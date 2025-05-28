@@ -36,3 +36,24 @@ next-env.d.ts
 
 # cloudflare
 .wrangler/
+
+# Local environment variables
+# .env*.local is already covered
+*.local
+
+# Logs
+logs
+*.log
+# npm-debug.log* is already covered
+# yarn-debug.log* is already covered
+# yarn-error.log* is already covered
+pnpm-debug.log*
+
+# OS generated files
+# .DS_Store is already covered
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db

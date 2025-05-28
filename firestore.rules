@@ -1,0 +1,84 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper function to get user's role and tenantId from custom claims
+    function getUserTenantId() {
+      return request.auth.token.tenantId;
+    }
+
+    function getUserRole() {
+      return request.auth.token.role;
+    }
+
+    // Helper function to check if user belongs to the tenant specified in the path
+    // This checks against the tenantId in their custom claims.
+    function isUserMemberOfTenant(tenantId) {
+      return request.auth.token.tenantId == tenantId;
+    }
+
+    // More granular check: Verifies against the user's profile if they are part of that specific tenant
+    // Useful if a user can belong to multiple tenants but claims only reflect one active context.
+    // For this, we'd need the users collection to store tenant memberships.
+    // function isUserAssociatedWithTenant(userId, tenantId) {
+    //   return get(/databases/$(database)/documents/users/$(userId)).data.tenants[tenantId] != null;
+    //   // Or if tenants is an array of maps:
+    //   // return tenantId in get(/databases/$(database)/documents/users/$(userId)).data.tenants.map(t => t.tenantId);
+    // }
+
+    // TENANTS
+    // Only authenticated users can read tenant info if they are part of it (e.g. listed in users/{userId}/tenants)
+    // Tenant creation/update is admin-only or via specific backend functions (not covered in these basic rules)
+    match /tenants/{tenantId} {
+      allow read: if request.auth != null && isUserMemberOfTenant(tenantId);
+      // Allow create/write typically managed by backend functions or super admin roles
+      allow create, write, delete: if false; // Placeholder - refine later
+    }
+
+    // TENANT SUBCOLLECTIONS
+    match /tenants/{tenantId}/{subcollection}/{document=**} {
+      // Default deny for all tenant subcollections unless specified below
+      allow read, write: if false;
+    }
+
+    // CASES within a tenant
+    // Users can CRUD cases if they are part of the tenant (based on claim)
+    match /tenants/{tenantId}/cases/{caseId} {
+      allow read, write, delete: if request.auth != null && isUserMemberOfTenant(tenantId);
+      // Create: User must be part of the tenant.
+      // We can add role checks here too, e.g. only 'admin' or 'lawyer' can create.
+      // allow create: if request.auth != null && isUserMemberOfTenant(tenantId) && (getUserRole() == 'admin' || getUserRole() == 'lawyer');
+    }
+
+    // USER_PROFILES within a tenant
+    // Users can read their own profile within a tenant.
+    // Admins of the tenant can read/write any profile in their tenant.
+    match /tenants/{tenantId}/users_profiles/{userId} {
+      allow read: if request.auth != null && isUserMemberOfTenant(tenantId) &&
+                      (request.auth.uid == userId || getUserRole() == 'admin');
+      allow write: if request.auth != null && isUserMemberOfTenant(tenantId) && getUserRole() == 'admin';
+      allow create: if request.auth != null && isUserMemberOfTenant(tenantId) && getUserRole() == 'admin'; // Or specific invitation logic
+    }
+
+    // Other tenant subcollections (templates, auditLogs, etc.)
+    // Add rules as these features are developed. For now, they inherit the default deny.
+    // Example for templates:
+    // match /tenants/{tenantId}/templates/{templateId} {
+    //   allow read: if request.auth != null && isUserMemberOfTenant(tenantId);
+    //   allow write: if request.auth != null && isUserMemberOfTenant(tenantId) && getUserRole() == 'admin';
+    // }
+
+
+    // USERS (Global Collection)
+    // Users can read their own global profile.
+    // Creation is handled by Firebase Auth.
+    // Updates to sensitive fields (like the 'tenants' array) should be done by trusted backend processes/functions.
+    match /users/{userId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+      // Allow create: if false; // Firebase Auth handles this
+      allow write: if request.auth != null && request.auth.uid == userId; // Allow user to update their own non-sensitive info like displayName
+      // For updating 'tenants' array or roles, use backend functions.
+    }
+  }
+}

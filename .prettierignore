@@ -1,0 +1,26 @@
+# Next.js
+.next/
+out/
+
+# Node
+node_modules/
+
+# Dependency directories
+pnpm-lock.yaml
+yarn.lock
+package-lock.json
+
+# Env files
+*.local
+.env
+.env.*
+
+# Build output
+dist/
+build/
+
+# IDE/Editor specific
+.vscode/
+.idea/
+*.swp
+*.swo
