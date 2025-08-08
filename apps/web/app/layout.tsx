@@ -110,9 +110,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   © {new Date().getFullYear()} Kraft Mortgages Canada Inc. All rights reserved.
                 </p>
                 <div className="flex gap-6 text-sm">
-                  <Link href="/privacy" className="text-gray-400 hover:text-gold-400 transition-colors">Privacy Policy</Link>
-                  <Link href="/terms" className="text-gray-400 hover:text-gold-400 transition-colors">Terms of Service</Link>
-                  <Link href="/compliance" className="text-gray-400 hover:text-gold-400 transition-colors">Compliance</Link>
+                  <Link href="/privacy" as any className="text-gray-400 hover:text-gold-400 transition-colors">Privacy Policy</Link>
+                  <Link href="/terms" as any className="text-gray-400 hover:text-gold-400 transition-colors">Terms of Service</Link>
+                  <Link href="/compliance" as any className="text-gray-400 hover:text-gold-400 transition-colors">Compliance</Link>
                 </div>
               </div>
               <div className="mt-4 text-xs text-gray-400 text-center">
