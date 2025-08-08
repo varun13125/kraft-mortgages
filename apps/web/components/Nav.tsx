@@ -127,6 +127,10 @@ export function Nav() {
           </AnimatePresence>
         </div>
 
+        <Link href="/about" className="text-sm font-medium text-gray-300 hover:text-gold-400 transition-colors">
+          About Us
+        </Link>
+
         <Link href="/learn" className="text-sm font-medium text-gray-300 hover:text-gold-400 transition-colors">
           Learn
         </Link>

@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { ChatAlex } from "@/components/ChatAlex";
-import { ArrowRight, Award, Shield, Users, TrendingUp, Building, CheckCircle, Sparkles } from "lucide-react";
+import { ArrowRight, Award, Shield, Users, TrendingUp, Building, CheckCircle, Sparkles, Clock, DollarSign, Target, Briefcase } from "lucide-react";
 
 
 export default function Home() {
@@ -28,8 +28,8 @@ export default function Home() {
                 transition={{ delay: 0.2 }}
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gold-900/30 border border-gold-700/50 text-gold-200 text-sm font-medium mb-6"
               >
-                <Sparkles className="w-4 h-4" />
-                <span>Canada&apos;s Most Advanced Mortgage Platform</span>
+                <Shield className="w-4 h-4" />
+                <span>Licensed Across BC • Alberta • Ontario</span>
               </motion.div>
               
               <div className="space-y-4 mb-8">
@@ -39,9 +39,9 @@ export default function Home() {
                   transition={{ delay: 0.4 }}
                   className="text-4xl md:text-6xl font-bold text-white"
                 >
-                  <span className="gradient-text">AI-Powered</span>
+                  <span className="gradient-text">Expert Mortgage Solutions</span>
                   <br />
-                  <span className="text-white">Mortgage Solutions</span>
+                  <span className="text-white">23+ Years of Excellence</span>
                 </motion.h1>
               </div>
               
@@ -51,7 +51,7 @@ export default function Home() {
                 transition={{ delay: 0.6 }}
                 className="text-lg text-gray-300 mb-8 leading-relaxed max-w-xl"
               >
-                Transform your homeownership dreams into reality with intelligent financing solutions across British Columbia, Alberta, and Ontario.
+                Specialized in MLI Select, Construction Financing, and Self-Employed mortgages. We navigate complex scenarios that others can't handle.
               </motion.p>
           
               <motion.div 
@@ -79,20 +79,37 @@ export default function Home() {
             >
               <div className="relative metallic-card rounded-2xl p-8 shadow-xl">
                 <div className="absolute top-0 right-0 w-24 h-24 bg-gold-900/40 rounded-bl-2xl flex items-center justify-center">
-                  <Building className="w-10 h-10 text-gold-400" />
+                  <Award className="w-10 h-10 text-gold-400" />
                 </div>
-                <div className="space-y-4 mt-8">
-                  <div className="flex items-center gap-3">
-                    <div className="w-3 h-3 bg-gold-500 rounded-full"></div>
-                    <span className="text-gray-200">Mortgage Payment Calculator</span>
+                <h3 className="text-xl font-semibold text-white mb-6">Why Choose Kraft Mortgages?</h3>
+                <div className="space-y-4">
+                  <div className="flex items-start gap-3">
+                    <CheckCircle className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+                    <div>
+                      <span className="text-gray-200 font-medium">MLI Select Expert</span>
+                      <p className="text-sm text-gray-400">CMHC's complex multi-unit program specialist</p>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <div className="w-3 h-3 bg-gold-400 rounded-full"></div>
-                    <span className="text-gray-200">Affordability Assessment</span>
+                  <div className="flex items-start gap-3">
+                    <CheckCircle className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+                    <div>
+                      <span className="text-gray-200 font-medium">Construction Financing</span>
+                      <p className="text-sm text-gray-400">Progressive draws for builders & developers</p>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <div className="w-3 h-3 bg-gold-300 rounded-full"></div>
-                    <span className="text-gray-200">AI-Powered Recommendations</span>
+                  <div className="flex items-start gap-3">
+                    <CheckCircle className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+                    <div>
+                      <span className="text-gray-200 font-medium">Self-Employed Specialist</span>
+                      <p className="text-sm text-gray-400">Alternative income verification expertise</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <CheckCircle className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
+                    <div>
+                      <span className="text-gray-200 font-medium">Multi-Provincial Coverage</span>
+                      <p className="text-sm text-gray-400">Licensed expertise in BC, AB & ON markets</p>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -107,10 +124,10 @@ export default function Home() {
             className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8 py-8 border-t border-gray-700"
           >
             {[
-              { value: "$2B+", desc: "Funded", icon: TrendingUp },
-              { value: "23 Years", desc: "Experience", icon: Award },
-              { value: "3 Provinces", desc: "Licensed", icon: Shield },
-              { value: "10,000+", desc: "Happy Clients", icon: Users }
+              { value: "$2B+", desc: "Funded", icon: DollarSign },
+              { value: "23+ Years", desc: "Industry Experience", icon: Clock },
+              { value: "10,000+", desc: "Families Helped", icon: Users },
+              { value: "500+", desc: "Complex Cases Solved", icon: Target }
             ].map((stat, i) => (
               <div key={i} className="text-center">
                 <stat.icon className="w-8 h-8 mx-auto text-gold-500 mb-3" />
@@ -144,19 +161,19 @@ export default function Home() {
           <div className="grid gap-6 md:grid-cols-3">
             {[
               {
-                title: "Mortgage Payment",
+                title: "Payment Calculator",
                 href: "/calculators/payment",
-                description: "Calculate monthly payments with advanced options and payment frequency optimization"
+                description: "Explore different payment scenarios, frequencies, and amortization periods to find your optimal structure"
               },
               {
-                title: "Affordability",
+                title: "Affordability Analysis",
                 href: "/calculators/affordability", 
-                description: "Discover your true purchasing power with AI-powered analysis"
+                description: "Understand your true purchasing power with stress test calculations and debt service ratios"
               },
               {
-                title: "Renewal Optimizer",
+                title: "Renewal Strategy",
                 href: "/calculators/renewal",
-                description: "Maximize savings on renewal with market intelligence"
+                description: "Compare renewal options, calculate penalties, and determine the best timing for your renewal"
               }
             ].map((calc, i) => (
               <motion.div
@@ -190,19 +207,19 @@ export default function Home() {
           <div className="grid gap-6 md:grid-cols-3 mt-6">
             {[
               {
-                title: "Construction Pro",
+                title: "Construction Financing",
                 href: "/calculators/construction-pro",
-                description: "Specialized construction financing with progressive draw analysis"
+                description: "Plan progressive draws, manage holdbacks, and optimize cash flow for your building project"
               },
               {
-                title: "Investment",
+                title: "Investment Analysis",
                 href: "/calculators/investment",
-                description: "Advanced ROI and cash flow analysis for property investors"
+                description: "Calculate ROI, cash flow, cap rates, and leverage strategies for rental properties"
               },
               {
-                title: "Self-Employed",
+                title: "Self-Employed Solutions",
                 href: "/calculators/self-employed",
-                description: "Tailored qualification strategies for entrepreneurs"
+                description: "Navigate stated income programs and alternative documentation requirements"
               }
             ].map((calc, i) => (
               <motion.div
@@ -235,7 +252,141 @@ export default function Home() {
         </motion.div>
       </section>
 
-      {/* AI Chat Section */}
+      {/* How We Work Section */}
+      <section className="px-6 py-20 metallic-dark">
+        <motion.div 
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          className="max-w-6xl mx-auto"
+        >
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+              Our <span className="gradient-text">Solution-Driven</span> Process
+            </h2>
+            <p className="text-lg text-gray-300 max-w-2xl mx-auto">
+              We don't just find you a mortgage - we architect the right financial solution for your unique situation
+            </p>
+          </div>
+          
+          <div className="grid gap-8 md:grid-cols-4">
+            {[
+              {
+                step: "1",
+                title: "Discovery Call",
+                description: "Understand your complete financial picture and long-term goals",
+                icon: Briefcase
+              },
+              {
+                step: "2",
+                title: "Strategic Analysis",
+                description: "Leverage 23+ years of expertise to identify optimal solutions",
+                icon: Target
+              },
+              {
+                step: "3",
+                title: "Custom Solutions",
+                description: "Present tailored options including MLI Select, construction, or alternative lending",
+                icon: Building
+              },
+              {
+                step: "4",
+                title: "Seamless Execution",
+                description: "Navigate complex requirements and documentation with ease",
+                icon: CheckCircle
+              }
+            ].map((item, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.1 }}
+                viewport={{ once: true }}
+                className="relative"
+              >
+                <div className="metallic-card rounded-xl p-6 h-full">
+                  <div className="flex items-center justify-center w-12 h-12 bg-gold-900/40 rounded-full mb-4">
+                    <span className="text-gold-400 font-bold text-lg">{item.step}</span>
+                  </div>
+                  <item.icon className="w-8 h-8 text-gold-500 mb-3" />
+                  <h3 className="text-lg font-semibold text-white mb-2">{item.title}</h3>
+                  <p className="text-sm text-gray-300">{item.description}</p>
+                </div>
+                {i < 3 && (
+                  <ArrowRight className="hidden md:block absolute -right-4 top-1/2 -translate-y-1/2 w-6 h-6 text-gold-500 z-10" />
+                )}
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+      </section>
+
+      {/* Testimonials Section */}
+      <section className="px-6 py-20 metallic-grey">
+        <motion.div 
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          className="max-w-6xl mx-auto"
+        >
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+              Client <span className="gradient-text">Success Stories</span>
+            </h2>
+            <p className="text-lg text-gray-300">
+              Real results for real people facing complex mortgage challenges
+            </p>
+          </div>
+          
+          <div className="grid gap-6 md:grid-cols-3">
+            {[
+              {
+                quote: "Varun helped us navigate the MLI Select program for our 16-unit development. His expertise saved us over $200,000 in insurance premiums.",
+                author: "Developer",
+                location: "Surrey, BC",
+                type: "MLI Select"
+              },
+              {
+                quote: "As self-employed contractors, we thought homeownership was impossible. Kraft Mortgages found us the perfect solution within 3 weeks.",
+                author: "Business Owners",
+                location: "Calgary, AB",
+                type: "Self-Employed"
+              },
+              {
+                quote: "The construction financing expertise was invaluable. They structured our draws perfectly and kept our project on budget throughout.",
+                author: "Custom Home Builder",
+                location: "Toronto, ON",
+                type: "Construction"
+              }
+            ].map((testimonial, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.1 }}
+                viewport={{ once: true }}
+              >
+                <div className="metallic-card rounded-xl p-6 h-full flex flex-col">
+                  <div className="mb-4">
+                    <span className="inline-block px-3 py-1 bg-gold-900/30 text-gold-400 text-xs font-semibold rounded-full">
+                      {testimonial.type}
+                    </span>
+                  </div>
+                  <blockquote className="text-gray-200 mb-4 flex-grow">
+                    "{testimonial.quote}"
+                  </blockquote>
+                  <div className="border-t border-gray-700 pt-4">
+                    <p className="font-semibold text-white">{testimonial.author}</p>
+                    <p className="text-sm text-gray-400">{testimonial.location}</p>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+      </section>
+
+      {/* Alex Chat Assistant Section - More Honest Positioning */}
       <section className="px-6 py-20 metallic-dark">
         <motion.div 
           initial={{ opacity: 0 }}
@@ -245,10 +396,10 @@ export default function Home() {
         >
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              Meet <span className="gradient-text">Alex</span>, Your AI Mortgage Advisor
+              Quick Mortgage <span className="gradient-text">Guidance Tool</span>
             </h2>
             <p className="text-lg text-gray-300">
-              Get instant answers to your mortgage questions 24/7
+              Get instant answers to common mortgage questions
             </p>
           </div>
           <div className="metallic-card rounded-2xl p-8">

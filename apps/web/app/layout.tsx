@@ -116,8 +116,38 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   <Link href={"/compliance" as Route} className="text-gray-400 hover:text-gold-400 transition-colors">Compliance</Link>
                 </div>
               </div>
-              <div className="mt-4 text-xs text-gray-400 text-center">
-                Licensed by BCFSA • RECA • FSRAO | Serving BC, Alberta, and Ontario
+              
+              {/* Licensing Information */}
+              <div className="mt-8 pt-6 border-t border-gray-700">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-center gap-2">
+                      <Shield className="w-5 h-5 text-gold-500" />
+                      <span className="text-sm font-semibold text-white">British Columbia</span>
+                    </div>
+                    <p className="text-xs text-gray-400">BCFSA License #X303985</p>
+                    <p className="text-xs text-gray-500">Mortgage Broker</p>
+                  </div>
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-center gap-2">
+                      <Shield className="w-5 h-5 text-gold-500" />
+                      <span className="text-sm font-semibold text-white">Alberta</span>
+                    </div>
+                    <p className="text-xs text-gray-400">RECA License #M22001447</p>
+                    <p className="text-xs text-gray-500">Mortgage Associate</p>
+                  </div>
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-center gap-2">
+                      <Shield className="w-5 h-5 text-gold-500" />
+                      <span className="text-sm font-semibold text-white">Ontario</span>
+                    </div>
+                    <p className="text-xs text-gray-400">FSRAO License #M22001447</p>
+                    <p className="text-xs text-gray-500">Mortgage Agent</p>
+                  </div>
+                </div>
+                <p className="text-xs text-gray-500 text-center mt-6">
+                  Established 2014 | Principal Broker: Varun Chaudhry
+                </p>
               </div>
             </div>
           </div>
