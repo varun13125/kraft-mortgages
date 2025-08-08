@@ -579,7 +579,7 @@ export default function ModernHomepage() {
               className="glass-card"
               style={{ borderRadius: '20px', padding: '3rem', margin: '1rem', position: 'relative' }}
             >
-              <span style={{ fontSize: '4rem', color: 'var(--accent)', opacity: 0.3, position: 'absolute', top: '1rem', left: '2rem' }}>"</span>
+              <span style={{ fontSize: '4rem', color: 'var(--accent)', opacity: 0.3, position: 'absolute', top: '1rem', left: '2rem' }}>&ldquo;</span>
               <p style={{ fontSize: '1.2rem', fontStyle: 'italic', marginBottom: '2rem', position: 'relative', zIndex: 1 }}>
                 Varun helped us navigate the MLI Select program for our 16-unit development. His expertise saved us over $200,000 in insurance premiums. The level of knowledge and attention to detail was exceptional.
               </p>

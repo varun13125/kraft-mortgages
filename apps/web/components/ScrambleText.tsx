@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { motion } from "framer-motion";
 
 interface ScrambleTextProps {
@@ -38,7 +38,7 @@ export function ScrambleText({
     return scrambled;
   };
 
-  const startAnimation = () => {
+  const startAnimation = useCallback(() => {
     if (isAnimating) return;
     
     setIsAnimating(true);
@@ -67,7 +67,7 @@ export function ScrambleText({
       
       intervalRef.current = revealInterval;
     }, 1000);
-  };
+  }, [isAnimating, scrambleSpeed, revealSpeed, text, characters]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -80,7 +80,7 @@ export function ScrambleText({
         clearInterval(intervalRef.current);
       }
     };
-  }, [text, delay]);
+  }, [text, delay, startAnimation]);
 
   return (
     <motion.span
