@@ -8,7 +8,7 @@ export default async function Admin() {
       <table className="w-full text-sm">
         <thead><tr className="text-left"><th>ID</th><th>Province</th><th>Status</th><th>Score</th><th>Intent</th><th>Created</th></tr></thead>
         <tbody>
-          {leads.map(l=> (
+          {leads.map((l: any)=> (
             <tr key={l.id} className="border-b">
               <td className="py-2">{l.id.slice(0,8)}</td>
               <td>{l.province}</td>
