@@ -8,7 +8,7 @@ export default async function AdminRates() {
       <table className="w-full text-sm">
         <thead><tr className="text-left"><th>Lender</th><th>Term</th><th>APR %</th><th>Province</th><th>Captured</th></tr></thead>
         <tbody>
-          {rows.map(r => (
+          {rows.map((r: any) => (
             <tr key={r.id} className="border-b">
               <td className="py-2">{r.lender}</td>
               <td>{r.termMonths} mo</td>
