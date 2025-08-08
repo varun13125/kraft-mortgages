@@ -13,7 +13,8 @@ export default function SelfEmployed() {
 
   return (
     <div className="max-w-2xl space-y-6">
-      <h2 className="text-2xl font-semibold text-white">Self-Employed Income Calculator</h2>\1\n      <div className="mt-2"><ComplianceBanner feature="LEAD_FORM" /></div>
+      <h2 className="text-2xl font-semibold text-white">Self-Employed Income Calculator</h2>
+      <div className="mt-2"><ComplianceBanner feature="LEAD_FORM" /></div>
       <div className="grid gap-3 md:grid-cols-2">
         <label className="grid gap-1 text-gray-200">NOA (Latest Year)
           <input type="number" value={y2} onChange={e=>setY2(+e.target.value)} className="bg-gray-700 border border-gray-600 rounded p-2 text-white placeholder-gray-400 focus:border-gold-500 focus:outline-none" />

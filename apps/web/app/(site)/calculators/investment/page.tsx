@@ -17,7 +17,7 @@ export default function Investment() {
   return (
     <div className="max-w-2xl space-y-6">
       <h1 className="text-2xl font-semibold text-white">Investment Calculator</h1>
-      \1\n      <div className="mt-2"><ComplianceBanner feature="LEAD_FORM" /></div>
+      <div className="mt-2"><ComplianceBanner feature="LEAD_FORM" /></div>
       <div className="grid gap-3 md:grid-cols-2">
         <label className="grid gap-1 text-gray-200">Purchase Price <input className="bg-gray-700 border border-gray-600 rounded p-2 text-white placeholder-gray-400 focus:border-gold-500 focus:outline-none" type="number" value={price} onChange={e=>setPrice(+e.target.value)} /></label>
         <label className="grid gap-1 text-gray-200">Down Payment <input className="bg-gray-700 border border-gray-600 rounded p-2 text-white placeholder-gray-400 focus:border-gold-500 focus:outline-none" type="number" value={down} onChange={e=>setDown(+e.target.value)} /></label>
