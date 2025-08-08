@@ -1,0 +1,105 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Province {
+  BC
+  AB
+  ON
+}
+
+enum LeadStatus {
+  NEW
+  QUALIFIED
+  WARM
+  COLD
+  CLOSED_LOST
+  CONVERTED
+}
+
+enum Role {
+  ADMIN
+  ADVISOR
+  ASSISTANT
+  CLIENT
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  role      Role     @default(CLIENT)
+  province  Province?
+  createdAt DateTime @default(now())
+  leads     Lead[]
+  preferences Preference[]
+  documents   Document[]
+  conversations Conversation[]
+}
+
+model Lead {
+  id            String     @id @default(cuid())
+  user          User?      @relation(fields: [userId], references: [id])
+  userId        String?
+  status        LeadStatus @default(NEW)
+  score         Int        @default(0) // 0–100
+  province      Province
+  intent        String
+  details       Json
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+}
+
+model Conversation {
+  id        String   @id @default(cuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id])
+  role      Role     @default(CLIENT)
+  messages  Json     // store chat transcripts (for audit)
+  createdAt DateTime @default(now())
+}
+
+model Document {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  key       String   // S3 key
+  kind      String   // e.g., NOA, BankStatement
+  meta      Json
+  createdAt DateTime @default(now())
+}
+
+model RateSnapshot {
+  id         String   @id @default(cuid())
+  lender     String
+  termMonths Int
+  rateAPR    Float
+  province   Province?
+  capturedAt DateTime @default(now())
+}
+
+model Preference {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  key       String
+  value     Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, key])
+}
+
+model KpiDaily {
+  id             String   @id @default(cuid())
+  date           DateTime @unique
+  leadsNew       Int
+  leadsQualified Int
+  conversionRate Float
+  createdAt      DateTime @default(now())
+}

@@ -1,5 +1,7 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/db";
+import { PrismaClient } from "@prisma/client";
+import { firestore } from "@/lib/firebaseAdmin";
 
 async function transcribeOpenAI(url: string) {
   // Downloads audio and sends to OpenAI Whisper — simplistic implementation
@@ -29,7 +31,12 @@ export async function POST(req: NextRequest) {
   const text = recUrl ? await transcribeOpenAI(recUrl + ".mp3") : "";
 
   if (text) {
-    await prisma.lead.create({ data: { province: "AB", intent: "voice_inquiry", details: { from, text }, score: 80 } });
+    if ((prisma as any) instanceof PrismaClient) {
+      await (prisma as PrismaClient).lead.create({ data: { province: "AB", intent: "voice_inquiry", details: { from, text }, score: 80 } });
+    } else {
+      const db = firestore();
+      await db.collection("leads").add({ province: "AB", intent: "voice_inquiry", details: { from, text }, score: 80, status: "NEW", createdAt: new Date() });
+    }
   }
 
   const body = `<?xml version="1.0" encoding="UTF-8"?>

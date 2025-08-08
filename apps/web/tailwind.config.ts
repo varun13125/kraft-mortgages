@@ -70,7 +70,7 @@ const config: Config = {
           800: "#78421d",
           900: "#5d2e0a",
         },
-        accent: {
+        accentPalette: {
           50: "#faf5f5",
           100: "#f5e6e8",
           200: "#e8c5ca",

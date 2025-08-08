@@ -1,0 +1,30 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git push:*)",
+      "Bash(pnpm install:*)",
+      "Bash(docker compose:*)",
+      "Bash(pnpm db:migrate:*)",
+      "Bash(pnpm dev:*)",
+      "Bash(pnpm add:*)",
+      "Bash(copy .env.example .env)",
+      "Bash(cp:*)",
+      "Bash(curl:*)",
+      "Bash(pnpm --filter @kraft/web dev:*)",
+      "Bash(taskkill:*)",
+      "Bash(git add:*)",
+      "Bash(rm:*)",
+      "Bash(powershell:*)",
+      "Bash(git commit:*)",
+      "Bash(git config:*)",
+      "Bash(git rm:*)",
+      "Bash(ping:*)",
+      "Bash(git reset:*)",
+      "Bash(mkdir:*)",
+      "Bash(find:*)",
+      "Bash(npm run build:*)",
+      "Bash(npm run lint)"
+    ],
+    "deny": []
+  }
+}

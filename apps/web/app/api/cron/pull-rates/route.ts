@@ -1,4 +1,6 @@
 import { prisma } from "@/lib/db";
+import { PrismaClient } from "@prisma/client";
+import { firestore } from "@/lib/firebaseAdmin";
 
 export async function POST() {
   const url = process.env.FASTAPI_BASE_URL || "http://localhost:8000";
@@ -7,6 +9,17 @@ export async function POST() {
   const data = rows.filter((x:any)=> !x.error).map((x:any)=> ({
     lender: String(x.lender), termMonths: Number(x.termMonths||0), rateAPR: Number(x.rateAPR||0), province: x.province || null
   }));
-  if (data.length) await prisma.rateSnapshot.createMany({ data, skipDuplicates: false });
+  if (!data.length) return Response.json({ inserted: 0 });
+  if ((prisma as any) instanceof PrismaClient) {
+    await (prisma as PrismaClient).rateSnapshot.createMany({ data, skipDuplicates: false });
+    return Response.json({ inserted: data.length });
+  }
+  const db = firestore();
+  const batch = db.batch();
+  for (const row of data) {
+    const ref = db.collection("rateSnapshots").doc();
+    batch.set(ref, { ...row, capturedAt: new Date() });
+  }
+  await batch.commit();
   return Response.json({ inserted: data.length });
 }

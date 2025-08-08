@@ -21,7 +21,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <header className="sticky top-0 z-50 backdrop-blur-xl border-b border-gray-700/50 shadow-sm metallic-dark">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-16">
-              <Link href="/" className="flex items-center gap-2 group">
+              <Link href={"/" as Route} className="flex items-center gap-2 group">
                 <div className="p-2 rounded-lg bg-gradient-to-br from-gold-500 to-gold-600 group-hover:from-gold-600 group-hover:to-gold-700 transition-all">
                   <Home className="w-5 h-5 text-white" />
                 </div>
@@ -67,10 +67,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <div>
                 <h3 className="font-semibold mb-4 text-white">Calculators</h3>
                 <ul className="space-y-2 text-sm">
-                  <li><Link href="/calculators/payment" className="text-gray-300 hover:text-gold-400 transition-colors">Payment Calculator</Link></li>
-                  <li><Link href="/calculators/affordability" className="text-gray-300 hover:text-gold-400 transition-colors">Affordability</Link></li>
-                  <li><Link href="/calculators/renewal" className="text-gray-300 hover:text-gold-400 transition-colors">Renewal Optimizer</Link></li>
-                  <li><Link href="/mli-select" className="text-gray-300 hover:text-gold-400 transition-colors">MLI Select</Link></li>
+                  <li><Link href={"/calculators/payment" as Route} className="text-gray-300 hover:text-gold-400 transition-colors">Payment Calculator</Link></li>
+                  <li><Link href={"/calculators/affordability" as Route} className="text-gray-300 hover:text-gold-400 transition-colors">Affordability</Link></li>
+                  <li><Link href={"/calculators/renewal" as Route} className="text-gray-300 hover:text-gold-400 transition-colors">Renewal Optimizer</Link></li>
+                  <li><Link href={"/mli-select" as Route} className="text-gray-300 hover:text-gold-400 transition-colors">MLI Select</Link></li>
                 </ul>
               </div>
 
@@ -78,9 +78,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <div>
                 <h3 className="font-semibold mb-4 text-white">Service Areas</h3>
                 <ul className="space-y-2 text-sm">
-                  <li><Link href="/provinces/bc" className="text-gray-300 hover:text-gold-400 transition-colors">British Columbia</Link></li>
-                  <li><Link href="/provinces/ab" className="text-gray-300 hover:text-gold-400 transition-colors">Alberta</Link></li>
-                  <li><Link href="/provinces/on" className="text-gray-300 hover:text-gold-400 transition-colors">Ontario</Link></li>
+                  <li><Link href={"/provinces/bc" as Route} className="text-gray-300 hover:text-gold-400 transition-colors">British Columbia</Link></li>
+                  <li><Link href={"/provinces/ab" as Route} className="text-gray-300 hover:text-gold-400 transition-colors">Alberta</Link></li>
+                  <li><Link href={"/provinces/on" as Route} className="text-gray-300 hover:text-gold-400 transition-colors">Ontario</Link></li>
                 </ul>
               </div>
 

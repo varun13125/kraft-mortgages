@@ -1,7 +1,17 @@
 import { prisma } from "@/lib/db";
+import { PrismaClient } from "@prisma/client";
+import { firestore } from "@/lib/firebaseAdmin";
+export const dynamic = "force-dynamic";
 
 export default async function Admin() {
-  const leads = await prisma.lead.findMany({ orderBy: { createdAt: 'desc' }, take: 100 });
+  let leads: any[] = [];
+  if (prisma instanceof PrismaClient) {
+    leads = await (prisma as PrismaClient).lead.findMany({ orderBy: { createdAt: 'desc' }, take: 100 }) as any[];
+  } else {
+    const db = firestore();
+    const snap = await db.collection("leads").orderBy("createdAt","desc").limit(100).get();
+    leads = snap.docs.map(d=> ({ id: d.id, ...(d.data() as any) }));
+  }
   return (
     <div className="space-y-4">
       <h2 className="text-2xl font-semibold">Admin — Leads</h2>

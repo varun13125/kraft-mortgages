@@ -1,0 +1,19 @@
+{
+  "name": "@kraft/prisma",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "prisma": "prisma",
+    "generate": "prisma generate",
+    "migrate": "prisma migrate dev",
+    "seed": "node -e \"require('ts-node/register'); require('./packages/prisma/seed.ts');\""
+  },
+  "devDependencies": {
+    "prisma": "5.16.2",
+    "ts-node": "10.9.2",
+    "typescript": "5.5.4"
+  },
+  "dependencies": {
+    "@prisma/client": "5.16.2"
+  }
+}
