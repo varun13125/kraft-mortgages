@@ -40,7 +40,7 @@ export default function MLISelect() {
               <span className="gradient-text">MLI Select</span> Program
             </h1>
             <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-              Canada's most sophisticated multi-unit mortgage insurance program. Save hundreds of thousands 
+              Canada&apos;s most sophisticated multi-unit mortgage insurance program. Save hundreds of thousands 
               in CMHC premiums with our expertise.
             </p>
           </motion.div>
@@ -61,7 +61,7 @@ export default function MLISelect() {
                 What is <span className="gradient-text">MLI Select</span>?
               </h2>
               <p className="text-gray-300 mb-4">
-                MLI Select is CMHC's premium multi-unit mortgage insurance program designed for properties 
+                MLI Select is CMHC&apos;s premium multi-unit mortgage insurance program designed for properties 
                 with 5 or more units. It rewards sustainable building practices and affordability measures 
                 with significant premium reductions.
               </p>

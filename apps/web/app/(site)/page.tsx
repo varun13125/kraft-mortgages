@@ -51,7 +51,7 @@ export default function Home() {
                 transition={{ delay: 0.6 }}
                 className="text-lg text-gray-300 mb-8 leading-relaxed max-w-xl"
               >
-                Specialized in MLI Select, Construction Financing, and Self-Employed mortgages. We navigate complex scenarios that others can't handle.
+                Specialized in MLI Select, Construction Financing, and Self-Employed mortgages. We navigate complex scenarios that others can&apos;t handle.
               </motion.p>
           
               <motion.div 
@@ -87,7 +87,7 @@ export default function Home() {
                     <CheckCircle className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
                     <div>
                       <span className="text-gray-200 font-medium">MLI Select Expert</span>
-                      <p className="text-sm text-gray-400">CMHC's complex multi-unit program specialist</p>
+                      <p className="text-sm text-gray-400">CMHC&apos;s complex multi-unit program specialist</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
@@ -265,7 +265,7 @@ export default function Home() {
               Our <span className="gradient-text">Solution-Driven</span> Process
             </h2>
             <p className="text-lg text-gray-300 max-w-2xl mx-auto">
-              We don't just find you a mortgage - we architect the right financial solution for your unique situation
+              We don&apos;t just find you a mortgage - we architect the right financial solution for your unique situation
             </p>
           </div>
           
@@ -373,7 +373,7 @@ export default function Home() {
                     </span>
                   </div>
                   <blockquote className="text-gray-200 mb-4 flex-grow">
-                    "{testimonial.quote}"
+                    &ldquo;{testimonial.quote}&rdquo;
                   </blockquote>
                   <div className="border-t border-gray-700 pt-4">
                     <p className="font-semibold text-white">{testimonial.author}</p>

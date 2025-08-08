@@ -52,7 +52,7 @@ export default function AboutUs() {
                 increasingly complex, with borrowers facing unique challenges that required specialized expertise.
               </p>
               <p className="text-gray-300 mb-4">
-                Today, we're proud to be recognized as specialists in three critical areas: MLI Select multi-unit financing, 
+                Today, we&apos;re proud to be recognized as specialists in three critical areas: MLI Select multi-unit financing, 
                 construction mortgages with progressive draws, and self-employed mortgage solutions. Our expertise in these 
                 complex scenarios sets us apart from conventional brokers.
               </p>
@@ -143,7 +143,7 @@ export default function AboutUs() {
               </p>
               
               <p className="text-gray-300 mb-4">
-                Varun's expertise spans construction financing with progressive draws, self-employed mortgage solutions, 
+                Varun&apos;s expertise spans construction financing with progressive draws, self-employed mortgage solutions, 
                 and multi-provincial transactions. He has successfully navigated challenging files that other brokers 
                 deemed impossible.
               </p>
@@ -352,7 +352,7 @@ export default function AboutUs() {
             Ready to Experience the <span className="gradient-text">Kraft Difference</span>?
           </h2>
           <p className="text-xl mb-8 text-gray-300">
-            Let's discuss your unique mortgage needs and find the perfect solution.
+            Let&apos;s discuss your unique mortgage needs and find the perfect solution.
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">

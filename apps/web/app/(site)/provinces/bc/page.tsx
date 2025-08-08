@@ -52,13 +52,13 @@ export default function BC() {
               </h2>
               <p className="text-gray-300 mb-4">
                 With our headquarters in Surrey and over a decade serving British Columbia, we understand the unique 
-                challenges and opportunities in BC's diverse real estate markets. From Vancouver's competitive 
+                challenges and opportunities in BC&apos;s diverse real estate markets. From Vancouver&apos;s competitive 
                 landscape to emerging opportunities in the Fraser Valley and Interior regions.
               </p>
               <p className="text-gray-300 mb-6">
                 Our expertise spans the full spectrum of BC mortgage products, including the BC Home Owner Mortgage 
-                and Equity Partnership, First-Time Home Buyers' Program, and specialized construction financing for 
-                the province's booming development sector.
+                and Equity Partnership, First-Time Home Buyers&apos; Program, and specialized construction financing for 
+                the province&apos;s booming development sector.
               </p>
               
               <div className="space-y-3">
@@ -114,7 +114,7 @@ export default function BC() {
               BC <span className="gradient-text">Specialized Programs</span>
             </h2>
             <p className="text-lg text-gray-300">
-              Expert guidance through British Columbia's unique mortgage programs
+              Expert guidance through British Columbia&apos;s unique mortgage programs
             </p>
           </div>
 
@@ -192,7 +192,7 @@ export default function BC() {
               Serving All <span className="gradient-text">BC Regions</span>
             </h2>
             <p className="text-lg text-gray-300">
-              Local expertise across British Columbia's diverse markets
+              Local expertise across British Columbia&apos;s diverse markets
             </p>
           </div>
 
@@ -256,7 +256,7 @@ export default function BC() {
               BC Market <span className="gradient-text">Challenges We Solve</span>
             </h2>
             <p className="text-lg text-gray-300">
-              Specialized solutions for British Columbia's unique mortgage landscape
+              Specialized solutions for British Columbia&apos;s unique mortgage landscape
             </p>
           </div>
 
@@ -276,7 +276,7 @@ export default function BC() {
               },
               {
                 challenge: "Self-Employed in Tech/Film",
-                solution: "Industry-specific income verification for BC's creative and tech sectors"
+                solution: "Industry-specific income verification for BC&apos;s creative and tech sectors"
               },
               {
                 challenge: "Property Transfer Tax",
