@@ -29,7 +29,7 @@ export default function Home() {
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gold-900/30 border border-gold-700/50 text-gold-200 text-sm font-medium mb-6"
               >
                 <Sparkles className="w-4 h-4" />
-                <span>Canada's Most Advanced Mortgage Platform</span>
+                <span>Canada&apos;s Most Advanced Mortgage Platform</span>
               </motion.div>
               
               <div className="space-y-4 mb-8">
@@ -325,7 +325,7 @@ export default function Home() {
             Ready to Start Your Mortgage Journey?
           </h2>
           <p className="text-xl mb-8 text-gray-300">
-            Join thousands of satisfied clients who've achieved their homeownership dreams
+            Join thousands of satisfied clients who&apos;ve achieved their homeownership dreams
           </p>
           <button className="px-8 py-4 bg-gold-500 hover:bg-gold-600 text-white font-semibold rounded-lg transition-colors flex items-center gap-2 mx-auto">
             Get Started Today

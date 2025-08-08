@@ -53,7 +53,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   <div className="font-bold gradient-text">Kraft Mortgages</div>
                 </div>
                 <p className="text-sm text-gray-300">
-                  Canada's most advanced AI-powered mortgage brokerage with 23+ years of experience.
+                  Canada&apos;s most advanced AI-powered mortgage brokerage with 23+ years of experience.
                 </p>
                 <div className="flex gap-2">
                   <Shield className="w-5 h-5 text-gold-500" />
