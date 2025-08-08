@@ -287,7 +287,7 @@ export default function Home() {
                 transition={{ delay: i * 0.1 }}
                 viewport={{ once: true }}
               >
-                <Link href={prov.href}>
+                <Link href={prov.href as any}>
                   <div className="group p-6 bg-gray-700 rounded-xl shadow-sm hover:shadow-lg border border-gray-600 hover:border-gold-500 transition-all cursor-pointer h-full">
                     <Building className="w-10 h-10 text-gold-500 mb-4" />
                     <h3 className="text-xl font-semibold text-white mb-3 group-hover:text-gold-300 transition-colors">
