@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function ModernHomepage() {
   const [scrolled, setScrolled] = useState(false);
@@ -263,8 +264,19 @@ export default function ModernHomepage() {
         {/* Navigation */}
         <nav className={`fixed top-0 w-full z-50 transition-all duration-300 glass-card ${scrolled ? 'nav-scrolled' : ''}`} style={{ padding: scrolled ? '0.7rem 5%' : '1rem 5%' }}>
           <div style={{ maxWidth: '1400px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <div style={{ fontSize: '1.8rem', fontWeight: '900', background: 'linear-gradient(135deg, var(--light) 0%, var(--primary-light) 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', letterSpacing: '-1px' }}>
-              KRAFT
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <Image 
+                src="/kraft-logo.png" 
+                alt="Kraft Mortgages Canada" 
+                width={120} 
+                height={40}
+                style={{ 
+                  height: 'auto',
+                  maxWidth: '120px',
+                  filter: 'brightness(1.1) contrast(1.1)'
+                }}
+                priority
+              />
             </div>
             
             <div className="hidden md:flex items-center gap-8">
