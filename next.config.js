@@ -1,10 +1,7 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+// This file exists to satisfy Vercel's Next.js detection
+// The actual config is in apps/web/next.config.mjs
+module.exports = {
+  experimental: { typedRoutes: true },
   reactStrictMode: true,
-  ,
-  images: {
-    domains: ['localhost'],
-  },
+  pageExtensions: ['ts','tsx','mdx']
 };
-
-module.exports = nextConfig;
