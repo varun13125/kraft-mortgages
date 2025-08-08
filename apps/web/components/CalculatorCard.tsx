@@ -18,7 +18,7 @@ export function CalculatorCard({ title, href, description }: { title: string; hr
   const Icon = iconMap[title] || Calculator;
   
   return (
-    <Link href={href}>
+    <Link href={href as any}>
       <motion.div
         whileHover={{ scale: 1.02, y: -5 }}
         whileTap={{ scale: 0.98 }}
