@@ -2,6 +2,8 @@
 
 🚀 **Live Site**: Professional mortgage brokerage platform with Firebase integration
 
+✅ **Status**: Ready for deployment
+
 ## Quick Start
 1) `pnpm i`
 2) `docker compose -f infra/docker-compose.yml up -d`
