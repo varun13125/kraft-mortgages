@@ -7,7 +7,7 @@ export async function POST() {
   const yEnd = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate()));
   const leads = await prisma.lead.findMany({ where: { createdAt: { gte: y, lt: yEnd } } });
   const leadsNew = leads.length;
-  const leadsQualified = leads.filter(l=>l.status === 'QUALIFIED').length;
+  const leadsQualified = leads.filter((l: any) => l.status === 'QUALIFIED').length;
   const conversionRate = leadsNew ? (leadsQualified / leadsNew) : 0;
   await prisma.kpiDaily.upsert({
     where: { date: y },
