@@ -166,7 +166,7 @@ export default function Home() {
                 transition={{ delay: i * 0.1 }}
                 viewport={{ once: true }}
               >
-                <Link href={calc.href}>
+                <Link href={calc.href as any}>
                   <div className="group metallic-card rounded-xl p-6 hover:shadow-2xl hover:border-gold-500 transition-all cursor-pointer h-full">
                     <div className="w-12 h-12 bg-gold-900/40 rounded-lg flex items-center justify-center mb-4 group-hover:bg-gold-800/60 transition-colors">
                       <Building className="w-6 h-6 text-gold-400" />
@@ -212,7 +212,7 @@ export default function Home() {
                 transition={{ delay: (i + 3) * 0.1 }}
                 viewport={{ once: true }}
               >
-                <Link href={calc.href}>
+                <Link href={calc.href as any}>
                   <div className="group metallic-card rounded-xl p-6 hover:shadow-2xl hover:border-gold-500 transition-all cursor-pointer h-full">
                     <div className="w-12 h-12 bg-gold-900/40 rounded-lg flex items-center justify-center mb-4 group-hover:bg-gold-800/60 transition-colors">
                       <Building className="w-6 h-6 text-gold-400" />
