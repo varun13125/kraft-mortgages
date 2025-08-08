@@ -63,7 +63,7 @@ export function HolographicCard({ title, href, description, className }: Hologra
   };
 
   return (
-    <Link href={href}>
+    <Link href={href as any}>
       <motion.div
         ref={ref}
         className={cn(

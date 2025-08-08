@@ -71,7 +71,7 @@ export function Nav() {
                 {calculators.map((calc) => (
                   <Link
                     key={calc.href}
-                    href={calc.href}
+                    href={calc.href as any}
                     className="flex items-center gap-3 px-4 py-3 hover:bg-gray-700 transition-colors group"
                   >
                     <calc.icon className="w-4 h-4 text-gold-500 group-hover:text-gold-400" />
@@ -111,7 +111,7 @@ export function Nav() {
                 {provinces.map((prov) => (
                   <Link
                     key={prov.href}
-                    href={prov.href}
+                    href={prov.href as any}
                     className="flex items-center justify-between px-4 py-3 hover:bg-gray-700 transition-colors group"
                   >
                     <span className="text-sm font-medium text-gray-200 group-hover:text-gold-400">
@@ -174,7 +174,7 @@ export function Nav() {
                 {calculators.map((calc) => (
                   <Link
                     key={calc.href}
-                    href={calc.href}
+                    href={calc.href as any}
                     onClick={() => setIsOpen(false)}
                     className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-700 transition-colors"
                   >
@@ -189,7 +189,7 @@ export function Nav() {
                 {provinces.map((prov) => (
                   <Link
                     key={prov.href}
-                    href={prov.href}
+                    href={prov.href as any}
                     onClick={() => setIsOpen(false)}
                     className="flex items-center justify-between px-3 py-2 rounded-lg hover:bg-gray-700 transition-colors"
                   >
