@@ -191,10 +191,11 @@ Every mortgage situation is unique. Contact Varun directly to discuss your speci
       readTime: '12 min read',
       category: 'First Time Buyers',
       metaDescription: 'Complete 2025 guide for first-time home buyers in BC. Learn about programs, down payments, mortgage options, and insider tips from licensed broker Varun Chaudhry.',
+      };
     }
-  };
-
-  return posts[slug] || null;
+    
+    return null;
+  }
 }
 
 export async function generateMetadata(
