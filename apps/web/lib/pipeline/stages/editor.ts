@@ -117,7 +117,7 @@ Every mortgage situation is unique. Contact Varun directly to discuss your speci
 
 ## Frequently Asked Questions
 
-${faq.map(q => `### ${q}
+${faq.map((q: string) => `### ${q}
 
 Contact our team for personalized guidance on this question based on your specific situation.`).join('\n\n')}
 `;
