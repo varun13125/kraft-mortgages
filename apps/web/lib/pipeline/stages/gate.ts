@@ -25,7 +25,7 @@ export async function gateStage(run: Run): Promise<{ success: boolean; data?: Ga
     const { markdownDraft, sources = [] } = draft;
     
     // Extract first few paragraphs for duplicate checking
-    const paragraphs = markdownDraft.split('\n\n').filter(p => p.trim() && !p.startsWith('#')).slice(0, 5);
+    const paragraphs = markdownDraft.split('\n\n').filter((p: string) => p.trim() && !p.startsWith('#')).slice(0, 5);
     
     await log(run.id, 'Gate: Generating embeddings for duplicate detection...');
     
