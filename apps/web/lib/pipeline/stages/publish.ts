@@ -47,7 +47,7 @@ export async function publishStage(run: Run): Promise<{ success: boolean; data?:
       author: 'Varun Chaudhry',
       url: `https://www.kraftmortgages.ca/blog/${slug}`,
       publishedDate: new Date().toISOString(),
-      faq: faq.map(q => ({ question: q, answer: 'Contact us for personalized guidance.' }))
+      faq: faq.map((q: string) => ({ question: q, answer: 'Contact us for personalized guidance.' }))
     });
 
     let publishUrl: string;
