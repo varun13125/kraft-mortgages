@@ -1,5 +1,17 @@
 {
   "framework": "nextjs",
   "buildCommand": "npm run build",
-  "installCommand": "npm install"
+  "installCommand": "npm install",
+  "rewrites": [
+    { 
+      "source": "/crewapi/(.*)", 
+      "destination": "https://kraft-crewapi.vercel.app/$1"
+    }
+  ],
+  "crons": [
+    {
+      "path": "/api/cron/daily",
+      "schedule": "5 9 * * *"
+    }
+  ]
 }

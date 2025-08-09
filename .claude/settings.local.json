@@ -24,7 +24,10 @@
       "Bash(find:*)",
       "Bash(npm run build:*)",
       "Bash(npm run lint)",
-      "Bash(mv:*)"
+      "Bash(mv:*)",
+      "Bash(gh repo view:*)",
+      "Bash(git init:*)",
+      "Bash(git branch:*)"
     ],
     "deny": []
   }
