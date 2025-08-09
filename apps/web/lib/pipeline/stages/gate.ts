@@ -75,7 +75,7 @@ Article content (first 2000 chars):
 ${markdownDraft.slice(0, 2000)}
 
 Sources provided:
-${sources.slice(0, 5).map(s => `- ${s.title}: ${s.url}`).join('\n')}
+${sources.slice(0, 5).map((s: any) => `- ${s.title}: ${s.url}`).join('\n')}
 
 Check for:
 1. Factual accuracy of all claims

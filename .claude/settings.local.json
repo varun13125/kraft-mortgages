@@ -27,7 +27,8 @@
       "Bash(mv:*)",
       "Bash(gh repo view:*)",
       "Bash(git init:*)",
-      "Bash(git branch:*)"
+      "Bash(git branch:*)",
+      "Bash(grep:*)"
     ],
     "deny": []
   }
