@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getRun } from '@/lib/pipeline/orchestrator';
-import admin from 'firebase-admin';
+import { getRun } from '@/lib/db/firestore';
+import { verifyFirebaseToken } from '@/lib/auth';
 
 async function verifyAuth(request: NextRequest) {
   const authHeader = request.headers.get('authorization');
@@ -9,7 +9,7 @@ async function verifyAuth(request: NextRequest) {
   }
 
   const token = authHeader.replace('Bearer ', '');
-  const decodedToken = await admin.auth().verifyIdToken(token);
+  const decodedToken = await verifyFirebaseToken(token);
   return decodedToken;
 }
 

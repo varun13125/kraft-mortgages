@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import admin from 'firebase-admin';
+import { verifyFirebaseToken } from '@/lib/auth';
 import { isAdmin } from '@/lib/db/firestore';
 import { createRun } from '@/lib/pipeline/orchestrator';
 
@@ -17,7 +17,7 @@ async function verifyAuth(request: NextRequest) {
   }
 
   const token = authHeader.replace('Bearer ', '');
-  const decodedToken = await admin.auth().verifyIdToken(token);
+  const decodedToken = await verifyFirebaseToken(token);
   
   const userIsAdmin = await isAdmin(decodedToken.uid);
   if (!userIsAdmin) {

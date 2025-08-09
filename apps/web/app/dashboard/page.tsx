@@ -112,7 +112,8 @@ export default function Dashboard() {
 
   async function startPoll(runId: string) {
     const token = await auth.currentUser?.getIdToken();
-    const sse = new EventSource(`${process.env.NEXT_PUBLIC_CREWAPI_BASE_URL}/runs/${runId}/stream?token=${token}`, { 
+    const baseUrl = process.env.NEXT_PUBLIC_CREWAPI_BASE_URL || '/api';
+    const sse = new EventSource(`${baseUrl}/runs/${runId}/stream?token=${token}`, { 
       withCredentials: false 
     });
     

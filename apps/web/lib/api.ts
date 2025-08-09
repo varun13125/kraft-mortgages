@@ -1,7 +1,7 @@
 import { getAuth } from "firebase/auth";
 import { app } from "./firebase.client";
 
-const BASE = process.env.NEXT_PUBLIC_CREWAPI_BASE_URL || "/crewapi";
+const BASE = process.env.NEXT_PUBLIC_CREWAPI_BASE_URL || "/api";
 
 async function authHeader(): Promise<HeadersInit> {
   const user = getAuth(app).currentUser;
