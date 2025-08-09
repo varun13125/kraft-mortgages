@@ -1,42 +1,21 @@
-const CACHE = 'kraft-pwa-v1';
-const OFFLINE_URLS = [
-  '/calculators/construction-pro', '/calculators/investment', '/calculators/self-employed', '/mli-select', '/learn/first-time-buyer',
-  '/', '/calculators/payment', '/calculators/affordability', '/calculators/renewal'
-];
+const CACHE = 'kraft-pwa-v3';
 
 self.addEventListener('install', (event) => {
-  event.waitUntil((async () => {
-    const cache = await caches.open(CACHE);
-    await cache.addAll(OFFLINE_URLS);
-    self.skipWaiting();
-  })());
+  // Skip waiting to immediately activate new service worker
+  self.skipWaiting();
 });
 
 self.addEventListener('activate', (event) => {
-  event.waitUntil(self.clients.claim());
+  event.waitUntil((async () => {
+    // Clean up ALL old caches
+    const cacheNames = await caches.keys();
+    await Promise.all(cacheNames.map(name => caches.delete(name)));
+    await self.clients.claim();
+  })());
 });
 
 self.addEventListener('fetch', (event) => {
-  const { request } = event;
-  
-  // Skip caching for POST requests and API calls
-  if (request.method !== 'GET' || request.url.includes('/api/')) {
-    return;
-  }
-  
-  event.respondWith((async () => {
-    try {
-      const network = await fetch(request);
-      const cache = await caches.open(CACHE);
-      cache.put(request, network.clone());
-      return network;
-    } catch (e) {
-      const cached = await caches.match(request);
-      if (cached) return cached;
-      if (request.mode === 'navigate') {
-        return caches.match('/');
-      }
-      throw e;
-    }
-  })());
+  // Simple pass-through - no caching for now to avoid issues
+  // This will prevent all caching errors
+  return;
 });
