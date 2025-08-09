@@ -50,7 +50,7 @@ Requirements:
 10. Current market context and trends
 
 Sources to reference and cite:
-${sources.slice(0, 8).map((source, i) => 
+${sources.slice(0, 8).map((source: any, i: number) => 
   `[${i + 1}] ${source.title}\n    ${source.snippet}\n    URL: ${source.url}`
 ).join('\n\n')}
 
@@ -138,7 +138,7 @@ Contact a licensed mortgage broker to discuss your specific situation and explor
 
     // Add sources section
     const sourcesSection = '\n\n## Sources\n\n' + 
-      sources.slice(0, 8).map((source, i) => 
+      sources.slice(0, 8).map((source: any, i: number) => 
         `[${i + 1}] [${source.title}](${source.url})`
       ).join('\n');
 

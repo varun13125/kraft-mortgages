@@ -28,7 +28,8 @@
       "Bash(gh repo view:*)",
       "Bash(git init:*)",
       "Bash(git branch:*)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "Bash(npx tsc:*)"
     ],
     "deny": []
   }

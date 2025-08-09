@@ -58,7 +58,7 @@ Analyze these mortgage industry sources and extract:
 4. Current news hooks and timely angles
 
 Sources:
-${sources.slice(0, 5).map((s, i) => `${i + 1}. ${s.title}\n   ${s.snippet}\n   URL: ${s.url}`).join('\n\n')}
+${sources.slice(0, 5).map((s: any, i: number) => `${i + 1}. ${s.title}\n   ${s.snippet}\n   URL: ${s.url}`).join('\n\n')}
 
 Return JSON format:
 {
