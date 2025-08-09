@@ -63,7 +63,7 @@ export default function Dashboard() {
       }
     });
     return () => unsub();
-  }, []);
+  }, [auth]);
 
   async function loadRuns() {
     try {
@@ -142,7 +142,7 @@ export default function Dashboard() {
   async function runWeeklyStrategy() {
     setLoading(true);
     try {
-      const result = await apiPost("/strategy/weekly", {});
+      const result = await apiPost<{actionsCount: number}>("/strategy/weekly", {});
       alert(`Strategy created: ${result.actionsCount} actions generated`);
       loadStrategy();
     } catch (e) {
