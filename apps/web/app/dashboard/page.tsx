@@ -363,13 +363,14 @@ export default function Dashboard() {
                     <div className="flex items-center gap-2 text-green-700">
                       <CheckCircle className="w-5 h-5" />
                       <span className="font-medium">Published:</span>
-                      <Link 
+                      <a 
                         href={activeRun.published.url} 
                         className="text-blue-600 underline hover:text-blue-800"
                         target="_blank"
+                        rel="noopener noreferrer"
                       >
                         {activeRun.published.url}
-                      </Link>
+                      </a>
                     </div>
                   </div>
                 )}
