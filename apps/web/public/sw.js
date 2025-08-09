@@ -18,6 +18,12 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('fetch', (event) => {
   const { request } = event;
+  
+  // Skip caching for POST requests and API calls
+  if (request.method !== 'GET' || request.url.includes('/api/')) {
+    return;
+  }
+  
   event.respondWith((async () => {
     try {
       const network = await fetch(request);
