@@ -28,7 +28,7 @@ export async function publishStage(run: Run): Promise<{ success: boolean; data?:
     let processedMarkdown = finalMarkdown;
     const sources = run.scout?.sources || [];
     
-    sources.forEach((source, index) => {
+    sources.forEach((source: any, index) => {
       const citationRegex = new RegExp(`\\[${index + 1}\\]`, 'g');
       processedMarkdown = processedMarkdown.replace(
         citationRegex, 
