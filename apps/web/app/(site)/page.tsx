@@ -266,14 +266,13 @@ export default function ModernHomepage() {
           <div style={{ maxWidth: '1400px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div style={{ display: 'flex', alignItems: 'center' }}>
               <Image 
-                src="/kraft-logo.png" 
+                src="/kraft-logo-dark.png" 
                 alt="Kraft Mortgages Canada" 
-                width={120} 
-                height={40}
+                width={180} 
+                height={60}
                 style={{ 
                   height: 'auto',
-                  maxWidth: '120px',
-                  filter: 'brightness(1.1) contrast(1.1)'
+                  maxWidth: '180px'
                 }}
                 priority
               />
