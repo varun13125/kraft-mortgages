@@ -14,15 +14,40 @@ interface BlogPost {
   metaDescription: string;
 }
 
-// This would normally fetch from your Firestore database
+import { db } from '@/lib/db/firestore';
+
+// Fetch from Firestore database
 async function getBlogPost(slug: string): Promise<BlogPost | null> {
-  // Sample posts - replace with actual Firestore queries
-  const posts: Record<string, BlogPost> = {
-    'first-time-home-buyer-guide-bc-2025': {
-      slug: 'first-time-home-buyer-guide-bc-2025',
-      title: 'Complete First-Time Home Buyer Guide for BC 2025',
-      excerpt: 'Everything you need to know about buying your first home in British Columbia, including programs, grants, and insider tips from 23+ years in the industry.',
-      content: `# Complete First-Time Home Buyer Guide for BC 2025
+  try {
+    const doc = await db.collection('posts').doc(slug).get();
+    
+    if (!doc.exists) {
+      return null;
+    }
+    
+    const data = doc.data();
+    if (!data) return null;
+    
+    return {
+      slug: data.slug,
+      title: data.title,
+      content: data.markdown, // Use the markdown content
+      excerpt: data.metaDescription || data.title, // Use meta description as excerpt
+      publishedAt: data.publishedAt?.toDate?.()?.toISOString() || new Date().toISOString(),
+      readTime: `${Math.ceil(data.markdown.length / 1000)} min read`, // Rough estimate
+      category: 'Mortgage Insights',
+      metaDescription: data.metaDescription || data.title,
+    };
+  } catch (error) {
+    console.error('Error fetching blog post:', error);
+    
+    // Fallback to sample post for first-time-buyer-guide-bc-2025
+    if (slug === 'first-time-home-buyer-guide-bc-2025') {
+      return {
+        slug: 'first-time-home-buyer-guide-bc-2025',
+        title: 'Complete First-Time Home Buyer Guide for BC 2025',
+        excerpt: 'Everything you need to know about buying your first home in British Columbia, including programs, grants, and insider tips from 23+ years in the industry.',
+        content: `# Complete First-Time Home Buyer Guide for BC 2025
 
 *Last updated: January 15, 2025*
 

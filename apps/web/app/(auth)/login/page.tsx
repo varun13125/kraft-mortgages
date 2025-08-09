@@ -38,7 +38,7 @@ export default function Login() {
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
             <input 
-              className="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
+              className="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 bg-white placeholder-gray-500" 
               placeholder="admin@kraftmortgages.ca" 
               type="email"
               value={email} 
@@ -50,7 +50,7 @@ export default function Login() {
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
             <input 
-              className="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
+              className="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 bg-white placeholder-gray-500" 
               placeholder="••••••••" 
               type="password" 
               value={password} 

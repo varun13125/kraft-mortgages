@@ -7,35 +7,52 @@ export const metadata: Metadata = {
   description: 'Expert mortgage advice, market insights, and Canadian homebuying tips from licensed broker Varun Chaudhry.',
 };
 
-// This would normally fetch from your CMS/database
+import { getRecentPosts } from '@/lib/db/firestore';
+
+// Fetch posts from Firestore database
 async function getBlogPosts() {
-  // For now, returning sample posts - you'll replace this with actual Firestore queries
-  return [
-    {
-      slug: 'first-time-home-buyer-guide-bc-2025',
-      title: 'Complete First-Time Home Buyer Guide for BC 2025',
-      excerpt: 'Everything you need to know about buying your first home in British Columbia, including programs, grants, and insider tips from 23+ years in the industry.',
-      publishedAt: '2025-01-15',
-      readTime: '12 min read',
-      category: 'First Time Buyers',
-    },
-    {
-      slug: 'construction-mortgage-financing-guide',
-      title: 'Construction Mortgage Financing: A Complete Guide',
-      excerpt: 'Navigate construction loans with confidence. Learn about draw schedules, interest calculations, and how to secure the best rates for your build.',
-      publishedAt: '2025-01-10',
-      readTime: '8 min read',
-      category: 'Construction',
-    },
-    {
-      slug: 'self-employed-mortgage-strategies-2025',
-      title: 'Self-Employed Mortgage Strategies That Work in 2025',
-      excerpt: 'Proven strategies for self-employed professionals to secure competitive mortgage rates, even with non-traditional income documentation.',
-      publishedAt: '2025-01-05',
-      readTime: '10 min read',
-      category: 'Self-Employed',
-    }
-  ];
+  try {
+    const posts = await getRecentPosts(20);
+    
+    return posts.map(post => ({
+      slug: post.slug,
+      title: post.title,
+      excerpt: post.metaDescription || post.title,
+      publishedAt: post.publishedAt.toISOString().split('T')[0], // Format as YYYY-MM-DD
+      readTime: `${Math.ceil(post.markdown?.length / 1000 || 5)} min read`,
+      category: 'Mortgage Insights',
+    }));
+  } catch (error) {
+    console.error('Error fetching blog posts:', error);
+    
+    // Fallback to sample posts if Firestore fails
+    return [
+      {
+        slug: 'first-time-home-buyer-guide-bc-2025',
+        title: 'Complete First-Time Home Buyer Guide for BC 2025',
+        excerpt: 'Everything you need to know about buying your first home in British Columbia, including programs, grants, and insider tips from 23+ years in the industry.',
+        publishedAt: '2025-01-15',
+        readTime: '12 min read',
+        category: 'First Time Buyers',
+      },
+      {
+        slug: 'construction-mortgage-financing-guide',
+        title: 'Construction Mortgage Financing: A Complete Guide',
+        excerpt: 'Navigate construction loans with confidence. Learn about draw schedules, interest calculations, and how to secure the best rates for your build.',
+        publishedAt: '2025-01-10',
+        readTime: '8 min read',
+        category: 'Construction',
+      },
+      {
+        slug: 'self-employed-mortgage-strategies-2025',
+        title: 'Self-Employed Mortgage Strategies That Work in 2025',
+        excerpt: 'Proven strategies for self-employed professionals to secure competitive mortgage rates, even with non-traditional income documentation.',
+        publishedAt: '2025-01-05',
+        readTime: '10 min read',
+        category: 'Self-Employed',
+      }
+    ];
+  }
 }
 
 export default async function BlogPage() {

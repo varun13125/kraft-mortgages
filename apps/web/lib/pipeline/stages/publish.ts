@@ -53,8 +53,10 @@ export async function publishStage(run: Run): Promise<{ success: boolean; data?:
     let publishUrl: string;
     let publishMethod: 'wordpress' | 'firestore' = 'firestore';
 
-    // Try WordPress first if configured
-    if (process.env.WORDPRESS_BASE_URL && process.env.WORDPRESS_USERNAME && process.env.WORDPRESS_APP_PASSWORD) {
+    // Check if AI_MODE is explicitly set to firestore to skip WordPress
+    const forceFirestore = process.env.AI_MODE === 'firestore';
+
+    if (!forceFirestore && process.env.WORDPRESS_BASE_URL && process.env.WORDPRESS_USERNAME && process.env.WORDPRESS_APP_PASSWORD) {
       try {
         await log(run.id, 'Publisher: Attempting WordPress publication...');
         publishUrl = await publishToWordPress({
@@ -72,7 +74,10 @@ export async function publishStage(run: Run): Promise<{ success: boolean; data?:
         publishUrl = await publishToFirestore();
       }
     } else {
-      // Publish to Firestore CMS
+      // Publish to Firestore CMS (either forced by AI_MODE or no WordPress config)
+      if (forceFirestore) {
+        await log(run.id, 'Publisher: AI_MODE=firestore, using Firestore CMS only');
+      }
       publishUrl = await publishToFirestore();
     }
 

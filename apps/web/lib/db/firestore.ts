@@ -55,6 +55,8 @@ export interface Post {
     title: string;
     license: string;
   };
+  metaDescription?: string;
+  keywords?: string[];
   embeddings?: number[][];
 }
 
