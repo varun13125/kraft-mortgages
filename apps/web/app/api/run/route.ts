@@ -29,12 +29,22 @@ async function verifyAuth(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
+    // Check if Firebase environment variables are configured
+    if (!process.env.FIREBASE_PROJECT_ID || !process.env.FIREBASE_CLIENT_EMAIL || !process.env.FIREBASE_PRIVATE_KEY) {
+      console.error('Missing Firebase Admin SDK environment variables');
+      return NextResponse.json(
+        { error: 'Server configuration error - Firebase not configured' },
+        { status: 500 }
+      );
+    }
+
     // Verify authentication and admin status
     const user = await verifyAuth(request);
     
     // Parse and validate request body
     const body = await request.json();
-    const { mode, manualQuery, targetProvinces } = RunRequestSchema.parse(body);
+    const validatedData = RunRequestSchema.parse(body);
+    const { mode, manualQuery, targetProvinces } = validatedData;
 
     // Validate manual query requirement
     if ((mode === 'manual-topic' || mode === 'manual-idea') && !manualQuery?.trim()) {
@@ -45,12 +55,23 @@ export async function POST(request: NextRequest) {
     }
 
     // Create new run
-    const runId = await createRun(mode, manualQuery, targetProvinces, user.uid);
+    const runId = await createRun(mode, manualQuery || undefined, targetProvinces, user.uid);
 
-    return NextResponse.json({ runId });
+    if (!runId) {
+      throw new Error('Failed to create run - no ID returned');
+    }
+
+    return NextResponse.json({ runId, message: 'Run created successfully' });
 
   } catch (error) {
     console.error('Run creation error:', error);
+    
+    if (error instanceof z.ZodError) {
+      return NextResponse.json(
+        { error: 'Invalid request data', details: error.errors },
+        { status: 400 }
+      );
+    }
     
     if (error instanceof Error) {
       if (error.message.includes('authorization') || error.message.includes('Admin')) {
@@ -59,10 +80,13 @@ export async function POST(request: NextRequest) {
           { status: 401 }
         );
       }
+      
+      // Log the full error for debugging
+      console.error('Full error:', error.message, error.stack);
     }
 
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: 'Internal server error - check server logs' },
       { status: 500 }
     );
   }
