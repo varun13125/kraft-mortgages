@@ -72,6 +72,7 @@ async function initializeAdmin() {
     try {
       admin.initializeApp({
         credential: admin.credential.cert(serviceAccount),
+        projectId: serviceAccount.projectId, // Explicitly set project ID
       });
       isInitialized = true;
     } catch (initError) {
