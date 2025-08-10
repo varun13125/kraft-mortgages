@@ -116,17 +116,29 @@ export default function Dashboard() {
 
   async function triggerRun() {
     setLoading(true);
+    console.log("Starting run with:", { mode, manualQuery: manual, targetProvinces: provinces });
+    
     try {
-      const { runId } = await apiPost<{runId:string}>("/run", { 
+      // Add timeout to the request
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('Request timeout after 30 seconds')), 30000)
+      );
+      
+      const apiPromise = apiPost<{runId:string}>("/run", { 
         mode, 
         manualQuery: manual || undefined, 
         targetProvinces: provinces 
       });
+      
+      console.log("Waiting for API response...");
+      const { runId } = await Promise.race([apiPromise, timeoutPromise]) as {runId: string};
+      
+      console.log("Got run ID:", runId);
       startPoll(runId);
       setManual("");
     } catch (e) {
       console.error("Failed to start run:", e);
-      alert("Failed to start run. Check console.");
+      alert(`Failed to start run: ${(e as Error).message}. Check console for details.`);
     } finally {
       setLoading(false);
     }

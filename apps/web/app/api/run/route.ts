@@ -95,29 +95,40 @@ export async function POST(request: NextRequest) {
     // Step 6: Create run in database
     let runId;
     try {
+      console.log('Step 6: Starting database creation...');
+      
       // Create run with proper structure
       const steps = ['topic-scout', 'brief', 'writer', 'gate', 'editor', 'publish'].map(agent => ({
         agent,
         status: 'queued' as const
       }));
+      console.log('Created steps array:', steps);
 
       // Prepare data for Firestore (no undefined values)
       const runData: any = {
         mode,
         targetProvinces,
         steps,
-        createdBy: decodedToken.uid,
-        startedAt: new Date()
+        createdBy: decodedToken.uid
       };
       
       // Only add manualQuery if it has a value
       if (manualQuery && manualQuery.trim()) {
         runData.manualQuery = manualQuery;
       }
+      
+      console.log('Prepared run data:', runData);
+      console.log('About to call dbCreateRun...');
 
-      runId = await dbCreateRun(runData);
+      // Add timeout for database operation
+      const dbTimeout = new Promise((_, reject) => 
+        setTimeout(() => reject(new Error('Database operation timeout after 25 seconds')), 25000)
+      );
+      
+      const dbPromise = dbCreateRun(runData);
+      runId = await Promise.race([dbPromise, dbTimeout]);
 
-      console.log('Run created successfully:', runId);
+      console.log('Run created successfully with ID:', runId);
     } catch (dbError) {
       console.error('Database error creating run:', dbError);
       console.error('Stack:', (dbError as Error).stack);
