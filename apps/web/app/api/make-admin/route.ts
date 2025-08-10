@@ -29,16 +29,17 @@ export async function POST(request: NextRequest) {
     // SECURITY: Only allow specific email (change this to your email)
     const ALLOWED_EMAILS = [
       'varun@kraftmortgages.ca',
-      // Add your actual email here
+      'varun131250@gmail.com', // Add your actual login email here if different
     ];
 
-    // Uncomment this section after adding your email above
-    // if (!email || !ALLOWED_EMAILS.includes(email)) {
-    //   return NextResponse.json({ 
-    //     error: 'This email is not authorized to become admin',
-    //     yourEmail: email 
-    //   }, { status: 403 });
-    // }
+    // Security check - enable this in production
+    if (!email || !ALLOWED_EMAILS.includes(email)) {
+      return NextResponse.json({ 
+        error: 'This email is not authorized to become admin',
+        yourEmail: email,
+        note: 'If this is your email, add it to ALLOWED_EMAILS in the code'
+      }, { status: 403 });
+    }
 
     // Make the user an admin
     await db.collection('admins').doc(uid).set({
