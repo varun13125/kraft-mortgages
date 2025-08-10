@@ -129,6 +129,24 @@ export async function POST(request: NextRequest) {
       runId = await Promise.race([dbPromise, dbTimeout]);
 
       console.log('Run created successfully with ID:', runId);
+      
+      // Step 7: Start the orchestration process
+      console.log('Starting orchestration for run:', runId);
+      try {
+        // Import orchestrator here to avoid circular dependencies
+        const { stepOrchestrate } = await import('@/lib/pipeline/orchestrator');
+        
+        // Start the first step asynchronously (don't await this)
+        stepOrchestrate(runId).then((result) => {
+          console.log('First orchestration step completed:', result);
+        }).catch((orchError) => {
+          console.error('Orchestration error:', orchError);
+        });
+      } catch (orchImportError) {
+        console.error('Failed to import orchestrator:', orchImportError);
+        // Don't fail the request if orchestration import fails
+      }
+      
     } catch (dbError) {
       console.error('Database error creating run:', dbError);
       console.error('Stack:', (dbError as Error).stack);

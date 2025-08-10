@@ -145,33 +145,61 @@ export default function Dashboard() {
   }
 
   async function startPoll(runId: string) {
+    console.log("Starting SSE connection for run:", runId);
+    
     const token = await auth.currentUser?.getIdToken();
     const baseUrl = process.env.NEXT_PUBLIC_CREWAPI_BASE_URL || '/api';
-    const sse = new EventSource(`${baseUrl}/runs/${runId}/stream?token=${token}`, { 
+    const sseUrl = `${baseUrl}/runs/${runId}/stream?token=${token}`;
+    
+    console.log("Connecting to SSE:", sseUrl);
+    
+    const sse = new EventSource(sseUrl, { 
       withCredentials: false 
     });
     
+    sse.onopen = () => {
+      console.log("SSE connection opened successfully");
+    };
+    
     sse.onmessage = (e) => { 
-      const data = JSON.parse(e.data); 
-      if (data.type === "run_update") {
-        setActiveRun({ id: runId, ...data.run });
-        
-        // Check if completed
-        const allDone = data.run.steps.every((s: any) => 
-          s.status === "ok" || s.status === "error"
-        );
-        if (allDone) {
-          sse.close();
-          loadRuns();
-          loadPosts();
+      console.log("SSE message received:", e.data);
+      try {
+        const data = JSON.parse(e.data); 
+        if (data.type === "connected") {
+          console.log("SSE connected to run:", data.runId);
+        } else if (data.type === "run_update") {
+          console.log("Run update received:", data.run);
+          setActiveRun({ id: runId, ...data.run });
+          
+          // Check if completed
+          const allDone = data.run.steps.every((s: any) => 
+            s.status === "ok" || s.status === "error"
+          );
+          if (allDone) {
+            console.log("Run completed, closing SSE");
+            sse.close();
+            loadRuns();
+            loadPosts();
+          }
         }
+      } catch (parseError) {
+        console.error("Failed to parse SSE data:", parseError, e.data);
       }
     };
     
-    sse.onerror = () => {
-      console.error("SSE connection lost");
+    sse.onerror = (error) => {
+      console.error("SSE connection error:", error);
+      console.error("SSE readyState:", sse.readyState);
       sse.close();
     };
+    
+    // Auto-close after 5 minutes to prevent hanging connections
+    setTimeout(() => {
+      if (sse.readyState === EventSource.OPEN) {
+        console.log("Auto-closing SSE after 5 minutes");
+        sse.close();
+      }
+    }, 5 * 60 * 1000);
   }
 
   async function runWeeklyStrategy() {
