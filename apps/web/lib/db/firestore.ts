@@ -106,6 +106,7 @@ async function getDb() {
   }
   
   try {
+    // Connect to the correct database (default is in nam5 region)
     return getFirestore();
   } catch (error) {
     console.error('Failed to get Firestore instance:', error);

@@ -39,15 +39,24 @@ export async function GET(request: NextRequest) {
     
     const adminData = adminDoc.exists ? adminDoc.data() : null;
     
+    // Debug: List all admin documents
+    const allAdmins = await adminsCollection.get();
+    const allAdminData = allAdmins.docs.map(doc => ({
+      id: doc.id,
+      data: doc.data()
+    }));
+    
     return NextResponse.json({ 
       isAdmin: adminStatus,
       uid,
       email,
       adminDocExists: adminDoc.exists,
       adminData,
+      allAdmins: allAdminData,
       debug: {
         tokenUid: decodedToken.uid,
         tokenEmail: decodedToken.email,
+        totalAdminDocs: allAdminData.length,
         decodedToken: {
           uid: decodedToken.uid,
           email: decodedToken.email,
