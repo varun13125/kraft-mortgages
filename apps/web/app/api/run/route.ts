@@ -126,7 +126,7 @@ export async function POST(request: NextRequest) {
       );
       
       const dbPromise = dbCreateRun(runData);
-      runId = await Promise.race([dbPromise, dbTimeout]);
+      runId = await Promise.race([dbPromise, dbTimeout]) as string;
 
       console.log('Run created successfully with ID:', runId);
       
@@ -137,7 +137,7 @@ export async function POST(request: NextRequest) {
         const { stepOrchestrate } = await import('@/lib/pipeline/orchestrator');
         
         // Start the first step asynchronously (don't await this)
-        stepOrchestrate(runId).then((result) => {
+        stepOrchestrate(runId as string).then((result) => {
           console.log('First orchestration step completed:', result);
         }).catch((orchError) => {
           console.error('Orchestration error:', orchError);
