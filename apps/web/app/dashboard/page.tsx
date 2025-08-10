@@ -310,6 +310,34 @@ export default function Dashboard() {
               >
                 Debug Run
               </button>
+              {/* Manual orchestration trigger */}
+              <button
+                onClick={async () => {
+                  try {
+                    const runId = prompt('Enter Run ID (e.g., L3AK6bSZN0Qj1ZuugJYD):');
+                    if (!runId) return;
+                    
+                    const token = await auth.currentUser?.getIdToken();
+                    const response = await fetch('/api/orchestrate-all', {
+                      method: 'POST',
+                      headers: {
+                        'Authorization': 'Bearer ' + token,
+                        'Content-Type': 'application/json'
+                      },
+                      body: JSON.stringify({ runId })
+                    });
+                    const result = await response.json();
+                    console.log('Orchestration result:', result);
+                    alert(`Orchestration result: ${result.success ? 'SUCCESS' : 'FAILED'} - Check console`);
+                  } catch (e) {
+                    console.error('Orchestration error:', e);
+                    alert('Orchestration failed - check console');
+                  }
+                }}
+                className="px-3 py-1 text-xs bg-purple-500 text-white rounded hover:bg-purple-600"
+              >
+                Manual Orchestrate
+              </button>
               <button
                 onClick={() => signOut(auth)}
                 className="flex items-center gap-2 text-gray-600 hover:text-gray-900"
