@@ -40,16 +40,15 @@ export async function GET() {
 
   // Try to initialize the LLM router
   try {
-    const { LLMRouter } = await import('@/lib/ai/llm');
-    const router = new LLMRouter();
+    const { llm } = await import('@/lib/ai/llm');
     
     config.llmRouter = {
       initialized: true,
       availableProviders: {
-        openai: !!router.openai,
-        anthropic: !!router.anthropic,
-        google: !!router.google,
-        openrouter: !!router.openrouter,
+        openai: !!(llm as any).openai,
+        anthropic: !!(llm as any).anthropic,
+        google: !!(llm as any).google,
+        openrouter: !!(llm as any).openrouter,
       }
     };
   } catch (error) {
