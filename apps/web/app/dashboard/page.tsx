@@ -92,6 +92,28 @@ export default function Dashboard() {
     }
   }
 
+  async function makeAdmin() {
+    try {
+      const token = await auth.currentUser?.getIdToken();
+      const response = await fetch('/api/make-admin', {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer ' + token
+        }
+      });
+      const result = await response.json();
+      if (result.success) {
+        alert('Success! You are now an admin. Please refresh the page.');
+      } else {
+        alert('Error: ' + (result.error || result.message || 'Unknown error'));
+      }
+      console.log(result);
+    } catch (e) {
+      console.error('Make admin error:', e);
+      alert('Failed to make admin. Check console.');
+    }
+  }
+
   async function triggerRun() {
     setLoading(true);
     try {
@@ -213,6 +235,13 @@ export default function Dashboard() {
             
             <div className="flex items-center gap-4">
               <span className="text-sm text-gray-600">{user?.email}</span>
+              {/* Temporary admin button - remove after setup */}
+              <button
+                onClick={makeAdmin}
+                className="px-3 py-1 text-xs bg-yellow-500 text-white rounded hover:bg-yellow-600"
+              >
+                Make Admin
+              </button>
               <button
                 onClick={() => signOut(auth)}
                 className="flex items-center gap-2 text-gray-600 hover:text-gray-900"
