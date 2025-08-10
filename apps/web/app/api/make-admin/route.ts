@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyFirebaseToken } from '@/lib/auth';
-import { db } from '@/lib/db/firestore';
+import { adminsCol } from '@/lib/db/firestore';
 
 // TEMPORARY ENDPOINT - REMOVE AFTER SETUP
 export async function POST(request: NextRequest) {
@@ -17,7 +17,8 @@ export async function POST(request: NextRequest) {
     const email = decodedToken.email;
 
     // Check if already admin
-    const adminDoc = await (await db.collection('admins')).doc(uid).get();
+    const adminsCollection = await adminsCol();
+    const adminDoc = await adminsCollection.doc(uid).get();
     if (adminDoc.exists) {
       return NextResponse.json({ 
         message: 'You are already an admin!',
@@ -42,7 +43,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Make the user an admin
-    await (await db.collection('admins')).doc(uid).set({
+    await adminsCollection.doc(uid).set({
       email: email || 'unknown',
       role: 'admin',
       createdAt: new Date().toISOString(),
