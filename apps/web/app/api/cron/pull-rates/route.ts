@@ -17,7 +17,7 @@ export async function POST() {
   const db = firestore();
   const batch = db.batch();
   for (const row of data) {
-    const ref = db.collection("rateSnapshots").doc();
+    const ref = (await db.collection("rateSnapshots")).doc();
     batch.set(ref, { ...row, capturedAt: new Date() });
   }
   await batch.commit();

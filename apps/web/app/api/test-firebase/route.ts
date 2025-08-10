@@ -23,7 +23,7 @@ export async function GET() {
     }
 
     // Try to read from Firestore
-    const testDoc = await db.collection('test').doc('test').get();
+    const testDoc = await (await db.collection('test')).doc('test').get();
     
     return NextResponse.json({
       ok: true,

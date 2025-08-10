@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
     const email = decodedToken.email;
 
     // Check if already admin
-    const adminDoc = await db.collection('admins').doc(uid).get();
+    const adminDoc = await (await db.collection('admins')).doc(uid).get();
     if (adminDoc.exists) {
       return NextResponse.json({ 
         message: 'You are already an admin!',
@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Make the user an admin
-    await db.collection('admins').doc(uid).set({
+    await (await db.collection('admins')).doc(uid).set({
       email: email || 'unknown',
       role: 'admin',
       createdAt: new Date().toISOString(),

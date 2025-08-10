@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
       await (prisma as PrismaClient).lead.create({ data: { province: "AB", intent: "voice_inquiry", details: { from, text }, score: 80 } });
     } else {
       const db = firestore();
-      await db.collection("leads").add({ province: "AB", intent: "voice_inquiry", details: { from, text }, score: 80, status: "NEW", createdAt: new Date() });
+      await (await db.collection("leads")).add({ province: "AB", intent: "voice_inquiry", details: { from, text }, score: 80, status: "NEW", createdAt: new Date() });
     }
   }
 

@@ -28,7 +28,7 @@ export async function GET(request: NextRequest) {
     if (uid) {
       try {
         // Try to get user-specific preferences
-        const userDoc = await db.collection('users').doc(uid).get();
+        const userDoc = await (await db.collection('users')).doc(uid).get();
         if (userDoc.exists) {
           const userData = userDoc.data();
           return NextResponse.json({
@@ -67,7 +67,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Save user preferences to Firestore
-    await db.collection('users').doc(uid).set({
+    await (await db.collection('users')).doc(uid).set({
       preferences,
       updatedAt: new Date().toISOString()
     }, { merge: true });

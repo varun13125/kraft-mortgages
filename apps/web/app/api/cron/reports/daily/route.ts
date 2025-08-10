@@ -12,7 +12,7 @@ export async function POST() {
     leads = await (prisma as PrismaClient).lead.findMany({ where: { createdAt: { gte: y, lt: yEnd } } });
   } else {
     const db = firestore();
-    const snap = await db.collection("leads").where("createdAt", ">=", y).where("createdAt", "<", yEnd).get();
+    const snap = await (await db.collection("leads")).where("createdAt", ">=", y).where("createdAt", "<", yEnd).get();
     leads = snap.docs.map(d=> ({ id: d.id, ...(d.data() as any) }));
   }
   const leadsNew = leads.length;
@@ -26,7 +26,7 @@ export async function POST() {
     });
   } else {
     const db = firestore();
-    const ref = db.collection("kpiDaily").doc(y.toISOString().slice(0,10));
+    const ref = (await db.collection("kpiDaily")).doc(y.toISOString().slice(0,10));
     await ref.set({ date: y, leadsNew, leadsQualified, conversionRate, createdAt: new Date() }, { merge: true });
   }
   return Response.json({ ok: true, date: y.toISOString().slice(0,10), leadsNew, leadsQualified, conversionRate });

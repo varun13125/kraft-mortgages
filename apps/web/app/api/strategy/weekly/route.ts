@@ -161,7 +161,7 @@ export async function POST(request: NextRequest) {
       }
     };
 
-    await db.collection('strategy').doc(`weekly_${weekId}`).set(strategyDoc);
+    await (await db.collection('strategy')).doc(`weekly_${weekId}`).set(strategyDoc);
 
     console.log(`Weekly strategy ${weekId} created with ${actions.length} actions`);
 
@@ -196,7 +196,7 @@ export async function GET(request: NextRequest) {
   try {
     await verifyAuth(request);
 
-    const latestStrategy = await db.collection('strategy')
+    const latestStrategy = await (await db.collection('strategy'))
       .orderBy('createdAt', 'desc')
       .limit(1)
       .get();

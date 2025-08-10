@@ -54,7 +54,7 @@ export async function POST(req: NextRequest) {
 
     // Fallback to Firestore
     const db = firestore();
-    const doc = await db.collection("leads").add(leadData);
+    const doc = await (await db.collection("leads")).add(leadData);
     return Response.json({ id: doc.id, score: leadData.score, status: leadData.status });
     
   } catch (error) {

@@ -29,7 +29,9 @@
       "Bash(git init:*)",
       "Bash(git branch:*)",
       "Bash(grep:*)",
-      "Bash(npx tsc:*)"
+      "Bash(npx tsc:*)",
+      "Bash(npx vercel env:*)",
+      "Bash(npx vercel:*)"
     ],
     "deny": []
   }

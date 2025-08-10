@@ -9,7 +9,7 @@ export async function POST() {
     leads = await (prisma as PrismaClient).lead.findMany({ orderBy: { createdAt: 'desc' }, take: 10 }) as any[];
   } else {
     const db = firestore();
-    const snap = await db.collection("leads").orderBy("createdAt","desc").limit(10).get();
+    const snap = await (await db.collection("leads")).orderBy("createdAt","desc").limit(10).get();
     leads = snap.docs.map(d=> ({ id: d.id, ...(d.data() as any) }));
   }
   for (const l of leads) {

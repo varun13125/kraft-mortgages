@@ -14,8 +14,5 @@ self.addEventListener('activate', (event) => {
   })());
 });
 
-self.addEventListener('fetch', (event) => {
-  // Simple pass-through - no caching for now to avoid issues
-  // This will prevent all caching errors
-  return;
-});
+// Removing no-op fetch event listener that was causing warnings
+// If fetch handling is needed later, implement proper cache strategy
