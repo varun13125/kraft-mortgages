@@ -242,6 +242,34 @@ export default function Dashboard() {
               >
                 Make Admin
               </button>
+              {/* Debug button */}
+              <button
+                onClick={async () => {
+                  try {
+                    const token = await auth.currentUser?.getIdToken();
+                    const response = await fetch('/api/test-run-creation', {
+                      method: 'POST',
+                      headers: {
+                        'Authorization': 'Bearer ' + token,
+                        'Content-Type': 'application/json'
+                      },
+                      body: JSON.stringify({
+                        mode: 'auto',
+                        targetProvinces: ['BC', 'AB', 'ON']
+                      })
+                    });
+                    const result = await response.json();
+                    console.log('Debug result:', result);
+                    alert('Check console for debug output');
+                  } catch (e) {
+                    console.error('Debug error:', e);
+                    alert('Debug failed - check console');
+                  }
+                }}
+                className="px-3 py-1 text-xs bg-red-500 text-white rounded hover:bg-red-600"
+              >
+                Debug Run
+              </button>
               <button
                 onClick={() => signOut(auth)}
                 className="flex items-center gap-2 text-gray-600 hover:text-gray-900"
