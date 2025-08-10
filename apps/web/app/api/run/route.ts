@@ -101,14 +101,21 @@ export async function POST(request: NextRequest) {
         status: 'queued' as const
       }));
 
-      runId = await dbCreateRun({
+      // Prepare data for Firestore (no undefined values)
+      const runData: any = {
         mode,
-        manualQuery: manualQuery || undefined,
         targetProvinces,
         steps,
         createdBy: decodedToken.uid,
         startedAt: new Date()
-      });
+      };
+      
+      // Only add manualQuery if it has a value
+      if (manualQuery && manualQuery.trim()) {
+        runData.manualQuery = manualQuery;
+      }
+
+      runId = await dbCreateRun(runData);
 
       console.log('Run created successfully:', runId);
     } catch (dbError) {
