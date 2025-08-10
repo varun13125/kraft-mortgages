@@ -130,21 +130,45 @@ export async function POST(request: NextRequest) {
 
       console.log('Run created successfully with ID:', runId);
       
-      // Step 7: Start the orchestration process
-      console.log('Starting orchestration for run:', runId);
+      // Step 7: Start the full orchestration process
+      console.log('Starting full orchestration for run:', runId);
       try {
-        // Import orchestrator here to avoid circular dependencies
         const { stepOrchestrate } = await import('@/lib/pipeline/orchestrator');
         
-        // Start the first step asynchronously (don't await this)
-        stepOrchestrate(runId as string).then((result) => {
-          console.log('First orchestration step completed:', result);
-        }).catch((orchError) => {
-          console.error('Orchestration error:', orchError);
+        // Run full orchestration asynchronously
+        (async () => {
+          let stepCount = 0;
+          const maxSteps = 10; // Safety limit
+          
+          while (stepCount < maxSteps) {
+            console.log(`Processing step ${stepCount + 1} for run ${runId}`);
+            
+            const result = await stepOrchestrate(runId as string);
+            console.log(`Step ${stepCount + 1} result:`, result);
+            
+            if (result.done) {
+              console.log(`Run ${runId} completed after ${stepCount + 1} steps`);
+              break;
+            }
+            
+            if (result.error) {
+              console.error(`Error in step ${stepCount + 1}:`, result.error);
+              break;
+            }
+            
+            stepCount++;
+            
+            // Small delay between steps
+            await new Promise(resolve => setTimeout(resolve, 2000));
+          }
+          
+          console.log(`Orchestration finished for run ${runId} after ${stepCount} steps`);
+        })().catch((orchError) => {
+          console.error('Orchestration process error:', orchError);
         });
+        
       } catch (orchImportError) {
-        console.error('Failed to import orchestrator:', orchImportError);
-        // Don't fail the request if orchestration import fails
+        console.error('Failed to start orchestration:', orchImportError);
       }
       
     } catch (dbError) {
