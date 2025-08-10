@@ -41,7 +41,7 @@ export async function GET(request: NextRequest) {
     
     // Debug: List all admin documents
     const allAdmins = await adminsCollection.get();
-    const allAdminData = allAdmins.docs.map(doc => ({
+    const allAdminData = allAdmins.docs.map((doc: any) => ({
       id: doc.id,
       data: doc.data()
     }));
