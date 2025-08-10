@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 
 export async function GET() {
-  const config = {
+  const config: any = {
     timestamp: new Date().toISOString(),
     firebase: {
       hasServiceAccount: !!process.env.FIREBASE_SERVICE_ACCOUNT_JSON,
