@@ -93,7 +93,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Step 6: Create run in database
-    let runId;
+    let runId: string | undefined;
     try {
       console.log('Step 6: Starting database creation...');
       
