@@ -14,12 +14,13 @@ interface BlogPost {
   metaDescription: string;
 }
 
-import { db } from '@/lib/db/firestore';
+import { postsCol } from '@/lib/db/firestore';
 
 // Fetch from Firestore database
 async function getBlogPost(slug: string): Promise<BlogPost | null> {
   try {
-    const doc = await db.collection('posts').doc(slug).get();
+    const collection = await postsCol();
+    const doc = await collection.doc(slug).get();
     
     if (!doc.exists) {
       return null;
