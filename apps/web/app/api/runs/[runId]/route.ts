@@ -1,3 +1,6 @@
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+
 import { NextRequest, NextResponse } from 'next/server';
 import { getRun } from '@/lib/db/firestore';
 import { verifyFirebaseToken } from '@/lib/auth';

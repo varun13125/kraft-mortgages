@@ -1,55 +1,90 @@
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { verifyFirebaseToken } from '@/lib/auth';
-import { isAdmin } from '@/lib/db/firestore';
-import { createRun } from '@/lib/pipeline/orchestrator';
+import { isAdmin, createRun as dbCreateRun } from '@/lib/db/firestore';
 
 const RunRequestSchema = z.object({
   mode: z.enum(['auto', 'manual-topic', 'manual-idea']),
   manualQuery: z.string().optional(),
-  targetProvinces: z.array(z.string()).default(['BC', 'AB', 'ON']),
+  targetProvinces: z.array(z.enum(['BC', 'AB', 'ON'])).default(['BC', 'AB', 'ON'])
 });
-
-async function verifyAuth(request: NextRequest) {
-  const authHeader = request.headers.get('authorization');
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    throw new Error('Missing or invalid authorization header');
-  }
-
-  const token = authHeader.replace('Bearer ', '');
-  const decodedToken = await verifyFirebaseToken(token);
-  
-  const userIsAdmin = await isAdmin(decodedToken.uid);
-  if (!userIsAdmin) {
-    throw new Error('Admin access required');
-  }
-
-  return decodedToken;
-}
 
 export async function POST(request: NextRequest) {
   try {
-    // Check if Firebase environment variables are configured
-    const hasServiceAccount = !!process.env.FIREBASE_SERVICE_ACCOUNT_JSON;
-    const hasIndividualVars = !!(process.env.FIREBASE_PROJECT_ID && process.env.FIREBASE_CLIENT_EMAIL && process.env.FIREBASE_PRIVATE_KEY);
-    
-    if (!hasServiceAccount && !hasIndividualVars) {
-      console.error('Missing Firebase Admin SDK environment variables');
+    // Step 1: Verify auth header exists
+    const authHeader = request.headers.get('authorization');
+    if (!authHeader?.startsWith('Bearer ')) {
+      console.log('Missing or invalid auth header:', authHeader?.substring(0, 20));
       return NextResponse.json(
-        { error: 'Server configuration error - Firebase not configured' },
+        { error: 'Missing or invalid Authorization header' },
+        { status: 401 }
+      );
+    }
+
+    // Step 2: Verify Firebase token
+    const token = authHeader.split(' ')[1];
+    let decodedToken;
+    try {
+      decodedToken = await verifyFirebaseToken(token);
+    } catch (tokenError) {
+      console.error('Token verification failed:', tokenError);
+      return NextResponse.json(
+        { error: 'Invalid authentication token' },
+        { status: 401 }
+      );
+    }
+
+    // Step 3: Check admin status
+    let userIsAdmin;
+    try {
+      userIsAdmin = await isAdmin(decodedToken.uid);
+    } catch (adminError) {
+      console.error('Admin check failed:', adminError);
+      return NextResponse.json(
+        { error: 'Failed to verify admin status' },
         { status: 500 }
       );
     }
 
-    // Verify authentication and admin status
-    const user = await verifyAuth(request);
-    
-    // Parse and validate request body
-    const body = await request.json();
-    const validatedData = RunRequestSchema.parse(body);
+    if (!userIsAdmin) {
+      return NextResponse.json(
+        { error: 'Admin access required' },
+        { status: 403 }
+      );
+    }
+
+    // Step 4: Parse and validate request body
+    let body;
+    try {
+      body = await request.json();
+    } catch (jsonError) {
+      console.error('JSON parse error:', jsonError);
+      return NextResponse.json(
+        { error: 'Invalid JSON in request body' },
+        { status: 400 }
+      );
+    }
+
+    let validatedData;
+    try {
+      validatedData = RunRequestSchema.parse(body);
+    } catch (zodError) {
+      if (zodError instanceof z.ZodError) {
+        console.log('Validation error:', zodError.errors);
+        return NextResponse.json(
+          { error: 'Invalid request data', details: zodError.errors },
+          { status: 400 }
+        );
+      }
+      throw zodError;
+    }
+
     const { mode, manualQuery, targetProvinces } = validatedData;
 
-    // Validate manual query requirement
+    // Step 5: Validate manual query requirement
     if ((mode === 'manual-topic' || mode === 'manual-idea') && !manualQuery?.trim()) {
       return NextResponse.json(
         { error: 'Manual query is required for manual modes' },
@@ -57,39 +92,58 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Create new run
-    const runId = await createRun(mode, manualQuery || undefined, targetProvinces, user.uid);
+    // Step 6: Create run in database
+    let runId;
+    try {
+      // Create run with proper structure
+      const steps = ['topic-scout', 'brief', 'writer', 'gate', 'editor', 'publish'].map(agent => ({
+        agent,
+        status: 'queued' as const
+      }));
 
-    if (!runId) {
-      throw new Error('Failed to create run - no ID returned');
-    }
+      runId = await dbCreateRun({
+        mode,
+        manualQuery: manualQuery || undefined,
+        targetProvinces,
+        steps,
+        createdBy: decodedToken.uid,
+        startedAt: new Date()
+      });
 
-    return NextResponse.json({ runId, message: 'Run created successfully' });
-
-  } catch (error) {
-    console.error('Run creation error:', error);
-    
-    if (error instanceof z.ZodError) {
+      console.log('Run created successfully:', runId);
+    } catch (dbError) {
+      console.error('Database error creating run:', dbError);
+      console.error('Stack:', (dbError as Error).stack);
       return NextResponse.json(
-        { error: 'Invalid request data', details: error.errors },
-        { status: 400 }
+        { error: 'Failed to create run in database', details: (dbError as Error).message },
+        { status: 500 }
       );
     }
-    
-    if (error instanceof Error) {
-      if (error.message.includes('authorization') || error.message.includes('Admin')) {
-        return NextResponse.json(
-          { error: error.message },
-          { status: 401 }
-        );
-      }
-      
-      // Log the full error for debugging
-      console.error('Full error:', error.message, error.stack);
+
+    if (!runId) {
+      console.error('No run ID returned from createRun');
+      return NextResponse.json(
+        { error: 'Failed to create run - no ID returned' },
+        { status: 500 }
+      );
     }
 
+    return NextResponse.json({ 
+      runId, 
+      message: 'Run created successfully' 
+    });
+
+  } catch (unexpectedError) {
+    // Catch-all for unexpected errors
+    console.error('Unexpected error in POST /api/run:');
+    console.error('Message:', (unexpectedError as Error).message);
+    console.error('Stack:', (unexpectedError as Error).stack);
+    
     return NextResponse.json(
-      { error: 'Internal server error - check server logs' },
+      { 
+        error: 'Internal server error',
+        details: (unexpectedError as Error).message 
+      },
       { status: 500 }
     );
   }
