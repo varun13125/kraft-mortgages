@@ -13,10 +13,16 @@ async function initializeFirebase() {
 
 // Initialize Firebase Admin - completely lazy
 async function initializeAdmin() {
-  if (isInitialized || (admin && admin.apps.length > 0)) return;
+  if (isInitialized || (admin && admin.apps.length > 0)) {
+    console.log('Firebase already initialized');
+    return;
+  }
+  
+  console.log('Initializing Firebase Admin...');
   
   // Skip during build or if no credentials
   if (!process.env.FIREBASE_SERVICE_ACCOUNT_JSON && !process.env.FIREBASE_PROJECT_ID) {
+    console.log('No Firebase credentials found, skipping initialization');
     return;
   }
   
@@ -70,14 +76,18 @@ async function initializeAdmin() {
   // Initialize admin
   if (serviceAccount && serviceAccount.projectId) {
     try {
+      console.log('Initializing Firebase Admin with project:', serviceAccount.projectId);
       admin.initializeApp({
         credential: admin.credential.cert(serviceAccount),
         projectId: serviceAccount.projectId, // Explicitly set project ID
       });
       isInitialized = true;
+      console.log('Firebase Admin initialized successfully');
     } catch (initError) {
       console.error('Firebase admin initialization error:', initError);
     }
+  } else {
+    console.log('Missing serviceAccount or projectId');
   }
 }
 
@@ -85,7 +95,16 @@ async function initializeAdmin() {
 async function getDb() {
   await initializeAdmin();
   
+  // Debug logging
+  console.log('getDb debug:', {
+    isInitialized,
+    hasAdmin: !!admin,
+    hasGetFirestore: !!getFirestore,
+    adminAppsLength: admin?.apps?.length || 0
+  });
+  
   if (!isInitialized || !admin || !getFirestore) {
+    console.log('Using mock database - Firebase not properly initialized');
     // Return a mock object for build time or when Firebase isn't available
     const mockCollection = {
       add: () => Promise.resolve({ id: 'mock' }),
