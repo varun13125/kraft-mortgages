@@ -240,6 +240,12 @@ export async function updateRunStep(runId: string, stepIndex: number, stepData: 
 }
 
 export async function isAdmin(uid: string): Promise<boolean> {
+  // Temporary hardcoded admin bypass - remove once Firestore connection is fixed
+  if (uid === 'TQGTUsLoc8RiGYPJ9SEg3h0jWTk2') {
+    console.log('Admin bypass: granting admin access to hardcoded UUID');
+    return true;
+  }
+  
   const doc = await (await adminsCol()).doc(uid).get();
   return doc.exists;
 }
