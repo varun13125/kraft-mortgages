@@ -282,6 +282,29 @@ export default function Dashboard() {
               >
                 Make Admin
               </button>
+              {/* Check admin status button */}
+              <button
+                onClick={async () => {
+                  try {
+                    const token = await auth.currentUser?.getIdToken();
+                    const response = await fetch('/api/check-admin', {
+                      method: 'GET',
+                      headers: {
+                        'Authorization': 'Bearer ' + token,
+                      }
+                    });
+                    const result = await response.json();
+                    console.log('Admin check result:', result);
+                    alert(`Admin Status: ${result.isAdmin ? 'YES' : 'NO'}\nUID: ${result.uid}\nEmail: ${result.email}\nSee console for details`);
+                  } catch (e) {
+                    console.error('Admin check error:', e);
+                    alert('Admin check failed - see console');
+                  }
+                }}
+                className="px-3 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600"
+              >
+                Check Admin
+              </button>
               {/* Debug button */}
               <button
                 onClick={async () => {
