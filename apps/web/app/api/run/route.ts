@@ -30,7 +30,10 @@ async function verifyAuth(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     // Check if Firebase environment variables are configured
-    if (!process.env.FIREBASE_PROJECT_ID || !process.env.FIREBASE_CLIENT_EMAIL || !process.env.FIREBASE_PRIVATE_KEY) {
+    const hasServiceAccount = !!process.env.FIREBASE_SERVICE_ACCOUNT_JSON;
+    const hasIndividualVars = !!(process.env.FIREBASE_PROJECT_ID && process.env.FIREBASE_CLIENT_EMAIL && process.env.FIREBASE_PRIVATE_KEY);
+    
+    if (!hasServiceAccount && !hasIndividualVars) {
       console.error('Missing Firebase Admin SDK environment variables');
       return NextResponse.json(
         { error: 'Server configuration error - Firebase not configured' },
