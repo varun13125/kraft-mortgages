@@ -1,5 +1,6 @@
-export const runtime = 'edge';
-export const maxDuration = 300; // 5 minutes max for Edge functions
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+export const maxDuration = 300; // 5 minutes max execution time
 
 import { NextRequest, NextResponse } from 'next/server';
 import { stepOrchestrate } from '@/lib/pipeline/orchestrator';
