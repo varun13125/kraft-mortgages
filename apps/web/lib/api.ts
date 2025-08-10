@@ -3,7 +3,7 @@ import { app } from "./firebase.client";
 
 const BASE = process.env.NEXT_PUBLIC_CREWAPI_BASE_URL || "/api";
 
-async function authHeader(): Promise<HeadersInit> {
+async function authHeader(): Promise<Record<string, string>> {
   const user = getAuth(app).currentUser;
   if (!user) {
     console.warn("No Firebase user logged in when making API request");
@@ -32,12 +32,12 @@ export async function apiPost<T>(path: string, body: any, opts: RequestInit = {}
   };
   
   // Log if no auth token
-  if (!authHeaders.Authorization) {
+  if (!authHeaders["Authorization"]) {
     console.warn(`Making POST request to ${path} without auth token`);
   }
   
   const url = `${BASE}${path}`;
-  console.log(`POST ${url}`, { body, hasAuth: !!authHeaders.Authorization });
+  console.log(`POST ${url}`, { body, hasAuth: !!authHeaders["Authorization"] });
   
   try {
     const res = await fetch(url, { 
@@ -71,12 +71,12 @@ export async function apiGet<T>(path: string): Promise<T> {
   const headers = { ...authHeaders };
   
   // Log if no auth token
-  if (!authHeaders.Authorization) {
+  if (!authHeaders["Authorization"]) {
     console.warn(`Making GET request to ${path} without auth token`);
   }
   
   const url = `${BASE}${path}`;
-  console.log(`GET ${url}`, { hasAuth: !!authHeaders.Authorization });
+  console.log(`GET ${url}`, { hasAuth: !!authHeaders["Authorization"] });
   
   try {
     const res = await fetch(url, { headers, cache: "no-store" });
