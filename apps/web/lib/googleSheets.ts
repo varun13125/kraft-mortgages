@@ -52,7 +52,12 @@ export async function getBlogPosts(): Promise<GoogleSheetsPost[]> {
         const slugOk = String((post as any).slug || '').trim().length > 0;
         const titleOk = String((post as any).title || '').trim().length > 0;
         const isPublished = ['published','true','1','yes','y'].includes(statusValue);
-        return slugOk && titleOk && isPublished;
+        const publishedAtStr = String((post as any).publishedat || '').trim();
+        const hasPublishedAt = publishedAtStr.length > 0;
+        const contentLen = String((post as any).content || '').trim().length;
+        const hasContent = contentLen > 0;
+        // Accept if explicitly published OR if it clearly looks like a post (has content or publishedAt)
+        return slugOk && titleOk && (isPublished || hasPublishedAt || hasContent);
       })
       .sort((a: GoogleSheetsPost, b: GoogleSheetsPost) => 
         new Date(b.publishedat).getTime() - new Date(a.publishedat).getTime()
