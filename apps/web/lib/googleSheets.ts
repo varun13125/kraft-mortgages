@@ -49,12 +49,27 @@ export async function getBlogPosts(): Promise<GoogleSheetsPost[]> {
     if (!rows || rows.length === 0) return [];
 
     // First row is headers (normalize aggressively: lowercase, strip non-alphanumerics)
-    const headers = rows[0].map((h: string) => String(h || '')
-      .toLowerCase()
-      .replace(/[^a-z0-9]/g, ''));
+    // Find the header row dynamically (within first 10 rows)
+    function normalizeHeader(h: string): string {
+      return String(h || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+    }
+
+    const candidateKeys = new Set(['slug','title','content','status','publishedat','excerpt']);
+    let headerRowIndex = 0;
+    for (let i = 0; i < Math.min(rows.length, 10); i++) {
+      const normalized = (rows[i] || []).map(normalizeHeader);
+      const hasAny = normalized.some((h) => candidateKeys.has(h));
+      const nonEmpty = normalized.some((h) => h.length > 0);
+      if (hasAny && nonEmpty) {
+        headerRowIndex = i;
+        break;
+      }
+    }
+
+    const headers = (rows[headerRowIndex] || []).map(normalizeHeader);
     
     // Convert rows to objects
-    const rawRows = rows.slice(1).map((row: any[]) => {
+    const rawRows = rows.slice(headerRowIndex + 1).map((row: any[]) => {
       const m: Record<string, any> = {};
       headers.forEach((header, index) => {
         const cell = row[index];
