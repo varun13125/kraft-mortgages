@@ -29,14 +29,18 @@ export async function getBlogPosts(): Promise<GoogleSheetsPost[]> {
     const rows = response.data.values;
     if (!rows || rows.length === 0) return [];
 
-    // First row is headers
-    const headers = rows[0].map((h: string) => String(h || '').toLowerCase().replace(/\s+/g, ''));
+    // First row is headers (normalize aggressively: lowercase, strip non-alphanumerics)
+    const headers = rows[0].map((h: string) => String(h || '')
+      .toLowerCase()
+      .replace(/[^a-z0-9]/g, ''));
     
     // Convert rows to objects
-    const posts = rows.slice(1).map((row: string[]) => {
+    const posts = rows.slice(1).map((row: any[]) => {
       const post: GoogleSheetsPost = {};
       headers.forEach((header, index) => {
-        post[header] = row[index] || '';
+        const cell = row[index];
+        const value = typeof cell === 'string' ? cell.trim() : (cell == null ? '' : String(cell).trim());
+        post[header] = value as any;
       });
       return post;
     });
@@ -44,10 +48,11 @@ export async function getBlogPosts(): Promise<GoogleSheetsPost[]> {
     // Filter only published posts and sort by date
     const sheetPosts = posts
       .filter((post: GoogleSheetsPost) => {
-        const statusValue = String((post as any).status || '').toLowerCase();
+        const statusValue = String((post as any).status || '').trim().toLowerCase();
         const slugOk = String((post as any).slug || '').trim().length > 0;
         const titleOk = String((post as any).title || '').trim().length > 0;
-        return slugOk && titleOk && (statusValue === 'published' || statusValue === 'true');
+        const isPublished = ['published','true','1','yes','y'].includes(statusValue);
+        return slugOk && titleOk && isPublished;
       })
       .sort((a: GoogleSheetsPost, b: GoogleSheetsPost) => 
         new Date(b.publishedat).getTime() - new Date(a.publishedat).getTime()
