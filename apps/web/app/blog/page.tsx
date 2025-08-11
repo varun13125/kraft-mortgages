@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 export const dynamic = 'force-dynamic';
 import Link from 'next/link';
 import { Calendar, User, ArrowRight, Clock, Tag, Star } from 'lucide-react';
-import { getBlogPosts } from '@/lib/googleSheets';
+import { getRecentPosts } from '@/lib/db/firestore';
 
 export const metadata: Metadata = {
   title: 'Mortgage Insights Blog | Kraft Mortgages',
@@ -24,27 +24,25 @@ export const metadata: Metadata = {
   },
 };
 
-// Function to transform Google Sheets data to our component format
-function transformGoogleSheetsPost(post: any) {
-  // Parse JSON strings if they exist
-  const tags = post.tags ? (typeof post.tags === 'string' ? JSON.parse(post.tags || '[]') : post.tags) : [];
+// Normalize Firestore post to page shape
+function transformPost(post: any) {
+  const tags = post.keywords || [];
   const categories = post.categories ? (typeof post.categories === 'string' ? JSON.parse(post.categories || '[]') : post.categories) : ['Mortgage Advice'];
-  
   return {
     slug: post.slug || '',
     title: post.title || '',
-    excerpt: post.excerpt || '',
-    publishedAt: post.publishedat || new Date().toISOString(),
-    readingTime: parseInt(post.readingtime) || 5,
+    excerpt: post.metaDescription || post.excerpt || '',
+    publishedAt: (post.publishedAt instanceof Date ? post.publishedAt : (post.publishedat || new Date().toISOString())),
+    readingTime: post.readingTime || parseInt(post.readingtime) || Math.ceil(((post.markdown || post.content || '').length) / 1000) || 5,
     tags,
-    featured: post.featured === 'true' || post.featured === true,
+    featured: post.featured === 'true' || post.featured === true || false,
     categories,
   };
 }
 
 export default async function BlogPage() {
-  const rawPosts = await getBlogPosts();
-  const posts = rawPosts.map(transformGoogleSheetsPost);
+  const fsPosts = await getRecentPosts(30);
+  const posts = (fsPosts || []).map(transformPost);
   const featuredPosts = posts.filter(post => post.featured);
   const regularPosts = posts.filter(post => !post.featured);
 

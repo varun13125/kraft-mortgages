@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { Calendar, User, ArrowLeft, Clock, Tag } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
-import { getBlogPost } from '@/lib/googleSheets';
+import { getPost as getFsPost } from '@/lib/db/firestore';
 
 // Transform Google Sheets post to our component format
 function transformGoogleSheetsPost(post: any) {
@@ -42,7 +42,7 @@ function transformGoogleSheetsPost(post: any) {
 export async function generateMetadata(
   { params }: { params: { slug: string } }
 ): Promise<Metadata> {
-  const rawPost = await getBlogPost(params.slug);
+  const rawPost = await getFsPost(params.slug);
   const post = transformGoogleSheetsPost(rawPost);
   
   if (!post) {
@@ -87,7 +87,7 @@ export default async function BlogPostPage({
 }: { 
   params: { slug: string } 
 }) {
-  const rawPost = await getBlogPost(params.slug);
+  const rawPost = await getFsPost(params.slug);
   const post = transformGoogleSheetsPost(rawPost);
 
   if (!post) {
