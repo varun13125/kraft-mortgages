@@ -1,9 +1,7 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { Calendar, User, ArrowRight, Clock, Tag, Star } from 'lucide-react';
-import { collection, getDocs, query, where, orderBy, limit } from 'firebase/firestore';
-import { db } from '@/lib/firebase.client';
-import { BlogPostListItem } from '@/lib/types/blog';
+import { getBlogPosts } from '@/lib/googleSheets';
 
 export const metadata: Metadata = {
   title: 'Mortgage Insights Blog | Kraft Mortgages',
@@ -25,41 +23,27 @@ export const metadata: Metadata = {
   },
 };
 
-// Fetch published blog posts from blog_posts collection
-async function getBlogPosts(): Promise<BlogPostListItem[]> {
-  try {
-    const postsQuery = query(
-      collection(db, 'blog_posts'),
-      where('status', '==', 'published'),
-      orderBy('publishedAt', 'desc'),
-      limit(12)
-    );
-    
-    const querySnapshot = await getDocs(postsQuery);
-    
-    return querySnapshot.docs.map(doc => {
-      const data = doc.data();
-      return {
-        slug: doc.id,
-        title: data.title || '',
-        excerpt: data.excerpt || '',
-        publishedAt: data.publishedAt || new Date().toISOString(),
-        readingTime: data.readingTime || Math.ceil((data.content || '').length / 1000),
-        tags: data.tags || [],
-        featured: data.featured || false,
-        categories: data.categories || ['Mortgage Advice'],
-      };
-    });
-  } catch (error) {
-    console.error('Error fetching blog posts:', error);
-    
-    // Fallback to empty array - n8n will populate this
-    return [];
-  }
+// Function to transform Google Sheets data to our component format
+function transformGoogleSheetsPost(post: any) {
+  // Parse JSON strings if they exist
+  const tags = post.tags ? (typeof post.tags === 'string' ? JSON.parse(post.tags || '[]') : post.tags) : [];
+  const categories = post.categories ? (typeof post.categories === 'string' ? JSON.parse(post.categories || '[]') : post.categories) : ['Mortgage Advice'];
+  
+  return {
+    slug: post.slug || '',
+    title: post.title || '',
+    excerpt: post.excerpt || '',
+    publishedAt: post.publishedat || new Date().toISOString(),
+    readingTime: parseInt(post.readingtime) || 5,
+    tags,
+    featured: post.featured === 'true' || post.featured === true,
+    categories,
+  };
 }
 
 export default async function BlogPage() {
-  const posts = await getBlogPosts();
+  const rawPosts = await getBlogPosts();
+  const posts = rawPosts.map(transformGoogleSheetsPost);
   const featuredPosts = posts.filter(post => post.featured);
   const regularPosts = posts.filter(post => !post.featured);
 
@@ -137,7 +121,7 @@ export default async function BlogPage() {
                         <div className="flex items-center gap-2 mb-4">
                           <Star className="w-4 h-4 text-yellow-500" />
                           <span className="text-yellow-600 font-medium text-sm">Featured</span>
-                          {post.categories.map((category) => (
+                          {post.categories.map((category: string) => (
                             <span 
                               key={category}
                               className="bg-blue-100 text-blue-600 px-2 py-1 rounded-full text-sm font-medium ml-2"
@@ -179,7 +163,7 @@ export default async function BlogPage() {
                         
                         {post.tags.length > 0 && (
                           <div className="flex flex-wrap gap-2 mb-6">
-                            {post.tags.slice(0, 4).map((tag) => (
+                            {post.tags.slice(0, 4).map((tag: string) => (
                               <span 
                                 key={tag}
                                 className="bg-gray-100 text-gray-600 px-2 py-1 rounded text-xs"
@@ -214,7 +198,7 @@ export default async function BlogPage() {
                 <div className="text-center py-12">
                   <h2 className="text-2xl font-bold text-gray-900 mb-4">Coming Soon</h2>
                   <p className="text-gray-600 mb-8">
-                    Our automated blog content system is being set up. 
+                    Our automated blog content system is being set up with Google Sheets integration. 
                     Fresh mortgage insights and market updates will be published here regularly.
                   </p>
                   <div className="bg-blue-50 rounded-lg p-6 max-w-2xl mx-auto">
@@ -222,7 +206,7 @@ export default async function BlogPage() {
                       Need Mortgage Advice Right Now?
                     </h3>
                     <p className="text-blue-800 mb-4">
-                      Don't wait for the next blog post. Get personalized mortgage guidance today.
+                      Don&apos;t wait for the next blog post. Get personalized mortgage guidance today.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                       <a 
@@ -251,7 +235,7 @@ export default async function BlogPage() {
                       >
                         <div className="p-6">
                           <div className="flex flex-wrap items-center gap-2 mb-3">
-                            {post.categories.map((category) => (
+                            {post.categories.map((category: string) => (
                               <span 
                                 key={category}
                                 className="bg-blue-100 text-blue-600 px-2 py-1 rounded-full text-sm font-medium"
@@ -293,7 +277,7 @@ export default async function BlogPage() {
                           
                           {post.tags.length > 0 && (
                             <div className="flex flex-wrap gap-1 mb-4">
-                              {post.tags.slice(0, 3).map((tag) => (
+                              {post.tags.slice(0, 3).map((tag: string) => (
                                 <span 
                                   key={tag}
                                   className="bg-gray-100 text-gray-600 px-2 py-1 rounded text-xs"

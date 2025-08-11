@@ -3,54 +3,46 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { Calendar, User, ArrowLeft, Clock, Tag } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
-import { doc, getDoc } from 'firebase/firestore';
-import { db } from '@/lib/firebase.client';
-import { BlogPost } from '@/lib/types/blog';
+import { getBlogPost } from '@/lib/googleSheets';
 
-// Fetch blog post from blog_posts collection using client SDK
-async function getBlogPost(slug: string): Promise<BlogPost | null> {
-  try {
-    const postDoc = await getDoc(doc(db, 'blog_posts', slug));
-    
-    if (!postDoc.exists()) {
-      return null;
-    }
-    
-    const postData = postDoc.data();
-    
-    return {
-      slug: postDoc.id,
-      title: postData.title || '',
-      content: postData.content || '',
-      excerpt: postData.excerpt || '',
-      author: postData.author || 'Varun Chaudhry',
-      authorEmail: postData.authorEmail || 'varun@kraftmortgages.ca',
-      publishedAt: postData.publishedAt || new Date().toISOString(),
-      updatedAt: postData.updatedAt || new Date().toISOString(),
-      status: postData.status || 'published',
-      featured: postData.featured || false,
-      categories: postData.categories || ['Mortgage Advice'],
-      tags: postData.tags || [],
-      seo: {
-        title: postData.seo?.title || postData.title || '',
-        description: postData.seo?.description || postData.excerpt || '',
-        keywords: postData.seo?.keywords || postData.tags || [],
-        ogImage: postData.seo?.ogImage || '/images/blog-default.jpg',
-        canonicalUrl: postData.seo?.canonicalUrl || `https://kraftmortgages.ca/blog/${slug}`
-      },
-      readingTime: postData.readingTime || Math.ceil((postData.content || '').length / 1000),
-      brief: postData.brief
-    };
-  } catch (error) {
-    console.error('Error fetching blog post:', error);
-    return null;
-  }
+// Transform Google Sheets post to our component format
+function transformGoogleSheetsPost(post: any) {
+  if (!post) return null;
+  
+  // Parse JSON strings if they exist
+  const tags = post.tags ? (typeof post.tags === 'string' ? JSON.parse(post.tags || '[]') : post.tags) : [];
+  const categories = post.categories ? (typeof post.categories === 'string' ? JSON.parse(post.categories || '[]') : post.categories) : ['Mortgage Advice'];
+  
+  return {
+    slug: post.slug || '',
+    title: post.title || '',
+    content: post.content || '',
+    excerpt: post.excerpt || '',
+    author: post.author || 'Varun Chaudhry',
+    authorEmail: post.authoremail || 'varun@kraftmortgages.ca',
+    publishedAt: post.publishedat || new Date().toISOString(),
+    updatedAt: post.updatedat || post.publishedat || new Date().toISOString(),
+    status: post.status || 'published',
+    featured: post.featured === 'true' || post.featured === true,
+    categories,
+    tags,
+    seo: {
+      title: post.seotitle || post.title || '',
+      description: post.seodescription || post.excerpt || '',
+      keywords: post.seokeywords ? (typeof post.seokeywords === 'string' ? post.seokeywords.split(',').map((k: string) => k.trim()) : post.seokeywords) : tags,
+      ogImage: post.seoimage || '/images/blog-default.jpg',
+      canonicalUrl: post.seocanonicalurl || `https://kraftmortgages.ca/blog/${post.slug}`
+    },
+    readingTime: parseInt(post.readingtime) || Math.ceil((post.content || '').length / 1000),
+    brief: post.brief
+  };
 }
 
 export async function generateMetadata(
   { params }: { params: { slug: string } }
 ): Promise<Metadata> {
-  const post = await getBlogPost(params.slug);
+  const rawPost = await getBlogPost(params.slug);
+  const post = transformGoogleSheetsPost(rawPost);
   
   if (!post) {
     return {
@@ -94,7 +86,8 @@ export default async function BlogPostPage({
 }: { 
   params: { slug: string } 
 }) {
-  const post = await getBlogPost(params.slug);
+  const rawPost = await getBlogPost(params.slug);
+  const post = transformGoogleSheetsPost(rawPost);
 
   if (!post) {
     notFound();
@@ -153,7 +146,7 @@ export default async function BlogPostPage({
               
               {/* Categories */}
               <div className="mb-4 flex flex-wrap gap-2">
-                {post.categories.map((category) => (
+                {post.categories.map((category: string) => (
                   <span 
                     key={category}
                     className="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-sm font-medium"
@@ -225,7 +218,7 @@ export default async function BlogPostPage({
                   <div className="flex flex-wrap items-center gap-2">
                     <Tag className="w-5 h-5 text-gray-500" />
                     <span className="text-gray-700 font-medium">Tags:</span>
-                    {post.tags.map((tag) => (
+                    {post.tags.map((tag: string) => (
                       <span 
                         key={tag}
                         className="bg-gray-100 text-gray-700 px-3 py-1 rounded-md text-sm hover:bg-gray-200 transition-colors"
@@ -242,7 +235,7 @@ export default async function BlogPostPage({
                 <div className="bg-blue-50 rounded-lg p-6">
                   <div className="flex items-start gap-4">
                     <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-xl">
-                      {post.author.split(' ').map(n => n[0]).join('')}
+                      {post.author.split(' ').map((n: string) => n[0]).join('')}
                     </div>
                     <div>
                       <h3 className="text-xl font-bold text-gray-900 mb-2">
