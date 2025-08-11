@@ -21,12 +21,31 @@ const DEFAULT_SHEET_ID = '1fz1DIUq7gerTUC9kWFXZovbJUFbp-dr5e3Rw005J2NU';
 
 export async function getBlogPosts(): Promise<GoogleSheetsPost[]> {
   try {
-    const response = await sheets.spreadsheets.values.get({
-      spreadsheetId: process.env.GOOGLE_SHEET_ID || DEFAULT_SHEET_ID,
-      range: 'Blogs!A:AF', // Allow extra columns without breaking mapping
-    });
+    const spreadsheetId = process.env.GOOGLE_SHEET_ID || DEFAULT_SHEET_ID;
 
-    const rows = response.data.values;
+    async function tryRanges(ranges: string[]): Promise<string[][] | null> {
+      for (const range of ranges) {
+        try {
+          const resp = await sheets.spreadsheets.values.get({ spreadsheetId, range });
+          const vals = resp.data.values as string[][] | undefined;
+          if (vals && vals.length > 0) return vals;
+        } catch {
+          // continue to next range
+        }
+      }
+      return null;
+    }
+
+    const candidateRanges = [
+      'Blogs!A:AF',
+      'Blog!A:AF',
+      'Posts!A:AF',
+      'Sheet1!A:AF',
+      'Sheet!A:AF',
+      'A:AF', // first sheet fallback
+    ];
+
+    const rows = await tryRanges(candidateRanges);
     if (!rows || rows.length === 0) return [];
 
     // First row is headers (normalize aggressively: lowercase, strip non-alphanumerics)
