@@ -171,3 +171,76 @@ export async function getBlogPost(slug: string): Promise<GoogleSheetsPost | unde
     return undefined;
   }
 }
+
+export async function getBlogPostsWithDiagnostics(): Promise<{ rawCount: number; filteredCount: number; sample: any[] }>{
+  try {
+    const response = await sheets.spreadsheets.values.get({
+      spreadsheetId: process.env.GOOGLE_SHEET_ID || DEFAULT_SHEET_ID,
+      range: 'Blogs!A:AF',
+    });
+    const rows = response.data.values || [];
+    if (!rows.length) return { rawCount: 0, filteredCount: 0, sample: [] };
+    const headers = rows[0].map((h: string) => String(h || '')
+      .toLowerCase()
+      .replace(/[^a-z0-9]/g, ''));
+    const rawRows = rows.slice(1).map((row: any[]) => {
+      const m: Record<string, any> = {};
+      headers.forEach((header, index) => {
+        const cell = row[index];
+        const value = typeof cell === 'string' ? cell.trim() : (cell == null ? '' : String(cell).trim());
+        m[header] = value;
+      });
+      return m as GoogleSheetsPost;
+    });
+    function pick(obj: any, keys: string[]): string {
+      for (const k of keys) {
+        const v = obj[k];
+        if (v != null && String(v).trim().length > 0) return String(v).trim();
+      }
+      return '';
+    }
+    function parseBool(val: string): boolean {
+      const v = String(val || '').trim().toLowerCase();
+      return v === 'true' || v === 'published' || v === '1' || v === 'yes' || v === 'y';
+    }
+    const posts = rawRows.map((r) => {
+      const slug = pick(r, ['slug','urlslug','postslug','permalink','path']);
+      const title = pick(r, ['title','posttitle','heading']);
+      const content = pick(r, ['content','body','markdown','article']);
+      const excerpt = pick(r, ['excerpt','description','summary','metadescription']);
+      const statusStr = pick(r, ['status','published','ispublished']);
+      const publishedat = pick(r, ['publishedat','date','datetime','publishdate']);
+      const readingtime = pick(r, ['readingtime','readtime','minutes']);
+      const tags = pick(r, ['tags','keywords']);
+      const categories = pick(r, ['categories','category']);
+      const featuredStr = pick(r, ['featured','isfeatured']);
+      return {
+        ...r,
+        slug, title, content, excerpt, status: statusStr || r['status'] || '',
+        publishedat, readingtime, tags, categories, featured: parseBool(featuredStr) || (r['featured'] as any),
+      } as any;
+    });
+    const filtered = posts.filter((post: any) => {
+      const statusValue = String(post.status || '').trim().toLowerCase();
+      const slugOk = String(post.slug || '').trim().length > 0;
+      const titleOk = String(post.title || '').trim().length > 0;
+      const isPublished = ['published','true','1','yes','y'].includes(statusValue);
+      const publishedAtStr = String(post.publishedat || '').trim();
+      const hasPublishedAt = publishedAtStr.length > 0;
+      const contentLen = String(post.content || '').trim().length;
+      const hasContent = contentLen > 0;
+      return slugOk && titleOk && (isPublished || hasPublishedAt || hasContent);
+    });
+    const sample = posts.slice(0, 5).map((p: any) => ({
+      slug: p.slug,
+      title: p.title,
+      status: p.status,
+      publishedat: p.publishedat,
+      contentLen: (p.content || '').length,
+      rawKeys: Object.keys(p).slice(0, 10),
+    }));
+    return { rawCount: posts.length, filteredCount: filtered.length, sample };
+  } catch {
+    return { rawCount: 0, filteredCount: 0, sample: [] };
+  }
+}
