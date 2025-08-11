@@ -5,16 +5,50 @@ interface GoogleSheetsPost {
   [key: string]: string;
 }
 
-// Use existing Firebase service account to access Google Sheets
-const auth = new google.auth.GoogleAuth({
-  credentials: {
-    client_email: process.env.FIREBASE_CLIENT_EMAIL,
-    private_key: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
-  },
-  scopes: ['https://www.googleapis.com/auth/spreadsheets.readonly'],
-});
+// Build robust GoogleAuth using either FIREBASE_SERVICE_ACCOUNT_JSON or individual vars
+function buildGoogleAuth(): any {
+  // Prefer full JSON
+  const json = process.env.FIREBASE_SERVICE_ACCOUNT_JSON;
+  if (json) {
+    try {
+      const svc = JSON.parse(json);
+      return new google.auth.GoogleAuth({
+        credentials: {
+          client_email: svc.client_email,
+          private_key: String(svc.private_key || '').replace(/\\n/g, '\n'),
+        },
+        scopes: ['https://www.googleapis.com/auth/spreadsheets.readonly'],
+      });
+    } catch (e) {
+      // fallthrough to individual vars
+    }
+  }
 
-const sheets = google.sheets({ version: 'v4', auth });
+  // Fallback to individual vars with decoding
+  let privateKey = process.env.FIREBASE_PRIVATE_KEY || '';
+  if (privateKey && !privateKey.includes('BEGIN PRIVATE KEY')) {
+    try {
+      privateKey = Buffer.from(privateKey, 'base64').toString('utf-8');
+    } catch {
+      // use as-is
+    }
+  }
+  // Strip surrounding quotes if any
+  if (privateKey.startsWith('"') && privateKey.endsWith('"')) {
+    privateKey = privateKey.slice(1, -1);
+  }
+  privateKey = privateKey.replace(/\\n/g, '\n');
+
+  return new google.auth.GoogleAuth({
+    credentials: {
+      client_email: process.env.FIREBASE_CLIENT_EMAIL,
+      private_key: privateKey,
+    },
+    scopes: ['https://www.googleapis.com/auth/spreadsheets.readonly'],
+  });
+}
+
+const sheets = google.sheets({ version: 'v4', auth: buildGoogleAuth() });
 
 // Default to the n8n workflow's configured Sheet ID if env is missing
 const DEFAULT_SHEET_ID = '1fz1DIUq7gerTUC9kWFXZovbJUFbp-dr5e3Rw005J2NU';
@@ -24,6 +58,7 @@ export async function getBlogPosts(): Promise<GoogleSheetsPost[]> {
     const spreadsheetId = process.env.GOOGLE_SHEET_ID || DEFAULT_SHEET_ID;
 
     // Strategy 1: If GOOGLE_API_KEY exists, try public API first (works when sheet is link-visible)
+    // We will try service-account auth first for reliability; public API later if set
     const apiKey = process.env.GOOGLE_API_KEY;
     async function tryPublicApi(range: string): Promise<string[][] | null> {
       if (!apiKey) return null;
@@ -42,10 +77,7 @@ export async function getBlogPosts(): Promise<GoogleSheetsPost[]> {
 
     async function tryRanges(ranges: string[]): Promise<string[][] | null> {
       for (const range of ranges) {
-        // Try public API first if available
-        const pub = await tryPublicApi(range);
-        if (pub && pub.length > 0) return pub;
-        // Fallback to service account auth
+        // Try service account first
         try {
           const resp = await sheets.spreadsheets.values.get({ spreadsheetId, range });
           const vals = resp.data.values as string[][] | undefined;
@@ -53,6 +85,9 @@ export async function getBlogPosts(): Promise<GoogleSheetsPost[]> {
         } catch {
           // continue to next range
         }
+        // Try public API as a secondary option
+        const pub = await tryPublicApi(range);
+        if (pub && pub.length > 0) return pub;
       }
       return null;
     }
