@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+export const dynamic = 'force-dynamic';
 import Link from 'next/link';
 import { Calendar, User, ArrowRight, Clock, Tag, Star } from 'lucide-react';
 import { getBlogPosts } from '@/lib/googleSheets';

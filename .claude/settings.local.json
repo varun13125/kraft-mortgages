@@ -31,7 +31,8 @@
       "Bash(grep:*)",
       "Bash(npx tsc:*)",
       "Bash(npx vercel env:*)",
-      "Bash(npx vercel:*)"
+      "Bash(npx vercel:*)",
+      "Bash(npm install)"
     ],
     "deny": []
   }
