@@ -92,6 +92,29 @@ export async function getBlogPosts(): Promise<GoogleSheetsPost[]> {
       return v === 'true' || v === 'published' || v === '1' || v === 'yes' || v === 'y';
     }
 
+    function deriveFromFrontmatter(markdown: string): { title?: string; date?: string } {
+      try {
+        if (!markdown) return {};
+        // Look for simple frontmatter lines like: title: "..." or title: ...
+        const titleMatch = markdown.match(/\btitle:\s*"?([^"\n]+)"?/i);
+        const dateMatch = markdown.match(/\bdate:\s*"?([^"\n]+)"?/i);
+        return {
+          title: titleMatch ? titleMatch[1].trim() : undefined,
+          date: dateMatch ? dateMatch[1].trim() : undefined,
+        };
+      } catch {
+        return {};
+      }
+    }
+
+    function slugify(input: string): string {
+      return String(input || '')
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '')
+        .slice(0, 80);
+    }
+
     // Normalize each row to a consistent shape used by pages
     const posts = rawRows.map((r) => {
       const slug = pick(r, ['slug','urlslug','postslug','permalink','path']);
@@ -105,16 +128,28 @@ export async function getBlogPosts(): Promise<GoogleSheetsPost[]> {
       const categories = pick(r, ['categories','category']);
       const featuredStr = pick(r, ['featured','isfeatured']);
 
+      // Derive from frontmatter if missing
+      let derivedTitle = title;
+      let derivedPublishedAt = publishedat;
+      if ((!derivedTitle || !derivedPublishedAt) && content) {
+        const fm = deriveFromFrontmatter(content);
+        if (!derivedTitle && fm.title) derivedTitle = fm.title;
+        if (!derivedPublishedAt && fm.date) derivedPublishedAt = fm.date;
+      }
+
+      const finalTitle = derivedTitle;
+      const finalSlug = slug || (finalTitle ? slugify(finalTitle) : '');
+
       return {
         // original
         ...r,
         // normalized keys expected by UI
-        slug,
-        title,
+        slug: finalSlug,
+        title: finalTitle,
         content,
         excerpt,
         status: statusStr || r['status'] || '',
-        publishedat,
+        publishedat: derivedPublishedAt,
         readingtime,
         tags,
         categories,
