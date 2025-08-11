@@ -67,7 +67,24 @@ export async function getBlogPosts(): Promise<GoogleSheetsPost[]> {
     ];
 
     const rows = await tryRanges(candidateRanges);
-    if (!rows || rows.length === 0) return [];
+    if (!rows || rows.length === 0) {
+      // Firestore fallback if Sheets empty
+      try {
+        const fsPosts = await getRecentPosts(20);
+        return fsPosts.map((p) => ({
+          slug: p.slug,
+          title: p.title,
+          content: (p as any).markdown || '',
+          excerpt: (p as any).metaDescription || '',
+          publishedat: (p.publishedAt instanceof Date ? p.publishedAt : new Date(p.publishedAt as any)).toISOString(),
+          readingtime: String(Math.ceil(((p as any).markdown || '').split(/\s+/).length / 200) || 5),
+          tags: JSON.stringify(p.keywords || []),
+          featured: 'false',
+          categories: JSON.stringify(['Mortgage Advice'])
+        } as any));
+      } catch {}
+      return [];
+    }
 
     // First row is headers (normalize aggressively: lowercase, strip non-alphanumerics)
     // Find the header row dynamically (within first 10 rows)
