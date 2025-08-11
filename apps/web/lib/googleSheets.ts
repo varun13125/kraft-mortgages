@@ -35,14 +35,57 @@ export async function getBlogPosts(): Promise<GoogleSheetsPost[]> {
       .replace(/[^a-z0-9]/g, ''));
     
     // Convert rows to objects
-    const posts = rows.slice(1).map((row: any[]) => {
-      const post: GoogleSheetsPost = {};
+    const rawRows = rows.slice(1).map((row: any[]) => {
+      const m: Record<string, any> = {};
       headers.forEach((header, index) => {
         const cell = row[index];
         const value = typeof cell === 'string' ? cell.trim() : (cell == null ? '' : String(cell).trim());
-        post[header] = value as any;
+        m[header] = value;
       });
-      return post;
+      return m as GoogleSheetsPost;
+    });
+
+    function pick(obj: any, keys: string[]): string {
+      for (const k of keys) {
+        const v = obj[k];
+        if (v != null && String(v).trim().length > 0) return String(v).trim();
+      }
+      return '';
+    }
+
+    function parseBool(val: string): boolean {
+      const v = String(val || '').trim().toLowerCase();
+      return v === 'true' || v === 'published' || v === '1' || v === 'yes' || v === 'y';
+    }
+
+    // Normalize each row to a consistent shape used by pages
+    const posts = rawRows.map((r) => {
+      const slug = pick(r, ['slug','urlslug','postslug','permalink','path']);
+      const title = pick(r, ['title','posttitle','heading']);
+      const content = pick(r, ['content','body','markdown','article']);
+      const excerpt = pick(r, ['excerpt','description','summary','metadescription']);
+      const statusStr = pick(r, ['status','published','ispublished']);
+      const publishedat = pick(r, ['publishedat','date','datetime','publishdate']);
+      const readingtime = pick(r, ['readingtime','readtime','minutes']);
+      const tags = pick(r, ['tags','keywords']);
+      const categories = pick(r, ['categories','category']);
+      const featuredStr = pick(r, ['featured','isfeatured']);
+
+      return {
+        // original
+        ...r,
+        // normalized keys expected by UI
+        slug,
+        title,
+        content,
+        excerpt,
+        status: statusStr || r['status'] || '',
+        publishedat,
+        readingtime,
+        tags,
+        categories,
+        featured: parseBool(featuredStr) || (r['featured'] as any),
+      } as GoogleSheetsPost as any;
     });
 
     // Filter only published posts and sort by date
