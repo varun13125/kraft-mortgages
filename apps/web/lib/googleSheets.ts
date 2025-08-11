@@ -23,8 +23,29 @@ export async function getBlogPosts(): Promise<GoogleSheetsPost[]> {
   try {
     const spreadsheetId = process.env.GOOGLE_SHEET_ID || DEFAULT_SHEET_ID;
 
+    // Strategy 1: If GOOGLE_API_KEY exists, try public API first (works when sheet is link-visible)
+    const apiKey = process.env.GOOGLE_API_KEY;
+    async function tryPublicApi(range: string): Promise<string[][] | null> {
+      if (!apiKey) return null;
+      try {
+        const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${encodeURIComponent(range)}?key=${apiKey}`;
+        const r = await fetch(url, { cache: 'no-store' as any });
+        if (!r.ok) return null;
+        const data = await r.json();
+        const vals = (data && data.values) as string[][] | undefined;
+        if (vals && vals.length > 0) return vals;
+        return null;
+      } catch {
+        return null;
+      }
+    }
+
     async function tryRanges(ranges: string[]): Promise<string[][] | null> {
       for (const range of ranges) {
+        // Try public API first if available
+        const pub = await tryPublicApi(range);
+        if (pub && pub.length > 0) return pub;
+        // Fallback to service account auth
         try {
           const resp = await sheets.spreadsheets.values.get({ spreadsheetId, range });
           const vals = resp.data.values as string[][] | undefined;
