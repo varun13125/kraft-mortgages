@@ -20,7 +20,7 @@ export default function SectionHero({
           {subtitle && <p className="mt-3 text-slate-700">{subtitle}</p>}
           <div className="mt-6 flex flex-wrap gap-3">
             {ctas.map((c) => (
-              <Link key={c.href} href={c.href} className={`btn ${c.primary ? "btn-primary" : "btn-outline"}`}>
+              <Link key={c.href} href={c.href as any} className={`btn ${c.primary ? "btn-primary" : "btn-outline"}`}>
                 {c.label}
               </Link>
             ))}
