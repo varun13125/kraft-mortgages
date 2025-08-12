@@ -15,7 +15,7 @@ export default function MLILanding() {
             Program
           </h1>
           <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-8">
-            Canada's most sophisticated multi-unit mortgage insurance program. 
+            Canada&apos;s most sophisticated multi-unit mortgage insurance program. 
             Save hundreds of thousands in CMHC premiums with our expertise.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
