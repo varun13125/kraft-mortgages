@@ -1,6 +1,5 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/db";
-import { PrismaClient } from "@prisma/client";
 import { firestore } from "@/lib/firebaseAdmin";
 
 export async function POST(req: NextRequest) {
@@ -39,8 +38,8 @@ export async function POST(req: NextRequest) {
   };
 
   try {
-    if ((prisma as any) instanceof PrismaClient) {
-      const lead = await (prisma as PrismaClient).lead.create({ 
+    if (process.env.DATABASE_URL) {
+      const lead = await prisma.lead.create({ 
         data: { 
           province: leadData.province, 
           intent: leadData.intent, 

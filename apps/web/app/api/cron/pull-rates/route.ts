@@ -1,5 +1,4 @@
 import { prisma } from "@/lib/db";
-import { PrismaClient } from "@prisma/client";
 import { firestore } from "@/lib/firebaseAdmin";
 
 export async function POST() {
@@ -10,8 +9,8 @@ export async function POST() {
     lender: String(x.lender), termMonths: Number(x.termMonths||0), rateAPR: Number(x.rateAPR||0), province: x.province || null
   }));
   if (!data.length) return Response.json({ inserted: 0 });
-  if ((prisma as any) instanceof PrismaClient) {
-    await (prisma as PrismaClient).rateSnapshot.createMany({ data, skipDuplicates: false });
+  if (process.env.DATABASE_URL) {
+    await prisma.rateSnapshot.createMany({ data, skipDuplicates: false });
     return Response.json({ inserted: data.length });
   }
   const db = firestore();

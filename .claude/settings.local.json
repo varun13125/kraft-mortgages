@@ -32,7 +32,11 @@
       "Bash(npx tsc:*)",
       "Bash(npx vercel env:*)",
       "Bash(npx vercel:*)",
-      "Bash(npm install)"
+      "Bash(npm install)",
+      "Bash(pnpm build:*)",
+      "Bash(npx next:*)",
+      "Bash(pnpm next:*)",
+      "Bash(npx prisma generate:*)"
     ],
     "deny": []
   }

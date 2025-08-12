@@ -1,5 +1,4 @@
 import { prisma } from "@/lib/db";
-import { PrismaClient } from "@prisma/client";
 import { firestore } from "@/lib/firebaseAdmin";
 
 export async function POST() {
@@ -8,8 +7,8 @@ export async function POST() {
   const y = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate()-1));
   const yEnd = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate()));
   let leads: any[] = [];
-  if ((prisma as any) instanceof PrismaClient) {
-    leads = await (prisma as PrismaClient).lead.findMany({ where: { createdAt: { gte: y, lt: yEnd } } });
+  if (process.env.DATABASE_URL) {
+    leads = await prisma.lead.findMany({ where: { createdAt: { gte: y, lt: yEnd } } });
   } else {
     const db = firestore();
     const snap = await (await db.collection("leads")).where("createdAt", ">=", y).where("createdAt", "<", yEnd).get();
@@ -18,8 +17,8 @@ export async function POST() {
   const leadsNew = leads.length;
   const leadsQualified = leads.filter((l: any) => l.status === 'QUALIFIED').length;
   const conversionRate = leadsNew ? (leadsQualified / leadsNew) : 0;
-  if ((prisma as any) instanceof PrismaClient) {
-    await (prisma as PrismaClient).kpiDaily.upsert({
+  if (process.env.DATABASE_URL) {
+    await prisma.kpiDaily.upsert({
       where: { date: y },
       update: { leadsNew, leadsQualified, conversionRate },
       create: { date: y, leadsNew, leadsQualified, conversionRate }

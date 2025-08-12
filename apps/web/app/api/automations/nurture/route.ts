@@ -1,12 +1,11 @@
 import { prisma } from "@/lib/db";
 import { runNurtureSequence } from "@/lib/automations";
-import { PrismaClient } from "@prisma/client";
 import { firestore } from "@/lib/firebaseAdmin";
 
 export async function POST() {
   let leads: any[] = [];
-  if ((prisma as any) instanceof PrismaClient) {
-    leads = await (prisma as PrismaClient).lead.findMany({ orderBy: { createdAt: 'desc' }, take: 10 }) as any[];
+  if (process.env.DATABASE_URL) {
+    leads = await prisma.lead.findMany({ orderBy: { createdAt: 'desc' }, take: 10 }) as any[];
   } else {
     const db = firestore();
     const snap = await (await db.collection("leads")).orderBy("createdAt","desc").limit(10).get();

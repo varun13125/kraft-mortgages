@@ -1,7 +1,6 @@
-import { PrismaClient } from "@prisma/client";
 import { firestore } from "@/lib/firebaseAdmin";
 
-type DbClient = PrismaClient | ReturnType<typeof firestore>;
+type DbClient = any | ReturnType<typeof firestore>;
 
 declare global {
   // eslint-disable-next-line no-var
@@ -10,6 +9,8 @@ declare global {
 
 function createClient(): DbClient {
   if (process.env.DATABASE_URL) {
+    // Only import PrismaClient if DATABASE_URL is set
+    const { PrismaClient } = require("@prisma/client");
     return new PrismaClient();
   }
   return firestore();

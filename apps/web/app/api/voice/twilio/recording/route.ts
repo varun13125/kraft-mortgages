@@ -1,6 +1,5 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/db";
-import { PrismaClient } from "@prisma/client";
 import { firestore } from "@/lib/firebaseAdmin";
 
 async function transcribeOpenAI(url: string) {
@@ -31,8 +30,8 @@ export async function POST(req: NextRequest) {
   const text = recUrl ? await transcribeOpenAI(recUrl + ".mp3") : "";
 
   if (text) {
-    if ((prisma as any) instanceof PrismaClient) {
-      await (prisma as PrismaClient).lead.create({ data: { province: "AB", intent: "voice_inquiry", details: { from, text }, score: 80 } });
+    if (process.env.DATABASE_URL) {
+      await prisma.lead.create({ data: { province: "AB", intent: "voice_inquiry", details: { from, text }, score: 80 } });
     } else {
       const db = firestore();
       await (await db.collection("leads")).add({ province: "AB", intent: "voice_inquiry", details: { from, text }, score: 80, status: "NEW", createdAt: new Date() });

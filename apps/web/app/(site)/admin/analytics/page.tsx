@@ -1,5 +1,4 @@
 import { prisma } from "@/lib/db";
-import { PrismaClient } from "@prisma/client";
 import { firestore } from "@/lib/firebaseAdmin";
 export const dynamic = "force-dynamic";
 import { TimeSeries } from "@/components/charts/TimeSeries";
@@ -11,8 +10,8 @@ function toDateStr(d: Date) {
 
 export default async function Analytics() {
   let leads: Array<{ createdAt: Date; status: string }> = [] as any;
-  if (prisma instanceof PrismaClient) {
-    leads = await (prisma as PrismaClient).lead.findMany({ select: { createdAt: true, status: true }, orderBy: { createdAt: 'asc' } }) as any;
+  if (process.env.DATABASE_URL) {
+    leads = await prisma.lead.findMany({ select: { createdAt: true, status: true }, orderBy: { createdAt: 'asc' } }) as any;
   } else {
     const db = firestore();
     const snap = await db.collection("leads").orderBy("createdAt","asc").get();

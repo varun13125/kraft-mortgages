@@ -1,12 +1,11 @@
 import { prisma } from "@/lib/db";
-import { PrismaClient } from "@prisma/client";
 import { firestore } from "@/lib/firebaseAdmin";
 export const dynamic = "force-dynamic";
 
 export default async function AdminRates() {
   let rows: any[] = [];
-  if (prisma instanceof PrismaClient) {
-    rows = await (prisma as PrismaClient).rateSnapshot.findMany({ orderBy: { capturedAt: 'desc' }, take: 200 }) as any[];
+  if (process.env.DATABASE_URL) {
+    rows = await prisma.rateSnapshot.findMany({ orderBy: { capturedAt: 'desc' }, take: 200 }) as any[];
   } else {
     const db = firestore();
     const snap = await db.collection("rateSnapshots").orderBy("capturedAt","desc").limit(200).get();
