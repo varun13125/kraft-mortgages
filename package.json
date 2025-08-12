@@ -5,7 +5,7 @@
   "packageManager": "pnpm@9.1.0",
   "scripts": {
     "dev": "pnpm -r --filter @kraft/web dev",
-    "build": "pnpm -r build && pnpm -C mli-select-complete build && pnpm --filter @kraft/web mli:export",
+    "build": "pnpm -r build && pnpm --filter @kraft/web mli:export",
     "start": "pnpm -r start",
     "db:migrate": "pnpm --filter @kraft/prisma prisma migrate dev",
     "db:generate": "pnpm --filter @kraft/prisma prisma generate",
@@ -13,7 +13,8 @@
   },
   "workspaces": [
     "apps/*",
-    "packages/*"
+    "packages/*",
+    "mli-select-complete"
   ],
   "dependencies": {
     "next": "14.2.5",
