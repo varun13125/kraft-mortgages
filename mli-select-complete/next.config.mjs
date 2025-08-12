@@ -2,6 +2,7 @@
 const nextConfig = {
   experimental: { typedRoutes: true },
   output: 'export',
-  basePath: '/mli'
+  trailingSlash: true,
+  images: { unoptimized: true }
 };
 export default nextConfig;
