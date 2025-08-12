@@ -1,9 +1,29 @@
+import Link from "next/link";
+
+export const dynamic = "force-dynamic";
+
+export default function MliSelectHub() {
+  return (
+    <div className="max-w-5xl mx-auto px-4 py-16">
+      <h1 className="text-3xl font-bold mb-4">CMHC MLI Select — Program Hub</h1>
+      <p className="text-gray-600 mb-6">Explore our complete MLI Select microsite with calculators, eligibility, scoring, and FAQs.</p>
+      <div className="flex gap-3">
+        <Link href="/mli-select/overview" className="px-4 py-2 rounded bg-blue-600 text-white">Overview</Link>
+        <Link href="/mli-select/eligibility" className="px-4 py-2 rounded bg-gray-200">Eligibility</Link>
+        <Link href="/mli-select/scoring" className="px-4 py-2 rounded bg-gray-200">Scoring</Link>
+        <a href="/mli" className="px-4 py-2 rounded bg-gray-200">Open Full Microsite</a>
+      </div>
+    </div>
+  );
+}
+
 "use client";
 import { useMemo, useState } from "react";
 import { estimateMliPremium } from "@/lib/calc/mli";
 import { motion } from "framer-motion";
-import { Building, DollarSign, Target, Award, CheckCircle, Calculator, ArrowRight, Shield } from "lucide-react";
+import { Building, DollarSign, Target, Award, CheckCircle, Calculator, ArrowRight, Shield, FileText, Users, TrendingUp, Clock, MapPin } from "lucide-react";
 import { ComplianceBanner } from "@/components/ComplianceBanner";
+import Link from "next/link";
 
 export default function MLISelect() {
   const [units, setUnits] = useState(24);
@@ -299,6 +319,151 @@ export default function MLISelect() {
               Schedule MLI Select Consultation
               <ArrowRight className="w-5 h-5" />
             </button>
+          </div>
+        </motion.div>
+      </section>
+
+      {/* Navigation to Detailed Pages */}
+      <section className="px-6 py-20 metallic-dark">
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          className="max-w-6xl mx-auto"
+        >
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+              Explore <span className="gradient-text">MLI Select</span> in Detail
+            </h2>
+            <p className="text-lg text-gray-300 max-w-2xl mx-auto">
+              Dive deeper into all aspects of the MLI Select program with our comprehensive guides
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <Link href="/mli-select/overview">
+              <motion.div
+                whileHover={{ scale: 1.02 }}
+                className="metallic-card rounded-xl p-6 h-full"
+              >
+                <div className="w-12 h-12 bg-gold-900/30 rounded-lg flex items-center justify-center mb-4">
+                  <MapPin className="w-6 h-6 text-gold-400" />
+                </div>
+                <h3 className="text-xl font-semibold text-white mb-3">Program Overview</h3>
+                <p className="text-sm text-gray-300 mb-4">
+                  Complete guide to CMHC MLI Select program, eligibility criteria, and key requirements for developers and investors.
+                </p>
+                <div className="text-gold-400 text-sm font-medium flex items-center gap-2">
+                  Learn More <ArrowRight className="w-4 h-4" />
+                </div>
+              </motion.div>
+            </Link>
+
+            <Link href="/mli-select/eligibility">
+              <motion.div
+                whileHover={{ scale: 1.02 }}
+                className="metallic-card rounded-xl p-6 h-full"
+              >
+                <div className="w-12 h-12 bg-gold-900/30 rounded-lg flex items-center justify-center mb-4">
+                  <CheckCircle className="w-6 h-6 text-gold-400" />
+                </div>
+                <h3 className="text-xl font-semibold text-white mb-3">Eligibility Checklist</h3>
+                <p className="text-sm text-gray-300 mb-4">
+                  Detailed eligibility requirements for borrowers, properties, and affordability terms to qualify for MLI Select.
+                </p>
+                <div className="text-gold-400 text-sm font-medium flex items-center gap-2">
+                  Check Requirements <ArrowRight className="w-4 h-4" />
+                </div>
+              </motion.div>
+            </Link>
+
+            <Link href="/mli-select/scoring">
+              <motion.div
+                whileHover={{ scale: 1.02 }}
+                className="metallic-card rounded-xl p-6 h-full"
+              >
+                <div className="w-12 h-12 bg-gold-900/30 rounded-lg flex items-center justify-center mb-4">
+                  <Target className="w-6 h-6 text-gold-400" />
+                </div>
+                <h3 className="text-xl font-semibold text-white mb-3">Scoring System</h3>
+                <p className="text-sm text-gray-300 mb-4">
+                  Understanding the three-pillar scoring system for Affordability, Energy Efficiency, and Accessibility.
+                </p>
+                <div className="text-gold-400 text-sm font-medium flex items-center gap-2">
+                  Score Calculation <ArrowRight className="w-4 h-4" />
+                </div>
+              </motion.div>
+            </Link>
+
+            <Link href="/mli-select/benefits">
+              <motion.div
+                whileHover={{ scale: 1.02 }}
+                className="metallic-card rounded-xl p-6 h-full"
+              >
+                <div className="w-12 h-12 bg-gold-900/30 rounded-lg flex items-center justify-center mb-4">
+                  <TrendingUp className="w-6 h-6 text-gold-400" />
+                </div>
+                <h3 className="text-xl font-semibold text-white mb-3">Benefits by Tier</h3>
+                <p className="text-sm text-gray-300 mb-4">
+                  Learn how Tier 50, 70, and 100 unlock different benefits: amortization, leverage, and premium discounts.
+                </p>
+                <div className="text-gold-400 text-sm font-medium flex items-center gap-2">
+                  See All Benefits <ArrowRight className="w-4 h-4" />
+                </div>
+              </motion.div>
+            </Link>
+
+            <Link href="/mli-select/calculators">
+              <motion.div
+                whileHover={{ scale: 1.02 }}
+                className="metallic-card rounded-xl p-6 h-full"
+              >
+                <div className="w-12 h-12 bg-gold-900/30 rounded-lg flex items-center justify-center mb-4">
+                  <Calculator className="w-6 h-6 text-gold-400" />
+                </div>
+                <h3 className="text-xl font-semibold text-white mb-3">Advanced Calculators</h3>
+                <p className="text-sm text-gray-300 mb-4">
+                  Use our suite of specialized calculators for points & tier, rent cap, loan optimization, and scenario planning.
+                </p>
+                <div className="text-gold-400 text-sm font-medium flex items-center gap-2">
+                  Use Calculators <ArrowRight className="w-4 h-4" />
+                </div>
+              </motion.div>
+            </Link>
+
+            <Link href="/mli-select/application-process">
+              <motion.div
+                whileHover={{ scale: 1.02 }}
+                className="metallic-card rounded-xl p-6 h-full"
+              >
+                <div className="w-12 h-12 bg-gold-900/30 rounded-lg flex items-center justify-center mb-4">
+                  <Clock className="w-6 h-6 text-gold-400" />
+                </div>
+                <h3 className="text-xl font-semibold text-white mb-3">Application Process</h3>
+                <p className="text-sm text-gray-300 mb-4">
+                  Step-by-step guide through the CMHC MLI Select application process, documentation, and timeline expectations.
+                </p>
+                <div className="text-gold-400 text-sm font-medium flex items-center gap-2">
+                  Start Application <ArrowRight className="w-4 h-4" />
+                </div>
+              </motion.div>
+            </Link>
+          </div>
+
+          <div className="mt-12 bg-gray-800/50 rounded-xl p-8 text-center">
+            <h3 className="text-2xl font-semibold text-white mb-4">Ready to Get Started?</h3>
+            <p className="text-gray-300 mb-6 max-w-xl mx-auto">
+              As Canada's leading MLI Select specialists, we've helped developers and investors save millions in CMHC premiums. 
+              Get a free assessment of your project today.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link href="/contact" className="px-8 py-4 bg-gold-500 hover:bg-gold-600 text-white font-semibold rounded-lg transition-colors inline-flex items-center gap-2">
+                Free MLI Select Assessment
+              </Link>
+              <Link href="/mli-select/download-guide" className="px-8 py-4 border border-gold-500 text-gold-400 rounded-lg hover:bg-gold-500/10 transition-colors">
+                Download Program Guide
+              </Link>
+            </div>
           </div>
         </motion.div>
       </section>

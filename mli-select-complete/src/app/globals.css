@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root { --bg: #f8fafc; --fg: #0b1220; }
+html, body { @apply bg-[var(--bg)] text-[var(--fg)]; }
+
+.container-tight { @apply max-w-6xl mx-auto px-4 sm:px-6 lg:px-8; }
+.btn { @apply inline-flex items-center justify-center rounded-lg px-4 py-2 font-medium transition shadow-sm; }
+.btn-primary { @apply bg-brand-blue text-white hover:bg-brand-blueLight; }
+.btn-outline { @apply border border-brand-blue text-brand-blue hover:bg-brand-blue/5; }
+.card { @apply rounded-2xl bg-white shadow-card ring-1 ring-black/5; }
+.card-body { @apply p-5 sm:p-6; }
+.section-pad { @apply py-10 sm:py-14; }
+.badge { @apply inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold; }
+.badge-tier { @apply bg-brand-gold/15 text-brand-blue; }
+input, select, textarea { @apply w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-brand-gold/50; }
+label { @apply text-sm font-medium text-slate-700; }

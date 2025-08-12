@@ -9,6 +9,14 @@ const nextConfig = {
   },
   reactStrictMode: true,
   pageExtensions: ['ts','tsx','mdx'],
+  async rewrites() {
+    return [
+      {
+        source: '/mli/:path*',
+        destination: '/mli-proxy/:path*',
+      },
+    ];
+  },
   webpack: (config, { isServer }) => {
     // Handle WebAssembly modules
     config.experiments = {
