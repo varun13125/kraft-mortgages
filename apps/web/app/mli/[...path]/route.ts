@@ -24,7 +24,7 @@ export async function GET(req: NextRequest, { params }: { params: { path: string
       headers: { 'Content-Type': contentType }
     });
   } catch (e) {
-    console.log('[mli route] File not found:', params.path, e.message);
+    console.log('[mli route] File not found:', params.path, e instanceof Error ? e.message : 'Unknown error');
     return new Response('Not found', { status: 404 });
   }
 }

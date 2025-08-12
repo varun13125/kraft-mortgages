@@ -13,7 +13,7 @@ export async function GET(req: NextRequest) {
       headers: { 'Content-Type': 'text/html' }
     });
   } catch (e) {
-    console.log('[mli route] Index file not found:', e.message);
+    console.log('[mli route] Index file not found:', e instanceof Error ? e.message : 'Unknown error');
     return new Response('MLI microsite not available', { status: 404 });
   }
 }
