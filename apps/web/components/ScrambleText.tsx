@@ -24,7 +24,8 @@ export function ScrambleText({
   const intervalRef = useRef<NodeJS.Timeout>();
   const revealedChars = useRef(0);
 
-  const scrambleText = () => {
+  // Memoize the scrambler so hooks depending on it can include it safely
+  const scrambleText = useCallback(() => {
     let scrambled = "";
     for (let i = 0; i < text.length; i++) {
       if (i < revealedChars.current) {
@@ -36,11 +37,11 @@ export function ScrambleText({
       }
     }
     return scrambled;
-  };
+  }, [text, characters]);
 
   const startAnimation = useCallback(() => {
     if (isAnimating) return;
-    
+
     setIsAnimating(true);
     revealedChars.current = 0;
 
@@ -52,7 +53,7 @@ export function ScrambleText({
     // Reveal phase
     setTimeout(() => {
       clearInterval(scrambleInterval);
-      
+
       const revealInterval = setInterval(() => {
         if (revealedChars.current >= text.length) {
           clearInterval(revealInterval);
@@ -60,14 +61,14 @@ export function ScrambleText({
           setIsAnimating(false);
           return;
         }
-        
+
         revealedChars.current++;
         setDisplayText(scrambleText());
       }, revealSpeed);
-      
+
       intervalRef.current = revealInterval;
     }, 1000);
-  }, [isAnimating, scrambleSpeed, revealSpeed, text, characters]);
+  }, [isAnimating, scrambleSpeed, revealSpeed, text, scrambleText]);
 
   useEffect(() => {
     const timer = setTimeout(() => {

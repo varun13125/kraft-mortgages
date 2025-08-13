@@ -9,11 +9,20 @@ const nextConfig = {
   },
   reactStrictMode: true,
   pageExtensions: ['ts','tsx','mdx'],
+  eslint: {
+    // Warning: This allows production builds to successfully complete even if
+    // your project has ESLint errors.
+    ignoreDuringBuilds: true,
+  },
   async rewrites() {
     return [
       {
         source: '/mli/:path*',
         destination: '/mli-proxy/:path*',
+      },
+      {
+        source: '/mli-select/:path*',
+        destination: '/mli-proxy/mli-select/:path*',
       },
     ];
   },

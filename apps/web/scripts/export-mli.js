@@ -14,12 +14,16 @@ console.log('[mli] Destination path:', destMli);
 try {
   if (!existsSync(srcOut)) {
     console.log('[mli] out folder does not exist, skipping export');
-    
+
     // List what exists in mli-select-complete
     const mliDir = join(repoRoot, 'mli-select-complete');
     if (existsSync(mliDir)) {
       console.log('[mli] Contents of mli-select-complete:', readdirSync(mliDir));
     }
+
+    // Create empty destination directory so the route handler doesn't fail
+    mkdirSync(destMli, { recursive: true });
+    console.log('[mli] Created empty destination directory for future use');
     process.exit(0);
   }
   
@@ -38,6 +42,13 @@ try {
   }
 } catch (e) {
   console.log('[mli] export failed:', e?.message || e);
+  // Create empty destination directory so the route handler doesn't fail
+  try {
+    mkdirSync(destMli, { recursive: true });
+    console.log('[mli] Created empty destination directory after error');
+  } catch (createError) {
+    console.log('[mli] Failed to create destination directory:', createError?.message || createError);
+  }
 }
 
 

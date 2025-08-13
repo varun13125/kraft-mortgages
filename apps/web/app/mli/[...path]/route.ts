@@ -4,37 +4,57 @@ import { readFile, access } from 'node:fs/promises';
 
 export const dynamic = 'force-dynamic';
 
-// Serve statically copied assets (PDF, images) under /mli/*
-export async function GET(req: NextRequest, { params }: { params: { path: string[] } }) {
-  try {
-    const sub = params.path?.join('/') || '';
-    const filePath = join(process.cwd(), 'public', 'mli', sub);
-    
-    console.log('[mli route] Attempting to serve:', filePath);
-    
-    // Check if file exists first
-    await access(filePath);
-    const data = await readFile(filePath);
-    
-    // Set appropriate content type
-    const ext = sub.split('.').pop()?.toLowerCase();
-    const contentType = ext === 'html' ? 'text/html' : 
-                       ext === 'css' ? 'text/css' :
-                       ext === 'js' ? 'application/javascript' :
-                       ext === 'svg' ? 'image/svg+xml' :
-                       ext === 'pdf' ? 'application/pdf' :
-                       'application/octet-stream';
-    
-    console.log('[mli route] Successfully serving:', sub, 'as', contentType);
-    return new Response(data, {
-      headers: { 'Content-Type': contentType }
-    });
-  } catch (e) {
-    console.log('[mli route] File not found:', params.path, 'Error:', e instanceof Error ? e.message : 'Unknown error');
-    
-    // For now, redirect to mli-select hub if file not found
-    return Response.redirect(new URL('/mli-select', req.url), 302);
+export async function GET(req: NextRequest, { params }: { params: { path?: string[] } }) {
+  const subPath = params.path?.join('/') ?? '';
+  const baseDir = join(process.cwd(), 'public', 'mli');
+
+  // Build candidate file paths to try in order
+  const candidates: string[] = [];
+  if (!subPath) {
+    candidates.push(join(baseDir, 'index.html'));
+  } else {
+    const abs = join(baseDir, subPath);
+    candidates.push(abs);
+    // If requesting a directory (no extension or trailing slash), try index.html
+    if (!subPath.includes('.') || subPath.endsWith('/')) {
+      const dir = subPath.endsWith('/') ? abs : abs + '/';
+      candidates.push(join(dir, 'index.html'));
+    }
   }
+
+  // Try to serve the first existing candidate
+  for (const filePath of candidates) {
+    try {
+      await access(filePath);
+      const data = await readFile(filePath);
+      const ext = (filePath.split('.').pop() || '').toLowerCase();
+      const contentType =
+        ext === 'html' ? 'text/html; charset=utf-8' :
+        ext === 'css' ? 'text/css' :
+        ext === 'js' ? 'application/javascript' :
+        ext === 'mjs' ? 'application/javascript' :
+        ext === 'json' ? 'application/json' :
+        ext === 'svg' ? 'image/svg+xml' :
+        ext === 'png' ? 'image/png' :
+        ext === 'jpg' || ext === 'jpeg' ? 'image/jpeg' :
+        ext === 'webp' ? 'image/webp' :
+        ext === 'ico' ? 'image/x-icon' :
+        ext === 'pdf' ? 'application/pdf' :
+        ext === 'woff' ? 'font/woff' :
+        ext === 'woff2' ? 'font/woff2' :
+        ext === 'ttf' ? 'font/ttf' :
+        ext === 'eot' ? 'application/vnd.ms-fontobject' :
+        ext === 'map' ? 'application/json' :
+        'application/octet-stream';
+
+      return new Response(data, { headers: { 'Content-Type': contentType } });
+    } catch {
+      // Try next candidate
+    }
+  }
+
+  // Not found; send users to the program hub instead of a 404 for nicer UX
+  return Response.redirect(new URL('/mli-select', req.url), 302);
 }
 
 
