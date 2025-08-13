@@ -26,23 +26,23 @@ const nextConfig = {
       },
     ];
   },
-  webpack: (config, { isServer }) => {
+  webpack: (config) => {
     // Handle WebAssembly modules
     config.experiments = {
       ...config.experiments,
       asyncWebAssembly: true,
       layers: true,
     };
-    
+
     // Handle WASM files properly
     config.module.rules.push({
       test: /\.wasm$/,
       type: 'webassembly/async',
     });
-    
+
     // Don't parse farmhash-modern WASM files
     config.module.noParse = /farmhash.*\.wasm$/;
-    
+
     return config;
   },
 };
