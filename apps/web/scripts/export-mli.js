@@ -1,57 +1,37 @@
-// Simple exporter: copies public assets from mli-select-complete into web public under /mli-select
-import { mkdirSync, cpSync, existsSync, readdirSync } from 'node:fs';
-import { join, dirname } from 'node:path';
-import { fileURLToPath } from 'node:url';
+const { cpSync, existsSync, mkdirSync, readdirSync } = require('fs');
+const { join } = require('path');
 
-// Fix for ES modules to get __dirname equivalent
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+function exportMli() {
+  const repoRoot = join(__dirname, '..', '..', '..');
+  const srcOut = join(repoRoot, 'mli-select-complete', 'out');
+  const destMli = join(__dirname, '..', 'public', 'mli-select');
 
-const root = dirname(__dirname); // apps/web (from scripts folder)
-const repoRoot = dirname(dirname(root)); // repo root (from apps folder)
-
-const srcOut = join(repoRoot, 'mli-select-complete', 'out');
-const destMli = join(root, 'public', 'mli-select');
-
-console.log('[mli] Source path:', srcOut);
-console.log('[mli] Destination path:', destMli);
-
-try {
-  if (!existsSync(srcOut)) {
-    console.log('[mli] out folder does not exist, skipping export');
-    
-    // List what exists in mli-select-complete
-    const mliDir = join(repoRoot, 'mli-select-complete');
-    if (existsSync(mliDir)) {
-      console.log('[mli] Contents of mli-select-complete:', readdirSync(mliDir));
-    }
-    
-    // Create empty destination directory so the route handler doesn't fail
-    mkdirSync(destMli, { recursive: true });
-    console.log('[mli] Created empty destination directory for future use');
-    process.exit(0);
-  }
-  
-  // List contents of out folder
-  console.log('[mli] Contents of out folder:', readdirSync(srcOut));
-  
-  mkdirSync(destMli, { recursive: true });
-  cpSync(srcOut, destMli, { recursive: true, force: true });
-  
-  // Verify copy worked
-  if (existsSync(destMli)) {
-    console.log('[mli] Successfully exported microsite to /public/mli-select');
-    console.log('[mli] Exported files:', readdirSync(destMli));
-  } else {
-    console.log('[mli] Export failed - destination folder not created');
-  }
-} catch (e) {
-  console.log('[mli] export failed:', e?.message || e);
-  // Create empty destination directory so the route handler doesn't fail
   try {
+    if (!existsSync(srcOut)) {
+      console.log(`[mli] Source directory ${srcOut} not found. Creating empty destination directory.`);
+      mkdirSync(destMli, { recursive: true });
+      return;
+    }
+
+    console.log(`[mli] Exporting microsite from ${srcOut} to ${destMli}`);
     mkdirSync(destMli, { recursive: true });
-    console.log('[mli] Created empty destination directory after error');
-  } catch (createError) {
-    console.log('[mli] Failed to create destination directory:', createError?.message || createError);
+    cpSync(srcOut, destMli, { recursive: true });
+    console.log('[mli] Successfully exported microsite to /public/mli-select');
+
+    if (existsSync(destMli)) {
+      console.log('[mli] Verified destination directory contents:');
+      const files = readdirSync(destMli);
+      files.forEach(file => console.log(`- ${file}`));
+    } else {
+      console.error('[mli] Verification failed: Destination directory does not exist after copy.');
+    }
+  } catch (error) {
+    console.error('[mli] An error occurred during the export process:', error);
+    // Attempt to create an empty directory to prevent build failures
+    if (!existsSync(destMli)) {
+      mkdirSync(destMli, { recursive: true });
+    }
   }
 }
+
+exportMli();
