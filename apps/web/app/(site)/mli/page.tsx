@@ -72,11 +72,11 @@ export default function MLILanding() {
           <p className="text-lg text-gray-300 mb-8">
             Our MLI Select specialists are here to help you maximize your savings and streamline your application.
           </p>
-          <Link 
-            href="/mli-select" 
+          <Link
+            href={"/mli-select" as any}
             className="px-8 py-4 bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-700 hover:to-green-700 text-white font-semibold rounded-lg transition-colors inline-block"
           >
-            Access Full MLI Select Hub →
+            Access Full MLI Select Portal →
           </Link>
         </div>
       </section>
