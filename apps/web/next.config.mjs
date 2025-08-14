@@ -17,12 +17,8 @@ const nextConfig = {
   async rewrites() {
     return [
       {
-        source: '/mli/:path*',
-        destination: '/mli-proxy/:path*',
-      },
-      {
         source: '/mli-select/:path*',
-        destination: '/mli-proxy/mli-select/:path*',
+        destination: '/mli-proxy/:path*',
       },
     ];
   },
