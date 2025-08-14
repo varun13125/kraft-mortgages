@@ -26,7 +26,7 @@ export default function MLILanding() {
               Access MLI Select Portal
             </a>
             <Link
-              href="/contact"
+              href={"/contact" as any}
               className="px-8 py-4 border border-blue-600 text-blue-400 hover:bg-blue-600 hover:text-white rounded-lg transition-colors"
             >
               Get Free Assessment
