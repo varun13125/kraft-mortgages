@@ -19,13 +19,13 @@ export default function MLILanding() {
             Save hundreds of thousands in CMHC premiums with our expertise.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link 
-              href="/mli-select" 
+            <Link
+              href={"/mli-select" as any}
               className="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors"
             >
-              Explore Program Hub
+              Access MLI Select Portal
             </Link>
-            <Link 
+            <Link
               href={"/contact" as any}
               className="px-8 py-4 border border-blue-600 text-blue-400 hover:bg-blue-600 hover:text-white rounded-lg transition-colors"
             >
