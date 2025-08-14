@@ -282,7 +282,7 @@ export default function ModernHomepage() {
               <a href="#services" className="text-gray-300 hover:text-amber-500 transition-colors font-medium text-sm">Services</a>
               <a href="#calculators" className="text-gray-300 hover:text-amber-500 transition-colors font-medium text-sm">Calculators</a>
               <Link href="/about" className="text-gray-300 hover:text-amber-500 transition-colors font-medium text-sm">About</Link>
-              <Link href="/mli-select" className="text-gray-300 hover:text-amber-500 transition-colors font-medium text-sm">MLI Select</Link>
+              <Link href="/mli" className="text-gray-300 hover:text-amber-500 transition-colors font-medium text-sm">MLI Select</Link>
               <a 
                 href="https://r.mtg-app.com/varun-chaudhry"
                 target="_blank"

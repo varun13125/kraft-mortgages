@@ -19,14 +19,14 @@ export default function MLILanding() {
             Save hundreds of thousands in CMHC premiums with our expertise.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href={"/mli-select" as any}
+            <a
+              href="/mli-select"
               className="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors"
             >
               Access MLI Select Portal
-            </Link>
+            </a>
             <Link
-              href={"/contact" as any}
+              href="/contact"
               className="px-8 py-4 border border-blue-600 text-blue-400 hover:bg-blue-600 hover:text-white rounded-lg transition-colors"
             >
               Get Free Assessment
@@ -72,12 +72,12 @@ export default function MLILanding() {
           <p className="text-lg text-gray-300 mb-8">
             Our MLI Select specialists are here to help you maximize your savings and streamline your application.
           </p>
-          <Link
-            href={"/mli-select" as any}
+          <a
+            href="/mli-select"
             className="px-8 py-4 bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-700 hover:to-green-700 text-white font-semibold rounded-lg transition-colors inline-block"
           >
             Access Full MLI Select Portal →
-          </Link>
+          </a>
         </div>
       </section>
     </div>
