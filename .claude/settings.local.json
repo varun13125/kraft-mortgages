@@ -36,7 +36,12 @@
       "Bash(pnpm build:*)",
       "Bash(npx next:*)",
       "Bash(pnpm next:*)",
-      "Bash(npx prisma generate:*)"
+      "Bash(npx prisma generate:*)",
+      "Bash(pnpm run:*)",
+      "Bash(for path in \"/mli-select/overview\" \"/mli-select/benefits\" \"/mli-select/calculators\" \"/mli-select/faq\")",
+      "Bash(do echo \"Testing $path:\")",
+      "Bash(done)",
+      "Bash(npm run dev:*)"
     ],
     "deny": []
   }

@@ -20,9 +20,23 @@ export default function Affordability() {
   const pass = gds <= 39 && tds <= 44; // typical guideline
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6">
-      <h2 className="text-2xl font-semibold text-white">Affordability Calculator</h2>
-      <div className="mt-2"><ComplianceBanner feature="LEAD_FORM" /></div>
+    <div className="min-h-screen">
+      {/* Hero Section */}
+      <section className="py-20 px-4">
+        <div className="max-w-6xl mx-auto text-center">
+          <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-gray-100 mb-6">
+            Affordability Calculator
+          </h1>
+          <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+            Calculate your qualifying mortgage amount with GDS/TDS stress testing.
+          </p>
+        </div>
+      </section>
+
+      <section className="pb-20 px-4">
+        <div className="max-w-4xl mx-auto">
+          <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl shadow-2xl border border-gray-700/50 p-8">
+            <div className="mt-2 mb-6"><ComplianceBanner feature="LEAD_FORM" /></div>
       <div className="grid gap-3 md:grid-cols-2">
         <label className="grid gap-1 text-gray-200">Household Income (annual)
           <input type="number" value={income} onChange={e=>setIncome(+e.target.value)} className="bg-gray-700 border border-gray-600 rounded p-2 text-white placeholder-gray-400 focus:border-gold-500 focus:outline-none" />
@@ -54,6 +68,9 @@ export default function Affordability() {
         <div className={pass?"text-green-400":"text-red-400"}>{pass?"Within typical guidelines":"Above typical guidelines"}</div>
         <p className="text-xs text-gray-400">Guidelines vary by lender and program; educational only.</p>
       </div>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

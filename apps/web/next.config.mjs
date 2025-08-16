@@ -14,14 +14,6 @@ const nextConfig = {
     // your project has ESLint errors.
     ignoreDuringBuilds: true,
   },
-  async rewrites() {
-    return [
-      {
-        source: '/mli-select/:path*',
-        destination: '/mli-proxy/:path*',
-      },
-    ];
-  },
   webpack: (config) => {
     // Handle WebAssembly modules
     config.experiments = {
