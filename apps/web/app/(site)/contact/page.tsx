@@ -66,8 +66,8 @@ export default function ContactPage() {
                     <div>
                       <h3 className="text-lg font-medium text-gray-100 mb-2">Email</h3>
                       <p className="text-gray-400 mb-2">Send us your questions anytime</p>
-                      <a href="mailto:info@kraftmortgages.com" className="text-gold-400 hover:text-gold-300 transition-colors font-semibold">
-                        info@kraftmortgages.com
+                      <a href="mailto:info@kraftmortgages.ca" className="text-gold-400 hover:text-gold-300 transition-colors font-semibold">
+                        info@kraftmortgages.ca
                       </a>
                     </div>
                   </div>

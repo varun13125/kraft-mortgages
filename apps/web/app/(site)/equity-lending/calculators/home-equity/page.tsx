@@ -26,11 +26,11 @@ export default function HomeEquityCalculator() {
 
   // Rate estimation based on credit score and equity position
   const estimatedRate = useMemo(() => {
-    const baseRate = 5.5; // Prime rate
-    if (creditScore >= 750) return baseRate + 0.5;
-    if (creditScore >= 700) return baseRate + 0.75;
-    if (creditScore >= 650) return baseRate + 1.0;
-    return baseRate + 1.5;
+    // Equity lending rate range: 4.99% - 7.95%
+    if (creditScore >= 750) return 4.99;
+    if (creditScore >= 700) return 5.50;
+    if (creditScore >= 650) return 6.50;
+    return 7.95;
   }, [creditScore]);
 
   const monthlyPaymentIOOnly = (availableEquity * estimatedRate / 100) / 12;

@@ -25,28 +25,28 @@ export default function EquityLending() {
       description: "Access up to 80% of your home's equity with competitive rates",
       features: ["Institutional rates", "Flexible access", "Interest-only payments", "Reusable credit line"],
       icon: Home,
-      rate: "Prime + 0.50%"
+      rate: "Starting from 4.99%"
     },
     {
       title: "Debt Consolidation",
       description: "Consolidate high-interest debt into one manageable payment",
       features: ["Lower monthly payments", "Single payment", "Improved credit score", "Tax-deductible options"],
       icon: CreditCard,
-      rate: "From 3.95%"
+      rate: "4.99% - 7.95%"
     },
     {
       title: "Investment Opportunities", 
       description: "Leverage your home equity for investment properties",
       features: ["Investment property down payments", "Portfolio expansion", "Tax advantages", "Professional guidance"],
       icon: Building2,
-      rate: "Competitive rates"
+      rate: "5.25% - 7.95%"
     },
     {
       title: "Cash-Out Refinancing",
       description: "Refinance and access cash for major expenses",
       features: ["Home renovations", "Business investments", "Education funding", "Emergency reserves"],
       icon: TrendingUp,
-      rate: "Market rates"
+      rate: "5.50% - 7.95%"
     }
   ];
 
@@ -105,7 +105,7 @@ export default function EquityLending() {
   ];
 
   const comparisonData = [
-    { feature: "Interest Rates", equity: "Prime + 0.50% - 2.00%", private: "8% - 15%+", winner: "equity" },
+    { feature: "Interest Rates", equity: "4.99% - 7.95%", private: "8% - 15%+", winner: "equity" },
     { feature: "Approval Time", equity: "24-48 hours", private: "Same day", winner: "private" },
     { feature: "Documentation", equity: "Standard verification", private: "Minimal docs", winner: "private" },
     { feature: "Professional Service", equity: "Full-service support", private: "Basic service", winner: "equity" },

@@ -24,11 +24,11 @@ export default function DebtConsolidationCalculator() {
   // Calculate new mortgage payment if debt is consolidated
   const newMortgageAmount = currentMortgage + availableEquity;
   const newRate = useMemo(() => {
-    const baseRate = 5.2; // Current market rate
-    if (creditScore >= 750) return baseRate;
-    if (creditScore >= 700) return baseRate + 0.25;
-    if (creditScore >= 650) return baseRate + 0.5;
-    return baseRate + 0.75;
+    // Equity lending rate range: 4.99% - 7.95%
+    if (creditScore >= 750) return 4.99;
+    if (creditScore >= 700) return 5.25;
+    if (creditScore >= 650) return 6.25;
+    return 7.50;
   }, [creditScore]);
 
   // Monthly payment calculation (25 year amortization)
