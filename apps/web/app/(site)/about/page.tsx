@@ -388,7 +388,7 @@ export default function AboutUs() {
                   <Phone className="w-5 h-5 text-gold-400 mt-0.5" />
                   <div>
                     <p className="font-semibold text-gray-100">Phone</p>
-                    <p className="text-sm text-gray-400">604-593-1550 (Varun)<br />604-727-1579 (Varun)<br />604-725-0134 (Gursharan)</p>
+                    <p className="text-sm text-gray-400">604-593-1550 (Office)<br />604-727-1579 (Varun)<br />604-725-0134 (Gursharan)</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
