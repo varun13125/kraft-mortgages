@@ -41,7 +41,9 @@
       "Bash(for path in \"/mli-select/overview\" \"/mli-select/benefits\" \"/mli-select/calculators\" \"/mli-select/faq\")",
       "Bash(do echo \"Testing $path:\")",
       "Bash(done)",
-      "Bash(npm run dev:*)"
+      "Bash(npm run dev:*)",
+      "Bash(ls:*)",
+      "Bash(git diff:*)"
     ],
     "deny": []
   }
