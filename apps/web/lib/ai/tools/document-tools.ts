@@ -69,7 +69,7 @@ export const checkDocumentsTool: MortgageTool = {
     }).optional()
   }),
   execute: async ({ mortgageType, situation = {} }) => {
-    const checklist = documentChecklists[mortgageType];
+    const checklist = documentChecklists[mortgageType as keyof typeof documentChecklists];
     const additionalDocs: string[] = [];
 
     // Add situation-specific documents
@@ -173,7 +173,7 @@ export const documentUploadGuideTool: MortgageTool = {
       }
     };
 
-    const guide = guides[documentType.toLowerCase()] || {
+    const guide = guides[documentType.toLowerCase() as keyof typeof guides] || {
       acceptedFormats: ["PDF", "JPG", "PNG"],
       maxSize: "10MB per file",
       tips: ["Ensure documents are clear and readable", "Include all pages"]
@@ -233,7 +233,7 @@ export const documentTimelineTool: MortgageTool = {
       }
     };
 
-    const timeline = timelines[mortgageType];
+    const timeline = timelines[mortgageType as keyof typeof timelines];
     
     return {
       success: true,
