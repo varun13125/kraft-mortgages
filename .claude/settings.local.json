@@ -43,7 +43,8 @@
       "Bash(done)",
       "Bash(npm run dev:*)",
       "Bash(ls:*)",
-      "Bash(git diff:*)"
+      "Bash(git diff:*)",
+      "Bash(npx typescript:*)"
     ],
     "deny": []
   }

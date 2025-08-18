@@ -10,10 +10,7 @@ export async function GET(req: NextRequest) {
       JSON.stringify({
         availableModels: {
           free: FREE_MODELS,
-          premium: {
-            CLAUDE_35: "claude-3-5-sonnet-20241022",
-            ...PREMIUM_MODELS,
-          },
+          premium: PREMIUM_MODELS,
         },
         analytics,
         costSavings: {
