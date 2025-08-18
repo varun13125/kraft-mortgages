@@ -93,10 +93,14 @@ export const checkAvailabilityTool: MortgageTool = {
   }),
   execute: async ({ appointmentType, preferredDate, preferredTime }) => {
     const targetDate = preferredDate ? new Date(preferredDate) : new Date();
-    const appointmentInfo = appointmentTypes[appointmentType];
+    const appointmentInfo = appointmentTypes[appointmentType as keyof typeof appointmentTypes];
     
     // Get slots for next 5 business days
-    const availability = [];
+    interface AvailabilityDay {
+      date: string;
+      slots: TimeSlot[];
+    }
+    const availability: AvailabilityDay[] = [];
     let currentDate = new Date(targetDate);
     let daysChecked = 0;
     
@@ -158,7 +162,7 @@ export const bookAppointmentTool: MortgageTool = {
     })
   }),
   execute: async ({ appointmentType, dateTime, contact }) => {
-    const appointmentInfo = appointmentTypes[appointmentType];
+    const appointmentInfo = appointmentTypes[appointmentType as keyof typeof appointmentTypes];
     const appointmentDate = new Date(dateTime);
     const endTime = new Date(appointmentDate.getTime() + appointmentInfo.duration * 60000);
     
@@ -295,7 +299,7 @@ export const appointmentPrepTool: MortgageTool = {
     appointmentType: z.enum(["consultation", "application", "review", "signing"])
   }),
   execute: async ({ appointmentType }) => {
-    const appointmentInfo = appointmentTypes[appointmentType];
+    const appointmentInfo = appointmentTypes[appointmentType as keyof typeof appointmentTypes];
     
     const prepChecklists = {
       consultation: {
