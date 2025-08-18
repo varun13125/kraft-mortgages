@@ -69,7 +69,7 @@ class ToolExecutor {
         name: "calculate_construction",
         description: "Calculate construction financing",
         parameters: null,
-        execute: async (params: any) => mortgageTools.calculateConstructionFinancing(params)
+        execute: async (params: any) => mortgageTools.calculateConstructionCost(params)
       }
     ];
 
