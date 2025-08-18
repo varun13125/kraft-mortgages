@@ -12,6 +12,15 @@ interface LeadFormData {
   consentToMarketing: boolean;
 }
 
+interface LeadFormErrors {
+  name?: string;
+  email?: string;
+  phone?: string;
+  province?: string;
+  consentToContact?: string;
+  consentToMarketing?: string;
+}
+
 interface LeadFormProps {
   onSubmit: (data: LeadFormData) => Promise<void>;
   reportType?: string;
@@ -29,7 +38,7 @@ export function LeadForm({ onSubmit, reportType = "Report", isLoading = false }:
     consentToMarketing: false
   });
 
-  const [errors, setErrors] = useState<Partial<LeadFormData>>({});
+  const [errors, setErrors] = useState<LeadFormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const provinces = [
@@ -39,7 +48,7 @@ export function LeadForm({ onSubmit, reportType = "Report", isLoading = false }:
   ];
 
   const validateForm = (): boolean => {
-    const newErrors: Partial<LeadFormData> = {};
+    const newErrors: LeadFormErrors = {};
 
     if (!formData.name.trim()) {
       newErrors.name = "Name is required";
@@ -83,8 +92,8 @@ export function LeadForm({ onSubmit, reportType = "Report", isLoading = false }:
   const handleInputChange = (field: keyof LeadFormData, value: string | boolean) => {
     setFormData(prev => ({ ...prev, [field]: value }));
     // Clear error when user starts typing
-    if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: undefined }));
+    if (errors[field as keyof LeadFormErrors]) {
+      setErrors(prev => ({ ...prev, [field as keyof LeadFormErrors]: undefined }));
     }
   };
 

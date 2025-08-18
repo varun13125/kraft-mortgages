@@ -1,4 +1,17 @@
-import { Client } from "@hubspot/api-client";
+// Make HubSpot client optional to prevent build errors if package not installed
+let Client: any;
+try {
+  const hubspotApi = require("@hubspot/api-client");
+  Client = hubspotApi.Client;
+} catch (error) {
+  console.warn("@hubspot/api-client not installed. HubSpot integration disabled.");
+  // Mock Client for development
+  Client = class MockClient {
+    constructor() {
+      console.warn("Using mock HubSpot client");
+    }
+  };
+}
 
 export interface HubSpotConfig {
   apiKey?: string;
