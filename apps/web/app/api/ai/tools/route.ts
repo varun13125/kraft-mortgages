@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import { mortgageTools } from "@/lib/ai/tools/mortgage-tools";
-import { rateTools } from "@/lib/ai/tools/rate-tools";
+import { rateToolsInstance } from "@/lib/ai/tools/rate-tools";
 
 export async function POST(req: NextRequest) {
   try {
@@ -33,19 +33,19 @@ export async function POST(req: NextRequest) {
         break;
       
       case "getCurrentRates":
-        result = await rateTools.getCurrentRates(parameters);
+        result = await rateToolsInstance.getCurrentRates(parameters);
         break;
       
       case "compareRates":
-        result = await rateTools.compareRates(parameters);
+        result = await rateToolsInstance.compareRates(parameters);
         break;
       
       case "getRateHistory":
-        result = await rateTools.getRateHistory(parameters);
+        result = await rateToolsInstance.getRateHistory(parameters);
         break;
       
       case "getRateAlert":
-        result = await rateTools.getRateAlert(parameters);
+        result = await rateToolsInstance.getRateAlert(parameters);
         break;
       
       default:
