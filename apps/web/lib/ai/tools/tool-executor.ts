@@ -133,10 +133,22 @@ class ToolExecutor {
     const tool = this.tools.get(toolName);
     if (!tool) return null;
     
+    // Handle parameters - check if it's a ZodObject with shape property
+    let parameterSchema = {};
+    if (tool.parameters) {
+      // Check if it's a ZodObject (which has _def.shape)
+      if ('_def' in tool.parameters && tool.parameters._def && 'shape' in tool.parameters._def) {
+        parameterSchema = tool.parameters._def.shape;
+      } else if ('shape' in tool.parameters) {
+        parameterSchema = (tool.parameters as any).shape;
+      }
+      // Otherwise leave as empty object for other Zod types
+    }
+    
     return {
       name: tool.name,
       description: tool.description,
-      parameters: tool.parameters ? tool.parameters.shape : {}
+      parameters: parameterSchema
     };
   }
 
