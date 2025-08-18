@@ -44,8 +44,13 @@ const appointmentTypes = {
 };
 
 // Available time slots (mock data - would connect to real calendar)
-const getAvailableSlots = (date: Date, type: string) => {
-  const slots = [];
+interface TimeSlot {
+  time: string;
+  available: boolean;
+}
+
+const getAvailableSlots = (date: Date, type: string): TimeSlot[] => {
+  const slots: TimeSlot[] = [];
   const dayOfWeek = date.getDay();
   
   // No appointments on weekends for now
