@@ -20,7 +20,7 @@ export interface HubSpotConfig {
 
 class HubSpotClient {
   private static instance: HubSpotClient;
-  private client: Client | null = null;
+  private client: any | null = null;
   private isInitialized = false;
 
   private constructor() {}
