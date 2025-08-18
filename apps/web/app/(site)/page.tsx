@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import Navigation from "@/components/Navigation";
+import { ChatWidget } from "@/components/ChatWidget/ChatWidget";
 import { DollarSign, Home, Building, Users, Shield, TrendingUp, Calculator, Phone, Mail, MapPin } from "lucide-react";
 
 export default function ModernHomepage() {
@@ -487,6 +488,9 @@ export default function ModernHomepage() {
           )}
         </AnimatePresence>
       </div>
+      
+      {/* AI Chat Widget */}
+      <ChatWidget />
     </>
   );
 }
