@@ -100,54 +100,41 @@ export function ChatWidget() {
     content: string;
     metadata?: any;
   }> => {
-    const lowerContent = content.toLowerCase();
+    try {
+      // Call the AI API v2 endpoint
+      const response = await fetch("/api/chat/v2", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          message: content,
+          province,
+          language,
+          stream: false, // Using non-streaming for simplicity in the widget
+          conversationHistory: messages.slice(-10).map(m => ({
+            role: m.sender === "user" ? "user" : "assistant",
+            content: m.content
+          }))
+        }),
+      });
 
-    // Handle tool-related requests
-    if (lowerContent.includes("afford") || lowerContent.includes("qualify")) {
+      if (!response.ok) {
+        throw new Error("Failed to get response");
+      }
+
+      const data = await response.json();
       return {
-        content: "I can help you calculate your affordability! To give you an accurate assessment, I'll need some information:\n\n• Annual household income\n• Monthly debt payments\n• Down payment amount\n• Current interest rate (I can also look up current rates)\n\nWould you like me to use some example numbers to show you how the calculation works, or do you have specific amounts in mind?",
-        metadata: { suggestedTool: "affordability" }
+        content: data.content,
+        metadata: data.metadata
+      };
+    } catch (error) {
+      console.error("Chat API error:", error);
+      // Fallback to a helpful error message
+      return {
+        content: "I apologize, but I'm having trouble connecting to the AI service. Please try again in a moment, or contact us directly at 604-593-1550 for immediate assistance."
       };
     }
-
-    if (lowerContent.includes("rate") || lowerContent.includes("interest")) {
-      return {
-        content: `I can help you with current mortgage rates! Here's what I can do:\n\n• Show current best rates in ${province}\n• Compare payment amounts across different rates\n• Explain rate trends\n• Set up rate alerts\n\nCurrent rates vary by term and lender. Would you like me to look up the latest rates for a specific term (like 5-year fixed), or would you prefer a general overview of what's available?`,
-        metadata: { suggestedTool: "rates" }
-      };
-    }
-
-    if (lowerContent.includes("payment") || lowerContent.includes("calculate payment")) {
-      return {
-        content: "I can calculate your mortgage payments! For an accurate calculation, I'll need:\n\n• Loan amount (purchase price minus down payment)\n• Interest rate\n• Amortization period (usually 25 or 30 years)\n\nI can also show you how much you could save with bi-weekly payments versus monthly payments. Do you have these numbers, or would you like me to use example amounts?",
-        metadata: { suggestedTool: "payment" }
-      };
-    }
-
-    if (lowerContent.includes("investment") || lowerContent.includes("rental")) {
-      return {
-        content: "Great! I can help analyze investment properties. For a complete cash flow analysis, I'll need:\n\n• Property purchase price\n• Down payment amount\n• Expected monthly rent\n• Estimated monthly expenses\n• Interest rate\n\nI'll calculate the cash flow, cap rate, and debt service coverage ratio to help you evaluate the investment. Have you found a specific property, or are you exploring different scenarios?",
-        metadata: { suggestedTool: "investment" }
-      };
-    }
-
-    // Handle general questions
-    if (lowerContent.includes("hello") || lowerContent.includes("hi")) {
-      return {
-        content: `Hello! Welcome to Kraft Mortgages. I'm here to help with all your mortgage needs in ${province}. I can assist with:\n\n• Mortgage calculations and affordability\n• Current rates and comparisons\n• Investment property analysis\n• First-time buyer guidance\n• Refinancing options\n\nWhat would you like to explore today?`
-      };
-    }
-
-    if (lowerContent.includes("first time") || lowerContent.includes("first home")) {
-      return {
-        content: `Congratulations on considering your first home purchase! As a first-time buyer in ${province}, you have several advantages:\n\n🏡 **Available Programs:**\n• First-Time Home Buyer Incentive\n• Provincial programs (varies by province)\n• RRSP Home Buyers' Plan\n\n💰 **Down Payment:**\n• As low as 5% for homes under $500k\n• CMHC insurance required under 20% down\n\n📊 **Next Steps:**\n• Calculate your affordability\n• Get pre-approved\n• Find a realtor\n• Start shopping!\n\nWould you like me to calculate your affordability or explain any of these programs in detail?`
-      };
-    }
-
-    // Default response
-    return {
-      content: "Thanks for your question! I'm here to help with mortgage-related questions including calculations, rates, and guidance. Some things I can help with:\n\n• Mortgage affordability calculations\n• Current rate comparisons\n• Payment calculations\n• Investment property analysis\n• First-time buyer guidance\n\nCould you tell me more specifically what you'd like help with? Or feel free to contact us directly at 604-593-1550 to speak with our team!"
-    };
   };
 
   const handleSubmit = (e: React.FormEvent) => {

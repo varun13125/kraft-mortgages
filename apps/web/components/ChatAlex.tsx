@@ -9,15 +9,36 @@ export function ChatAlex() {
   const [messages, setMessages] = useState<string[]>([]);
 
   async function send() {
-    const res = await fetch("/api/chat", { method: "POST", body: JSON.stringify({ input, province, language }), headers: {"content-type":"application/json"} });
+    setMessages(prev => [...prev, `You: ${input}`]);
+    const currentInput = input;
+    setInput("");
+    
+    const res = await fetch("/api/chat/v2", { 
+      method: "POST", 
+      body: JSON.stringify({ 
+        message: currentInput, 
+        province, 
+        language,
+        stream: true 
+      }), 
+      headers: {"content-type":"application/json"} 
+    });
+    
+    if (!res.ok) {
+      setMessages(prev => [...prev, "Alex: Sorry, I'm having trouble connecting. Please try again."]);
+      return;
+    }
+    
     const reader = res.body!.getReader();
     const decoder = new TextDecoder();
     let acc = "";
+    setMessages(prev => [...prev, "Alex: "]);
+    
     for(;;){
       const { value, done } = await reader.read();
       if (done) break;
       acc += decoder.decode(value);
-      setMessages(prev => [...prev.slice(0, -1), acc]);
+      setMessages(prev => [...prev.slice(0, -1), `Alex: ${acc}`]);
     }
   }
 
