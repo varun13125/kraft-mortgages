@@ -223,11 +223,6 @@ export function ChatWidget() {
                     }`}
                   >
                     <div className="text-sm whitespace-pre-wrap">{message.content}</div>
-                    {message.metadata?.modelUsed && (
-                      <div className="text-xs text-gray-400 mt-1">
-                        {message.metadata.isFree ? "💰 Free" : "⭐ Premium"} • {message.metadata.modelUsed}
-                      </div>
-                    )}
                   </div>
                 </motion.div>
               ))}
