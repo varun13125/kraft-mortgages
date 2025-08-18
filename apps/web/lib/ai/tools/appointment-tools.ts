@@ -386,7 +386,7 @@ export const appointmentPrepTool: MortgageTool = {
       }
     };
     
-    const checklist = prepChecklists[appointmentType];
+    const checklist = prepChecklists[appointmentType as keyof typeof prepChecklists];
     
     return {
       success: true,
