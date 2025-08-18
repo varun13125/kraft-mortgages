@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { MortgageTool } from "./types";
+import { MortgageTool, ToolResult, AppointmentType, ContactInfo } from "./types";
 
 // Available appointment types
 const appointmentTypes = {

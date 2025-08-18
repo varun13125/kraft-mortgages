@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { MortgageTool } from "./types";
+import { MortgageTool, ToolResult, MortgageType } from "./types";
 
 // Document checklist for different mortgage types
 const documentChecklists = {

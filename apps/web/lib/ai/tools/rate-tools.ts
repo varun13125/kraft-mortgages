@@ -1,5 +1,5 @@
 import { firestore } from "@/lib/firebaseAdmin";
-import { ToolResult } from "./mortgage-tools";
+import { ToolResult, MortgageTool, Province } from "./types";
 
 export interface RateData {
   lender: string;
@@ -407,4 +407,27 @@ export class RateTools {
   }
 }
 
-export const rateTools = RateTools.getInstance();
+// Export individual tool functions as MortgageTool objects
+export const rateTools: MortgageTool[] = [
+  {
+    name: "get_current_rates",
+    description: "Get current mortgage rates",
+    parameters: null,
+    execute: async (params: any) => RateTools.getInstance().getCurrentRates(params)
+  },
+  {
+    name: "compare_rates", 
+    description: "Compare mortgage rates",
+    parameters: null,
+    execute: async (params: any) => RateTools.getInstance().compareRates(params)
+  },
+  {
+    name: "get_rate_history",
+    description: "Get historical rate data",
+    parameters: null,
+    execute: async (params: any) => RateTools.getInstance().getRateHistory(params)
+  }
+];
+
+// Also export the class instance for direct use
+export const rateToolsInstance = RateTools.getInstance();
