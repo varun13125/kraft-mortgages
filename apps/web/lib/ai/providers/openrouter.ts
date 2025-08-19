@@ -42,9 +42,9 @@ interface OpenRouterResponse {
 }
 
 export function openRouterProvider(model: string, referer?: string): ChatProvider {
-  const apiKey = process.env.OPEN_ROUTER_API_KEY;
+  const apiKey = process.env.OPENROUTER_API_KEY || process.env.OPEN_ROUTER_API_KEY;
   if (!apiKey) {
-    throw new Error("OPEN_ROUTER_API_KEY not configured");
+    throw new Error("OPENROUTER_API_KEY not configured");
   }
 
   async function* streamOpenRouterResponse(reader: ReadableStreamDefaultReader<Uint8Array>) {

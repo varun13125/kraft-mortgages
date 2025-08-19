@@ -175,6 +175,22 @@ export function ChatWidget() {
           }
         }
         
+        // Parse metadata from headers if available
+        const modelUsed = response.headers.get("X-Model-Used");
+        const provider = response.headers.get("X-Provider");
+        const cost = response.headers.get("X-Cost");
+        const isFree = response.headers.get("X-Is-Free") === "true";
+
+        if (modelUsed) {
+          metadata = {
+            ...metadata,
+            modelUsed,
+            provider,
+            cost: cost ? parseFloat(cost) : 0,
+            isFree,
+          };
+        }
+
         setIsTyping(false);
         return {
           content: fullContent || "I received your message but couldn't generate a proper response.",
