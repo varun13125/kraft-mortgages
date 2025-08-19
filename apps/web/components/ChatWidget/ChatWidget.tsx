@@ -117,6 +117,7 @@ export function ChatWidget() {
     metadata?: any;
   }> => {
     try {
+      console.log("[ChatWidget] Sending message:", content);
       setIsTyping(true);
       
       // Call the AI API endpoint with streaming support  
@@ -133,8 +134,11 @@ export function ChatWidget() {
       });
 
       if (!response.ok) {
+        console.error("[ChatWidget] Response not OK:", response.status);
         throw new Error("Failed to get response");
       }
+      
+      console.log("[ChatWidget] Got response, starting to stream...");
 
       // Handle streaming response
       if (response.body) {
@@ -152,6 +156,7 @@ export function ChatWidget() {
         }
         
         setIsTyping(false);
+        console.log("[ChatWidget] Received response:", fullContent.substring(0, 100) + "...");
         return {
           content: fullContent || "I received your message but couldn't generate a proper response.",
           metadata

@@ -101,11 +101,6 @@ export class AIRouterV2 {
   }
 
   async streamChat(request: ChatRequestV2): Promise<ChatResponseV2> {
-    console.log("[Router V2] streamChat called with:", { 
-      message: request.message?.substring(0, 50),
-      hasHistory: !!request.conversationHistory 
-    });
-    
     const startTime = Date.now();
     
     const context: QueryContext = {
@@ -119,12 +114,10 @@ export class AIRouterV2 {
     };
 
     try {
-      console.log("[Router V2] Calling fallbackHandler.executeWithFallback");
       const result = await this.fallbackHandler.executeWithFallback(
         context,
         "streamChat"
       );
-      console.log("[Router V2] Got result from fallbackHandler");
 
       const responseTime = Date.now() - startTime;
 

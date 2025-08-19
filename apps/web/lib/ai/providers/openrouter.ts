@@ -42,17 +42,11 @@ interface OpenRouterResponse {
 }
 
 export function openRouterProvider(model: string, referer?: string): ChatProvider {
-  console.log("[OpenRouter] Creating provider for model:", model);
-  console.log("[OpenRouter] Checking API key...");
-  
   const apiKey = process.env.OPEN_ROUTER_API_KEY;
   
   if (!apiKey) {
-    console.error("[OpenRouter] API key not found!");
     throw new Error("OPEN_ROUTER_API_KEY not configured - check environment variables");
   }
-  
-  console.log("[OpenRouter] API key found, length:", apiKey.length);
 
   async function* streamOpenRouterResponse(reader: ReadableStreamDefaultReader<Uint8Array>) {
     const decoder = new TextDecoder();

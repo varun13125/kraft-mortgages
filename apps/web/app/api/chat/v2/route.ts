@@ -2,16 +2,8 @@ import { NextRequest } from "next/server";
 import { aiRouterV2 } from "@/lib/ai/router-v2";
 
 export async function POST(req: NextRequest) {
-  console.log("[Chat V2] API route called");
-  
   try {
     const body = await req.json();
-    console.log("[Chat V2] Request body:", { 
-      hasMessage: !!body.message,
-      messageLength: body.message?.length,
-      stream: body.stream,
-      province: body.province 
-    });
     
     const {
       message,
@@ -47,13 +39,9 @@ export async function POST(req: NextRequest) {
       forceModel,
     };
 
-    console.log("[Chat V2] Processing request with:", { stream, hasForceModel: !!forceModel });
-    
     if (stream) {
-      console.log("[Chat V2] Calling streamChat");
       // Return streaming response
       const response = await aiRouterV2.streamChat(chatRequest);
-      console.log("[Chat V2] Got response from streamChat:", response.metadata);
       
       // Add metadata as headers
       const headers = new Headers({
