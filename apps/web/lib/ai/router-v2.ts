@@ -37,7 +37,7 @@ export class AIRouterV2 {
       maxRetries: 3,
       timeoutMs: 30000,
       enableFallback: true,
-      logErrors: process.env.NODE_ENV === "development",
+      logErrors: true, // Always log for debugging
     });
   }
 

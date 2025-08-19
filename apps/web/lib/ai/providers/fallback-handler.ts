@@ -29,7 +29,7 @@ export class FallbackHandler {
       maxRetries: 3,
       timeoutMs: 30000,
       enableFallback: true,
-      logErrors: true,
+      logErrors: true, // Always log errors
       ...config,
     };
   }
