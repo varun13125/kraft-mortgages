@@ -20,8 +20,8 @@ export async function POST(req: NextRequest) {
         limit: 5
       });
       
-      if (ratesResult.success && ratesResult.data) {
-        // Format the rates data into the prompt
+      if (ratesResult.success && ratesResult.data && ratesResult.data.rates && ratesResult.data.rates.length > 0) {
+        // We have actual rates - use them
         const ratesInfo = ratesResult.formattedResult || JSON.stringify(ratesResult.data);
         const enhancedPrompt = `User asked: ${input}
         
@@ -42,6 +42,35 @@ Please use these EXACT rates in your response. Do not make up or estimate rates.
             "X-Provider": PROVIDER,
             "X-Is-Free": "true",
             "X-Tool-Used": "getCurrentRates"
+          } 
+        });
+      } else {
+        // No rates available - be transparent and helpful
+        const noRatesPrompt = `User asked: ${input}
+
+IMPORTANT: We don't have current rate data available in our system right now.
+
+Please respond professionally by:
+1. Acknowledging their interest in rates
+2. Explaining that rates change frequently and vary by lender
+3. Offering to connect them directly with our team for personalized, up-to-date rates
+4. Mention they can call 604-593-1550 or book a consultation
+5. Ask if there's anything else about mortgages you can help with
+
+DO NOT make up or estimate specific rate numbers. Be helpful but honest.`;
+        
+        const stream = await aiRoute.streamChat({
+          system: `You are Alex, a professional, friendly Canadian mortgage advisor. Serve BC/AB/ON and follow provincial compliance. Do not provide legal or tax advice.\nUser preferred province: ${province || "BC"}; language: ${language || "en"}. If not English, keep responses concise and friendly.`,
+          prompt: noRatesPrompt,
+        });
+        
+        return new Response(stream, { 
+          headers: { 
+            "content-type": "text/plain; charset=utf-8",
+            "X-Model-Used": CURRENT_MODEL,
+            "X-Provider": PROVIDER,
+            "X-Is-Free": "true",
+            "X-Tool-Used": "getCurrentRates-no-data"
           } 
         });
       }
