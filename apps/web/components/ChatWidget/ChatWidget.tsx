@@ -138,7 +138,13 @@ export function ChatWidget() {
         throw new Error("Failed to get response");
       }
       
+      // Get model info from headers
+      const modelUsed = response.headers.get("X-Model-Used");
+      const provider = response.headers.get("X-Provider");
+      const isFree = response.headers.get("X-Is-Free");
+      
       console.log("[ChatWidget] Got response, starting to stream...");
+      console.log("[ChatWidget] Model:", modelUsed, "| Provider:", provider, "| Free:", isFree);
 
       // Handle streaming response
       if (response.body) {

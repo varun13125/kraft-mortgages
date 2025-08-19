@@ -1,11 +1,67 @@
 import { NextRequest } from "next/server";
 import { aiRoute } from "@/lib/ai/router";
+import { rateToolsInstance } from "@/lib/ai/tools/rate-tools";
+
+// Current model being used (free OpenRouter model)
+const CURRENT_MODEL = "z-ai/glm-4.5-air:free";
+const PROVIDER = "openrouter";
 
 export async function POST(req: NextRequest) {
   const { input, province, language } = await req.json();
+  
+  // Check if user is asking about rates
+  const inputLower = input.toLowerCase();
+  if (inputLower.includes("rate") || inputLower.includes("interest")) {
+    try {
+      // Get actual rates from database
+      const ratesResult = await rateToolsInstance.getCurrentRates({
+        province: province || "BC",
+        termMonths: 60, // Default to 5-year
+        limit: 5
+      });
+      
+      if (ratesResult.success && ratesResult.data) {
+        // Format the rates data into the prompt
+        const ratesInfo = ratesResult.formattedResult || JSON.stringify(ratesResult.data);
+        const enhancedPrompt = `User asked: ${input}
+        
+Here are the ACTUAL current mortgage rates from our database:
+${ratesInfo}
+
+Please use these EXACT rates in your response. Do not make up or estimate rates.`;
+        
+        const stream = await aiRoute.streamChat({
+          system: `You are Alex, a professional, friendly Canadian mortgage advisor. Serve BC/AB/ON and follow provincial compliance. Do not provide legal or tax advice.\nUser preferred province: ${province || "BC"}; language: ${language || "en"}. If not English, keep responses concise and friendly.`,
+          prompt: enhancedPrompt,
+        });
+        
+        return new Response(stream, { 
+          headers: { 
+            "content-type": "text/plain; charset=utf-8",
+            "X-Model-Used": CURRENT_MODEL,
+            "X-Provider": PROVIDER,
+            "X-Is-Free": "true",
+            "X-Tool-Used": "getCurrentRates"
+          } 
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching rates:", error);
+    }
+  }
+  
+  // Regular chat without tools
   const stream = await aiRoute.streamChat({
     system: `You are Alex, a professional, friendly Canadian mortgage advisor. Serve BC/AB/ON and follow provincial compliance. Do not provide legal or tax advice.\nUser preferred province: ${province || "BC"}; language: ${language || "en"}. If not English, keep responses concise and friendly.`,
     prompt: input,
   });
-  return new Response(stream, { headers: { "content-type": "text/plain; charset=utf-8" } });
+  
+  return new Response(stream, { 
+    headers: { 
+      "content-type": "text/plain; charset=utf-8",
+      "X-Model-Used": CURRENT_MODEL,
+      "X-Provider": PROVIDER,
+      "X-Is-Free": "true"
+    } 
+  });
 }
