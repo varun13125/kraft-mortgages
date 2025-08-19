@@ -1,7 +1,8 @@
 import { ChatProvider, openAIProvider, echoProvider } from "./providers";
+import { openRouterProvider } from "./providers/openrouter";
 
-const mode = process.env.AI_MODE || "openai"; // echo | openai  
-const base: ChatProvider = mode === "openai" ? openAIProvider(process.env.AI_PRIMARY_MODEL || "gpt-4o") : echoProvider();
+// Use OpenRouter free model as default  
+const base: ChatProvider = openRouterProvider("z-ai/glm-4.5-air:free");
 
 export const aiRoute = {
   async chat(opts: { system?: string; prompt: string }) { return base.chat(opts); },
