@@ -53,7 +53,7 @@ class HubSpotClient {
     this.isInitialized = true;
   }
 
-  getClient(): Client {
+  getClient(): any {
     if (!this.client || !this.isInitialized) {
       // Auto-initialize with environment variables
       this.initialize({});
