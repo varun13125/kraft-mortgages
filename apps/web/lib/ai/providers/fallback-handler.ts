@@ -46,18 +46,23 @@ export class FallbackHandler {
       wasSuccessful: boolean;
     };
   }> {
+    console.log("[FallbackHandler] executeWithFallback called for:", operation);
+    
     const sessionId = this.generateSessionId(context);
     const attempts: AttemptResult[] = [];
     let totalCost = 0;
     
     // Start with initial model selection
     let modelSelection = modelSelector.selectModel(context);
+    console.log("[FallbackHandler] Selected model:", modelSelection);
     
     for (let attempt = 1; attempt <= this.config.maxRetries; attempt++) {
       const startTime = Date.now();
       
       try {
+        console.log(`[FallbackHandler] Attempt ${attempt} with model:`, modelSelection.model);
         const provider = this.getProvider(modelSelection);
+        console.log("[FallbackHandler] Got provider:", provider.name);
         const result = await this.executeWithTimeout(
           provider,
           context,
@@ -226,10 +231,14 @@ export class FallbackHandler {
   }
 
   private getProvider(selection: ModelSelection): ChatProvider {
+    console.log("[FallbackHandler] Getting provider for:", selection.provider, selection.model);
+    
     switch (selection.provider) {
       case "anthropic":
+        console.log("[FallbackHandler] Creating Anthropic provider");
         return anthropicProvider(selection.model);
       case "openrouter":
+        console.log("[FallbackHandler] Creating OpenRouter provider");
         return openRouterProvider(selection.model);
       default:
         throw new Error(`Unsupported provider: ${selection.provider}`);
