@@ -119,21 +119,16 @@ export function ChatWidget() {
     try {
       setIsTyping(true);
       
-      // Call the AI API v2 endpoint with streaming support
-      const response = await fetch("/api/chat/v2", {
+      // Call the AI API endpoint with streaming support  
+      const response = await fetch("/api/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          message: content,
+          input: content,
           province,
-          language,
-          stream: true, // Enable streaming for real-time responses
-          conversationHistory: messages.slice(-10).map(m => ({
-            role: m.sender === "user" ? "user" : "assistant",
-            content: m.content
-          }))
+          language
         }),
       });
 
@@ -153,44 +148,9 @@ export function ChatWidget() {
           if (done) break;
           
           const chunk = decoder.decode(value);
-          const lines = chunk.split('\n');
-          
-          for (const line of lines) {
-            if (line.startsWith('data: ')) {
-              try {
-                const data = JSON.parse(line.slice(6));
-                if (data.content) {
-                  fullContent += data.content;
-                }
-                if (data.metadata) {
-                  metadata = { ...metadata, ...data.metadata };
-                }
-                if (data.toolResult) {
-                  metadata.toolResult = data.toolResult;
-                }
-              } catch (e) {
-                // Ignore parse errors
-              }
-            }
-          }
+          fullContent += chunk;
         }
         
-        // Parse metadata from headers if available
-        const modelUsed = response.headers.get("X-Model-Used");
-        const provider = response.headers.get("X-Provider");
-        const cost = response.headers.get("X-Cost");
-        const isFree = response.headers.get("X-Is-Free") === "true";
-
-        if (modelUsed) {
-          metadata = {
-            ...metadata,
-            modelUsed,
-            provider,
-            cost: cost ? parseFloat(cost) : 0,
-            isFree,
-          };
-        }
-
         setIsTyping(false);
         return {
           content: fullContent || "I received your message but couldn't generate a proper response.",
