@@ -1,12 +1,12 @@
 // Make HubSpot client optional to prevent build errors if package not installed
-let Client: any;
+let HubSpotClientConstructor: any;
 try {
   const hubspotApi = require("@hubspot/api-client");
-  Client = hubspotApi.Client;
+  HubSpotClientConstructor = hubspotApi.Client;
 } catch (error) {
   console.warn("@hubspot/api-client not installed. HubSpot integration disabled.");
   // Mock Client for development
-  Client = class MockClient {
+  HubSpotClientConstructor = class MockClient {
     constructor() {
       console.warn("Using mock HubSpot client");
     }
@@ -45,7 +45,7 @@ class HubSpotClient {
       throw new Error("HubSpot API key or access token is required");
     }
 
-    this.client = new Client({
+    this.client = new HubSpotClientConstructor({
       accessToken: accessToken || undefined,
       apiKey: apiKey || undefined,
     });
@@ -157,7 +157,7 @@ class HubSpotClient {
         })
       );
 
-      return response.results || [];
+      return (response as any).results || [];
     } catch (error) {
       console.error("Error searching for duplicates:", error);
       return [];

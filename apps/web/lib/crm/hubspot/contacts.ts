@@ -54,7 +54,7 @@ class HubSpotContacts {
         })
       );
 
-      console.log("Contact created in HubSpot:", response.id);
+      console.log("Contact created in HubSpot:", (response as any).id);
       return response;
     } catch (error: any) {
       console.error("Error creating HubSpot contact:", error);
@@ -113,7 +113,7 @@ class HubSpotContacts {
         })
       );
 
-      return response.results || [];
+      return (response as any).results || [];
     } catch (error) {
       console.error("Error searching contacts by email:", error);
       return [];
