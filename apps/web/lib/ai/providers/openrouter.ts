@@ -42,19 +42,10 @@ interface OpenRouterResponse {
 }
 
 export function openRouterProvider(model: string, referer?: string): ChatProvider {
-  const apiKey = process.env.OPENROUTER_API_KEY || process.env.OPEN_ROUTER_API_KEY;
-  
-  // Debug logging for environment variables
-  console.log("OpenRouter Debug:", {
-    hasOpenRouterKey: !!process.env.OPENROUTER_API_KEY,
-    hasOpenRouterKeyAlt: !!process.env.OPEN_ROUTER_API_KEY,
-    hasOpenAIKey: !!process.env.OPENAI_API_KEY,
-    hasAnthropicKey: !!process.env.ANTHROPIC_API_KEY,
-    model,
-  });
+  const apiKey = process.env.OPEN_ROUTER_API_KEY;
   
   if (!apiKey) {
-    throw new Error("OPENROUTER_API_KEY not configured - check environment variables");
+    throw new Error("OPEN_ROUTER_API_KEY not configured - check environment variables");
   }
 
   async function* streamOpenRouterResponse(reader: ReadableStreamDefaultReader<Uint8Array>) {

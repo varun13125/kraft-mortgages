@@ -23,11 +23,6 @@ interface AnthropicResponse {
 export function anthropicProvider(model: string = "claude-3-5-sonnet-20241022"): ChatProvider {
   const apiKey = process.env.ANTHROPIC_API_KEY;
   
-  console.log("Anthropic Debug:", {
-    hasAnthropicKey: !!process.env.ANTHROPIC_API_KEY,
-    model,
-  });
-  
   if (!apiKey) {
     throw new Error("ANTHROPIC_API_KEY not configured - check environment variables");
   }
