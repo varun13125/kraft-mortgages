@@ -183,7 +183,7 @@ export class MultilingualVoiceService {
 
   // Test voice quality
   async testVoice(language: string): Promise<Blob> {
-    const testTexts = {
+    const testTexts: Record<string, string> = {
       'hi-IN': 'हैलो! मैं Alex हूं, Kraft Mortgages से। कैसे help कर सकता हूं?',
       'pa-IN': 'Sat Sri Akal ji! Main Alex, Kraft Mortgages ton. Ki help chahidi?',
       'en-CA': 'Hello! Alex from Kraft Mortgages. How can I help you today?',
