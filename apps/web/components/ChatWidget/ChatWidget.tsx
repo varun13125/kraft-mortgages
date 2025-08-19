@@ -1,10 +1,11 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MessageCircle, X, Send, Calculator, TrendingUp, DollarSign } from "lucide-react";
+import { MessageCircle, X, Send, Calculator, TrendingUp, DollarSign, Volume2, Languages } from "lucide-react";
 import { useAppStore } from "@/store/useAppStore";
 import { VoiceInput } from "./VoiceInput";
 import { ToolResults } from "./ToolResults";
+import { MultilingualVoiceService } from "@/lib/voice/multilingual-voice";
 
 interface Message {
   id: string;
@@ -38,9 +39,11 @@ export function ChatWidget() {
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
+  const [voiceEnabled, setVoiceEnabled] = useState(false);
   const { province, language } = useAppStore();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
+  const voiceService = useRef(new MultilingualVoiceService());
 
   // Load messages from localStorage on mount
   useEffect(() => {
@@ -267,6 +270,11 @@ export function ChatWidget() {
     }
   };
 
+  // Toggle voice mode
+  const toggleVoiceMode = () => {
+    setVoiceEnabled(!voiceEnabled);
+  };
+
   return (
     <>
       {/* Floating Button */}
@@ -313,8 +321,34 @@ export function ChatWidget() {
           >
             {/* Header */}
             <div className="bg-gradient-to-r from-gold-500 to-gold-600 p-4 text-white">
-              <h3 className="font-semibold text-lg">Kraft Mortgages Assistant</h3>
-              <p className="text-sm opacity-90">Powered by AI • Available 24/7</p>
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="font-semibold text-lg">Kraft Mortgages Assistant</h3>
+                  <p className="text-sm opacity-90">Powered by AI • Available 24/7</p>
+                </div>
+                <div className="flex items-center gap-2">
+                  {/* Voice Toggle */}
+                  <button
+                    onClick={toggleVoiceMode}
+                    className={`p-2 rounded-lg transition-colors ${
+                      voiceEnabled 
+                        ? 'bg-white/20 text-white' 
+                        : 'bg-white/10 text-white/70 hover:bg-white/15'
+                    }`}
+                    title={voiceEnabled ? 'Voice mode on' : 'Enable voice mode'}
+                  >
+                    <Volume2 className="w-4 h-4" />
+                  </button>
+                  
+                  {/* Language Indicator */}
+                  {voiceEnabled && (
+                    <div className="flex items-center gap-1 bg-white/10 px-2 py-1 rounded text-xs">
+                      <Languages className="w-3 h-3" />
+                      <span>{voiceService.current.getCurrentLanguage().split('-')[0].toUpperCase()}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
 
             {/* Messages */}
