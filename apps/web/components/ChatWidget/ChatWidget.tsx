@@ -29,6 +29,9 @@ interface QuickAction {
   icon: React.ReactNode;
 }
 
+const STORAGE_KEY = "kraft-chat-messages";
+const MAX_MESSAGES = 50; // Increased from default to 50
+
 export function ChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -39,17 +42,51 @@ export function ChatWidget() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
 
-  // Initialize with welcome message
+  // Load messages from localStorage on mount
   useEffect(() => {
-    if (messages.length === 0) {
-      setMessages([{
+    try {
+      const savedMessages = localStorage.getItem(STORAGE_KEY);
+      if (savedMessages) {
+        const parsed = JSON.parse(savedMessages);
+        // Convert timestamp strings back to Date objects
+        const messagesWithDates = parsed.map((msg: any) => ({
+          ...msg,
+          timestamp: new Date(msg.timestamp)
+        }));
+        setMessages(messagesWithDates);
+      } else {
+        // Initialize with welcome message if no saved messages
+        const welcomeMessage = {
+          id: "welcome",
+          content: "Hi! I'm Alex, your mortgage advisor. I can help you with calculations, current rates, and answer any mortgage questions you have in BC, AB, and ON. What would you like to know?",
+          sender: "assistant" as const,
+          timestamp: new Date(),
+        };
+        setMessages([welcomeMessage]);
+      }
+    } catch (error) {
+      console.error("Error loading chat messages:", error);
+      // Fallback to welcome message
+      const welcomeMessage = {
         id: "welcome",
         content: "Hi! I'm Alex, your mortgage advisor. I can help you with calculations, current rates, and answer any mortgage questions you have in BC, AB, and ON. What would you like to know?",
-        sender: "assistant",
+        sender: "assistant" as const,
         timestamp: new Date(),
-      }]);
+      };
+      setMessages([welcomeMessage]);
     }
-  }, [messages.length]);
+  }, []);
+
+  // Save messages to localStorage whenever messages change
+  useEffect(() => {
+    if (messages.length > 0) {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
+      } catch (error) {
+        console.error("Error saving chat messages:", error);
+      }
+    }
+  }, [messages]);
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
@@ -74,6 +111,18 @@ export function ChatWidget() {
     }
   ];
 
+  // Clear chat history
+  const clearChat = () => {
+    const welcomeMessage = {
+      id: "welcome",
+      content: "Hi! I'm Alex, your mortgage advisor. I can help you with calculations, current rates, and answer any mortgage questions you have in BC, AB, and ON. What would you like to know?",
+      sender: "assistant" as const,
+      timestamp: new Date(),
+    };
+    setMessages([welcomeMessage]);
+    localStorage.removeItem(STORAGE_KEY);
+  };
+
   const sendMessage = async (content: string) => {
     // Add user message
     const userMessage: Message = {
@@ -82,7 +131,11 @@ export function ChatWidget() {
       sender: "user",
       timestamp: new Date(),
     };
-    setMessages(prev => [...prev, userMessage]);
+    setMessages(prev => {
+      const newMessages = [...prev, userMessage];
+      // Keep only the latest MAX_MESSAGES
+      return newMessages.slice(-MAX_MESSAGES);
+    });
     setIsLoading(true);
 
     try {
@@ -97,7 +150,11 @@ export function ChatWidget() {
         timestamp: new Date(),
         metadata: response.metadata
       };
-      setMessages(prev => [...prev, assistantMessage]);
+      setMessages(prev => {
+        const newMessages = [...prev, assistantMessage];
+        // Keep only the latest MAX_MESSAGES
+        return newMessages.slice(-MAX_MESSAGES);
+      });
     } catch (error) {
       console.error("Error sending message:", error);
       const errorMessage: Message = {
@@ -106,7 +163,11 @@ export function ChatWidget() {
         sender: "assistant",
         timestamp: new Date(),
       };
-      setMessages(prev => [...prev, errorMessage]);
+      setMessages(prev => {
+        const newMessages = [...prev, errorMessage];
+        // Keep only the latest MAX_MESSAGES
+        return newMessages.slice(-MAX_MESSAGES);
+      });
     } finally {
       setIsLoading(false);
     }

@@ -2,6 +2,12 @@ import "./globals.css";
 import { Analytics } from "@/components/Analytics";
 import { PrefSync } from "@/components/PrefSync";
 import { PWA } from "@/components/PWA";
+import dynamic from "next/dynamic";
+
+// Dynamically import ChatWidget to avoid hydration issues
+const ChatWidget = dynamic(() => import("@/components/ChatWidget/ChatWidget").then(mod => ({ default: mod.ChatWidget })), {
+  ssr: false
+});
 
 export const metadata = {
   title: "Kraft Mortgages Canada | Expert Mortgage Solutions | BC, AB & ON",
@@ -15,6 +21,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="min-h-screen">
         <PrefSync />
         {children}
+        
+        {/* Global AI Chat Widget - Available on every page */}
+        <ChatWidget />
         
         <Analytics />
         <PWA />
