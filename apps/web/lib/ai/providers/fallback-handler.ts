@@ -108,9 +108,9 @@ export class FallbackHandler {
           console.error(`Attempt ${attempt} failed:`, {
             model: modelSelection.model,
             provider: modelSelection.provider,
-            error: error instanceof Error ? error.message : String(error),
+            errorMessage: error instanceof Error ? error.message : String(error),
             stack: error instanceof Error ? error.stack : undefined,
-            error: attemptResult.error,
+            attemptError: attemptResult.error,
             duration,
           });
         }
