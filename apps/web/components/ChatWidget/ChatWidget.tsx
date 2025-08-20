@@ -443,7 +443,7 @@ export function ChatWidget() {
                             </div>
                           )}
                           <button
-                            onClick={() => playVoiceMessage(message.id, message.metadata.voice.audioUrl)}
+                            onClick={() => playVoiceMessage(message.id, message.metadata?.voice?.audioUrl!)}
                             className={`p-1 rounded transition-colors ${
                               isPlayingVoice === message.id
                                 ? 'bg-gold-500/30 text-gold-300'
