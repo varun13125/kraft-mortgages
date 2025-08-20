@@ -161,7 +161,7 @@ export class ConversationVoiceService {
   }
 
   private getLanguageName(code: string): string {
-    const names = {
+    const names: Record<string, string> = {
       'hi-IN': 'Hindi',
       'pa-IN': 'Punjabi', 
       'en-CA': 'English',
