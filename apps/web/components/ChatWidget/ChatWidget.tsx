@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { MessageCircle, X, Send, Calculator, TrendingUp, DollarSign, Volume2, Languages, Globe } from "lucide-react";
 import { useAppStore } from "@/store/useAppStore";
 import { VoiceInput } from "./VoiceInput";
+import { VoiceControls } from "./VoiceControls";
 import { ToolResults } from "./ToolResults";
 import { MultilingualVoiceService } from "@/lib/voice/multilingual-voice";
 
@@ -47,6 +48,7 @@ export function ChatWidget() {
   const [isTyping, setIsTyping] = useState(false);
   const [voiceEnabled, setVoiceEnabled] = useState(false);
   const [isPlayingVoice, setIsPlayingVoice] = useState<string | null>(null);
+  const [showVoiceControls, setShowVoiceControls] = useState(false);
   const { province, language } = useAppStore();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
@@ -393,13 +395,13 @@ export function ChatWidget() {
                 <div className="flex items-center gap-2">
                   {/* Voice Toggle */}
                   <button
-                    onClick={toggleVoiceMode}
+                    onClick={() => setShowVoiceControls(!showVoiceControls)}
                     className={`p-2 rounded-lg transition-colors ${
-                      voiceEnabled 
+                      showVoiceControls 
                         ? 'bg-white/20 text-white' 
                         : 'bg-white/10 text-white/70 hover:bg-white/15'
                     }`}
-                    title={voiceEnabled ? 'Voice mode on' : 'Enable voice mode'}
+                    title={showVoiceControls ? 'Hide voice controls' : 'Show voice controls'}
                   >
                     <Volume2 className="w-4 h-4" />
                   </button>
@@ -414,6 +416,27 @@ export function ChatWidget() {
                 </div>
               </div>
             </div>
+            
+            {/* Voice Controls Panel */}
+            {showVoiceControls && (
+              <div className="border-b border-gray-700 bg-gray-800">
+                <VoiceControls
+                  onTranscript={(text) => {
+                    // Add user message from voice
+                    const newMessage: Message = {
+                      id: `msg-${Date.now()}`,
+                      content: text,
+                      sender: 'user',
+                      timestamp: new Date()
+                    };
+                    setMessages(prev => [...prev, newMessage]);
+                  }}
+                  onAIResponse={(response) => {
+                    // Response will be handled by existing chat flow
+                  }}
+                />
+              </div>
+            )}
 
             {/* Messages */}
             <div 
