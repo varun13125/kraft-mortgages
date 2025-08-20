@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MessageCircle, X, Send, Calculator, TrendingUp, DollarSign, Volume2, Languages } from "lucide-react";
+import { MessageCircle, X, Send, Calculator, TrendingUp, DollarSign, Volume2, Languages, Globe } from "lucide-react";
 import { useAppStore } from "@/store/useAppStore";
 import { VoiceInput } from "./VoiceInput";
 import { ToolResults } from "./ToolResults";
@@ -20,6 +20,12 @@ interface Message {
       toolName: string;
       result: any;
       displayType?: "table" | "card" | "list" | "text" | "chart";
+    };
+    voice?: {
+      language: string;
+      provider: string;
+      switchedLanguage: boolean;
+      audioUrl?: string;
     };
   };
 }
@@ -40,10 +46,12 @@ export function ChatWidget() {
   const [isLoading, setIsLoading] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const [voiceEnabled, setVoiceEnabled] = useState(false);
+  const [isPlayingVoice, setIsPlayingVoice] = useState<string | null>(null);
   const { province, language } = useAppStore();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const voiceService = useRef(new MultilingualVoiceService());
+  const audioRefs = useRef<Record<string, HTMLAudioElement>>({});
 
   // Load messages from localStorage on mount
   useEffect(() => {
@@ -227,6 +235,32 @@ export function ChatWidget() {
         
         setIsTyping(false);
         console.log("[ChatWidget] Received response:", fullContent.substring(0, 100) + "...");
+
+        // Generate voice for assistant response if voice is enabled
+        if (voiceEnabled && fullContent) {
+          try {
+            console.log("[Voice] Generating voice for response...");
+            const voiceResponse = await voiceService.current.speak(fullContent);
+            
+            const audioUrl = URL.createObjectURL(voiceResponse.audioBlob);
+            
+            metadata.voice = {
+              language: voiceResponse.language,
+              provider: voiceResponse.provider,
+              switchedLanguage: voiceResponse.switchedLanguage,
+              audioUrl
+            };
+            
+            console.log('[Voice] Generated:', {
+              language: voiceResponse.language,
+              switched: voiceResponse.switchedLanguage,
+              provider: voiceResponse.provider
+            });
+          } catch (voiceError) {
+            console.warn('[Voice] Generation failed:', voiceError);
+          }
+        }
+
         return {
           content: fullContent || "I received your message but couldn't generate a proper response.",
           metadata
@@ -273,6 +307,32 @@ export function ChatWidget() {
   // Toggle voice mode
   const toggleVoiceMode = () => {
     setVoiceEnabled(!voiceEnabled);
+  };
+
+  // Play voice message
+  const playVoiceMessage = (messageId: string, audioUrl: string) => {
+    // Stop any currently playing audio
+    Object.values(audioRefs.current).forEach(audio => {
+      if (!audio.paused) {
+        audio.pause();
+      }
+    });
+
+    if (!audioRefs.current[messageId]) {
+      const audio = new Audio(audioUrl);
+      audio.onended = () => setIsPlayingVoice(null);
+      audioRefs.current[messageId] = audio;
+    }
+
+    const audio = audioRefs.current[messageId];
+    if (isPlayingVoice === messageId) {
+      audio.pause();
+      setIsPlayingVoice(null);
+    } else {
+      audio.currentTime = 0;
+      audio.play();
+      setIsPlayingVoice(messageId);
+    }
   };
 
   return (
@@ -370,7 +430,33 @@ export function ChatWidget() {
                         : "bg-gray-700/50 text-gray-200 border border-gray-600/50"
                     }`}
                   >
-                    <div className="text-sm whitespace-pre-wrap">{message.content}</div>
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="text-sm whitespace-pre-wrap flex-1">{message.content}</div>
+                      
+                      {/* Voice Controls for Assistant Messages */}
+                      {message.sender === "assistant" && message.metadata?.voice?.audioUrl && (
+                        <div className="flex items-center gap-1 ml-2">
+                          {message.metadata.voice.switchedLanguage && (
+                            <div className="flex items-center gap-1 bg-blue-500/20 px-1 py-0.5 rounded text-xs text-blue-300" title="Language switched">
+                              <Globe className="w-3 h-3" />
+                              {message.metadata.voice.language.split('-')[0].toUpperCase()}
+                            </div>
+                          )}
+                          <button
+                            onClick={() => playVoiceMessage(message.id, message.metadata.voice.audioUrl)}
+                            className={`p-1 rounded transition-colors ${
+                              isPlayingVoice === message.id
+                                ? 'bg-gold-500/30 text-gold-300'
+                                : 'bg-gray-600/50 text-gray-400 hover:bg-gray-500/50 hover:text-gray-300'
+                            }`}
+                            title={isPlayingVoice === message.id ? 'Stop' : 'Play voice'}
+                          >
+                            <Volume2 className="w-3 h-3" />
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                    
                     {message.metadata?.toolResult && (
                       <div className="mt-3">
                         <ToolResults
