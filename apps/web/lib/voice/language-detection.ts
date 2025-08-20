@@ -166,7 +166,7 @@ export class LanguageDetectionService {
 
   // Get language-specific optimizations for voice synthesis
   getLanguageOptimizations(languageCode: string): any {
-    const optimizations = {
+    const optimizations: Record<string, any> = {
       'hi-IN': {
         // ElevenLabs handles Hinglish naturally
         textPreprocessing: (text: string) => {
@@ -207,7 +207,7 @@ export class LanguageDetectionService {
   }
 
   private getLanguageName(code: string): string {
-    const names = {
+    const names: Record<string, string> = {
       'hi-IN': 'Hindi',
       'pa-IN': 'Punjabi', 
       'en-CA': 'English',
@@ -219,7 +219,7 @@ export class LanguageDetectionService {
   }
 
   private getScript(code: string): string {
-    const scripts = {
+    const scripts: Record<string, string> = {
       'hi-IN': 'Devanagari',
       'pa-IN': 'Gurmukhi',
       'en-CA': 'Latin',
