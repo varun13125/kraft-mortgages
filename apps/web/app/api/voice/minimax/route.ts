@@ -16,58 +16,56 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Language to voice mapping for MiniMax
+    // Language to voice mapping for MiniMax - updated voice IDs
     const voiceMap: Record<string, any> = {
       'hi-IN': {
-        voice_id: 'female-shaonv-jingpin',
-        language: 'hi-IN',
-        emotion: 'friendly'
+        voice_id: 'male-qn-qingse',
+        language: 'hi-IN'
       },
       'pa-IN': {
-        voice_id: 'female-shaonv-jingpin', 
-        language: 'hi-IN', // Use Hindi voice for Punjabi
-        emotion: 'friendly'
+        voice_id: 'male-qn-qingse', 
+        language: 'hi-IN' // Use Hindi voice for Punjabi
       },
       'en-CA': {
-        voice_id: 'female-emily',
-        language: 'en-US',
-        emotion: emotion || 'friendly'
+        voice_id: 'female-shaonv',
+        language: 'en-US'
       },
       'zh-CN': {
-        voice_id: 'female-xiaoxiao',
-        language: 'zh-CN',
-        emotion: 'friendly'
+        voice_id: 'female-yujie',
+        language: 'zh-CN'
       },
       'es-ES': {
-        voice_id: 'female-isabella',
-        language: 'es-ES',
-        emotion: 'friendly'
+        voice_id: 'female-shaonv',
+        language: 'es-ES'
       },
       'fr-CA': {
-        voice_id: 'female-denise',
-        language: 'fr-FR',
-        emotion: 'friendly'
+        voice_id: 'female-shaonv',
+        language: 'fr-FR'
       }
     };
 
     const voiceConfig = voiceMap[language] || voiceMap['en-CA'];
 
-    // MiniMax API endpoint - using latest model
-    const apiUrl = 'https://api.minimax.chat/v1/text_to_speech';
+    // MiniMax API endpoint - using correct endpoint
+    const apiUrl = 'https://api.minimax.chat/v1/t2a_v2';
     
     const requestBody = {
-      model: 'speech-02',  // Latest stable model
+      model: 'speech-01-240228',  // Correct model name
       text: optimizeTextForMiniMax(text, language),
       voice_setting: {
         voice_id: voiceConfig.voice_id,
         speed: speed,
         vol: 1.0,
-        pitch: 0,
-        emotion: voiceConfig.emotion,
-        language: voiceConfig.language
+        pitch: 0
       },
-      format: 'mp3',
-      sample_rate: 24000
+      audio_setting: {
+        sample_rate: 24000,
+        bitrate: 128000,
+        format: 'mp3'
+      },
+      pronunciation_dict: {
+        'Kraft': 'kraft'
+      }
     };
 
     const response = await fetch(apiUrl, {
@@ -94,9 +92,28 @@ export async function POST(request: NextRequest) {
     // Check if response is audio or JSON
     const contentType = response.headers.get('content-type');
     
-    if (contentType?.includes('audio')) {
-      // Direct audio response
-      const audioBuffer = await response.arrayBuffer();
+    // Parse the response
+    const data = await response.json();
+    
+    if (data.base_resp?.status_code !== 0) {
+      throw new Error(`MiniMax API error: ${data.base_resp?.status_msg || 'Unknown error'}`);
+    }
+    
+    if (data.audio_file) {
+      // Base64 encoded audio
+      const audioBuffer = Buffer.from(data.audio_file, 'base64');
+      
+      return new NextResponse(audioBuffer, {
+        headers: {
+          'Content-Type': 'audio/mpeg',
+          'X-Voice-Provider': 'minimax',
+          'X-Voice-Language': language
+        }
+      });
+    } else if (data.audio_url) {
+      // Fetch audio from URL
+      const audioResponse = await fetch(data.audio_url);
+      const audioBuffer = await audioResponse.arrayBuffer();
       
       return new NextResponse(audioBuffer, {
         headers: {
@@ -106,35 +123,7 @@ export async function POST(request: NextRequest) {
         }
       });
     } else {
-      // JSON response with audio URL or base64
-      const data = await response.json();
-      
-      if (data.audio_url) {
-        // Fetch audio from URL
-        const audioResponse = await fetch(data.audio_url);
-        const audioBuffer = await audioResponse.arrayBuffer();
-        
-        return new NextResponse(audioBuffer, {
-          headers: {
-            'Content-Type': 'audio/mpeg',
-            'X-Voice-Provider': 'minimax',
-            'X-Voice-Language': language
-          }
-        });
-      } else if (data.audio_base64) {
-        // Decode base64 audio
-        const audioBuffer = Buffer.from(data.audio_base64, 'base64');
-        
-        return new NextResponse(audioBuffer, {
-          headers: {
-            'Content-Type': 'audio/mpeg',
-            'X-Voice-Provider': 'minimax',
-            'X-Voice-Language': language
-          }
-        });
-      } else {
-        throw new Error('No audio data in MiniMax response');
-      }
+      throw new Error('No audio data in MiniMax response');
     }
 
   } catch (error) {
