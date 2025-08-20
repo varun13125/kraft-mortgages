@@ -127,16 +127,14 @@ export class SpeechRecognitionService {
 
     // Handle end
     this.recognition.onend = () => {
+      const wasListening = this.isListening;
       this.isListening = false;
       
       if (this.onEnd) {
         this.onEnd();
       }
       
-      // Auto-restart if needed
-      if (this.isListening) {
-        this.start();
-      }
+      // Don't auto-restart - let the conversation manager handle it
     };
 
     // Handle start
@@ -156,6 +154,13 @@ export class SpeechRecognitionService {
       return;
     }
 
+    // If already listening, stop first
+    if (this.isListening) {
+      console.log('Recognition already running, restarting...');
+      this.restart();
+      return;
+    }
+
     if (config) {
       if (config.language) {
         this.currentLanguage = config.language;
@@ -172,10 +177,14 @@ export class SpeechRecognitionService {
     try {
       this.recognition.start();
       this.isListening = true;
-    } catch (error) {
-      console.error('Failed to start recognition:', error);
-      // If already started, restart
-      this.restart();
+    } catch (error: any) {
+      if (error.name === 'InvalidStateError') {
+        // Already started, just update the flag
+        this.isListening = true;
+        console.log('Recognition was already started');
+      } else {
+        console.error('Failed to start recognition:', error);
+      }
     }
   }
 
@@ -189,10 +198,20 @@ export class SpeechRecognitionService {
 
   // Restart recognition
   restart() {
-    this.stop();
+    if (this.recognition && this.isListening) {
+      this.recognition.stop();
+      this.isListening = false;
+    }
     setTimeout(() => {
-      this.start();
-    }, 100);
+      if (this.recognition) {
+        try {
+          this.recognition.start();
+          this.isListening = true;
+        } catch (error) {
+          console.error('Failed to restart recognition:', error);
+        }
+      }
+    }, 200);
   }
 
   // Switch language

@@ -132,6 +132,11 @@ export class VoiceConversationManager {
       return;
     }
 
+    if (this.state.isListening) {
+      console.log('Already listening');
+      return;
+    }
+
     // Request microphone permission if needed
     try {
       await navigator.mediaDevices.getUserMedia({ audio: true });

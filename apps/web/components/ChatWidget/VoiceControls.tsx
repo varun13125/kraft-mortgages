@@ -85,11 +85,18 @@ export const VoiceControls: React.FC<VoiceControlsProps> = ({
     }
   };
 
-  const handleMicPress = () => {
+  const handleMicPress = (event: React.MouseEvent | React.TouchEvent) => {
     if (!conversationManager.current || !isActive) return;
     
+    // Prevent double-triggering from touch and mouse events
+    event.preventDefault();
+    
     if (mode === 'push-to-talk') {
-      conversationManager.current.toggleListening();
+      if (event.type === 'mousedown' || event.type === 'touchstart') {
+        conversationManager.current.startListening();
+      } else if (event.type === 'mouseup' || event.type === 'touchend') {
+        conversationManager.current.stopListening();
+      }
     }
   };
 
