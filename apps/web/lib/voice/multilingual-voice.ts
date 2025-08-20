@@ -21,6 +21,8 @@ interface VoiceResponse {
 
 export class MultilingualVoiceService {
   private currentLanguage: string = 'en-CA';
+  private lastRequestTime: number = 0;
+  private minRequestInterval: number = 1000; // 1 second between requests
   
   // Language detection patterns
   private languagePatterns = {
@@ -132,24 +134,43 @@ export class MultilingualVoiceService {
 
   // Generate speech using API route (server-side)
   private async generateSpeech(text: string, config: VoiceConfig): Promise<Blob> {
-    const response = await fetch('/api/voice/generate', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        text: this.optimizeText(text, config.language),
-        language: config.language
-      })
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
-      console.error('Voice API Error:', errorData);
-      throw new Error(errorData.error || `Voice generation failed: ${response.status}`);
+    // Simple rate limiting
+    const now = Date.now();
+    const timeSinceLastRequest = now - this.lastRequestTime;
+    if (timeSinceLastRequest < this.minRequestInterval) {
+      await new Promise(resolve => setTimeout(resolve, this.minRequestInterval - timeSinceLastRequest));
     }
+    this.lastRequestTime = Date.now();
 
-    return await response.blob();
+    try {
+      const response = await fetch('/api/voice/generate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          text: this.optimizeText(text, config.language),
+          language: config.language
+        })
+      });
+
+      if (!response.ok) {
+        if (response.status === 429) {
+          // Rate limited - wait and don't retry
+          console.warn('Voice API rate limited');
+          throw new Error('Rate limited - please wait before trying again');
+        }
+        
+        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+        console.error('Voice API Error:', errorData);
+        throw new Error(errorData.error || `Voice generation failed: ${response.status}`);
+      }
+
+      return await response.blob();
+    } catch (error) {
+      console.error('Voice generation error:', error);
+      throw error;
+    }
   }
 
   // Optimize text for better pronunciation

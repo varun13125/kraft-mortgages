@@ -83,8 +83,8 @@ export class VoiceConversationManager {
             this.onTranscript(result.transcript, true);
           }
           
-          // Process with AI if in conversation mode
-          if (this.state.mode === 'always-on' || this.state.mode === 'voice-activated') {
+          // Process with AI if in conversation mode and not already processing
+          if ((this.state.mode === 'always-on' || this.state.mode === 'voice-activated') && !this.state.isProcessing) {
             this.processWithAI(result.transcript);
           }
           
@@ -230,31 +230,22 @@ export class VoiceConversationManager {
     }
 
     try {
-      // Try MiniMax first if available
-      let audioBlob: Blob | null = null;
+      // Use only ElevenLabs for now (MiniMax has issues)
+      const response = await this.voiceService.speak(text, this.state.currentLanguage);
       
-      if (!forceProvider || forceProvider === 'minimax') {
-        audioBlob = await this.speakWithMiniMax(text).catch(() => null);
-      }
-      
-      // Fallback to ElevenLabs
-      if (!audioBlob) {
-        const response = await this.voiceService.speak(text, this.state.currentLanguage);
-        audioBlob = response.audioBlob;
-      }
-
       // Play audio
-      await this.playAudio(audioBlob);
+      await this.playAudio(response.audioBlob);
       
     } catch (error) {
       console.error('Speech synthesis error:', error);
+      // Don't retry on error to prevent loops
     } finally {
       this.state.isSpeaking = false;
       this.updateState();
       
       // Resume listening in always-on mode
       if (this.state.mode === 'always-on') {
-        setTimeout(() => this.startListening(), 500);
+        setTimeout(() => this.startListening(), 1000);
       }
     }
   }
