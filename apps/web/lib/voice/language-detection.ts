@@ -1,14 +1,14 @@
 // Language Detection Service for Mid-Conversation Switching
 // Detects language changes and provides appropriate voice settings
 
-interface LanguageInfo {
+export interface LanguageInfo {
   code: string;
   name: string;
   confidence: number;
   script?: string;
 }
 
-interface VoicePreferences {
+export interface VoicePreferences {
   provider: 'elevenlabs' | 'azure' | 'google';
   voiceId: string;
   settings: any;
