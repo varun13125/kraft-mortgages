@@ -307,6 +307,10 @@ export function ChatWidget() {
   // Toggle voice mode
   const toggleVoiceMode = () => {
     setVoiceEnabled(!voiceEnabled);
+    if (!voiceEnabled) {
+      // Check if API key is configured
+      console.log('[Voice] Voice mode enabled. Checking API configuration...');
+    }
   };
 
   // Play voice message

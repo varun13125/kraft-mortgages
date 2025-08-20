@@ -20,7 +20,6 @@ interface VoiceResponse {
 }
 
 export class MultilingualVoiceService {
-  private apiKey: string;
   private currentLanguage: string = 'en-CA';
   
   // Language detection patterns
@@ -74,7 +73,7 @@ export class MultilingualVoiceService {
   };
 
   constructor() {
-    this.apiKey = process.env.ELEVENLABS_API_KEY || '';
+    // No initialization needed - API calls go through server-side route
   }
 
   // Detect language from text
@@ -117,12 +116,11 @@ export class MultilingualVoiceService {
     
     // Get voice configuration
     const config = this.voiceConfigs[detectedLanguage] || this.voiceConfigs['en-CA'];
+    // Add language to config for API route
+    config.language = detectedLanguage;
     
-    // Optimize text for better pronunciation
-    const optimizedText = this.optimizeText(text, detectedLanguage);
-    
-    // Generate speech using ElevenLabs
-    const audioBlob = await this.generateSpeech(optimizedText, config);
+    // Generate speech using API route
+    const audioBlob = await this.generateSpeech(text, config);
     
     return {
       audioBlob,
@@ -132,29 +130,23 @@ export class MultilingualVoiceService {
     };
   }
 
-  // Generate speech using ElevenLabs API
+  // Generate speech using API route (server-side)
   private async generateSpeech(text: string, config: VoiceConfig): Promise<Blob> {
-    const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${config.voiceId}`, {
+    const response = await fetch('/api/voice/generate', {
       method: 'POST',
       headers: {
-        'Accept': 'audio/mpeg',
         'Content-Type': 'application/json',
-        'xi-api-key': this.apiKey,
       },
       body: JSON.stringify({
-        text,
-        model_id: 'eleven_multilingual_v2',
-        voice_settings: {
-          stability: config.settings.stability,
-          similarity_boost: config.settings.similarityBoost,
-          style: config.settings.style,
-          use_speaker_boost: true
-        }
+        text: this.optimizeText(text, config.language),
+        language: config.language
       })
     });
 
     if (!response.ok) {
-      throw new Error(`Voice generation failed: ${response.status}`);
+      const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+      console.error('Voice API Error:', errorData);
+      throw new Error(errorData.error || `Voice generation failed: ${response.status}`);
     }
 
     return await response.blob();
