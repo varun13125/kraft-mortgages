@@ -97,20 +97,20 @@ export class ElevenLabsSpeechService {
   async testVoiceQuality(language: string, style: 'professional' | 'casual' = 'casual'): Promise<Blob> {
     const testTexts: Record<string, any> = {
       'hi-IN': {
-        casual: 'हैलो! मैं Alexandra हूं, Kraft Mortgages से। अभी की mortgage rates काफी अच्छी हैं, 5.2% से start हो रही हैं। कैसे help कर सकता हूं?',
-        professional: 'नमस्कार। Kraft Mortgages में आपका स्वागत है। हमारी वर्तमान ब्याज दरें 5.2% से प्रारंभ होती हैं।'
+        casual: 'हैलो! मैं Alexandra हूं, Kraft Mortgages से। आपके mortgage के लिए कैसे help कर सकता हूं?',
+        professional: 'नमस्कार। Kraft Mortgages में आपका स्वागत है। आपकी mortgage की जरूरतों में मैं कैसे सहायता कर सकती हूं?'
       },
       'pa-IN': {
         casual: 'Sat Sri Akal ji! Main Alexandra, Kraft Mortgages ton. Tuhade ghar de loan vich ki help chahidi hai?',
         professional: 'ਸਤ ਸ੍ਰੀ ਅਕਾਲ ਜੀ। Kraft Mortgages ਵਿੱਚ ਤੁਹਾਡਾ ਸਵਾਗਤ ਹੈ।'
       },
       'en-CA': {
-        casual: 'Hey! I\'m Alexandra from Kraft Mortgages. Our rates are looking great at 5.2%. What can I help you with?',
-        professional: 'Good afternoon. Welcome to Kraft Mortgages. Our current mortgage rates begin at 5.2%.'
+        casual: 'Hey! I\'m Alexandra from Kraft Mortgages. How can I help with your mortgage needs today?',
+        professional: 'Good afternoon. Welcome to Kraft Mortgages. How may I assist you with your mortgage requirements?'
       },
       'en-IN': {
-        casual: 'Hello! This is Alexandra from Kraft Mortgages. Current home loan rates are starting from 5.2%. How can I assist you?',
-        professional: 'Good day. Welcome to Kraft Mortgages. Our present interest rates commence at 5.2%.'
+        casual: 'Hello! This is Alexandra from Kraft Mortgages. How can I assist you with your home loan needs?',
+        professional: 'Good day. Welcome to Kraft Mortgages. How may I help you with your mortgage requirements?'
       }
     };
 
