@@ -194,19 +194,29 @@ export class VoiceConversationManager {
 
   // Send transcript to AI
   private async sendToAI(transcript: string): Promise<string> {
-    // This will be connected to your existing chat API
-    const response = await fetch('/api/chat', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        message: transcript,
-        language: this.state.currentLanguage,
-        conversationId: 'voice-session'
-      })
-    });
+    try {
+      // Match the expected format for the chat API
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          input: transcript,  // Changed from 'message' to 'input'
+          language: this.state.currentLanguage.split('-')[0], // Just the language code
+          province: 'BC' // Default province
+        })
+      });
 
-    const data = await response.json();
-    return data.message || 'I understand. How else can I help you?';
+      if (!response.ok) {
+        throw new Error(`Chat API error: ${response.status}`);
+      }
+
+      // The API returns a stream, so we need to read it as text
+      const text = await response.text();
+      return text || 'I understand. How else can I help you?';
+    } catch (error) {
+      console.error('Error sending to AI:', error);
+      return 'I apologize, but I had trouble processing that. Could you please try again?';
+    }
   }
 
   // Speak response with voice synthesis
