@@ -7,8 +7,8 @@ export async function POST(request: NextRequest) {
   try {
     const { text, language, emotion = 'friendly', speed = 1.0 } = await request.json();
     
-    const jwtToken = process.env.MINIMAX_JWT_TOKEN;
-    if (!jwtToken) {
+    const apiKey = process.env.MINIMAX_API_KEY || process.env.MINIMAX_JWT_TOKEN;
+    if (!apiKey) {
       // Fallback to ElevenLabs if MiniMax not configured
       return NextResponse.json(
         { error: 'MiniMax not configured, use fallback' },
@@ -74,7 +74,7 @@ export async function POST(request: NextRequest) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${jwtToken}`,
+        'Authorization': `Bearer ${apiKey}`,
         'Accept': 'audio/mpeg'
       },
       body: JSON.stringify(requestBody)
