@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { MessageCircle, X, Send, Calculator, TrendingUp, DollarSign, Volume2, Languages, Globe } from "lucide-react";
 import { useAppStore } from "@/store/useAppStore";
 import { VoiceInput } from "./VoiceInput";
-import { VoiceControls } from "./VoiceControls";
+import { CleanVoiceControls } from "./CleanVoiceControls";
 import { ToolResults } from "./ToolResults";
 import { MultilingualVoiceService } from "@/lib/voice/multilingual-voice";
 
@@ -419,23 +419,28 @@ export function ChatWidget() {
             
             {/* Voice Controls Panel */}
             {showVoiceControls && (
-              <div className="border-b border-gray-700 bg-gray-800">
-                <VoiceControls
-                  onTranscript={(text) => {
-                    // Add user message from voice
-                    const newMessage: Message = {
-                      id: `msg-${Date.now()}`,
-                      content: text,
-                      sender: 'user',
-                      timestamp: new Date()
-                    };
-                    setMessages(prev => [...prev, newMessage]);
-                  }}
-                  onAIResponse={(response) => {
-                    // Response will be handled by existing chat flow
-                  }}
-                />
-              </div>
+              <CleanVoiceControls
+                onVoiceMessage={(text) => {
+                  // Add user message from voice
+                  const newMessage: Message = {
+                    id: `msg-${Date.now()}`,
+                    content: text,
+                    sender: 'user',
+                    timestamp: new Date()
+                  };
+                  setMessages(prev => [...prev, newMessage]);
+                }}
+                onAIResponse={(response) => {
+                  // Add AI response message
+                  const newMessage: Message = {
+                    id: `msg-${Date.now()}`,
+                    content: response,
+                    sender: 'assistant',
+                    timestamp: new Date()
+                  };
+                  setMessages(prev => [...prev, newMessage]);
+                }}
+              />
             )}
 
             {/* Messages */}
