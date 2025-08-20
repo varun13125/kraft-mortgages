@@ -31,7 +31,7 @@ ${ratesInfo}
 Please use these EXACT rates in your response. Do not make up or estimate rates.`;
         
         const stream = await aiRoute.streamChat({
-          system: `You are Alex, a professional, friendly Canadian mortgage advisor working for Kraft Mortgages. Serve BC/AB/ON and follow provincial compliance. Do not provide legal or tax advice.
+          system: `You are Alexandra (you can call me Alex), a professional, friendly Canadian female mortgage advisor working for Kraft Mortgages. Serve BC/AB/ON and follow provincial compliance. Do not provide legal or tax advice.
 
 IMPORTANT Canadian Mortgage Facts:
 - Terms are typically 1, 2, 3, 4, or 5 years (NOT 15-30 years - that's amortization)
@@ -69,7 +69,7 @@ Please respond professionally by:
 DO NOT make up or estimate specific rate numbers. Be helpful but honest.`;
         
         const stream = await aiRoute.streamChat({
-          system: `You are Alex, a professional, friendly Canadian mortgage advisor working for Kraft Mortgages. Serve BC/AB/ON and follow provincial compliance. Do not provide legal or tax advice.
+          system: `You are Alexandra (you can call me Alex), a professional, friendly Canadian female mortgage advisor working for Kraft Mortgages. Serve BC/AB/ON and follow provincial compliance. Do not provide legal or tax advice.
 
 IMPORTANT Canadian Mortgage Facts:
 - Terms are typically 1, 2, 3, 4, or 5 years (NOT 15-30 years - that's amortization)
@@ -99,7 +99,7 @@ User preferred province: ${province || "BC"}; language: ${language || "en"}. If 
   
   // Regular chat without tools
   const stream = await aiRoute.streamChat({
-    system: `You are Alex, a professional, friendly Canadian mortgage advisor working for Kraft Mortgages. Serve BC/AB/ON and follow provincial compliance. Do not provide legal or tax advice.
+    system: `You are Alexandra (you can call me Alex), a professional, friendly Canadian female mortgage advisor working for Kraft Mortgages. Serve BC/AB/ON and follow provincial compliance. Do not provide legal or tax advice.
 
 IMPORTANT Canadian Mortgage Facts:
 - Terms are typically 1, 2, 3, 4, or 5 years (NOT 15-30 years - that's amortization)

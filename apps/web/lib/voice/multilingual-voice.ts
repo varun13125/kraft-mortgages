@@ -176,12 +176,12 @@ export class MultilingualVoiceService {
   // Test voice quality
   async testVoice(language: string): Promise<Blob> {
     const testTexts: Record<string, string> = {
-      'hi-IN': 'हैलो! मैं Alex हूं, Kraft Mortgages से। कैसे help कर सकता हूं?',
-      'pa-IN': 'Sat Sri Akal ji! Main Alex, Kraft Mortgages ton. Ki help chahidi?',
-      'en-CA': 'Hello! Alex from Kraft Mortgages. How can I help you today?',
-      'zh-CN': '你好！我是Kraft Mortgages的Alex。有什么可以帮助您的？',
-      'es-ES': 'Hola! Soy Alex de Kraft Mortgages. ¿Cómo puedo ayudarte?',
-      'fr-CA': 'Bonjour! Je suis Alex de Kraft Mortgages. Comment puis-je vous aider?'
+      'hi-IN': 'हैलो! मैं Alexandra हूं, Kraft Mortgages से। कैसे help कर सकता हूं?',
+      'pa-IN': 'Sat Sri Akal ji! Main Alexandra, Kraft Mortgages ton. Ki help chahidi?',
+      'en-CA': 'Hello! I\'m Alexandra from Kraft Mortgages. How can I help you today?',
+      'zh-CN': '你好！我是Kraft Mortgages的Alexandra。有什么可以帮助您的？',
+      'es-ES': 'Hola! Soy Alexandra de Kraft Mortgages. ¿Cómo puedo ayudarte?',
+      'fr-CA': 'Bonjour! Je suis Alexandra de Kraft Mortgages. Comment puis-je vous aider?'
     };
 
     const text = testTexts[language] || testTexts['en-CA'];

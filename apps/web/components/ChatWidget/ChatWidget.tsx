@@ -71,7 +71,7 @@ export function ChatWidget() {
         // Initialize with welcome message if no saved messages
         const welcomeMessage = {
           id: "welcome",
-          content: "Hi! I'm Alex, your mortgage advisor. I can help you with calculations, current rates, and answer any mortgage questions you have in BC, AB, and ON. What would you like to know?",
+          content: "Hi! I'm Alexandra, your mortgage advisor. I can help you with calculations, current rates, and answer any mortgage questions you have in BC, AB, and ON. What would you like to know?",
           sender: "assistant" as const,
           timestamp: new Date(),
         };
@@ -82,7 +82,7 @@ export function ChatWidget() {
       // Fallback to welcome message
       const welcomeMessage = {
         id: "welcome",
-        content: "Hi! I'm Alex, your mortgage advisor. I can help you with calculations, current rates, and answer any mortgage questions you have in BC, AB, and ON. What would you like to know?",
+        content: "Hi! I'm Alexandra, your mortgage advisor. I can help you with calculations, current rates, and answer any mortgage questions you have in BC, AB, and ON. What would you like to know?",
         sender: "assistant" as const,
         timestamp: new Date(),
       };
