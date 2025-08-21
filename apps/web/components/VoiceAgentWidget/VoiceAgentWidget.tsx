@@ -22,6 +22,11 @@ export function VoiceAgentWidget() {
         widgetDiv.className = 'wshpnd-scloser-meeting-form';
         widgetDiv.setAttribute('data-wishpond-id', '6b40ce6f-71ba-47c0-bd48-a0f0ccaa55f3');
         widgetDiv.setAttribute('data-wishpond-domain', 'https://app.salescloser.ai');
+        // Try to force embedded mode
+        widgetDiv.setAttribute('data-embed-mode', 'true');
+        widgetDiv.setAttribute('data-target', '_self');
+        widgetDiv.style.width = '100%';
+        widgetDiv.style.height = '100%';
         
         if (widgetContainerRef.current) {
           widgetContainerRef.current.appendChild(widgetDiv);
@@ -60,6 +65,33 @@ export function VoiceAgentWidget() {
         setScriptLoaded(true);
         setIsLoading(false);
         console.log('SalesCloser voice agent loaded');
+        
+        // Try to intercept form submissions and external links
+        setTimeout(() => {
+          const forms = document.querySelectorAll('.wshpnd-scloser-meeting-form form');
+          const links = document.querySelectorAll('.wshpnd-scloser-meeting-form a');
+          
+          // Prevent forms from opening new windows
+          forms.forEach(form => {
+            form.setAttribute('target', '_self');
+            form.addEventListener('submit', (e) => {
+              console.log('Form submission intercepted');
+              // You could handle the form data here instead of redirecting
+            });
+          });
+          
+          // Prevent links from opening new windows
+          links.forEach(link => {
+            if (link.getAttribute('href')?.includes('salescloser.ai')) {
+              link.setAttribute('target', '_self');
+              link.addEventListener('click', (e) => {
+                e.preventDefault();
+                console.log('External navigation prevented');
+                // You could show an iframe or handle this differently
+              });
+            }
+          });
+        }, 2000);
       };
       
       script.onerror = () => {

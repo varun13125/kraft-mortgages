@@ -9,8 +9,8 @@ const ChatWidget = dynamic(() => import("@/components/ChatWidget/ChatWidget").th
   ssr: false
 });
 
-// Dynamically import VoiceAgentWidget
-const VoiceAgentWidget = dynamic(() => import("@/components/VoiceAgentWidget/VoiceAgentWidget").then(mod => ({ default: mod.VoiceAgentWidget })), {
+// Dynamically import EmbeddedVoiceAgent
+const EmbeddedVoiceAgent = dynamic(() => import("@/components/VoiceAgentWidget/EmbeddedVoiceAgent").then(mod => ({ default: mod.EmbeddedVoiceAgent })), {
   ssr: false
 });
 
@@ -31,7 +31,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ChatWidget />
         
         {/* Global Voice Agent Widget - Professional voice consultations */}
-        <VoiceAgentWidget />
+        <EmbeddedVoiceAgent />
         
         <Analytics />
         <PWA />
