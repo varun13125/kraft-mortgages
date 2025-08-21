@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Phone, PhoneOff, Headphones, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import './VoiceAgentWidget.css';
 
 export function VoiceAgentWidget() {
   const [isOpen, setIsOpen] = useState(false);
@@ -26,6 +27,28 @@ export function VoiceAgentWidget() {
           widgetContainerRef.current.appendChild(widgetDiv);
         }
       }
+      
+      // Add global styles to fix text visibility
+      const styleEl = document.createElement('style');
+      styleEl.innerHTML = `
+        .wshpnd-scloser-meeting-form input,
+        .wshpnd-scloser-meeting-form textarea,
+        .wshpnd-scloser-meeting-form select,
+        .wshpnd-scloser-meeting-form [contenteditable="true"] {
+          color: #1f2937 !important;
+          -webkit-text-fill-color: #1f2937 !important;
+          opacity: 1 !important;
+        }
+        .wshpnd-scloser-meeting-form ::placeholder {
+          color: #6b7280 !important;
+          -webkit-text-fill-color: #6b7280 !important;
+          opacity: 0.7 !important;
+        }
+        .wshpnd-scloser-meeting-form label {
+          color: #374151 !important;
+        }
+      `;
+      document.head.appendChild(styleEl);
 
       // Load the SalesCloser script
       const script = document.createElement('script');
@@ -146,7 +169,7 @@ export function VoiceAgentWidget() {
               </div>
 
               {/* SalesCloser Widget Container */}
-              <div className="flex-1 bg-gray-50 p-4 overflow-auto">
+              <div className="flex-1 bg-gray-50 p-4 overflow-auto voice-agent-container">
                 {isLoading ? (
                   <div className="flex items-center justify-center h-full">
                     <div className="text-center">

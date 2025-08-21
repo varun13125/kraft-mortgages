@@ -1,0 +1,65 @@
+/* Voice Agent Widget Styles */
+
+/* Fix text color visibility in SalesCloser form */
+.voice-agent-container {
+  /* Override text colors for all form inputs */
+  color: #1f2937 !important; /* Dark gray text */
+}
+
+/* Target all input fields in the SalesCloser form */
+.voice-agent-container input,
+.voice-agent-container textarea,
+.voice-agent-container select,
+.voice-agent-container [contenteditable="true"],
+.voice-agent-container .wshpnd-scloser-meeting-form input,
+.voice-agent-container .wshpnd-scloser-meeting-form textarea,
+.voice-agent-container .wshpnd-scloser-meeting-form select {
+  color: #1f2937 !important; /* Dark gray text */
+  opacity: 1 !important;
+}
+
+/* Ensure placeholder text is visible but lighter */
+.voice-agent-container input::placeholder,
+.voice-agent-container textarea::placeholder,
+.voice-agent-container .wshpnd-scloser-meeting-form input::placeholder,
+.voice-agent-container .wshpnd-scloser-meeting-form textarea::placeholder {
+  color: #6b7280 !important; /* Medium gray for placeholders */
+  opacity: 0.8 !important;
+}
+
+/* Fix label colors */
+.voice-agent-container label,
+.voice-agent-container .wshpnd-scloser-meeting-form label {
+  color: #374151 !important; /* Darker gray for labels */
+}
+
+/* Fix any text that might be in spans or divs */
+.voice-agent-container span,
+.voice-agent-container div,
+.voice-agent-container p,
+.voice-agent-container .wshpnd-scloser-meeting-form span,
+.voice-agent-container .wshpnd-scloser-meeting-form div,
+.voice-agent-container .wshpnd-scloser-meeting-form p {
+  color: #1f2937 !important; /* Ensure all text is dark */
+}
+
+/* Specific overrides for form text that might be set inline */
+.voice-agent-container * {
+  color: inherit;
+}
+
+/* Force dark text for any element with light text color */
+.voice-agent-container [style*="color: rgb(255"],
+.voice-agent-container [style*="color: #fff"],
+.voice-agent-container [style*="color: #FFF"],
+.voice-agent-container [style*="color: white"] {
+  color: #1f2937 !important;
+}
+
+/* Ensure focus states maintain visibility */
+.voice-agent-container input:focus,
+.voice-agent-container textarea:focus,
+.voice-agent-container select:focus {
+  color: #111827 !important; /* Even darker on focus */
+  outline-color: #d4a574 !important; /* Gold outline */
+}
