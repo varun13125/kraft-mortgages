@@ -79,7 +79,9 @@ export const CleanVoiceControls: React.FC<CleanVoiceControlsProps> = ({
       });
 
       if (!response.ok) {
-        throw new Error(`AI API error: ${response.status}`);
+        const errorText = await response.text();
+        console.error('AI API Error Response:', errorText);
+        throw new Error(`AI API error: ${response.status} - ${errorText}`);
       }
 
       const aiResponse = await response.text();
@@ -98,7 +100,23 @@ export const CleanVoiceControls: React.FC<CleanVoiceControlsProps> = ({
       }
     } catch (error) {
       console.error('AI processing error:', error);
-      setIsSpeaking(false);
+      
+      // Provide fallback response
+      const fallbackResponse = "I apologize, but I'm having trouble processing that right now. Could you please try again or contact us directly at 604-593-1550?";
+      
+      if (onAIResponse) {
+        onAIResponse(fallbackResponse);
+      }
+      
+      // Try to speak the fallback
+      try {
+        setIsSpeaking(true);
+        await voiceSystem.current?.speak(fallbackResponse, language);
+      } catch (speakError) {
+        console.error('Failed to speak fallback response:', speakError);
+      } finally {
+        setIsSpeaking(false);
+      }
     }
   };
 

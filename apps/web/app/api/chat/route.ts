@@ -7,7 +7,12 @@ const CURRENT_MODEL = "z-ai/glm-4.5-air:free";
 const PROVIDER = "openrouter";
 
 export async function POST(req: NextRequest) {
-  const { input, province, language } = await req.json();
+  try {
+    const { input, province, language } = await req.json();
+    
+    if (!input) {
+      return new Response('Input is required', { status: 400 });
+    }
   
   // Check if user is asking about rates
   const inputLower = input.toLowerCase();
@@ -120,4 +125,18 @@ User preferred province: ${province || "BC"}; language: ${language || "en"}. If 
       "X-Is-Free": "true"
     } 
   });
+  
+  } catch (error) {
+    console.error('Chat API Error:', error);
+    return new Response(
+      JSON.stringify({ 
+        error: 'Failed to process chat request',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      }), 
+      { 
+        status: 500,
+        headers: { 'Content-Type': 'application/json' }
+      }
+    );
+  }
 }
