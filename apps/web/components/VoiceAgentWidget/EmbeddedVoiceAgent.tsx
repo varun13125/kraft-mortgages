@@ -6,10 +6,42 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 export function EmbeddedVoiceAgent() {
   const [isOpen, setIsOpen] = useState(false);
-  const [useIframe, setUseIframe] = useState(false);
+  const [voiceWindowOpen, setVoiceWindowOpen] = useState(false);
 
-  // Use the hosted form URL from SalesCloser (better for iframe embedding)
-  const salesCloserUrl = 'https://app.salescloser.ai/form/6b40ce6f-71ba-47c0-bd48-a0f0ccaa55f3';
+  // SalesCloser URLs - they prevent iframe embedding, so we'll use popup/new window approach
+  const salesCloserFormUrl = 'https://app.salescloser.ai/form/6b40ce6f-71ba-47c0-bd48-a0f0ccaa55f3';
+  const salesCloserWidgetUrl = 'https://app.salescloser.ai/widget/6b40ce6f-71ba-47c0-bd48-a0f0ccaa55f3';
+
+  // Handle voice consultation launch
+  const startVoiceConsultation = () => {
+    // Open in a centered popup window
+    const width = 800;
+    const height = 600;
+    const left = (window.screen.width - width) / 2;
+    const top = (window.screen.height - height) / 2;
+    
+    const popup = window.open(
+      salesCloserFormUrl,
+      'voice_consultation',
+      `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes,status=yes,toolbar=no,menubar=no,location=no`
+    );
+    
+    if (popup) {
+      setVoiceWindowOpen(true);
+      setIsOpen(false); // Close our modal
+      
+      // Monitor if popup is closed
+      const checkClosed = setInterval(() => {
+        if (popup.closed) {
+          setVoiceWindowOpen(false);
+          clearInterval(checkClosed);
+        }
+      }, 1000);
+    } else {
+      // Popup blocked, fallback to new tab
+      window.open(salesCloserFormUrl, '_blank');
+    }
+  };
 
   return (
     <>
@@ -93,14 +125,6 @@ export function EmbeddedVoiceAgent() {
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
-                    {/* Toggle iframe mode */}
-                    <button
-                      onClick={() => setUseIframe(!useIframe)}
-                      className="p-1 hover:bg-white/20 rounded-lg transition-colors"
-                      title={useIframe ? 'Switch to embed mode' : 'Switch to iframe mode'}
-                    >
-                      <ExternalLink className="w-4 h-4" />
-                    </button>
                     <button
                       onClick={() => setIsOpen(false)}
                       className="p-1 hover:bg-white/20 rounded-lg transition-colors"
@@ -112,51 +136,42 @@ export function EmbeddedVoiceAgent() {
               </div>
 
               {/* Content Area */}
-              <div className="flex-1 overflow-hidden">
-                {useIframe ? (
-                  /* Iframe Mode - Guaranteed to stay embedded */
-                  <iframe
-                    src={salesCloserUrl}
-                    className="w-full h-full border-0 bg-white"
-                    title="SalesCloser Voice Agent"
-                    allow="microphone; camera; autoplay; encrypted-media; fullscreen; geolocation"
-                    sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox allow-modals allow-orientation-lock allow-pointer-lock allow-presentation"
-                    loading="lazy"
-                  />
-                ) : (
-                  /* Direct embed mode with fallback */
-                  <div className="p-4 h-full flex flex-col items-center justify-center text-center">
-                    <Phone className="w-16 h-16 text-gold-500 mb-4" />
-                    <h4 className="font-semibold text-lg mb-2">Voice Consultation</h4>
-                    <p className="text-gray-600 mb-6 max-w-sm">
-                      Start a professional voice consultation with our AI mortgage expert. Available in multiple languages.
-                    </p>
-                    
-                    <div className="space-y-3 w-full max-w-sm">
-                      <button
-                        onClick={() => setUseIframe(true)}
-                        className="w-full bg-gradient-to-r from-gold-500 to-gold-600 text-white py-3 px-6 rounded-lg font-semibold hover:shadow-lg transition-all"
-                      >
-                        Start Voice Call
-                      </button>
-                      
-                      <a
-                        href={salesCloserUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="w-full bg-gray-100 text-gray-700 py-3 px-6 rounded-lg font-semibold hover:bg-gray-200 transition-all flex items-center justify-center gap-2"
-                      >
-                        Open in New Tab
-                        <ExternalLink className="w-4 h-4" />
-                      </a>
-                    </div>
+              <div className="flex-1 p-4 flex flex-col items-center justify-center text-center">
+                <Phone className="w-16 h-16 text-gold-500 mb-4" />
+                <h4 className="font-semibold text-lg mb-2">AI Voice Consultation</h4>
+                <p className="text-gray-600 mb-6 max-w-sm">
+                  Start a professional voice consultation with our AI mortgage expert. Opens in a focused popup window for the best experience.
+                </p>
+                
+                <div className="space-y-3 w-full max-w-sm">
+                  <button
+                    onClick={startVoiceConsultation}
+                    disabled={voiceWindowOpen}
+                    className={`w-full py-3 px-6 rounded-lg font-semibold transition-all ${
+                      voiceWindowOpen 
+                        ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                        : 'bg-gradient-to-r from-gold-500 to-gold-600 text-white hover:shadow-lg'
+                    }`}
+                  >
+                    {voiceWindowOpen ? 'Voice Consultation Active' : 'Start Voice Consultation'}
+                  </button>
+                  
+                  <a
+                    href={salesCloserFormUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full bg-gray-100 text-gray-700 py-3 px-6 rounded-lg font-semibold hover:bg-gray-200 transition-all flex items-center justify-center gap-2"
+                  >
+                    Open in New Tab
+                    <ExternalLink className="w-4 h-4" />
+                  </a>
+                </div>
 
-                    <div className="mt-6 text-xs text-gray-500">
-                      <p>Languages: English • Hindi • Punjabi</p>
-                      <p>Spanish • French • Chinese</p>
-                    </div>
-                  </div>
-                )}
+                <div className="mt-6 text-xs text-gray-500">
+                  <p className="mb-1">🎙️ <strong>Multilingual Support:</strong></p>
+                  <p>English • Hindi • Punjabi • Spanish • French • Chinese</p>
+                  <p className="mt-2">✨ Professional AI agent with real-time voice interaction</p>
+                </div>
               </div>
 
               {/* Footer */}
