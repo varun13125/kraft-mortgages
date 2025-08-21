@@ -46,10 +46,12 @@ export class SimpleVoiceSystem {
     // Set up event handlers
     this.recognition.onresult = (event: any) => {
       const result = event.results[event.results.length - 1];
-      const transcript = result.transcript;
+      const transcript = result[0].transcript;
       const isFinal = result.isFinal;
 
-      if (this.callbacks.onTranscript) {
+      console.log('Speech recognition result:', { transcript, isFinal });
+
+      if (this.callbacks.onTranscript && transcript) {
         this.callbacks.onTranscript(transcript, isFinal);
       }
     };

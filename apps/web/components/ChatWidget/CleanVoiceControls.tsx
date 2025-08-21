@@ -35,7 +35,7 @@ export const CleanVoiceControls: React.FC<CleanVoiceControlsProps> = ({
       onTranscript: (text, isFinal) => {
         setTranscript(text);
         
-        if (isFinal) {
+        if (isFinal && text && text.trim()) {
           // Detect language
           const detectedLang = voiceSystem.current?.detectLanguage(text) || 'en-CA';
           setCurrentLanguage(detectedLang);
@@ -66,13 +66,21 @@ export const CleanVoiceControls: React.FC<CleanVoiceControlsProps> = ({
   }, [onVoiceMessage]);
 
   const processWithAI = async (text: string, language: string) => {
+    // Validate input
+    if (!text || !text.trim()) {
+      console.error('Cannot process empty text');
+      return;
+    }
+
     try {
+      console.log('Processing with AI:', { text, language });
+      
       // Send to AI
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          input: text,
+          input: text.trim(),
           language: language.split('-')[0],
           province: 'BC'
         })
