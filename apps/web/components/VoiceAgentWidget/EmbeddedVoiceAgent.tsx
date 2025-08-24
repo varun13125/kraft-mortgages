@@ -1,63 +1,79 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
-import { Phone, PhoneOff, Headphones, X, ExternalLink } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { Phone, PhoneOff, Headphones, X, ExternalLink, Mic, MicOff } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export function EmbeddedVoiceAgent() {
   const [isOpen, setIsOpen] = useState(false);
-  const [isIframeLoaded, setIsIframeLoaded] = useState(false);
-  const [iframeError, setIframeError] = useState(false);
-  const [currentUrlIndex, setCurrentUrlIndex] = useState(0);
-  const iframeRef = useRef<HTMLIFrameElement>(null);
+  const [isAgentActive, setIsAgentActive] = useState(false);
+  const [agentWindow, setAgentWindow] = useState<Window | null>(null);
 
-  // SalesCloser URLs - Try multiple formats to find the working one
+  // SalesCloser URL - Since iframe is blocked, we'll use popup
   const widgetId = '6b40ce6f-71ba-47c0-bd48-a0f0ccaa55f3';
-  
-  // Array of possible URL formats to try
-  const possibleUrls = [
-    `https://app.salescloser.ai/public/book/${widgetId}`, // Public booking URL
-    `https://app.salescloser.ai/embed/${widgetId}`, // Embed format
-    `https://app.salescloser.ai/widget/${widgetId}`, // Widget format
-    `https://app.salescloser.ai/share/${widgetId}`, // Share format
-    `https://app.salescloser.ai/${widgetId}`, // Direct ID format
-    `https://app.salescloser.ai/demo/${widgetId}`, // Demo format
-  ];
+  const salesCloserUrl = `https://app.salescloser.ai/${widgetId}`;
 
-  const salesCloserUrl = possibleUrls[currentUrlIndex];
-
-  // Handle iframe load errors - try next URL
-  const handleIframeLoad = () => {
-    setIsIframeLoaded(true);
-    
-    // Try to detect if iframe loaded but is blocked
-    setTimeout(() => {
-      if (iframeRef.current) {
-        try {
-          // This will throw if cross-origin
-          const doc = iframeRef.current.contentDocument;
-          if (!doc || !doc.body || doc.body.innerHTML === '') {
-            tryNextUrl();
-          }
-        } catch (e) {
-          // Cross-origin, but that's expected - iframe is likely working
-          console.log(`SalesCloser iframe loaded with URL format #${currentUrlIndex + 1}: ${salesCloserUrl}`);
-          setIframeError(false);
+  // Monitor popup window
+  useEffect(() => {
+    if (agentWindow) {
+      const checkInterval = setInterval(() => {
+        if (agentWindow.closed) {
+          setIsAgentActive(false);
+          setAgentWindow(null);
+          clearInterval(checkInterval);
         }
-      }
-    }, 1000);
+      }, 1000);
+
+      return () => clearInterval(checkInterval);
+    }
+  }, [agentWindow]);
+
+  // Launch voice agent in popup
+  const launchVoiceAgent = () => {
+    // If window already exists, focus it
+    if (agentWindow && !agentWindow.closed) {
+      agentWindow.focus();
+      return;
+    }
+
+    // Open in a centered popup window
+    const width = 500;
+    const height = 700;
+    const left = (window.screen.width - width) / 2;
+    const top = (window.screen.height - height) / 2;
+
+    const features = [
+      `width=${width}`,
+      `height=${height}`,
+      `left=${left}`,
+      `top=${top}`,
+      'resizable=yes',
+      'scrollbars=yes',
+      'status=no',
+      'toolbar=no',
+      'menubar=no',
+      'location=no'
+    ].join(',');
+
+    const popup = window.open(salesCloserUrl, 'salescloser_voice_agent', features);
+
+    if (popup) {
+      setAgentWindow(popup);
+      setIsAgentActive(true);
+      popup.focus();
+    } else {
+      // Popup blocked, open in new tab
+      window.open(salesCloserUrl, '_blank');
+    }
   };
 
-  const tryNextUrl = () => {
-    if (currentUrlIndex < possibleUrls.length - 1) {
-      console.log(`Trying next URL format: ${possibleUrls[currentUrlIndex + 1]}`);
-      setCurrentUrlIndex(currentUrlIndex + 1);
-      setIsIframeLoaded(false);
-      setIframeError(false);
-    } else {
-      console.log('All URL formats attempted, showing fallback');
-      setIframeError(true);
+  // Close the agent window
+  const closeVoiceAgent = () => {
+    if (agentWindow && !agentWindow.closed) {
+      agentWindow.close();
     }
+    setIsAgentActive(false);
+    setAgentWindow(null);
   };
 
   return (
@@ -152,70 +168,91 @@ export function EmbeddedVoiceAgent() {
                 </div>
               </div>
 
-              {/* Content Area - Embedded iframe */}
-              <div className="flex-1 relative bg-gray-50">
-                {!isIframeLoaded && (
-                  <div className="absolute inset-0 flex items-center justify-center bg-white z-10">
+              {/* Content Area - Voice Agent Controls */}
+              <div className="flex-1 p-6 flex flex-col items-center justify-center bg-gradient-to-br from-gray-50 to-white">
+                {!isAgentActive ? (
+                  <>
+                    {/* Initial state - Ready to start */}
                     <div className="text-center">
-                      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gold-500 mx-auto mb-4"></div>
-                      <p className="text-gray-600">Loading AI Voice Agent...</p>
-                      <p className="text-sm text-gray-500 mt-2">Trying connection method {currentUrlIndex + 1} of {possibleUrls.length}</p>
-                      <p className="text-xs text-gray-400 mt-1">Please wait while we connect you</p>
-                    </div>
-                  </div>
-                )}
-                
-                {/* Embedded iframe */}
-                <iframe
-                  key={currentUrlIndex} // Force re-render when URL changes
-                  ref={iframeRef}
-                  src={salesCloserUrl}
-                  className="w-full h-full border-0"
-                  title="AI Voice Consultation"
-                  allow="microphone *; camera *; autoplay *; fullscreen *"
-                  sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-modals allow-downloads allow-presentation"
-                  onLoad={handleIframeLoad}
-                  onError={tryNextUrl}
-                  style={{
-                    minHeight: '450px',
-                    backgroundColor: 'white'
-                  }}
-                />
-                
-                {/* Error or fallback message */}
-                {(iframeError || isIframeLoaded) && (
-                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-white to-transparent p-3">
-                    <div className="text-center">
-                      {iframeError ? (
-                        <div>
-                          <p className="text-sm text-red-600 font-semibold mb-2">
-                            Unable to load embedded agent
-                          </p>
-                          <a 
-                            href={salesCloserUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-2 px-4 py-2 bg-gold-500 text-white rounded-lg hover:bg-gold-600 transition-colors"
-                          >
-                            Open Voice Agent
-                            <ExternalLink className="w-4 h-4" />
-                          </a>
+                      <div className="relative">
+                        <div className="w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-gold-400 to-gold-600 rounded-full flex items-center justify-center shadow-lg">
+                          <Mic className="w-12 h-12 text-white" />
                         </div>
-                      ) : (
-                        <p className="text-xs text-gray-500">
-                          Having issues? 
-                          <a 
-                            href={salesCloserUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="ml-1 text-gold-600 hover:text-gold-700 font-semibold"
-                          >
-                            Open in new tab
-                          </a>
-                        </p>
-                      )}
+                        <span className="absolute top-0 right-0 flex h-4 w-4">
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                          <span className="relative inline-flex rounded-full h-4 w-4 bg-green-500"></span>
+                        </span>
+                      </div>
+                      
+                      <h3 className="text-xl font-bold text-gray-900 mb-3">
+                        AI Voice Consultation
+                      </h3>
+                      
+                      <p className="text-gray-600 mb-6 max-w-sm mx-auto">
+                        Connect with our intelligent mortgage advisor for personalized guidance through voice conversation.
+                      </p>
+
+                      <button
+                        onClick={launchVoiceAgent}
+                        className="w-full max-w-xs mx-auto bg-gradient-to-r from-gold-500 to-gold-600 text-white py-3 px-6 rounded-lg font-semibold hover:shadow-lg transition-all transform hover:scale-105"
+                      >
+                        Start Voice Consultation
+                      </button>
+
+                      <div className="mt-8 space-y-3 text-sm text-gray-500">
+                        <div className="flex items-center justify-center gap-2">
+                          <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                          <span>Agent Available 24/7</span>
+                        </div>
+                        
+                        <div className="bg-gray-50 rounded-lg p-3">
+                          <p className="font-semibold text-gray-700 mb-2">🌐 Multilingual Support</p>
+                          <p className="text-xs">English • Hindi • Punjabi • Spanish • French • Chinese</p>
+                        </div>
+                      </div>
                     </div>
-                  </div>
+                  </>
+                ) : (
+                  <>
+                    {/* Active state - Voice consultation in progress */}
+                    <div className="text-center">
+                      <div className="relative">
+                        <div className="w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center shadow-lg animate-pulse">
+                          <Phone className="w-12 h-12 text-white" />
+                        </div>
+                      </div>
+                      
+                      <h3 className="text-xl font-bold text-gray-900 mb-3">
+                        Voice Consultation Active
+                      </h3>
+                      
+                      <p className="text-gray-600 mb-6 max-w-sm mx-auto">
+                        Your AI mortgage advisor is ready in the popup window. The consultation will continue there.
+                      </p>
+
+                      <div className="space-y-3 w-full max-w-xs mx-auto">
+                        <button
+                          onClick={() => agentWindow?.focus()}
+                          className="w-full bg-gradient-to-r from-gold-500 to-gold-600 text-white py-3 px-6 rounded-lg font-semibold hover:shadow-lg transition-all"
+                        >
+                          Return to Consultation
+                        </button>
+
+                        <button
+                          onClick={closeVoiceAgent}
+                          className="w-full bg-red-500 text-white py-3 px-6 rounded-lg font-semibold hover:bg-red-600 transition-all"
+                        >
+                          End Consultation
+                        </button>
+                      </div>
+
+                      <div className="mt-8 bg-blue-50 rounded-lg p-3 text-sm">
+                        <p className="text-blue-700">
+                          💡 <strong>Tip:</strong> Keep this window open to easily return to your consultation
+                        </p>
+                      </div>
+                    </div>
+                  </>
                 )}
               </div>
 
