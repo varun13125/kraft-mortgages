@@ -6,75 +6,75 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 export function EmbeddedVoiceAgent() {
   const [isOpen, setIsOpen] = useState(false);
-  const [isAgentActive, setIsAgentActive] = useState(false);
-  const [agentWindow, setAgentWindow] = useState<Window | null>(null);
+  const [isScriptLoaded, setIsScriptLoaded] = useState(false);
+  const widgetContainerRef = useRef<HTMLDivElement>(null);
 
-  // SalesCloser URL - Since iframe is blocked, we'll use popup
-  const widgetId = '6b40ce6f-71ba-47c0-bd48-a0f0ccaa55f3';
-  const salesCloserUrl = `https://app.salescloser.ai/${widgetId}`;
-
-  // Monitor popup window
+  // Load SalesCloser embed script when modal opens
   useEffect(() => {
-    if (agentWindow) {
-      const checkInterval = setInterval(() => {
-        if (agentWindow.closed) {
-          setIsAgentActive(false);
-          setAgentWindow(null);
-          clearInterval(checkInterval);
+    if (isOpen && !isScriptLoaded) {
+      // Add custom styles for the widget
+      const style = document.createElement('style');
+      style.innerHTML = `
+        .wshpnd-scloser-meeting-form {
+          width: 100% !important;
+          height: 100% !important;
+          min-height: 450px !important;
         }
-      }, 1000);
+        .wshpnd-scloser-meeting-form iframe {
+          width: 100% !important;
+          height: 100% !important;
+          min-height: 450px !important;
+          border: none !important;
+        }
+        /* Fix for text visibility in form fields */
+        .wshpnd-scloser-meeting-form input,
+        .wshpnd-scloser-meeting-form textarea,
+        .wshpnd-scloser-meeting-form select {
+          color: #1f2937 !important;
+          -webkit-text-fill-color: #1f2937 !important;
+        }
+      `;
+      document.head.appendChild(style);
 
-      return () => clearInterval(checkInterval);
+      // Create the widget div
+      const widgetDiv = document.createElement('div');
+      widgetDiv.className = 'wshpnd-scloser-meeting-form';
+      widgetDiv.setAttribute('data-wishpond-id', '6b40ce6f-71ba-47c0-bd48-a0f0ccaa55f3');
+      widgetDiv.setAttribute('data-wishpond-domain', 'https://app.salescloser.ai');
+      
+      // Append to our container
+      if (widgetContainerRef.current) {
+        widgetContainerRef.current.innerHTML = ''; // Clear any existing content
+        widgetContainerRef.current.appendChild(widgetDiv);
+      }
+
+      // Load the SalesCloser script
+      const script = document.createElement('script');
+      script.src = 'https://app.salescloser.ai/js/embed_demo_form.js';
+      script.type = 'text/javascript';
+      script.defer = true;
+      
+      script.onload = () => {
+        setIsScriptLoaded(true);
+        console.log('SalesCloser widget loaded successfully');
+      };
+      
+      script.onerror = () => {
+        console.error('Failed to load SalesCloser widget');
+      };
+      
+      document.body.appendChild(script);
+
+      // Cleanup function
+      return () => {
+        // Remove script when component unmounts or modal closes
+        if (script.parentNode) {
+          script.parentNode.removeChild(script);
+        }
+        setIsScriptLoaded(false);
+      };
     }
-  }, [agentWindow]);
-
-  // Launch voice agent in popup
-  const launchVoiceAgent = () => {
-    // If window already exists, focus it
-    if (agentWindow && !agentWindow.closed) {
-      agentWindow.focus();
-      return;
-    }
-
-    // Open in a centered popup window
-    const width = 500;
-    const height = 700;
-    const left = (window.screen.width - width) / 2;
-    const top = (window.screen.height - height) / 2;
-
-    const features = [
-      `width=${width}`,
-      `height=${height}`,
-      `left=${left}`,
-      `top=${top}`,
-      'resizable=yes',
-      'scrollbars=yes',
-      'status=no',
-      'toolbar=no',
-      'menubar=no',
-      'location=no'
-    ].join(',');
-
-    const popup = window.open(salesCloserUrl, 'salescloser_voice_agent', features);
-
-    if (popup) {
-      setAgentWindow(popup);
-      setIsAgentActive(true);
-      popup.focus();
-    } else {
-      // Popup blocked, open in new tab
-      window.open(salesCloserUrl, '_blank');
-    }
-  };
-
-  // Close the agent window
-  const closeVoiceAgent = () => {
-    if (agentWindow && !agentWindow.closed) {
-      agentWindow.close();
-    }
-    setIsAgentActive(false);
-    setAgentWindow(null);
-  };
+  }, [isOpen, isScriptLoaded]);
 
   return (
     <>
@@ -168,91 +168,32 @@ export function EmbeddedVoiceAgent() {
                 </div>
               </div>
 
-              {/* Content Area - Voice Agent Controls */}
-              <div className="flex-1 p-6 flex flex-col items-center justify-center bg-gradient-to-br from-gray-50 to-white">
-                {!isAgentActive ? (
-                  <>
-                    {/* Initial state - Ready to start */}
+              {/* Content Area - Embedded SalesCloser Widget */}
+              <div className="flex-1 relative overflow-hidden">
+                {!isScriptLoaded && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-white z-10">
                     <div className="text-center">
-                      <div className="relative">
-                        <div className="w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-gold-400 to-gold-600 rounded-full flex items-center justify-center shadow-lg">
-                          <Mic className="w-12 h-12 text-white" />
-                        </div>
-                        <span className="absolute top-0 right-0 flex h-4 w-4">
-                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                          <span className="relative inline-flex rounded-full h-4 w-4 bg-green-500"></span>
-                        </span>
-                      </div>
-                      
-                      <h3 className="text-xl font-bold text-gray-900 mb-3">
-                        AI Voice Consultation
-                      </h3>
-                      
-                      <p className="text-gray-600 mb-6 max-w-sm mx-auto">
-                        Connect with our intelligent mortgage advisor for personalized guidance through voice conversation.
-                      </p>
-
-                      <button
-                        onClick={launchVoiceAgent}
-                        className="w-full max-w-xs mx-auto bg-gradient-to-r from-gold-500 to-gold-600 text-white py-3 px-6 rounded-lg font-semibold hover:shadow-lg transition-all transform hover:scale-105"
-                      >
-                        Start Voice Consultation
-                      </button>
-
-                      <div className="mt-8 space-y-3 text-sm text-gray-500">
-                        <div className="flex items-center justify-center gap-2">
-                          <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                          <span>Agent Available 24/7</span>
-                        </div>
-                        
-                        <div className="bg-gray-50 rounded-lg p-3">
-                          <p className="font-semibold text-gray-700 mb-2">🌐 Multilingual Support</p>
-                          <p className="text-xs">English • Hindi • Punjabi • Spanish • French • Chinese</p>
-                        </div>
-                      </div>
+                      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gold-500 mx-auto mb-4"></div>
+                      <p className="text-gray-600">Loading AI Voice Agent...</p>
+                      <p className="text-sm text-gray-500 mt-2">Please wait while we connect you</p>
                     </div>
-                  </>
-                ) : (
-                  <>
-                    {/* Active state - Voice consultation in progress */}
-                    <div className="text-center">
-                      <div className="relative">
-                        <div className="w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center shadow-lg animate-pulse">
-                          <Phone className="w-12 h-12 text-white" />
-                        </div>
-                      </div>
-                      
-                      <h3 className="text-xl font-bold text-gray-900 mb-3">
-                        Voice Consultation Active
-                      </h3>
-                      
-                      <p className="text-gray-600 mb-6 max-w-sm mx-auto">
-                        Your AI mortgage advisor is ready in the popup window. The consultation will continue there.
-                      </p>
-
-                      <div className="space-y-3 w-full max-w-xs mx-auto">
-                        <button
-                          onClick={() => agentWindow?.focus()}
-                          className="w-full bg-gradient-to-r from-gold-500 to-gold-600 text-white py-3 px-6 rounded-lg font-semibold hover:shadow-lg transition-all"
-                        >
-                          Return to Consultation
-                        </button>
-
-                        <button
-                          onClick={closeVoiceAgent}
-                          className="w-full bg-red-500 text-white py-3 px-6 rounded-lg font-semibold hover:bg-red-600 transition-all"
-                        >
-                          End Consultation
-                        </button>
-                      </div>
-
-                      <div className="mt-8 bg-blue-50 rounded-lg p-3 text-sm">
-                        <p className="text-blue-700">
-                          💡 <strong>Tip:</strong> Keep this window open to easily return to your consultation
-                        </p>
-                      </div>
-                    </div>
-                  </>
+                  </div>
+                )}
+                
+                {/* SalesCloser Widget Container */}
+                <div 
+                  ref={widgetContainerRef}
+                  className="w-full h-full bg-white"
+                  style={{ minHeight: '450px' }}
+                />
+                
+                {/* If widget doesn't load properly, show fallback */}
+                {isScriptLoaded && (
+                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-white via-white/80 to-transparent p-3">
+                    <p className="text-xs text-gray-500 text-center">
+                      Having issues? Try refreshing or contact support.
+                    </p>
+                  </div>
                 )}
               </div>
 
