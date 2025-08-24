@@ -6,35 +6,42 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 export function EmbeddedVoiceAgent() {
   const [isOpen, setIsOpen] = useState(false);
-  const [isScriptLoaded, setIsScriptLoaded] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const widgetContainerRef = useRef<HTMLDivElement>(null);
+  const scriptRef = useRef<HTMLScriptElement | null>(null);
+  const styleRef = useRef<HTMLStyleElement | null>(null);
 
   // Load SalesCloser embed script when modal opens
   useEffect(() => {
-    if (isOpen && !isScriptLoaded) {
-      // Add custom styles for the widget
-      const style = document.createElement('style');
-      style.innerHTML = `
-        .wshpnd-scloser-meeting-form {
-          width: 100% !important;
-          height: 100% !important;
-          min-height: 450px !important;
-        }
-        .wshpnd-scloser-meeting-form iframe {
-          width: 100% !important;
-          height: 100% !important;
-          min-height: 450px !important;
-          border: none !important;
-        }
-        /* Fix for text visibility in form fields */
-        .wshpnd-scloser-meeting-form input,
-        .wshpnd-scloser-meeting-form textarea,
-        .wshpnd-scloser-meeting-form select {
-          color: #1f2937 !important;
-          -webkit-text-fill-color: #1f2937 !important;
-        }
-      `;
-      document.head.appendChild(style);
+    if (isOpen && !scriptRef.current) {
+      setIsLoading(true);
+
+      // Add custom styles for the widget if not already added
+      if (!styleRef.current) {
+        const style = document.createElement('style');
+        style.innerHTML = `
+          .wshpnd-scloser-meeting-form {
+            width: 100% !important;
+            height: 100% !important;
+            min-height: 450px !important;
+          }
+          .wshpnd-scloser-meeting-form iframe {
+            width: 100% !important;
+            height: 100% !important;
+            min-height: 450px !important;
+            border: none !important;
+          }
+          /* Fix for text visibility in form fields */
+          .wshpnd-scloser-meeting-form input,
+          .wshpnd-scloser-meeting-form textarea,
+          .wshpnd-scloser-meeting-form select {
+            color: #1f2937 !important;
+            -webkit-text-fill-color: #1f2937 !important;
+          }
+        `;
+        document.head.appendChild(style);
+        styleRef.current = style;
+      }
 
       // Create the widget div
       const widgetDiv = document.createElement('div');
@@ -48,33 +55,49 @@ export function EmbeddedVoiceAgent() {
         widgetContainerRef.current.appendChild(widgetDiv);
       }
 
+      // Check if script already exists
+      const existingScript = document.querySelector('script[src="https://app.salescloser.ai/js/embed_demo_form.js"]');
+      if (existingScript) {
+        setIsLoading(false);
+        return;
+      }
+
       // Load the SalesCloser script
       const script = document.createElement('script');
       script.src = 'https://app.salescloser.ai/js/embed_demo_form.js';
       script.type = 'text/javascript';
-      script.defer = true;
+      script.async = true;
       
       script.onload = () => {
-        setIsScriptLoaded(true);
-        console.log('SalesCloser widget loaded successfully');
+        setIsLoading(false);
+        console.log('SalesCloser widget script loaded');
       };
       
       script.onerror = () => {
+        setIsLoading(false);
         console.error('Failed to load SalesCloser widget');
       };
       
       document.body.appendChild(script);
-
-      // Cleanup function
-      return () => {
-        // Remove script when component unmounts or modal closes
-        if (script.parentNode) {
-          script.parentNode.removeChild(script);
-        }
-        setIsScriptLoaded(false);
-      };
+      scriptRef.current = script;
     }
-  }, [isOpen, isScriptLoaded]);
+
+    // Cleanup function
+    return () => {
+      if (!isOpen && scriptRef.current) {
+        // Remove script and widget when modal closes
+        if (scriptRef.current.parentNode) {
+          scriptRef.current.parentNode.removeChild(scriptRef.current);
+        }
+        scriptRef.current = null;
+        
+        // Clear the widget container
+        if (widgetContainerRef.current) {
+          widgetContainerRef.current.innerHTML = '';
+        }
+      }
+    };
+  }, [isOpen]);
 
   return (
     <>
@@ -169,9 +192,9 @@ export function EmbeddedVoiceAgent() {
               </div>
 
               {/* Content Area - Embedded SalesCloser Widget */}
-              <div className="flex-1 relative overflow-hidden">
-                {!isScriptLoaded && (
-                  <div className="absolute inset-0 flex items-center justify-center bg-white z-10">
+              <div className="flex-1 relative overflow-auto bg-white">
+                {isLoading && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-white/90 z-10">
                     <div className="text-center">
                       <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gold-500 mx-auto mb-4"></div>
                       <p className="text-gray-600">Loading AI Voice Agent...</p>
@@ -183,18 +206,9 @@ export function EmbeddedVoiceAgent() {
                 {/* SalesCloser Widget Container */}
                 <div 
                   ref={widgetContainerRef}
-                  className="w-full h-full bg-white"
+                  className="w-full h-full"
                   style={{ minHeight: '450px' }}
                 />
-                
-                {/* If widget doesn't load properly, show fallback */}
-                {isScriptLoaded && (
-                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-white via-white/80 to-transparent p-3">
-                    <p className="text-xs text-gray-500 text-center">
-                      Having issues? Try refreshing or contact support.
-                    </p>
-                  </div>
-                )}
               </div>
 
               {/* Footer */}
