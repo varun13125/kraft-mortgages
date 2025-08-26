@@ -1,12 +1,12 @@
 /* Voice Agent Widget Styles */
 
-/* Fix text color visibility in SalesCloser form */
+/* Fix text color visibility in voice agent form */
 .voice-agent-container {
   /* Override text colors for all form inputs */
   color: #1f2937 !important; /* Dark gray text */
 }
 
-/* Target all input fields in the SalesCloser form */
+/* Target all input fields in the voice agent form */
 .voice-agent-container input,
 .voice-agent-container textarea,
 .voice-agent-container select,

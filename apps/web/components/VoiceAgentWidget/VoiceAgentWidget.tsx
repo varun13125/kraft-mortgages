@@ -5,13 +5,18 @@ import { Phone, PhoneOff, Headphones, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import './VoiceAgentWidget.css';
 
+// Get voice agent configuration from environment variables
+const WIDGET_ID = process.env.NEXT_PUBLIC_VOICE_AGENT_WIDGET_ID || '6b40ce6f-71ba-47c0-bd48-a0f0ccaa55f3';
+const AGENT_DOMAIN = process.env.NEXT_PUBLIC_VOICE_AGENT_DOMAIN || 'https://app.voiceagent.kraftmortgages.com';
+const SCRIPT_URL = process.env.NEXT_PUBLIC_VOICE_AGENT_SCRIPT_URL || 'https://app.voiceagent.kraftmortgages.com/js/embed_demo_form.js';
+
 export function VoiceAgentWidget() {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [scriptLoaded, setScriptLoaded] = useState(false);
   const widgetContainerRef = useRef<HTMLDivElement>(null);
 
-  // Load SalesCloser script when widget opens
+  // Load voice agent script when widget opens
   useEffect(() => {
     if (isOpen && !scriptLoaded) {
       setIsLoading(true);
@@ -20,8 +25,8 @@ export function VoiceAgentWidget() {
       if (!document.querySelector('.wshpnd-scloser-meeting-form')) {
         const widgetDiv = document.createElement('div');
         widgetDiv.className = 'wshpnd-scloser-meeting-form';
-        widgetDiv.setAttribute('data-wishpond-id', '6b40ce6f-71ba-47c0-bd48-a0f0ccaa55f3');
-        widgetDiv.setAttribute('data-wishpond-domain', 'https://app.salescloser.ai');
+        widgetDiv.setAttribute('data-wishpond-id', WIDGET_ID);
+        widgetDiv.setAttribute('data-wishpond-domain', AGENT_DOMAIN);
         // Try to force embedded mode
         widgetDiv.setAttribute('data-embed-mode', 'true');
         widgetDiv.setAttribute('data-target', '_self');
@@ -55,16 +60,16 @@ export function VoiceAgentWidget() {
       `;
       document.head.appendChild(styleEl);
 
-      // Load the SalesCloser script
+      // Load the voice agent script
       const script = document.createElement('script');
-      script.src = 'https://app.salescloser.ai/js/embed_demo_form.js';
+      script.src = SCRIPT_URL;
       script.type = 'text/javascript';
       script.defer = true;
       
       script.onload = () => {
         setScriptLoaded(true);
         setIsLoading(false);
-        console.log('SalesCloser voice agent loaded');
+        console.log('Voice agent loaded');
         
         // Try to intercept form submissions and external links
         setTimeout(() => {
@@ -82,7 +87,7 @@ export function VoiceAgentWidget() {
           
           // Prevent links from opening new windows
           links.forEach(link => {
-            if (link.getAttribute('href')?.includes('salescloser.ai')) {
+            if (link.getAttribute('href')?.includes(AGENT_DOMAIN.replace('https://', '').replace('http://', ''))) {
               link.setAttribute('target', '_self');
               link.addEventListener('click', (e) => {
                 e.preventDefault();
@@ -96,7 +101,7 @@ export function VoiceAgentWidget() {
       
       script.onerror = () => {
         setIsLoading(false);
-        console.error('Failed to load SalesCloser voice agent');
+        console.error('Failed to load voice agent');
       };
       
       document.body.appendChild(script);
@@ -200,7 +205,7 @@ export function VoiceAgentWidget() {
                 </div>
               </div>
 
-              {/* SalesCloser Widget Container */}
+              {/* Voice Agent Widget Container */}
               <div className="flex-1 bg-gray-50 p-4 overflow-auto voice-agent-container">
                 {isLoading ? (
                   <div className="flex items-center justify-center h-full">
@@ -211,7 +216,7 @@ export function VoiceAgentWidget() {
                   </div>
                 ) : (
                   <div ref={widgetContainerRef} className="h-full">
-                    {/* SalesCloser widget will be injected here */}
+                    {/* Voice agent widget will be injected here */}
                     {!scriptLoaded && (
                       <div className="bg-white rounded-lg p-6 text-center">
                         <Phone className="w-12 h-12 text-gold-500 mx-auto mb-4" />

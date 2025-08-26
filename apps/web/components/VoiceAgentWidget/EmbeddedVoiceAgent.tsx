@@ -4,6 +4,11 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Phone, PhoneOff, Headphones, X, ExternalLink, Mic, MicOff } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
+// Get voice agent configuration from environment variables
+const WIDGET_ID = process.env.NEXT_PUBLIC_VOICE_AGENT_WIDGET_ID || '6b40ce6f-71ba-47c0-bd48-a0f0ccaa55f3';
+const AGENT_DOMAIN = process.env.NEXT_PUBLIC_VOICE_AGENT_DOMAIN || 'https://app.voiceagent.kraftmortgages.com';
+const SCRIPT_URL = process.env.NEXT_PUBLIC_VOICE_AGENT_SCRIPT_URL || 'https://app.voiceagent.kraftmortgages.com/js/embed_demo_form.js';
+
 export function EmbeddedVoiceAgent() {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -11,7 +16,7 @@ export function EmbeddedVoiceAgent() {
   const scriptRef = useRef<HTMLScriptElement | null>(null);
   const styleRef = useRef<HTMLStyleElement | null>(null);
 
-  // Load SalesCloser embed script when modal opens
+  // Load voice agent embed script when modal opens
   useEffect(() => {
     if (isOpen && !scriptRef.current) {
       setIsLoading(true);
@@ -46,8 +51,8 @@ export function EmbeddedVoiceAgent() {
       // Create the widget div
       const widgetDiv = document.createElement('div');
       widgetDiv.className = 'wshpnd-scloser-meeting-form';
-      widgetDiv.setAttribute('data-wishpond-id', '6b40ce6f-71ba-47c0-bd48-a0f0ccaa55f3');
-      widgetDiv.setAttribute('data-wishpond-domain', 'https://app.salescloser.ai');
+      widgetDiv.setAttribute('data-wishpond-id', WIDGET_ID);
+      widgetDiv.setAttribute('data-wishpond-domain', AGENT_DOMAIN);
       
       // Append to our container
       if (widgetContainerRef.current) {
@@ -56,26 +61,26 @@ export function EmbeddedVoiceAgent() {
       }
 
       // Check if script already exists
-      const existingScript = document.querySelector('script[src="https://app.salescloser.ai/js/embed_demo_form.js"]');
+      const existingScript = document.querySelector(`script[src="${SCRIPT_URL}"]`);
       if (existingScript) {
         setIsLoading(false);
         return;
       }
 
-      // Load the SalesCloser script
+      // Load the voice agent script
       const script = document.createElement('script');
-      script.src = 'https://app.salescloser.ai/js/embed_demo_form.js';
+      script.src = SCRIPT_URL;
       script.type = 'text/javascript';
       script.async = true;
       
       script.onload = () => {
         setIsLoading(false);
-        console.log('SalesCloser widget script loaded');
+        console.log('Voice agent widget script loaded');
       };
       
       script.onerror = () => {
         setIsLoading(false);
-        console.error('Failed to load SalesCloser widget');
+        console.error('Failed to load voice agent widget');
       };
       
       document.body.appendChild(script);
@@ -191,7 +196,7 @@ export function EmbeddedVoiceAgent() {
                 </div>
               </div>
 
-              {/* Content Area - Embedded SalesCloser Widget */}
+              {/* Content Area - Embedded Voice Agent Widget */}
               <div className="flex-1 relative overflow-auto bg-white">
                 {isLoading && (
                   <div className="absolute inset-0 flex items-center justify-center bg-white/90 z-10">
@@ -203,7 +208,7 @@ export function EmbeddedVoiceAgent() {
                   </div>
                 )}
                 
-                {/* SalesCloser Widget Container */}
+                {/* Voice Agent Widget Container */}
                 <div 
                   ref={widgetContainerRef}
                   className="w-full h-full"
@@ -218,7 +223,7 @@ export function EmbeddedVoiceAgent() {
                     <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
                     Agent Available
                   </span>
-                  <span>Powered by SalesCloser AI</span>
+                  <span>Powered by Kraft AI</span>
                 </div>
               </div>
             </motion.div>
