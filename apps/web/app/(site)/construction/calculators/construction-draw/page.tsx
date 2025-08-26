@@ -443,7 +443,7 @@ export default function ConstructionDrawCalculator() {
           </div>
         </section>
 
-        <ComplianceBanner />
+        <ComplianceBanner feature="CALC_CONSTRUCTION" />
       </main>
     </>
   );

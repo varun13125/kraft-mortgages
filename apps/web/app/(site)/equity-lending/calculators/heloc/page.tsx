@@ -345,7 +345,7 @@ export default function HELOCCalculator() {
           </div>
         </section>
 
-        <ComplianceBanner />
+        <ComplianceBanner feature="LEAD_FORM" />
       </main>
     </>
   );

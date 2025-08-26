@@ -478,7 +478,7 @@ export default function PreApprovalCalculator() {
           </div>
         </section>
 
-        <ComplianceBanner />
+        <ComplianceBanner feature="LEAD_FORM" />
       </main>
     </>
   );

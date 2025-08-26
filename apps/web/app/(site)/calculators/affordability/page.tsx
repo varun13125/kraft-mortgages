@@ -306,7 +306,7 @@ export default function Affordability() {
           </div>
         </section>
 
-        <ComplianceBanner />
+        <ComplianceBanner feature="LEAD_FORM" />
       </main>
     </>
   );
