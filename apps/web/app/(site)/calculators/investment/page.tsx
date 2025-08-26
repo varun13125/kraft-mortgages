@@ -267,7 +267,7 @@ export default function Investment() {
                   Payment Calculator
                 </Link>
                 <Link 
-                  href={"/private-lending/calculators/dscr" as any}
+                  href="/mli-select/calculators/dscr"
                   className="inline-flex items-center gap-2 px-4 py-2 bg-gold-500/20 text-gold-400 rounded-lg hover:bg-gold-500/30 transition-colors"
                 >
                   <Percent className="w-4 h-4" />
