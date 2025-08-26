@@ -57,13 +57,6 @@ export function VoiceAgentWidget() {
         .wshpnd-scloser-meeting-form label {
           color: #374151 !important;
         }
-        .wshpnd-scloser-meeting-form iframe {
-          height: calc(100% + 40px) !important;
-          margin-bottom: -40px !important;
-        }
-        .voice-agent-container {
-          overflow: hidden !important;
-        }
       `;
       document.head.appendChild(styleEl);
 
@@ -213,7 +206,7 @@ export function VoiceAgentWidget() {
               </div>
 
               {/* Voice Agent Widget Container */}
-              <div className="flex-1 bg-gray-50 p-4 overflow-hidden voice-agent-container" style={{paddingBottom: 0}}>
+              <div className="flex-1 bg-gray-50 p-4 relative overflow-hidden voice-agent-container">
                 {isLoading ? (
                   <div className="flex items-center justify-center h-full">
                     <div className="text-center">
@@ -222,7 +215,7 @@ export function VoiceAgentWidget() {
                     </div>
                   </div>
                 ) : (
-                  <div ref={widgetContainerRef} className="h-full" style={{marginBottom: '-35px'}}>
+                  <div ref={widgetContainerRef} className="h-full">
                     {/* Voice agent widget will be injected here */}
                     {!scriptLoaded && (
                       <div className="bg-white rounded-lg p-6 text-center">
@@ -238,18 +231,32 @@ export function VoiceAgentWidget() {
                     )}
                   </div>
                 )}
+                
+                {/* Overlay to hide SalesCloser branding */}
+                {scriptLoaded && !isLoading && (
+                  <div 
+                    className="absolute bottom-0 left-4 right-4 bg-gray-50 z-20" 
+                    style={{ 
+                      height: '50px',
+                      marginBottom: '0',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      borderTop: '1px solid #e5e7eb',
+                      backgroundColor: '#f9fafb'
+                    }}
+                  >
+                    <div className="flex items-center justify-between w-full px-4 text-xs text-gray-600">
+                      <span className="flex items-center gap-1">
+                        <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                        Agent Available
+                      </span>
+                      <span>Powered by Kraft AI Voice Assistant</span>
+                    </div>
+                  </div>
+                )}
               </div>
 
-              {/* Footer */}
-              <div className="bg-white border-t p-3">
-                <div className="flex items-center justify-between text-xs text-gray-600">
-                  <span className="flex items-center gap-1">
-                    <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-                    Agent Available
-                  </span>
-                  <span>Powered by Kraft AI Voice Assistant</span>
-                </div>
-              </div>
             </motion.div>
           </>
         )}

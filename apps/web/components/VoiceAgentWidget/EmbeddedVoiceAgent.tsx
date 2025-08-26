@@ -29,16 +29,12 @@ export function EmbeddedVoiceAgent() {
             width: 100% !important;
             height: 100% !important;
             min-height: 450px !important;
-            position: relative !important;
           }
           .wshpnd-scloser-meeting-form iframe {
             width: 100% !important;
-            height: calc(100% + 40px) !important;
+            height: 100% !important;
             min-height: 450px !important;
             border: none !important;
-            position: relative !important;
-            top: 0 !important;
-            margin-bottom: -40px !important;
           }
           /* Fix for text visibility in form fields */
           .wshpnd-scloser-meeting-form input,
@@ -201,7 +197,7 @@ export function EmbeddedVoiceAgent() {
               </div>
 
               {/* Content Area - Embedded Voice Agent Widget */}
-              <div className="flex-1 relative overflow-auto bg-white">
+              <div className="flex-1 relative overflow-hidden bg-white">
                 {isLoading && (
                   <div className="absolute inset-0 flex items-center justify-center bg-white/90 z-10">
                     <div className="text-center">
@@ -215,21 +211,34 @@ export function EmbeddedVoiceAgent() {
                 {/* Voice Agent Widget Container */}
                 <div 
                   ref={widgetContainerRef}
-                  className="w-full h-full overflow-hidden"
-                  style={{ minHeight: '450px', marginBottom: '-35px' }}
+                  className="w-full h-full"
+                  style={{ minHeight: '450px' }}
                 />
+                
+                {/* Overlay to hide SalesCloser branding */}
+                {!isLoading && (
+                  <div 
+                    className="absolute bottom-0 left-0 right-0 bg-white z-20" 
+                    style={{ 
+                      height: '45px',
+                      borderTop: '1px solid #e5e7eb',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      padding: '0 16px',
+                      fontSize: '12px',
+                      color: '#6b7280'
+                    }}
+                  >
+                    <span className="flex items-center gap-1">
+                      <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                      Agent Available
+                    </span>
+                    <span>Powered by Kraft AI Voice Assistant</span>
+                  </div>
+                )}
               </div>
 
-              {/* Footer - covers the iframe's bottom branding */}
-              <div className="bg-white border-t p-3 relative z-10">
-                <div className="flex items-center justify-between text-xs text-gray-600">
-                  <span className="flex items-center gap-1">
-                    <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
-                    Agent Available
-                  </span>
-                  <span>Powered by Kraft AI Voice Assistant</span>
-                </div>
-              </div>
             </motion.div>
           </>
         )}
