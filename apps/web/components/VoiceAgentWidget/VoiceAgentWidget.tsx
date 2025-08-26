@@ -38,7 +38,7 @@ export function VoiceAgentWidget() {
         }
       }
       
-      // Add global styles to fix text visibility
+      // Add global styles to fix text visibility and hide branding
       const styleEl = document.createElement('style');
       styleEl.innerHTML = `
         .wshpnd-scloser-meeting-form input,
@@ -56,6 +56,13 @@ export function VoiceAgentWidget() {
         }
         .wshpnd-scloser-meeting-form label {
           color: #374151 !important;
+        }
+        .wshpnd-scloser-meeting-form iframe {
+          height: calc(100% + 40px) !important;
+          margin-bottom: -40px !important;
+        }
+        .voice-agent-container {
+          overflow: hidden !important;
         }
       `;
       document.head.appendChild(styleEl);
@@ -206,7 +213,7 @@ export function VoiceAgentWidget() {
               </div>
 
               {/* Voice Agent Widget Container */}
-              <div className="flex-1 bg-gray-50 p-4 overflow-auto voice-agent-container">
+              <div className="flex-1 bg-gray-50 p-4 overflow-hidden voice-agent-container" style={{paddingBottom: 0}}>
                 {isLoading ? (
                   <div className="flex items-center justify-center h-full">
                     <div className="text-center">
@@ -215,7 +222,7 @@ export function VoiceAgentWidget() {
                     </div>
                   </div>
                 ) : (
-                  <div ref={widgetContainerRef} className="h-full">
+                  <div ref={widgetContainerRef} className="h-full" style={{marginBottom: '-35px'}}>
                     {/* Voice agent widget will be injected here */}
                     {!scriptLoaded && (
                       <div className="bg-white rounded-lg p-6 text-center">
@@ -240,7 +247,7 @@ export function VoiceAgentWidget() {
                     <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
                     Agent Available
                   </span>
-                  <span>Powered by AI</span>
+                  <span>Powered by Kraft AI Voice Assistant</span>
                 </div>
               </div>
             </motion.div>

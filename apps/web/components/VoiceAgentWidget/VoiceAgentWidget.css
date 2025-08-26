@@ -63,3 +63,16 @@
   color: #111827 !important; /* Even darker on focus */
   outline-color: #d4a574 !important; /* Gold outline */
 }
+
+/* Hide iframe bottom branding */
+.voice-agent-container .wshpnd-scloser-meeting-form {
+  position: relative;
+  overflow: hidden !important;
+  margin-bottom: -40px !important;
+}
+
+.voice-agent-container .wshpnd-scloser-meeting-form iframe {
+  position: relative !important;
+  height: calc(100% + 50px) !important;
+  margin-bottom: -50px !important;
+}

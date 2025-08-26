@@ -29,12 +29,16 @@ export function EmbeddedVoiceAgent() {
             width: 100% !important;
             height: 100% !important;
             min-height: 450px !important;
+            position: relative !important;
           }
           .wshpnd-scloser-meeting-form iframe {
             width: 100% !important;
-            height: 100% !important;
+            height: calc(100% + 40px) !important;
             min-height: 450px !important;
             border: none !important;
+            position: relative !important;
+            top: 0 !important;
+            margin-bottom: -40px !important;
           }
           /* Fix for text visibility in form fields */
           .wshpnd-scloser-meeting-form input,
@@ -211,19 +215,19 @@ export function EmbeddedVoiceAgent() {
                 {/* Voice Agent Widget Container */}
                 <div 
                   ref={widgetContainerRef}
-                  className="w-full h-full"
-                  style={{ minHeight: '450px' }}
+                  className="w-full h-full overflow-hidden"
+                  style={{ minHeight: '450px', marginBottom: '-35px' }}
                 />
               </div>
 
-              {/* Footer */}
-              <div className="bg-white border-t p-3">
+              {/* Footer - covers the iframe's bottom branding */}
+              <div className="bg-white border-t p-3 relative z-10">
                 <div className="flex items-center justify-between text-xs text-gray-600">
                   <span className="flex items-center gap-1">
                     <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
                     Agent Available
                   </span>
-                  <span>Powered by Kraft AI</span>
+                  <span>Powered by Kraft AI Voice Assistant</span>
                 </div>
               </div>
             </motion.div>
