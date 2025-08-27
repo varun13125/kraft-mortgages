@@ -46,7 +46,10 @@
       "Bash(git diff:*)",
       "Bash(npx typescript:*)",
       "Bash(npm install:*)",
-      "Bash(git merge:*)"
+      "Bash(git merge:*)",
+      "Bash(npm run typecheck:*)",
+      "Read(/C:\\Users\\varun\\Pictures\\Screenshots/**)",
+      "Read(/C:\\Users\\varun\\Pictures\\Screenshots/**)"
     ],
     "deny": []
   }

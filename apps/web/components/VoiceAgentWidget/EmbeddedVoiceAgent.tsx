@@ -29,12 +29,19 @@ export function EmbeddedVoiceAgent() {
             width: 100% !important;
             height: 100% !important;
             min-height: 450px !important;
+            display: block !important;
+            position: relative !important;
           }
           .wshpnd-scloser-meeting-form iframe {
             width: 100% !important;
             height: 100% !important;
             min-height: 450px !important;
             border: none !important;
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            position: relative !important;
+            z-index: 1 !important;
           }
           /* Fix for text visibility in form fields */
           .wshpnd-scloser-meeting-form input,
@@ -42,6 +49,10 @@ export function EmbeddedVoiceAgent() {
           .wshpnd-scloser-meeting-form select {
             color: #1f2937 !important;
             -webkit-text-fill-color: #1f2937 !important;
+          }
+          /* Ensure the iframe content is not hidden */
+          .wshpnd-scloser-meeting-form * {
+            visibility: visible !important;
           }
         `;
         document.head.appendChild(style);
@@ -63,6 +74,11 @@ export function EmbeddedVoiceAgent() {
       // Check if script already exists
       const existingScript = document.querySelector(`script[src="${SCRIPT_URL}"]`);
       if (existingScript) {
+        console.log('Script already exists, triggering re-initialization');
+        // Try to re-initialize the widget if script was already loaded
+        if (typeof (window as any).WishpondVoiceAgent !== 'undefined') {
+          (window as any).WishpondVoiceAgent.init();
+        }
         setIsLoading(false);
         return;
       }
@@ -71,11 +87,39 @@ export function EmbeddedVoiceAgent() {
       const script = document.createElement('script');
       script.src = SCRIPT_URL;
       script.type = 'text/javascript';
-      script.async = true;
+      script.defer = true; // Changed from async to defer
       
       script.onload = () => {
-        setIsLoading(false);
         console.log('Voice agent widget script loaded');
+        
+        // Wait a bit for the iframe to be created by the script
+        setTimeout(() => {
+          const iframe = widgetContainerRef.current?.querySelector('iframe');
+          if (iframe) {
+            console.log('Iframe found:', iframe);
+            // Ensure iframe is visible
+            iframe.style.display = 'block';
+            iframe.style.visibility = 'visible';
+            iframe.style.opacity = '1';
+          } else {
+            console.warn('No iframe found after script load, creating fallback iframe');
+            // Fallback: Create iframe directly if script doesn't create one
+            if (widgetContainerRef.current) {
+              const fallbackIframe = document.createElement('iframe');
+              fallbackIframe.src = `${AGENT_DOMAIN}/widget/${WIDGET_ID}`;
+              fallbackIframe.style.width = '100%';
+              fallbackIframe.style.height = '100%';
+              fallbackIframe.style.minHeight = '450px';
+              fallbackIframe.style.border = 'none';
+              fallbackIframe.style.display = 'block';
+              fallbackIframe.allow = 'microphone; camera; autoplay';
+              widgetContainerRef.current.innerHTML = '';
+              widgetContainerRef.current.appendChild(fallbackIframe);
+              console.log('Fallback iframe created');
+            }
+          }
+          setIsLoading(false);
+        }, 2000);
       };
       
       script.onerror = () => {
@@ -215,29 +259,27 @@ export function EmbeddedVoiceAgent() {
                   style={{ minHeight: '450px' }}
                 />
                 
-                {/* Overlay to hide SalesCloser branding */}
-                {!isLoading && (
-                  <div 
-                    className="absolute bottom-0 left-0 right-0 bg-white z-20" 
-                    style={{ 
-                      height: '45px',
-                      borderTop: '1px solid #e5e7eb',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      padding: '0 16px',
-                      fontSize: '12px',
-                      color: '#6b7280'
-                    }}
-                  >
+                {/* Footer to replace SalesCloser branding - removed overlay approach */}
+              </div>
+              
+              {/* Footer outside the content area */}
+              {!isLoading && (
+                <div 
+                  className="bg-white border-t border-gray-200 px-4 py-3"
+                  style={{ 
+                    fontSize: '12px',
+                    color: '#6b7280'
+                  }}
+                >
+                  <div className="flex items-center justify-between">
                     <span className="flex items-center gap-1">
                       <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
                       Agent Available
                     </span>
                     <span>Powered by Kraft AI Voice Assistant</span>
                   </div>
-                )}
-              </div>
+                </div>
+              )}
 
             </motion.div>
           </>

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Voice Agent</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            background: #f9f9f9;
+        }
+        .iframe-container {
+            width: 100%;
+            height: 500px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        button {
+            background: #d4a574;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #b89050;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Voice Agent Test Page</h1>
+        <div class="status" id="status">Click a button to test the voice agent integration</div>
+        
+        <button onclick="testScriptLoad()">Test Script Load</button>
+        <button onclick="testDirectIframe()">Test Direct Iframe</button>
+        <button onclick="testWidgetDiv()">Test Widget Div</button>
+        
+        <div class="iframe-container" id="testContainer">
+            <!-- Test content will be inserted here -->
+        </div>
+    </div>
+
+    <script>
+        const WIDGET_ID = '6b40ce6f-71ba-47c0-bd48-a0f0ccaa55f3';
+        const AGENT_DOMAIN = 'https://app.voiceagent.kraftmortgages.com';
+        const SCRIPT_URL = 'https://app.voiceagent.kraftmortgages.com/js/embed_demo_form.js';
+        
+        function updateStatus(message) {
+            document.getElementById('status').innerHTML = message;
+        }
+        
+        function testScriptLoad() {
+            updateStatus('Loading voice agent script...');
+            const container = document.getElementById('testContainer');
+            container.innerHTML = '';
+            
+            // Create widget div
+            const widgetDiv = document.createElement('div');
+            widgetDiv.className = 'wshpnd-scloser-meeting-form';
+            widgetDiv.setAttribute('data-wishpond-id', WIDGET_ID);
+            widgetDiv.setAttribute('data-wishpond-domain', AGENT_DOMAIN);
+            widgetDiv.style.width = '100%';
+            widgetDiv.style.height = '100%';
+            container.appendChild(widgetDiv);
+            
+            // Load script
+            const script = document.createElement('script');
+            script.src = SCRIPT_URL;
+            script.type = 'text/javascript';
+            script.defer = true;
+            
+            script.onload = () => {
+                updateStatus('Script loaded successfully. Checking for iframe...');
+                setTimeout(() => {
+                    const iframe = container.querySelector('iframe');
+                    if (iframe) {
+                        updateStatus('✅ Iframe created successfully by script');
+                    } else {
+                        updateStatus('❌ No iframe found. Widget HTML: ' + container.innerHTML.substring(0, 200));
+                    }
+                }, 2000);
+            };
+            
+            script.onerror = () => {
+                updateStatus('❌ Failed to load script');
+            };
+            
+            document.body.appendChild(script);
+        }
+        
+        function testDirectIframe() {
+            updateStatus('Creating direct iframe...');
+            const container = document.getElementById('testContainer');
+            container.innerHTML = '';
+            
+            const iframe = document.createElement('iframe');
+            iframe.src = AGENT_DOMAIN + '/widget/' + WIDGET_ID;
+            iframe.style.width = '100%';
+            iframe.style.height = '100%';
+            iframe.allow = 'microphone; camera; autoplay';
+            
+            iframe.onload = () => {
+                updateStatus('✅ Direct iframe loaded successfully');
+            };
+            
+            iframe.onerror = () => {
+                updateStatus('❌ Direct iframe failed to load');
+            };
+            
+            container.appendChild(iframe);
+        }
+        
+        function testWidgetDiv() {
+            updateStatus('Testing widget div approach...');
+            const container = document.getElementById('testContainer');
+            container.innerHTML = `
+                <div class="wshpnd-scloser-meeting-form" 
+                     data-wishpond-id="${WIDGET_ID}" 
+                     data-wishpond-domain="${AGENT_DOMAIN}"
+                     style="width: 100%; height: 100%;">
+                    <p>Widget placeholder - waiting for script initialization...</p>
+                </div>
+            `;
+            updateStatus('Widget div created. Load the script to see if it initializes.');
+        }
+    </script>
+</body>
+</html>
