@@ -28,20 +28,28 @@ export function EmbeddedVoiceAgent() {
           .wshpnd-scloser-meeting-form {
             width: 100% !important;
             height: 100% !important;
-            min-height: 450px !important;
+            min-height: 500px !important;
             display: block !important;
             position: relative !important;
+            background: transparent !important;
           }
           .wshpnd-scloser-meeting-form iframe {
             width: 100% !important;
             height: 100% !important;
-            min-height: 450px !important;
+            min-height: 500px !important;
             border: none !important;
             display: block !important;
             visibility: visible !important;
             opacity: 1 !important;
-            position: relative !important;
-            z-index: 1 !important;
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
+            z-index: 10 !important;
+            background: white !important;
+          }
+          /* Hide SalesCloser branding at bottom */
+          .wshpnd-scloser-meeting-form iframe {
+            clip-path: inset(0 0 40px 0) !important;
           }
           /* Fix for text visibility in form fields */
           .wshpnd-scloser-meeting-form input,
@@ -53,6 +61,13 @@ export function EmbeddedVoiceAgent() {
           /* Ensure the iframe content is not hidden */
           .wshpnd-scloser-meeting-form * {
             visibility: visible !important;
+            opacity: 1 !important;
+          }
+          /* Widget container should show content */
+          #widget-container-${WIDGET_ID} {
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
           }
         `;
         document.head.appendChild(style);
@@ -92,34 +107,58 @@ export function EmbeddedVoiceAgent() {
       script.onload = () => {
         console.log('Voice agent widget script loaded');
         
-        // Wait a bit for the iframe to be created by the script
+        // Try immediate fallback since the script might not be creating the iframe properly
         setTimeout(() => {
-          const iframe = widgetContainerRef.current?.querySelector('iframe');
+          // Check if iframe was created by the script
+          let iframe = widgetContainerRef.current?.querySelector('iframe');
+          
+          if (!iframe && widgetContainerRef.current) {
+            console.log('Creating iframe directly since script did not create one');
+            // Create iframe directly
+            const fallbackIframe = document.createElement('iframe');
+            // Try different URL patterns for the iframe
+            const iframeUrls = [
+              `${AGENT_DOMAIN}/widget/${WIDGET_ID}`,
+              `${AGENT_DOMAIN}/embed/${WIDGET_ID}`,
+              `${AGENT_DOMAIN}/sales-widgets/${WIDGET_ID}`,
+              `https://embed.salescloser.ai/widget/${WIDGET_ID}`
+            ];
+            
+            // Use the first URL pattern that seems most likely
+            fallbackIframe.src = iframeUrls[0];
+            fallbackIframe.style.cssText = `
+              width: 100% !important;
+              height: 100% !important;
+              min-height: 500px !important;
+              border: none !important;
+              display: block !important;
+              visibility: visible !important;
+              opacity: 1 !important;
+              position: relative !important;
+              background: white !important;
+            `;
+            fallbackIframe.allow = 'microphone; camera; autoplay';
+            fallbackIframe.setAttribute('allowfullscreen', 'true');
+            fallbackIframe.setAttribute('frameborder', '0');
+            
+            // Clear container and add iframe
+            widgetContainerRef.current.innerHTML = '';
+            widgetContainerRef.current.appendChild(fallbackIframe);
+            
+            console.log('Fallback iframe created with URL:', fallbackIframe.src);
+            iframe = fallbackIframe;
+          }
+          
           if (iframe) {
-            console.log('Iframe found:', iframe);
-            // Ensure iframe is visible
+            console.log('Iframe is present:', iframe);
+            // Force visibility
             iframe.style.display = 'block';
             iframe.style.visibility = 'visible';
             iframe.style.opacity = '1';
-          } else {
-            console.warn('No iframe found after script load, creating fallback iframe');
-            // Fallback: Create iframe directly if script doesn't create one
-            if (widgetContainerRef.current) {
-              const fallbackIframe = document.createElement('iframe');
-              fallbackIframe.src = `${AGENT_DOMAIN}/widget/${WIDGET_ID}`;
-              fallbackIframe.style.width = '100%';
-              fallbackIframe.style.height = '100%';
-              fallbackIframe.style.minHeight = '450px';
-              fallbackIframe.style.border = 'none';
-              fallbackIframe.style.display = 'block';
-              fallbackIframe.allow = 'microphone; camera; autoplay';
-              widgetContainerRef.current.innerHTML = '';
-              widgetContainerRef.current.appendChild(fallbackIframe);
-              console.log('Fallback iframe created');
-            }
           }
+          
           setIsLoading(false);
-        }, 2000);
+        }, 1000);
       };
       
       script.onerror = () => {
@@ -255,8 +294,12 @@ export function EmbeddedVoiceAgent() {
                 {/* Voice Agent Widget Container */}
                 <div 
                   ref={widgetContainerRef}
-                  className="w-full h-full"
-                  style={{ minHeight: '450px' }}
+                  className="w-full h-full relative"
+                  style={{ 
+                    minHeight: '500px',
+                    background: 'white',
+                    overflow: 'hidden'
+                  }}
                 />
                 
                 {/* Footer to replace SalesCloser branding - removed overlay approach */}
