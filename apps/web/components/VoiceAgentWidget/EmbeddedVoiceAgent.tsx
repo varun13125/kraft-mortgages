@@ -23,7 +23,7 @@ export function EmbeddedVoiceAgent() {
         WIDGET_ID,
         AGENT_DOMAIN,
         SCRIPT_URL,
-        iframeUrl: `${AGENT_DOMAIN}/widget/${WIDGET_ID}`
+        iframeUrl: `${AGENT_DOMAIN}/agents/${WIDGET_ID}/start-meeting-form`
       });
       
       // Small delay to ensure modal is rendered
@@ -147,7 +147,7 @@ export function EmbeddedVoiceAgent() {
                 {/* Voice Agent Widget Container */}
                 {!isLoading && (
                   <iframe
-                    src={`${AGENT_DOMAIN}/widget/${WIDGET_ID}`}
+                    src={`${AGENT_DOMAIN}/agents/${WIDGET_ID}/start-meeting-form`}
                     className="w-full h-full"
                     style={{ minHeight: '450px', border: 'none' }}
                     allow="microphone; camera; autoplay; clipboard-write"
