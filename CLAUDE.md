@@ -39,6 +39,13 @@ Advanced mortgage advisory platform with AI assistant, lead generation, and CRM 
 - **Language Indicators**: Visual feedback for language switches
 - **Voice Toggle**: Enable/disable voice mode in chat header
 
+### ✅ PHASE 3.6: Voice Agent Widget (100%)
+- **SalesCloser Integration**: Whitelabel voice agent integration
+- **Correct URL Configuration**: Fixed to use app.salescloser.ai domain
+- **Iframe Embedding**: Direct iframe embedding with start-meeting-form endpoint
+- **Branding Overlay**: Custom footer to hide third-party branding
+- **Environment Variables**: Properly configured for production deployment
+
 ### ✅ PHASE 4: Report Generation & Lead Capture (100%)
 - **PDF Reports**: Professional branded reports (affordability, payment, MLI, investment)
 - **Lead Forms**: Multi-step with validation and consent tracking
@@ -114,10 +121,11 @@ Advanced mortgage advisory platform with AI assistant, lead generation, and CRM 
 - `lib/utils/formatting.ts` - Number and currency formatting utilities
 - `components/ui/ValidatedInput.tsx` - Reusable validation component
 
-### Chat Interface
+### Chat Interface & Voice Agents
 - `components/ChatWidget/ChatWidget.tsx` - Main chat component with voice AI
 - `components/ChatWidget/VoiceInput.tsx` - Speech recognition
 - `components/ChatWidget/ToolResults.tsx` - Rich result display
+- `components/VoiceAgentWidget/EmbeddedVoiceAgent.tsx` - SalesCloser voice agent integration
 - `lib/voice/multilingual-voice.ts` - Multilingual voice AI service
 
 ### Report System
@@ -155,6 +163,10 @@ Advanced mortgage advisory platform with AI assistant, lead generation, and CRM 
 - TypeScript compilation error-free
 
 ## 🔄 RECENT UPDATES
+- **Voice Agent Widget Fix**: Resolved blank display issue and implemented proper SalesCloser integration
+- **Whitelabel Implementation**: Added overlay to hide third-party branding while maintaining functionality
+- **URL Configuration**: Fixed environment variables to use correct app.salescloser.ai domain
+- **Iframe Integration**: Direct iframe embedding using /agents/{id}/start-meeting-form endpoint
 - **Comprehensive Website Audit**: Complete review and fixes for all components
 - **New Calculator Additions**: HELOC, pre-approval, and construction draw calculators
 - **Validation System Overhaul**: New ValidatedInput component with real-time validation
