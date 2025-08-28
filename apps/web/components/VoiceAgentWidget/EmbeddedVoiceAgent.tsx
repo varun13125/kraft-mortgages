@@ -16,26 +16,90 @@ export function EmbeddedVoiceAgent() {
   const scriptRef = useRef<HTMLScriptElement | null>(null);
   const styleRef = useRef<HTMLStyleElement | null>(null);
 
-  // Load voice agent iframe directly when modal opens
+  // Load voice agent embed script when modal opens
   useEffect(() => {
-    if (isOpen) {
-      console.log('Opening voice agent with:', {
-        WIDGET_ID,
-        AGENT_DOMAIN,
-        SCRIPT_URL,
-        iframeUrl: `${AGENT_DOMAIN}/agents/${WIDGET_ID}/start-meeting-form`
-      });
+    if (isOpen && !scriptRef.current) {
+      setIsLoading(true);
+
+      // Add custom styles for the widget if not already added
+      if (!styleRef.current) {
+        const style = document.createElement('style');
+        style.innerHTML = `
+          .wshpnd-scloser-meeting-form {
+            width: 100% !important;
+            height: 100% !important;
+            min-height: 450px !important;
+          }
+          .wshpnd-scloser-meeting-form iframe {
+            width: 100% !important;
+            height: 100% !important;
+            min-height: 450px !important;
+            border: none !important;
+          }
+          /* Fix for text visibility in form fields */
+          .wshpnd-scloser-meeting-form input,
+          .wshpnd-scloser-meeting-form textarea,
+          .wshpnd-scloser-meeting-form select {
+            color: #1f2937 !important;
+            -webkit-text-fill-color: #1f2937 !important;
+          }
+        `;
+        document.head.appendChild(style);
+        styleRef.current = style;
+      }
+
+      // Create the widget div
+      const widgetDiv = document.createElement('div');
+      widgetDiv.className = 'wshpnd-scloser-meeting-form';
+      widgetDiv.setAttribute('data-wishpond-id', WIDGET_ID);
+      widgetDiv.setAttribute('data-wishpond-domain', AGENT_DOMAIN);
       
-      // Small delay to ensure modal is rendered
-      setTimeout(() => {
+      // Append to our container
+      if (widgetContainerRef.current) {
+        widgetContainerRef.current.innerHTML = ''; // Clear any existing content
+        widgetContainerRef.current.appendChild(widgetDiv);
+      }
+
+      // Check if script already exists
+      const existingScript = document.querySelector(`script[src="${SCRIPT_URL}"]`);
+      if (existingScript) {
         setIsLoading(false);
-      }, 500);
+        return;
+      }
+
+      // Load the voice agent script
+      const script = document.createElement('script');
+      script.src = SCRIPT_URL;
+      script.type = 'text/javascript';
+      script.async = true;
+      
+      script.onload = () => {
+        setIsLoading(false);
+        console.log('Voice agent widget script loaded');
+      };
+      
+      script.onerror = () => {
+        setIsLoading(false);
+        console.error('Failed to load voice agent widget');
+      };
+      
+      document.body.appendChild(script);
+      scriptRef.current = script;
     }
 
     // Cleanup function
     return () => {
-      if (!isOpen && widgetContainerRef.current) {
-        widgetContainerRef.current.innerHTML = '';
+      if (!isOpen && scriptRef.current) {
+        // Remove script and widget when modal closes
+        if (scriptRef.current.parentNode) {
+          scriptRef.current.parentNode.removeChild(scriptRef.current);
+        }
+        scriptRef.current = null;
+        
+        // Clear the widget container
+        if (widgetContainerRef.current) {
+          widgetContainerRef.current.innerHTML = '';
+        }
       }
     };
   }, [isOpen]);
@@ -145,15 +209,11 @@ export function EmbeddedVoiceAgent() {
                 )}
                 
                 {/* Voice Agent Widget Container */}
-                {!isLoading && (
-                  <iframe
-                    src={`${AGENT_DOMAIN}/agents/${WIDGET_ID}/start-meeting-form`}
-                    className="w-full h-full"
-                    style={{ minHeight: '450px', border: 'none' }}
-                    allow="microphone; camera; autoplay; clipboard-write"
-                    allowFullScreen
-                  />
-                )}
+                <div 
+                  ref={widgetContainerRef}
+                  className="w-full h-full"
+                  style={{ minHeight: '450px' }}
+                />
                 
                 {/* Overlay to hide SalesCloser branding at bottom */}
                 <div 
