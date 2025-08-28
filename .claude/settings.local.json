@@ -50,6 +50,7 @@
       "Bash(npm run typecheck:*)",
       "Read(/C:\\Users\\varun\\Pictures\\Screenshots/**)",
       "Read(/C:\\Users\\varun\\Pictures\\Screenshots/**)",
+      "Read(C:\\Users\\varun\\Pictures\\Screenshots/**)",
       "Read(C:\\Users\\varun\\Pictures\\Screenshots/**)"
     ],
     "deny": []
