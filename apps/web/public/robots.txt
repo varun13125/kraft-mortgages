@@ -1,0 +1,65 @@
+# Kraft Mortgages - Robots.txt
+User-agent: *
+Allow: /
+
+# Allow access to all calculator pages
+Allow: /calculators/*
+Allow: /mortgage-calculator
+Allow: /affordability-calculator
+Allow: /refinance-calculator
+Allow: /investment-calculator
+
+# Allow access to blog
+Allow: /blog/*
+
+# Allow access to static assets
+Allow: /images/*
+Allow: /icons/*
+Allow: /_next/static/*
+
+# Disallow admin and API routes
+Disallow: /admin/*
+Disallow: /api/*
+Disallow: /_next/*
+Disallow: /dashboard/*
+
+# Disallow private pages
+Disallow: /reports/*
+Disallow: /leads/*
+
+# Common crawl traps to avoid
+Disallow: /search
+Disallow: /*?*
+Disallow: /*#*
+
+# Sitemap location
+Sitemap: https://www.kraftmortgages.ca/sitemap.xml
+
+# Crawl delay (optional - be respectful to servers)
+Crawl-delay: 1
+
+# Specific bot instructions
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Slurp
+Allow: /
+
+# Block AI training bots (optional)
+User-agent: ChatGPT-User
+Disallow: /
+
+User-agent: GPTBot
+Disallow: /
+
+User-agent: Google-Extended
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: anthropic-ai
+Disallow: /

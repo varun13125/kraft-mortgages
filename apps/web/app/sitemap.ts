@@ -1,8 +1,13 @@
-import type { MetadataRoute } from "next";
-export default function sitemap(): MetadataRoute.Sitemap {
-  const base = process.env.NEXTAUTH_URL || "http://localhost:3000";
-  const routes = ["/", "/about", "/old-design", "/mli-select", "/calculators/payment", "/calculators/affordability", "/calculators/renewal",
-    "/calculators/construction-pro", "/calculators/investment", "/calculators/self-employed",
-    "/provinces/bc", "/provinces/ab", "/provinces/on" ].map((p)=> ({ url: base + p, changeFrequency: "weekly" as const, priority: p === "/" ? 1 : 0.7 }));
-  return routes;
+import { MetadataRoute } from 'next';
+import { generateSitemap } from '@/lib/seo/sitemap';
+
+// This would eventually fetch from your blog database
+async function getBlogPosts() {
+  // TODO: Replace with actual database query when blog is implemented
+  return [];
+}
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const blogPosts = await getBlogPosts();
+  return generateSitemap(blogPosts);
 }
