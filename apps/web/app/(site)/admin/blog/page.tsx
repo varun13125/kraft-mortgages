@@ -308,18 +308,11 @@ export default function BlogAdminPage() {
                           >
                             <Eye className="w-4 h-4" />
                           </Link>
-                          <Link
-                            href={`/admin/blog/${post.slug}/edit`}
-                            className="p-2 text-gray-400 hover:text-blue-600 transition-colors"
-                            title="Edit Post"
-                          >
-                            <Edit className="w-4 h-4" />
-                          </Link>
                           <button
                             onClick={() => toggleFeatured(post.slug)}
                             className={`p-2 transition-colors ${
-                              post.featured 
-                                ? 'text-yellow-500 hover:text-yellow-600' 
+                              post.featured
+                                ? 'text-yellow-500 hover:text-yellow-600'
                                 : 'text-gray-400 hover:text-yellow-500'
                             }`}
                             title={post.featured ? 'Remove from Featured' : 'Add to Featured'}

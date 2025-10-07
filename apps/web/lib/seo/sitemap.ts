@@ -177,7 +177,7 @@ export function generateXMLSitemap(blogPosts: BlogPost[] = []): string {
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${urls.map((url) => `  <url>
     <loc>${url.url}</loc>
-    <lastmod>${url.lastModified.toISOString()}</lastmod>
+    <lastmod>${url.lastModified instanceof Date ? url.lastModified.toISOString() : new Date(url.lastModified || new Date()).toISOString()}</lastmod>
     <changefreq>${url.changeFrequency}</changefreq>
     <priority>${url.priority}</priority>
   </url>`).join('\n')}
