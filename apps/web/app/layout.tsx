@@ -9,11 +9,6 @@ const ChatWidget = dynamic(() => import("@/components/ChatWidget/ChatWidget").th
   ssr: false
 });
 
-// Dynamically import EmbeddedVoiceAgent
-const EmbeddedVoiceAgent = dynamic(() => import("@/components/VoiceAgentWidget/EmbeddedVoiceAgent").then(mod => ({ default: mod.EmbeddedVoiceAgent })), {
-  ssr: false
-});
-
 export const metadata = {
   title: "Kraft Mortgages Canada | Expert Mortgage Solutions | BC, AB & ON",
   description: "23+ years navigating MLI Select, Construction Financing, and Self-Employed mortgages across BC, AB & ON. Expert mortgage solutions for complex scenarios.",
@@ -26,13 +21,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="min-h-screen">
         <PrefSync />
         {children}
-        
+
         {/* Global AI Chat Widget - Available on every page */}
         <ChatWidget />
-        
-        {/* Global Voice Agent Widget - Professional voice consultations */}
-        <EmbeddedVoiceAgent />
-        
+
+        {/* Voice Agent Widget removed - will be replaced with new implementation */}
+
         <Analytics />
         <PWA />
       </body>

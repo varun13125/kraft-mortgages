@@ -3,7 +3,7 @@ const withMDX = createMDX({ extension: /\.mdx?$/ });
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: { 
+  experimental: {
     typedRoutes: true,
     serverComponentsExternalPackages: ['farmhash-modern']
   },
@@ -13,6 +13,27 @@ const nextConfig = {
     // Warning: This allows production builds to successfully complete even if
     // your project has ESLint errors.
     ignoreDuringBuilds: true,
+  },
+  // Redirect old URLs to new structure
+  async redirects() {
+    return [
+      {
+        source: '/pages/home',
+        destination: '/',
+        permanent: true, // 301 redirect for SEO
+      },
+      // Add other common old URL patterns if needed
+      {
+        source: '/home',
+        destination: '/',
+        permanent: true,
+      },
+      {
+        source: '/index',
+        destination: '/',
+        permanent: true,
+      },
+    ];
   },
   webpack: (config) => {
     // Handle WebAssembly modules
