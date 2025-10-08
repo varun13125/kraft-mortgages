@@ -22,13 +22,23 @@ import { BlogPost, BlogPostListItem } from '@/lib/types/blog';
 // Mock data for development - replace with actual API calls
 const mockPosts: BlogPostListItem[] = [
   {
+    slug: 'beyond-big-banks-complex-mortgage-approval',
+    title: 'Beyond the Big Banks: How We Get Complex Files Approved Post-Stress Test',
+    excerpt: 'We specialize in helping self-employed business owners and new Canadians get mortgage approval when traditional banks say no. Learn our expert strategies for passing the stress test.',
+    publishedAt: '2025-10-08T10:00:00Z',
+    readingTime: 8,
+    tags: ['stress-test', 'self-employed', 'mortgage-approval', 'complex-files', 'alternative-lenders'],
+    featured: true,
+    categories: ['Mortgage Advice', 'Self-Employed', 'Mortgage Approval']
+  },
+  {
     slug: 'first-time-buyer-guide-2024',
     title: 'Complete First-Time Home Buyer Guide for Canada 2024',
     excerpt: 'Everything you need to know about buying your first home in Canada, from mortgage pre-approval to closing day.',
     publishedAt: '2024-01-15T10:00:00Z',
     readingTime: 12,
     tags: ['first-time-buyer', 'canadian-mortgages', 'home-buying'],
-    featured: true,
+    featured: false,
     categories: ['Home Buying', 'First-Time Buyers']
   },
   {
