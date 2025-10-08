@@ -316,7 +316,7 @@ export async function getPost(slug: string): Promise<Post | null> {
 
 <p>Ready to see how your financial picture fits into the right mortgage strategy?</p>
 
-<p><button style="background-color: #1e3a8a; color: white; padding: 12px 24px; border: none; border-radius: 6px; font-size: 16px; font-weight: 600; cursor: pointer; transition: background-color 0.3s ease;">Book a 15 min Free Consultation Now</button></p>
+<p><a href="https://calendar.app.google/HcbcfrKKtBvcPQqd8" target="_blank" rel="noopener noreferrer" style="display: inline-block; background-color: #1e3a8a; color: white; padding: 12px 24px; border: none; border-radius: 6px; font-size: 16px; font-weight: 600; cursor: pointer; transition: background-color 0.3s ease; text-decoration: none;">Book a 15 min Free Consultation Now</a></p>
 
 <p><em><small>(Disclaimer: The following is a representative example for illustrative purposes. Your actual rates and payments may vary. For a loan with an interest rate of 4.25% and a term of 5 years, the Annual Percentage Rate (APR) is 4.35%. This APR is calculated based on a representative loan amount and includes applicable fees. All lending is subject to credit approval.)</small></em></p>`;
 
@@ -381,7 +381,9 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
 
 <p>At <strong>Kraft Mortgages</strong>, we don't just process applications; we build strategies. We thrive on the complex files that others turn away.</p>
 
-<p>Ready to see how your financial picture fits into the right mortgage strategy?</p>`;
+<p>Ready to see how your financial picture fits into the right mortgage strategy?</p>
+
+<p><a href="https://calendar.app.google/HcbcfrKKtBvcPQqd8" target="_blank" rel="noopener noreferrer" style="display: inline-block; background-color: #1e3a8a; color: white; padding: 12px 24px; border: none; border-radius: 6px; font-size: 16px; font-weight: 600; cursor: pointer; transition: background-color 0.3s ease; text-decoration: none;">Book a 15 min Free Consultation Now</a></p>`;
 
   // Return our mock post as part of recent posts
   const mockPost: Post = {

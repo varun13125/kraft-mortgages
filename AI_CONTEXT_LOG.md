@@ -4,6 +4,41 @@ This file serves as the persistent memory for AI assistants working on this proj
 The latest entry is at the top.
 
 ---
+**Timestamp:** 2025-10-08 11:45:00 PDT
+**Agent:** Claude Sonnet 4.5
+**Commit Hash:** [pending]
+
+---
+
+**Summary of Changes:**
+- Added functional appointment booking link to blog post content
+- Replaced static consultation button with clickable Google Calendar link
+- Updated both `getPost()` and `getRecentPosts()` functions in firestore.ts
+- Ensured appointment link opens in new tab with proper rel attributes
+- Maintained button styling while adding hyperlink functionality
+
+**Problem Identified:**
+User reported "for now it has button but no link" - the consultation booking button existed in the blog content but was not a functional hyperlink. The button styling was present but lacked the actual href attribute to connect to the Google Calendar appointment system.
+
+**Technical Implementation:**
+- Modified `apps/web/lib/db/firestore.ts` mock blog content
+- Replaced static button element with proper anchor tag:
+  ```html
+  <a href="https://calendar.app.google/HcbcfrKKtBvcPQqd8" target="_blank" rel="noopener noreferrer" style="display: inline-block; background-color: #1e3a8a; color: white; padding: 12px 24px; border: none; border-radius: 6px; font-size: 16px; font-weight: 600; cursor: pointer; transition: background-color 0.3s ease; text-decoration: none;">Book a 15 min Free Consultation Now</a>
+  ```
+- Applied to both single post content and recent posts content
+- Preserved existing button styling through inline CSS
+- Added proper accessibility attributes (target="_blank", rel="noopener noreferrer")
+
+**Status:**
+Appointment booking functionality is now fully integrated into blog content. Users can click the consultation button to book appointments through Google Calendar.
+
+**Next Steps:**
+- Commit changes to Git repository
+- Deploy to production via Vercel
+- Test appointment link functionality on live site
+
+---
 **Timestamp:** 2025-10-08 11:30:00 PDT
 **Agent:** Claude Sonnet 4.5
 **Commit Hash:** 21a7a89
