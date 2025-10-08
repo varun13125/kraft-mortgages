@@ -43,7 +43,7 @@ function transformPost(post: any) {
     slug: post.slug || '',
     title: post.title || '',
     excerpt: post.metaDescription || post.excerpt || dynamicExcerpt,
-    author: post.author || 'Varun Chaudhry',
+    author: post.author?.name || post.author || 'Varun Chaudhry',
     authorEmail: post.authoremail || 'varun@kraftmortgages.ca',
     publishedAt: (post.publishedAt instanceof Date ? post.publishedAt : (post.publishedat || new Date().toISOString())),
     updatedAt: (post.updatedAt instanceof Date ? post.updatedAt : (post.updatedat || post.publishedat || new Date().toISOString())),
