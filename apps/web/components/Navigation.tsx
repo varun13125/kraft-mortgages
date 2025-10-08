@@ -19,7 +19,7 @@ import {
   DollarSign,
   FileText
 } from "lucide-react";
-import { usePathname, type Route } from "next/navigation";
+import { usePathname } from "next/navigation";
 
 export default function Navigation() {
   const [scrolled, setScrolled] = useState(false);
