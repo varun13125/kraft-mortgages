@@ -175,6 +175,36 @@ export default function Navigation() {
                             <div className="text-xs text-gray-500">Local experts for Surrey, BC</div>
                           </div>
                         </Link>
+                        <Link 
+                          href="/mortgage-broker-kelowna"  
+                          className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-teal-400 transition-all rounded-lg"
+                        >
+                          <Users className="w-5 h-5 text-teal-400" />
+                          <div>
+                            <div className="font-semibold">Kelowna Mortgages</div>
+                            <div className="text-xs text-gray-500">Local experts for Kelowna, BC</div>
+                          </div>
+                        </Link>
+                        <Link 
+                          href="/mortgage-broker-kamloops"  
+                          className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-teal-400 transition-all rounded-lg"
+                        >
+                          <Users className="w-5 h-5 text-teal-400" />
+                          <div>
+                            <div className="font-semibold">Kamloops Mortgages</div>
+                            <div className="text-xs text-gray-500">Local experts for Kamloops, BC</div>
+                          </div>
+                        </Link>
+                        <Link 
+                          href="/mortgage-broker-abbotsford"  
+                          className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-teal-400 transition-all rounded-lg"
+                        >
+                          <Users className="w-5 h-5 text-teal-400" />
+                          <div>
+                            <div className="font-semibold">Abbotsford Mortgages</div>
+                            <div className="text-xs text-gray-500">Local experts for Abbotsford, BC</div>
+                          </div>
+                        </Link>
                       </div>
                     </motion.div>
                   )}
