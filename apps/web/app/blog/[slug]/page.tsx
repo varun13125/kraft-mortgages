@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Calendar, User, ArrowLeft, Clock, Tag } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import { getPost as getFsPost } from '@/lib/db/firestore';
+import Navigation from '@/components/Navigation';
 
 // Transform Google Sheets post to our component format
 function transformGoogleSheetsPost(post: any) {
@@ -19,7 +20,7 @@ function transformGoogleSheetsPost(post: any) {
     title: post.title || '',
     content: post.content || '',
     excerpt: post.excerpt || '',
-    author: post.author || 'Varun Chaudhry',
+    author: post.author?.name || post.author || 'Varun Chaudhry',
     authorEmail: post.authoremail || 'varun@kraftmortgages.ca',
     publishedAt: post.publishedat || new Date().toISOString(),
     updatedAt: post.updatedat || post.publishedat || new Date().toISOString(),
@@ -99,6 +100,9 @@ export default async function BlogPostPage({
 
   return (
     <>
+      {/* Navigation Component */}
+      <Navigation />
+
       {/* Structured Data for SEO */}
       <script
         type="application/ld+json"

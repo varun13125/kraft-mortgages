@@ -3,6 +3,7 @@ export const dynamic = 'force-dynamic';
 import Link from 'next/link';
 import { Calendar, User, ArrowRight, Clock, Tag, Star, Mail, Phone, FileText } from 'lucide-react';
 import { getRecentPosts } from '@/lib/db/firestore';
+import Navigation from '@/components/Navigation';
 
 export const metadata: Metadata = {
   title: 'Mortgage Insights Blog | Kraft Mortgages',
@@ -63,6 +64,9 @@ export default async function BlogPage() {
 
   return (
     <>
+      {/* Navigation Component */}
+      <Navigation />
+
       {/* Structured Data for Blog */}
       <script
         type="application/ld+json"

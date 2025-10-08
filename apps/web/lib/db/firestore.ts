@@ -327,8 +327,11 @@ export async function getPost(slug: string): Promise<Post | null> {
       html: blogContent,
       status: 'published' as const,
       publishedAt: new Date('2025-10-08T10:00:00Z'),
-      author: 'Varun Chaudhry',
-      authorEmail: 'varun@kraftmortgages.ca',
+      author: {
+        name: 'Varun Chaudhry',
+        title: 'Licensed Mortgage Broker',
+        license: 'BCFSA #M08001935'
+      },
       metaDescription: 'We specialize in helping self-employed business owners and new Canadians get mortgage approval when traditional banks say no. Learn our expert strategies for passing the stress test.',
       keywords: ['stress-test', 'self-employed', 'mortgage-approval', 'complex-files', 'alternative-lenders']
     };
@@ -353,7 +356,11 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
     html: '<p>We specialize in helping self-employed business owners and new Canadians get mortgage approval when traditional banks say no.</p>',
     status: 'published' as const,
     publishedAt: new Date('2025-10-08T10:00:00Z'),
-    author: 'Varun Chaudhry',
+    author: {
+      name: 'Varun Chaudhry',
+      title: 'Licensed Mortgage Broker',
+      license: 'BCFSA #M08001935'
+    },
     metaDescription: 'We specialize in helping self-employed business owners and new Canadians get mortgage approval when traditional banks say no. Learn our expert strategies for passing the stress test.',
     keywords: ['stress-test', 'self-employed', 'mortgage-approval', 'complex-files', 'alternative-lenders']
   };
