@@ -3,20 +3,21 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-  Menu, 
-  X, 
-  Home, 
-  Calculator, 
-  Phone, 
-  ChevronDown, 
+import {
+  Menu,
+  X,
+  Home,
+  Calculator,
+  Phone,
+  ChevronDown,
   ArrowLeft,
   Building,
   TrendingUp,
   Hammer,
   Shield,
   Users,
-  DollarSign
+  DollarSign,
+  FileText
 } from "lucide-react";
 import { usePathname } from "next/navigation";
 
@@ -291,15 +292,23 @@ export default function Navigation() {
                 </AnimatePresence>
               </div>
               
-              <Link 
-                href="/about" 
+              <Link
+                href="/about"
                 className="px-4 py-2 text-gray-300 hover:text-gold-400 transition-colors"
               >
                 About
               </Link>
-              
-              <Link 
-                href="/contact" 
+
+              <Link
+                href="/blog"
+                className="flex items-center gap-2 px-4 py-2 text-gray-300 hover:text-gold-400 transition-colors"
+              >
+                <FileText className="w-4 h-4" />
+                Blog
+              </Link>
+
+              <Link
+                href="/contact"
                 className="flex items-center gap-2 px-4 py-2 text-gray-300 hover:text-gold-400 transition-colors"
               >
                 <Phone className="w-4 h-4" />
@@ -474,15 +483,23 @@ export default function Navigation() {
               </div>
               
               <div className="border-t border-gray-700 pt-4">
-                <Link 
-                  href="/about" 
+                <Link
+                  href="/about"
                   className="block px-4 py-3 text-lg text-gray-300 hover:text-gold-400 transition-colors"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   About
                 </Link>
-                <Link 
-                  href="/contact" 
+                <Link
+                  href="/blog"
+                  className="flex items-center gap-3 px-4 py-3 text-lg text-gray-300 hover:text-gold-400 transition-colors"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  <FileText className="w-5 h-5" />
+                  Blog
+                </Link>
+                <Link
+                  href="/contact"
                   className="flex items-center gap-3 px-4 py-3 text-lg text-gray-300 hover:text-gold-400 transition-colors"
                   onClick={() => setMobileMenuOpen(false)}
                 >
