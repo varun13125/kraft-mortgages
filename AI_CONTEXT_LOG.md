@@ -4,6 +4,39 @@ This file serves as the persistent memory for AI assistants working on this proj
 The latest entry is at the top.
 
 ---
+**Timestamp:** 2025-10-08 11:15:00 PDT
+**Agent:** Claude Sonnet 4.5
+**Commit Hash:** [pending]
+
+---
+
+**Summary of Changes:**
+- Fixed actual blog post content issue preventing proper excerpt generation
+- Updated mock post data in `getRecentPosts()` to include full blog content instead of single sentence
+- Resolved root cause of generic "Stay tuned for expert insights" message in blog previews
+- Mock post now contains complete blog content for meaningful excerpt generation
+- Verified excerpt generation works properly with full content (30-word excerpts)
+
+**Problem Identified:**
+While the previous fix correctly implemented word-based excerpt generation, the mock post data in `getRecentPosts()` only contained a single sentence instead of the full blog content. This meant the excerpt generation had insufficient content to work with, resulting in generic fallback messages.
+
+**Technical Implementation:**
+- Updated `apps/web/lib/db/firestore.ts` `getRecentPosts()` function
+- Replaced minimal mock content with complete blog article content
+- Added full HTML blog post content including headers, paragraphs, and structured sections
+- Maintained consistency with `getPost()` function content structure
+
+**Verification:**
+- Tested excerpt generation with full content - produces meaningful 30-word summaries
+- TypeScript compilation passes without errors
+- Blog preview cards will now display actual content excerpts instead of generic text
+
+**Next Steps:**
+- Deploy fix to resolve blog excerpt display issue
+- Monitor blog page to verify proper content rendering
+- Test with additional blog posts when available
+
+---
 **Timestamp:** 2025-10-08 10:45:00 PDT
 **Agent:** Claude Sonnet 4.5
 **Commit Hash:** 25ce057
