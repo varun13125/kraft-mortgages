@@ -18,8 +18,8 @@ function transformGoogleSheetsPost(post: any) {
   return {
     slug: post.slug || '',
     title: post.title || '',
-    content: post.content || '',
-    excerpt: post.excerpt || '',
+    content: post.markdown || post.content || '',
+    excerpt: post.excerpt || post.metaDescription || '',
     author: post.author?.name || post.author || 'Varun Chaudhry',
     authorEmail: post.authoremail || 'varun@kraftmortgages.ca',
     publishedAt: post.publishedat || new Date().toISOString(),
@@ -30,12 +30,12 @@ function transformGoogleSheetsPost(post: any) {
     tags,
     seo: {
       title: post.seotitle || post.title || '',
-      description: post.seodescription || post.excerpt || '',
+      description: post.seodescription || post.excerpt || post.metaDescription || '',
       keywords: post.seokeywords ? (typeof post.seokeywords === 'string' ? post.seokeywords.split(',').map((k: string) => k.trim()) : post.seokeywords) : tags,
       ogImage: post.seoimage || '/images/blog-default.jpg',
       canonicalUrl: post.seocanonicalurl || `https://kraftmortgages.ca/blog/${post.slug}`
     },
-    readingTime: parseInt(post.readingtime) || Math.ceil((post.content || '').length / 1000),
+    readingTime: parseInt(post.readingtime) || Math.ceil((post.markdown || post.content || '').length / 1000),
     brief: post.brief
   };
 }
