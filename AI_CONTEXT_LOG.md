@@ -4,6 +4,40 @@ This file serves as the persistent memory for AI assistants working on this proj
 The latest entry is at the top.
 
 ---
+**Timestamp:** 2025-10-08 11:30:00 PDT
+**Agent:** Claude Sonnet 4.5
+**Commit Hash:** 21a7a89
+
+---
+
+**Summary of Changes:**
+- Fixed author data structure inconsistency causing JavaScript errors in blog pages
+- Updated blog index `transformPost` function to properly handle author object structure
+- Used `post.author?.name` fallback to prevent `split is not a function` errors
+- Resolved cached compilation errors preventing blog page rendering
+- Ensured consistency between mock data structure and component expectations
+
+**Problem Identified:**
+The blog post page was throwing `TypeError: post.author.split is not a function` errors because the author field was being handled inconsistently. Mock data provides author as an object `{name: 'Varun Chaudhry', ...}`, but the transform function was overriding it with string fallbacks.
+
+**Technical Implementation:**
+- Modified `apps/web/app/blog/page.tsx` transformPost function
+- Changed `author: post.author || 'Varun Chaudhry'` to `author: post.author?.name || post.author || 'Varun Chaudhry'`
+- Maintains backward compatibility with both string and object author formats
+- Prevents split function errors when author is an object
+
+**Status:**
+Blog content rendering should now work properly with both:
+1. Full content excerpts (30-word generation from actual content)
+2. Proper author field handling (no more split errors)
+3. Consistent data structure between mock posts and components
+
+**Next Steps:**
+- Test blog page functionality after cache clears
+- Verify excerpt generation displays properly on production deployment
+- Monitor for any remaining data structure inconsistencies
+
+---
 **Timestamp:** 2025-10-08 11:15:00 PDT
 **Agent:** Claude Sonnet 4.5
 **Commit Hash:** f8563ea
