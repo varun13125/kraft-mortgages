@@ -19,7 +19,7 @@ import {
   DollarSign,
   FileText
 } from "lucide-react";
-import { usePathname } from "next/navigation";
+import { usePathname, type Route } from "next/navigation";
 
 export default function Navigation() {
   const [scrolled, setScrolled] = useState(false);
@@ -166,7 +166,7 @@ export default function Navigation() {
                           </div>
                         </Link>
                         <Link 
-                          href="/mortgage-broker-surrey" 
+                                                    href={"/mortgage-broker-surrey" as Route}  
                           className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-teal-400 transition-all rounded-lg"
                         >
                           <Users className="w-5 h-5 text-teal-400" />
