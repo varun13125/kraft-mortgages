@@ -3,9 +3,9 @@ export const dynamic = 'force-dynamic';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { Calendar, User, ArrowLeft, Clock, Tag } from 'lucide-react';
-import ReactMarkdown from 'react-markdown';
 import { getPost as getFsPost } from '@/lib/db/firestore';
 import Navigation from '@/components/Navigation';
+import { processPostContent } from '@/lib/utils/blog-content';
 
 // Transform Google Sheets post to our component format
 function transformGoogleSheetsPost(post: any) {
@@ -83,10 +83,10 @@ export async function generateMetadata(
   };
 }
 
-export default async function BlogPostPage({ 
-  params 
-}: { 
-  params: { slug: string } 
+export default async function BlogPostPage({
+  params
+}: {
+  params: { slug: string }
 }) {
   const rawPost = await getFsPost(params.slug);
   const post = transformGoogleSheetsPost(rawPost);
@@ -94,6 +94,9 @@ export default async function BlogPostPage({
   if (!post) {
     notFound();
   }
+
+  // Process content to handle image placeholders
+  const processedContent = processPostContent(post.content);
 
   const publishedDate = new Date(post.publishedAt);
   const updatedDate = new Date(post.updatedAt);
@@ -219,8 +222,10 @@ export default async function BlogPostPage({
                 prose-hr:border-gray-700
                 [&>button]:bg-gold-500 [&>button]:hover:bg-gold-400 [&>button]:text-gray-900 [&>button]:font-semibold [&>button]:px-4 [&>button]:py-2 [&>button]:rounded-lg [&>button]:transition-colors
                 [&>button]:cursor-pointer [&>button]:inline-flex [&>button]:items-center [&>button]:justify-center
-                [&>em_small]:text-gray-500 [&>em_small]:text-sm [&>em_small]:italic">
-                <ReactMarkdown>{post.content}</ReactMarkdown>
+                [&>em_small]:text-gray-500 [&>em_small]:text-sm [&>em_small]:italic
+                [&>img]:w-full [&>img]:rounded-lg [&>img]:shadow-lg [&>img]:my-6
+                [&>h1]:text-gray-100 [&>h2]:text-gray-100 [&>h3]:text-gray-100">
+                <div dangerouslySetInnerHTML={{ __html: processedContent }} />
               </div>
               
               {/* Tags */}

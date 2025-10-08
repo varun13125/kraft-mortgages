@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { Calendar, User, ArrowRight, Clock, Tag, Star, Mail, Phone, FileText } from 'lucide-react';
 import { getRecentPosts } from '@/lib/db/firestore';
 import Navigation from '@/components/Navigation';
+import { processExcerptContent } from '@/lib/utils/blog-content';
 
 export const metadata: Metadata = {
   title: 'Mortgage Insights Blog | Kraft Mortgages',
@@ -32,10 +33,16 @@ function transformPost(post: any) {
   const tags = post.keywords || [];
   const categories = post.categories ? (typeof post.categories === 'string' ? JSON.parse(post.categories || '[]') : post.categories) : ['Mortgage Advice'];
 
+  // Get the content for excerpt generation
+  const content = post.markdown || post.content || '';
+
+  // Generate dynamic excerpt from content
+  const dynamicExcerpt = processExcerptContent(content, 150);
+
   return {
     slug: post.slug || '',
     title: post.title || '',
-    excerpt: post.metaDescription || post.excerpt || '',
+    excerpt: post.metaDescription || post.excerpt || dynamicExcerpt,
     author: post.author || 'Varun Chaudhry',
     authorEmail: post.authoremail || 'varun@kraftmortgages.ca',
     publishedAt: (post.publishedAt instanceof Date ? post.publishedAt : (post.publishedat || new Date().toISOString())),
@@ -46,7 +53,7 @@ function transformPost(post: any) {
     tags,
     seo: {
       title: post.seotitle || post.title || '',
-      description: post.seodescription || post.excerpt || '',
+      description: post.seodescription || post.excerpt || dynamicExcerpt,
       keywords: post.seokeywords ? (typeof post.seokeywords === 'string' ? post.seokeywords.split(',').map((k: string) => k.trim()) : post.seokeywords) : tags,
       ogImage: post.seoimage || '/images/blog-default.jpg',
       canonicalUrl: post.seocanonicalurl || `https://kraftmortgages.ca/blog/${post.slug}`
