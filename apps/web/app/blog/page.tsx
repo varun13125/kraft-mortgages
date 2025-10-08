@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 export const dynamic = 'force-dynamic';
 import Link from 'next/link';
-import { Calendar, User, ArrowRight, Clock, Tag, Star } from 'lucide-react';
+import { Calendar, User, ArrowRight, Clock, Tag, Star, Mail, Phone } from 'lucide-react';
 import { getRecentPosts } from '@/lib/db/firestore';
 
 export const metadata: Metadata = {
@@ -80,22 +80,27 @@ export default async function BlogPage() {
         }}
       />
 
-      <div className="min-h-screen bg-white">
+      <div className="min-h-screen bg-gray-900">
         {/* Hero Section */}
-        <section className="bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 text-white py-16">
-          <div className="container mx-auto px-4">
+        <section className="py-20 px-4 mt-16">
+          <div className="max-w-6xl mx-auto">
             <div className="max-w-4xl mx-auto text-center">
-              <h1 className="text-4xl md:text-5xl font-bold mb-6">
+              <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-gray-100 mb-6">
                 Mortgage Insights & Market Updates
+                <span className="bg-gradient-to-r from-gold-400 to-amber-500 bg-clip-text text-transparent"> Expert Advice</span>
               </h1>
-              <p className="text-xl md:text-2xl text-blue-100 mb-8">
-                Expert advice from 23+ years in the Canadian mortgage industry
+              <p className="text-xl text-gray-400 mb-8 max-w-3xl mx-auto">
+                Expert advice from 23+ years in the Canadian mortgage industry. Navigate complex scenarios with industry-leading expertise.
               </p>
-              <div className="flex items-center justify-center gap-4 text-blue-200">
+              <div className="flex items-center justify-center gap-4 text-gray-400 mb-8">
                 <User className="w-5 h-5" />
                 <span>Varun Chaudhry, Licensed Mortgage Broker</span>
-                <span className="text-blue-300">•</span>
+                <span className="text-gray-600">•</span>
                 <span>BCFSA #M08001935</span>
+              </div>
+              <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold bg-gold-500/20 text-gold-400 border border-gold-500/30">
+                <Star className="w-3 h-3" />
+                Featured Insights
               </div>
             </div>
           </div>
@@ -103,82 +108,81 @@ export default async function BlogPage() {
 
         {/* Featured Posts */}
         {featuredPosts.length > 0 && (
-          <section className="py-12 bg-gray-50">
-            <div className="container mx-auto px-4">
-              <div className="max-w-6xl mx-auto">
-                <div className="flex items-center gap-2 mb-8">
-                  <Star className="w-6 h-6 text-yellow-500" />
-                  <h2 className="text-2xl font-bold text-gray-900">Featured Articles</h2>
-                </div>
-                <div className="grid md:grid-cols-2 gap-8">
-                  {featuredPosts.slice(0, 2).map((post) => (
-                    <article 
-                      key={post.slug}
-                      className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300"
-                    >
-                      <div className="p-8">
-                        <div className="flex items-center gap-2 mb-4">
-                          <Star className="w-4 h-4 text-yellow-500" />
-                          <span className="text-yellow-600 font-medium text-sm">Featured</span>
-                          {post.categories.map((category: string) => (
-                            <span 
-                              key={category}
-                              className="bg-blue-100 text-blue-600 px-2 py-1 rounded-full text-sm font-medium ml-2"
-                            >
-                              {category}
-                            </span>
-                          ))}
-                        </div>
-                        
-                        <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                          <Link 
-                            href={`/blog/${post.slug}`}
-                            className="hover:text-blue-600 transition-colors"
+          <section className="py-20 px-4">
+            <div className="max-w-6xl mx-auto">
+              <div className="flex items-center gap-2 mb-12">
+                <Star className="w-6 h-6 text-gold-400" />
+                <h2 className="text-3xl font-bold text-gray-100">Featured Articles</h2>
+              </div>
+              <div className="grid md:grid-cols-2 gap-8">
+                {featuredPosts.slice(0, 2).map((post) => (
+                  <article
+                    key={post.slug}
+                    className="bg-gray-800/50 backdrop-blur-sm border border-gray-700/50 rounded-xl overflow-hidden hover:shadow-2xl hover:shadow-gold-500/10 transition-all duration-300 hover:-translate-y-1"
+                  >
+                    <div className="p-8">
+                      <div className="flex items-center gap-2 mb-6">
+                        <Star className="w-4 h-4 text-gold-400" />
+                        <span className="text-gold-400 font-medium text-sm">Featured</span>
+                        {post.categories.map((category: string) => (
+                          <span
+                            key={category}
+                            className="bg-gold-500/20 text-gold-300 px-3 py-1 rounded-full text-sm font-medium ml-2 border border-gold-500/30"
                           >
-                            {post.title}
-                          </Link>
-                        </h3>
-                        
-                        <p className="text-gray-600 mb-6 text-lg">
-                          {post.excerpt}
-                        </p>
-                        
-                        <div className="flex items-center justify-between text-sm text-gray-500 mb-6">
-                          <div className="flex items-center gap-4">
-                            <div className="flex items-center gap-1">
-                              <Calendar className="w-4 h-4" />
-                              <span>{new Date(post.publishedAt).toLocaleDateString('en-CA', {
-                                year: 'numeric',
-                                month: 'long', 
-                                day: 'numeric'
-                              })}</span>
-                            </div>
-                            <div className="flex items-center gap-1">
-                              <Clock className="w-4 h-4" />
-                              <span>{post.readingTime} min read</span>
-                            </div>
+                            {category}
+                          </span>
+                        ))}
+                      </div>
+
+                      <h3 className="text-2xl font-bold text-gray-100 mb-4">
+                        <Link
+                          href={`/blog/${post.slug}`}
+                          className="hover:text-gold-400 transition-colors"
+                        >
+                          {post.title}
+                        </Link>
+                      </h3>
+
+                      <p className="text-gray-400 mb-6 text-lg leading-relaxed">
+                        {post.excerpt}
+                      </p>
+
+                      <div className="flex items-center justify-between text-sm text-gray-500 mb-6">
+                        <div className="flex items-center gap-4">
+                          <div className="flex items-center gap-1">
+                            <Calendar className="w-4 h-4" />
+                            <span>{new Date(post.publishedAt).toLocaleDateString('en-CA', {
+                              year: 'numeric',
+                              month: 'long',
+                              day: 'numeric'
+                            })}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <Clock className="w-4 h-4" />
+                            <span>{post.readingTime} min read</span>
                           </div>
                         </div>
+                      </div>
                         
                         {post.tags.length > 0 && (
                           <div className="flex flex-wrap gap-2 mb-6">
                             {post.tags.slice(0, 4).map((tag: string) => (
-                              <span 
+                              <span
                                 key={tag}
-                                className="bg-gray-100 text-gray-600 px-2 py-1 rounded text-xs"
+                                className="bg-gray-700/50 text-gray-300 px-3 py-1 rounded-full text-xs border border-gray-600/50"
                               >
                                 {tag}
                               </span>
                             ))}
                           </div>
                         )}
-                        
-                        <Link 
+
+                        <Link
                           href={`/blog/${post.slug}`}
-                          className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-800 font-medium transition-colors"
+                          className="inline-flex items-center gap-2 text-gold-400 hover:text-gold-300 font-medium transition-colors group"
                         >
                           Read More
-                          <ArrowRight className="w-4 h-4" />
+                          <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                         </Link>
                       </div>
                     </article>
@@ -190,12 +194,15 @@ export default async function BlogPage() {
         )}
 
         {/* Regular Blog Posts Grid */}
-        <section className="py-16">
-          <div className="container mx-auto px-4">
-            <div className="max-w-6xl mx-auto">
-              {posts.length === 0 ? (
-                <div className="text-center py-12">
-                  <h2 className="text-2xl font-bold text-gray-900 mb-4">Coming Soon</h2>
+        <section className="py-20 px-4">
+          <div className="max-w-6xl mx-auto">
+            {posts.length === 0 ? (
+              <div className="text-center py-16">
+                <div className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold bg-gold-500/20 text-gold-400 border border-gold-500/30 mb-6">
+                  <FileText className="w-4 h-4" />
+                  Blog Coming Soon
+                </div>
+                <h2 className="text-3xl font-bold text-gray-100 mb-4">Stay Tuned for Expert Insights</h2>
                   <p className="text-gray-600 mb-8">
                     Our automated blog content system is being set up with Google Sheets integration. 
                     Fresh mortgage insights and market updates will be published here regularly.
@@ -225,39 +232,39 @@ export default async function BlogPage() {
                 </div>
               ) : (
                 <>
-                  <h2 className="text-2xl font-bold text-gray-900 mb-8">Latest Articles</h2>
+                  <h2 className="text-3xl font-bold text-gray-100 mb-12">Latest Articles</h2>
                   <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {regularPosts.map((post) => (
                       <article 
                         key={post.slug}
-                        className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-300"
+                        className="bg-gray-800/50 backdrop-blur-sm border border-gray-700/50 rounded-xl overflow-hidden hover:shadow-2xl hover:shadow-gold-500/10 transition-all duration-300 hover:-translate-y-1"
                       >
                         <div className="p-6">
                           <div className="flex flex-wrap items-center gap-2 mb-3">
                             {post.categories.map((category: string) => (
-                              <span 
+                              <span
                                 key={category}
-                                className="bg-blue-100 text-blue-600 px-2 py-1 rounded-full text-sm font-medium"
+                                className="bg-gold-500/20 text-gold-300 px-3 py-1 rounded-full text-sm font-medium border border-gold-500/30"
                               >
                                 {category}
                               </span>
                             ))}
                           </div>
                           
-                          <h3 className="text-xl font-bold text-gray-900 mb-3 line-clamp-2">
-                            <Link 
+                          <h3 className="text-xl font-bold text-gray-100 mb-3 line-clamp-2">
+                            <Link
                               href={`/blog/${post.slug}`}
-                              className="hover:text-blue-600 transition-colors"
+                              className="hover:text-gold-400 transition-colors"
                             >
                               {post.title}
                             </Link>
                           </h3>
-                          
-                          <p className="text-gray-600 mb-4 line-clamp-3">
+
+                          <p className="text-gray-400 mb-4 line-clamp-3">
                             {post.excerpt}
                           </p>
-                          
-                          <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
+
+                          <div className="flex items-center justify-between text-sm text-gray-400 mb-4">
                             <div className="flex items-center gap-4">
                               <div className="flex items-center gap-1">
                                 <Calendar className="w-4 h-4" />
@@ -277,22 +284,22 @@ export default async function BlogPage() {
                           {post.tags.length > 0 && (
                             <div className="flex flex-wrap gap-1 mb-4">
                               {post.tags.slice(0, 3).map((tag: string) => (
-                                <span 
+                                <span
                                   key={tag}
-                                  className="bg-gray-100 text-gray-600 px-2 py-1 rounded text-xs"
+                                  className="bg-gray-700/50 text-gray-300 px-2 py-1 rounded text-xs border border-gray-600/50"
                                 >
                                   {tag}
                                 </span>
                               ))}
                             </div>
                           )}
-                          
-                          <Link 
+
+                          <Link
                             href={`/blog/${post.slug}`}
-                            className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-800 font-medium transition-colors"
+                            className="inline-flex items-center gap-2 text-gold-400 hover:text-gold-300 font-medium transition-colors group"
                           >
                             Read More
-                            <ArrowRight className="w-4 h-4" />
+                            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                           </Link>
                         </div>
                       </article>
