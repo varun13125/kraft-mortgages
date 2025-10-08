@@ -166,7 +166,7 @@ export default function Navigation() {
                           </div>
                         </Link>
                         <Link 
-                                                    href={"/mortgage-broker-surrey" as Route}  
+                                                    href="/mortgage-broker-surrey"  
                           className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-teal-400 transition-all rounded-lg"
                         >
                           <Users className="w-5 h-5 text-teal-400" />

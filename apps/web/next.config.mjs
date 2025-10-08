@@ -4,7 +4,7 @@ const withMDX = createMDX({ extension: /\.mdx?$/ });
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   experimental: {
-    typedRoutes: true,
+    typedRoutes: false,
     serverComponentsExternalPackages: ['farmhash-modern']
   },
   reactStrictMode: true,
