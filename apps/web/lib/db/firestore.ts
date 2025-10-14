@@ -281,6 +281,25 @@ export async function savePost(post: Post): Promise<void> {
 
 export async function getPost(slug: string): Promise<Post | null> {
   // Mock data for our specific blog post
+  if (slug === 'the-developers-edge') {
+    const blogContent = `<h1>The Developer's Edge: Unlocking 95% LTV with CMHC MLI Select in Surrey and Vancouver</h1><p>For multi-unit residential developers in British Columbia, profit margins are everything. You’re constantly balancing the high costs of land and construction against future rental income and property valuation. But what if you could significantly reduce your initial cash equity requirement and secure financing terms that dramatically improve your project's cash flow from day one? That's precisely what the CMHC MLI Select program is designed to do. This isn't just another mortgage product; it's a strategic tool. For developers in high-need areas like Surrey and Vancouver, it's a game-changer. At Kraft Mortgages, we specialize in structuring these complex applications to ensure our developer clients maximize their leverage and returns.</p><h2>Everyday Expert Translation: What is MLI Select?</h2><p>Think of MLI Select as a rewards program for building the right kind of housing. CMHC uses a points system to incentivize developers who build energy-efficient, accessible, and affordable rental units. The more points your project scores, the better the financing incentives you receive. We're talking up to 95% loan-to-value (LTV) financing and 50-year amortizations—terms that are simply unavailable through conventional financing.</p><h2>Breaking Down the Points System for BC Developers</h2><p>To qualify for the best incentives, a project needs 100 points. Here’s how you get there:</p><ul><li><strong>Energy Efficiency (Up to 100 points):</strong> This is the fastest path to premium benefits...</li><li><strong>Affordability (Up to 100 points):</strong> This involves committing a percentage of your units to rental rates below the market average...</li><li><strong>Accessibility (Up to 50 points):</strong> By incorporating accessible design features...</li></ul><h2>The Bottom Line: A Practical Example</h2><p>Imagine a $10 million, 20-unit rental project in Surrey.</p><ul><li><strong>Conventional Financing:</strong> Might require a $2.5 million down payment (75% LTV).</li><li><strong>MLI Select Financing:</strong> By scoring 100+ points, you could potentially secure financing with only a $500,000 down payment (95% LTV).</li></ul><p>That’s $2 million in capital freed up... This is the power of working with a broker who understands the intricate details of programs like MLI Select. Navigating the CMHC application process requires more than just filling out forms. It requires a strategic approach to project design and a deep understanding of the underwriter's requirements.</p><p>Is your next project a candidate for MLI Select?</p><p><a href=\"https://calendar.app.google/HcbcfrKKtBvcPQqd8\">Book a 15 min Free Consultation Now</a></p><p><em>(Disclaimer: The information provided is for general informational purposes only...)</em></p>`;
+
+    return {
+      slug: 'the-developers-edge',
+      title: "The Developer's Edge: Unlocking 95% LTV with CMHC MLI Select in Surrey and Vancouver",
+      markdown: blogContent,
+      html: blogContent,
+      status: 'published' as const,
+      publishedAt: new Date('2025-10-13T10:00:00Z'),
+      author: {
+        name: 'Varun Chaudhry',
+        title: 'Licensed Mortgage Broker',
+        license: 'BCFSA #M08001935'
+      },
+      metaDescription: "For multi-unit residential developers in British Columbia, profit margins are everything. Learn how the CMHC MLI Select program can unlock up to 95% LTV...",
+      keywords: ['mli-select', 'cmhc', 'development-financing', 'surrey', 'vancouver']
+    };
+  }
   if (slug === 'beyond-big-banks-complex-mortgage-approval') {
     const blogContent = `<h1>Beyond the Big Banks: How We Get Complex Files Approved Post-Stress Test</h1>
 
@@ -402,6 +421,22 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
     keywords: ['stress-test', 'self-employed', 'mortgage-approval', 'complex-files', 'alternative-lenders']
   };
 
+  const mockPost2: Post = {
+    slug: 'the-developers-edge',
+    title: "The Developer's Edge: Unlocking 95% LTV with CMHC MLI Select in Surrey and Vancouver",
+    markdown: `<h1>The Developer's Edge: Unlocking 95% LTV with CMHC MLI Select in Surrey and Vancouver</h1><p>For multi-unit residential developers in British Columbia, profit margins are everything. You’re constantly balancing the high costs of land and construction against future rental income and property valuation. But what if you could significantly reduce your initial cash equity requirement and secure financing terms that dramatically improve your project's cash flow from day one? That's precisely what the CMHC MLI Select program is designed to do. This isn't just another mortgage product; it's a strategic tool. For developers in high-need areas like Surrey and Vancouver, it's a game-changer. At Kraft Mortgages, we specialize in structuring these complex applications to ensure our developer clients maximize their leverage and returns.</p><h2>Everyday Expert Translation: What is MLI Select?</h2><p>Think of MLI Select as a rewards program for building the right kind of housing. CMHC uses a points system to incentivize developers who build energy-efficient, accessible, and affordable rental units. The more points your project scores, the better the financing incentives you receive. We're talking up to 95% loan-to-value (LTV) financing and 50-year amortizations—terms that are simply unavailable through conventional financing.</p><h2>Breaking Down the Points System for BC Developers</h2><p>To qualify for the best incentives, a project needs 100 points. Here’s how you get there:</p><ul><li><strong>Energy Efficiency (Up to 100 points):</strong> This is the fastest path to premium benefits...</li><li><strong>Affordability (Up to 100 points):</strong> This involves committing a percentage of your units to rental rates below the market average...</li><li><strong>Accessibility (Up to 50 points):</strong> By incorporating accessible design features...</li></ul><h2>The Bottom Line: A Practical Example</h2><p>Imagine a $10 million, 20-unit rental project in Surrey.</p><ul><li><strong>Conventional Financing:</strong> Might require a $2.5 million down payment (75% LTV).</li><li><strong>MLI Select Financing:</strong> By scoring 100+ points, you could potentially secure financing with only a $500,000 down payment (95% LTV).</li></ul><p>That’s $2 million in capital freed up... This is the power of working with a broker who understands the intricate details of programs like MLI Select. Navigating the CMHC application process requires more than just filling out forms. It requires a strategic approach to project design and a deep understanding of the underwriter's requirements.</p><p>Is your next project a candidate for MLI Select?</p><p><a href="https://calendar.app.google/HcbcfrKKtBvcPQqd8">Book a 15 min Free Consultation Now</a></p><p><em>(Disclaimer: The information provided is for general informational purposes only...)</em></p>`,
+    html: `<h1>The Developer's Edge: Unlocking 95% LTV with CMHC MLI Select in Surrey and Vancouver</h1><p>For multi-unit residential developers in British Columbia, profit margins are everything. You’re constantly balancing the high costs of land and construction against future rental income and property valuation. But what if you could significantly reduce your initial cash equity requirement and secure financing terms that dramatically improve your project's cash flow from day one? That's precisely what the CMHC MLI Select program is designed to do. This isn't just another mortgage product; it's a strategic tool. For developers in high-need areas like Surrey and Vancouver, it's a game-changer. At Kraft Mortgages, we specialize in structuring these complex applications to ensure our developer clients maximize their leverage and returns.</p><h2>Everyday Expert Translation: What is MLI Select?</h2><p>Think of MLI Select as a rewards program for building the right kind of housing. CMHC uses a points system to incentivize developers who build energy-efficient, accessible, and affordable rental units. The more points your project scores, the better the financing incentives you receive. We're talking up to 95% loan-to-value (LTV) financing and 50-year amortizations—terms that are simply unavailable through conventional financing.</p><h2>Breaking Down the Points System for BC Developers</h2><p>To qualify for the best incentives, a project needs 100 points. Here’s how you get there:</p><ul><li><strong>Energy Efficiency (Up to 100 points):</strong> This is the fastest path to premium benefits...</li><li><strong>Affordability (Up to 100 points):</strong> This involves committing a percentage of your units to rental rates below the market average...</li><li><strong>Accessibility (Up to 50 points):</strong> By incorporating accessible design features...</li></ul><h2>The Bottom Line: A Practical Example</h2><p>Imagine a $10 million, 20-unit rental project in Surrey.</p><ul><li><strong>Conventional Financing:</strong> Might require a $2.5 million down payment (75% LTV).</li><li><strong>MLI Select Financing:</strong> By scoring 100+ points, you could potentially secure financing with only a $500,000 down payment (95% LTV).</li></ul><p>That’s $2 million in capital freed up... This is the power of working with a broker who understands the intricate details of programs like MLI Select. Navigating the CMHC application process requires more than just filling out forms. It requires a strategic approach to project design and a deep understanding of the underwriter's requirements.</p><p>Is your next project a candidate for MLI Select?</p><p><a href="https://calendar.app.google/HcbcfrKKtBvcPQqd8">Book a 15 min Free Consultation Now</a></p><p><em>(Disclaimer: The information provided is for general informational purposes only...)</em></p>`,
+    status: 'published' as const,
+    publishedAt: new Date('2025-10-13T10:00:00Z'),
+    author: {
+      name: 'Varun Chaudhry',
+      title: 'Licensed Mortgage Broker',
+      license: 'BCFSA #M08001935'
+    },
+    metaDescription: "For multi-unit residential developers in British Columbia, profit margins are everything. Learn how the CMHC MLI Select program can unlock up to 95% LTV...",
+    keywords: ['mli-select', 'cmhc', 'development-financing', 'surrey', 'vancouver']
+  };
+
   try {
     const snapshot = await (await postsCol())
       .orderBy('publishedAt', 'desc')
@@ -414,7 +449,7 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
     })) as Post[];
 
     // Combine our mock post with Firestore posts and sort by date
-    const allPosts = [mockPost, ...firestorePosts].sort((a, b) =>
+    const allPosts = [mockPost, mockPost2, ...firestorePosts].sort((a, b) =>
       new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
     );
 
@@ -422,6 +457,6 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
   } catch (error) {
     console.error('Error fetching recent posts:', error);
     // Return only our mock post if Firestore fails
-    return [mockPost];
+    return [mockPost, mockPost2];
   }
 }
