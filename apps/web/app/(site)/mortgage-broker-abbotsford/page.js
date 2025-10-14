@@ -1,7 +1,7 @@
 "use client";
 import Navigation from "@/components/Navigation";
 
-const AbbotsfordPage = () => {
+export default function AbbotsfordPage() {
   return (
     <>
       <Navigation />
@@ -21,6 +21,4 @@ const AbbotsfordPage = () => {
       </div>
     </>
   );
-};
-
-export default AbbotsfordPage;
+}

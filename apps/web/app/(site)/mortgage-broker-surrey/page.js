@@ -1,7 +1,7 @@
 "use client";
 import Navigation from "@/components/Navigation";
 
-const SurreyPage = () => {
+export default function SurreyPage() {
   return (
     <>
       <Navigation />
@@ -61,6 +61,4 @@ const SurreyPage = () => {
       </div>
     </>
   );
-};
-
-export default SurreyPage;
+}

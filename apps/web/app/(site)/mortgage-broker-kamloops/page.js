@@ -1,7 +1,7 @@
 "use client";
 import Navigation from "@/components/Navigation";
 
-const KamloopsPage = () => {
+export default function KamloopsPage() {
   return (
     <>
       <Navigation />
@@ -21,6 +21,4 @@ const KamloopsPage = () => {
       </div>
     </>
   );
-};
-
-export default KamloopsPage;
+}

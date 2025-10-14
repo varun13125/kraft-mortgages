@@ -1,7 +1,7 @@
 "use client";
 import Navigation from "@/components/Navigation";
 
-const KelownaPage = () => {
+export default function KelownaPage() {
   return (
     <>
       <Navigation />
@@ -21,6 +21,4 @@ const KelownaPage = () => {
       </div>
     </>
   );
-};
-
-export default KelownaPage;
+}
