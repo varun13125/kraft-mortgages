@@ -1,13 +1,5 @@
-import Head from 'next/head';
-import Layout from '../../components/Layout';
-
 const KamloopsPage = () => {
   return (
-    <Layout>
-      <Head>
-        <title>Expert Mortgage Broker in Kamloops | Kraft Mortgages</title>
-        <meta name="description" content="Kraft Mortgages serves Kamloops, BC, with expert mortgage advice for residential, self-employed, and investment property financing in the Thompson-Nicola region." />
-      </Head>
       <div className="container mx-auto px-4 py-12">
         <h1>Kamloops' Trusted Mortgage Experts</h1>
         <div className="prose prose-invert max-w-none">
@@ -21,7 +13,6 @@ const KamloopsPage = () => {
             <p>With its strong local economy, Kamloops offers excellent opportunities for real estate investors. We can help you secure the right financing to grow your property portfolio.</p>
         </div>
       </div>
-    </Layout>
   );
 };
 

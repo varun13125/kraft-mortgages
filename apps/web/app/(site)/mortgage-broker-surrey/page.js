@@ -1,14 +1,5 @@
-import Head from 'next/head';
-import Layout from '../../components/layout'; // Assuming layout is at this path
-
 const SurreyPage = () => {
   return (
-    <Layout>
-      <Head>
-        <title>Expert Mortgage Broker in Surrey | Kraft Mortgages</title>
-        <meta name="description" content="Looking for a mortgage broker in Surrey, BC? Kraft Mortgages specializes in mortgages for self-employed, new builds, and newcomers to Canada. Get local expert advice." />
-      </Head>
-      
       <div className="container mx-auto px-4 py-12">
         <h1 className="text-4xl font-bold text-gray-900 dark:text-white sm:text-5xl md:text-6xl mb-6">
           Surrey's Top-Rated Mortgage Brokerage
@@ -62,7 +53,6 @@ const SurreyPage = () => {
             </p>
         </div>
       </div>
-    </Layout>
   );
 };
 

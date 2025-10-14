@@ -1,13 +1,5 @@
-import Head from 'next/head';
-import Layout from '../../components/Layout';
-
 const AbbotsfordPage = () => {
   return (
-    <Layout>
-      <Head>
-        <title>Expert Mortgage Broker in Abbotsford | Kraft Mortgages</title>
-        <meta name="description" content="Your local mortgage broker in Abbotsford and the Fraser Valley. Kraft Mortgages offers specialized financing for residential, agricultural, and self-employed clients." />
-      </Head>
       <div className="container mx-auto px-4 py-12">
         <h1>Abbotsford's Trusted Mortgage Experts</h1>
         <div className="prose prose-invert max-w-none">
@@ -21,7 +13,6 @@ const AbbotsfordPage = () => {
             <p>We have experience with lenders who specialize in financing for agricultural properties and large acreages, a unique need for many clients in the Abbotsford area.</p>
         </div>
       </div>
-    </Layout>
   );
 };
 

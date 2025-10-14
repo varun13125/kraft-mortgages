@@ -1,13 +1,5 @@
-import Head from 'next/head';
-import Layout from '../../components/Layout';
-
 const KelownaPage = () => {
   return (
-    <Layout>
-      <Head>
-        <title>Expert Mortgage Broker in Kelowna | Kraft Mortgages</title>
-        <meta name="description" content="Your trusted mortgage broker in Kelowna, BC. We specialize in financing for investment properties, self-employed individuals, and newcomers in the Okanagan." />
-      </Head>
       <div className="container mx-auto px-4 py-12">
         <h1>Kelowna's Trusted Mortgage Experts</h1>
         <div className="prose prose-invert max-w-none">
@@ -21,7 +13,6 @@ const KelownaPage = () => {
             <p>With a booming tourism industry and growing population, Kelowna is a prime location for real estate investment. We structure financing for rental properties and vacation homes to maximize your cash flow and return on investment.</p>
         </div>
       </div>
-    </Layout>
   );
 };
 
