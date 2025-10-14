@@ -1,6 +1,12 @@
+"use client";
+import Navigation from "@/components/Navigation";
+
 const SurreyPage = () => {
   return (
-      <div className="container mx-auto px-4 py-12">
+    <>
+      <Navigation />
+      <div className="min-h-screen">
+        <div className="container mx-auto px-4 py-12">
         <h1 className="text-4xl font-bold text-gray-900 dark:text-white sm:text-5xl md:text-6xl mb-6">
           Surrey's Top-Rated Mortgage Brokerage
         </h1>
@@ -53,6 +59,7 @@ const SurreyPage = () => {
             </p>
         </div>
       </div>
+    </>
   );
 };
 

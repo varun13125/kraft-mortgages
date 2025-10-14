@@ -1,6 +1,12 @@
+"use client";
+import Navigation from "@/components/Navigation";
+
 const KelownaPage = () => {
   return (
-      <div className="container mx-auto px-4 py-12">
+    <>
+      <Navigation />
+      <div className="min-h-screen">
+        <div className="container mx-auto px-4 py-12">
         <h1>Kelowna's Trusted Mortgage Experts</h1>
         <div className="prose prose-invert max-w-none">
             <p>From the beautiful shores of Okanagan Lake to the thriving downtown core, Kraft Mortgages is proud to serve the Kelowna community. We understand the unique dynamics of the Okanagan real estate market and provide tailored mortgage solutions for homebuyers and investors looking to thrive in this beautiful region.</p>
@@ -13,6 +19,7 @@ const KelownaPage = () => {
             <p>With a booming tourism industry and growing population, Kelowna is a prime location for real estate investment. We structure financing for rental properties and vacation homes to maximize your cash flow and return on investment.</p>
         </div>
       </div>
+    </>
   );
 };
 

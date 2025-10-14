@@ -1,6 +1,12 @@
+"use client";
+import Navigation from "@/components/Navigation";
+
 const KamloopsPage = () => {
   return (
-      <div className="container mx-auto px-4 py-12">
+    <>
+      <Navigation />
+      <div className="min-h-screen">
+        <div className="container mx-auto px-4 py-12">
         <h1>Kamloops' Trusted Mortgage Experts</h1>
         <div className="prose prose-invert max-w-none">
             <p>As the Tournament Capital of Canada, Kamloops is a city of action and opportunity. Kraft Mortgages provides clear, strategic mortgage advice to help you achieve your real estate goals in this vibrant community. We understand the local market and are dedicated to finding the perfect financing solution for you.</p>
@@ -13,6 +19,7 @@ const KamloopsPage = () => {
             <p>With its strong local economy, Kamloops offers excellent opportunities for real estate investors. We can help you secure the right financing to grow your property portfolio.</p>
         </div>
       </div>
+    </>
   );
 };
 

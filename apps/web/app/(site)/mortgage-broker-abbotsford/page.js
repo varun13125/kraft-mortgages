@@ -1,6 +1,12 @@
+"use client";
+import Navigation from "@/components/Navigation";
+
 const AbbotsfordPage = () => {
   return (
-      <div className="container mx-auto px-4 py-12">
+    <>
+      <Navigation />
+      <div className="min-h-screen">
+        <div className="container mx-auto px-4 py-12">
         <h1>Abbotsford's Trusted Mortgage Experts</h1>
         <div className="prose prose-invert max-w-none">
             <p>Nestled in the heart of the Fraser Valley, Abbotsford is a community rich in opportunity. Kraft Mortgages is proud to provide expert mortgage services to its residents, from farmers and entrepreneurs to growing families. We understand the local market and are committed to your success.</p>
@@ -13,6 +19,7 @@ const AbbotsfordPage = () => {
             <p>We have experience with lenders who specialize in financing for agricultural properties and large acreages, a unique need for many clients in the Abbotsford area.</p>
         </div>
       </div>
+    </>
   );
 };
 
