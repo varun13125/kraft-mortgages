@@ -15,7 +15,7 @@ export async function editorStage(run: Run): Promise<{ success: boolean; data?: 
 
     const draft = run.draft;
     const brief = run.brief;
-    
+
     if (!draft?.markdownDraft || !brief) {
       throw new Error('Draft and brief data required for editor stage');
     }
@@ -44,7 +44,7 @@ Author Details:
 - Name: Varun Chaudhry
 - Title: Licensed Mortgage Broker  
 - License: BCFSA #M08001935
-- Experience: 23+ years in Canadian mortgage industry
+- Experience: 18+ years in Canadian mortgage industry
 - Specialties: MLI Select, Construction Financing, Self-Employed mortgages
 - Office: 301-1688 152nd Street, Surrey, BC V4A 4N2
 - Phone: 604-593-1550
@@ -69,18 +69,18 @@ Return the enhanced article in Markdown format.
         role: 'user',
         content: editorPrompt
       }
-    ], { 
+    ], {
       temperature: 0.5,
-      maxTokens: 3500 
+      maxTokens: 3500
     });
 
     let enhancedContent = response.content;
 
     // Ensure minimum enhancements are present
-    const currentDate = new Date().toLocaleDateString('en-CA', { 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric' 
+    const currentDate = new Date().toLocaleDateString('en-CA', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
     });
 
     // Add author bio if not present
@@ -91,7 +91,7 @@ Return the enhanced article in Markdown format.
 
 ## About the Author
 
-**Varun Chaudhry** is a licensed mortgage broker with over 23 years of experience in the Canadian mortgage industry. Specializing in MLI Select, construction financing, and self-employed mortgages across BC, AB, and ON.
+**Varun Chaudhry** is a licensed mortgage broker with over 18 years of experience in the Canadian mortgage industry. Specializing in MLI Select, construction financing, and self-employed mortgages across BC, AB, and ON.
 
 - **License**: BCFSA #M08001935
 - **Office**: 301-1688 152nd Street, Surrey, BC V4A 4N2  
@@ -121,7 +121,7 @@ ${faq.map((q: string) => `### ${q}
 
 Contact our team for personalized guidance on this question based on your specific situation.`).join('\n\n')}
 `;
-      
+
       // Insert FAQ before author bio
       enhancedContent = enhancedContent.replace(
         /---\s*\n\s*## About the Author/,

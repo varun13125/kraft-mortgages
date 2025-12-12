@@ -12,8 +12,8 @@ export default function Home() {
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 metallic-dark" />
         <div className="absolute inset-0 mesh-gradient opacity-30" />
-        
-        <motion.div 
+
+        <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8 }}
@@ -22,7 +22,7 @@ export default function Home() {
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             {/* Left Column - Content */}
             <div className="text-left">
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
@@ -31,9 +31,9 @@ export default function Home() {
                 <Shield className="w-4 h-4" />
                 <span>Licensed Across BC • Alberta • Ontario</span>
               </motion.div>
-              
+
               <div className="space-y-4 mb-8">
-                <motion.h1 
+                <motion.h1
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.4 }}
@@ -41,11 +41,11 @@ export default function Home() {
                 >
                   <span className="gradient-text">Expert Mortgage Solutions</span>
                   <br />
-                  <span className="text-white">23+ Years of Excellence</span>
+                  <span className="text-white">18+ Years of Excellence</span>
                 </motion.h1>
               </div>
-              
-              <motion.p 
+
+              <motion.p
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.6 }}
@@ -53,8 +53,8 @@ export default function Home() {
               >
                 Specialized in MLI Select, Construction Financing, and Self-Employed mortgages. We navigate complex scenarios that others can&apos;t handle.
               </motion.p>
-          
-              <motion.div 
+
+              <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.8 }}
@@ -71,7 +71,7 @@ export default function Home() {
             </div>
 
             {/* Right Column - Visual */}
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 1.0 }}
@@ -115,9 +115,9 @@ export default function Home() {
               </div>
             </motion.div>
           </div>
-          
+
           {/* Clean Stats Section */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.2 }}
@@ -125,7 +125,7 @@ export default function Home() {
           >
             {[
               { value: "$2B+", desc: "Funded", icon: DollarSign },
-              { value: "23+ Years", desc: "Industry Experience", icon: Clock },
+              { value: "18+ Years", desc: "Industry Experience", icon: Clock },
               { value: "10,000+", desc: "Families Helped", icon: Users },
               { value: "500+", desc: "Complex Cases Solved", icon: Target }
             ].map((stat, i) => (
@@ -143,7 +143,7 @@ export default function Home() {
 
       {/* Clean Calculator Section */}
       <section className="px-6 py-20 metallic-grey">
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
@@ -157,7 +157,7 @@ export default function Home() {
               Industry-leading tools powered by AI to help you make informed decisions
             </p>
           </div>
-          
+
           <div className="grid gap-6 md:grid-cols-3">
             {[
               {
@@ -167,7 +167,7 @@ export default function Home() {
               },
               {
                 title: "Affordability Analysis",
-                href: "/calculators/affordability", 
+                href: "/calculators/affordability",
                 description: "Understand your true purchasing power with stress test calculations and debt service ratios"
               },
               {
@@ -203,7 +203,7 @@ export default function Home() {
               </motion.div>
             ))}
           </div>
-          
+
           <div className="grid gap-6 md:grid-cols-3 mt-6">
             {[
               {
@@ -254,7 +254,7 @@ export default function Home() {
 
       {/* How We Work Section */}
       <section className="px-6 py-20 metallic-dark">
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
@@ -268,7 +268,7 @@ export default function Home() {
               We don&apos;t just find you a mortgage - we architect the right financial solution for your unique situation
             </p>
           </div>
-          
+
           <div className="grid gap-8 md:grid-cols-4">
             {[
               {
@@ -280,7 +280,7 @@ export default function Home() {
               {
                 step: "2",
                 title: "Strategic Analysis",
-                description: "Leverage 23+ years of expertise to identify optimal solutions",
+                description: "Leverage 18+ years of expertise to identify optimal solutions",
                 icon: Target
               },
               {
@@ -323,7 +323,7 @@ export default function Home() {
 
       {/* Testimonials Section */}
       <section className="px-6 py-20 metallic-grey">
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
@@ -337,7 +337,7 @@ export default function Home() {
               Real results for real people facing complex mortgage challenges
             </p>
           </div>
-          
+
           <div className="grid gap-6 md:grid-cols-3">
             {[
               {
@@ -388,7 +388,7 @@ export default function Home() {
 
       {/* Alex Chat Assistant Section - More Honest Positioning */}
       <section className="px-6 py-20 metallic-dark">
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
@@ -410,7 +410,7 @@ export default function Home() {
 
       {/* Provincial Coverage */}
       <section className="px-6 py-20 metallic-grey">
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
@@ -424,14 +424,14 @@ export default function Home() {
               Expert mortgage services tailored to your province
             </p>
           </div>
-          
+
           <div className="grid gap-8 md:grid-cols-3">
             {[
               { province: "British Columbia", href: "/provinces/bc", features: ["BCFSA Licensed", "Surrey Office", "Lower Mainland Focus"] },
               { province: "Alberta", href: "/provinces/ab", features: ["RECA Licensed", "Calgary & Edmonton", "Energy Sector Expertise"] },
               { province: "Ontario", href: "/provinces/on", features: ["FSRAO Licensed", "GTA Coverage", "First-Time Buyer Programs"] }
             ].map((prov, i) => (
-              <motion.div 
+              <motion.div
                 key={i}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -466,7 +466,7 @@ export default function Home() {
 
       {/* CTA Section */}
       <section className="px-6 py-20 bg-gray-900">
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
@@ -485,14 +485,16 @@ export default function Home() {
         </motion.div>
       </section>
 
-      <script type="application/ld+json" suppressHydrationWarning dangerouslySetInnerHTML={{ __html: JSON.stringify({
-        "@context":"https://schema.org",
-        "@type":"Organization",
-        "name":"Kraft Mortgages Canada Inc.",
-        "url":process.env.NEXTAUTH_URL || "http://localhost:3000",
-        "logo":"/icons/icon-192.png",
-        "areaServed":["CA-BC","CA-AB","CA-ON"]
-      }) }} />
+      <script type="application/ld+json" suppressHydrationWarning dangerouslySetInnerHTML={{
+        __html: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          "name": "Kraft Mortgages Canada Inc.",
+          "url": process.env.NEXTAUTH_URL || "http://localhost:3000",
+          "logo": "/icons/icon-192.png",
+          "areaServed": ["CA-BC", "CA-AB", "CA-ON"]
+        })
+      }} />
     </main>
   );
 }

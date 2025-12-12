@@ -55,7 +55,7 @@ export default function ModernHomepage() {
     const interval = setInterval(() => {
       currentStep++;
       const progress = currentStep / steps;
-      
+
       setYearsCount(Math.floor(yearTarget * progress));
       setClientsCount(Math.floor(clientTarget * progress));
       setFundedCount(Number((fundedTarget * progress).toFixed(1)));
@@ -68,7 +68,7 @@ export default function ModernHomepage() {
 
   const handleLeadSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     try {
       // Send to API
       await fetch("/api/lead", {
@@ -94,7 +94,7 @@ export default function ModernHomepage() {
       console.error('Error submitting lead:', error);
       alert("Thank you! We've received your information and will be in touch shortly.");
     }
-    
+
     setShowLeadForm(false);
     setSelectedCalculator(null);
     setLeadData({ name: "", email: "", phone: "", calculatorType: "", loanAmount: "", message: "" });
@@ -120,7 +120,7 @@ export default function ModernHomepage() {
                 transition={{ duration: 0.8 }}
               >
                 <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold bg-gold-500/20 text-gold-400 border border-gold-500/30 mb-6">
-                  Mortgage Experts • 23+ Years
+                  Mortgage Experts • 18+ Years
                 </div>
                 <h1 className="text-4xl sm:text-6xl font-bold tracking-tight text-gray-100 mb-6">
                   Expert Mortgage Solutions for
@@ -129,7 +129,7 @@ export default function ModernHomepage() {
                 <p className="text-xl text-gray-400 mb-8">
                   Navigate MLI Select, Construction Financing, and Self-Employed mortgages across BC, AB & ON with industry-leading expertise.
                 </p>
-                
+
                 <div ref={statsRef} className="grid grid-cols-3 gap-6 mb-8">
                   <div className="text-center">
                     <div className="text-3xl font-bold text-gold-400">{yearsCount}+</div>
@@ -146,7 +146,7 @@ export default function ModernHomepage() {
                 </div>
 
                 <div className="flex flex-wrap gap-4">
-                  <a 
+                  <a
                     href="https://r.mtg-app.com/varun-chaudhry"
                     target="_blank"
                     rel="noopener noreferrer"
@@ -154,7 +154,7 @@ export default function ModernHomepage() {
                   >
                     Start Application
                   </a>
-                  <a 
+                  <a
                     href="tel:604-593-1550"
                     className="inline-flex items-center justify-center px-6 py-3 border border-gold-500/50 text-gold-400 rounded-lg hover:bg-gold-500/10 transition-colors"
                   >
@@ -253,8 +253,8 @@ export default function ModernHomepage() {
               <p className="text-xl text-gray-400 max-w-3xl mx-auto mb-8">
                 Professional-grade calculators with personalized reports delivered to your inbox
               </p>
-              <Link 
-                href="/mli-select/calculators" 
+              <Link
+                href="/mli-select/calculators"
                 className="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-gold-500 to-gold-600 text-gray-900 font-semibold rounded-lg hover:from-gold-400 hover:to-gold-500 transition-all transform hover:scale-105"
               >
                 <Calculator className="w-5 h-5 mr-2" />
@@ -338,7 +338,7 @@ export default function ModernHomepage() {
               Join thousands of satisfied clients who've achieved their property goals with expert guidance
             </p>
             <div className="flex flex-wrap gap-4 justify-center">
-              <a 
+              <a
                 href="https://r.mtg-app.com/varun-chaudhry"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -346,7 +346,7 @@ export default function ModernHomepage() {
               >
                 Start Application
               </a>
-              <a 
+              <a
                 href="tel:604-593-1550"
                 className="inline-flex items-center justify-center px-8 py-4 border-2 border-gold-500/50 text-gold-400 rounded-lg hover:bg-gold-500/10 transition-colors text-lg font-semibold"
               >
@@ -363,10 +363,10 @@ export default function ModernHomepage() {
             <div>
               <h3 className="text-xl font-semibold text-gold-400 mb-4">Kraft Mortgages</h3>
               <p className="text-gray-400 text-sm leading-relaxed">
-                23+ years of excellence in complex mortgage solutions across British Columbia, Alberta, and Ontario.
+                18+ years of excellence in complex mortgage solutions across British Columbia, Alberta, and Ontario.
               </p>
             </div>
-            
+
             <div>
               <h3 className="text-lg font-semibold text-gold-400 mb-4">Quick Links</h3>
               <div className="space-y-2">
@@ -376,7 +376,7 @@ export default function ModernHomepage() {
                 <Link href="/mli-select" className="block text-gray-400 hover:text-gold-400 transition-colors text-sm">MLI Select</Link>
               </div>
             </div>
-            
+
             <div>
               <h3 className="text-lg font-semibold text-gold-400 mb-4">Contact</h3>
               <div className="space-y-2 text-gray-400 text-sm">
@@ -398,7 +398,7 @@ export default function ModernHomepage() {
                 </div>
               </div>
             </div>
-            
+
             <div>
               <h3 className="text-lg font-semibold text-gold-400 mb-4">Licensed In</h3>
               <div className="space-y-2 text-gray-400 text-sm">
@@ -440,7 +440,7 @@ export default function ModernHomepage() {
                     required
                     className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg text-gray-100 placeholder-gray-400 focus:ring-2 focus:ring-gold-500/50 focus:border-gold-500 transition-all"
                     value={leadData.name}
-                    onChange={(e) => setLeadData({...leadData, name: e.target.value})}
+                    onChange={(e) => setLeadData({ ...leadData, name: e.target.value })}
                   />
                   <input
                     type="email"
@@ -448,7 +448,7 @@ export default function ModernHomepage() {
                     required
                     className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg text-gray-100 placeholder-gray-400 focus:ring-2 focus:ring-gold-500/50 focus:border-gold-500 transition-all"
                     value={leadData.email}
-                    onChange={(e) => setLeadData({...leadData, email: e.target.value})}
+                    onChange={(e) => setLeadData({ ...leadData, email: e.target.value })}
                   />
                   <input
                     type="tel"
@@ -456,21 +456,21 @@ export default function ModernHomepage() {
                     required
                     className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg text-gray-100 placeholder-gray-400 focus:ring-2 focus:ring-gold-500/50 focus:border-gold-500 transition-all"
                     value={leadData.phone}
-                    onChange={(e) => setLeadData({...leadData, phone: e.target.value})}
+                    onChange={(e) => setLeadData({ ...leadData, phone: e.target.value })}
                   />
                   <input
                     type="text"
                     placeholder="Loan Amount Needed (e.g. $500,000)"
                     className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg text-gray-100 placeholder-gray-400 focus:ring-2 focus:ring-gold-500/50 focus:border-gold-500 transition-all"
                     value={leadData.loanAmount}
-                    onChange={(e) => setLeadData({...leadData, loanAmount: e.target.value})}
+                    onChange={(e) => setLeadData({ ...leadData, loanAmount: e.target.value })}
                   />
                   <textarea
                     placeholder="Tell us about your mortgage needs..."
                     rows={3}
                     className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg text-gray-100 placeholder-gray-400 focus:ring-2 focus:ring-gold-500/50 focus:border-gold-500 transition-all resize-none"
                     value={leadData.message}
-                    onChange={(e) => setLeadData({...leadData, message: e.target.value})}
+                    onChange={(e) => setLeadData({ ...leadData, message: e.target.value })}
                   />
                   <button
                     type="submit"

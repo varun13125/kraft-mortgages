@@ -2,12 +2,12 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import Navigation from "@/components/Navigation";
-import { 
-  Home, 
-  Calculator, 
-  Users, 
-  Shield, 
-  CheckCircle, 
+import {
+  Home,
+  Calculator,
+  Users,
+  Shield,
+  CheckCircle,
   TrendingUp,
   DollarSign,
   Clock,
@@ -30,7 +30,7 @@ export default function ResidentialLending() {
       icon: TrendingUp
     },
     {
-      title: "Mortgage Renewals", 
+      title: "Mortgage Renewals",
       description: "Secure better terms at renewal time",
       features: ["Rate negotiations", "Term optimization", "Lender switching", "Early renewal options"],
       icon: Shield
@@ -54,7 +54,7 @@ export default function ResidentialLending() {
     {
       title: "Payment Calculator",
       description: "Calculate monthly payments based on loan amount, rate, and term",
-      href: "/calculators/payment", 
+      href: "/calculators/payment",
       icon: Calculator,
       popular: true
     },
@@ -77,7 +77,7 @@ export default function ResidentialLending() {
   const benefits = [
     {
       title: "Expert Guidance",
-      description: "23+ years of residential mortgage expertise across BC, AB, and ON"
+      description: "18+ years of residential mortgage expertise across BC, AB, and ON"
     },
     {
       title: "Multiple Lenders",
@@ -100,7 +100,7 @@ export default function ResidentialLending() {
         {/* Hero Section */}
         <section className="py-20 px-4">
           <div className="max-w-6xl mx-auto">
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
@@ -116,9 +116,9 @@ export default function ResidentialLending() {
               <p className="text-xl text-gray-400 max-w-3xl mx-auto mb-8">
                 From first-time buyers to seasoned homeowners, we provide expert mortgage solutions for every residential financing need.
               </p>
-              
+
               <div className="flex flex-wrap gap-4 justify-center">
-                <a 
+                <a
                   href="https://r.mtg-app.com/varun-chaudhry"
                   target="_blank"
                   rel="noopener noreferrer"
@@ -126,7 +126,7 @@ export default function ResidentialLending() {
                 >
                   Start Application
                 </a>
-                <Link 
+                <Link
                   href="#calculators"
                   className="inline-flex items-center justify-center px-6 py-3 border border-blue-500/50 text-blue-400 rounded-lg hover:bg-blue-500/10 transition-colors"
                 >
@@ -140,7 +140,7 @@ export default function ResidentialLending() {
         {/* Services Grid */}
         <section className="py-20 px-4">
           <div className="max-w-6xl mx-auto">
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
@@ -173,7 +173,7 @@ export default function ResidentialLending() {
                       <p className="text-gray-400 text-sm">{service.description}</p>
                     </div>
                   </div>
-                  
+
                   <ul className="space-y-2">
                     {service.features.map((feature, j) => (
                       <li key={j} className="flex items-center gap-2 text-sm text-gray-400">
@@ -191,7 +191,7 @@ export default function ResidentialLending() {
         {/* Calculators Section */}
         <section id="calculators" className="py-20 px-4 bg-gradient-to-br from-gray-900/50 to-gray-800/30">
           <div className="max-w-6xl mx-auto">
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
@@ -222,7 +222,7 @@ export default function ResidentialLending() {
                       </div>
                     </div>
                   )}
-                  
+
                   <Link href={calc.href as any} className="group">
                     <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl shadow-2xl border border-gray-700/50 p-6 transition-all hover:shadow-blue-500/20 hover:shadow-2xl hover:-translate-y-1">
                       <div className="flex items-center gap-4 mb-4">
@@ -246,7 +246,7 @@ export default function ResidentialLending() {
         {/* Why Choose Us */}
         <section className="py-20 px-4">
           <div className="max-w-6xl mx-auto">
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
@@ -281,7 +281,7 @@ export default function ResidentialLending() {
         {/* CTA Section */}
         <section className="py-20 px-4 bg-gradient-to-br from-blue-900/20 to-cyan-900/20 border-t border-blue-500/20">
           <div className="max-w-4xl mx-auto text-center">
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -292,9 +292,9 @@ export default function ResidentialLending() {
               <p className="text-xl mb-8 text-gray-400">
                 Let our residential mortgage experts guide you through every step of the process.
               </p>
-              
+
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <a 
+                <a
                   href="https://r.mtg-app.com/varun-chaudhry"
                   target="_blank"
                   rel="noopener noreferrer"
@@ -302,8 +302,8 @@ export default function ResidentialLending() {
                 >
                   Start Your Application
                 </a>
-                <a 
-                  href="tel:604-593-1550" 
+                <a
+                  href="tel:604-593-1550"
                   className="inline-flex items-center justify-center px-8 py-4 border-2 border-blue-500/50 text-blue-400 rounded-lg hover:bg-blue-500/10 transition-colors"
                 >
                   <Phone className="w-5 h-5 mr-2" />

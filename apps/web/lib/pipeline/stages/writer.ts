@@ -19,7 +19,7 @@ export async function writerStage(run: Run): Promise<{ success: boolean; data?: 
 
     const scout = run.scout;
     const brief = run.brief;
-    
+
     if (!scout || !brief) {
       throw new Error('Scout and brief data required for writer stage');
     }
@@ -50,9 +50,9 @@ Requirements:
 10. Current market context and trends
 
 Sources to reference and cite:
-${sources.slice(0, 8).map((source: any, i: number) => 
-  `[${i + 1}] ${source.title}\n    ${source.snippet}\n    URL: ${source.url}`
-).join('\n\n')}
+${sources.slice(0, 8).map((source: any, i: number) =>
+      `[${i + 1}] ${source.title}\n    ${source.snippet}\n    URL: ${source.url}`
+    ).join('\n\n')}
 
 Structure:
 # ${title}
@@ -86,9 +86,9 @@ Write with authority and expertise. Use specific examples and current data from 
         role: 'user',
         content: writerPrompt
       }
-    ], { 
+    ], {
       temperature: 0.7,
-      maxTokens: 3000 
+      maxTokens: 3000
     });
 
     let markdownContent = response.content;
@@ -96,7 +96,7 @@ Write with authority and expertise. Use specific examples and current data from 
     // Ensure article has minimum structure
     if (!markdownContent.includes('#') || markdownContent.length < 800) {
       await log(run.id, 'Writer: Generated content too short, enhancing...');
-      
+
       // Fallback content structure
       markdownContent = `# ${title}
 
@@ -133,12 +133,12 @@ Contact a licensed mortgage broker to discuss your specific situation and explor
 
 ---
 
-*This analysis is provided by Varun Chaudhry, Licensed Mortgage Broker (BCFSA #M08001935), with 23+ years of Canadian mortgage experience.*`;
+*This analysis is provided by Varun Chaudhry, Licensed Mortgage Broker (BCFSA #M08001935), with 18+ years of Canadian mortgage experience.*`;
     }
 
     // Add sources section
-    const sourcesSection = '\n\n## Sources\n\n' + 
-      sources.slice(0, 8).map((source: any, i: number) => 
+    const sourcesSection = '\n\n## Sources\n\n' +
+      sources.slice(0, 8).map((source: any, i: number) =>
         `[${i + 1}] [${source.title}](${source.url})`
       ).join('\n');
 

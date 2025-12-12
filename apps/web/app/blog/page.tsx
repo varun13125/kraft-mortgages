@@ -8,7 +8,7 @@ import { generateExcerpt } from '@/lib/utils/blog-content';
 
 export const metadata: Metadata = {
   title: 'Mortgage Insights Blog | Kraft Mortgages',
-  description: 'Expert mortgage advice, market insights, and Canadian homebuying tips from licensed broker Varun Chaudhry with 23+ years experience.',
+  description: 'Expert mortgage advice, market insights, and Canadian homebuying tips from licensed broker Varun Chaudhry with 18+ years experience.',
   keywords: 'mortgage advice, Canadian mortgages, home buying, mortgage broker, BC mortgages, Alberta mortgages, Ontario mortgages',
   openGraph: {
     title: 'Mortgage Insights Blog | Kraft Mortgages',
@@ -116,7 +116,7 @@ export default async function BlogPage() {
                 <span className="bg-gradient-to-r from-gold-400 to-amber-500 bg-clip-text text-transparent"> Expert Advice</span>
               </h1>
               <p className="text-xl text-gray-400 mb-8 max-w-3xl mx-auto">
-                Expert advice from 23+ years in the Canadian mortgage industry. Navigate complex scenarios with industry-leading expertise.
+                Expert advice from 18+ years in the Canadian mortgage industry. Navigate complex scenarios with industry-leading expertise.
               </p>
               <div className="flex items-center justify-center gap-4 text-gray-400 mb-8">
                 <User className="w-5 h-5" />

@@ -10,11 +10,11 @@ import { processPostContent } from '@/lib/utils/blog-content';
 // Transform Google Sheets post to our component format
 function transformGoogleSheetsPost(post: any) {
   if (!post) return null;
-  
+
   // Parse JSON strings if they exist
   const tags = post.tags ? (typeof post.tags === 'string' ? JSON.parse(post.tags || '[]') : post.tags) : [];
   const categories = post.categories ? (typeof post.categories === 'string' ? JSON.parse(post.categories || '[]') : post.categories) : ['Mortgage Advice'];
-  
+
   return {
     slug: post.slug || '',
     title: post.title || '',
@@ -45,7 +45,7 @@ export async function generateMetadata(
 ): Promise<Metadata> {
   const rawPost = await getFsPost(params.slug);
   const post = transformGoogleSheetsPost(rawPost);
-  
+
   if (!post) {
     return {
       title: 'Post Not Found | Kraft Mortgages',
@@ -227,7 +227,7 @@ export default async function BlogPostPage({
                 [&>h1]:text-gray-100 [&>h2]:text-gray-100 [&>h3]:text-gray-100">
                 <div dangerouslySetInnerHTML={{ __html: processedContent }} />
               </div>
-              
+
               {/* Tags */}
               {post.tags.length > 0 && (
                 <div className="mt-12 pt-8 border-t border-gray-700">
@@ -258,7 +258,7 @@ export default async function BlogPostPage({
                         About {typeof post.author === 'string' ? post.author : post.author.name}
                       </h3>
                       <p className="text-gray-400 mb-4">
-                        Licensed mortgage broker with over 23 years of experience in the Canadian mortgage industry.
+                        Licensed mortgage broker with over 18 years of experience in the Canadian mortgage industry.
                         Specializing in MLI Select, construction financing, and self-employed mortgages across BC, AB, and ON.
                       </p>
                       <div className="flex flex-wrap gap-4 text-sm text-gray-500">

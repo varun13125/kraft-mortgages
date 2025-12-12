@@ -12,7 +12,7 @@ export default function AboutUs() {
         {/* Hero Section */}
         <section className="py-20 px-4 mt-16">
           <div className="max-w-6xl mx-auto">
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
@@ -34,7 +34,7 @@ export default function AboutUs() {
         {/* Company Overview */}
         <section className="py-20 px-4">
           <div className="max-w-6xl mx-auto">
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
@@ -45,17 +45,17 @@ export default function AboutUs() {
                   Established in <span className="bg-gradient-to-r from-gold-400 to-amber-500 bg-clip-text text-transparent">2014</span>
                 </h2>
                 <p className="text-gray-400 mb-4 leading-relaxed">
-                  Kraft Mortgages Canada Inc. was founded with a clear vision: to provide sophisticated mortgage solutions 
-                  that go beyond traditional brokering. We recognized that the Canadian mortgage landscape was becoming 
+                  Kraft Mortgages Canada Inc. was founded with a clear vision: to provide sophisticated mortgage solutions
+                  that go beyond traditional brokering. We recognized that the Canadian mortgage landscape was becoming
                   increasingly complex, with borrowers facing unique challenges that required specialized expertise.
                 </p>
                 <p className="text-gray-400 mb-4 leading-relaxed">
-                  Today, we're proud to be recognized as specialists in three critical areas: MLI Select multi-unit financing, 
-                  construction mortgages with progressive draws, and self-employed mortgage solutions. Our expertise in these 
+                  Today, we're proud to be recognized as specialists in three critical areas: MLI Select multi-unit financing,
+                  construction mortgages with progressive draws, and self-employed mortgage solutions. Our expertise in these
                   complex scenarios sets us apart from conventional brokers.
                 </p>
                 <p className="text-gray-400 leading-relaxed">
-                  With licenses across British Columbia, Alberta, and Ontario, we bring local market knowledge combined with 
+                  With licenses across British Columbia, Alberta, and Ontario, we bring local market knowledge combined with
                   national lending relationships to deliver optimal outcomes for our clients.
                 </p>
               </div>
@@ -86,7 +86,7 @@ export default function AboutUs() {
         {/* Leadership Team */}
         <section className="py-20 px-4 bg-gradient-to-br from-gray-900/50 to-gray-800/30">
           <div className="max-w-6xl mx-auto">
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
@@ -118,11 +118,11 @@ export default function AboutUs() {
                       <p className="text-gold-400">Founder & Principal Broker</p>
                     </div>
                   </div>
-                  
+
                   <div className="space-y-3 mb-6">
                     <div className="flex items-center gap-2">
                       <Shield className="w-4 h-4 text-gold-400" />
-                      <span className="text-sm text-gray-400">23+ Years Industry Experience</span>
+                      <span className="text-sm text-gray-400">18+ Years Industry Experience</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <Award className="w-4 h-4 text-gold-400" />
@@ -135,14 +135,14 @@ export default function AboutUs() {
                   </div>
 
                   <p className="text-gray-400 mb-4 leading-relaxed">
-                    With over two decades in the mortgage industry, Varun has built a reputation as the go-to expert 
-                    for complex financing scenarios. His deep understanding of MLI Select programs has saved developers 
+                    With over two decades in the mortgage industry, Varun has built a reputation as the go-to expert
+                    for complex financing scenarios. His deep understanding of MLI Select programs has saved developers
                     millions in insurance premiums.
                   </p>
-                  
+
                   <p className="text-gray-400 mb-4 leading-relaxed">
-                    Varun's expertise spans construction financing with progressive draws, self-employed mortgage solutions, 
-                    and multi-provincial transactions. He has successfully navigated challenging files that other brokers 
+                    Varun's expertise spans construction financing with progressive draws, self-employed mortgage solutions,
+                    and multi-provincial transactions. He has successfully navigated challenging files that other brokers
                     deemed impossible.
                   </p>
 
@@ -170,7 +170,7 @@ export default function AboutUs() {
                       <p className="text-gold-400">Co-Founder & Senior Mortgage Advisor</p>
                     </div>
                   </div>
-                  
+
                   <div className="space-y-3 mb-6">
                     <div className="flex items-center gap-2">
                       <Shield className="w-4 h-4 text-gold-400" />
@@ -187,14 +187,14 @@ export default function AboutUs() {
                   </div>
 
                   <p className="text-gray-400 mb-4 leading-relaxed">
-                    Gursharan brings extensive expertise in commercial mortgages and investment property financing. 
-                    His analytical approach and deep understanding of cash flow analysis has helped hundreds of investors 
+                    Gursharan brings extensive expertise in commercial mortgages and investment property financing.
+                    His analytical approach and deep understanding of cash flow analysis has helped hundreds of investors
                     build profitable real estate portfolios.
                   </p>
-                  
+
                   <p className="text-gray-400 mb-4 leading-relaxed">
-                    Known for his patient, educational approach with first-time buyers, Gursharan ensures clients understand 
-                    every aspect of their mortgage. His multi-lingual capabilities serve our diverse client base across 
+                    Known for his patient, educational approach with first-time buyers, Gursharan ensures clients understand
+                    every aspect of their mortgage. His multi-lingual capabilities serve our diverse client base across
                     Western Canada.
                   </p>
 
@@ -212,7 +212,7 @@ export default function AboutUs() {
         {/* Our Expertise */}
         <section className="py-20 px-4">
           <div className="max-w-6xl mx-auto">
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
@@ -289,7 +289,7 @@ export default function AboutUs() {
         {/* Why Choose Us */}
         <section className="py-20 px-4 bg-gradient-to-br from-gray-900/50 to-gray-800/30">
           <div className="max-w-6xl mx-auto">
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
@@ -346,7 +346,7 @@ export default function AboutUs() {
         {/* Contact CTA */}
         <section className="py-20 px-4 bg-gradient-to-br from-gold-900/20 to-amber-900/20 border-t border-gold-500/20">
           <div className="max-w-4xl mx-auto text-center">
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -357,9 +357,9 @@ export default function AboutUs() {
               <p className="text-xl mb-8 text-gray-400">
                 Let's discuss your unique mortgage needs and find the perfect solution.
               </p>
-              
+
               <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-                <a 
+                <a
                   href="https://r.mtg-app.com/varun-chaudhry"
                   target="_blank"
                   rel="noopener noreferrer"
@@ -367,8 +367,8 @@ export default function AboutUs() {
                 >
                   Start Your Application
                 </a>
-                <a 
-                  href="tel:604-593-1550" 
+                <a
+                  href="tel:604-593-1550"
                   className="inline-flex items-center justify-center px-8 py-4 border-2 border-gold-500/50 text-gold-400 rounded-lg hover:bg-gold-500/10 transition-colors"
                 >
                   <Phone className="w-4 h-4 mr-2" />

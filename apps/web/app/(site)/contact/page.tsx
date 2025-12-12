@@ -13,7 +13,7 @@ export default function ContactPage() {
         {/* Hero Section */}
         <section className="py-20 px-4">
           <div className="max-w-6xl mx-auto">
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
@@ -58,7 +58,7 @@ export default function ContactPage() {
                       </a>
                     </div>
                   </div>
-                  
+
                   <div className="flex items-start gap-4">
                     <div className="w-12 h-12 bg-gradient-to-br from-gold-500/20 to-amber-500/20 rounded-xl flex items-center justify-center border border-gold-500/30">
                       <Mail className="w-6 h-6 text-gold-400" />
@@ -206,7 +206,7 @@ export default function ContactPage() {
         {/* Why Choose Us */}
         <section className="py-20 px-4 bg-gradient-to-br from-gray-900/50 to-gray-800/30">
           <div className="max-w-6xl mx-auto">
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
@@ -228,12 +228,12 @@ export default function ContactPage() {
                 <div className="w-16 h-16 bg-gradient-to-br from-gold-500/20 to-amber-500/20 rounded-full flex items-center justify-center border border-gold-500/30 mx-auto mb-4">
                   <Award className="w-8 h-8 text-gold-400" />
                 </div>
-                <h3 className="text-lg font-semibold text-gray-100 mb-2">23+ Years Experience</h3>
+                <h3 className="text-lg font-semibold text-gray-100 mb-2">18+ Years Experience</h3>
                 <p className="text-gray-400">
                   Decades of expertise helping clients navigate complex mortgage solutions across Canada
                 </p>
               </motion.div>
-              
+
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -249,7 +249,7 @@ export default function ContactPage() {
                   Access to exclusive rates and specialized programs like MLI Select for multi-unit properties
                 </p>
               </motion.div>
-              
+
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}

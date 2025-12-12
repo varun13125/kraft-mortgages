@@ -2,11 +2,11 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import Navigation from "@/components/Navigation";
-import { 
-  Hammer, 
-  Calculator, 
-  Building, 
-  CheckCircle, 
+import {
+  Hammer,
+  Calculator,
+  Building,
+  CheckCircle,
   TrendingUp,
   DollarSign,
   Clock,
@@ -35,7 +35,7 @@ export default function ConstructionFinancing() {
       typical: "Competitive rates"
     },
     {
-      title: "Builder Programs", 
+      title: "Builder Programs",
       description: "Specialized financing for professional builders",
       features: ["Volume discounts", "Fast approvals", "Dedicated support", "Portfolio management"],
       icon: Users,
@@ -61,7 +61,7 @@ export default function ConstructionFinancing() {
     {
       title: "Progressive Draw Calculator",
       description: "Calculate draw schedules and interest during construction",
-      href: "/construction/calculators/progressive-draw", 
+      href: "/construction/calculators/progressive-draw",
       icon: Layers,
       popular: true
     },
@@ -89,7 +89,7 @@ export default function ConstructionFinancing() {
       duration: "1-2 weeks"
     },
     {
-      step: "02", 
+      step: "02",
       title: "Construction Loan Approval",
       description: "Final approval and construction loan documentation",
       duration: "1-2 weeks"
@@ -110,7 +110,7 @@ export default function ConstructionFinancing() {
 
   const expertise = [
     {
-      title: "23+ Years Construction Experience",
+      title: "18+ Years Construction Experience",
       description: "Deep understanding of construction financing across residential and commercial projects"
     },
     {
@@ -134,7 +134,7 @@ export default function ConstructionFinancing() {
         {/* Hero Section */}
         <section className="py-20 px-4">
           <div className="max-w-6xl mx-auto">
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
@@ -148,16 +148,16 @@ export default function ConstructionFinancing() {
                 <span className="bg-gradient-to-r from-orange-400 to-red-500 bg-clip-text text-transparent">Construction</span> Financing
               </h1>
               <p className="text-xl text-gray-400 max-w-3xl mx-auto mb-8">
-                Expert construction financing with progressive draws, builder programs, and construction-to-permanent solutions. 23+ years of construction lending expertise.
+                Expert construction financing with progressive draws, builder programs, and construction-to-permanent solutions. 18+ years of construction lending expertise.
               </p>
-              
+
               <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-orange-500/20 p-4 max-w-2xl mx-auto mb-8">
                 <div className="text-lg font-semibold text-orange-400 mb-2">Starting from Prime + 1.00%</div>
                 <div className="text-sm text-gray-400">Progressive draws • Professional inspections • Completion guarantees</div>
               </div>
-              
+
               <div className="flex flex-wrap gap-4 justify-center">
-                <a 
+                <a
                   href="https://r.mtg-app.com/varun-chaudhry"
                   target="_blank"
                   rel="noopener noreferrer"
@@ -165,7 +165,7 @@ export default function ConstructionFinancing() {
                 >
                   Start Your Project
                 </a>
-                <Link 
+                <Link
                   href="#calculators"
                   className="inline-flex items-center justify-center px-6 py-3 border border-orange-500/50 text-orange-400 rounded-lg hover:bg-orange-500/10 transition-colors"
                 >
@@ -179,7 +179,7 @@ export default function ConstructionFinancing() {
         {/* Construction Process */}
         <section className="py-20 px-4 bg-gradient-to-br from-gray-900/50 to-gray-800/30">
           <div className="max-w-6xl mx-auto">
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
@@ -206,7 +206,7 @@ export default function ConstructionFinancing() {
                   {i < process.length - 1 && (
                     <div className="hidden lg:block absolute top-12 left-full w-full h-0.5 bg-gradient-to-r from-orange-500/50 to-transparent transform -translate-y-1/2"></div>
                   )}
-                  
+
                   <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl shadow-2xl border border-gray-700/50 p-6 text-center relative z-10">
                     <div className="w-12 h-12 bg-gradient-to-br from-orange-500/20 to-red-500/20 rounded-full flex items-center justify-center border border-orange-500/30 mx-auto mb-4">
                       <span className="text-lg font-bold text-orange-400">{step.step}</span>
@@ -224,7 +224,7 @@ export default function ConstructionFinancing() {
         {/* Services Grid */}
         <section className="py-20 px-4">
           <div className="max-w-6xl mx-auto">
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
@@ -260,7 +260,7 @@ export default function ConstructionFinancing() {
                       <div className="text-orange-400 font-semibold text-sm">{service.typical}</div>
                     </div>
                   </div>
-                  
+
                   <ul className="space-y-2">
                     {service.features.map((feature, j) => (
                       <li key={j} className="flex items-center gap-2 text-sm text-gray-400">
@@ -278,7 +278,7 @@ export default function ConstructionFinancing() {
         {/* Calculators Section */}
         <section id="calculators" className="py-20 px-4 bg-gradient-to-br from-gray-900/50 to-gray-800/30">
           <div className="max-w-6xl mx-auto">
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
@@ -309,7 +309,7 @@ export default function ConstructionFinancing() {
                       </div>
                     </div>
                   )}
-                  
+
                   <Link href={calc.href as any} className="group">
                     <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl shadow-2xl border border-gray-700/50 p-6 transition-all hover:shadow-orange-500/20 hover:shadow-2xl hover:-translate-y-1">
                       <div className="flex items-center gap-4 mb-4">
@@ -333,7 +333,7 @@ export default function ConstructionFinancing() {
         {/* Why Choose Us */}
         <section className="py-20 px-4">
           <div className="max-w-6xl mx-auto">
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
@@ -368,7 +368,7 @@ export default function ConstructionFinancing() {
         {/* CTA Section */}
         <section className="py-20 px-4 bg-gradient-to-br from-orange-900/20 to-red-900/20 border-t border-orange-500/20">
           <div className="max-w-4xl mx-auto text-center">
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -379,9 +379,9 @@ export default function ConstructionFinancing() {
               <p className="text-xl mb-8 text-gray-400">
                 Our construction financing experts will guide your project from foundation to completion.
               </p>
-              
+
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <a 
+                <a
                   href="https://r.mtg-app.com/varun-chaudhry"
                   target="_blank"
                   rel="noopener noreferrer"
@@ -389,8 +389,8 @@ export default function ConstructionFinancing() {
                 >
                   Start Your Construction Loan
                 </a>
-                <a 
-                  href="tel:604-593-1550" 
+                <a
+                  href="tel:604-593-1550"
                   className="inline-flex items-center justify-center px-8 py-4 border-2 border-orange-500/50 text-orange-400 rounded-lg hover:bg-orange-500/10 transition-colors"
                 >
                   <Phone className="w-5 h-5 mr-2" />

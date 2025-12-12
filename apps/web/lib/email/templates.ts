@@ -1,24 +1,24 @@
 export interface EmailTemplateData {
-  recipientName?: string;
-  calculatorType?: string;
-  calculationResults?: any;
-  reportUrl?: string;
-  appointmentDate?: string;
-  appointmentTime?: string;
-  brokerName?: string;
-  brokerEmail?: string;
-  brokerPhone?: string;
-  companyName?: string;
-  unsubscribeUrl?: string;
-  [key: string]: any;
+    recipientName?: string;
+    calculatorType?: string;
+    calculationResults?: any;
+    reportUrl?: string;
+    appointmentDate?: string;
+    appointmentTime?: string;
+    brokerName?: string;
+    brokerEmail?: string;
+    brokerPhone?: string;
+    companyName?: string;
+    unsubscribeUrl?: string;
+    [key: string]: any;
 }
 
 // Base template wrapper with Kraft Mortgages branding
 const getBaseTemplate = (content: string, data: EmailTemplateData): string => {
-  const recipientName = data.recipientName || 'Valued Client';
-  const unsubscribeUrl = data.unsubscribeUrl || 'https://kraftmortgages.ca/unsubscribe';
-  
-  return `
+    const recipientName = data.recipientName || 'Valued Client';
+    const unsubscribeUrl = data.unsubscribeUrl || 'https://kraftmortgages.ca/unsubscribe';
+
+    return `
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -149,10 +149,10 @@ const getBaseTemplate = (content: string, data: EmailTemplateData): string => {
 
 // Welcome email for new leads
 export const welcomeEmailTemplate = (data: EmailTemplateData): string => {
-  const content = `
+    const content = `
     <p>Thank you for your interest in mortgage services with Kraft Mortgages! I'm excited to help you navigate your mortgage journey.</p>
     
-    <p>As a licensed mortgage broker with over 23 years of experience, I specialize in helping clients across British Columbia, Alberta, and Ontario secure the best mortgage solutions for their unique needs.</p>
+    <p>As a licensed mortgage broker with over 18 years of experience, I specialize in helping clients across British Columbia, Alberta, and Ontario secure the best mortgage solutions for their unique needs.</p>
     
     <div style="background: #e8f4fd; padding: 20px; border-radius: 6px; margin: 20px 0; border-left: 4px solid #D4AF37;">
         <h3 style="color: #2c3e50; margin-bottom: 15px;">🏠 What's Next?</h3>
@@ -183,16 +183,16 @@ export const welcomeEmailTemplate = (data: EmailTemplateData): string => {
     <strong>Varun Chaudhry</strong><br>
     Licensed Mortgage Broker</p>
   `;
-  
-  return getBaseTemplate(content, data);
+
+    return getBaseTemplate(content, data);
 };
 
 // Calculator report email
 export const calculatorReportTemplate = (data: EmailTemplateData): string => {
-  const calculatorType = data.calculatorType || 'mortgage calculation';
-  const reportUrl = data.reportUrl || '#';
-  
-  const content = `
+    const calculatorType = data.calculatorType || 'mortgage calculation';
+    const reportUrl = data.reportUrl || '#';
+
+    const content = `
     <p>Thank you for using our ${calculatorType} tool! Your personalized mortgage report is ready for download.</p>
     
     <div style="background: #e8f4fd; padding: 20px; border-radius: 6px; margin: 20px 0; text-align: center;">
@@ -219,16 +219,16 @@ export const calculatorReportTemplate = (data: EmailTemplateData): string => {
     
     <p><strong>Remember:</strong> These calculations are estimates. Let's discuss your specific situation to ensure you get the most accurate information and best possible rates.</p>
   `;
-  
-  return getBaseTemplate(content, data);
+
+    return getBaseTemplate(content, data);
 };
 
 // Appointment confirmation email
 export const appointmentConfirmationTemplate = (data: EmailTemplateData): string => {
-  const appointmentDate = data.appointmentDate || 'TBD';
-  const appointmentTime = data.appointmentTime || 'TBD';
-  
-  const content = `
+    const appointmentDate = data.appointmentDate || 'TBD';
+    const appointmentTime = data.appointmentTime || 'TBD';
+
+    const content = `
     <p>Great! Your mortgage consultation is confirmed. I'm looking forward to discussing your mortgage needs and helping you find the perfect solution.</p>
     
     <div style="background: #d4edda; padding: 20px; border-radius: 6px; margin: 20px 0; border-left: 4px solid #28a745;">
@@ -266,19 +266,19 @@ export const appointmentConfirmationTemplate = (data: EmailTemplateData): string
     <p>📞 <a href="tel:+16045931550" style="color: #D4AF37;">604-593-1550</a><br>
     📧 <a href="mailto:varun@kraftmortgages.ca" style="color: #D4AF37;">varun@kraftmortgages.ca</a></p>
   `;
-  
-  return getBaseTemplate(content, data);
+
+    return getBaseTemplate(content, data);
 };
 
 // Follow-up email for leads who haven't responded
 export const followUpEmailTemplate = (data: EmailTemplateData): string => {
-  const content = `
+    const content = `
     <p>I wanted to follow up on your recent mortgage inquiry. I know choosing a mortgage broker is an important decision, and I'm here to answer any questions you might have.</p>
     
     <div style="background: #fff3cd; padding: 20px; border-radius: 6px; margin: 20px 0; border-left: 4px solid #D4AF37;">
         <h3 style="color: #856404; margin-bottom: 15px;">🤝 Why Choose Kraft Mortgages?</h3>
         <ul style="color: #856404; margin-left: 20px;">
-            <li><strong>23+ Years Experience:</strong> Deep industry knowledge and relationships</li>
+            <li><strong>18+ Years Experience:</strong> Deep industry knowledge and relationships</li>
             <li><strong>Multi-Province Licensed:</strong> BC, AB, and ON coverage</li>
             <li><strong>Best Rate Guarantee:</strong> We shop 50+ lenders for you</li>
             <li><strong>No Fees to You:</strong> Lenders pay our commission</li>
@@ -303,13 +303,13 @@ export const followUpEmailTemplate = (data: EmailTemplateData): string => {
     <strong>Varun Chaudhry</strong><br>
     Licensed Mortgage Broker</p>
   `;
-  
-  return getBaseTemplate(content, data);
+
+    return getBaseTemplate(content, data);
 };
 
 // Market update newsletter template
 export const marketUpdateTemplate = (data: EmailTemplateData): string => {
-  const content = `
+    const content = `
     <p>Here's your monthly mortgage market update with the latest rates, trends, and opportunities in the Canadian mortgage market.</p>
     
     <div style="background: linear-gradient(135deg, #e8f4fd, #d4edda); padding: 20px; border-radius: 6px; margin: 20px 0;">
@@ -349,13 +349,13 @@ export const marketUpdateTemplate = (data: EmailTemplateData): string => {
     
     <p><strong>Questions about how these rates affect you?</strong> Reply to this email or give me a call. I'm here to help!</p>
   `;
-  
-  return getBaseTemplate(content, data);
+
+    return getBaseTemplate(content, data);
 };
 
 // Renewal reminder email
 export const renewalReminderTemplate = (data: EmailTemplateData): string => {
-  const content = `
+    const content = `
     <p>Your mortgage renewal is coming up, and I want to make sure you get the best possible rate and terms for your next term.</p>
     
     <div style="background: #fff3cd; padding: 20px; border-radius: 6px; margin: 20px 0; border-left: 4px solid #ffc107;">
@@ -392,16 +392,16 @@ export const renewalReminderTemplate = (data: EmailTemplateData): string => {
     
     <p>Let's make sure you're getting the best deal for your next mortgage term. I'm here to help!</p>
   `;
-  
-  return getBaseTemplate(content, data);
+
+    return getBaseTemplate(content, data);
 };
 
 // Export template functions
 export const emailTemplates = {
-  welcome: welcomeEmailTemplate,
-  calculatorReport: calculatorReportTemplate,
-  appointmentConfirmation: appointmentConfirmationTemplate,
-  followUp: followUpEmailTemplate,
-  marketUpdate: marketUpdateTemplate,
-  renewalReminder: renewalReminderTemplate,
+    welcome: welcomeEmailTemplate,
+    calculatorReport: calculatorReportTemplate,
+    appointmentConfirmation: appointmentConfirmationTemplate,
+    followUp: followUpEmailTemplate,
+    marketUpdate: marketUpdateTemplate,
+    renewalReminder: renewalReminderTemplate,
 };
