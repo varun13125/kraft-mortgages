@@ -185,6 +185,7 @@ export interface Post {
   };
   metaDescription?: string;
   keywords?: string[];
+  categories?: string[];
   embeddings?: number[][];
 }
 
@@ -297,7 +298,8 @@ export async function getPost(slug: string): Promise<Post | null> {
         license: 'BCFSA #M08001935'
       },
       metaDescription: 'A comprehensive guide to construction mortgages in BC, demystifying the process and positioning Kraft Mortgages as the essential partner for any building project.',
-      keywords: ['construction-mortgage', 'bc-real-estate', 'building-finance', 'draw-mortgage']
+      keywords: ['construction-mortgage', 'bc-real-estate', 'building-finance', 'draw-mortgage'],
+      categories: ['Construction Financing', 'Mortgage Guide']
     };
   }
   if (slug === 'the-developers-edge') {
@@ -316,7 +318,8 @@ export async function getPost(slug: string): Promise<Post | null> {
         license: 'BCFSA #M08001935'
       },
       metaDescription: "For multi-unit residential developers in British Columbia, profit margins are everything. Learn how the CMHC MLI Select program can unlock up to 95% LTV...",
-      keywords: ['mli-select', 'cmhc', 'development-financing', 'surrey', 'vancouver']
+      keywords: ['mli-select', 'cmhc', 'development-financing', 'surrey', 'vancouver'],
+      categories: ['Development Financing', 'MLI Select']
     };
   }
   if (slug === 'bank-of-canada-rate-hold-december-2025') {
@@ -404,7 +407,8 @@ export async function getPost(slug: string): Promise<Post | null> {
         license: 'BCFSA #M08001935'
       },
       metaDescription: 'Bank of Canada announced holding its key overnight rate at 2.25%. After a year of aggressive cuts, the easing cycle is likely over. What this new reality means for your mortgage strategy in 2026.',
-      keywords: ['Bank of Canada', 'interest-rates', 'mortgage-strategy', '2026', 'vancouver-real-estate', 'surrey-mortgages', 'fixed-vs-variable']
+      keywords: ['Bank of Canada', 'interest-rates', 'mortgage-strategy', '2026', 'vancouver-real-estate', 'surrey-mortgages', 'fixed-vs-variable'],
+      categories: ['Market News', 'Interest Rates']
     };
   }
   if (slug === 'mli-select-infinite-return-alberta') {
@@ -577,7 +581,8 @@ export async function getPost(slug: string): Promise<Post | null> {
         license: 'BCFSA #M08001935'
       },
       metaDescription: 'Discover why CMHC MLI Select creates infinite returns in Alberta but negative cash flow in Vancouver. Compare 95% LTV multi-family deals in BC vs. Edmonton.',
-      keywords: ['MLI-Select', 'CMHC', 'Alberta-investing', 'infinite-returns', 'multi-family', '95-LTV', '50-year-amortization', 'Edmonton']
+      keywords: ['MLI-Select', 'CMHC', 'Alberta-investing', 'infinite-returns', 'multi-family', '95-LTV', '50-year-amortization', 'Edmonton'],
+      categories: ['Real Estate Investing', 'MLI Select']
     };
   }
   if (slug === 'condo-crunch-surrey-vancouver-low-appraisals') {
@@ -710,7 +715,8 @@ export async function getPost(slug: string): Promise<Post | null> {
         license: 'BCFSA #M08001935'
       },
       metaDescription: 'Presale condo appraisal came in low? Learn how Kraft Mortgages 85% LTV rescue mortgage can save your deposit and close your Surrey or Vancouver condo.',
-      keywords: ['low-appraisal', 'presale-condo', 'Surrey', 'Vancouver', '85-LTV', 'rescue-mortgage', 'condo-completion', 'appraisal-gap']
+      keywords: ['low-appraisal', 'presale-condo', 'Surrey', 'Vancouver', '85-LTV', 'rescue-mortgage', 'condo-completion', 'appraisal-gap'],
+      categories: ['Mortgage Solutions', 'BC Real Estate']
     };
   }
   if (slug === 'renewal-cliff-2026-mortgage-strategy') {
@@ -836,7 +842,8 @@ export async function getPost(slug: string): Promise<Post | null> {
         license: 'BCFSA #M08001935'
       },
       metaDescription: '60% of Canadian mortgages renew by 2026. Learn 3 strategies to handle payment shock from pandemic-low rates including amortization reset and switch market options.',
-      keywords: ['renewal-cliff', 'mortgage-renewal', '2026', 'payment-shock', 'amortization-reset', 'Surrey', 'Vancouver', 'interest-rates']
+      keywords: ['renewal-cliff', 'mortgage-renewal', '2026', 'payment-shock', 'amortization-reset', 'Surrey', 'Vancouver', 'interest-rates'],
+      categories: ['Mortgage Strategy', 'Market News']
     };
   }
   if (slug === 'alberta-advantage-where-to-invest-2026') {
@@ -923,7 +930,8 @@ export async function getPost(slug: string): Promise<Post | null> {
         license: 'BCFSA #M08001935'
       },
       metaDescription: 'The Alberta Migration continues but Calgary may be played out. Discover why Edmonton is the 2026 opportunity for BC real estate investors seeking positive cash flow.',
-      keywords: ['Alberta-investing', 'Edmonton-real-estate', 'Calgary-vs-Edmonton', '2026', 'investment-property', 'cash-flow', 'BC-investors']
+      keywords: ['Alberta-investing', 'Edmonton-real-estate', 'Calgary-vs-Edmonton', '2026', 'investment-property', 'cash-flow', 'BC-investors'],
+      categories: ['Real Estate Investing', 'Market Trends']
     };
   }
   if (slug === 'beyond-big-banks-complex-mortgage-approval') {
@@ -978,7 +986,8 @@ export async function getPost(slug: string): Promise<Post | null> {
         license: 'BCFSA #M08001935'
       },
       metaDescription: 'We specialize in helping self-employed business owners and new Canadians get mortgage approval when traditional banks say no. Learn our expert strategies for passing the stress test.',
-      keywords: ['stress-test', 'self-employed', 'mortgage-approval', 'complex-files', 'alternative-lenders']
+      keywords: ['stress-test', 'self-employed', 'mortgage-approval', 'complex-files', 'alternative-lenders'],
+      categories: ['Mortgage Solutions', 'Self-Employed']
     };
   }
 
@@ -1044,7 +1053,8 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
       license: 'BCFSA #M08001935'
     },
     metaDescription: 'We specialize in helping self-employed business owners and new Canadians get mortgage approval when traditional banks say no. Learn our expert strategies for passing the stress test.',
-    keywords: ['stress-test', 'self-employed', 'mortgage-approval', 'complex-files', 'alternative-lenders']
+    keywords: ['stress-test', 'self-employed', 'mortgage-approval', 'complex-files', 'alternative-lenders'],
+    categories: ['Mortgage Solutions', 'Self-Employed']
   };
 
   const mockPost2: Post = {
@@ -1060,7 +1070,8 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
       license: 'BCFSA #M08001935'
     },
     metaDescription: "For multi-unit residential developers in British Columbia, profit margins are everything. Learn how the CMHC MLI Select program can unlock up to 95% LTV...",
-    keywords: ['mli-select', 'cmhc', 'development-financing', 'surrey', 'vancouver']
+    keywords: ['mli-select', 'cmhc', 'development-financing', 'surrey', 'vancouver'],
+    categories: ['Development Financing', 'MLI Select']
   };
 
   const mockPost3: Post = {
@@ -1076,7 +1087,8 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
       license: 'BCFSA #M08001935'
     },
     metaDescription: 'A comprehensive guide to construction mortgages in BC, demystifying the process and positioning Kraft Mortgages as the essential partner for any building project.',
-    keywords: ['construction-mortgage', 'bc-real-estate', 'building-finance', 'draw-mortgage']
+    keywords: ['construction-mortgage', 'bc-real-estate', 'building-finance', 'draw-mortgage'],
+    categories: ['Construction Financing', 'Mortgage Guide']
   };
 
   const mockPost4: Post = {
@@ -1230,7 +1242,8 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
       license: 'BCFSA #M08001935'
     },
     metaDescription: 'Bank of Canada announced holding its key overnight rate at 2.25%. After a year of aggressive cuts, the easing cycle is likely over. What this new reality means for your mortgage strategy in 2026.',
-    keywords: ['Bank of Canada', 'interest-rates', 'mortgage-strategy', '2026', 'vancouver-real-estate', 'surrey-mortgages', 'fixed-vs-variable']
+    keywords: ['Bank of Canada', 'interest-rates', 'mortgage-strategy', '2026', 'vancouver-real-estate', 'surrey-mortgages', 'fixed-vs-variable'],
+    categories: ['Market News', 'Interest Rates']
   };
 
   const mockPost5: Post = {
@@ -1332,7 +1345,8 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
       license: 'BCFSA #M08001935'
     },
     metaDescription: 'The Alberta Migration continues but Calgary may be played out. Discover why Edmonton is the 2026 opportunity for BC real estate investors seeking positive cash flow.',
-    keywords: ['Alberta-investing', 'Edmonton-real-estate', 'Calgary-vs-Edmonton', '2026', 'investment-property', 'cash-flow', 'BC-investors']
+    keywords: ['Alberta-investing', 'Edmonton-real-estate', 'Calgary-vs-Edmonton', '2026', 'investment-property', 'cash-flow', 'BC-investors'],
+    categories: ['Real Estate Investing', 'Market Trends']
   };
 
   const mockPost6: Post = {
@@ -1372,7 +1386,8 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
       license: 'BCFSA #M08001935'
     },
     metaDescription: 'Discover why CMHC MLI Select creates infinite returns in Alberta but negative cash flow in Vancouver. Compare 95% LTV multi-family deals.',
-    keywords: ['MLI-Select', 'CMHC', 'Alberta-investing', 'infinite-returns', 'multi-family', '95-LTV', '50-year-amortization']
+    keywords: ['MLI-Select', 'CMHC', 'Alberta-investing', 'infinite-returns', 'multi-family', '95-LTV', '50-year-amortization'],
+    categories: ['Real Estate Investing', 'MLI Select']
   };
 
   const mockPost7: Post = {
@@ -1412,7 +1427,8 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
       license: 'BCFSA #M08001935'
     },
     metaDescription: 'Presale condo appraisal came in low? Learn how Kraft Mortgages 85% LTV rescue mortgage can save your deposit and close your Surrey or Vancouver condo.',
-    keywords: ['low-appraisal', 'presale-condo', 'Surrey', 'Vancouver', '85-LTV', 'rescue-mortgage']
+    keywords: ['low-appraisal', 'presale-condo', 'Surrey', 'Vancouver', '85-LTV', 'rescue-mortgage'],
+    categories: ['Mortgage Solutions', 'BC Real Estate']
   };
 
   const mockPost8: Post = {
@@ -1446,7 +1462,8 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
       license: 'BCFSA #M08001935'
     },
     metaDescription: '60% of Canadian mortgages renew by 2026. Learn 3 strategies to handle payment shock from pandemic-low rates.',
-    keywords: ['renewal-cliff', 'mortgage-renewal', '2026', 'payment-shock', 'amortization-reset']
+    keywords: ['renewal-cliff', 'mortgage-renewal', '2026', 'payment-shock', 'amortization-reset'],
+    categories: ['Mortgage Strategy', 'Market News']
   };
 
   try {
