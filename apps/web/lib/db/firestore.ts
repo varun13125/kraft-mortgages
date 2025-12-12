@@ -713,6 +713,132 @@ export async function getPost(slug: string): Promise<Post | null> {
       keywords: ['low-appraisal', 'presale-condo', 'Surrey', 'Vancouver', '85-LTV', 'rescue-mortgage', 'condo-completion', 'appraisal-gap']
     };
   }
+  if (slug === 'renewal-cliff-2026-mortgage-strategy') {
+    const blogContent = `<article>
+<h2>The "Renewal Cliff" is Coming: 60% of Canadian Mortgages Renew by 2026</h2>
+<p><strong>Date:</strong> December 12, 2025 | <strong>Category:</strong> Mortgage Strategy, Market News | <strong>Reading Time:</strong> 6 Minutes</p>
+
+<p style="text-align: center; color: #9ca3af; font-size: 0.875rem; margin: 1.5rem 0;">[IMAGE: A calendar flipped to 2026 with a pair of glasses and a calculator on top of a mortgage renewal letter.]</p>
+
+<p style="font-size: 1.1em; line-height: 1.8;">If you bought your home or renewed your mortgage during the "pandemic lows" of 2020 or 2021, you likely secured an incredible rate—perhaps as low as <strong style="color: #10b981;">1.79%</strong>.</p>
+
+<p><strong>But the clock is ticking.</strong></p>
+
+<p>A new report confirms that <span style="font-size: 1.2em; font-weight: bold; color: #f59e0b;">60% of all outstanding mortgages in Canada</span> will renew between now and the end of 2026. For millions of homeowners in Surrey and Vancouver, this means trading a record-low rate for a market rate that could be <strong style="color: #ef4444;">2% to 3% higher</strong>.</p>
+
+<p>The media calls it the "Renewal Cliff." At <strong>Kraft Mortgages</strong>, we prefer to call it a <strong style="color: #10b981;">"Strategy Pivot."</strong> Here is exactly what you need to know to handle the jump.</p>
+
+<hr/>
+
+<h3>The Math: What Does "Payment Shock" Actually Look Like?</h3>
+
+<p>Let's look at a typical Surrey mortgage to see the real impact.</p>
+
+<div style="background: linear-gradient(135deg, #1f2937 0%, #374151 100%); border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0; border-left: 4px solid #f59e0b;">
+  <h4 style="color: #f59e0b; margin: 0 0 1rem 0;">📋 The Scenario</h4>
+  <p style="color: #d1d5db; margin: 0;">You have a <strong style="color: #ffffff;">$600,000 mortgage balance</strong>.</p>
+  <p style="color: #d1d5db; margin: 0.5rem 0 0 0;"><strong>Current Rate (2021):</strong> <span style="color: #10b981;">1.99%</span></p>
+  <p style="color: #d1d5db; margin: 0.5rem 0 0 0;"><strong>Renewal Rate (2026 Forecast):</strong> <span style="color: #ef4444;">~4.49%</span></p>
+</div>
+
+<!-- Payment Shock Table -->
+<div style="background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 100%); border-radius: 12px; padding: 1.5rem; margin: 2rem 0;">
+  <h4 style="color: #ffffff; margin: 0 0 1rem 0; text-align: center;">⚡ THE PAYMENT SHOCK REALITY</h4>
+  
+  <div style="overflow-x: auto;">
+    <table style="width: 100%; border-collapse: collapse; background: rgba(0,0,0,0.3); border-radius: 8px; overflow: hidden;">
+      <thead>
+        <tr>
+          <th style="padding: 1rem; text-align: left; color: #fecaca; font-weight: 600; border-bottom: 2px solid #ef4444;">Feature</th>
+          <th style="padding: 1rem; text-align: center; color: #10b981; font-weight: 600; border-bottom: 2px solid #ef4444;">Your Old Mortgage</th>
+          <th style="padding: 1rem; text-align: center; color: #ef4444; font-weight: 600; border-bottom: 2px solid #ef4444;">Your New Renewal</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="padding: 1rem; color: #fecaca; border-bottom: 1px solid #7f1d1d;">Interest Rate</td>
+          <td style="padding: 1rem; text-align: center; color: #10b981; font-weight: 600; border-bottom: 1px solid #7f1d1d;">1.99%</td>
+          <td style="padding: 1rem; text-align: center; color: #ef4444; font-weight: 700; border-bottom: 1px solid #7f1d1d;">4.49%</td>
+        </tr>
+        <tr style="background: rgba(0,0,0,0.2);">
+          <td style="padding: 1rem; color: #fecaca; border-bottom: 1px solid #7f1d1d;">Monthly Payment</td>
+          <td style="padding: 1rem; text-align: center; color: #10b981; font-weight: 600; border-bottom: 1px solid #7f1d1d;">~$2,500</td>
+          <td style="padding: 1rem; text-align: center; color: #ef4444; font-weight: 700; border-bottom: 1px solid #7f1d1d;">~$3,300</td>
+        </tr>
+        <tr style="background: rgba(239, 68, 68, 0.3);">
+          <td style="padding: 1rem; color: #ffffff; font-weight: 600;">The Increase</td>
+          <td style="padding: 1rem; text-align: center; color: #6b7280;">—</td>
+          <td style="padding: 1rem; text-align: center; color: #ffffff; font-weight: 700; font-size: 1.25em;">+$800/month</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
+  <p style="color: #fecaca; text-align: center; margin: 1rem 0 0 0; font-size: 1.1em;">That's an extra <strong style="color: #ffffff;">$9,600 per year</strong> in after-tax income you need to find.</p>
+</div>
+
+<hr/>
+
+<h3>Don't Just "Auto-Renew" (The Bank's Trap)</h3>
+
+<div style="background: linear-gradient(135deg, #1f2937 0%, #374151 100%); border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0; border-left: 4px solid #ef4444;">
+  <p style="color: #d1d5db; margin: 0;">The biggest mistake you can make is waiting for your bank's renewal letter to arrive in the mail and simply signing it out of fear. <strong style="color: #fca5a5;">Banks bank on your inertia.</strong> They often offer existing clients a rate that is <strong>0.10% to 0.20% higher</strong> than what they offer new clients, knowing you probably won't shop around.</p>
+</div>
+
+<hr/>
+
+<h3>3 Strategies to Soften the Landing</h3>
+
+<p>If you are facing a renewal in 2025 or 2026, you have options beyond just "paying more."</p>
+
+<div style="background: linear-gradient(135deg, #1f2937 0%, #374151 100%); border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0; border-left: 4px solid #10b981;">
+  <h4 style="color: #10b981; margin: 0 0 0.75rem 0;">1. The "Amortization Reset"</h4>
+  <p style="color: #d1d5db; margin: 0 0 0.5rem 0;">If the new monthly payment destroys your household budget, we can look at <strong style="color: #ffffff;">extending your amortization</strong>.</p>
+  <p style="color: #9ca3af; margin: 0 0 0.5rem 0; font-size: 0.9em;"><em>How it works:</em> If you have 20 years left on your mortgage, we might be able to refinance and reset it back to 25 or 30 years.</p>
+  <p style="color: #10b981; margin: 0; font-size: 0.9em;"><strong>The Result:</strong> This spreads the payments out, significantly lowering your monthly obligation.</p>
+</div>
+
+<div style="background: linear-gradient(135deg, #1f2937 0%, #374151 100%); border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0; border-left: 4px solid #3b82f6;">
+  <h4 style="color: #3b82f6; margin: 0 0 0.75rem 0;">2. Shop the "Switch" Market</h4>
+  <p style="color: #d1d5db; margin: 0 0 0.5rem 0;">Thanks to new OSFI rules, it is now easier to switch lenders at renewal <strong style="color: #ffffff;">without passing the Stress Test</strong> (for uninsured mortgages).</p>
+  <p style="color: #3b82f6; margin: 0; font-size: 0.9em;"><strong>The Opportunity:</strong> We can take your file to 50+ lenders to find who is hungriest for your business, potentially saving you thousands over the term.</p>
+</div>
+
+<div style="background: linear-gradient(135deg, #1f2937 0%, #374151 100%); border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0; border-left: 4px solid #f59e0b;">
+  <h4 style="color: #f59e0b; margin: 0 0 0.75rem 0;">3. Pre-Payment Strategy (Start Now)</h4>
+  <p style="color: #d1d5db; margin: 0 0 0.5rem 0;">If your renewal is still 6-12 months away, use your current "low rate" privileges to <strong style="color: #ffffff;">make lump sum payments now</strong>.</p>
+  <p style="color: #f59e0b; margin: 0; font-size: 0.9em;"><strong>The Logic:</strong> Every $1,000 you knock off the principal today is $1,000 you won't have to renew at 4.5% later.</p>
+</div>
+
+<hr/>
+
+<h3>The Bottom Line</h3>
+
+<p>The "Renewal Cliff" is real, but it doesn't have to push you over the edge. The key is starting the conversation <strong style="color: #f59e0b;">6 months early</strong>, not 2 weeks before your term expires.</p>
+
+<div style="background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); border-radius: 12px; padding: 2rem; margin: 2rem 0; text-align: center;">
+  <p style="color: #ffffff; font-size: 1.25em; margin: 0 0 1rem 0; font-weight: 600;">Is your renewal coming up in 2026?</p>
+  <a href="https://calendar.app.google/HcbcfrKKtBvcPQqd8" target="_blank" rel="noopener noreferrer" style="display: inline-block; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: #1f2937; padding: 16px 32px; border: none; border-radius: 8px; font-size: 18px; font-weight: 700; cursor: pointer; text-decoration: none; box-shadow: 0 4px 14px rgba(245, 158, 11, 0.4);">📅 Book a 15-min Renewal Review</a>
+  <p style="color: #bfdbfe; font-size: 0.9em; margin: 1rem 0 0 0;">Let's run the numbers on an "Amortization Reset" and see how much cash flow we can save you.</p>
+</div>
+</article>`;
+
+    return {
+      slug: 'renewal-cliff-2026-mortgage-strategy',
+      title: 'The "Renewal Cliff" is Coming: 60% of Canadian Mortgages Renew by 2026 (Are You Ready?)',
+      markdown: blogContent,
+      html: blogContent,
+      status: 'published' as const,
+      publishedAt: new Date('2025-12-12T12:00:00Z'),
+      author: {
+        name: 'Varun Chaudhry',
+        title: 'Licensed Mortgage Broker',
+        license: 'BCFSA #M08001935'
+      },
+      metaDescription: '60% of Canadian mortgages renew by 2026. Learn 3 strategies to handle payment shock from pandemic-low rates including amortization reset and switch market options.',
+      keywords: ['renewal-cliff', 'mortgage-renewal', '2026', 'payment-shock', 'amortization-reset', 'Surrey', 'Vancouver', 'interest-rates']
+    };
+  }
   if (slug === 'alberta-advantage-where-to-invest-2026') {
     const blogContent = `<article>
 <h2>The "Alberta Advantage" Hasn't Vanished—It Just Moved North</h2>
@@ -1289,6 +1415,40 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
     keywords: ['low-appraisal', 'presale-condo', 'Surrey', 'Vancouver', '85-LTV', 'rescue-mortgage']
   };
 
+  const mockPost8: Post = {
+    slug: 'renewal-cliff-2026-mortgage-strategy',
+    title: 'The "Renewal Cliff" is Coming: 60% of Canadian Mortgages Renew by 2026 (Are You Ready?)',
+    markdown: `<article>
+<h2>The "Renewal Cliff" is Coming: 60% Renew by 2026</h2>
+<p><strong>Date:</strong> December 12, 2025 | <strong>Category:</strong> Mortgage Strategy, Market News | <strong>Reading Time:</strong> 6 Minutes</p>
+
+<p>If you locked in at <strong style="color: #10b981;">1.99%</strong> in 2021, you're about to renew at <strong style="color: #ef4444;">4.49%</strong>.</p>
+
+<p><strong>Payment Shock:</strong> $2,500/month → $3,300/month = <strong style="color: #ef4444;">+$800/month</strong></p>
+
+<p>We have 3 strategies: Amortization Reset, Shop the Switch Market, Pre-Payment Strategy. Book a 15-min renewal review today.</p>
+</article>`,
+    html: `<article>
+<h2>The "Renewal Cliff" is Coming: 60% Renew by 2026</h2>
+<p><strong>Date:</strong> December 12, 2025 | <strong>Category:</strong> Mortgage Strategy, Market News | <strong>Reading Time:</strong> 6 Minutes</p>
+
+<p>If you locked in at <strong style="color: #10b981;">1.99%</strong> in 2021, you're about to renew at <strong style="color: #ef4444;">4.49%</strong>.</p>
+
+<p><strong>Payment Shock:</strong> $2,500/month → $3,300/month = <strong style="color: #ef4444;">+$800/month</strong></p>
+
+<p>We have 3 strategies: Amortization Reset, Shop the Switch Market, Pre-Payment Strategy. Book a 15-min renewal review today.</p>
+</article>`,
+    status: 'published' as const,
+    publishedAt: new Date('2025-12-12T12:00:00Z'),
+    author: {
+      name: 'Varun Chaudhry',
+      title: 'Licensed Mortgage Broker',
+      license: 'BCFSA #M08001935'
+    },
+    metaDescription: '60% of Canadian mortgages renew by 2026. Learn 3 strategies to handle payment shock from pandemic-low rates.',
+    keywords: ['renewal-cliff', 'mortgage-renewal', '2026', 'payment-shock', 'amortization-reset']
+  };
+
   try {
     const snapshot = await (await postsCol())
       .orderBy('publishedAt', 'desc')
@@ -1301,7 +1461,7 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
     })) as Post[];
 
     // Combine our mock post with Firestore posts and sort by date
-    const allPosts = [mockPost, mockPost2, mockPost3, mockPost4, mockPost5, mockPost6, mockPost7, ...firestorePosts].sort((a, b) =>
+    const allPosts = [mockPost, mockPost2, mockPost3, mockPost4, mockPost5, mockPost6, mockPost7, mockPost8, ...firestorePosts].sort((a, b) =>
       new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
     );
 
@@ -1309,6 +1469,6 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
   } catch (error) {
     console.error('Error fetching recent posts:', error);
     // Return only our mock post if Firestore fails
-    return [mockPost, mockPost2, mockPost3, mockPost4, mockPost5, mockPost6, mockPost7];
+    return [mockPost, mockPost2, mockPost3, mockPost4, mockPost5, mockPost6, mockPost7, mockPost8];
   }
 }
