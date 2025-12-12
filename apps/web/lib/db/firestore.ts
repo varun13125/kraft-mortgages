@@ -410,7 +410,7 @@ export async function getPost(slug: string): Promise<Post | null> {
   if (slug === 'mli-select-infinite-return-alberta') {
     const blogContent = `<article>
 <h2>The "Infinite Return" Loop: Why CMHC MLI Select Was Made for Alberta (Not Vancouver)</h2>
-<p><strong>Date:</strong> December 13, 2025 | <strong>Category:</strong> Advanced Real Estate Strategy | <strong>Reading Time:</strong> 6 Minutes</p>
+<p><strong>Date:</strong> December 12, 2025 | <strong>Category:</strong> Advanced Real Estate Strategy | <strong>Reading Time:</strong> 6 Minutes</p>
 
 <p>If you are a real estate investor, you've heard the buzzwords: <span style="font-size: 1.25em; font-weight: bold; color: #f59e0b;">95% Loan-to-Value</span>. <span style="font-size: 1.25em; font-weight: bold; color: #f59e0b;">50-Year Amortization</span>.</p>
 
@@ -570,7 +570,7 @@ export async function getPost(slug: string): Promise<Post | null> {
       markdown: blogContent,
       html: blogContent,
       status: 'published' as const,
-      publishedAt: new Date('2025-12-13T08:00:00Z'),
+      publishedAt: new Date('2025-12-12T08:00:00Z'),
       author: {
         name: 'Varun Chaudhry',
         title: 'Licensed Mortgage Broker',
@@ -1081,7 +1081,7 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
     title: 'The "Infinite Return" Loop: Why CMHC MLI Select Was Made for Alberta (Not Vancouver)',
     markdown: `<article>
 <h2>The "Infinite Return" Loop: Why CMHC MLI Select Was Made for Alberta</h2>
-<p><strong>Date:</strong> December 13, 2025 | <strong>Category:</strong> Advanced Real Estate Strategy | <strong>Reading Time:</strong> 6 Minutes</p>
+<p><strong>Date:</strong> December 12, 2025 | <strong>Category:</strong> Advanced Real Estate Strategy | <strong>Reading Time:</strong> 6 Minutes</p>
 
 <p>The CMHC MLI Select program offers <strong style="color: #f59e0b;">95% LTV</strong> and <strong style="color: #f59e0b;">50-Year Amortization</strong> for multi-family investors. But here's the truth: <strong style="color: #ef4444;">it's mathematically broken in Vancouver</strong>.</p>
 
@@ -1094,7 +1094,7 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
 </article>`,
     html: `<article>
 <h2>The "Infinite Return" Loop: Why CMHC MLI Select Was Made for Alberta</h2>
-<p><strong>Date:</strong> December 13, 2025 | <strong>Category:</strong> Advanced Real Estate Strategy | <strong>Reading Time:</strong> 6 Minutes</p>
+<p><strong>Date:</strong> December 12, 2025 | <strong>Category:</strong> Advanced Real Estate Strategy | <strong>Reading Time:</strong> 6 Minutes</p>
 
 <p>The CMHC MLI Select program offers <strong style="color: #f59e0b;">95% LTV</strong> and <strong style="color: #f59e0b;">50-Year Amortization</strong> for multi-family investors. But here's the truth: <strong style="color: #ef4444;">it's mathematically broken in Vancouver</strong>.</p>
 
@@ -1106,7 +1106,7 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
 <p>Ready to stop parking money and start multiplying it? Book a Strategy Call to structure your Alberta MLI Select deal.</p>
 </article>`,
     status: 'published' as const,
-    publishedAt: new Date('2025-12-13T08:00:00Z'),
+    publishedAt: new Date('2025-12-12T08:00:00Z'),
     author: {
       name: 'Varun Chaudhry',
       title: 'Licensed Mortgage Broker',
