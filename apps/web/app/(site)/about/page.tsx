@@ -174,7 +174,7 @@ export default function AboutUs() {
                   <div className="space-y-3 mb-6">
                     <div className="flex items-center gap-2">
                       <Shield className="w-4 h-4 text-gold-400" />
-                      <span className="text-sm text-gray-400">15+ Years Industry Experience</span>
+                      <span className="text-sm text-gray-400">18+ Years Industry Experience</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <Building className="w-4 h-4 text-gold-400" />
