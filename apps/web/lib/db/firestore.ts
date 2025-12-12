@@ -17,19 +17,19 @@ async function initializeAdmin() {
     console.log('Firebase already initialized');
     return;
   }
-  
+
   console.log('Initializing Firebase Admin...');
-  
+
   // Skip during build or if no credentials
   if (!process.env.FIREBASE_SERVICE_ACCOUNT_JSON && !process.env.FIREBASE_PROJECT_ID) {
     console.log('No Firebase credentials found, skipping initialization');
     return;
   }
-  
+
   await initializeFirebase();
-  
+
   let serviceAccount;
-  
+
   // Try using complete service account JSON first (recommended)
   if (process.env.FIREBASE_SERVICE_ACCOUNT_JSON) {
     try {
@@ -39,18 +39,18 @@ async function initializeAdmin() {
       return;
     }
   }
-  
+
   // Fallback to individual environment variables
   if (!serviceAccount) {
     const projectId = process.env.FIREBASE_PROJECT_ID;
     const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
     let privateKey = process.env.FIREBASE_PRIVATE_KEY;
-    
+
     // Skip initialization if required env vars are missing
     if (!projectId || !clientEmail || !privateKey) {
       return;
     }
-    
+
     // Handle different private key formats
     if (privateKey) {
       // If it's base64 encoded, decode it
@@ -61,7 +61,7 @@ async function initializeAdmin() {
           console.log('Private key is not base64, using as-is');
         }
       }
-      
+
       // Replace literal \n with actual newlines
       privateKey = privateKey.replace(/\\n/g, '\n');
     }
@@ -94,7 +94,7 @@ async function initializeAdmin() {
 // Safe database getter with build-time fallback
 async function getDb() {
   await initializeAdmin();
-  
+
   // Debug logging
   console.log('getDb debug:', {
     isInitialized,
@@ -102,7 +102,7 @@ async function getDb() {
     hasGetFirestore: !!getFirestore,
     adminAppsLength: admin?.apps?.length || 0
   });
-  
+
   if (!isInitialized || !admin || !getFirestore) {
     console.log('Using mock database - Firebase not properly initialized');
     // Return a mock object for build time or when Firebase isn't available
@@ -119,12 +119,12 @@ async function getDb() {
       limit: () => mockCollection,
       get: () => Promise.resolve({ docs: [], empty: true }),
     };
-    
+
     return {
       collection: () => mockCollection,
     } as any;
   }
-  
+
   try {
     // Connect to the correct database (default is in nam5 region)
     return getFirestore();
@@ -189,8 +189,8 @@ export interface Post {
 }
 
 // Export db for backward compatibility
-export const db = { 
-  collection: async (name: string) => (await getDb()).collection(name) 
+export const db = {
+  collection: async (name: string) => (await getDb()).collection(name)
 };
 
 // Collection helpers
@@ -215,7 +215,7 @@ export async function createRun(data: Omit<Run, 'id'>): Promise<string> {
 export async function getRun(runId: string): Promise<Run | null> {
   const doc = await (await runsCol()).doc(runId).get();
   if (!doc.exists) return null;
-  
+
   return {
     id: doc.id,
     ...doc.data(),
@@ -237,7 +237,7 @@ export async function updateRunStep(runId: string, stepIndex: number, stepData: 
   const timestampData: any = {
     ...stepData,
   };
-  
+
   // Only add timestamp fields if they have values
   if (stepData.startedAt) {
     await initializeFirebase();
@@ -245,14 +245,14 @@ export async function updateRunStep(runId: string, stepIndex: number, stepData: 
       timestampData.startedAt = admin.firestore.Timestamp.fromDate(stepData.startedAt);
     }
   }
-  
+
   if (stepData.finishedAt) {
     await initializeFirebase();
     if (admin) {
       timestampData.finishedAt = admin.firestore.Timestamp.fromDate(stepData.finishedAt);
     }
   }
-  
+
   await (await runsCol()).doc(runId).update({
     [`steps.${stepIndex}`]: timestampData,
   });
@@ -264,7 +264,7 @@ export async function isAdmin(uid: string): Promise<boolean> {
     console.log('Admin bypass: granting admin access to hardcoded UUID');
     return true;
   }
-  
+
   const doc = await (await adminsCol()).doc(uid).get();
   return doc.exists;
 }
@@ -272,7 +272,7 @@ export async function isAdmin(uid: string): Promise<boolean> {
 export async function savePost(post: Post): Promise<void> {
   await initializeFirebase();
   const timestampData = admin ? admin.firestore.Timestamp.fromDate(post.publishedAt) : post.publishedAt;
-  
+
   await (await postsCol()).doc(post.slug).set({
     ...post,
     publishedAt: timestampData,
@@ -317,6 +317,94 @@ export async function getPost(slug: string): Promise<Post | null> {
       },
       metaDescription: "For multi-unit residential developers in British Columbia, profit margins are everything. Learn how the CMHC MLI Select program can unlock up to 95% LTV...",
       keywords: ['mli-select', 'cmhc', 'development-financing', 'surrey', 'vancouver']
+    };
+  }
+  if (slug === 'bank-of-canada-rate-hold-december-2025') {
+    const blogContent = `<article>
+<h2>The "Wait and See" Is Over: Bank of Canada Holds Rates at 2.25%</h2>
+<p><strong>Date:</strong> December 11, 2025 | <strong>Category:</strong> Market Update, Mortgage Strategy | <strong>Reading Time:</strong> 4 Minutes</p>
+
+<p>If you've been sitting on the sidelines waiting for mortgage rates to hit rock bottom, the Bank of Canada just sent a clear signal: <strong>we have arrived</strong>.</p>
+
+<p>On December 10, 2025, the Bank of Canada announced it is holding its key overnight rate at <strong>2.25%</strong>. After a year of aggressive cuts—dropping a full 1.00% in 2025 alone—the Bank has signaled that the easing cycle is likely over for now.</p>
+
+<p>For homeowners and buyers in Surrey and Vancouver, this marks a <strong>critical pivot point</strong>. The era of "rapidly falling rates" is shifting to an era of "stability." Here is what this new reality means for your mortgage strategy in 2026.</p>
+
+<hr/>
+
+<h3>The News Breakdown: Why the Pause?</h3>
+
+<p>Governor Tiff Macklem stated that the current rate of 2.25% is "at about the right level" to keep inflation near the 2% target while supporting the economy.</p>
+
+<p><strong>The Good News:</strong> The economy grew a surprisingly strong 2.6% in Q3. The recession fears that plagued early 2025 have largely subsided.</p>
+
+<p><strong>The Caution:</strong> With global trade uncertainty (specifically potential US tariffs) looming, the Bank is keeping some ammunition in reserve.</p>
+
+<p><strong>The Result:</strong> Prime rates at major banks will remain steady at <strong>4.45%</strong>.</p>
+
+<hr/>
+
+<h3>The "Golden Window" for Vancouver Buyers</h3>
+
+<p>While rates have stabilized, the real estate market is presenting a unique opportunity.</p>
+
+<p>According to the <strong>latest Royal LePage Market Survey Forecast</strong>, home prices in Greater Vancouver are expected to dip approximately <strong>3.5% in 2026</strong>. Why? Because inventory is currently hovering at decade highs.</p>
+
+<p>This creates a rare <strong>"Golden Window"</strong> for buyers:</p>
+
+<ul>
+<li><strong>Rates are Accessible:</strong> We are sitting at the bottom of the neutral range (2.25%).</li>
+<li><strong>Prices are Softening:</strong> You have negotiating power that hasn't existed in years.</li>
+<li><strong>Competition is Low:</strong> Many buyers are still waiting for "lower rates" that likely aren't coming.</li>
+</ul>
+
+<img src="/images/blog-boc-rate-hold-2025.png" alt="Bank of Canada rate decision December 2025 - rates holding steady at 2.25%" style="width:100%;height:auto;border-radius:8px;margin:1rem 0;" />
+
+<hr/>
+
+<h3>Actionable Advice: Your 2026 Strategy</h3>
+
+<h4>1. For Home Buyers: Don't Time the Absolute Bottom</h4>
+
+<p>The Bank of Canada is expected to hold this 2.25% rate through most of 2026. Waiting for another 0.25% cut might save you $40 a month, but it could cost you the chance to buy while prices are soft. When the market realizes rates have stabilized, buyer confidence will return, and that inventory will vanish.</p>
+
+<h4>2. For Renewals: The Fixed vs. Variable Debate</h4>
+
+<p>With the BoC pausing, variable rates will remain steady at <strong>Prime minus your discount</strong> (currently around 3.45% for many). However, fixed rates are actually starting to creep up. Bond markets are reacting to the economic strength, pushing yields higher.</p>
+
+<p><strong>Strategy:</strong> If you value sleep, a <strong>3-year fixed rate</strong> might be the sweet spot right now before bond yields push them higher.</p>
+
+<p><strong>Opportunity:</strong> Remember, if you have an uninsured mortgage, you can now switch lenders at renewal without passing the stress test. <strong>Do not sign your bank's renewal letter</strong> without letting us shop the market for you.</p>
+
+<h4>3. For Investors: Watch the "Stress Test"</h4>
+
+<p>Rumors are circulating that <strong>OSFI</strong> (the banking regulator) is considering replacing the stress test with a "loan-to-income" limit later in 2026. While this isn't official yet, it could drastically change borrowing power for investors with multiple properties. We are monitoring this closely.</p>
+
+<hr/>
+
+<h3>The Bottom Line</h3>
+
+<p><strong>The falling knife has hit the floor.</strong> Rates are stable, the economy is resilient, and the Vancouver market is on sale.</p>
+
+<p>Unsure if you should lock in or ride the variable wave in 2026?</p>
+
+<p><a href="https://calendar.app.google/HcbcfrKKtBvcPQqd8" target="_blank" rel="noopener noreferrer" style="display: inline-block; background-color: #1e3a8a; color: white; padding: 12px 24px; border: none; border-radius: 6px; font-size: 16px; font-weight: 600; cursor: pointer; transition: background-color 0.3s ease; text-decoration: none;">📞 Book a 15-min Market Strategy Call</a></p>
+</article>`;
+
+    return {
+      slug: 'bank-of-canada-rate-hold-december-2025',
+      title: 'The "Wait and See" Is Over: Bank of Canada Holds Rates at 2.25% (And What It Means for 2026)',
+      markdown: blogContent,
+      html: blogContent,
+      status: 'published' as const,
+      publishedAt: new Date('2025-12-11T08:00:00Z'),
+      author: {
+        name: 'Varun Chaudhry',
+        title: 'Licensed Mortgage Broker',
+        license: 'BCFSA #M08001935'
+      },
+      metaDescription: 'Bank of Canada announced holding its key overnight rate at 2.25%. After a year of aggressive cuts, the easing cycle is likely over. What this new reality means for your mortgage strategy in 2026.',
+      keywords: ['Bank of Canada', 'interest-rates', 'mortgage-strategy', '2026', 'vancouver-real-estate', 'surrey-mortgages', 'fixed-vs-variable']
     };
   }
   if (slug === 'beyond-big-banks-complex-mortgage-approval') {
@@ -472,6 +560,160 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
     keywords: ['construction-mortgage', 'bc-real-estate', 'building-finance', 'draw-mortgage']
   };
 
+  const mockPost4: Post = {
+    slug: 'bank-of-canada-rate-hold-december-2025',
+    title: 'The "Wait and See" Is Over: Bank of Canada Holds Rates at 2.25% (And What It Means for 2026)',
+    markdown: `<article>
+<h2>The "Wait and See" Is Over: Bank of Canada Holds Rates at 2.25%</h2>
+<p><strong>Date:</strong> December 11, 2025 | <strong>Category:</strong> Market Update, Mortgage Strategy | <strong>Reading Time:</strong> 4 Minutes</p>
+
+<p>If you've been sitting on the sidelines waiting for mortgage rates to hit rock bottom, the Bank of Canada just sent a clear signal: <strong>we have arrived</strong>.</p>
+
+<p>On December 10, 2025, the Bank of Canada announced it is holding its key overnight rate at <strong>2.25%</strong>. After a year of aggressive cuts—dropping a full 1.00% in 2025 alone—the Bank has signaled that the easing cycle is likely over for now.</p>
+
+<p>For homeowners and buyers in Surrey and Vancouver, this marks a <strong>critical pivot point</strong>. The era of "rapidly falling rates" is shifting to an era of "stability." Here is what this new reality means for your mortgage strategy in 2026.</p>
+
+<hr/>
+
+<h3>The News Breakdown: Why the Pause?</h3>
+
+<p>Governor Tiff Macklem stated that the current rate of 2.25% is "at about the right level" to keep inflation near the 2% target while supporting the economy.</p>
+
+<p><strong>The Good News:</strong> The economy grew a surprisingly strong 2.6% in Q3. The recession fears that plagued early 2025 have largely subsided.</p>
+
+<p><strong>The Caution:</strong> With global trade uncertainty (specifically potential US tariffs) looming, the Bank is keeping some ammunition in reserve.</p>
+
+<p><strong>The Result:</strong> Prime rates at major banks will remain steady at <strong>4.45%</strong>.</p>
+
+<hr/>
+
+<h3>The "Golden Window" for Vancouver Buyers</h3>
+
+<p>While rates have stabilized, the real estate market is presenting a unique opportunity.</p>
+
+<p>According to the <strong>latest Royal LePage Market Survey Forecast</strong>, home prices in Greater Vancouver are expected to dip approximately <strong>3.5% in 2026</strong>. Why? Because inventory is currently hovering at decade highs.</p>
+
+<p>This creates a rare <strong>"Golden Window"</strong> for buyers:</p>
+
+<ul>
+<li><strong>Rates are Accessible:</strong> We are sitting at the bottom of the neutral range (2.25%).</li>
+<li><strong>Prices are Softening:</strong> You have negotiating power that hasn't existed in years.</li>
+<li><strong>Competition is Low:</strong> Many buyers are still waiting for "lower rates" that likely aren't coming.</li>
+</ul>
+
+<img src="/images/blog-boc-rate-hold-2025.png" alt="Bank of Canada rate decision December 2025 - rates holding steady at 2.25%" style="width:100%;height:auto;border-radius:8px;margin:1rem 0;" />
+
+<hr/>
+
+<h3>Actionable Advice: Your 2026 Strategy</h3>
+
+<h4>1. For Home Buyers: Don't Time the Absolute Bottom</h4>
+
+<p>The Bank of Canada is expected to hold this 2.25% rate through most of 2026. Waiting for another 0.25% cut might save you $40 a month, but it could cost you the chance to buy while prices are soft. When the market realizes rates have stabilized, buyer confidence will return, and that inventory will vanish.</p>
+
+<h4>2. For Renewals: The Fixed vs. Variable Debate</h4>
+
+<p>With the BoC pausing, variable rates will remain steady at <strong>Prime minus your discount</strong> (currently around 3.45% for many). However, fixed rates are actually starting to creep up. Bond markets are reacting to the economic strength, pushing yields higher.</p>
+
+<p><strong>Strategy:</strong> If you value sleep, a <strong>3-year fixed rate</strong> might be the sweet spot right now before bond yields push them higher.</p>
+
+<p><strong>Opportunity:</strong> Remember, if you have an uninsured mortgage, you can now switch lenders at renewal without passing the stress test. <strong>Do not sign your bank's renewal letter</strong> without letting us shop the market for you.</p>
+
+<h4>3. For Investors: Watch the "Stress Test"</h4>
+
+<p>Rumors are circulating that <strong>OSFI</strong> (the banking regulator) is considering replacing the stress test with a "loan-to-income" limit later in 2026. While this isn't official yet, it could drastically change borrowing power for investors with multiple properties. We are monitoring this closely.</p>
+
+<hr/>
+
+<h3>The Bottom Line</h3>
+
+<p><strong>The falling knife has hit the floor.</strong> Rates are stable, the economy is resilient, and the Vancouver market is on sale.</p>
+
+<p>Unsure if you should lock in or ride the variable wave in 2026?</p>
+
+<p><a href="https://calendar.app.google/HcbcfrKKtBvcPQqd8" target="_blank" rel="noopener noreferrer" style="display: inline-block; background-color: #1e3a8a; color: white; padding: 12px 24px; border: none; border-radius: 6px; font-size: 16px; font-weight: 600; cursor: pointer; transition: background-color 0.3s ease; text-decoration: none;">📞 Book a 15-min Market Strategy Call</a></p>
+</article>`,
+    html: `<article>
+<h2>The "Wait and See" Is Over: Bank of Canada Holds Rates at 2.25%</h2>
+<p><strong>Date:</strong> December 11, 2025 | <strong>Category:</strong> Market Update, Mortgage Strategy | <strong>Reading Time:</strong> 4 Minutes</p>
+
+<p>If you've been sitting on the sidelines waiting for mortgage rates to hit rock bottom, the Bank of Canada just sent a clear signal: <strong>we have arrived</strong>.</p>
+
+<p>On December 10, 2025, the Bank of Canada announced it is holding its key overnight rate at <strong>2.25%</strong>. After a year of aggressive cuts—dropping a full 1.00% in 2025 alone—the Bank has signaled that the easing cycle is likely over for now.</p>
+
+<p>For homeowners and buyers in Surrey and Vancouver, this marks a <strong>critical pivot point</strong>. The era of "rapidly falling rates" is shifting to an era of "stability." Here is what this new reality means for your mortgage strategy in 2026.</p>
+
+<hr/>
+
+<h3>The News Breakdown: Why the Pause?</h3>
+
+<p>Governor Tiff Macklem stated that the current rate of 2.25% is "at about the right level" to keep inflation near the 2% target while supporting the economy.</p>
+
+<p><strong>The Good News:</strong> The economy grew a surprisingly strong 2.6% in Q3. The recession fears that plagued early 2025 have largely subsided.</p>
+
+<p><strong>The Caution:</strong> With global trade uncertainty (specifically potential US tariffs) looming, the Bank is keeping some ammunition in reserve.</p>
+
+<p><strong>The Result:</strong> Prime rates at major banks will remain steady at <strong>4.45%</strong>.</p>
+
+<hr/>
+
+<h3>The "Golden Window" for Vancouver Buyers</h3>
+
+<p>While rates have stabilized, the real estate market is presenting a unique opportunity.</p>
+
+<p>According to the <strong>latest Royal LePage Market Survey Forecast</strong>, home prices in Greater Vancouver are expected to dip approximately <strong>3.5% in 2026</strong>. Why? Because inventory is currently hovering at decade highs.</p>
+
+<p>This creates a rare <strong>"Golden Window"</strong> for buyers:</p>
+
+<ul>
+<li><strong>Rates are Accessible:</strong> We are sitting at the bottom of the neutral range (2.25%).</li>
+<li><strong>Prices are Softening:</strong> You have negotiating power that hasn't existed in years.</li>
+<li><strong>Competition is Low:</strong> Many buyers are still waiting for "lower rates" that likely aren't coming.</li>
+</ul>
+
+<img src="/images/blog-boc-rate-hold-2025.png" alt="Bank of Canada rate decision December 2025 - rates holding steady at 2.25%" style="width:100%;height:auto;border-radius:8px;margin:1rem 0;" />
+
+<hr/>
+
+<h3>Actionable Advice: Your 2026 Strategy</h3>
+
+<h4>1. For Home Buyers: Don't Time the Absolute Bottom</h4>
+
+<p>The Bank of Canada is expected to hold this 2.25% rate through most of 2026. Waiting for another 0.25% cut might save you $40 a month, but it could cost you the chance to buy while prices are soft. When the market realizes rates have stabilized, buyer confidence will return, and that inventory will vanish.</p>
+
+<h4>2. For Renewals: The Fixed vs. Variable Debate</h4>
+
+<p>With the BoC pausing, variable rates will remain steady at <strong>Prime minus your discount</strong> (currently around 3.45% for many). However, fixed rates are actually starting to creep up. Bond markets are reacting to the economic strength, pushing yields higher.</p>
+
+<p><strong>Strategy:</strong> If you value sleep, a <strong>3-year fixed rate</strong> might be the sweet spot right now before bond yields push them higher.</p>
+
+<p><strong>Opportunity:</strong> Remember, if you have an uninsured mortgage, you can now switch lenders at renewal without passing the stress test. <strong>Do not sign your bank's renewal letter</strong> without letting us shop the market for you.</p>
+
+<h4>3. For Investors: Watch the "Stress Test"</h4>
+
+<p>Rumors are circulating that <strong>OSFI</strong> (the banking regulator) is considering replacing the stress test with a "loan-to-income" limit later in 2026. While this isn't official yet, it could drastically change borrowing power for investors with multiple properties. We are monitoring this closely.</p>
+
+<hr/>
+
+<h3>The Bottom Line</h3>
+
+<p><strong>The falling knife has hit the floor.</strong> Rates are stable, the economy is resilient, and the Vancouver market is on sale.</p>
+
+<p>Unsure if you should lock in or ride the variable wave in 2026?</p>
+
+<p><a href="https://calendar.app.google/HcbcfrKKtBvcPQqd8" target="_blank" rel="noopener noreferrer" style="display: inline-block; background-color: #1e3a8a; color: white; padding: 12px 24px; border: none; border-radius: 6px; font-size: 16px; font-weight: 600; cursor: pointer; transition: background-color 0.3s ease; text-decoration: none;">📞 Book a 15-min Market Strategy Call</a></p>
+</article>`,
+    status: 'published' as const,
+    publishedAt: new Date('2025-12-11T08:00:00Z'),
+    author: {
+      name: 'Varun Chaudhry',
+      title: 'Licensed Mortgage Broker',
+      license: 'BCFSA #M08001935'
+    },
+    metaDescription: 'Bank of Canada announced holding its key overnight rate at 2.25%. After a year of aggressive cuts, the easing cycle is likely over. What this new reality means for your mortgage strategy in 2026.',
+    keywords: ['Bank of Canada', 'interest-rates', 'mortgage-strategy', '2026', 'vancouver-real-estate', 'surrey-mortgages', 'fixed-vs-variable']
+  };
+
   try {
     const snapshot = await (await postsCol())
       .orderBy('publishedAt', 'desc')
@@ -484,7 +726,7 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
     })) as Post[];
 
     // Combine our mock post with Firestore posts and sort by date
-    const allPosts = [mockPost, mockPost2, mockPost3, ...firestorePosts].sort((a, b) =>
+    const allPosts = [mockPost, mockPost2, mockPost3, mockPost4, ...firestorePosts].sort((a, b) =>
       new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
     );
 
@@ -492,6 +734,6 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
   } catch (error) {
     console.error('Error fetching recent posts:', error);
     // Return only our mock post if Firestore fails
-    return [mockPost, mockPost2, mockPost3];
+    return [mockPost, mockPost2, mockPost3, mockPost4];
   }
 }
