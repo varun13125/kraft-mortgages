@@ -585,7 +585,7 @@ export async function getPost(slug: string): Promise<Post | null> {
 <h2>The "Condo Crunch" in Surrey & Vancouver: Why Appraisals Are Coming in Low (And How to Close Anyway)</h2>
 <p><strong>Date:</strong> December 12, 2025 | <strong>Category:</strong> Mortgage Solutions, BC Real Estate | <strong>Reading Time:</strong> 5 Minutes</p>
 
-<p style="text-align: center; color: #9ca3af; font-size: 0.875rem; margin: 1.5rem 0;">[IMAGE: A worried couple looking at a condo construction site in Surrey with a tablet showing a downward trend graph.]</p>
+<img src="/images/blog-condo-crunch-appraisal.jpg" alt="Worried couple looking at condo construction site with appraisal gap showing $60K short" style="width:100%;height:auto;border-radius:12px;margin:1.5rem 0;box-shadow: 0 4px 20px rgba(0,0,0,0.3);" />
 
 <p style="font-size: 1.1em; line-height: 1.8;">It's the phone call no condo buyer wants to receive one week before completion.</p>
 
