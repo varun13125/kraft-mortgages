@@ -407,6 +407,93 @@ export async function getPost(slug: string): Promise<Post | null> {
       keywords: ['Bank of Canada', 'interest-rates', 'mortgage-strategy', '2026', 'vancouver-real-estate', 'surrey-mortgages', 'fixed-vs-variable']
     };
   }
+  if (slug === 'alberta-advantage-where-to-invest-2026') {
+    const blogContent = `<article>
+<h2>The "Alberta Advantage" Hasn't Vanished—It Just Moved North</h2>
+<p><strong>Date:</strong> December 12, 2025 | <strong>Category:</strong> Real Estate Investing, Market Trends | <strong>Reading Time:</strong> 5 Minutes</p>
+
+<p>We all know someone who has done it. Maybe it was a neighbor in Surrey who sold their townhome to buy a detached house in Calgary cash-free. Maybe it was a colleague who bought a pre-construction condo in Airdrie.</p>
+
+<p>The "Alberta Migration" isn't just a headline; it's a demographic tidal wave. In early 2025 alone, Alberta saw a net gain of <strong>over 17,000 people</strong>, with the vast majority arriving from British Columbia and Ontario.</p>
+
+<p>But for investors sitting in Vancouver today, the question isn't "Should I invest in Alberta?" The question is: <strong>"Did I miss the boat?"</strong></p>
+
+<p>If you're looking at Calgary? Maybe. But if you look just three hours north to Edmonton, <strong>the ship is just coming in</strong>.</p>
+
+<hr/>
+
+<h3>The Tale of Two Cities: Calgary vs. Edmonton in 2026</h3>
+
+<p>At Kraft Mortgages, we help clients finance properties across Western Canada. Here is the shift we are seeing in the data for 2026.</p>
+
+<h4>1. Calgary: The "Balanced" Big Brother</h4>
+
+<p>Calgary has been the darling of the real estate world for three years. Because of this, prices have jumped significantly.</p>
+
+<p><strong>The Reality:</strong> The "easy equity" has been made. Calgary has transitioned into a <strong>balanced market</strong>.</p>
+
+<p><strong>The Numbers:</strong> While prices are stable, the entry point is higher (detached homes averaging $750k+), and finding a property that is "cash flow positive" with 20% down is becoming as difficult as it is in the Fraser Valley.</p>
+
+<h4>2. Edmonton: The "Early Upswing" Opportunity</h4>
+
+<p>While Calgary prices spiked, Edmonton remained relatively quiet—until now.</p>
+
+<p><strong>The Opportunity:</strong> Edmonton is currently trailing Calgary by about <strong>12-18 months</strong> in its market cycle. It is firmly in the "Early Upswing" phase.</p>
+
+<p><strong>The ROI:</strong> You can still find detached homes in good neighborhoods for <strong>$450k - $550k</strong>.</p>
+
+<p><strong>The Cash Flow:</strong> With significantly lower purchase prices and strong rental demand (driven by the same migration trends), Edmonton is one of the last major Canadian cities where a rental property can generate <strong>positive cash flow from Day 1</strong>.</p>
+
+<img src="/images/blog-3.png" alt="Alberta real estate investment opportunity - Edmonton vs Calgary market comparison" style="width:100%;height:auto;border-radius:8px;margin:1rem 0;" />
+
+<hr/>
+
+<h3>The "Remote Landlord" Strategy: How to Buy Across the Border</h3>
+
+<p>Buying investment property in another province scares many people. It shouldn't. As your mortgage broker, we handle the financing exactly the same way we would if you were buying in Burnaby.</p>
+
+<p>However, there are three <strong>"Golden Rules"</strong> for BC investors buying in Alberta:</p>
+
+<h4>1. The 20% Rule</h4>
+<p>Investment properties require a 20% down payment. No exceptions. But in Edmonton, 20% of a $450k house is only <strong>$90,000</strong>. In Vancouver, that same down payment barely gets you a parking spot.</p>
+
+<h4>2. Don't Ignore Property Management</h4>
+<p>You cannot manage a tenant from 1,000km away. We can introduce you to reputable local property managers who take 8-10% of the rent but save you 100% of the headache.</p>
+
+<h4>3. Get Pre-Approved for the "Total Picture"</h4>
+<p>We need to ensure your BC income and debts can support the new Alberta mortgage. The good news? We can often use <strong>50% of the projected rental income</strong> from the Alberta property to help you qualify.</p>
+
+<hr/>
+
+<h3>The Bottom Line for 2026</h3>
+
+<p>The "Alberta is Calling" campaign worked. The people have moved. Now, the housing demand is following them.</p>
+
+<p>If you are priced out of the Lower Mainland investment market, or if you're tired of feeding a negative cash flow condo every month, it's time to <strong>look east</strong>.</p>
+
+<p>Don't guess on the numbers.</p>
+
+<p><a href="https://calendar.app.google/HcbcfrKKtBvcPQqd8" target="_blank" rel="noopener noreferrer" style="display: inline-block; background-color: #1e3a8a; color: white; padding: 12px 24px; border: none; border-radius: 6px; font-size: 16px; font-weight: 600; cursor: pointer; transition: background-color 0.3s ease; text-decoration: none;">📞 Book a 15-min Investment Strategy Call</a></p>
+
+<p style="font-size: 14px; color: #666;">Let's run the math on an Edmonton rental property vs. a local BC investment and see which one wins for your portfolio.</p>
+</article>`;
+
+    return {
+      slug: 'alberta-advantage-where-to-invest-2026',
+      title: 'The "Alberta Advantage" Hasn\'t Vanished—It Just Moved North (Where to Invest in 2026)',
+      markdown: blogContent,
+      html: blogContent,
+      status: 'published' as const,
+      publishedAt: new Date('2025-12-12T08:00:00Z'),
+      author: {
+        name: 'Varun Chaudhry',
+        title: 'Licensed Mortgage Broker',
+        license: 'BCFSA #M08001935'
+      },
+      metaDescription: 'The Alberta Migration continues but Calgary may be played out. Discover why Edmonton is the 2026 opportunity for BC real estate investors seeking positive cash flow.',
+      keywords: ['Alberta-investing', 'Edmonton-real-estate', 'Calgary-vs-Edmonton', '2026', 'investment-property', 'cash-flow', 'BC-investors']
+    };
+  }
   if (slug === 'beyond-big-banks-complex-mortgage-approval') {
     const blogContent = `<h1>Beyond the Big Banks: How We Get Complex Files Approved Post-Stress Test</h1>
 
@@ -714,6 +801,108 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
     keywords: ['Bank of Canada', 'interest-rates', 'mortgage-strategy', '2026', 'vancouver-real-estate', 'surrey-mortgages', 'fixed-vs-variable']
   };
 
+  const mockPost5: Post = {
+    slug: 'alberta-advantage-where-to-invest-2026',
+    title: 'The "Alberta Advantage" Hasn\'t Vanished—It Just Moved North (Where to Invest in 2026)',
+    markdown: `<article>
+<h2>The "Alberta Advantage" Hasn't Vanished—It Just Moved North</h2>
+<p><strong>Date:</strong> December 12, 2025 | <strong>Category:</strong> Real Estate Investing, Market Trends | <strong>Reading Time:</strong> 5 Minutes</p>
+
+<p>We all know someone who has done it. Maybe it was a neighbor in Surrey who sold their townhome to buy a detached house in Calgary cash-free. Maybe it was a colleague who bought a pre-construction condo in Airdrie.</p>
+
+<p>The "Alberta Migration" isn't just a headline; it's a demographic tidal wave. In early 2025 alone, Alberta saw a net gain of <strong>over 17,000 people</strong>, with the vast majority arriving from British Columbia and Ontario.</p>
+
+<p>But for investors sitting in Vancouver today, the question isn't "Should I invest in Alberta?" The question is: <strong>"Did I miss the boat?"</strong></p>
+
+<p>If you're looking at Calgary? Maybe. But if you look just three hours north to Edmonton, <strong>the ship is just coming in</strong>.</p>
+
+<hr/>
+
+<h3>The Tale of Two Cities: Calgary vs. Edmonton in 2026</h3>
+
+<p>At Kraft Mortgages, we help clients finance properties across Western Canada. Here is the shift we are seeing in the data for 2026.</p>
+
+<h4>1. Calgary: The "Balanced" Big Brother</h4>
+
+<p>Calgary has been the darling of the real estate world for three years. Because of this, prices have jumped significantly.</p>
+
+<p><strong>The Reality:</strong> The "easy equity" has been made. Calgary has transitioned into a <strong>balanced market</strong>.</p>
+
+<h4>2. Edmonton: The "Early Upswing" Opportunity</h4>
+
+<p>While Calgary prices spiked, Edmonton remained relatively quiet—until now.</p>
+
+<p><strong>The Opportunity:</strong> Edmonton is currently trailing Calgary by about <strong>12-18 months</strong> in its market cycle. It is firmly in the "Early Upswing" phase.</p>
+
+<p><strong>The ROI:</strong> You can still find detached homes in good neighborhoods for <strong>$450k - $550k</strong>.</p>
+
+<p><strong>The Cash Flow:</strong> Edmonton is one of the last major Canadian cities where a rental property can generate <strong>positive cash flow from Day 1</strong>.</p>
+
+<img src="/images/blog-3.png" alt="Alberta real estate investment opportunity" style="width:100%;height:auto;border-radius:8px;margin:1rem 0;" />
+
+<hr/>
+
+<h3>The "Remote Landlord" Strategy: How to Buy Across the Border</h3>
+
+<p>Buying investment property in another province scares many people. It shouldn't. Here are three <strong>"Golden Rules"</strong> for BC investors buying in Alberta.</p>
+
+<p><a href="https://calendar.app.google/HcbcfrKKtBvcPQqd8" target="_blank" rel="noopener noreferrer" style="display: inline-block; background-color: #1e3a8a; color: white; padding: 12px 24px; border: none; border-radius: 6px; font-size: 16px; font-weight: 600; cursor: pointer; transition: background-color 0.3s ease; text-decoration: none;">📞 Book a 15-min Investment Strategy Call</a></p>
+</article>`,
+    html: `<article>
+<h2>The "Alberta Advantage" Hasn't Vanished—It Just Moved North</h2>
+<p><strong>Date:</strong> December 12, 2025 | <strong>Category:</strong> Real Estate Investing, Market Trends | <strong>Reading Time:</strong> 5 Minutes</p>
+
+<p>We all know someone who has done it. Maybe it was a neighbor in Surrey who sold their townhome to buy a detached house in Calgary cash-free. Maybe it was a colleague who bought a pre-construction condo in Airdrie.</p>
+
+<p>The "Alberta Migration" isn't just a headline; it's a demographic tidal wave. In early 2025 alone, Alberta saw a net gain of <strong>over 17,000 people</strong>, with the vast majority arriving from British Columbia and Ontario.</p>
+
+<p>But for investors sitting in Vancouver today, the question isn't "Should I invest in Alberta?" The question is: <strong>"Did I miss the boat?"</strong></p>
+
+<p>If you're looking at Calgary? Maybe. But if you look just three hours north to Edmonton, <strong>the ship is just coming in</strong>.</p>
+
+<hr/>
+
+<h3>The Tale of Two Cities: Calgary vs. Edmonton in 2026</h3>
+
+<p>At Kraft Mortgages, we help clients finance properties across Western Canada. Here is the shift we are seeing in the data for 2026.</p>
+
+<h4>1. Calgary: The "Balanced" Big Brother</h4>
+
+<p>Calgary has been the darling of the real estate world for three years. Because of this, prices have jumped significantly.</p>
+
+<p><strong>The Reality:</strong> The "easy equity" has been made. Calgary has transitioned into a <strong>balanced market</strong>.</p>
+
+<h4>2. Edmonton: The "Early Upswing" Opportunity</h4>
+
+<p>While Calgary prices spiked, Edmonton remained relatively quiet—until now.</p>
+
+<p><strong>The Opportunity:</strong> Edmonton is currently trailing Calgary by about <strong>12-18 months</strong> in its market cycle. It is firmly in the "Early Upswing" phase.</p>
+
+<p><strong>The ROI:</strong> You can still find detached homes in good neighborhoods for <strong>$450k - $550k</strong>.</p>
+
+<p><strong>The Cash Flow:</strong> Edmonton is one of the last major Canadian cities where a rental property can generate <strong>positive cash flow from Day 1</strong>.</p>
+
+<img src="/images/blog-3.png" alt="Alberta real estate investment opportunity" style="width:100%;height:auto;border-radius:8px;margin:1rem 0;" />
+
+<hr/>
+
+<h3>The "Remote Landlord" Strategy: How to Buy Across the Border</h3>
+
+<p>Buying investment property in another province scares many people. It shouldn't. Here are three <strong>"Golden Rules"</strong> for BC investors buying in Alberta.</p>
+
+<p><a href="https://calendar.app.google/HcbcfrKKtBvcPQqd8" target="_blank" rel="noopener noreferrer" style="display: inline-block; background-color: #1e3a8a; color: white; padding: 12px 24px; border: none; border-radius: 6px; font-size: 16px; font-weight: 600; cursor: pointer; transition: background-color 0.3s ease; text-decoration: none;">📞 Book a 15-min Investment Strategy Call</a></p>
+</article>`,
+    status: 'published' as const,
+    publishedAt: new Date('2025-12-12T08:00:00Z'),
+    author: {
+      name: 'Varun Chaudhry',
+      title: 'Licensed Mortgage Broker',
+      license: 'BCFSA #M08001935'
+    },
+    metaDescription: 'The Alberta Migration continues but Calgary may be played out. Discover why Edmonton is the 2026 opportunity for BC real estate investors seeking positive cash flow.',
+    keywords: ['Alberta-investing', 'Edmonton-real-estate', 'Calgary-vs-Edmonton', '2026', 'investment-property', 'cash-flow', 'BC-investors']
+  };
+
   try {
     const snapshot = await (await postsCol())
       .orderBy('publishedAt', 'desc')
@@ -726,7 +915,7 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
     })) as Post[];
 
     // Combine our mock post with Firestore posts and sort by date
-    const allPosts = [mockPost, mockPost2, mockPost3, mockPost4, ...firestorePosts].sort((a, b) =>
+    const allPosts = [mockPost, mockPost2, mockPost3, mockPost4, mockPost5, ...firestorePosts].sort((a, b) =>
       new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
     );
 
@@ -734,6 +923,6 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
   } catch (error) {
     console.error('Error fetching recent posts:', error);
     // Return only our mock post if Firestore fails
-    return [mockPost, mockPost2, mockPost3, mockPost4];
+    return [mockPost, mockPost2, mockPost3, mockPost4, mockPost5];
   }
 }
