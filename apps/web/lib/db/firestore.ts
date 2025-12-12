@@ -444,7 +444,7 @@ export async function getPost(slug: string): Promise<Post | null> {
 
 <p><strong>The Cash Flow:</strong> With significantly lower purchase prices and strong rental demand (driven by the same migration trends), Edmonton is one of the last major Canadian cities where a rental property can generate <strong>positive cash flow from Day 1</strong>.</p>
 
-<img src="/images/blog-3.png" alt="Alberta real estate investment opportunity - Edmonton vs Calgary market comparison" style="width:100%;height:auto;border-radius:8px;margin:1rem 0;" />
+<img src="/images/blog-alberta-advantage-2026.jpg" alt="Alberta real estate investment opportunity - Edmonton vs Calgary market comparison" style="width:100%;height:auto;border-radius:8px;margin:1rem 0;" />
 
 <hr/>
 
@@ -838,7 +838,7 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
 
 <p><strong>The Cash Flow:</strong> Edmonton is one of the last major Canadian cities where a rental property can generate <strong>positive cash flow from Day 1</strong>.</p>
 
-<img src="/images/blog-3.png" alt="Alberta real estate investment opportunity" style="width:100%;height:auto;border-radius:8px;margin:1rem 0;" />
+<img src="/images/blog-alberta-advantage-2026.jpg" alt="Alberta real estate investment opportunity" style="width:100%;height:auto;border-radius:8px;margin:1rem 0;" />
 
 <hr/>
 
@@ -882,7 +882,7 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
 
 <p><strong>The Cash Flow:</strong> Edmonton is one of the last major Canadian cities where a rental property can generate <strong>positive cash flow from Day 1</strong>.</p>
 
-<img src="/images/blog-3.png" alt="Alberta real estate investment opportunity" style="width:100%;height:auto;border-radius:8px;margin:1rem 0;" />
+<img src="/images/blog-alberta-advantage-2026.jpg" alt="Alberta real estate investment opportunity" style="width:100%;height:auto;border-radius:8px;margin:1rem 0;" />
 
 <hr/>
 
