@@ -407,6 +407,179 @@ export async function getPost(slug: string): Promise<Post | null> {
       keywords: ['Bank of Canada', 'interest-rates', 'mortgage-strategy', '2026', 'vancouver-real-estate', 'surrey-mortgages', 'fixed-vs-variable']
     };
   }
+  if (slug === 'mli-select-infinite-return-alberta') {
+    const blogContent = `<article>
+<h2>The "Infinite Return" Loop: Why CMHC MLI Select Was Made for Alberta (Not Vancouver)</h2>
+<p><strong>Date:</strong> December 13, 2025 | <strong>Category:</strong> Advanced Real Estate Strategy | <strong>Reading Time:</strong> 6 Minutes</p>
+
+<p>If you are a real estate investor, you've heard the buzzwords: <span style="font-size: 1.25em; font-weight: bold; color: #f59e0b;">95% Loan-to-Value</span>. <span style="font-size: 1.25em; font-weight: bold; color: #f59e0b;">50-Year Amortization</span>.</p>
+
+<p>The CMHC MLI Select program is effectively the most powerful leverage tool ever offered to Canadian investors. It allows you to buy multi-family properties with as little as 5% down, spreading payments over half a century to drastically lower your monthly obligations.</p>
+
+<p>But here is the <strong>"mind-blowing"</strong> truth that most brokers won't tell you: <strong style="color: #ef4444;">This program is mathematically broken in Vancouver.</strong></p>
+
+<p>In a market like Surrey or Vancouver, where cap rates hover around 3-4%, maxing out your leverage to 95% usually guarantees one thing: <strong>negative cash flow</strong>. You might own the building with very little money down, but you'll be feeding it cash every month just to keep the lights on.</p>
+
+<p><strong>Enter Alberta.</strong></p>
+
+<p>When you combine MLI Select's massive leverage with Alberta's high cap rates and lack of rent control, you enter the territory of <span style="font-size: 1.25em; font-weight: bold; color: #10b981;">Infinite Returns</span>. Here is why the smart money is moving east.</p>
+
+<hr/>
+
+<h3>The Math: BC vs. Alberta (The "Cash Flow" Test)</h3>
+
+<p>Let's look at a hypothetical <strong>$5 Million Multi-Family</strong> purchase in both provinces to see why geography changes everything.</p>
+
+<!-- Comparison Table -->
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 2rem 0;">
+  
+  <!-- Vancouver Box -->
+  <div style="background: linear-gradient(135deg, #1f2937 0%, #374151 100%); border-radius: 12px; padding: 1.5rem; border: 2px solid #ef4444;">
+    <h4 style="color: #ef4444; margin: 0 0 1rem 0; font-size: 1.25rem; text-align: center;">🏙️ Scenario A: Vancouver</h4>
+    <p style="text-align: center; color: #9ca3af; font-size: 0.875rem; margin-bottom: 1rem;">"The Equity Trap"</p>
+    
+    <div style="space-y: 0.5rem;">
+      <div style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #4b5563;">
+        <span style="color: #d1d5db;">Purchase Price</span>
+        <span style="color: #f3f4f6; font-weight: 600;">$5,000,000</span>
+      </div>
+      <div style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #4b5563;">
+        <span style="color: #d1d5db;">Cap Rate</span>
+        <span style="color: #f3f4f6; font-weight: 600;">3.5%</span>
+      </div>
+      <div style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #4b5563;">
+        <span style="color: #d1d5db;">NOI (Annual)</span>
+        <span style="color: #f3f4f6; font-weight: 600;">$175,000</span>
+      </div>
+      <div style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #4b5563;">
+        <span style="color: #d1d5db;">Financing</span>
+        <span style="color: #f59e0b; font-weight: 600;">95% LTV (MLI)</span>
+      </div>
+      <div style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #4b5563;">
+        <span style="color: #d1d5db;">Mortgage Payment</span>
+        <span style="color: #f3f4f6; font-weight: 600;">~$250,000/yr</span>
+      </div>
+      <div style="display: flex; justify-content: space-between; padding: 0.75rem 0; margin-top: 0.5rem; background: rgba(239, 68, 68, 0.2); border-radius: 8px; padding-left: 0.5rem; padding-right: 0.5rem;">
+        <span style="color: #fca5a5; font-weight: 600;">Cash Flow</span>
+        <span style="color: #ef4444; font-weight: 700; font-size: 1.125rem;">-$75,000/yr</span>
+      </div>
+    </div>
+    
+    <p style="color: #f87171; font-size: 0.875rem; margin-top: 1rem; text-align: center; font-style: italic;">❌ You own it, but it's a liability. Betting purely on appreciation.</p>
+  </div>
+  
+  <!-- Edmonton Box -->
+  <div style="background: linear-gradient(135deg, #1f2937 0%, #374151 100%); border-radius: 12px; padding: 1.5rem; border: 2px solid #10b981;">
+    <h4 style="color: #10b981; margin: 0 0 1rem 0; font-size: 1.25rem; text-align: center;">🏔️ Scenario B: Edmonton</h4>
+    <p style="text-align: center; color: #9ca3af; font-size: 0.875rem; margin-bottom: 1rem;">"The Cash Cow"</p>
+    
+    <div style="space-y: 0.5rem;">
+      <div style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #4b5563;">
+        <span style="color: #d1d5db;">Purchase Price</span>
+        <span style="color: #f3f4f6; font-weight: 600;">$5,000,000</span>
+      </div>
+      <div style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #4b5563;">
+        <span style="color: #d1d5db;">Cap Rate</span>
+        <span style="color: #10b981; font-weight: 600;">5.75%</span>
+      </div>
+      <div style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #4b5563;">
+        <span style="color: #d1d5db;">NOI (Annual)</span>
+        <span style="color: #10b981; font-weight: 600;">$287,500</span>
+      </div>
+      <div style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #4b5563;">
+        <span style="color: #d1d5db;">Financing</span>
+        <span style="color: #f59e0b; font-weight: 600;">95% LTV (MLI)</span>
+      </div>
+      <div style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #4b5563;">
+        <span style="color: #d1d5db;">Mortgage Payment</span>
+        <span style="color: #f3f4f6; font-weight: 600;">~$250,000/yr</span>
+      </div>
+      <div style="display: flex; justify-content: space-between; padding: 0.75rem 0; margin-top: 0.5rem; background: rgba(16, 185, 129, 0.2); border-radius: 8px; padding-left: 0.5rem; padding-right: 0.5rem;">
+        <span style="color: #6ee7b7; font-weight: 600;">Cash Flow</span>
+        <span style="color: #10b981; font-weight: 700; font-size: 1.125rem;">+$37,500/yr</span>
+      </div>
+    </div>
+    
+    <p style="color: #34d399; font-size: 0.875rem; margin-top: 1rem; text-align: center; font-style: italic;">✅ 5% down = immediate positive income. Building pays YOU.</p>
+  </div>
+  
+</div>
+
+<p style="text-align: center; color: #9ca3af; font-size: 0.875rem; margin: 1rem 0;">[IMAGE: A 3D isometric comparison chart showing two apartment buildings. The Vancouver building has a red 'Negative Cashflow' indicator, the Edmonton building has a green 'Positive Cashflow' indicator.]</p>
+
+<hr/>
+
+<h3>The "Secret Sauce": No Rent Control</h3>
+
+<p>This is the <strong>multiplier effect</strong>.</p>
+
+<p>In British Columbia, your ability to raise rents is capped by the government (often below inflation). <strong style="color: #10b981;">In Alberta, there is no rent control.</strong></p>
+
+<p>When you buy an older, under-performing building in Edmonton using MLI Select financing:</p>
+
+<ol style="line-height: 1.8;">
+  <li><strong>You renovate</strong> to improve energy efficiency (scoring you the points needed for the 50-year amortization).</li>
+  <li><strong>You stabilize</strong> the tenant profile.</li>
+  <li><strong>You increase rents</strong> to market rates <em>immediately</em>.</li>
+</ol>
+
+<p>Because your mortgage payment is fixed and suppressed (thanks to the <span style="font-size: 1.1em; font-weight: bold; color: #f59e0b;">50-Year Amortization</span>), every dollar of rent increase goes straight to your bottom line. In a 95% leverage scenario, a <strong>10% increase in Net Operating Income can double your Cash-on-Cash return</strong>.</p>
+
+<hr/>
+
+<h3>How to Qualify for the "Golden Ticket"</h3>
+
+<p>To get the <span style="font-size: 1.1em; font-weight: bold; color: #f59e0b;">95% LTV</span> and <span style="font-size: 1.1em; font-weight: bold; color: #f59e0b;">50-year amortization</span>, you need to score 100 points on the CMHC scale. In Alberta, this is often easier than in BC:</p>
+
+<div style="background: linear-gradient(135deg, #1f2937 0%, #374151 100%); border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0; border-left: 4px solid #f59e0b;">
+  <h4 style="color: #f59e0b; margin: 0 0 0.75rem 0;">⚡ Energy Efficiency (The Easiest Path)</h4>
+  <p style="color: #d1d5db; margin: 0;">Alberta has an older housing stock. Taking a 1970s walk-up apartment and upgrading the boiler, windows, and insulation often yields a massive efficiency jump (over 40%), instantly qualifying you for the full 100 points.</p>
+</div>
+
+<div style="background: linear-gradient(135deg, #1f2937 0%, #374151 100%); border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0; border-left: 4px solid #10b981;">
+  <h4 style="color: #10b981; margin: 0 0 0.75rem 0;">💰 Affordability</h4>
+  <p style="color: #d1d5db; margin: 0;">You can pledge to keep a portion of units "affordable." In Alberta, where market rents are naturally lower, the gap between "market" and "affordable" is smaller, costing you less in potential revenue than it would in Vancouver.</p>
+</div>
+
+<hr/>
+
+<h3>The Bottom Line</h3>
+
+<p><strong>MLI Select is a tool.</strong> In Vancouver, it's a tool for speculation. In Alberta, it's a tool for <span style="font-size: 1.15em; font-weight: bold; color: #10b981;">wealth scaling</span>.</p>
+
+<div style="background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0;">
+  <p style="color: #ffffff; margin: 0 0 0.5rem 0;"><strong>If you have $500,000 to invest:</strong></p>
+  <ul style="color: #e0e7ff; margin: 0; padding-left: 1.5rem;">
+    <li style="margin-bottom: 0.5rem;"><strong style="color: #fca5a5;">In Vancouver:</strong> That's a 35% down payment on a small, cash-flow-neutral condo.</li>
+    <li><strong style="color: #6ee7b7;">In Alberta:</strong> That's the 5% down payment on a <strong>$10 Million apartment complex</strong> that generates positive income from Day 1.</li>
+  </ul>
+</div>
+
+<p style="font-size: 1.1em; text-align: center; margin: 2rem 0;"><strong>Ready to stop "parking" money and start multiplying it?</strong></p>
+
+<p style="text-align: center;">
+  <a href="https://calendar.app.google/HcbcfrKKtBvcPQqd8" target="_blank" rel="noopener noreferrer" style="display: inline-block; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: #1f2937; padding: 16px 32px; border: none; border-radius: 8px; font-size: 18px; font-weight: 700; cursor: pointer; text-decoration: none; box-shadow: 0 4px 14px rgba(245, 158, 11, 0.4);">📞 Book a Strategy Call</a>
+</p>
+
+<p style="text-align: center; color: #9ca3af; font-size: 0.875rem;">We specialize in structuring MLI Select deals for BC investors moving capital into the high-yield Alberta market.</p>
+</article>`;
+
+    return {
+      slug: 'mli-select-infinite-return-alberta',
+      title: 'The "Infinite Return" Loop: Why CMHC MLI Select Was Made for Alberta (Not Vancouver)',
+      markdown: blogContent,
+      html: blogContent,
+      status: 'published' as const,
+      publishedAt: new Date('2025-12-13T08:00:00Z'),
+      author: {
+        name: 'Varun Chaudhry',
+        title: 'Licensed Mortgage Broker',
+        license: 'BCFSA #M08001935'
+      },
+      metaDescription: 'Discover why CMHC MLI Select creates infinite returns in Alberta but negative cash flow in Vancouver. Compare 95% LTV multi-family deals in BC vs. Edmonton.',
+      keywords: ['MLI-Select', 'CMHC', 'Alberta-investing', 'infinite-returns', 'multi-family', '95-LTV', '50-year-amortization', 'Edmonton']
+    };
+  }
   if (slug === 'alberta-advantage-where-to-invest-2026') {
     const blogContent = `<article>
 <h2>The "Alberta Advantage" Hasn't Vanished—It Just Moved North</h2>
@@ -903,6 +1076,46 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
     keywords: ['Alberta-investing', 'Edmonton-real-estate', 'Calgary-vs-Edmonton', '2026', 'investment-property', 'cash-flow', 'BC-investors']
   };
 
+  const mockPost6: Post = {
+    slug: 'mli-select-infinite-return-alberta',
+    title: 'The "Infinite Return" Loop: Why CMHC MLI Select Was Made for Alberta (Not Vancouver)',
+    markdown: `<article>
+<h2>The "Infinite Return" Loop: Why CMHC MLI Select Was Made for Alberta</h2>
+<p><strong>Date:</strong> December 13, 2025 | <strong>Category:</strong> Advanced Real Estate Strategy | <strong>Reading Time:</strong> 6 Minutes</p>
+
+<p>The CMHC MLI Select program offers <strong style="color: #f59e0b;">95% LTV</strong> and <strong style="color: #f59e0b;">50-Year Amortization</strong> for multi-family investors. But here's the truth: <strong style="color: #ef4444;">it's mathematically broken in Vancouver</strong>.</p>
+
+<p>When you combine MLI Select's massive leverage with Alberta's high cap rates and no rent control, you achieve <strong style="color: #10b981;">Infinite Returns</strong>.</p>
+
+<h4>Vancouver: -$75,000/yr Cash Flow (The Equity Trap)</h4>
+<h4>Edmonton: +$37,500/yr Cash Flow (The Cash Cow)</h4>
+
+<p>Ready to stop parking money and start multiplying it? Book a Strategy Call to structure your Alberta MLI Select deal.</p>
+</article>`,
+    html: `<article>
+<h2>The "Infinite Return" Loop: Why CMHC MLI Select Was Made for Alberta</h2>
+<p><strong>Date:</strong> December 13, 2025 | <strong>Category:</strong> Advanced Real Estate Strategy | <strong>Reading Time:</strong> 6 Minutes</p>
+
+<p>The CMHC MLI Select program offers <strong style="color: #f59e0b;">95% LTV</strong> and <strong style="color: #f59e0b;">50-Year Amortization</strong> for multi-family investors. But here's the truth: <strong style="color: #ef4444;">it's mathematically broken in Vancouver</strong>.</p>
+
+<p>When you combine MLI Select's massive leverage with Alberta's high cap rates and no rent control, you achieve <strong style="color: #10b981;">Infinite Returns</strong>.</p>
+
+<h4>Vancouver: -$75,000/yr Cash Flow (The Equity Trap)</h4>
+<h4>Edmonton: +$37,500/yr Cash Flow (The Cash Cow)</h4>
+
+<p>Ready to stop parking money and start multiplying it? Book a Strategy Call to structure your Alberta MLI Select deal.</p>
+</article>`,
+    status: 'published' as const,
+    publishedAt: new Date('2025-12-13T08:00:00Z'),
+    author: {
+      name: 'Varun Chaudhry',
+      title: 'Licensed Mortgage Broker',
+      license: 'BCFSA #M08001935'
+    },
+    metaDescription: 'Discover why CMHC MLI Select creates infinite returns in Alberta but negative cash flow in Vancouver. Compare 95% LTV multi-family deals.',
+    keywords: ['MLI-Select', 'CMHC', 'Alberta-investing', 'infinite-returns', 'multi-family', '95-LTV', '50-year-amortization']
+  };
+
   try {
     const snapshot = await (await postsCol())
       .orderBy('publishedAt', 'desc')
@@ -915,7 +1128,7 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
     })) as Post[];
 
     // Combine our mock post with Firestore posts and sort by date
-    const allPosts = [mockPost, mockPost2, mockPost3, mockPost4, mockPost5, ...firestorePosts].sort((a, b) =>
+    const allPosts = [mockPost, mockPost2, mockPost3, mockPost4, mockPost5, mockPost6, ...firestorePosts].sort((a, b) =>
       new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
     );
 
@@ -923,6 +1136,6 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
   } catch (error) {
     console.error('Error fetching recent posts:', error);
     // Return only our mock post if Firestore fails
-    return [mockPost, mockPost2, mockPost3, mockPost4, mockPost5];
+    return [mockPost, mockPost2, mockPost3, mockPost4, mockPost5, mockPost6];
   }
 }
