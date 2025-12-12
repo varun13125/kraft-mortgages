@@ -718,7 +718,7 @@ export async function getPost(slug: string): Promise<Post | null> {
 <h2>The "Renewal Cliff" is Coming: 60% of Canadian Mortgages Renew by 2026</h2>
 <p><strong>Date:</strong> December 12, 2025 | <strong>Category:</strong> Mortgage Strategy, Market News | <strong>Reading Time:</strong> 6 Minutes</p>
 
-<p style="text-align: center; color: #9ca3af; font-size: 0.875rem; margin: 1.5rem 0;">[IMAGE: A calendar flipped to 2026 with a pair of glasses and a calculator on top of a mortgage renewal letter.]</p>
+<img src="/images/blog-renewal-cliff-2026.png" alt="2026 calendar with glasses and calculator on mortgage renewal notice showing 1.99% to 4.49% rate change" style="width:100%;height:auto;border-radius:12px;margin:1.5rem 0;box-shadow: 0 4px 20px rgba(0,0,0,0.3);" />
 
 <p style="font-size: 1.1em; line-height: 1.8;">If you bought your home or renewed your mortgage during the "pandemic lows" of 2020 or 2021, you likely secured an incredible rate—perhaps as low as <strong style="color: #10b981;">1.79%</strong>.</p>
 
