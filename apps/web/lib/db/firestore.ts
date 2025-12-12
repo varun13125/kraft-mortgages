@@ -505,7 +505,7 @@ export async function getPost(slug: string): Promise<Post | null> {
   
 </div>
 
-<p style="text-align: center; color: #9ca3af; font-size: 0.875rem; margin: 1rem 0;">[IMAGE: A 3D isometric comparison chart showing two apartment buildings. The Vancouver building has a red 'Negative Cashflow' indicator, the Edmonton building has a green 'Positive Cashflow' indicator.]</p>
+<img src="/images/blog-mli-select-infinite-return.jpg" alt="Real Estate Investment Comparison: Vancouver vs Edmonton - MLI Select & 95% LTV Cash Flow Analysis" style="width:100%;height:auto;border-radius:12px;margin:1.5rem 0;box-shadow: 0 4px 20px rgba(0,0,0,0.3);" />
 
 <hr/>
 
