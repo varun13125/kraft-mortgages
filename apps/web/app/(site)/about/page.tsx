@@ -153,7 +153,7 @@ export default function AboutUs() {
                   </div>
                 </motion.div>
 
-                {/* Gursharan Dhalwial */}
+                {/* Gursharan Dhaliwal */}
                 <motion.div
                   initial={{ opacity: 0, x: 20 }}
                   whileInView={{ opacity: 1, x: 0 }}
@@ -166,7 +166,7 @@ export default function AboutUs() {
                       <span className="text-2xl font-bold text-gold-400">GD</span>
                     </div>
                     <div>
-                      <h3 className="text-2xl font-bold text-gray-100">Gursharan Dhalwial</h3>
+                      <h3 className="text-2xl font-bold text-gray-100">Gursharan Dhaliwal</h3>
                       <p className="text-gold-400">Co-Founder & Senior Mortgage Advisor</p>
                     </div>
                   </div>
