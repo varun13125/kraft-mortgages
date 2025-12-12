@@ -580,6 +580,139 @@ export async function getPost(slug: string): Promise<Post | null> {
       keywords: ['MLI-Select', 'CMHC', 'Alberta-investing', 'infinite-returns', 'multi-family', '95-LTV', '50-year-amortization', 'Edmonton']
     };
   }
+  if (slug === 'condo-crunch-surrey-vancouver-low-appraisals') {
+    const blogContent = `<article>
+<h2>The "Condo Crunch" in Surrey & Vancouver: Why Appraisals Are Coming in Low (And How to Close Anyway)</h2>
+<p><strong>Date:</strong> December 12, 2025 | <strong>Category:</strong> Mortgage Solutions, BC Real Estate | <strong>Reading Time:</strong> 5 Minutes</p>
+
+<p style="text-align: center; color: #9ca3af; font-size: 0.875rem; margin: 1.5rem 0;">[IMAGE: A worried couple looking at a condo construction site in Surrey with a tablet showing a downward trend graph.]</p>
+
+<p style="font-size: 1.1em; line-height: 1.8;">It's the phone call no condo buyer wants to receive one week before completion.</p>
+
+<blockquote style="border-left: 4px solid #ef4444; padding-left: 1.5rem; margin: 1.5rem 0; font-style: italic; color: #fca5a5; font-size: 1.1em;">
+"The appraisal is back. It's <strong>$60,000 short</strong>."
+</blockquote>
+
+<p>If you bought a presale condo in Surrey or Vancouver back in 2022 or 2023, you likely bought at the peak of the market. Now, as you prepare to move in, the market reality has shifted. Prices in many condo pockets have softened, and buyers are walking away from their deposits because they simply <strong>can't bridge the gap</strong>.</p>
+
+<div style="background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 100%); border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0;">
+  <p style="color: #fecaca; margin: 0; font-size: 1em;"><strong style="color: #ffffff;">⚠️ Warning:</strong> Walking away means losing your deposit (often <strong>15-20%</strong>) and facing potential <strong>lawsuits from developers</strong>.</p>
+</div>
+
+<p>At <strong>Kraft Mortgages</strong>, we have a solution that the big banks don't: <span style="font-size: 1.2em; font-weight: bold; color: #10b981;">An exclusive lender willing to finance up to 85% Loan-to-Value (LTV) on condos.</span></p>
+
+<hr/>
+
+<h3>The "Appraisal Trap": Why Buyers Are Scrambling</h3>
+
+<p>Here is the math that is keeping buyers up at night.</p>
+
+<p>When you buy a home, the bank lends based on the <strong>lower</strong> of two numbers: what you paid, or what it's worth today.</p>
+
+<div style="background: linear-gradient(135deg, #1f2937 0%, #374151 100%); border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0; border-left: 4px solid #f59e0b;">
+  <h4 style="color: #f59e0b; margin: 0 0 1rem 0;">📋 The Scenario</h4>
+  <p style="color: #d1d5db; margin: 0 0 0.5rem 0;">You signed a contract for a 2-bedroom condo in Surrey for <strong style="color: #ffffff;">$700,000</strong>.</p>
+  <p style="color: #d1d5db; margin: 0;">Today, the appraiser says it's only worth <strong style="color: #ef4444;">$640,000</strong>.</p>
+</div>
+
+<ul style="line-height: 2; color: #d1d5db;">
+  <li><strong style="color: #f3f4f6;">The Bank's Move:</strong> A traditional bank will give you 80% of the <em>current</em> value ($640k). That's a mortgage of <strong style="color: #ef4444;">$512,000</strong>.</li>
+  <li><strong style="color: #f3f4f6;">The Problem:</strong> You still owe the developer <strong>$700,000</strong>.</li>
+  <li><strong style="color: #f3f4f6;">The Gap:</strong> You now need to come up with <strong style="color: #ef4444;">$188,000</strong> in cash to close. If you only saved the traditional 20% down payment ($140,000), you are <strong style="color: #ef4444;">$48,000 short</strong>.</li>
+</ul>
+
+<p style="color: #fca5a5; font-style: italic; text-align: center; margin: 1.5rem 0;">This is why buyers are "walking away"—they literally cannot find that extra cash.</p>
+
+<hr/>
+
+<h3>The Kraft Solution: The 85% "Rescue" Mortgage</h3>
+
+<p>While the major banks are tightening their belts and capping conventional mortgages at 80%, we have access to a <strong>specialized lending partner</strong> who understands the current BC market.</p>
+
+<p style="font-size: 1.15em; text-align: center; margin: 1.5rem 0;"><strong style="color: #10b981;">They are willing to go up to 85% Loan-to-Value.</strong></p>
+
+<p>Here is how that same scenario looks with our solution:</p>
+
+<!-- Comparison Table -->
+<div style="overflow-x: auto; margin: 2rem 0;">
+  <table style="width: 100%; border-collapse: collapse; background: linear-gradient(135deg, #1f2937 0%, #374151 100%); border-radius: 12px; overflow: hidden;">
+    <thead>
+      <tr style="background: linear-gradient(135deg, #374151 0%, #4b5563 100%);">
+        <th style="padding: 1rem; text-align: left; color: #f3f4f6; font-weight: 600; border-bottom: 2px solid #6b7280;">Feature</th>
+        <th style="padding: 1rem; text-align: center; color: #ef4444; font-weight: 600; border-bottom: 2px solid #6b7280;">Standard Bank (80%)</th>
+        <th style="padding: 1rem; text-align: center; color: #10b981; font-weight: 600; border-bottom: 2px solid #6b7280;">Kraft Partner (85%)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="padding: 1rem; color: #d1d5db; border-bottom: 1px solid #4b5563;">Appraised Value</td>
+        <td style="padding: 1rem; text-align: center; color: #f3f4f6; border-bottom: 1px solid #4b5563;">$640,000</td>
+        <td style="padding: 1rem; text-align: center; color: #f3f4f6; border-bottom: 1px solid #4b5563;">$640,000</td>
+      </tr>
+      <tr style="background: rgba(0,0,0,0.2);">
+        <td style="padding: 1rem; color: #d1d5db; border-bottom: 1px solid #4b5563;">Max Mortgage Amount</td>
+        <td style="padding: 1rem; text-align: center; color: #ef4444; font-weight: 600; border-bottom: 1px solid #4b5563;">$512,000</td>
+        <td style="padding: 1rem; text-align: center; color: #10b981; font-weight: 700; border-bottom: 1px solid #4b5563;">$544,000</td>
+      </tr>
+      <tr>
+        <td style="padding: 1rem; color: #d1d5db; border-bottom: 1px solid #4b5563;">Cash You Need to Close</td>
+        <td style="padding: 1rem; text-align: center; color: #ef4444; font-weight: 600; border-bottom: 1px solid #4b5563;">$188,000</td>
+        <td style="padding: 1rem; text-align: center; color: #10b981; font-weight: 700; border-bottom: 1px solid #4b5563;">$156,000</td>
+      </tr>
+      <tr style="background: rgba(16, 185, 129, 0.15);">
+        <td style="padding: 1rem; color: #d1d5db; font-weight: 600;">Cash Saved</td>
+        <td style="padding: 1rem; text-align: center; color: #6b7280;">$0</td>
+        <td style="padding: 1rem; text-align: center; color: #10b981; font-weight: 700; font-size: 1.25em;">$32,000</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div style="background: linear-gradient(135deg, #065f46 0%, #047857 100%); border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0; text-align: center;">
+  <p style="color: #ffffff; margin: 0; font-size: 1.1em;"><strong>That $32,000 difference is often the lifeline that allows you to keep your condo and protect your original deposit.</strong></p>
+</div>
+
+<hr/>
+
+<h3>Who Is This For?</h3>
+
+<p>This program is specifically designed for:</p>
+
+<ol style="line-height: 2;">
+  <li><strong style="color: #f59e0b;">Presale Buyers:</strong> Facing low appraisals upon completion.</li>
+  <li><strong style="color: #f59e0b;">Recent Purchasers:</strong> Who bought with a quick closing and are seeing values dip.</li>
+  <li><strong style="color: #f59e0b;">High-Ratio Borrowers:</strong> Who have strong income but are "cash poor" regarding the extra down payment funds.</li>
+</ol>
+
+<hr/>
+
+<h3>Don't Walk Away From Your Deposit</h3>
+
+<p>The market in Vancouver and Surrey is shifting, but real estate is a long game. <strong>Walking away from a $100,000+ deposit because of a temporary appraisal gap is a tragedy we want to prevent.</strong></p>
+
+<div style="background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); border-radius: 12px; padding: 2rem; margin: 2rem 0; text-align: center;">
+  <p style="color: #ffffff; font-size: 1.25em; margin: 0 0 1rem 0; font-weight: 600;">Received a low appraisal? Don't panic.</p>
+  <a href="https://calendar.app.google/HcbcfrKKtBvcPQqd8" target="_blank" rel="noopener noreferrer" style="display: inline-block; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: #1f2937; padding: 16px 32px; border: none; border-radius: 8px; font-size: 18px; font-weight: 700; cursor: pointer; text-decoration: none; box-shadow: 0 4px 14px rgba(245, 158, 11, 0.4);">🆘 Book a 15-min Emergency Strategy Call</a>
+  <p style="color: #bfdbfe; font-size: 0.9em; margin: 1rem 0 0 0;">Let's run the numbers with our 85% LTV lender and get you the keys to your new home.</p>
+</div>
+</article>`;
+
+    return {
+      slug: 'condo-crunch-surrey-vancouver-low-appraisals',
+      title: 'The "Condo Crunch" in Surrey & Vancouver: Why Appraisals Are Coming in Low (And How to Close Anyway)',
+      markdown: blogContent,
+      html: blogContent,
+      status: 'published' as const,
+      publishedAt: new Date('2025-12-12T10:00:00Z'),
+      author: {
+        name: 'Varun Chaudhry',
+        title: 'Licensed Mortgage Broker',
+        license: 'BCFSA #M08001935'
+      },
+      metaDescription: 'Presale condo appraisal came in low? Learn how Kraft Mortgages 85% LTV rescue mortgage can save your deposit and close your Surrey or Vancouver condo.',
+      keywords: ['low-appraisal', 'presale-condo', 'Surrey', 'Vancouver', '85-LTV', 'rescue-mortgage', 'condo-completion', 'appraisal-gap']
+    };
+  }
   if (slug === 'alberta-advantage-where-to-invest-2026') {
     const blogContent = `<article>
 <h2>The "Alberta Advantage" Hasn't Vanished—It Just Moved North</h2>
@@ -1116,6 +1249,46 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
     keywords: ['MLI-Select', 'CMHC', 'Alberta-investing', 'infinite-returns', 'multi-family', '95-LTV', '50-year-amortization']
   };
 
+  const mockPost7: Post = {
+    slug: 'condo-crunch-surrey-vancouver-low-appraisals',
+    title: 'The "Condo Crunch" in Surrey & Vancouver: Why Appraisals Are Coming in Low (And How to Close Anyway)',
+    markdown: `<article>
+<h2>The "Condo Crunch" in Surrey & Vancouver</h2>
+<p><strong>Date:</strong> December 12, 2025 | <strong>Category:</strong> Mortgage Solutions, BC Real Estate | <strong>Reading Time:</strong> 5 Minutes</p>
+
+<p>Presale condo appraisal came in <strong style="color: #ef4444;">$60,000 short</strong>? You're not alone.</p>
+
+<p>At <strong>Kraft Mortgages</strong>, we have a solution: <strong style="color: #10b981;">85% LTV rescue mortgage</strong> that can save you up to $32,000 in cash at closing.</p>
+
+<p><strong>Standard Bank (80%):</strong> $188,000 cash needed</p>
+<p><strong>Kraft Partner (85%):</strong> $156,000 cash needed</p>
+
+<p>Don't walk away from your deposit. Book an emergency strategy call today.</p>
+</article>`,
+    html: `<article>
+<h2>The "Condo Crunch" in Surrey & Vancouver</h2>
+<p><strong>Date:</strong> December 12, 2025 | <strong>Category:</strong> Mortgage Solutions, BC Real Estate | <strong>Reading Time:</strong> 5 Minutes</p>
+
+<p>Presale condo appraisal came in <strong style="color: #ef4444;">$60,000 short</strong>? You're not alone.</p>
+
+<p>At <strong>Kraft Mortgages</strong>, we have a solution: <strong style="color: #10b981;">85% LTV rescue mortgage</strong> that can save you up to $32,000 in cash at closing.</p>
+
+<p><strong>Standard Bank (80%):</strong> $188,000 cash needed</p>
+<p><strong>Kraft Partner (85%):</strong> $156,000 cash needed</p>
+
+<p>Don't walk away from your deposit. Book an emergency strategy call today.</p>
+</article>`,
+    status: 'published' as const,
+    publishedAt: new Date('2025-12-12T10:00:00Z'),
+    author: {
+      name: 'Varun Chaudhry',
+      title: 'Licensed Mortgage Broker',
+      license: 'BCFSA #M08001935'
+    },
+    metaDescription: 'Presale condo appraisal came in low? Learn how Kraft Mortgages 85% LTV rescue mortgage can save your deposit and close your Surrey or Vancouver condo.',
+    keywords: ['low-appraisal', 'presale-condo', 'Surrey', 'Vancouver', '85-LTV', 'rescue-mortgage']
+  };
+
   try {
     const snapshot = await (await postsCol())
       .orderBy('publishedAt', 'desc')
@@ -1128,7 +1301,7 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
     })) as Post[];
 
     // Combine our mock post with Firestore posts and sort by date
-    const allPosts = [mockPost, mockPost2, mockPost3, mockPost4, mockPost5, mockPost6, ...firestorePosts].sort((a, b) =>
+    const allPosts = [mockPost, mockPost2, mockPost3, mockPost4, mockPost5, mockPost6, mockPost7, ...firestorePosts].sort((a, b) =>
       new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
     );
 
@@ -1136,6 +1309,6 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
   } catch (error) {
     console.error('Error fetching recent posts:', error);
     // Return only our mock post if Firestore fails
-    return [mockPost, mockPost2, mockPost3, mockPost4, mockPost5, mockPost6];
+    return [mockPost, mockPost2, mockPost3, mockPost4, mockPost5, mockPost6, mockPost7];
   }
 }
