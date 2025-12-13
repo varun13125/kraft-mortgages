@@ -851,7 +851,7 @@ export async function getPost(slug: string): Promise<Post | null> {
 <h2>The "Geographic Arbitrage": How to Turn Your Surrey Townhouse into a Mortgage-Free Mansion in Alberta</h2>
 <p><strong>Date:</strong> December 12, 2025 | <strong>Category:</strong> Relocation Strategy, Market Trends | <strong>Reading Time:</strong> 6 Minutes</p>
 
-<p style="text-align: center; color: #9ca3af; font-size: 0.875rem; margin: 1.5rem 0;">[IMAGE: A split screen photo. Left side: A rainy, expensive townhouse in Vancouver. Right side: A sunny, large detached home in Alberta. Text overlay says: "Trade This... For This + Cash".]</p>
+<img src="/images/blog-geographic-arbitrage.jpg" alt="Trade This For This Plus Cash - Surrey townhouse with $550K mortgage vs Alberta mansion with $150K mortgage" style="width:100%;height:auto;border-radius:12px;margin:1.5rem 0;box-shadow: 0 4px 20px rgba(0,0,0,0.3);" />
 
 <p style="font-size: 1.1em; line-height: 1.8;">We see the same story in our Surrey office every week. A family is "house rich" but "cash poor." They own a $1.1 million property in the Lower Mainland, but they are drowning in a $700,000 mortgage and struggling with the high cost of living.</p>
 
