@@ -846,6 +846,142 @@ export async function getPost(slug: string): Promise<Post | null> {
       categories: ['Mortgage Strategy', 'Market News']
     };
   }
+  if (slug === 'geographic-arbitrage-surrey-to-alberta') {
+    const blogContent = `<article>
+<h2>The "Geographic Arbitrage": How to Turn Your Surrey Townhouse into a Mortgage-Free Mansion in Alberta</h2>
+<p><strong>Date:</strong> December 12, 2025 | <strong>Category:</strong> Relocation Strategy, Market Trends | <strong>Reading Time:</strong> 6 Minutes</p>
+
+<p style="text-align: center; color: #9ca3af; font-size: 0.875rem; margin: 1.5rem 0;">[IMAGE: A split screen photo. Left side: A rainy, expensive townhouse in Vancouver. Right side: A sunny, large detached home in Alberta. Text overlay says: "Trade This... For This + Cash".]</p>
+
+<p style="font-size: 1.1em; line-height: 1.8;">We see the same story in our Surrey office every week. A family is "house rich" but "cash poor." They own a $1.1 million property in the Lower Mainland, but they are drowning in a $700,000 mortgage and struggling with the high cost of living.</p>
+
+<p>They think they are stuck. <strong style="color: #10b981;">They aren't.</strong></p>
+
+<p>In 2025, the smartest financial move for many BC residents isn't a new investment strategy—it's a map change. It's called <span style="font-size: 1.15em; font-weight: bold; color: #f59e0b;">Geographic Arbitrage</span>: taking equity from a high-cost market (Vancouver/Surrey) and <strong>Moving to Alberta</strong>, a high-growth, lower-cost market (Calgary/Edmonton).</p>
+
+<p>At <strong>Kraft Mortgages</strong>, we are licensed in <strong style="color: #10b981;">both British Columbia and Alberta</strong>. This gives us a unique view of the market—and the ability to handle your entire move seamlessly. As your <strong>Mortgage Broker Surrey</strong> and Alberta specialist, we bridge both worlds.</p>
+
+<hr/>
+
+<h3>The Math That Is Changing Lives</h3>
+
+<p>Let's look at a real-world scenario we recently handled for a client moving from Surrey to Edmonton.</p>
+
+<!-- BC Exit Strategy Table -->
+<div style="background: linear-gradient(135deg, #1f2937 0%, #374151 100%); border-radius: 12px; padding: 1.5rem; margin: 2rem 0;">
+  <h4 style="color: #f59e0b; margin: 0 0 1.5rem 0; text-align: center;">📊 THE "BC EXIT" STRATEGY</h4>
+  
+  <div style="overflow-x: auto;">
+    <table style="width: 100%; border-collapse: collapse; background: rgba(0,0,0,0.2); border-radius: 8px; overflow: hidden;">
+      <thead>
+        <tr style="background: linear-gradient(135deg, #374151 0%, #4b5563 100%);">
+          <th style="padding: 1rem; text-align: left; color: #f3f4f6; font-weight: 600; border-bottom: 2px solid #6b7280;">Step</th>
+          <th style="padding: 1rem; text-align: left; color: #f3f4f6; font-weight: 600; border-bottom: 2px solid #6b7280;">Location</th>
+          <th style="padding: 1rem; text-align: right; color: #f3f4f6; font-weight: 600; border-bottom: 2px solid #6b7280;">The Numbers</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="padding: 1rem; color: #d1d5db; border-bottom: 1px solid #4b5563;"><strong>1. Sell</strong></td>
+          <td style="padding: 1rem; color: #ef4444; font-weight: 600; border-bottom: 1px solid #4b5563;">Surrey, BC (3-Bed Townhouse)</td>
+          <td style="padding: 1rem; text-align: right; color: #10b981; font-weight: 600; border-bottom: 1px solid #4b5563;">Sold: $950,000</td>
+        </tr>
+        <tr style="background: rgba(0,0,0,0.2);">
+          <td style="padding: 1rem; color: #d1d5db; border-bottom: 1px solid #4b5563;"><strong>2. Payoff</strong></td>
+          <td style="padding: 1rem; color: #d1d5db; border-bottom: 1px solid #4b5563;">Existing Mortgage</td>
+          <td style="padding: 1rem; text-align: right; color: #ef4444; font-weight: 600; border-bottom: 1px solid #4b5563;">-$550,000</td>
+        </tr>
+        <tr>
+          <td style="padding: 1rem; color: #d1d5db; border-bottom: 1px solid #4b5563;"><strong>3. Equity</strong></td>
+          <td style="padding: 1rem; color: #d1d5db; border-bottom: 1px solid #4b5563;">Cash in Hand</td>
+          <td style="padding: 1rem; text-align: right; color: #f59e0b; font-weight: 700; font-size: 1.1em; border-bottom: 1px solid #4b5563;">$400,000</td>
+        </tr>
+        <tr style="background: rgba(0,0,0,0.2);">
+          <td style="padding: 1rem; color: #d1d5db; border-bottom: 1px solid #4b5563;"><strong>4. Buy</strong></td>
+          <td style="padding: 1rem; color: #10b981; font-weight: 600; border-bottom: 1px solid #4b5563;"><strong>Edmonton Real Estate</strong> (4-Bed Detached)</td>
+          <td style="padding: 1rem; text-align: right; color: #d1d5db; border-bottom: 1px solid #4b5563;">$550,000</td>
+        </tr>
+        <tr style="background: rgba(16, 185, 129, 0.2);">
+          <td style="padding: 1rem; color: #ffffff; font-weight: 600;"><strong>5. Result</strong></td>
+          <td style="padding: 1rem; color: #10b981; font-weight: 600;">New Mortgage Amount</td>
+          <td style="padding: 1rem; text-align: right; color: #10b981; font-weight: 700; font-size: 1.25em;">$150,000</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div style="background: linear-gradient(135deg, #065f46 0%, #047857 100%); border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0; text-align: center;">
+  <p style="color: #ffffff; margin: 0; font-size: 1.1em;"><strong>The Outcome:</strong> This family went from a <span style="color: #fecaca;">$550,000 mortgage</span> in a cramped townhouse to a <span style="color: #6ee7b7;">$150,000 mortgage</span> in a detached home with a yard. <strong>Monthly payments dropped by over $2,500.</strong></p>
+</div>
+
+<p style="text-align: center; font-size: 1.15em; color: #f59e0b; font-weight: 600; margin: 1.5rem 0;">That is life-changing cash flow.</p>
+
+<hr/>
+
+<h3>The Tricky Part: "Bridge Financing" Across Borders</h3>
+
+<p>Moving provinces is stressful. Financing it shouldn't be.</p>
+
+<p>The biggest hurdle is timing. Often, you need to buy your new home in <strong>Calgary Mortgages</strong> territory or <strong>Edmonton Real Estate</strong> <em>before</em> you receive the cash from your sale in Vancouver or Surrey.</p>
+
+<div style="background: linear-gradient(135deg, #1f2937 0%, #374151 100%); border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0; border-left: 4px solid #3b82f6;">
+  <p style="color: #d1d5db; margin: 0;">Most banks struggle with this when the properties are in different provinces. Because <strong style="color: #ffffff;">Kraft Mortgages</strong> operates in both BC and Alberta, we specialize in <strong style="color: #3b82f6;">Bridge Financing</strong>. We can use the equity in your BC home to provide the down payment for your Alberta home, allowing you to move on <em>your</em> schedule, not the bank's.</p>
+</div>
+
+<hr/>
+
+<h3>Why Do This in 2026?</h3>
+
+<div style="display: grid; gap: 1rem; margin: 1.5rem 0;">
+  <div style="background: linear-gradient(135deg, #1f2937 0%, #374151 100%); border-radius: 12px; padding: 1.25rem; border-left: 4px solid #10b981;">
+    <h4 style="color: #10b981; margin: 0 0 0.5rem 0;">1. Alberta is Still Affordable (For Now)</h4>
+    <p style="color: #d1d5db; margin: 0; font-size: 0.95em;">While Calgary prices have risen, <strong>Edmonton Real Estate</strong> remains undervalued. You can still buy "luxury" for under $650k.</p>
+  </div>
+  
+  <div style="background: linear-gradient(135deg, #1f2937 0%, #374151 100%); border-radius: 12px; padding: 1.25rem; border-left: 4px solid #f59e0b;">
+    <h4 style="color: #f59e0b; margin: 0 0 0.5rem 0;">2. No Land Transfer Tax</h4>
+    <p style="color: #d1d5db; margin: 0; font-size: 0.95em;">When you buy in Alberta, you don't pay the massive Property Transfer Tax (PTT) you are used to in BC. <strong>That saves you another $10,000–$15,000 instantly.</strong></p>
+  </div>
+  
+  <div style="background: linear-gradient(135deg, #1f2937 0%, #374151 100%); border-radius: 12px; padding: 1.25rem; border-left: 4px solid #3b82f6;">
+    <h4 style="color: #3b82f6; margin: 0 0 0.5rem 0;">3. Lower Income Tax</h4>
+    <p style="color: #d1d5db; margin: 0; font-size: 0.95em;">Keep more of what you earn. Alberta's income tax rates are among the lowest in Canada.</p>
+  </div>
+</div>
+
+<hr/>
+
+<h3>Stop Paying for "Potential" and Start Living for Real</h3>
+
+<p>If you are tired of the "BC Grind," let's run the numbers on your property. You might be sitting on a lottery ticket that can buy you financial freedom just one province over.</p>
+
+<p>As your trusted <strong>Mortgage Broker Surrey</strong> with Alberta expertise, we make cross-province moves seamless.</p>
+
+<div style="background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); border-radius: 12px; padding: 2rem; margin: 2rem 0; text-align: center;">
+  <p style="color: #ffffff; font-size: 1.25em; margin: 0 0 1rem 0; font-weight: 600;">Thinking of making the move?</p>
+  <a href="https://calendar.app.google/HcbcfrKKtBvcPQqd8" target="_blank" rel="noopener noreferrer" style="display: inline-block; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: #1f2937; padding: 16px 32px; border: none; border-radius: 8px; font-size: 18px; font-weight: 700; cursor: pointer; text-decoration: none; box-shadow: 0 4px 14px rgba(245, 158, 11, 0.4);">🏔️ Book a "BC to Alberta" Strategy Call</a>
+  <p style="color: #bfdbfe; font-size: 0.9em; margin: 1rem 0 0 0;">We handle the mortgage on both sides of the Rockies so you only deal with one expert team.</p>
+</div>
+</article>`;
+
+    return {
+      slug: 'geographic-arbitrage-surrey-to-alberta',
+      title: 'The "Geographic Arbitrage": How to Turn Your Surrey Townhouse into a Mortgage-Free Mansion in Alberta',
+      markdown: blogContent,
+      html: blogContent,
+      status: 'published' as const,
+      publishedAt: new Date('2025-12-12T14:00:00Z'),
+      author: {
+        name: 'Varun Chaudhry',
+        title: 'Licensed Mortgage Broker',
+        license: 'BCFSA #M08001935'
+      },
+      metaDescription: 'Learn how to turn your Surrey townhouse equity into a mortgage-free home in Alberta. Bridge financing, no PTT, and lower costs. Your Mortgage Broker Surrey to Alberta specialist.',
+      keywords: ['geographic-arbitrage', 'mortgage-broker-surrey', 'moving-to-alberta', 'bridge-financing', 'edmonton-real-estate', 'calgary-mortgages', 'BC-to-Alberta'],
+      categories: ['Relocation Strategy', 'Market Trends']
+    };
+  }
   if (slug === 'alberta-advantage-where-to-invest-2026') {
     const blogContent = `<article>
 <h2>The "Alberta Advantage" Hasn't Vanished—It Just Moved North</h2>
@@ -1466,6 +1602,41 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
     categories: ['Mortgage Strategy', 'Market News']
   };
 
+  const mockPost9: Post = {
+    slug: 'geographic-arbitrage-surrey-to-alberta',
+    title: 'The "Geographic Arbitrage": How to Turn Your Surrey Townhouse into a Mortgage-Free Mansion in Alberta',
+    markdown: `<article>
+<h2>The "Geographic Arbitrage": Surrey Townhouse → Alberta Mansion</h2>
+<p><strong>Date:</strong> December 12, 2025 | <strong>Category:</strong> Relocation Strategy, Market Trends | <strong>Reading Time:</strong> 6 Minutes</p>
+
+<p>Turn your <strong>Mortgage Broker Surrey</strong> equity into a mortgage-free home in Alberta. <strong>Moving to Alberta</strong> with <strong>Bridge Financing</strong> makes it seamless.</p>
+
+<p><strong>BC Exit Result:</strong> $550K mortgage → $150K mortgage. Monthly savings: $2,500+</p>
+
+<p>We handle mortgages in both <strong>Edmonton Real Estate</strong> and <strong>Calgary Mortgages</strong>.</p>
+</article>`,
+    html: `<article>
+<h2>The "Geographic Arbitrage": Surrey Townhouse → Alberta Mansion</h2>
+<p><strong>Date:</strong> December 12, 2025 | <strong>Category:</strong> Relocation Strategy, Market Trends | <strong>Reading Time:</strong> 6 Minutes</p>
+
+<p>Turn your <strong>Mortgage Broker Surrey</strong> equity into a mortgage-free home in Alberta. <strong>Moving to Alberta</strong> with <strong>Bridge Financing</strong> makes it seamless.</p>
+
+<p><strong>BC Exit Result:</strong> $550K mortgage → $150K mortgage. Monthly savings: $2,500+</p>
+
+<p>We handle mortgages in both <strong>Edmonton Real Estate</strong> and <strong>Calgary Mortgages</strong>.</p>
+</article>`,
+    status: 'published' as const,
+    publishedAt: new Date('2025-12-12T14:00:00Z'),
+    author: {
+      name: 'Varun Chaudhry',
+      title: 'Licensed Mortgage Broker',
+      license: 'BCFSA #M08001935'
+    },
+    metaDescription: 'Learn how to turn your Surrey townhouse equity into a mortgage-free home in Alberta with bridge financing.',
+    keywords: ['geographic-arbitrage', 'mortgage-broker-surrey', 'moving-to-alberta', 'bridge-financing', 'edmonton-real-estate'],
+    categories: ['Relocation Strategy', 'Market Trends']
+  };
+
   try {
     const snapshot = await (await postsCol())
       .orderBy('publishedAt', 'desc')
@@ -1478,7 +1649,7 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
     })) as Post[];
 
     // Combine our mock post with Firestore posts and sort by date
-    const allPosts = [mockPost, mockPost2, mockPost3, mockPost4, mockPost5, mockPost6, mockPost7, mockPost8, ...firestorePosts].sort((a, b) =>
+    const allPosts = [mockPost, mockPost2, mockPost3, mockPost4, mockPost5, mockPost6, mockPost7, mockPost8, mockPost9, ...firestorePosts].sort((a, b) =>
       new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
     );
 
@@ -1486,6 +1657,6 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
   } catch (error) {
     console.error('Error fetching recent posts:', error);
     // Return only our mock post if Firestore fails
-    return [mockPost, mockPost2, mockPost3, mockPost4, mockPost5, mockPost6, mockPost7, mockPost8];
+    return [mockPost, mockPost2, mockPost3, mockPost4, mockPost5, mockPost6, mockPost7, mockPost8, mockPost9];
   }
 }
