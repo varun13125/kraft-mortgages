@@ -2,7 +2,7 @@
 
 import { motion, useReducedMotion } from 'framer-motion'
 import Script from 'next/script'
-import { Shield, Clock, Users, FileText, CheckCircle, Phone, Mail, MapPin, ArrowRight } from 'lucide-react'
+import { Shield, Clock, Users, FileText, CheckCircle, Phone, Mail, MapPin, ArrowRight, Calculator, BookOpen, ClipboardCheck } from 'lucide-react'
 
 export default function VarunLandingPage() {
     const shouldReduceMotion = useReducedMotion()
@@ -107,6 +107,22 @@ export default function VarunLandingPage() {
                                 >
                                     Get Started →
                                 </button>
+                            </motion.div>
+
+                            {/* Subtle Main Site Link */}
+                            <motion.div
+                                {...fadeInUpDelay(0.9)}
+                                className="mt-5 text-center md:text-left text-sm text-zinc-500"
+                            >
+                                Prefer to explore first?{' '}
+                                <a
+                                    href="https://www.kraftmortgages.ca"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="underline underline-offset-4 hover:text-gold-400 transition-colors"
+                                >
+                                    Visit KraftMortgages.ca
+                                </a>
                             </motion.div>
                         </div>
 
@@ -285,6 +301,67 @@ export default function VarunLandingPage() {
                         >
                             🔒 Your information is secure and will never be shared. No obligation.
                         </motion.p>
+
+                        {/* ========== TRUSTED RESOURCES SECTION ========== */}
+                        <motion.div
+                            initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ delay: 0.5 }}
+                            className="mt-16"
+                        >
+                            <div className="text-center mb-8">
+                                <h3 className="text-2xl font-bold text-zinc-100 mb-2">Trusted Resources</h3>
+                                <p className="text-zinc-500 text-sm">Want to learn more before we speak? These links can help.</p>
+                            </div>
+
+                            <div className="grid md:grid-cols-3 gap-4">
+                                {/* Calculators Card */}
+                                <a
+                                    href="https://www.kraftmortgages.ca/calculators"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="bg-zinc-900/50 backdrop-blur-xl border border-zinc-800/50 rounded-2xl p-6 hover:border-gold-500/30 transition-all duration-300 block group"
+                                >
+                                    <div className="w-12 h-12 bg-gold-500/10 rounded-xl flex items-center justify-center mb-4">
+                                        <Calculator className="w-6 h-6 text-gold-400" />
+                                    </div>
+                                    <h4 className="text-lg font-semibold text-zinc-100 mb-2">Mortgage Calculators</h4>
+                                    <p className="text-zinc-400 text-sm mb-3">Estimate payments and affordability in minutes.</p>
+                                    <span className="text-gold-400 text-sm font-medium group-hover:underline">Open →</span>
+                                </a>
+
+                                {/* Blog Card */}
+                                <a
+                                    href="https://www.kraftmortgages.ca/blog"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="bg-zinc-900/50 backdrop-blur-xl border border-zinc-800/50 rounded-2xl p-6 hover:border-gold-500/30 transition-all duration-300 block group"
+                                >
+                                    <div className="w-12 h-12 bg-gold-500/10 rounded-xl flex items-center justify-center mb-4">
+                                        <BookOpen className="w-6 h-6 text-gold-400" />
+                                    </div>
+                                    <h4 className="text-lg font-semibold text-zinc-100 mb-2">Mortgage Insights Blog</h4>
+                                    <p className="text-zinc-400 text-sm mb-3">Read practical guidance on buying, renewing, and refinancing.</p>
+                                    <span className="text-gold-400 text-sm font-medium group-hover:underline">Open →</span>
+                                </a>
+
+                                {/* Application Portal Card */}
+                                <a
+                                    href="https://r.mtg-app.com/varun-chaudhry"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="bg-zinc-900/50 backdrop-blur-xl border border-zinc-800/50 rounded-2xl p-6 hover:border-gold-500/30 transition-all duration-300 block group"
+                                >
+                                    <div className="w-12 h-12 bg-gold-500/10 rounded-xl flex items-center justify-center mb-4">
+                                        <ClipboardCheck className="w-6 h-6 text-gold-400" />
+                                    </div>
+                                    <h4 className="text-lg font-semibold text-zinc-100 mb-2">Secure Application Portal</h4>
+                                    <p className="text-zinc-400 text-sm mb-3">Start a full application when you're ready.</p>
+                                    <span className="text-gold-400 text-sm font-medium group-hover:underline">Open →</span>
+                                </a>
+                            </div>
+                        </motion.div>
                     </div>
                 </div>
             </section>
