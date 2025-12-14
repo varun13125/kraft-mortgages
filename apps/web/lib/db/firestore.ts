@@ -982,6 +982,143 @@ export async function getPost(slug: string): Promise<Post | null> {
       categories: ['Relocation Strategy', 'Market Trends']
     };
   }
+  if (slug === 'insured-mortgage-cap-1-5-million-december-2025') {
+    const blogContent = `<article>
+<h2>The $1.5 Million Game Changer: Why You No Longer Need $240k Cash to Buy a Home in Surrey</h2>
+<p><strong>Date:</strong> December 13, 2025 | <strong>Category:</strong> Market News, First-Time Buyers | <strong>Reading Time:</strong> 5 Minutes</p>
+
+<p style="text-align: center; color: #9ca3af; font-size: 0.875rem; margin: 1.5rem 0;">[IMAGE: A modern townhouse in Surrey with a "SOLD" sign. Overlay text: "Under $1.5M? You don't need 20% down anymore."]</p>
+
+<p style="font-size: 1.1em; line-height: 1.8;">For the last decade, buying a family home in <strong>Surrey</strong>, <strong>Langley</strong>, or <strong>Vancouver</strong> came with a massive barrier. If the purchase price was over $1 Million, you <em>had</em> to put 20% down. No exceptions.</p>
+
+<p>For a $1.2M townhouse, that meant saving <strong style="color: #ef4444;">$240,000 in cash</strong>. For many high-income families who could easily afford the monthly payments, that lump sum was impossible to save while paying high rents.</p>
+
+<div style="background: linear-gradient(135deg, #065f46 0%, #047857 100%); border-radius: 12px; padding: 1.5rem; margin: 2rem 0; text-align: center;">
+  <p style="color: #ffffff; margin: 0; font-size: 1.25em; font-weight: 600;">As of December 15, 2025, that rule is history.</p>
+</div>
+
+<p>At <strong>Kraft Mortgages</strong>, we are already pre-approving clients under these new federal rules. Here is how they unlock the market for you as a <strong>First-Time Home Buyer BC</strong>.</p>
+
+<hr/>
+
+<h3>Change #1: The <strong>Insured Mortgage Cap</strong> Hits $1.5 Million</h3>
+
+<p>The federal government has raised the "<strong>Insured Mortgage Cap</strong>" from $1 million to <strong style="color: #10b981;">$1.5 million</strong>.</p>
+
+<p>This means you can now buy a home up to $1.5M with <strong>less than 20% down</strong>. You simply pay the mortgage default insurance (CMHC) premium, which is added to your mortgage balance.</p>
+
+<h4 style="color: #f59e0b; margin-top: 2rem;">The Real-World Impact (The $1.2M Townhouse)</h4>
+
+<p>Here is how the math changes for a standard family home in the Fraser Valley:</p>
+
+<!-- Down Payment Comparison Table -->
+<div style="background: linear-gradient(135deg, #1f2937 0%, #374151 100%); border-radius: 12px; padding: 1.5rem; margin: 2rem 0;">
+  <h4 style="color: #f59e0b; margin: 0 0 1.5rem 0; text-align: center;">📊 DOWN PAYMENT COMPARISON</h4>
+  
+  <div style="overflow-x: auto;">
+    <table style="width: 100%; border-collapse: collapse; background: rgba(0,0,0,0.2); border-radius: 8px; overflow: hidden;">
+      <thead>
+        <tr style="background: linear-gradient(135deg, #374151 0%, #4b5563 100%);">
+          <th style="padding: 1rem; text-align: left; color: #f3f4f6; font-weight: 600; border-bottom: 2px solid #6b7280;">Scenario</th>
+          <th style="padding: 1rem; text-align: right; color: #f3f4f6; font-weight: 600; border-bottom: 2px solid #6b7280;">Old Rule (Before Dec 15)</th>
+          <th style="padding: 1rem; text-align: right; color: #10b981; font-weight: 600; border-bottom: 2px solid #6b7280;">New Rule (Now)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="padding: 1rem; color: #d1d5db; border-bottom: 1px solid #4b5563;"><strong>Home Price</strong></td>
+          <td style="padding: 1rem; text-align: right; color: #d1d5db; border-bottom: 1px solid #4b5563;">$1,200,000</td>
+          <td style="padding: 1rem; text-align: right; color: #10b981; font-weight: 600; border-bottom: 1px solid #4b5563;">$1,200,000</td>
+        </tr>
+        <tr style="background: rgba(0,0,0,0.2);">
+          <td style="padding: 1rem; color: #d1d5db; border-bottom: 1px solid #4b5563;"><strong>Minimum Down Payment</strong></td>
+          <td style="padding: 1rem; text-align: right; color: #d1d5db; border-bottom: 1px solid #4b5563;">20%</td>
+          <td style="padding: 1rem; text-align: right; color: #10b981; font-weight: 600; border-bottom: 1px solid #4b5563;">~7.9% (Tiered)</td>
+        </tr>
+        <tr>
+          <td style="padding: 1rem; color: #d1d5db; border-bottom: 1px solid #4b5563;"><strong>Cash Required</strong></td>
+          <td style="padding: 1rem; text-align: right; color: #ef4444; font-weight: 600; border-bottom: 1px solid #4b5563;">$240,000</td>
+          <td style="padding: 1rem; text-align: right; color: #10b981; font-weight: 700; font-size: 1.1em; border-bottom: 1px solid #4b5563;">$95,000</td>
+        </tr>
+        <tr style="background: rgba(16, 185, 129, 0.2);">
+          <td style="padding: 1rem; color: #ffffff; font-weight: 600;"><strong>Cash Saved Upfront</strong></td>
+          <td style="padding: 1rem; text-align: right; color: #9ca3af;">—</td>
+          <td style="padding: 1rem; text-align: right; color: #10b981; font-weight: 700; font-size: 1.25em;">$145,000</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div style="background: linear-gradient(135deg, #065f46 0%, #047857 100%); border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0; text-align: center;">
+  <p style="color: #ffffff; margin: 0; font-size: 1.1em;"><strong>The Verdict:</strong> You can now get into the same home with <span style="color: #6ee7b7; font-weight: 700;">$145,000 LESS cash upfront</span>. This allows you to keep your savings for renovations, furniture, or investments.</p>
+</div>
+
+<hr/>
+
+<h3>Change #2: <strong>30-Year Amortization</strong> for All First-Time Buyers</h3>
+
+<p>Previously, if you put less than 20% down (an "insured" mortgage), you were capped at a 25-year amortization. This forced your monthly payments higher and made it harder to qualify.</p>
+
+<div style="background: linear-gradient(135deg, #1f2937 0%, #374151 100%); border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0; border-left: 4px solid #3b82f6;">
+  <p style="color: #d1d5db; margin: 0;"><strong style="color: #3b82f6;">The New Rule:</strong> All <strong>First-Time Home Buyer BC</strong> (and buyers of <em>new construction</em> homes) can now access <strong style="color: #10b981;">30-Year Amortizations</strong>, even with a small down payment.</p>
+</div>
+
+<p><strong style="color: #f59e0b;">Why this matters:</strong> Stretching the loan by 5 extra years lowers your monthly payment and boosts your borrowing power. It's often the difference between qualifying for a condo or a townhouse.</p>
+
+<hr/>
+
+<h3>Who Does This Help Most?</h3>
+
+<div style="display: grid; gap: 1rem; margin: 1.5rem 0;">
+  <div style="background: linear-gradient(135deg, #1f2937 0%, #374151 100%); border-radius: 12px; padding: 1.25rem; border-left: 4px solid #10b981;">
+    <h4 style="color: #10b981; margin: 0 0 0.5rem 0;">1. The "High Income, Low Savings" Buyer</h4>
+    <p style="color: #d1d5db; margin: 0; font-size: 0.95em;">Professionals in Vancouver/Surrey who make good money but haven't been able to save a quarter-million dollars. As your local <strong>Mortgage Broker Surrey</strong>, we see this every day.</p>
+  </div>
+  
+  <div style="background: linear-gradient(135deg, #1f2937 0%, #374151 100%); border-radius: 12px; padding: 1.25rem; border-left: 4px solid #f59e0b;">
+    <h4 style="color: #f59e0b; margin: 0 0 0.5rem 0;">2. Upgraders</h4>
+    <p style="color: #d1d5db; margin: 0; font-size: 0.95em;">Families moving from a condo to a townhouse/detached home who want to keep some equity in their pocket rather than dumping it all into the <strong>Down Payment Rules 2025</strong>.</p>
+  </div>
+  
+  <div style="background: linear-gradient(135deg, #1f2937 0%, #374151 100%); border-radius: 12px; padding: 1.25rem; border-left: 4px solid #3b82f6;">
+    <h4 style="color: #3b82f6; margin: 0 0 0.5rem 0;">3. New Construction Buyers</h4>
+    <p style="color: #d1d5db; margin: 0; font-size: 0.95em;">Investors and residents buying presales in <strong>Calgary</strong> or <strong>Edmonton</strong> can also leverage the <strong>30-Year Amortization</strong> to improve cash flow.</p>
+  </div>
+</div>
+
+<hr/>
+
+<h3>The Window is Open</h3>
+
+<p>Inventory in the $1M - $1.5M range is about to see a surge in demand as thousands of buyers realize they now qualify under the new <strong>Insured Mortgage Cap</strong> rules.</p>
+
+<p style="font-size: 1.15em; color: #f59e0b; font-weight: 600;">Do you want to beat the rush?</p>
+
+<div style="background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); border-radius: 12px; padding: 2rem; margin: 2rem 0; text-align: center;">
+  <p style="color: #ffffff; font-size: 1.25em; margin: 0 0 1rem 0; font-weight: 600;">Re-calculate your buying power under the new December 15th rules</p>
+  <a href="https://calendar.app.google/HcbcfrKKtBvcPQqd8" target="_blank" rel="noopener noreferrer" style="display: inline-block; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: #1f2937; padding: 16px 32px; border: none; border-radius: 8px; font-size: 18px; font-weight: 700; cursor: pointer; text-decoration: none; box-shadow: 0 4px 14px rgba(245, 158, 11, 0.4);">📅 Book a Strategy Call</a>
+  <p style="color: #bfdbfe; font-size: 0.9em; margin: 1rem 0 0 0;">You might be ready to buy <em>today</em>.</p>
+</div>
+</article>`;
+
+    return {
+      slug: 'insured-mortgage-cap-1-5-million-december-2025',
+      title: 'The $1.5 Million Game Changer: Why You No Longer Need $240k Cash to Buy a Home in Surrey',
+      markdown: blogContent,
+      html: blogContent,
+      status: 'published' as const,
+      publishedAt: new Date('2025-12-13T15:00:00Z'),
+      author: {
+        name: 'Varun Chaudhry',
+        title: 'Licensed Mortgage Broker',
+        license: 'BCFSA #M08001935'
+      },
+      metaDescription: 'New December 2025 rules raise the insured mortgage cap to $1.5M. First-time buyers in BC can now buy with less than 20% down and access 30-year amortizations.',
+      keywords: ['insured-mortgage-cap', '30-year-amortization', 'mortgage-broker-surrey', 'first-time-home-buyer-bc', 'down-payment-rules-2025'],
+      categories: ['Market News', 'First-Time Buyers']
+    };
+  }
   if (slug === 'alberta-advantage-where-to-invest-2026') {
     const blogContent = `<article>
 <h2>The "Alberta Advantage" Hasn't Vanished—It Just Moved North</h2>
@@ -1637,6 +1774,37 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
     categories: ['Relocation Strategy', 'Market Trends']
   };
 
+  const mockPost10: Post = {
+    slug: 'insured-mortgage-cap-1-5-million-december-2025',
+    title: 'The $1.5 Million Game Changer: Why You No Longer Need $240k Cash to Buy a Home in Surrey',
+    markdown: `<article>
+<h2>The $1.5 Million Game Changer: New December 2025 Rules</h2>
+<p><strong>Date:</strong> December 13, 2025 | <strong>Category:</strong> Market News, First-Time Buyers | <strong>Reading Time:</strong> 5 Minutes</p>
+
+<p>The federal government raised the <strong>Insured Mortgage Cap</strong> to $1.5M. First-Time Home Buyers can now buy with less than 20% down.</p>
+
+<p><strong>Cash Saved:</strong> $145,000 on a $1.2M home. <strong>30-Year Amortization</strong> now available for all first-time buyers.</p>
+</article>`,
+    html: `<article>
+<h2>The $1.5 Million Game Changer: New December 2025 Rules</h2>
+<p><strong>Date:</strong> December 13, 2025 | <strong>Category:</strong> Market News, First-Time Buyers | <strong>Reading Time:</strong> 5 Minutes</p>
+
+<p>The federal government raised the <strong>Insured Mortgage Cap</strong> to $1.5M. First-Time Home Buyers can now buy with less than 20% down.</p>
+
+<p><strong>Cash Saved:</strong> $145,000 on a $1.2M home. <strong>30-Year Amortization</strong> now available for all first-time buyers.</p>
+</article>`,
+    status: 'published' as const,
+    publishedAt: new Date('2025-12-13T15:00:00Z'),
+    author: {
+      name: 'Varun Chaudhry',
+      title: 'Licensed Mortgage Broker',
+      license: 'BCFSA #M08001935'
+    },
+    metaDescription: 'New December 2025 rules raise the insured mortgage cap to $1.5M. First-time buyers in BC can now buy with less than 20% down.',
+    keywords: ['insured-mortgage-cap', '30-year-amortization', 'mortgage-broker-surrey', 'first-time-home-buyer-bc'],
+    categories: ['Market News', 'First-Time Buyers']
+  };
+
   try {
     const snapshot = await (await postsCol())
       .orderBy('publishedAt', 'desc')
@@ -1649,7 +1817,7 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
     })) as Post[];
 
     // Combine our mock post with Firestore posts and sort by date
-    const allPosts = [mockPost, mockPost2, mockPost3, mockPost4, mockPost5, mockPost6, mockPost7, mockPost8, mockPost9, ...firestorePosts].sort((a, b) =>
+    const allPosts = [mockPost, mockPost2, mockPost3, mockPost4, mockPost5, mockPost6, mockPost7, mockPost8, mockPost9, mockPost10, ...firestorePosts].sort((a, b) =>
       new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
     );
 
@@ -1657,6 +1825,6 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
   } catch (error) {
     console.error('Error fetching recent posts:', error);
     // Return only our mock post if Firestore fails
-    return [mockPost, mockPost2, mockPost3, mockPost4, mockPost5, mockPost6, mockPost7, mockPost8, mockPost9];
+    return [mockPost, mockPost2, mockPost3, mockPost4, mockPost5, mockPost6, mockPost7, mockPost8, mockPost9, mockPost10];
   }
 }
