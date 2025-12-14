@@ -987,7 +987,7 @@ export async function getPost(slug: string): Promise<Post | null> {
 <h2>The $1.5 Million Game Changer: Why You No Longer Need $240k Cash to Buy a Home in Surrey</h2>
 <p><strong>Date:</strong> December 13, 2025 | <strong>Category:</strong> Market News, First-Time Buyers | <strong>Reading Time:</strong> 5 Minutes</p>
 
-<p style="text-align: center; color: #9ca3af; font-size: 0.875rem; margin: 1.5rem 0;">[IMAGE: A modern townhouse in Surrey with a "SOLD" sign. Overlay text: "Under $1.5M? You don't need 20% down anymore."]</p>
+<p style="text-align: center; color: #9ca3af; font-size: 0.875rem; margin: 1.5rem 0;"><img src="/images/blog-insured-mortgage-cap.png" alt="Modern townhouse in Surrey with SOLD sign - Under $1.5M you don't need 20% down anymore" style="width: 100%; max-width: 800px; border-radius: 12px; margin: 0 auto;" /></p>
 
 <p style="font-size: 1.1em; line-height: 1.8;">For the last decade, buying a family home in <strong>Surrey</strong>, <strong>Langley</strong>, or <strong>Vancouver</strong> came with a massive barrier. If the purchase price was over $1 Million, you <em>had</em> to put 20% down. No exceptions.</p>
 
