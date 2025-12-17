@@ -996,7 +996,7 @@ export async function getPost(slug: string): Promise<Post | null> {
 <p>I'm seeing two distinct strategies emerging from my highest-net-worth clients right now. They aren't just buying "rentals." They are either <strong>Building in BC</strong> to beat the tax, or <strong>Buying in Alberta</strong> for the cash flow.</p>
 
 <div style="background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); border-radius: 12px; padding: 1.5rem; margin: 2rem 0; text-align: center;">
-  <p style="color: #ffffff; margin: 0; font-size: 1.25em; font-weight: 600;">Here is the financial playbook for 2026.</p>
+  <p style="color: #ffffff; margin: 0; font-size: 1.25em; font-weight: 600;">📋 Here is the financial playbook for 2026 👇</p>
 </div>
 
 <hr/>
