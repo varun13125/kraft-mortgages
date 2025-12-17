@@ -982,6 +982,131 @@ export async function getPost(slug: string): Promise<Post | null> {
       categories: ['Relocation Strategy', 'Market Trends']
     };
   }
+  if (slug === '2-5-rate-cut-bc-build-or-alberta-buy-2026') {
+    const blogContent = `<article>
+<h2>The 2.5% Rate Cut is Here: Why Smart Investors Are Building in BC or Buying in Alberta</h2>
+<p><strong>Date:</strong> December 17, 2025 | <strong>Category:</strong> Real Estate Investing, Market News | <strong>Reading Time:</strong> 6 Minutes</p>
+
+<p style="text-align: center; margin: 1.5rem 0;"><img src="/images/blog-rate-cut-bc-alberta.png" alt="2.5% Rate Cut - Build in BC or Buy in Alberta - 2026 Strategy" style="width: 100%; max-width: 800px; border-radius: 12px; margin: 0 auto;" /></p>
+
+<p style="font-size: 1.1em; line-height: 1.8;">The headlines this month are dominated by the <strong>Bank of Canada cutting the benchmark rate to 2.5%</strong>.</p>
+
+<p>It's the signal we've all been waiting for. After two years of holding your breath, the market is moving again. But if you're sitting in Surrey or Vancouver thinking about jumping back into a standard rental or a quick flip, I need to be real with you: <strong style="color: #ef4444;">the game has changed.</strong></p>
+
+<p>I'm seeing two distinct strategies emerging from my highest-net-worth clients right now. They aren't just buying "rentals." They are either <strong>Building in BC</strong> to beat the tax, or <strong>Buying in Alberta</strong> for the cash flow.</p>
+
+<div style="background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); border-radius: 12px; padding: 1.5rem; margin: 2rem 0; text-align: center;">
+  <p style="color: #ffffff; margin: 0; font-size: 1.25em; font-weight: 600;">Here is the financial playbook for 2026.</p>
+</div>
+
+<hr/>
+
+<!-- Strategy A Card -->
+<div style="background: linear-gradient(135deg, #065f46 0%, #047857 100%); border-radius: 16px; padding: 2rem; margin: 2rem 0;">
+  <h3 style="color: #ffffff; margin: 0 0 1rem 0; font-size: 1.5em;">🏗️ Strategy A: The "BC Build" (Surrey, Kelowna, Victoria)</h3>
+  
+  <div style="background: rgba(0,0,0,0.2); border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem;">
+    <p style="color: #fca5a5; margin: 0; font-weight: 600;">⚠️ The Challenge:</p>
+    <p style="color: #e5e7eb; margin: 0.5rem 0 0 0;">The <strong>BC Home Flipping Tax</strong> is now live. If you buy a property and sell it within 365 days, you are facing a <strong style="color: #ef4444;">20% tax</strong> on your profit. That kills the traditional "fix and flip" model.</p>
+  </div>
+  
+  <div style="background: rgba(0,0,0,0.2); border-radius: 12px; padding: 1.25rem;">
+    <p style="color: #6ee7b7; margin: 0; font-weight: 600;">✅ The Varun Chaudhry Solution: Don't flip. Densify.</p>
+    <p style="color: #e5e7eb; margin: 0.75rem 0;">The government wants housing supply, which is why there are exemptions for those who add units.</p>
+    
+    <ul style="color: #e5e7eb; margin: 1rem 0; padding-left: 1.5rem;">
+      <li style="margin-bottom: 0.75rem;"><strong style="color: #fbbf24;">The Play:</strong> My clients are actively purchasing single-family lots in Surrey and the Fraser Valley that are zoned for <strong>Bill 44</strong> (Small-Scale Multi-Unit Housing).</li>
+      <li style="margin-bottom: 0.75rem;"><strong style="color: #fbbf24;">The Finance:</strong> We don't just get you a mortgage; we structure a <strong>Construction Draw Mortgage</strong> specifically designed to fund the build of a 4-plex or 6-plex.</li>
+      <li><strong style="color: #fbbf24;">The Exit:</strong> Once built, we refinance you into a <strong>CMHC MLI Select mortgage</strong>. This allows for up to <strong style="color: #10b981;">50-year amortizations</strong>, which can actually make a new build in BC cash-flow positive.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- Strategy B Card -->
+<div style="background: linear-gradient(135deg, #7c2d12 0%, #c2410c 100%); border-radius: 16px; padding: 2rem; margin: 2rem 0;">
+  <h3 style="color: #ffffff; margin: 0 0 1rem 0; font-size: 1.5em;">🏠 Strategy B: The "Alberta Pivot" (Calgary, Edmonton)</h3>
+  
+  <div style="background: rgba(0,0,0,0.2); border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem;">
+    <p style="color: #fca5a5; margin: 0; font-weight: 600;">⚠️ The Challenge:</p>
+    <p style="color: #e5e7eb; margin: 0.5rem 0 0 0;">Prices in BC, even with the rate cut, still make it hard to find positive cash flow without massive down payments.</p>
+  </div>
+  
+  <div style="background: rgba(0,0,0,0.2); border-radius: 12px; padding: 1.25rem;">
+    <p style="color: #fdba74; margin: 0; font-weight: 600;">✅ The Solution: Move your equity to the Prairies.</p>
+    <p style="color: #e5e7eb; margin: 0.75rem 0;">I am processing a record number of files for BC residents who are leveraging their home equity here to buy in Calgary and Edmonton.</p>
+    
+    <ul style="color: #e5e7eb; margin: 1rem 0; padding-left: 1.5rem;">
+      <li style="margin-bottom: 0.75rem;"><strong style="color: #fbbf24;">Why Alberta?</strong> <strong style="color: #10b981;">No land transfer tax</strong> (unlike BC's PTT), no speculation tax, and significantly lower entry points.</li>
+      <li style="margin-bottom: 0.75rem;"><strong style="color: #fbbf24;">The Play:</strong> You can pick up a detached home or a row townhouse in A-class neighbourhoods in Calgary for a <strong>fraction of the cost</strong> of a condo in Burnaby.</li>
+      <li><strong style="color: #fbbf24;">The Finance:</strong> The beauty of the <strong>CMHC MLI Select program</strong> is that it is federal. We can use the exact same high-leverage, <strong style="color: #10b981;">50-year amortization strategy</strong> for multi-unit purchases in Alberta that we use in BC.</li>
+    </ul>
+  </div>
+</div>
+
+<hr/>
+
+<h3>The "Hidden" Risk: Construction Draws</h3>
+
+<p>Whether you are building a laneway house in Kelowna or an infill project in Edmonton, the financing risk is the same: <strong style="color: #f59e0b;">The Draw Schedule.</strong></p>
+
+<div style="background: linear-gradient(135deg, #1f2937 0%, #374151 100%); border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0; border-left: 4px solid #ef4444;">
+  <p style="color: #fca5a5; margin: 0; font-weight: 600;">⚠️ Warning:</p>
+  <p style="color: #d1d5db; margin: 0.5rem 0 0 0;">Nothing kills a project faster than running out of cash because the bank's inspector didn't approve a draw. I've seen developers lose <strong style="color: #ef4444;">$150,000+</strong> in carrying costs just because their lending strategy wasn't aligned with their build timeline.</p>
+</div>
+
+<p>At Kraft Mortgages, we don't just hand you a rate sheet. <strong>I personally review your construction budget</strong> and align the lender's draw schedule with your contractor's cash flow needs. We ensure the money is there when the concrete is poured.</p>
+
+<hr/>
+
+<h3>The Bottom Line</h3>
+
+<div style="background: linear-gradient(135deg, #1f2937 0%, #374151 100%); border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0;">
+  <p style="color: #10b981; font-size: 1.25em; font-weight: 700; margin: 0 0 1rem 0;">The rate is 2.5%. The window is open.</p>
+  <ul style="color: #d1d5db; margin: 0; padding-left: 1.5rem;">
+    <li style="margin-bottom: 0.5rem;"><strong>If you stay in BC:</strong> Build density.</li>
+    <li><strong>If you want pure cash flow:</strong> Look East to Alberta.</li>
+  </ul>
+</div>
+
+<p>Don't let the new taxes or the stress test scare you off. The opportunities are <strong>massive</strong> if you structure the debt correctly.</p>
+
+<hr/>
+
+<h3>Are you debating between a BC Build or an Alberta Buy?</h3>
+
+<p>Let's look at the numbers together. Book a 15-minute strategy call with me, and I'll walk you through which market offers the best ROI for your specific profile.</p>
+
+<div style="background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); border-radius: 12px; padding: 2rem; margin: 2rem 0; text-align: center;">
+  <p style="color: #ffffff; font-size: 1.25em; margin: 0 0 1rem 0; font-weight: 600;">Get Your Personalized Strategy</p>
+  <a href="https://calendar.app.google/HcbcfrKKtBvcPQqd8" target="_blank" rel="noopener noreferrer" style="display: inline-block; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: #1f2937; padding: 16px 32px; border: none; border-radius: 8px; font-size: 18px; font-weight: 700; cursor: pointer; text-decoration: none; box-shadow: 0 4px 14px rgba(245, 158, 11, 0.4);">📅 Book Your Strategy Call with Varun</a>
+</div>
+
+<hr/>
+
+<div style="background: linear-gradient(135deg, #1f2937 0%, #374151 100%); border-radius: 12px; padding: 1.5rem; margin: 2rem 0;">
+  <p style="color: #9ca3af; font-size: 0.85em; margin: 0;"><strong>Kraft Mortgages</strong><br/># 301 - 1688 152nd Street Surrey BC V4A 2G2<br/>Serving Clients Across British Columbia and Alberta</p>
+  <p style="color: #6b7280; font-size: 0.75em; margin: 1rem 0 0 0;"><em>Note: This post is for information purposes only and does not constitute legal, real estate, or tax advice. Please consult a realtor for property selection and a tax professional regarding your eligibility for BC Home Flipping Tax exemptions.</em></p>
+  <p style="color: #6b7280; font-size: 0.75em; margin: 0.5rem 0 0 0;"><em>APR Disclosure: On a $500,000 mortgage with a 5-year fixed rate of 3.99% and a 25-year amortization, the APR is 4.02% assuming a standard closing fee. Rates are subject to qualification and market change.</em></p>
+</div>
+</article>`;
+
+    return {
+      slug: '2-5-rate-cut-bc-build-or-alberta-buy-2026',
+      title: 'The 2.5% Rate Cut is Here: Why Smart Investors Are Building in BC or Buying in Alberta',
+      markdown: blogContent,
+      html: blogContent,
+      status: 'published' as const,
+      publishedAt: new Date('2025-12-17T12:00:00Z'),
+      author: {
+        name: 'Varun Chaudhry',
+        title: 'Senior Mortgage Strategist',
+        license: 'BCFSA #M08001935'
+      },
+      metaDescription: 'The rate cut is here but the BC Flipping Tax changed everything. Smart investors are now building density in BC or pivoting to Alberta. Here is the playbook.',
+      keywords: ['rate-cut', 'bc-build', 'alberta-buy', 'bill-44', 'mli-select', 'construction-mortgage', 'calgary-real-estate', 'surrey-real-estate'],
+      categories: ['Real Estate Investing', 'Market News']
+    };
+  }
   if (slug === 'insured-mortgage-cap-1-5-million-december-2025') {
     const blogContent = `<article>
 <h2>The $1.5 Million Game Changer: Why You No Longer Need $240k Cash to Buy a Home in Surrey</h2>
@@ -1805,6 +1930,33 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
     categories: ['Market News', 'First-Time Buyers']
   };
 
+  const mockPost11: Post = {
+    slug: '2-5-rate-cut-bc-build-or-alberta-buy-2026',
+    title: 'The 2.5% Rate Cut is Here: Why Smart Investors Are Building in BC or Buying in Alberta',
+    markdown: `<article>
+<h2>2.5% Rate Cut: BC Build vs Alberta Buy</h2>
+<p><strong>Date:</strong> December 17, 2025 | <strong>Category:</strong> Real Estate Investing, Market News | <strong>Reading Time:</strong> 6 Minutes</p>
+
+<p>The Bank of Canada cut rates to 2.5%. But the <strong>BC Home Flipping Tax</strong> changed everything. Smart investors are now choosing: <strong>Build density in BC</strong> or <strong>Pivot to Alberta</strong> for cash flow.</p>
+</article>`,
+    html: `<article>
+<h2>2.5% Rate Cut: BC Build vs Alberta Buy</h2>
+<p><strong>Date:</strong> December 17, 2025 | <strong>Category:</strong> Real Estate Investing, Market News | <strong>Reading Time:</strong> 6 Minutes</p>
+
+<p>The Bank of Canada cut rates to 2.5%. But the <strong>BC Home Flipping Tax</strong> changed everything. Smart investors are now choosing: <strong>Build density in BC</strong> or <strong>Pivot to Alberta</strong> for cash flow.</p>
+</article>`,
+    status: 'published' as const,
+    publishedAt: new Date('2025-12-17T12:00:00Z'),
+    author: {
+      name: 'Varun Chaudhry',
+      title: 'Senior Mortgage Strategist',
+      license: 'BCFSA #M08001935'
+    },
+    metaDescription: 'The rate cut is here but the BC Flipping Tax changed everything. Smart investors are now building density in BC or pivoting to Alberta.',
+    keywords: ['rate-cut', 'bc-build', 'alberta-buy', 'bill-44', 'mli-select'],
+    categories: ['Real Estate Investing', 'Market News']
+  };
+
   try {
     const snapshot = await (await postsCol())
       .orderBy('publishedAt', 'desc')
@@ -1817,7 +1969,7 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
     })) as Post[];
 
     // Combine our mock post with Firestore posts and sort by date
-    const allPosts = [mockPost, mockPost2, mockPost3, mockPost4, mockPost5, mockPost6, mockPost7, mockPost8, mockPost9, mockPost10, ...firestorePosts].sort((a, b) =>
+    const allPosts = [mockPost, mockPost2, mockPost3, mockPost4, mockPost5, mockPost6, mockPost7, mockPost8, mockPost9, mockPost10, mockPost11, ...firestorePosts].sort((a, b) =>
       new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
     );
 
@@ -1825,6 +1977,6 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
   } catch (error) {
     console.error('Error fetching recent posts:', error);
     // Return only our mock post if Firestore fails
-    return [mockPost, mockPost2, mockPost3, mockPost4, mockPost5, mockPost6, mockPost7, mockPost8, mockPost9, mockPost10];
+    return [mockPost, mockPost2, mockPost3, mockPost4, mockPost5, mockPost6, mockPost7, mockPost8, mockPost9, mockPost10, mockPost11];
   }
 }
