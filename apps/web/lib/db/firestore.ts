@@ -982,6 +982,134 @@ export async function getPost(slug: string): Promise<Post | null> {
       categories: ['Relocation Strategy', 'Market Trends']
     };
   }
+  if (slug === 'bc-real-estate-sales-down-13-percent-december-2025') {
+    const blogContent = `<article>
+<h2>Sales Are Down 13%. Here Is Why That's The Best Christmas Gift You Could Ask For.</h2>
+<p><strong>Date:</strong> December 18, 2025 | <strong>Category:</strong> Market News, Buyer Strategy | <strong>Reading Time:</strong> 5 Minutes</p>
+
+<p style="text-align: center; margin: 1.5rem 0;"><img src="/images/blog-sales-down-13.png" alt="BC Real Estate Sales Down 13% - Why This Is Good News for Buyers" style="width: 100%; max-width: 800px; border-radius: 12px; margin: 0 auto;" /></p>
+
+<p style="font-size: 1.1em; line-height: 1.8;">If you read the headlines this morning, you probably want to hide your wallet.</p>
+
+<p>The <strong>BC Real Estate Association (BCREA)</strong> just dropped their November report, and the numbers aren't pretty. Residential sales are <strong style="color: #ef4444;">down 13.3%</strong> compared to last year, and prices have slipped by 1.4%. The media is calling it a "weakening" market as we head into the holidays.</p>
+
+<div style="background: linear-gradient(135deg, #1f2937 0%, #374151 100%); border-radius: 12px; padding: 1.5rem; margin: 2rem 0; border-left: 4px solid #f59e0b;">
+  <p style="color: #fbbf24; margin: 0 0 0.5rem 0; font-weight: 600;">💡 The Kraft Perspective:</p>
+  <p style="color: #d1d5db; margin: 0; font-size: 1.1em;">Most people see red ink and freeze.<br/><strong style="color: #10b981;">My most successful clients see opportunity.</strong></p>
+</div>
+
+<p>Here is the reality of the market as we close out 2025—and why this "bad" news might be the signal you've been waiting for.</p>
+
+<hr/>
+
+<!-- Point 1 -->
+<div style="background: linear-gradient(135deg, #065f46 0%, #047857 100%); border-radius: 16px; padding: 2rem; margin: 2rem 0;">
+  <h3 style="color: #ffffff; margin: 0 0 1rem 0; font-size: 1.4em;">1. The "Fear Premium" is Your Best Friend</h3>
+  
+  <p style="color: #e5e7eb; margin: 0 0 1rem 0;">Why is the market soft when the Bank of Canada rate is sitting at a friendly <strong style="color: #6ee7b7;">2.25%</strong>?</p>
+  
+  <p style="color: #e5e7eb; margin: 0 0 1rem 0;">It's not the cost of borrowing. <strong>It's uncertainty.</strong></p>
+  
+  <p style="color: #e5e7eb; margin: 0 0 1rem 0;">The headlines are dominated by fears of a "<strong>US Trade War</strong>" and new tariffs hitting the Canadian economy in 2026. That fear is keeping average buyers on the sidelines.</p>
+  
+  <div style="background: rgba(0,0,0,0.2); border-radius: 12px; padding: 1.25rem; margin-top: 1rem;">
+    <p style="color: #6ee7b7; margin: 0; font-weight: 600;">🔑 But here is the secret:</p>
+    <p style="color: #e5e7eb; margin: 0.5rem 0 0 0;">That same fear is making mortgages <strong>cheaper</strong>. When investors get scared of trade wars, they flock to safe assets like government bonds. This "flight to safety" pushes bond yields down—and <strong style="color: #fbbf24;">fixed mortgage rates follow</strong>.</p>
+  </div>
+</div>
+
+<div style="background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); border-radius: 12px; padding: 1.5rem; margin: 2rem 0; text-align: center;">
+  <p style="color: #bfdbfe; margin: 0 0 0.5rem 0; font-size: 0.9em;">Right now, we are seeing 5-year fixed rates:</p>
+  <p style="color: #ffffff; margin: 0; font-size: 2em; font-weight: 700;">4.39% – 4.49%</p>
+  <p style="color: #93c5fd; margin: 0.5rem 0 0 0; font-size: 0.95em;">You are getting the benefit of <strong>crisis pricing</strong> without the crisis actually hitting your bank account yet.</p>
+</div>
+
+<hr/>
+
+<!-- Point 2 -->
+<div style="background: linear-gradient(135deg, #7c2d12 0%, #c2410c 100%); border-radius: 16px; padding: 2rem; margin: 2rem 0;">
+  <h3 style="color: #ffffff; margin: 0 0 1rem 0; font-size: 1.4em;">2. Sellers Are Tired</h3>
+  
+  <p style="color: #e5e7eb; margin: 0 0 1rem 0;">The BCREA report shows that sales are <strong style="color: #fcd34d;">25% below the 10-year average</strong>.</p>
+  
+  <p style="color: #e5e7eb; margin: 0 0 1rem 0;">That means there are thousands of sellers in Surrey, Vancouver, and the Fraser Valley who have been sitting on the market for months. They are fatigued. They are stressed. And they are looking at a very quiet Christmas.</p>
+  
+  <div style="background: rgba(0,0,0,0.2); border-radius: 12px; padding: 1.25rem; margin-top: 1rem;">
+    <p style="color: #fdba74; margin: 0; font-weight: 600;">📋 This is where the "Kraft Strategy" comes in:</p>
+    <p style="color: #e5e7eb; margin: 0.5rem 0 0 0;">In a roaring market, you pay the asking price. In a market down 13% with tired sellers, <strong style="color: #10b981;">you negotiate</strong>. We are helping clients secure properties at <strong style="color: #10b981;">5% to 10% below asking</strong>, knowing that the financing is already locked in at these historically stable lows.</p>
+  </div>
+</div>
+
+<hr/>
+
+<!-- Point 3 -->
+<div style="background: linear-gradient(135deg, #1f2937 0%, #374151 100%); border-radius: 16px; padding: 2rem; margin: 2rem 0; border-left: 4px solid #ef4444;">
+  <h3 style="color: #ffffff; margin: 0 0 1rem 0; font-size: 1.4em;">3. The Window is Closing ⏰</h3>
+  
+  <p style="color: #d1d5db; margin: 0 0 1rem 0;">The same economists predicting a "slow grind" right now are <strong>forecasting a rebound in 2026</strong> as the dust settles on the trade talks.</p>
+  
+  <p style="color: #fca5a5; margin: 0; font-weight: 600;">By Spring 2026, if the uncertainty clears, the buyers will return. The "discount bin" we are seeing in December 2025 will be gone.</p>
+</div>
+
+<hr/>
+
+<h3>📋 The Play</h3>
+
+<p style="font-size: 1.1em; color: #f59e0b; font-weight: 600;">Don't wait for the headlines to turn positive. By then, the prices will have already moved.</p>
+
+<div style="display: grid; gap: 1rem; margin: 1.5rem 0;">
+  <div style="background: linear-gradient(135deg, #1f2937 0%, #374151 100%); border-radius: 12px; padding: 1.25rem; border-left: 4px solid #10b981;">
+    <h4 style="color: #10b981; margin: 0 0 0.5rem 0;">🔒 Lock a Rate Hold Now</h4>
+    <p style="color: #d1d5db; margin: 0; font-size: 0.95em;">Secure a fixed rate in the <strong>4.30%s</strong> while bond yields are low.</p>
+  </div>
+  
+  <div style="background: linear-gradient(135deg, #1f2937 0%, #374151 100%); border-radius: 12px; padding: 1.25rem; border-left: 4px solid #f59e0b;">
+    <h4 style="color: #f59e0b; margin: 0 0 0.5rem 0;">🏠 Shop the "Stale" Listings</h4>
+    <p style="color: #d1d5db; margin: 0; font-size: 0.95em;">Look for properties that have been listed for <strong>60+ days</strong>. That is where the deal is.</p>
+  </div>
+  
+  <div style="background: linear-gradient(135deg, #1f2937 0%, #374151 100%); border-radius: 12px; padding: 1.25rem; border-left: 4px solid #3b82f6;">
+    <h4 style="color: #3b82f6; margin: 0 0 0.5rem 0;">🔇 Ignore the Noise</h4>
+    <p style="color: #d1d5db; margin: 0; font-size: 0.95em;">The <strong>2.25% policy rate</strong> is here to stay for the near future.</p>
+  </div>
+</div>
+
+<hr/>
+
+<h3>Are you ready to make a low-ball offer with confidence?</h3>
+
+<p>We can underwrite your file <strong>before</strong> you make an offer, giving you the power to negotiate like a cash buyer.</p>
+
+<div style="background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); border-radius: 12px; padding: 2rem; margin: 2rem 0; text-align: center;">
+  <p style="color: #ffffff; font-size: 1.25em; margin: 0 0 1rem 0; font-weight: 600;">Get Pre-Approved & Negotiate With Confidence</p>
+  <a href="https://calendar.app.google/HcbcfrKKtBvcPQqd8" target="_blank" rel="noopener noreferrer" style="display: inline-block; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: #1f2937; padding: 16px 32px; border: none; border-radius: 8px; font-size: 18px; font-weight: 700; cursor: pointer; text-decoration: none; box-shadow: 0 4px 14px rgba(245, 158, 11, 0.4);">📅 Book Your Strategy Call with Varun</a>
+</div>
+
+<hr/>
+
+<div style="background: linear-gradient(135deg, #1f2937 0%, #374151 100%); border-radius: 12px; padding: 1.5rem; margin: 2rem 0;">
+  <p style="color: #9ca3af; font-size: 0.85em; margin: 0;"><strong>Kraft Mortgages</strong><br/># 301 - 1688 152nd Street Surrey BC V4A 2G2</p>
+  <p style="color: #6b7280; font-size: 0.75em; margin: 0.75rem 0 0 0;"><em>APR Disclosure: On a $500,000 mortgage with a 5-year fixed rate of 4.39% and a 25-year amortization, the APR is 4.42% assuming a standard closing fee. Rates are subject to qualification and market change.</em></p>
+</div>
+</article>`;
+
+    return {
+      slug: 'bc-real-estate-sales-down-13-percent-december-2025',
+      title: "Sales Are Down 13%. Here Is Why That's The Best Christmas Gift You Could Ask For.",
+      markdown: blogContent,
+      html: blogContent,
+      status: 'published' as const,
+      publishedAt: new Date('2025-12-18T12:00:00Z'),
+      author: {
+        name: 'Varun Chaudhry',
+        title: 'Licensed Mortgage Broker',
+        license: 'BCFSA #M08001935'
+      },
+      metaDescription: 'BCREA reports sales down 13.3% in November. While headlines scream doom, smart buyers are locking 4.39% rates and negotiating 5-10% below asking.',
+      keywords: ['bc-real-estate-2025', 'mortgage-rates-surrey', 'buyers-market-bc', 'bcrea-report', 'fixed-rates'],
+      categories: ['Market News', 'Buyer Strategy']
+    };
+  }
   if (slug === '2-5-rate-cut-bc-build-or-alberta-buy-2026') {
     const blogContent = `<article>
 <h2>The 2.5% Rate Cut is Here: Why Smart Investors Are Building in BC or Buying in Alberta</h2>
@@ -1957,6 +2085,33 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
     categories: ['Real Estate Investing', 'Market News']
   };
 
+  const mockPost12: Post = {
+    slug: 'bc-real-estate-sales-down-13-percent-december-2025',
+    title: "Sales Are Down 13%. Here Is Why That's The Best Christmas Gift You Could Ask For.",
+    markdown: `<article>
+<h2>Sales Down 13% = Buying Opportunity</h2>
+<p><strong>Date:</strong> December 18, 2025 | <strong>Category:</strong> Market News, Buyer Strategy | <strong>Reading Time:</strong> 5 Minutes</p>
+
+<p>BCREA reports sales <strong>down 13.3%</strong>. Media calls it doom. Smart buyers see opportunity: 4.39% rates + tired sellers = 5-10% below asking.</p>
+</article>`,
+    html: `<article>
+<h2>Sales Down 13% = Buying Opportunity</h2>
+<p><strong>Date:</strong> December 18, 2025 | <strong>Category:</strong> Market News, Buyer Strategy | <strong>Reading Time:</strong> 5 Minutes</p>
+
+<p>BCREA reports sales <strong>down 13.3%</strong>. Media calls it doom. Smart buyers see opportunity: 4.39% rates + tired sellers = 5-10% below asking.</p>
+</article>`,
+    status: 'published' as const,
+    publishedAt: new Date('2025-12-18T12:00:00Z'),
+    author: {
+      name: 'Varun Chaudhry',
+      title: 'Licensed Mortgage Broker',
+      license: 'BCFSA #M08001935'
+    },
+    metaDescription: 'BCREA reports sales down 13.3% in November. Smart buyers are locking 4.39% rates and negotiating 5-10% below asking.',
+    keywords: ['bc-real-estate-2025', 'mortgage-rates-surrey', 'buyers-market-bc', 'bcrea-report'],
+    categories: ['Market News', 'Buyer Strategy']
+  };
+
   try {
     const snapshot = await (await postsCol())
       .orderBy('publishedAt', 'desc')
@@ -1969,7 +2124,7 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
     })) as Post[];
 
     // Combine our mock post with Firestore posts and sort by date
-    const allPosts = [mockPost, mockPost2, mockPost3, mockPost4, mockPost5, mockPost6, mockPost7, mockPost8, mockPost9, mockPost10, mockPost11, ...firestorePosts].sort((a, b) =>
+    const allPosts = [mockPost, mockPost2, mockPost3, mockPost4, mockPost5, mockPost6, mockPost7, mockPost8, mockPost9, mockPost10, mockPost11, mockPost12, ...firestorePosts].sort((a, b) =>
       new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
     );
 
@@ -1977,6 +2132,6 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
   } catch (error) {
     console.error('Error fetching recent posts:', error);
     // Return only our mock post if Firestore fails
-    return [mockPost, mockPost2, mockPost3, mockPost4, mockPost5, mockPost6, mockPost7, mockPost8, mockPost9, mockPost10, mockPost11];
+    return [mockPost, mockPost2, mockPost3, mockPost4, mockPost5, mockPost6, mockPost7, mockPost8, mockPost9, mockPost10, mockPost11, mockPost12];
   }
 }
