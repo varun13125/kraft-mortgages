@@ -1,5 +1,6 @@
 import "./globals.css";
 import { Analytics } from "@/components/Analytics";
+import { Analytics as VercelAnalytics } from "@vercel/analytics/react";
 import { PrefSync } from "@/components/PrefSync";
 import { PWA } from "@/components/PWA";
 import dynamic from "next/dynamic";
@@ -28,6 +29,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* Voice Agent Widget removed - will be replaced with new implementation */}
 
         <Analytics />
+        <VercelAnalytics />
         <PWA />
       </body>
     </html>
