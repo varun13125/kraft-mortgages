@@ -237,7 +237,7 @@ export function ChatWidget() {
           const { done, value } = await reader.read();
           if (done) break;
 
-          const chunk = decoder.decode(value);
+          const chunk = decoder.decode(value, { stream: true });
           fullContent += chunk;
         }
 
@@ -403,8 +403,8 @@ export function ChatWidget() {
                   <button
                     onClick={() => setShowVoiceControls(!showVoiceControls)}
                     className={`p-2 rounded-lg transition-colors ${showVoiceControls
-                        ? 'bg-white/20 text-white'
-                        : 'bg-white/10 text-white/70 hover:bg-white/15'
+                      ? 'bg-white/20 text-white'
+                      : 'bg-white/10 text-white/70 hover:bg-white/15'
                       }`}
                     title={showVoiceControls ? 'Hide voice controls' : 'Show voice controls'}
                   >
@@ -462,8 +462,8 @@ export function ChatWidget() {
                 >
                   <div
                     className={`max-w-[80%] px-4 py-2 rounded-2xl ${message.sender === "user"
-                        ? "bg-gold-500/20 text-gray-100 border border-gold-500/30"
-                        : "bg-gray-700/50 text-gray-200 border border-gray-600/50"
+                      ? "bg-gold-500/20 text-gray-100 border border-gold-500/30"
+                      : "bg-gray-700/50 text-gray-200 border border-gray-600/50"
                       }`}
                   >
                     <div className="flex items-start justify-between gap-2">
@@ -481,8 +481,8 @@ export function ChatWidget() {
                           <button
                             onClick={() => playVoiceMessage(message.id, message.metadata?.voice?.audioUrl!)}
                             className={`p-1 rounded transition-colors ${isPlayingVoice === message.id
-                                ? 'bg-gold-500/30 text-gold-300'
-                                : 'bg-gray-600/50 text-gray-400 hover:bg-gray-500/50 hover:text-gray-300'
+                              ? 'bg-gold-500/30 text-gold-300'
+                              : 'bg-gray-600/50 text-gray-400 hover:bg-gray-500/50 hover:text-gray-300'
                               }`}
                             title={isPlayingVoice === message.id ? 'Stop' : 'Play voice'}
                           >

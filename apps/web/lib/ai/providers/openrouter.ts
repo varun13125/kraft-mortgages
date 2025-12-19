@@ -4,17 +4,17 @@ import { ChatProvider } from "../providers";
 export const FREE_MODELS = {
   // Primary models for general use
   GENERAL: "google/gemini-2.0-flash-exp:free", // Much better quality and currently free
-  CODER: "qwen/qwen3-coder:free",
-  LONG_CONTEXT: "moonshotai/kimi-k2:free",
-  QUICK: "google/gemma-3n-e2b-it:free",
-  COMPLEX: "tngtech/deepseek-r1t2-chimera:free",
+  CODER: "google/gemini-2.0-flash-exp:free",    // Gemini 2.0 is excellent at coding
+  LONG_CONTEXT: "google/gemini-2.0-flash-exp:free", // 1M context window
+  QUICK: "google/gemma-2-9b-it:free",           // Good fallback for quick/simple queries
+  COMPLEX: "google/gemini-2.0-flash-exp:free",
 
-  // New specialized models (December 2024)
-  DEVSTRAL: "mistralai/devstral-2512:free",           // Code & reasoning from Mistral
-  CHIMERA: "tngtech/tng-r1t-chimera:free",            // Advanced reasoning
-  KAT_CODER: "kwaipilot/kat-coder-pro:free",          // Code generation
-  NEMOTRON: "nvidia/nemotron-nano-12b-v2-vl:free",    // Vision + language capable
-  DEEPRESEARCH: "alibaba/tongyi-deepresearch-30b-a3b:free", // Research & analysis
+  // New specialized models (Mapped to reliable implementations)
+  DEVSTRAL: "mistralai/mistral-nemo:free",            // Reliable Mistral fallback
+  CHIMERA: "google/gemini-2.0-flash-exp:free",        // Reason with Gemini
+  KAT_CODER: "google/gemini-2.0-flash-exp:free",      // Code with Gemini
+  NEMOTRON: "nvidia/llama-3.1-nemotron-70b-instruct:free", // Good alternative
+  DEEPRESEARCH: "google/gemini-2.0-flash-exp:free",   // Gemini 2.0 for research (The Alibaba model was broken)
 } as const;
 
 // Premium models for fallback
