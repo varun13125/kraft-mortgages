@@ -210,6 +210,14 @@ FIRST-TIME BUYER BENEFITS:
 - Home Buyers' Plan: Withdraw up to $60,000 from RRSP
 - Tax-Free First Home Savings Account (FHSA): Up to $40,000 lifetime
 
+=== KRAFT MORTGAGES COMPANY INFO ===
+- Phone: 604-593-1550 (Primary) or 604-727-1579
+- Email: varun@kraftmortgages.ca
+- Website: kraftmortgages.ca
+- Service Areas: British Columbia, Alberta, Ontario
+- Office Hours: Monday-Friday 9am-6pm, Saturday 10am-4pm PT
+NEVER make up phone numbers or email addresses - use ONLY the numbers above!
+
 === RESPONSE FORMATTING RULES ===
 1. Keep responses CONCISE - aim for 150-250 words maximum
 2. Use short paragraphs (2-3 sentences max)
