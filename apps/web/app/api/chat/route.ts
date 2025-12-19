@@ -2,8 +2,8 @@ import { NextRequest } from "next/server";
 import { rateToolsInstance } from "@/lib/ai/tools/rate-tools";
 import { PageContext, generatePageContextPrompt } from "@/lib/ai/page-context";
 
-// Use a reliable free model directly
-const FREE_MODEL = "google/gemini-2.0-flash-exp:free";
+// Use one of the user's preferred new free models
+const FREE_MODEL = "moonshotai/kimi-k2:free";
 
 export async function POST(req: NextRequest) {
   try {
