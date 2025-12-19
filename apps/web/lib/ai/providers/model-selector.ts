@@ -9,6 +9,12 @@ export interface QueryContext {
   language?: string;
   previousAttempts?: number;
   forceModel?: string;
+  currentPage?: string;
+  pageContext?: {
+    pageType?: string;
+    pageName?: string;
+    calculatorType?: string;
+  };
 }
 
 export interface ModelSelection {
@@ -116,6 +122,17 @@ export class ModelSelector {
         reason: "Application intent detected",
         estimatedCost: 0.003,
         isFree: false,
+      };
+    }
+
+    // Calculator page context - use DeepResearch for detailed explanations
+    if (context.pageContext?.pageType === "calculator" || context.currentPage?.includes("/calculators")) {
+      return {
+        provider: "openrouter",
+        model: FREE_MODELS.DEEPRESEARCH,
+        reason: "Calculator page context requiring detailed explanation",
+        estimatedCost: 0,
+        isFree: true,
       };
     }
 
