@@ -74,12 +74,14 @@ export default function Navigation() {
                   className="h-10 w-auto group-hover:scale-105 transition-transform duration-200"
                   priority
                 />
-                {isMLISection && (
-                  <div className="ml-3 pl-3 border-l border-gray-700 z-10 relative">
-                    <div className="text-xs text-gold-400 font-semibold whitespace-nowrap">MLI Select Portal</div>
-                  </div>
-                )}
               </Link>
+
+              {/* MLI Select Portal Badge - separate from logo */}
+              {isMLISection && (
+                <div className="ml-3 pl-3 border-l border-gray-700 mr-6">
+                  <div className="text-xs text-gold-400 font-semibold whitespace-nowrap">MLI Select Portal</div>
+                </div>
+              )}
             </div>
 
             {/* Desktop Navigation */}
