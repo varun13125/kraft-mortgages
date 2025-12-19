@@ -1,14 +1,11 @@
 import { NextRequest } from "next/server";
-import { openRouterProvider } from "@/lib/ai/providers/openrouter";
 import { rateToolsInstance } from "@/lib/ai/tools/rate-tools";
 import { PageContext, generatePageContextPrompt } from "@/lib/ai/page-context";
-import { modelSelector } from "@/lib/ai/providers/model-selector";
+
+// Use a reliable free model directly
+const FREE_MODEL = "google/gemini-2.0-flash-exp:free";
 
 export async function POST(req: NextRequest) {
-  let currentModel = "";
-  let providerName = "";
-  let isFreeModel = true;
-
   try {
     const { input, province, language, currentPage, pageContext } = await req.json();
 
@@ -16,11 +13,17 @@ export async function POST(req: NextRequest) {
       return new Response('Input is required', { status: 400 });
     }
 
+    const apiKey = process.env.OPEN_ROUTER_API_KEY;
+    if (!apiKey) {
+      console.error("OPEN_ROUTER_API_KEY not configured");
+      return new Response(JSON.stringify({ error: "API key not configured" }), { status: 500 });
+    }
+
     // Generate page-specific context for the AI
     const pageContextPrompt = pageContext ? generatePageContextPrompt(pageContext as PageContext) : '';
 
     // Build the base system prompt
-    const buildSystemPrompt = () => `You are Alexa, a professional, friendly Canadian female mortgage advisor working for Kraft Mortgages. Serve BC/AB/ON and follow provincial compliance. Do not provide legal or tax advice.
+    const systemPrompt = `You are Alexa, a professional, friendly Canadian female mortgage advisor working for Kraft Mortgages. Serve BC/AB/ON and follow provincial compliance. Do not provide legal or tax advice.
 
 CRITICAL RULES - YOU MUST FOLLOW THESE:
 1. NEVER say "5.25%" for stress test - this is OUTDATED. Always say "the current benchmark rate" 
@@ -45,112 +48,100 @@ IMPORTANT Canadian Mortgage Facts (Updated 2025):
 User preferred province: ${province || "BC"}; language: ${language || "en"}. If not English, keep responses concise and friendly.
 ${pageContextPrompt}`;
 
-    const systemPrompt = buildSystemPrompt();
-
-    // Select initial model
-    let selection = modelSelector.selectModel({
-      message: input,
-      province,
-      language,
-      currentPage,
-      pageContext,
-      previousAttempts: 0
-    });
-
-    // Retry loop for fallback strategy
-    let attempts = 0;
-    const maxAttempts = 2; // Try up to 2 times (Initial -> Fallback)
-
-    while (attempts < maxAttempts) {
+    // Check if user is asking about rates
+    let finalPrompt = input;
+    const inputLower = input.toLowerCase();
+    if (inputLower.includes("rate") || inputLower.includes("interest")) {
       try {
-        currentModel = selection.model;
-        providerName = selection.provider;
-        isFreeModel = selection.isFree;
-
-        const provider = openRouterProvider(selection.model);
-
-        // Check for rate queries first (only on first attempt to avoid doubleDB hits)
-        if (attempts === 0) {
-          const inputLower = input.toLowerCase();
-          if (inputLower.includes("rate") || inputLower.includes("interest")) {
-            try {
-              const ratesResult = await rateToolsInstance.getCurrentRates({
-                province: province || "BC",
-                termMonths: 60,
-                limit: 5
-              });
-
-              if (ratesResult.success && ratesResult.data?.rates?.length > 0) {
-                const ratesInfo = ratesResult.formattedResult || JSON.stringify(ratesResult.data);
-                const enhancedPrompt = `User asked: ${input}\n\nHere are the ACTUAL current mortgage rates from our database:\n${ratesInfo}\n\nPlease use these EXACT rates in your response.`;
-
-                const stream = await provider.streamChat({
-                  system: systemPrompt,
-                  prompt: enhancedPrompt,
-                });
-
-                return new Response(stream, {
-                  headers: {
-                    "content-type": "text/plain; charset=utf-8",
-                    "X-Model-Used": currentModel,
-                    "X-Provider": providerName,
-                    "X-Is-Free": String(isFreeModel),
-                    "X-Tool-Used": "getCurrentRates"
-                  }
-                });
-              }
-            } catch (e) {
-              console.error("Rate tool error:", e);
-              // Continue to normal chat if tool fails
-            }
-          }
-        }
-
-        // Standard Chat Request
-        const enhancedInput = input + "\n\nREMINDER: Never say '5.25%' for stress test - use 'current benchmark rate'. Max insured mortgage is $1.5M not $1M.";
-
-        const stream = await provider.streamChat({
-          system: systemPrompt,
-          prompt: enhancedInput,
+        const ratesResult = await rateToolsInstance.getCurrentRates({
+          province: province || "BC",
+          termMonths: 60,
+          limit: 5
         });
 
-        return new Response(stream, {
-          headers: {
-            "content-type": "text/plain; charset=utf-8",
-            "X-Model-Used": currentModel,
-            "X-Provider": providerName,
-            "X-Is-Free": String(isFreeModel)
-          }
-        });
-
-      } catch (error) {
-        console.error(`Attempt ${attempts + 1} failed with model ${currentModel}:`, error);
-        attempts++;
-
-        if (attempts < maxAttempts) {
-          // Select fallback model
-          selection = modelSelector.selectModel({
-            message: input,
-            province,
-            language,
-            currentPage,
-            pageContext,
-            previousAttempts: attempts
-          });
-          console.log(`Falling back to model: ${selection.model}`);
-        } else {
-          throw error; // Rethrow if we've run out of retries
+        if (ratesResult.success && ratesResult.data?.rates?.length > 0) {
+          const ratesInfo = ratesResult.formattedResult || JSON.stringify(ratesResult.data);
+          finalPrompt = `User asked: ${input}\n\nHere are the ACTUAL current mortgage rates from our database:\n${ratesInfo}\n\nPlease use these EXACT rates in your response.`;
         }
+      } catch (e) {
+        console.error("Rate tool error:", e);
       }
     }
 
+    // Add reminder to prompt
+    finalPrompt += "\n\nREMINDER: Never say '5.25%' for stress test - use 'current benchmark rate'. Max insured mortgage is $1.5M not $1M.";
+
+    // Call OpenRouter directly
+    const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${apiKey}`,
+        "HTTP-Referer": process.env.NEXT_PUBLIC_SITE_URL || "https://kraftmortgages.ca",
+        "X-Title": "Kraft Mortgages AI Assistant",
+      },
+      body: JSON.stringify({
+        model: FREE_MODEL,
+        messages: [
+          { role: "system", content: systemPrompt },
+          { role: "user", content: finalPrompt }
+        ],
+        max_tokens: 4096,
+        temperature: 0.3,
+        stream: true,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error("OpenRouter API error:", response.status, errorText);
+      return new Response(JSON.stringify({
+        error: "AI service error",
+        details: errorText
+      }), { status: 500 });
+    }
+
+    // Stream the response directly
+    const transformStream = new TransformStream({
+      async transform(chunk, controller) {
+        const text = new TextDecoder().decode(chunk);
+        const lines = text.split('\n');
+
+        for (const line of lines) {
+          const trimmed = line.trim();
+          if (!trimmed.startsWith('data:')) continue;
+
+          const data = trimmed.slice(5).trim();
+          if (data === '[DONE]') continue;
+
+          try {
+            const json = JSON.parse(data);
+            const content = json.choices?.[0]?.delta?.content;
+            if (content) {
+              controller.enqueue(new TextEncoder().encode(content));
+            }
+          } catch (e) {
+            // Skip invalid JSON chunks
+          }
+        }
+      }
+    });
+
+    return new Response(response.body?.pipeThrough(transformStream), {
+      headers: {
+        "content-type": "text/plain; charset=utf-8",
+        "X-Model-Used": FREE_MODEL,
+        "X-Provider": "openrouter",
+        "X-Is-Free": "true"
+      }
+    });
+
   } catch (error) {
-    console.error('Chat API Fatal Error:', error);
+    console.error('Chat API Error:', error);
     return new Response(
       JSON.stringify({
         error: 'Failed to process chat request',
-        details: error instanceof Error ? error.message : 'Unknown error',
-        lastModel: currentModel
+        details: error instanceof Error ? error.message : 'Unknown error'
       }),
       {
         status: 500,
@@ -158,5 +149,4 @@ ${pageContextPrompt}`;
       }
     );
   }
-  return new Response(JSON.stringify({ error: "Unexpected end of function" }), { status: 500 });
 }
