@@ -6,6 +6,7 @@ import { navigationTools } from "./navigation-tools";
 import { calculatorTools } from "./calculator-tools";
 import { blogSearchTools } from "./blog-search-tools";
 import { leadCaptureTools } from "./lead-capture-tools";
+import { webSearchTools } from "./web-search-tools";
 import { MortgageTool } from "./types";
 
 export interface ToolExecutionResult {
@@ -98,6 +99,11 @@ class ToolExecutor {
 
     // Register lead capture tools (form prefill, callback)
     leadCaptureTools.forEach(tool => {
+      this.tools.set(tool.name, tool);
+    });
+
+    // Register web search tools
+    webSearchTools.forEach(tool => {
       this.tools.set(tool.name, tool);
     });
   }

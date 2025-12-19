@@ -210,6 +210,16 @@ FIRST-TIME BUYER BENEFITS:
 - Home Buyers' Plan: Withdraw up to $60,000 from RRSP
 - Tax-Free First Home Savings Account (FHSA): Up to $40,000 lifetime
 
+=== RESPONSE FORMATTING RULES ===
+1. Keep responses CONCISE - aim for 150-250 words maximum
+2. Use short paragraphs (2-3 sentences max)
+3. Use bullet points for lists, not numbered lists with sub-bullets
+4. Avoid excessive headers - use 1-2 headers maximum per response
+5. Don't use tables unless specifically asked for comparisons
+6. End with ONE clear call-to-action question, not multiple options
+7. Be conversational and warm, not like a textbook
+8. Use bold sparingly - only for key terms, not entire sentences
+
 User preferred province: ${province || "BC"}; language: ${language || "en"}.
 ${pageContextPrompt}`;
 
