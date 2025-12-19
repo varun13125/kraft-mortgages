@@ -79,9 +79,9 @@ const SIMPLE_INTENTS = [
 
 export class ModelSelector {
   private static instance: ModelSelector;
-  
-  private constructor() {}
-  
+
+  private constructor() { }
+
   static getInstance(): ModelSelector {
     if (!ModelSelector.instance) {
       ModelSelector.instance = new ModelSelector();
@@ -91,7 +91,7 @@ export class ModelSelector {
 
   selectModel(context: QueryContext): ModelSelection {
     const message = context.message.toLowerCase();
-    
+
     // Force model if specified (for testing)
     if (context.forceModel) {
       return this.getModelConfig(context.forceModel);
@@ -174,11 +174,22 @@ export class ModelSelector {
       };
     }
 
-    // Complex reasoning but not financial - use DeepSeek
+    // Research/analysis queries - use Tongyi DeepResearch
+    if (this.isResearchQuery(message)) {
+      return {
+        provider: "openrouter",
+        model: FREE_MODELS.DEEPRESEARCH,
+        reason: "Research/analysis query requiring depth",
+        estimatedCost: 0,
+        isFree: true,
+      };
+    }
+
+    // Complex reasoning but not financial - use DeepSeek or TNG Chimera
     if (this.requiresReasoning(message)) {
       return {
         provider: "openrouter",
-        model: FREE_MODELS.COMPLEX,
+        model: FREE_MODELS.CHIMERA, // Use newer TNG Chimera for reasoning
         reason: "Complex reasoning required",
         estimatedCost: 0,
         isFree: true,
@@ -223,12 +234,12 @@ export class ModelSelector {
     if (SIMPLE_INTENTS.some(intent => message.includes(intent))) {
       return true;
     }
-    
+
     // Check message length (short messages are usually simple)
     if (message.split(" ").length < 5) {
       return true;
     }
-    
+
     // Check for question words at start
     const simpleStarts = ["what is your", "where is", "when are", "are you"];
     return simpleStarts.some(start => message.startsWith(start));
@@ -250,6 +261,24 @@ export class ModelSelector {
     return reasoningKeywords.some(keyword => message.includes(keyword));
   }
 
+  private isResearchQuery(message: string): boolean {
+    const researchKeywords = [
+      "research",
+      "analyze",
+      "analysis",
+      "in-depth",
+      "deep dive",
+      "explain in detail",
+      "market trends",
+      "historical",
+      "comprehensive",
+      "thorough",
+      "study",
+      "investigate",
+    ];
+    return researchKeywords.some(keyword => message.includes(keyword));
+  }
+
   private getModelConfig(modelName: string): ModelSelection {
     // Helper to return config for forced model selection
     if (modelName.includes("claude")) {
@@ -261,12 +290,12 @@ export class ModelSelector {
         isFree: false,
       };
     }
-    
+
     // Return appropriate free model
     const freeModelKey = Object.keys(FREE_MODELS).find(
       key => FREE_MODELS[key as keyof typeof FREE_MODELS].includes(modelName)
     );
-    
+
     if (freeModelKey) {
       return {
         provider: "openrouter",
@@ -276,7 +305,7 @@ export class ModelSelector {
         isFree: true,
       };
     }
-    
+
     // Default
     return {
       provider: "openrouter",

@@ -4,6 +4,8 @@ import { documentTools } from "./document-tools";
 import { appointmentTools } from "./appointment-tools";
 import { navigationTools } from "./navigation-tools";
 import { calculatorTools } from "./calculator-tools";
+import { blogSearchTools } from "./blog-search-tools";
+import { leadCaptureTools } from "./lead-capture-tools";
 import { MortgageTool } from "./types";
 
 export interface ToolExecutionResult {
@@ -86,6 +88,16 @@ class ToolExecutor {
 
     // Register new calculator tools (cap rate, NOI, refinance, etc.)
     calculatorTools.forEach(tool => {
+      this.tools.set(tool.name, tool);
+    });
+
+    // Register blog search tools
+    blogSearchTools.forEach(tool => {
+      this.tools.set(tool.name, tool);
+    });
+
+    // Register lead capture tools (form prefill, callback)
+    leadCaptureTools.forEach(tool => {
       this.tools.set(tool.name, tool);
     });
   }

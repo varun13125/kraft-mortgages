@@ -2,11 +2,19 @@ import { ChatProvider } from "../providers";
 
 // Free models available on OpenRouter
 export const FREE_MODELS = {
+  // Primary models for general use
   GENERAL: "z-ai/glm-4.5-air:free",
-  CODER: "qwen/qwen3-coder:free", 
+  CODER: "qwen/qwen3-coder:free",
   LONG_CONTEXT: "moonshotai/kimi-k2:free",
   QUICK: "google/gemma-3n-e2b-it:free",
   COMPLEX: "tngtech/deepseek-r1t2-chimera:free",
+
+  // New specialized models (December 2024)
+  DEVSTRAL: "mistralai/devstral-2512:free",           // Code & reasoning from Mistral
+  CHIMERA: "tngtech/tng-r1t-chimera:free",            // Advanced reasoning
+  KAT_CODER: "kwaipilot/kat-coder-pro:free",          // Code generation
+  NEMOTRON: "nvidia/nemotron-nano-12b-v2-vl:free",    // Vision + language capable
+  DEEPRESEARCH: "alibaba/tongyi-deepresearch-30b-a3b:free", // Research & analysis
 } as const;
 
 // Premium models for fallback
@@ -43,7 +51,7 @@ interface OpenRouterResponse {
 
 export function openRouterProvider(model: string, referer?: string): ChatProvider {
   const apiKey = process.env.OPEN_ROUTER_API_KEY;
-  
+
   if (!apiKey) {
     throw new Error("OPEN_ROUTER_API_KEY not configured - check environment variables");
   }
@@ -51,22 +59,22 @@ export function openRouterProvider(model: string, referer?: string): ChatProvide
   async function* streamOpenRouterResponse(reader: ReadableStreamDefaultReader<Uint8Array>) {
     const decoder = new TextDecoder();
     let buffer = "";
-    
+
     while (true) {
       const { value, done } = await reader.read();
       if (done) break;
-      
+
       buffer += decoder.decode(value, { stream: true });
       const lines = buffer.split("\n");
       buffer = lines.pop() || "";
-      
+
       for (const line of lines) {
         const trimmed = line.trim();
         if (!trimmed.startsWith("data:")) continue;
-        
+
         const data = trimmed.slice(5).trim();
         if (data === "[DONE]") return;
-        
+
         try {
           const json = JSON.parse(data);
           const content = json.choices?.[0]?.delta?.content;
@@ -82,10 +90,10 @@ export function openRouterProvider(model: string, referer?: string): ChatProvide
 
   return {
     name: `openrouter-${model}`,
-    
+
     async chat({ system, prompt, maxTokens = 512, temperature = 0.3 }) {
       const messages: OpenRouterMessage[] = [];
-      
+
       if (system) {
         messages.push({ role: "system", content: system });
       }
@@ -119,7 +127,7 @@ export function openRouterProvider(model: string, referer?: string): ChatProvide
 
     async streamChat({ system, prompt }) {
       const messages: OpenRouterMessage[] = [];
-      
+
       if (system) {
         messages.push({ role: "system", content: system });
       }
@@ -149,7 +157,7 @@ export function openRouterProvider(model: string, referer?: string): ChatProvide
 
       const reader = response.body!.getReader();
       const encoder = new TextEncoder();
-      
+
       return new ReadableStream<Uint8Array>({
         async pull(controller) {
           for await (const chunk of streamOpenRouterResponse(reader)) {
