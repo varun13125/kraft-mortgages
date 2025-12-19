@@ -12,8 +12,8 @@ const FREE_MODELS = [
 
 // Paid models for final fallback (direct API)
 const PAID_MODELS = {
-  openai: "gpt-4o",      // ChatGPT via OPENAI_API_KEY
-  google: "gemini-1.5-pro", // Gemini via GOOGLE_API_KEY
+  openai: "gpt-5.2",      // ChatGPT 5.2 via OPENAI_API_KEY
+  google: "gemini-3", // Gemini 3 via GOOGLE_API_KEY
 };
 
 async function callOpenRouter(model: string, systemPrompt: string, userPrompt: string, apiKey: string) {
