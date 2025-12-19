@@ -2,6 +2,8 @@ import { mortgageTools } from "./mortgage-tools";
 import { rateTools } from "./rate-tools";
 import { documentTools } from "./document-tools";
 import { appointmentTools } from "./appointment-tools";
+import { navigationTools } from "./navigation-tools";
+import { calculatorTools } from "./calculator-tools";
 import { MortgageTool } from "./types";
 
 export interface ToolExecutionResult {
@@ -46,7 +48,7 @@ class ToolExecutor {
     });
 
     // Register mortgage calculator tools (legacy format)
-    const calculatorTools = [
+    const legacyCalculatorTools = [
       {
         name: "calculate_affordability",
         description: "Calculate how much home you can afford",
@@ -73,14 +75,24 @@ class ToolExecutor {
       }
     ];
 
-    calculatorTools.forEach(tool => {
+    legacyCalculatorTools.forEach(tool => {
       this.tools.set(tool.name, tool as MortgageTool);
+    });
+
+    // Register navigation tools
+    navigationTools.forEach(tool => {
+      this.tools.set(tool.name, tool);
+    });
+
+    // Register new calculator tools (cap rate, NOI, refinance, etc.)
+    calculatorTools.forEach(tool => {
+      this.tools.set(tool.name, tool);
     });
   }
 
   async executeTool(toolName: string, parameters: any): Promise<ToolExecutionResult> {
     const tool = this.tools.get(toolName);
-    
+
     if (!tool) {
       return {
         success: false,
@@ -105,7 +117,7 @@ class ToolExecutor {
 
       // Execute the tool
       const result = await tool.execute(parameters);
-      
+
       return {
         success: true,
         data: result.data || result,
@@ -132,7 +144,7 @@ class ToolExecutor {
   getToolSchema(toolName: string): any {
     const tool = this.tools.get(toolName);
     if (!tool) return null;
-    
+
     // Handle parameters - check if it's a ZodObject with shape property
     let parameterSchema: any = {};
     if (tool.parameters) {
@@ -145,7 +157,7 @@ class ToolExecutor {
       }
       // Otherwise leave as empty object for other Zod types
     }
-    
+
     return {
       name: tool.name,
       description: tool.description,
