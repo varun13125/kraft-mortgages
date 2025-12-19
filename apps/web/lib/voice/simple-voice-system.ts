@@ -29,7 +29,7 @@ export class SimpleVoiceSystem {
     if (typeof window === 'undefined') return;
 
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    
+
     if (!SpeechRecognition) {
       console.warn('Speech Recognition not supported');
       return;
@@ -37,7 +37,7 @@ export class SimpleVoiceSystem {
 
     this.isSupported = true;
     this.recognition = new SpeechRecognition();
-    
+
     // Configure recognition
     this.recognition.continuous = false;
     this.recognition.interimResults = true;
@@ -58,6 +58,7 @@ export class SimpleVoiceSystem {
 
     this.recognition.onstart = () => {
       this.isListening = true;
+      console.log('[SimpleVoiceSystem] Recognition started event');
       if (this.callbacks.onStartListening) {
         this.callbacks.onStartListening();
       }
@@ -65,6 +66,7 @@ export class SimpleVoiceSystem {
 
     this.recognition.onend = () => {
       this.isListening = false;
+      console.log('[SimpleVoiceSystem] Recognition ended event');
       if (this.callbacks.onStopListening) {
         this.callbacks.onStopListening();
       }
@@ -86,6 +88,7 @@ export class SimpleVoiceSystem {
 
   // Start listening
   async startListening(): Promise<boolean> {
+    console.log('[SimpleVoiceSystem] startListening called'); // Debug log added
     if (!this.isSupported || !this.recognition) {
       console.error('Speech recognition not supported');
       return false;
@@ -99,7 +102,7 @@ export class SimpleVoiceSystem {
     try {
       // Request microphone permission
       await navigator.mediaDevices.getUserMedia({ audio: true });
-      
+
       this.recognition.start();
       return true;
     } catch (error) {
@@ -110,6 +113,7 @@ export class SimpleVoiceSystem {
 
   // Stop listening
   stopListening() {
+    console.log('[SimpleVoiceSystem] stopListening called');
     if (this.recognition && this.isListening) {
       this.recognition.stop();
     }
@@ -117,6 +121,7 @@ export class SimpleVoiceSystem {
 
   // Toggle listening
   async toggleListening(): Promise<boolean> {
+    console.log('[SimpleVoiceSystem] toggleListening called');
     if (this.isListening) {
       this.stopListening();
       return false;
@@ -145,11 +150,11 @@ export class SimpleVoiceSystem {
       }
 
       const audioBlob = await response.blob();
-      
+
       // Play the audio
       const audioUrl = URL.createObjectURL(audioBlob);
       const audio = new Audio(audioUrl);
-      
+
       return new Promise((resolve) => {
         audio.onended = () => {
           URL.revokeObjectURL(audioUrl);

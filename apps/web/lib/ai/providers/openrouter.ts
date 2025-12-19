@@ -3,7 +3,7 @@ import { ChatProvider } from "../providers";
 // Free models available on OpenRouter
 export const FREE_MODELS = {
   // Primary models for general use
-  GENERAL: "z-ai/glm-4.5-air:free",
+  GENERAL: "google/gemini-2.0-flash-exp:free", // Much better quality and currently free
   CODER: "qwen/qwen3-coder:free",
   LONG_CONTEXT: "moonshotai/kimi-k2:free",
   QUICK: "google/gemma-3n-e2b-it:free",
@@ -144,7 +144,7 @@ export function openRouterProvider(model: string, referer?: string): ChatProvide
         body: JSON.stringify({
           model,
           messages,
-          max_tokens: 1024,
+          max_tokens: 4096,
           temperature: 0.3,
           stream: true,
         }),

@@ -97,13 +97,40 @@ export class ModelSelector {
 
   selectModel(context: QueryContext): ModelSelection {
     const message = context.message.toLowerCase();
+    const attempts = context.previousAttempts || 0;
 
-    // Force model if specified (for testing)
+    // Force model if specified
     if (context.forceModel) {
       return this.getModelConfig(context.forceModel);
     }
 
-    // High-value lead - use Claude for better conversion
+    // --- TIER 3: PREMIUM FALLBACK (Attempts > 1) ---
+    if (attempts > 1) {
+      return {
+        provider: "anthropic",
+        model: "claude-3-5-sonnet-20241022",
+        reason: "Fallback to premium after multiple failures",
+        estimatedCost: 0.003,
+        isFree: false,
+      };
+    }
+
+    // --- TIER 2: ALTERNATE FREE MODELS (Attempt == 1) ---
+    // If first attempt failed, try a different high-quality free model
+    if (attempts === 1) {
+      // If we used a reasoning model properly, fallback to Gemini
+      return {
+        provider: "openrouter",
+        model: FREE_MODELS.GENERAL, // Gemini 2.0 Flash is very stable
+        reason: "First retry: Switching to Gemini 2.0 Flash (Stable)",
+        estimatedCost: 0,
+        isFree: true,
+      };
+    }
+
+    // --- TIER 1: CONTEXT-AWARE FREE MODELS (Attempt == 0) ---
+
+    // High-value lead - try Premium immediately
     if (context.leadScore && context.leadScore > 70) {
       return {
         provider: "anthropic",
@@ -114,117 +141,44 @@ export class ModelSelector {
       };
     }
 
-    // User explicitly ready to apply
-    if (context.userIntent === "ready_to_apply" || message.includes("apply now")) {
-      return {
-        provider: "anthropic",
-        model: "claude-3-5-sonnet-20241022",
-        reason: "Application intent detected",
-        estimatedCost: 0.003,
-        isFree: false,
-      };
-    }
-
-    // Calculator page context - use DeepResearch for detailed explanations
-    if (context.pageContext?.pageType === "calculator" || context.currentPage?.includes("/calculators")) {
+    // Calculator/Deep Research Context
+    if (
+      (context.pageContext?.pageType === "calculator" ||
+        context.currentPage?.includes("/calculators") ||
+        this.isResearchQuery(message))
+    ) {
       return {
         provider: "openrouter",
         model: FREE_MODELS.DEEPRESEARCH,
-        reason: "Calculator page context requiring detailed explanation",
+        reason: "Deep research/calculation context",
         estimatedCost: 0,
         isFree: true,
       };
     }
 
-    // Complex financial scenarios requiring expertise
-    if (this.hasComplexKeywords(message)) {
-      return {
-        provider: "anthropic",
-        model: "claude-3-5-sonnet-20241022",
-        reason: "Complex mortgage scenario requiring expertise",
-        estimatedCost: 0.003,
-        isFree: false,
-      };
-    }
-
-    // Compliance and legal questions need accuracy
-    if (this.hasComplianceKeywords(message)) {
-      return {
-        provider: "anthropic",
-        model: "claude-3-5-sonnet-20241022",
-        reason: "Compliance/legal question requiring accuracy",
-        estimatedCost: 0.003,
-        isFree: false,
-      };
-    }
-
-    // Calculation requests - use free Qwen Coder
-    if (this.hasCalculationKeywords(message)) {
+    // Complex Reasoning / Logic
+    if (this.requiresReasoning(message) || this.hasComplexKeywords(message)) {
       return {
         provider: "openrouter",
-        model: FREE_MODELS.CODER,
-        reason: "Mathematical calculation request",
-        estimatedCost: 0,
-        isFree: true,
-      };
-    }
-
-    // Long conversation context - use Kimi
-    if (context.conversationHistory && context.conversationHistory.length > 10) {
-      return {
-        provider: "openrouter",
-        model: FREE_MODELS.LONG_CONTEXT,
-        reason: "Long conversation requiring context retention",
-        estimatedCost: 0,
-        isFree: true,
-      };
-    }
-
-    // Simple/quick responses - use Gemma
-    if (this.isSimpleQuery(message)) {
-      return {
-        provider: "openrouter",
-        model: FREE_MODELS.QUICK,
-        reason: "Simple query with quick response",
-        estimatedCost: 0,
-        isFree: true,
-      };
-    }
-
-    // Research/analysis queries - use Tongyi DeepResearch
-    if (this.isResearchQuery(message)) {
-      return {
-        provider: "openrouter",
-        model: FREE_MODELS.DEEPRESEARCH,
-        reason: "Research/analysis query requiring depth",
-        estimatedCost: 0,
-        isFree: true,
-      };
-    }
-
-    // Complex reasoning but not financial - use DeepSeek or TNG Chimera
-    if (this.requiresReasoning(message)) {
-      return {
-        provider: "openrouter",
-        model: FREE_MODELS.CHIMERA, // Use newer TNG Chimera for reasoning
+        model: FREE_MODELS.CHIMERA, // TNG Chimera (R1 + Llama) is excellent for logic
         reason: "Complex reasoning required",
         estimatedCost: 0,
         isFree: true,
       };
     }
 
-    // Retry logic - escalate to premium after failures
-    if (context.previousAttempts && context.previousAttempts > 1) {
+    // Coding / Calculation specific
+    if (this.hasCalculationKeywords(message)) {
       return {
-        provider: "anthropic",
-        model: "claude-3-5-sonnet-20241022",
-        reason: "Fallback after failed attempts",
-        estimatedCost: 0.003,
-        isFree: false,
+        provider: "openrouter",
+        model: FREE_MODELS.CODER, // Qwen Coder
+        reason: "Calculation/technical query",
+        estimatedCost: 0,
+        isFree: true,
       };
     }
 
-    // Default to free general model
+    // Default: Gemini 2.0 Flash (Best all-rounder)
     return {
       provider: "openrouter",
       model: FREE_MODELS.GENERAL,

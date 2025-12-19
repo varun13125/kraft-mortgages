@@ -1,13 +1,14 @@
 import { NextRequest } from "next/server";
-import { aiRoute } from "@/lib/ai/router";
+import { openRouterProvider } from "@/lib/ai/providers/openrouter";
 import { rateToolsInstance } from "@/lib/ai/tools/rate-tools";
 import { PageContext, generatePageContextPrompt } from "@/lib/ai/page-context";
-
-// Current model being used (free OpenRouter model)
-const CURRENT_MODEL = "z-ai/glm-4.5-air:free";
-const PROVIDER = "openrouter";
+import { modelSelector } from "@/lib/ai/providers/model-selector";
 
 export async function POST(req: NextRequest) {
+  let currentModel = "";
+  let providerName = "";
+  let isFreeModel = true;
+
   try {
     const { input, province, language, currentPage, pageContext } = await req.json();
 
@@ -18,7 +19,7 @@ export async function POST(req: NextRequest) {
     // Generate page-specific context for the AI
     const pageContextPrompt = pageContext ? generatePageContextPrompt(pageContext as PageContext) : '';
 
-    // Build the base system prompt with page context
+    // Build the base system prompt
     const buildSystemPrompt = () => `You are Alexa, a professional, friendly Canadian female mortgage advisor working for Kraft Mortgages. Serve BC/AB/ON and follow provincial compliance. Do not provide legal or tax advice.
 
 CRITICAL RULES - YOU MUST FOLLOW THESE:
@@ -46,100 +47,110 @@ ${pageContextPrompt}`;
 
     const systemPrompt = buildSystemPrompt();
 
-    // Check if user is asking about rates
-    const inputLower = input.toLowerCase();
-    if (inputLower.includes("rate") || inputLower.includes("interest")) {
+    // Select initial model
+    let selection = modelSelector.selectModel({
+      message: input,
+      province,
+      language,
+      currentPage,
+      pageContext,
+      previousAttempts: 0
+    });
+
+    // Retry loop for fallback strategy
+    let attempts = 0;
+    const maxAttempts = 2; // Try up to 2 times (Initial -> Fallback)
+
+    while (attempts < maxAttempts) {
       try {
-        // Get actual rates from database
-        const ratesResult = await rateToolsInstance.getCurrentRates({
-          province: province || "BC",
-          termMonths: 60, // Default to 5-year
-          limit: 5
+        currentModel = selection.model;
+        providerName = selection.provider;
+        isFreeModel = selection.isFree;
+
+        const provider = openRouterProvider(selection.model);
+
+        // Check for rate queries first (only on first attempt to avoid doubleDB hits)
+        if (attempts === 0) {
+          const inputLower = input.toLowerCase();
+          if (inputLower.includes("rate") || inputLower.includes("interest")) {
+            try {
+              const ratesResult = await rateToolsInstance.getCurrentRates({
+                province: province || "BC",
+                termMonths: 60,
+                limit: 5
+              });
+
+              if (ratesResult.success && ratesResult.data?.rates?.length > 0) {
+                const ratesInfo = ratesResult.formattedResult || JSON.stringify(ratesResult.data);
+                const enhancedPrompt = `User asked: ${input}\n\nHere are the ACTUAL current mortgage rates from our database:\n${ratesInfo}\n\nPlease use these EXACT rates in your response.`;
+
+                const stream = await provider.streamChat({
+                  system: systemPrompt,
+                  prompt: enhancedPrompt,
+                });
+
+                return new Response(stream, {
+                  headers: {
+                    "content-type": "text/plain; charset=utf-8",
+                    "X-Model-Used": currentModel,
+                    "X-Provider": providerName,
+                    "X-Is-Free": String(isFreeModel),
+                    "X-Tool-Used": "getCurrentRates"
+                  }
+                });
+              }
+            } catch (e) {
+              console.error("Rate tool error:", e);
+              // Continue to normal chat if tool fails
+            }
+          }
+        }
+
+        // Standard Chat Request
+        const enhancedInput = input + "\n\nREMINDER: Never say '5.25%' for stress test - use 'current benchmark rate'. Max insured mortgage is $1.5M not $1M.";
+
+        const stream = await provider.streamChat({
+          system: systemPrompt,
+          prompt: enhancedInput,
         });
 
-        if (ratesResult.success && ratesResult.data && ratesResult.data.rates && ratesResult.data.rates.length > 0) {
-          // We have actual rates - use them
-          const ratesInfo = ratesResult.formattedResult || JSON.stringify(ratesResult.data);
-          const enhancedPrompt = `User asked: ${input}
-        
-Here are the ACTUAL current mortgage rates from our database:
-${ratesInfo}
+        return new Response(stream, {
+          headers: {
+            "content-type": "text/plain; charset=utf-8",
+            "X-Model-Used": currentModel,
+            "X-Provider": providerName,
+            "X-Is-Free": String(isFreeModel)
+          }
+        });
 
-Please use these EXACT rates in your response. Do not make up or estimate rates.`;
-
-          const stream = await aiRoute.streamChat({
-            system: systemPrompt,
-            prompt: enhancedPrompt,
-          });
-
-          return new Response(stream, {
-            headers: {
-              "content-type": "text/plain; charset=utf-8",
-              "X-Model-Used": CURRENT_MODEL,
-              "X-Provider": PROVIDER,
-              "X-Is-Free": "true",
-              "X-Tool-Used": "getCurrentRates"
-            }
-          });
-        } else {
-          // No rates available - be transparent and helpful
-          const noRatesPrompt = `User asked: ${input}
-
-IMPORTANT: We don't have current rate data available in our system right now.
-
-Please respond professionally by:
-1. Acknowledging their interest in rates
-2. Explaining that rates change frequently and vary by lender
-3. Offering to connect them directly with our team for personalized, up-to-date rates
-4. Mention they can call 604-593-1550 or book a consultation
-5. Ask if there's anything else about mortgages you can help with
-
-DO NOT make up or estimate specific rate numbers. Be helpful but honest.`;
-
-          const stream = await aiRoute.streamChat({
-            system: systemPrompt,
-            prompt: noRatesPrompt,
-          });
-
-          return new Response(stream, {
-            headers: {
-              "content-type": "text/plain; charset=utf-8",
-              "X-Model-Used": CURRENT_MODEL,
-              "X-Provider": PROVIDER,
-              "X-Is-Free": "true",
-              "X-Tool-Used": "getCurrentRates-no-data"
-            }
-          });
-        }
       } catch (error) {
-        console.error("Error fetching rates:", error);
+        console.error(`Attempt ${attempts + 1} failed with model ${currentModel}:`, error);
+        attempts++;
+
+        if (attempts < maxAttempts) {
+          // Select fallback model
+          selection = modelSelector.selectModel({
+            message: input,
+            province,
+            language,
+            currentPage,
+            pageContext,
+            previousAttempts: attempts
+          });
+          console.log(`Falling back to model: ${selection.model}`);
+        } else {
+          throw error; // Rethrow if we've run out of retries
+        }
       }
     }
 
-    // Add warning about outdated info to the prompt
-    const enhancedInput = input + "\n\nREMINDER: Never say '5.25%' for stress test - use 'current benchmark rate'. Max insured mortgage is $1.5M not $1M.";
-
-    // Regular chat without tools
-    const stream = await aiRoute.streamChat({
-      system: systemPrompt,
-      prompt: enhancedInput,
-    });
-
-    return new Response(stream, {
-      headers: {
-        "content-type": "text/plain; charset=utf-8",
-        "X-Model-Used": CURRENT_MODEL,
-        "X-Provider": PROVIDER,
-        "X-Is-Free": "true"
-      }
-    });
-
   } catch (error) {
-    console.error('Chat API Error:', error);
+    console.error('Chat API Fatal Error:', error);
     return new Response(
       JSON.stringify({
         error: 'Failed to process chat request',
-        details: error instanceof Error ? error.message : 'Unknown error'
+        details: error instanceof Error ? error.message : 'Unknown error',
+        lastModel: currentModel
       }),
       {
         status: 500,
@@ -147,4 +158,5 @@ DO NOT make up or estimate specific rate numbers. Be helpful but honest.`;
       }
     );
   }
+  return new Response(JSON.stringify({ error: "Unexpected end of function" }), { status: 500 });
 }
