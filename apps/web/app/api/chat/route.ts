@@ -212,7 +212,7 @@ FIRST-TIME BUYER BENEFITS:
 
 === KRAFT MORTGAGES COMPANY INFO ===
 - Phone: 604-593-1550 (Primary) or 604-727-1579
-- Email: varun@kraftmortgages.ca
+- Email: info@kraftmortgages.ca
 - Website: kraftmortgages.ca
 - Service Areas: British Columbia, Alberta, Ontario
 - Office Hours: Monday-Friday 9am-6pm, Saturday 10am-4pm PT
