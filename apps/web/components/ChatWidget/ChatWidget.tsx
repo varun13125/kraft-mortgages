@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
+import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { MessageCircle, X, Send, Calculator, TrendingUp, DollarSign, Volume2, Languages, Globe } from "lucide-react";
 import { useAppStore } from "@/store/useAppStore";
@@ -7,6 +8,7 @@ import { VoiceInput } from "./VoiceInput";
 import { CleanVoiceControls } from "./CleanVoiceControls";
 import { ToolResults } from "./ToolResults";
 import { MultilingualVoiceService } from "@/lib/voice/multilingual-voice";
+import { getPageContext } from "@/lib/ai/page-context";
 
 interface Message {
   id: string;
@@ -50,6 +52,8 @@ export function ChatWidget() {
   const [isPlayingVoice, setIsPlayingVoice] = useState<string | null>(null);
   const [showVoiceControls, setShowVoiceControls] = useState(false);
   const { province, language } = useAppStore();
+  const pathname = usePathname();
+  const pageContext = getPageContext(pathname);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const voiceService = useRef(new MultilingualVoiceService());
@@ -154,7 +158,7 @@ export function ChatWidget() {
     try {
       // Get AI response
       const response = await handleMessage(content);
-      
+
       // Add assistant message
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
@@ -193,7 +197,7 @@ export function ChatWidget() {
     try {
       console.log("[ChatWidget] Sending message:", content);
       setIsTyping(true);
-      
+
       // Call the AI API endpoint with streaming support  
       const response = await fetch("/api/chat", {
         method: "POST",
@@ -203,7 +207,9 @@ export function ChatWidget() {
         body: JSON.stringify({
           input: content,
           province,
-          language
+          language,
+          currentPage: pathname,
+          pageContext: pageContext,
         }),
       });
 
@@ -211,12 +217,12 @@ export function ChatWidget() {
         console.error("[ChatWidget] Response not OK:", response.status);
         throw new Error("Failed to get response");
       }
-      
+
       // Get model info from headers
       const modelUsed = response.headers.get("X-Model-Used");
       const provider = response.headers.get("X-Provider");
       const isFree = response.headers.get("X-Is-Free");
-      
+
       console.log("[ChatWidget] Got response, starting to stream...");
       console.log("[ChatWidget] Model:", modelUsed, "| Provider:", provider, "| Free:", isFree);
 
@@ -226,15 +232,15 @@ export function ChatWidget() {
         const decoder = new TextDecoder();
         let fullContent = "";
         let metadata: any = {};
-        
+
         while (true) {
           const { done, value } = await reader.read();
           if (done) break;
-          
+
           const chunk = decoder.decode(value);
           fullContent += chunk;
         }
-        
+
         setIsTyping(false);
         console.log("[ChatWidget] Received response:", fullContent.substring(0, 100) + "...");
 
@@ -243,16 +249,16 @@ export function ChatWidget() {
           try {
             console.log("[Voice] Generating voice for response...");
             const voiceResponse = await voiceService.current.speak(fullContent);
-            
+
             const audioUrl = URL.createObjectURL(voiceResponse.audioBlob);
-            
+
             metadata.voice = {
               language: voiceResponse.language,
               provider: voiceResponse.provider,
               switchedLanguage: voiceResponse.switchedLanguage,
               audioUrl
             };
-            
+
             console.log('[Voice] Generated:', {
               language: voiceResponse.language,
               switched: voiceResponse.switchedLanguage,
@@ -268,7 +274,7 @@ export function ChatWidget() {
           metadata
         };
       }
-      
+
       // Fallback to non-streaming
       const data = await response.json();
       setIsTyping(false);
@@ -396,16 +402,15 @@ export function ChatWidget() {
                   {/* Voice Toggle */}
                   <button
                     onClick={() => setShowVoiceControls(!showVoiceControls)}
-                    className={`p-2 rounded-lg transition-colors ${
-                      showVoiceControls 
-                        ? 'bg-white/20 text-white' 
+                    className={`p-2 rounded-lg transition-colors ${showVoiceControls
+                        ? 'bg-white/20 text-white'
                         : 'bg-white/10 text-white/70 hover:bg-white/15'
-                    }`}
+                      }`}
                     title={showVoiceControls ? 'Hide voice controls' : 'Show voice controls'}
                   >
                     <Volume2 className="w-4 h-4" />
                   </button>
-                  
+
                   {/* Language Indicator */}
                   {voiceEnabled && (
                     <div className="flex items-center gap-1 bg-white/10 px-2 py-1 rounded text-xs">
@@ -416,7 +421,7 @@ export function ChatWidget() {
                 </div>
               </div>
             </div>
-            
+
             {/* Voice Controls Panel */}
             {showVoiceControls && (
               <CleanVoiceControls
@@ -444,7 +449,7 @@ export function ChatWidget() {
             )}
 
             {/* Messages */}
-            <div 
+            <div
               ref={chatContainerRef}
               className="flex-1 overflow-y-auto p-4 space-y-3 bg-gray-900/50"
             >
@@ -456,15 +461,14 @@ export function ChatWidget() {
                   className={`flex ${message.sender === "user" ? "justify-end" : "justify-start"}`}
                 >
                   <div
-                    className={`max-w-[80%] px-4 py-2 rounded-2xl ${
-                      message.sender === "user"
+                    className={`max-w-[80%] px-4 py-2 rounded-2xl ${message.sender === "user"
                         ? "bg-gold-500/20 text-gray-100 border border-gold-500/30"
                         : "bg-gray-700/50 text-gray-200 border border-gray-600/50"
-                    }`}
+                      }`}
                   >
                     <div className="flex items-start justify-between gap-2">
                       <div className="text-sm whitespace-pre-wrap flex-1">{message.content}</div>
-                      
+
                       {/* Voice Controls for Assistant Messages */}
                       {message.sender === "assistant" && message.metadata?.voice?.audioUrl && (
                         <div className="flex items-center gap-1 ml-2">
@@ -476,11 +480,10 @@ export function ChatWidget() {
                           )}
                           <button
                             onClick={() => playVoiceMessage(message.id, message.metadata?.voice?.audioUrl!)}
-                            className={`p-1 rounded transition-colors ${
-                              isPlayingVoice === message.id
+                            className={`p-1 rounded transition-colors ${isPlayingVoice === message.id
                                 ? 'bg-gold-500/30 text-gold-300'
                                 : 'bg-gray-600/50 text-gray-400 hover:bg-gray-500/50 hover:text-gray-300'
-                            }`}
+                              }`}
                             title={isPlayingVoice === message.id ? 'Stop' : 'Play voice'}
                           >
                             <Volume2 className="w-3 h-3" />
@@ -488,7 +491,7 @@ export function ChatWidget() {
                         </div>
                       )}
                     </div>
-                    
+
                     {message.metadata?.toolResult && (
                       <div className="mt-3">
                         <ToolResults
@@ -501,7 +504,7 @@ export function ChatWidget() {
                   </div>
                 </motion.div>
               ))}
-              
+
               {(isLoading || isTyping) && (
                 <motion.div
                   initial={{ opacity: 0 }}
