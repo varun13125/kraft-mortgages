@@ -1756,6 +1756,199 @@ A contractor assumed his $900,000 calculator result was solid. His actual pre-ap
       categories: ['Mortgage Education', 'BC Real Estate']
     };
   }
+  if (slug === 'how-we-saved-client-200k-mli-select-guide') {
+    const blogContent = `<img src="https://cdn.marblism.com/BYlGdYf0ttu.webp" alt="MLI Select Expert Guide" style="width:100%;height:auto;border-radius:12px;margin:1.5rem 0;" />
+
+<p>We're Kraft Mortgages Canada Inc. Led by Varun Chaudhry (President, CEO, Sr. Mortgage Professional), we've spent 18+ years structuring complex multi-unit financing across BC, Alberta, and Ontario. In 2025, CMHC's MLI Select is the most powerful tool on your table—and when you optimize it right, you can save $200,000 to $500,000 in insurance premiums while unlocking up to 95% financing.</p>
+
+<p>In this guide, we show you exactly how we do it for our clients—so you can learn how to leverage MLI Select like an insider.</p>
+
+<h2>1 min: What MLI Select is—and why smart developers use it</h2>
+
+<p>MLI Select is CMHC's mortgage loan insurance program for 5+ unit residential properties. Unlike conventional financing, it rewards your project for measurable affordability, energy efficiency, and accessibility—with dramatically lower premiums and better terms.</p>
+
+<p>It runs on a point-based scoring system across those three pillars. The higher your score, the stronger your terms: reduced insurance premiums, amortization up to 50 years, and loan-to-value ratios up to 95%.</p>
+
+<p><strong>What changed everything</strong>: In 2024, CMHC streamlined MLI Select and expanded qualifying criteria. In 2025, we're seeing previously marginal projects qualify—and our clients are routinely saving $200,000+ in premiums over the loan term.</p>
+
+<img src="https://cdn.marblism.com/ryxG1Bnbmx4.webp" alt="MLI Select Point System" style="width:100%;height:auto;border-radius:8px;margin:1rem 0;" />
+
+<h2>3 min: The point system that unlocks massive savings</h2>
+
+<p>Your MLI Select point score directly determines your savings potential. Here's how the scoring breaks down:</p>
+
+<h3>Affordability Commitments (Up to 40 points)</h3>
+<ul>
+<li>20% of units affordable for 20 years: 20 points</li>
+<li>30% of units affordable for 25 years: 30 points</li>
+<li>40% of units affordable for 30 years: 40 points</li>
+</ul>
+
+<h3>Energy Efficiency Standards (Up to 40 points)</h3>
+<ul>
+<li>Meet specific energy targets above building code</li>
+<li>Install qualifying heating/cooling systems</li>
+<li>Achieve certified energy ratings</li>
+</ul>
+
+<h3>Accessibility Features (Up to 20 points)</h3>
+<ul>
+<li>Universal design elements</li>
+<li>Barrier-free unit percentages</li>
+<li>Enhanced accessibility beyond code requirements</li>
+</ul>
+
+<h3>The magic numbers you need to know:</h3>
+<ul>
+<li><strong>50 points</strong>: 95% financing + 40-year amortization</li>
+<li><strong>70 points</strong>: 95% financing + 45-year amortization</li>
+<li><strong>100+ points</strong>: 95% financing + 50-year amortization + limited recourse options</li>
+</ul>
+
+<h2>Case Study (5 min): How we saved $214,000+ in premiums on a Surrey multi-unit</h2>
+
+<p>In May 2025, a Surrey-based developer came to us mid-design with a 52-unit purpose-built rental—total project cost of $18.0M. The conventional path looked like this:</p>
+
+<h3>Traditional Financing:</h3>
+<ul>
+<li>25% down payment: $4.5M</li>
+<li>25-year amortization</li>
+<li>Standard CMHC premiums: 3.1% of loan amount</li>
+<li>Debt service coverage ratio: 1.25x minimum</li>
+</ul>
+
+<p>We restructured the plan during weeks 1–2 to target a 70+ point MLI Select outcome—without blowing the budget:</p>
+<ul>
+<li>Affordability: 30% of units committed for 25 years</li>
+<li>Energy: High-efficiency heat pumps + envelope upgrades above code</li>
+<li>Accessibility: 15% of units with universal design features</li>
+</ul>
+
+<h3>MLI Select result (72 points):</h3>
+<ul>
+<li>95% financing</li>
+<li>45-year amortization</li>
+<li>Reduced MLI Select premium: 1.75% of loan amount</li>
+</ul>
+
+<h3>What that meant in dollars:</h3>
+<ul>
+<li>Premium reduction: $216,000 saved on insurance costs</li>
+<li>Upfront capital freed: $3.6M (moving from 25% down to 5%)</li>
+<li>Monthly payments: approx. $6,500 lower vs. conventional structure</li>
+<li>Over 25 years: approx. $2.0M in payment savings</li>
+</ul>
+
+<p><strong>Total financial advantage: ~$5.8M</strong></p>
+
+<p>This is why our clients across Surrey, Burnaby, and Coquitlam prioritize MLI Select qualification from day one of project planning.</p>
+
+<img src="https://cdn.marblism.com/b8TW9XfN7KT.webp" alt="MLI Select Benefits" style="width:100%;height:auto;border-radius:8px;margin:1rem 0;" />
+
+<h2>How Kraft Mortgages Maximizes Your MLI Select Benefits</h2>
+
+<p>After facilitating over $500 million in MLI Select approvals across BC, Alberta, and Ontario, we've identified the specific strategies that separate successful applications from rejected ones.</p>
+
+<h3>1. Strategic Point Optimization (Week 1-2)</h3>
+<p>Most developers approach MLI Select backwards: they design their project first, then try to earn points. Smart developers work with us to structure point accumulation during the design phase. We analyze your project's potential point score using our <a href="/mli-select/calculators">MLI Select calculators</a> and identify the most cost-effective path to your target score.</p>
+
+<h3>2. Documentation Mastery (Week 3-4)</h3>
+<p>CMHC's MLI Select application requires 47 specific documents, submitted in precise formats with exact naming conventions. One missing form or incorrect energy efficiency calculation delays approval by 6-8 weeks. Our team manages the entire documentation process, ensuring your application moves through CMHC review without delays.</p>
+
+<h3>3. Construction Draw Coordination (Ongoing)</h3>
+<p>MLI Select includes unique construction monitoring requirements that differ from conventional CMHC products. We coordinate directly with CMHC inspectors and your construction team to ensure draw releases stay on schedule. This prevents the costly delays that kill project profitability.</p>
+
+<p>Prefer a quick read on your project? <a href="/contact">Speak with Varun Chaudhry directly—book a 15-minute consult</a>.</p>
+
+<img src="https://cdn.marblism.com/BBvdiy-Ukxj.webp" alt="2025 MLI Select Changes" style="width:100%;height:auto;border-radius:8px;margin:1rem 0;" />
+
+<h2>The 2025 MLI Select Changes You Need to Know</h2>
+
+<p>CMHC updated MLI Select eligibility criteria in January 2025, creating new opportunities for projects that previously didn't qualify:</p>
+
+<h3>Expanded Geographic Eligibility</h3>
+<p>Surrey, Langley, and Richmond projects now qualify for enhanced point multipliers in designated affordability zones.</p>
+
+<h3>New Energy Efficiency Pathways</h3>
+<p>Heat pump installations now earn bonus points, making 70+ point scores achievable for smaller projects.</p>
+
+<h3>Streamlined Affordability Commitments</h3>
+<p>20-year affordability periods (previously 25-year minimum) now qualify for full points, reducing long-term obligations while maintaining financing advantages.</p>
+
+<h3>Construction-to-Permanent Integration</h3>
+<p>MLI Select now offers seamless construction-to-permanent financing, eliminating the need for bridge financing and reducing overall project costs.</p>
+
+<p>For our clients, these changes are opening approvals that weren't possible in 2024—especially smaller infill projects in Surrey, Langley, and Richmond.</p>
+
+<h2>Common MLI Select Mistakes That Cost Developers Millions</h2>
+
+<h3>Mistake #1: Applying Too Late</h3>
+<p>MLI Select applications require 16-20 weeks for approval. Developers who apply after construction starts face financing gaps that can cost $50,000+ in bridge financing fees.</p>
+
+<h3>Mistake #2: Misunderstanding Point Requirements</h3>
+<p>Earning 49 points gets you nothing. 50 points unlocks the program. We often see developers spend $30,000 on energy upgrades that earn 15 points when a $5,000 accessibility feature would have secured the 2 points needed to qualify.</p>
+
+<h3>Mistake #3: Ignoring Geographic Multipliers</h3>
+<p>Surrey projects in designated zones can earn 1.5x point multipliers for affordability commitments. Most developers don't know these zones exist or how to leverage them.</p>
+
+<h3>Mistake #4: Poor Construction Monitoring</h3>
+<p>MLI Select requires progress inspections at specific construction milestones. Missing an inspection delays your next draw by 3-4 weeks and can push completion beyond your deadline.</p>
+
+<img src="https://cdn.marblism.com/PliLA7XZQzg.webp" alt="MLI Select vs Conventional Financing" style="width:100%;height:auto;border-radius:8px;margin:1rem 0;" />
+
+<h2>MLI Select vs. Conventional Financing: The Numbers Don't Lie</h2>
+
+<p>Here's a direct comparison using current market rates and terms:</p>
+
+<h3>MLI Select (70+ points)</h3>
+<ul>
+<li>Loan-to-value: Up to 95%</li>
+<li>Amortization: Up to 45 years</li>
+<li>Insurance premium: 1.75-2.5%</li>
+<li>Debt service coverage: 1.1x minimum</li>
+<li>Interest rate: Prime + 1.25%</li>
+</ul>
+
+<h3>Conventional CMHC</h3>
+<ul>
+<li>Loan-to-value: Up to 85%</li>
+<li>Amortization: 25 years maximum</li>
+<li>Insurance premium: 2.8-3.1%</li>
+<li>Debt service coverage: 1.25x minimum</li>
+<li>Interest rate: Prime + 1.45%</li>
+</ul>
+
+<p><strong>The bottom line</strong>: MLI Select delivers lower monthly payments, reduced upfront capital requirements, and significant insurance savings. For a $10 million project, our clients are seeing $300,000+ in total cost savings over the loan term.</p>
+
+<h2>Ready to Unlock Your MLI Select Savings?</h2>
+
+<p>MLI Select isn't just another financing option: it's the competitive advantage that separates profitable developments from marginal ones. With CMHC's 2025 updates expanding eligibility and streamlining approvals, there's never been a better time to explore MLI Select for your project.</p>
+
+<p>At Kraft Mortgages, we've guided over 200 multi-unit developments through successful MLI Select approvals across BC, Alberta, and Ontario. Our team understands the program inside and out, from point optimization strategies to construction monitoring requirements.</p>
+
+<p><strong>Take the next step</strong>: Use our <a href="/mli-select/calculators">MLI Select calculator</a> to estimate your project's point potential and savings opportunity. Then <a href="/contact">contact our team</a> for a detailed MLI Select feasibility analysis.</p>
+
+<p>Don't let another project move forward with conventional financing when MLI Select could save you hundreds of thousands in premiums and monthly payments. The developers who understand MLI Select today are the ones building tomorrow's profitable portfolios.</p>
+
+<img src="https://cdn.marblism.com/9K2xznQ9EbQ.webp" alt="MLI Select Success" style="width:100%;height:auto;border-radius:8px;margin:1rem 0;" />`;
+
+    return {
+      slug: 'how-we-saved-client-200k-mli-select-guide',
+      title: "How We Saved Our Client $200K+ in Premiums: Our Expert Guide to MLI Select",
+      markdown: blogContent,
+      html: blogContent,
+      status: 'published' as const,
+      publishedAt: new Date('2025-12-22T12:00:00Z'),
+      author: {
+        name: 'Varun Chaudhry',
+        title: 'President, CEO, Sr. Mortgage Professional',
+        license: 'BCFSA #M08001935'
+      },
+      metaDescription: "Learn how Kraft Mortgages saved a Surrey developer $214,000+ in CMHC premiums using MLI Select. Expert guide to the point system, 2025 changes, and common mistakes.",
+      keywords: ['MLI-Select', 'CMHC', 'multi-unit-financing', 'Surrey-developer', '95-LTV', '50-year-amortization', 'insurance-premium-savings'],
+      categories: ['MLI Select', 'Development Financing']
+    };
+  }
 
   const doc = await (await postsCol()).doc(slug).get();
   if (!doc.exists) return null;
@@ -2369,6 +2562,23 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
     categories: ['Mortgage Education', 'BC Real Estate']
   };
 
+  const mockPost14: Post = {
+    slug: 'how-we-saved-client-200k-mli-select-guide',
+    title: "How We Saved Our Client $200K+ in Premiums: Our Expert Guide to MLI Select",
+    markdown: `<p>We're Kraft Mortgages Canada Inc. CMHC's MLI Select is the most powerful tool on your table—and when you optimize it right, you can save $200,000 to $500,000 in insurance premiums while unlocking up to 95% financing.</p>`,
+    html: `<p>We're Kraft Mortgages Canada Inc. CMHC's MLI Select is the most powerful tool on your table—and when you optimize it right, you can save $200,000 to $500,000 in insurance premiums while unlocking up to 95% financing.</p>`,
+    status: 'published' as const,
+    publishedAt: new Date('2025-12-22T12:00:00Z'),
+    author: {
+      name: 'Varun Chaudhry',
+      title: 'President, CEO, Sr. Mortgage Professional',
+      license: 'BCFSA #M08001935'
+    },
+    metaDescription: "Learn how Kraft Mortgages saved a Surrey developer $214,000+ in CMHC premiums using MLI Select. Expert guide to the point system, 2025 changes, and common mistakes.",
+    keywords: ['MLI-Select', 'CMHC', 'multi-unit-financing', 'Surrey-developer'],
+    categories: ['MLI Select', 'Development Financing']
+  };
+
   try {
     const snapshot = await (await postsCol())
       .orderBy('publishedAt', 'desc')
@@ -2381,7 +2591,7 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
     })) as Post[];
 
     // Combine our mock post with Firestore posts and sort by date
-    const allPosts = [mockPost, mockPost2, mockPost3, mockPost4, mockPost5, mockPost6, mockPost7, mockPost8, mockPost9, mockPost10, mockPost11, mockPost12, mockPost13, ...firestorePosts].sort((a, b) =>
+    const allPosts = [mockPost, mockPost2, mockPost3, mockPost4, mockPost5, mockPost6, mockPost7, mockPost8, mockPost9, mockPost10, mockPost11, mockPost12, mockPost13, mockPost14, ...firestorePosts].sort((a, b) =>
       new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
     );
 
@@ -2389,6 +2599,6 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
   } catch (error) {
     console.error('Error fetching recent posts:', error);
     // Return only our mock post if Firestore fails
-    return [mockPost, mockPost2, mockPost3, mockPost4, mockPost5, mockPost6, mockPost7, mockPost8, mockPost9, mockPost10, mockPost11, mockPost12];
+    return [mockPost, mockPost2, mockPost3, mockPost4, mockPost5, mockPost6, mockPost7, mockPost8, mockPost9, mockPost10, mockPost11, mockPost12, mockPost13, mockPost14];
   }
 }
