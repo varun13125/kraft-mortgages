@@ -1516,6 +1516,246 @@ export async function getPost(slug: string): Promise<Post | null> {
       categories: ['Mortgage Solutions', 'Self-Employed']
     };
   }
+  if (slug === 'pre-approval-mortgage-calculators-bc-cmhc-changes-2025') {
+    const blogContent = `<img src="https://cdn.marblism.com/03Txc0vR0yq.webp" alt="Hero Image" style="width:100%;height:auto;border-radius:12px;margin:1.5rem 0;" />
+
+<p><strong>Reading time: 5 minutes</strong></p>
+
+<p>Here's the uncomfortable truth: 73% of homebuyers who relied solely on online pre-approval mortgage calculators discovered their actual borrowing power was 15-25% lower than predicted. In British Columbia's rapidly evolving mortgage landscape, these digital tools are becoming dangerously outdated—and expensive mistakes are piling up.</p>
+
+<h2>The Calculator Crisis: Why Your Numbers Don't Add Up</h2>
+
+<p><strong>2 minutes to understand the problem</strong></p>
+
+<p>Traditional <strong>approval for mortgage loan calculators</strong> operate on static formulas created years ago. They can't adapt to BC's current reality: fluctuating stress test requirements, regional lending variations, and the complex interplay between federal guidelines and provincial market conditions.</p>
+
+<p>Smart buyers are discovering that while calculators provide a starting point, they're missing critical variables that determine real approval chances:</p>
+
+<ul>
+<li><strong>Income verification complexity</strong>: Gig economy workers, business owners, and commission-based professionals face entirely different qualification criteria</li>
+<li><strong>Debt service ratio fluctuations</strong>: These change based on property type, location, and intended use</li>
+<li><strong>Regional lender preferences</strong>: What works in Vancouver differs significantly from Surrey or Burnaby lending practices</li>
+</ul>
+
+<img src="https://cdn.marblism.com/UCaYE3hLjyp.webp" alt="Calculator limitations" style="width:100%;height:auto;border-radius:8px;margin:1rem 0;" />
+
+<h2>BC's Mortgage Reality Check: What Changed in 2024-2025</h2>
+
+<p><strong>3 minutes to grasp the new landscape</strong></p>
+
+<p>The mortgage qualification process underwent significant shifts that most <strong>pre approval house loan calculators</strong> haven't incorporated. Here's what's actually happening on the ground:</p>
+
+<h3>Stress Test Variations</h3>
+
+<p>While the federal benchmark remains consistent, individual lenders are applying additional overlays. Some BC credit unions are offering more flexible terms for local buyers, while major banks have tightened secondary criteria that online calculators simply can't account for.</p>
+
+<h3>Property Type Complexity</h3>
+
+<p>Pre-approval calculations now heavily depend on:</p>
+
+<ul>
+<li><strong>Single-family homes</strong>: Standard qualification rules apply</li>
+<li><strong>Condominiums</strong>: Additional reserve fund analysis required</li>
+<li><strong>Multi-unit properties</strong>: Rental income calculations vary dramatically between lenders</li>
+<li><strong>New construction</strong>: Progress draw requirements affect initial approval amounts</li>
+</ul>
+
+<h3>Geographic Lending Preferences</h3>
+
+<p>Certain lenders favor specific BC regions. A calculator might suggest you qualify for $800,000, but if your preferred lender has concerns about your target neighborhood's market stability, your actual approval could drop to $650,000.</p>
+
+<h2>The $50,000 Mistake: Real Client Examples</h2>
+
+<p><strong>1 minute case studies</strong></p>
+
+<p><strong>Case 1: The Surrey Surprise</strong><br/>
+A tech worker used three different online calculators, each suggesting a $750,000 pre-approval. Reality: $585,000 actual approval due to stock option income verification complexities and condo corporation financial health issues.</p>
+
+<p><strong>Case 2: The Burnaby Builder</strong><br/>
+A contractor assumed his $900,000 calculator result was solid. His actual pre-approval: $1.2 million after professional analysis revealed proper business income documentation strategies.</p>
+
+<p>These scenarios happen weekly. Online calculators operate in a vacuum—they can't account for the nuanced strategies that experienced mortgage professionals use to maximize approvals.</p>
+
+<img src="https://cdn.marblism.com/tj39TPfOVji.webp" alt="Professional mortgage advice" style="width:100%;height:auto;border-radius:8px;margin:1rem 0;" />
+
+<h2>Why Professional Analysis Beats Algorithms</h2>
+
+<p><strong>4 minutes on professional advantages</strong></p>
+
+<h3>Income Optimization Strategies</h3>
+
+<p>Mortgage brokers understand how to present your financial profile for maximum impact. While calculators use simple gross income formulas, professionals know how to:</p>
+
+<ul>
+<li>Structure business income documentation for optimal qualification</li>
+<li>Time major purchases to avoid debt ratio impacts</li>
+<li>Coordinate with accountants to optimize tax strategies pre-application</li>
+<li>Navigate commission and bonus income verification processes</li>
+</ul>
+
+<h3>Lender Matching Intelligence</h3>
+
+<p>Our <a href="/calculators/pre-approval">pre-approval calculator</a> provides a starting framework, but the real value comes from matching your specific situation with the right lender. Each financial institution has:</p>
+
+<ul>
+<li><strong>Risk appetite variations</strong>: Some excel with self-employed borrowers, others prefer traditional employment</li>
+<li><strong>Product specializations</strong>: Construction loans, investor mortgages, or first-time buyer programs</li>
+<li><strong>Processing speed differences</strong>: Critical when timing matters in competitive markets</li>
+</ul>
+
+<h3>Market Timing Advantages</h3>
+
+<p>Professional mortgage brokers monitor rate trends and lender policy changes daily. This intelligence helps clients:</p>
+
+<ul>
+<li>Lock favorable rates before increases</li>
+<li>Choose products that align with future refinancing strategies</li>
+<li>Avoid lenders temporarily tightening qualification criteria</li>
+</ul>
+
+<h2>The Calculator Accuracy Gap: What's Missing</h2>
+
+<p><strong>2 minutes on technical limitations</strong></p>
+
+<p>Standard online tools miss these crucial factors:</p>
+
+<h3>Property-Specific Considerations</h3>
+
+<ul>
+<li>Strata fees and special assessments impact affordability calculations</li>
+<li>Property taxes vary significantly across BC municipalities</li>
+<li>Insurance costs fluctuate based on location and construction type</li>
+<li>Utilities and maintenance expenses differ between property styles</li>
+</ul>
+
+<h3>Dynamic Market Variables</h3>
+
+<ul>
+<li>Interest rate trend analysis for mortgage product selection</li>
+<li>Amortization strategy optimization</li>
+<li>Prepayment privilege evaluation</li>
+<li>Refinancing timeline planning</li>
+</ul>
+
+<img src="https://cdn.marblism.com/UMch2TLYjO0.webp" alt="BC mortgage landscape" style="width:100%;height:auto;border-radius:8px;margin:1rem 0;" />
+
+<h2>BC's Unique Lending Landscape</h2>
+
+<p><strong>3 minutes on regional specifics</strong></p>
+
+<p>British Columbia's mortgage market operates differently than other provinces. Local factors that generic calculators ignore include:</p>
+
+<h3>Provincial Programs</h3>
+
+<ul>
+<li>First Time Home Buyers' Program implications</li>
+<li>Property Transfer Tax considerations</li>
+<li>Speculation and Vacancy Tax impacts for certain buyers</li>
+<li>Foreign Buyer Tax calculations</li>
+</ul>
+
+<h3>Regional Economic Factors</h3>
+
+<ul>
+<li>Tech industry employment verification processes</li>
+<li>Resource sector income stability assessments</li>
+<li>Tourism industry seasonal income evaluation</li>
+<li>Small business owner qualification complexities</li>
+</ul>
+
+<h2>Smart Buyers' New Strategy: Calculator + Professional Analysis</h2>
+
+<p><strong>2 minutes on the winning approach</strong></p>
+
+<p>The most successful home buyers in today's BC market use a two-step process:</p>
+
+<h3>Step 1: Initial Assessment</h3>
+
+<p>Use our <a href="/calculators/affordability">affordability calculator</a> for preliminary budgeting. This gives you a realistic starting point for house hunting without the emotional investment of falling in love with properties outside your range.</p>
+
+<h3>Step 2: Professional Optimization</h3>
+
+<p>Schedule a comprehensive pre-approval analysis with experienced brokers who understand BC's specific lending environment. This typically reveals:</p>
+
+<ul>
+<li>15-30% higher qualification amounts through proper documentation strategies</li>
+<li>Alternative lending solutions for complex income situations</li>
+<li>Rate and product options not available through traditional applications</li>
+</ul>
+
+<img src="https://cdn.marblism.com/gqckBCcZo9J.webp" alt="Investment property considerations" style="width:100%;height:auto;border-radius:8px;margin:1rem 0;" />
+
+<h2>The Construction and Investment Advantage</h2>
+
+<p><strong>3 minutes on specialized scenarios</strong></p>
+
+<p>For builders, developers, and investors, generic calculators are particularly inadequate. These scenarios require:</p>
+
+<h3>Construction Financing Expertise</h3>
+
+<ul>
+<li>Progress draw scheduling optimization</li>
+<li>Contractor qualification coordination</li>
+<li>Timeline risk management</li>
+<li>Completion guarantee structuring</li>
+</ul>
+
+<p>Our <a href="/calculators/construction-draw">construction draw calculator</a> provides initial estimates, but professional guidance ensures you secure optimal terms and avoid costly delays.</p>
+
+<h3>Investment Property Calculations</h3>
+
+<p>Multi-unit properties and rental income scenarios involve complex calculations that standard tools can't handle:</p>
+
+<ul>
+<li>Rental income verification requirements</li>
+<li>Vacancy allowance calculations</li>
+<li>Property management expense considerations</li>
+<li>Portfolio lending optimization strategies</li>
+</ul>
+
+<h2>Technology + Expertise: The Kraft Mortgages Advantage</h2>
+
+<p><strong>2 minutes on our approach</strong></p>
+
+<p>We combine the convenience of modern calculation tools with deep market expertise. Our comprehensive calculator suite includes:</p>
+
+<ul>
+<li><a href="/calculators/payment-calculator">Mortgage payment calculators</a></li>
+<li><a href="/refinance-calculator">Refinancing analysis tools</a></li>
+<li><a href="/investment-calculator">Investment property evaluations</a></li>
+</ul>
+
+<p>But the real value comes from professional interpretation and optimization strategies that turn preliminary numbers into actual approvals.</p>
+
+<h2>Your Next Move: Beyond the Calculator</h2>
+
+<p>Pre-approval mortgage calculators aren't dead—they're just incomplete. Smart buyers use them as starting points, then leverage professional expertise to maximize their borrowing power and secure optimal terms.</p>
+
+<p>Ready to discover your real pre-approval potential? Our BC-based team specializes in complex scenarios that defeat online calculators. From tech workers with stock options to contractors with seasonal income, we've helped thousands navigate BC's unique lending landscape.</p>
+
+<p><strong>Contact Kraft Mortgages Canada Inc. today for a comprehensive pre-approval analysis that goes far beyond what any calculator can provide. Your dream home might be more affordable than you think.</strong></p>
+
+<hr/>
+
+<p><em>Kraft Mortgages | #301 - 1688 152nd Street, Surrey BC V4A 2G2 | Serving British Columbia and Alberta</em></p>`;
+
+    return {
+      slug: 'pre-approval-mortgage-calculators-bc-cmhc-changes-2025',
+      title: "Are Pre-Approval Mortgage Calculators Dead? How BC's New CMHC Changes Are Rewriting the Rules",
+      markdown: blogContent,
+      html: blogContent,
+      status: 'published' as const,
+      publishedAt: new Date('2025-12-22T07:00:00Z'),
+      author: {
+        name: 'Varun Chaudhry',
+        title: 'Senior Mortgage Strategist',
+        license: 'BCFSA #M08001935'
+      },
+      metaDescription: "Discover why 73% of homebuyers find their actual borrowing power is 15-25% lower than online calculators predict. Learn how BC's new CMHC changes are reshaping pre-approval strategies.",
+      keywords: ['pre-approval-mortgage-calculator', 'BC-mortgage', 'CMHC-changes-2025', 'mortgage-broker-BC', 'Vancouver-mortgage', 'Surrey-mortgage'],
+      categories: ['Mortgage Education', 'BC Real Estate']
+    };
+  }
 
   const doc = await (await postsCol()).doc(slug).get();
   if (!doc.exists) return null;
@@ -2112,6 +2352,23 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
     categories: ['Market News', 'Buyer Strategy']
   };
 
+  const mockPost13: Post = {
+    slug: 'pre-approval-mortgage-calculators-bc-cmhc-changes-2025',
+    title: "Are Pre-Approval Mortgage Calculators Dead? How BC's New CMHC Changes Are Rewriting the Rules",
+    markdown: `<p>Here's the uncomfortable truth: 73% of homebuyers who relied solely on online pre-approval mortgage calculators discovered their actual borrowing power was 15-25% lower than predicted.</p>`,
+    html: `<p>Here's the uncomfortable truth: 73% of homebuyers who relied solely on online pre-approval mortgage calculators discovered their actual borrowing power was 15-25% lower than predicted.</p>`,
+    status: 'published' as const,
+    publishedAt: new Date('2025-12-22T07:00:00Z'),
+    author: {
+      name: 'Varun Chaudhry',
+      title: 'Senior Mortgage Strategist',
+      license: 'BCFSA #M08001935'
+    },
+    metaDescription: "Discover why 73% of homebuyers find their actual borrowing power is 15-25% lower than online calculators predict. Learn how BC's new CMHC changes are reshaping pre-approval strategies.",
+    keywords: ['pre-approval-mortgage-calculator', 'BC-mortgage', 'CMHC-changes-2025', 'mortgage-broker-BC'],
+    categories: ['Mortgage Education', 'BC Real Estate']
+  };
+
   try {
     const snapshot = await (await postsCol())
       .orderBy('publishedAt', 'desc')
@@ -2124,7 +2381,7 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
     })) as Post[];
 
     // Combine our mock post with Firestore posts and sort by date
-    const allPosts = [mockPost, mockPost2, mockPost3, mockPost4, mockPost5, mockPost6, mockPost7, mockPost8, mockPost9, mockPost10, mockPost11, mockPost12, ...firestorePosts].sort((a, b) =>
+    const allPosts = [mockPost, mockPost2, mockPost3, mockPost4, mockPost5, mockPost6, mockPost7, mockPost8, mockPost9, mockPost10, mockPost11, mockPost12, mockPost13, ...firestorePosts].sort((a, b) =>
       new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
     );
 
