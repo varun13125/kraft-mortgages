@@ -1,66 +1,13 @@
+// Deployment: December 19, 2025 - GHL Form Embed
 "use client";
-import { useState } from "react";
 import { motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
-import { Phone, Mail, Clock, MapPin, Award, DollarSign, Zap, Loader2, CheckCircle, AlertCircle } from "lucide-react";
+import Script from "next/script";
+import { Phone, Mail, Clock, MapPin, Award, DollarSign, Zap } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
-interface FormState {
-  name: string;
-  email: string;
-  phone: string;
-  subject: string;
-  message: string;
-}
-
 export default function ContactPage() {
-  const [formData, setFormData] = useState<FormState>({
-    name: "",
-    email: "",
-    phone: "",
-    subject: "",
-    message: "",
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
-  const [statusMessage, setStatusMessage] = useState("");
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    setSubmitStatus("idle");
-
-    try {
-      const response = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-
-      const data = await response.json();
-
-      if (response.ok && data.success) {
-        setSubmitStatus("success");
-        setStatusMessage(data.message || "Thank you! Your message has been received.");
-        // Reset form
-        setFormData({ name: "", email: "", phone: "", subject: "", message: "" });
-      } else {
-        setSubmitStatus("error");
-        setStatusMessage(data.error || "Something went wrong. Please try again.");
-      }
-    } catch {
-      setSubmitStatus("error");
-      setStatusMessage("Network error. Please check your connection and try again.");
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
   return (
     <>
       <Navigation />
@@ -121,8 +68,8 @@ export default function ContactPage() {
                     <div>
                       <h3 className="text-lg font-medium text-gray-100 mb-2">Email</h3>
                       <p className="text-gray-400 mb-2">Send us your questions anytime</p>
-                      <a href="mailto:info@kraftmortgages.ca" className="text-gold-400 hover:text-gold-300 transition-colors font-semibold">
-                        info@kraftmortgages.ca
+                      <a href="mailto:varun@kraftmortgages.ca" className="text-gold-400 hover:text-gold-300 transition-colors font-semibold">
+                        varun@kraftmortgages.ca
                       </a>
                     </div>
                   </div>
@@ -157,146 +104,33 @@ export default function ContactPage() {
                 </div>
               </motion.div>
 
-              {/* Contact Form */}
+              {/* GHL Form Embed */}
               <motion.div
                 initial={{ opacity: 0, x: 20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
-                className="bg-gray-800/50 backdrop-blur-sm rounded-xl shadow-2xl border border-gray-700/50 p-8"
+                className="bg-gray-800/50 backdrop-blur-sm rounded-xl shadow-2xl border border-gray-700/50 p-6 overflow-hidden"
               >
-                <h2 className="text-2xl font-semibold text-gray-100 mb-6">Send us a Message</h2>
-
-                {/* Success/Error Message */}
-                {submitStatus !== "idle" && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className={`p-4 rounded-lg mb-6 flex items-center gap-3 ${submitStatus === "success"
-                        ? "bg-green-500/20 border border-green-500/30 text-green-300"
-                        : "bg-red-500/20 border border-red-500/30 text-red-300"
-                      }`}
-                  >
-                    {submitStatus === "success" ? (
-                      <CheckCircle className="w-5 h-5 flex-shrink-0" />
-                    ) : (
-                      <AlertCircle className="w-5 h-5 flex-shrink-0" />
-                    )}
-                    <span>{statusMessage}</span>
-                  </motion.div>
-                )}
-
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div>
-                    <label htmlFor="name" className="block text-sm font-medium text-gray-200 mb-2">
-                      Full Name
-                    </label>
-                    <input
-                      type="text"
-                      id="name"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent text-white placeholder-gray-400"
-                      placeholder="Enter your full name"
-                      required
-                      disabled={isSubmitting}
-                    />
-                  </div>
-
-                  <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-200 mb-2">
-                      Email Address
-                    </label>
-                    <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent text-white placeholder-gray-400"
-                      placeholder="Enter your email"
-                      required
-                      disabled={isSubmitting}
-                    />
-                  </div>
-
-                  <div>
-                    <label htmlFor="phone" className="block text-sm font-medium text-gray-200 mb-2">
-                      Phone Number
-                    </label>
-                    <input
-                      type="tel"
-                      id="phone"
-                      name="phone"
-                      value={formData.phone}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent text-white placeholder-gray-400"
-                      placeholder="Enter your phone number"
-                      disabled={isSubmitting}
-                    />
-                  </div>
-
-                  <div>
-                    <label htmlFor="subject" className="block text-sm font-medium text-gray-200 mb-2">
-                      Subject
-                    </label>
-                    <select
-                      id="subject"
-                      name="subject"
-                      value={formData.subject}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent text-white"
-                      required
-                      disabled={isSubmitting}
-                    >
-                      <option value="">Select a subject</option>
-                      <option value="General Inquiry">General Inquiry</option>
-                      <option value="Residential Lending">Residential Lending</option>
-                      <option value="Equity Lending">Equity Lending</option>
-                      <option value="Construction Financing">Construction Financing</option>
-                      <option value="Commercial Lending">Commercial Lending</option>
-                      <option value="Private Lending">Private Lending</option>
-                      <option value="MLI Select Program">MLI Select Program</option>
-                      <option value="Refinancing">Refinancing</option>
-                      <option value="Other">Other</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label htmlFor="message" className="block text-sm font-medium text-gray-200 mb-2">
-                      Message
-                    </label>
-                    <textarea
-                      id="message"
-                      name="message"
-                      value={formData.message}
-                      onChange={handleInputChange}
-                      rows={5}
-                      className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent text-white placeholder-gray-400"
-                      placeholder="Tell us how we can help you..."
-                      required
-                      disabled={isSubmitting}
-                    ></textarea>
-                  </div>
-
-                  <motion.button
-                    type="submit"
-                    whileHover={isSubmitting ? {} : { scale: 1.02 }}
-                    whileTap={isSubmitting ? {} : { scale: 0.98 }}
-                    disabled={isSubmitting}
-                    className={`w-full px-6 py-3 bg-gradient-to-r from-gold-500 to-amber-600 text-gray-900 font-semibold rounded-lg shadow-lg shadow-gold-500/30 hover:shadow-gold-500/50 transition-all flex items-center justify-center gap-2 ${isSubmitting ? "opacity-70 cursor-not-allowed" : ""
-                      }`}
-                  >
-                    {isSubmitting ? (
-                      <>
-                        <Loader2 className="w-5 h-5 animate-spin" />
-                        Sending...
-                      </>
-                    ) : (
-                      "Send Message"
-                    )}
-                  </motion.button>
-                </form>
+                <h2 className="text-2xl font-semibold text-gray-100 mb-4">Send us a Message</h2>
+                <div className="w-full" style={{ minHeight: '740px' }}>
+                  <iframe
+                    src="https://api.leadconnectorhq.com/widget/form/EWgpdDb4vZV81EZXxWHf"
+                    style={{ width: '100%', height: '740px', border: 'none', borderRadius: '8px' }}
+                    id="inline-EWgpdDb4vZV81EZXxWHf"
+                    data-layout="{'id':'INLINE'}"
+                    data-trigger-type="alwaysShow"
+                    data-trigger-value=""
+                    data-activation-type="alwaysActivated"
+                    data-activation-value=""
+                    data-deactivation-type="neverDeactivate"
+                    data-deactivation-value=""
+                    data-form-name="Mortgage Lead Capture"
+                    data-height="740"
+                    data-layout-iframe-id="inline-EWgpdDb4vZV81EZXxWHf"
+                    data-form-id="EWgpdDb4vZV81EZXxWHf"
+                    title="Mortgage Lead Capture"
+                  />
+                </div>
               </motion.div>
             </div>
           </div>
@@ -368,6 +202,9 @@ export default function ContactPage() {
           </div>
         </section>
       </main>
+
+      {/* GHL Form Embed Script */}
+      <Script src="https://link.msgsndr.com/js/form_embed.js" strategy="lazyOnload" />
     </>
   );
 }
