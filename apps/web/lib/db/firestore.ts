@@ -1949,6 +1949,133 @@ A contractor assumed his $900,000 calculator result was solid. His actual pre-ap
       categories: ['MLI Select', 'Development Financing']
     };
   }
+  if (slug === 'burnaby-mortgage-renewal-crisis-2025') {
+    const blogContent = `<img src="https://cdn.marblism.com/1RunsTWgQpj.webp" alt="Burnaby Mortgage Renewal Crisis" style="width:100%;height:auto;border-radius:12px;margin:1.5rem 0;" />
+
+<p>Canada's mortgage landscape has fundamentally shifted, and the numbers are staggering. Over <strong>1.5 million Canadian homeowners</strong> face mortgage renewals in the next two years, with approximately <strong>60% of all outstanding mortgages</strong> set to renew in 2025 or 2026. For Burnaby homeowners who secured their mortgages during the pandemic's historic low-rate environment, this isn't just a renewal: it's a financial reckoning.</p>
+
+<h2>The Payment Shock Reality: What Burnaby Homeowners Face</h2>
+
+<p>If you locked in your mortgage between 2020-2022, you likely secured rates around <strong>2% or lower</strong>. Today's renewal rates sit significantly higher, creating what industry experts call "payment shock." For the average Burnaby homeowner, this translates to <strong>hundreds of additional dollars per month</strong>.</p>
+
+<p>Here's what the math looks like: A typical Burnaby home purchased in 2021 with a 10% down payment now faces monthly payment increases of <strong>$400-600</strong> upon renewal. For many families already stretched by BC's cost of living, this increase represents a genuine affordability crisis.</p>
+
+<p>The Fraser Valley region, which includes Burnaby, was already experiencing affordability challenges before the rate environment changed. Now, homeowners face a perfect storm of higher rates, reduced refinancing options, and declining home equity that limits alternative financing strategies.</p>
+
+<h2>Why Your Bank's Renewal Offer Isn't Your Best Option</h2>
+
+<img src="https://cdn.marblism.com/5-KylqW09Hr.webp" alt="Bank Renewal Offer" style="width:100%;height:auto;border-radius:8px;margin:1rem 0;" />
+
+<p>When your renewal notice arrives, your current lender presents their offer as if it's your only choice. This couldn't be further from the truth. Banks count on borrower inertia: the tendency to accept the path of least resistance rather than shop around.</p>
+
+<p>Your current lender knows you're facing:</p>
+<ul>
+<li><strong>Tighter qualification standards</strong> that make switching appear difficult</li>
+<li><strong>Stress test requirements</strong> that weren't in place when you originally qualified</li>
+<li><strong>Time pressure</strong> with renewal deadlines approaching</li>
+<li><strong>Emotional decision-making</strong> driven by payment shock anxiety</li>
+</ul>
+
+<p>This knowledge gives them negotiating power they didn't have during your original mortgage process. They're banking on you accepting their terms without exploring alternatives that could save you <strong>tens of thousands</strong> over your next term.</p>
+
+<h2>The Hidden Costs of Going It Alone</h2>
+
+<p>Burnaby homeowners who attempt to navigate renewal independently often make costly mistakes:</p>
+
+<h3>1. Accepting the First Offer</h3>
+<p>Most homeowners renew with their existing lender at posted rates, missing potential savings of <strong>0.25% to 0.75%</strong> through proper negotiation or lender switching.</p>
+
+<h3>2. Missing Alternative Products</h3>
+<p>Banks present their standard renewal options, but mortgage brokers access <strong>40+ lenders</strong> with specialized products for challenging situations, including:</p>
+<ul>
+<li>Extended amortization options</li>
+<li>Blended payment solutions</li>
+<li>Alternative documentation programs</li>
+<li>Debt consolidation mortgages</li>
+</ul>
+
+<h3>3. Overlooking Refinancing Opportunities</h3>
+<p>While refinancing rules have tightened, strategic refinancing can still provide relief through debt consolidation or accessing home equity for investment purposes.</p>
+
+<h2>What Mortgage Brokers Do That Banks Can't</h2>
+
+<img src="https://cdn.marblism.com/yGyKG1dzRkc.webp" alt="Mortgage Broker Advantage" style="width:100%;height:auto;border-radius:8px;margin:1rem 0;" />
+
+<p>A mortgage broker's value becomes critical during renewal because we operate with different priorities than your current lender. While banks focus on retaining existing customers at profitable margins, brokers are compensated for finding you the best available solution.</p>
+
+<h3>Market Intelligence</h3>
+<p>We track rate movements across dozens of lenders daily, understanding which institutions are competing aggressively for renewal business and which offer specialty programs for unique situations.</p>
+
+<h3>Negotiation Power</h3>
+<p>Your current lender knows you're a captive customer facing qualification challenges. When we represent you, lenders compete for your business, often resulting in better rates and terms than you'd receive directly.</p>
+
+<h3>Strategic Planning</h3>
+<p>Beyond securing better rates, we analyze your complete financial picture to determine whether renewal, refinancing, or alternative strategies best serve your long-term goals.</p>
+
+<h2>Burnaby Market Specifics: Why Location Matters</h2>
+
+<p>Burnaby homeowners face unique challenges that require specialized expertise:</p>
+
+<h3>Property Values and Equity</h3>
+<p>Burnaby's housing market has experienced volatility, affecting available equity for refinancing or alternative financing strategies. We understand local market dynamics and work with lenders who appreciate Burnaby's long-term stability.</p>
+
+<h3>Income Documentation</h3>
+<p>Many Burnaby residents work in industries requiring alternative income documentation: from tech professionals with stock options to small business owners. We specialize in presenting these income sources effectively to lenders.</p>
+
+<h3>Investment Property Considerations</h3>
+<p>Burnaby's rental market attracts significant investor activity. If you're considering converting your residence to rental property or purchasing additional investment properties, renewal timing can significantly impact your strategy.</p>
+
+<h2>The Kraft Mortgages Advantage: Complex Solutions for Complex Times</h2>
+
+<p>At Kraft Mortgages Canada Inc., we've guided thousands of homeowners through challenging renewal scenarios across BC, Alberta, and Ontario. Our approach differs from traditional mortgage services in several key ways:</p>
+
+<h3>Comprehensive Analysis</h3>
+<p>We don't just focus on securing your renewal: we analyze your complete financial picture using tools like our <a href="/calculators/affordability">affordability calculator</a> to ensure your renewal strategy aligns with your long-term goals.</p>
+
+<h3>Lender Relationship Strength</h3>
+<p>Our established relationships with over 40 lenders, including alternative and private lenders, provide options that banks simply cannot offer. When traditional qualification becomes challenging, we have solutions.</p>
+
+<h3>Ongoing Support</h3>
+<p>Unlike banks that hand you off after closing, we maintain relationships throughout your mortgage life cycle, providing strategic advice for future renewals, refinancing opportunities, and investment decisions.</p>
+
+<h2>Your Renewal Action Plan: What to Do Now</h2>
+
+<h3>60 Days Before Renewal:</h3>
+<p>Start the process early. Don't wait for your lender's renewal offer. Contact us to begin rate shopping and strategy development.</p>
+
+<h3>45 Days Before Renewal:</h3>
+<p>Complete financial documentation review. We'll identify any qualification challenges and develop solutions before approaching lenders.</p>
+
+<h3>30 Days Before Renewal:</h3>
+<p>Finalize lender selection and begin formal application processes. This timing ensures we have alternatives if challenges arise.</p>
+
+<h2>Take Action Today</h2>
+
+<p>The mortgage renewal cliff isn't a future problem: it's happening now. Every month you delay could cost you hundreds of dollars in additional interest payments.</p>
+
+<p>Don't let payment shock dictate your financial future. The expertise to navigate this crisis exists, and the cost of professional guidance pales in comparison to the potential savings and peace of mind you'll gain.</p>
+
+<p>Contact Kraft Mortgages Canada Inc. today to discover how we can transform your renewal challenge into a strategic advantage. Visit our <a href="/services">services page</a> or <a href="/contact">contact us directly</a> to begin your renewal strategy consultation.</p>
+
+<p><strong>Your mortgage renewal doesn't have to be a crisis: with the right guidance, it can become an opportunity to improve your financial position and secure your family's future.</strong></p>`;
+
+    return {
+      slug: 'burnaby-mortgage-renewal-crisis-2025',
+      title: "Why 1.2 Million Canadians Need a Mortgage Broker: Burnaby Homeowners' Renewal Crisis Explained",
+      markdown: blogContent,
+      html: blogContent,
+      status: 'published' as const,
+      publishedAt: new Date('2025-12-24T15:00:00Z'),
+      author: {
+        name: 'Varun Chaudhry',
+        title: 'President, CEO, Sr. Mortgage Professional',
+        license: 'BCFSA #M08001935'
+      },
+      metaDescription: "1.5 million Canadians face mortgage renewals in 2025-2026. Burnaby homeowners could see $400-600/month payment increases. Learn why a mortgage broker is essential for navigating the renewal crisis.",
+      keywords: ['mortgage-renewal', 'Burnaby', 'payment-shock', 'mortgage-broker', 'renewal-crisis-2025', 'BC-mortgages'],
+      categories: ['Mortgage Renewals', 'Burnaby Real Estate']
+    };
+  }
 
   const doc = await (await postsCol()).doc(slug).get();
   if (!doc.exists) return null;
@@ -2579,6 +2706,23 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
     categories: ['MLI Select', 'Development Financing']
   };
 
+  const mockPost15: Post = {
+    slug: 'burnaby-mortgage-renewal-crisis-2025',
+    title: "Why 1.2 Million Canadians Need a Mortgage Broker: Burnaby Homeowners' Renewal Crisis Explained",
+    markdown: `<p>Over 1.5 million Canadian homeowners face mortgage renewals in the next two years, with 60% of all outstanding mortgages set to renew in 2025 or 2026. For Burnaby homeowners, this means payment increases of $400-600/month.</p>`,
+    html: `<p>Over 1.5 million Canadian homeowners face mortgage renewals in the next two years, with 60% of all outstanding mortgages set to renew in 2025 or 2026. For Burnaby homeowners, this means payment increases of $400-600/month.</p>`,
+    status: 'published' as const,
+    publishedAt: new Date('2025-12-24T15:00:00Z'),
+    author: {
+      name: 'Varun Chaudhry',
+      title: 'President, CEO, Sr. Mortgage Professional',
+      license: 'BCFSA #M08001935'
+    },
+    metaDescription: "1.5 million Canadians face mortgage renewals in 2025-2026. Burnaby homeowners could see $400-600/month payment increases. Learn why a mortgage broker is essential.",
+    keywords: ['mortgage-renewal', 'Burnaby', 'payment-shock', 'mortgage-broker'],
+    categories: ['Mortgage Renewals', 'Burnaby Real Estate']
+  };
+
   try {
     const snapshot = await (await postsCol())
       .orderBy('publishedAt', 'desc')
@@ -2591,7 +2735,7 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
     })) as Post[];
 
     // Combine our mock post with Firestore posts and sort by date
-    const allPosts = [mockPost, mockPost2, mockPost3, mockPost4, mockPost5, mockPost6, mockPost7, mockPost8, mockPost9, mockPost10, mockPost11, mockPost12, mockPost13, mockPost14, ...firestorePosts].sort((a, b) =>
+    const allPosts = [mockPost, mockPost2, mockPost3, mockPost4, mockPost5, mockPost6, mockPost7, mockPost8, mockPost9, mockPost10, mockPost11, mockPost12, mockPost13, mockPost14, mockPost15, ...firestorePosts].sort((a, b) =>
       new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
     );
 
@@ -2599,6 +2743,6 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
   } catch (error) {
     console.error('Error fetching recent posts:', error);
     // Return only our mock post if Firestore fails
-    return [mockPost, mockPost2, mockPost3, mockPost4, mockPost5, mockPost6, mockPost7, mockPost8, mockPost9, mockPost10, mockPost11, mockPost12, mockPost13, mockPost14];
+    return [mockPost, mockPost2, mockPost3, mockPost4, mockPost5, mockPost6, mockPost7, mockPost8, mockPost9, mockPost10, mockPost11, mockPost12, mockPost13, mockPost14, mockPost15];
   }
 }
