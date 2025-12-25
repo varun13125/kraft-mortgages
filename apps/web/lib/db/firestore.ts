@@ -2076,6 +2076,184 @@ A contractor assumed his $900,000 calculator result was solid. His actual pre-ap
       categories: ['Mortgage Renewals', 'Burnaby Real Estate']
     };
   }
+  if (slug === 'coquitlam-mortgage-renewal-mistakes-2026') {
+    const blogContent = `<img src="https://cdn.marblism.com/OqoJ63Fb3G-.webp" alt="Coquitlam Mortgage Renewal 2026" style="width:100%;height:auto;border-radius:12px;margin:1.5rem 0;" />
+
+<p>As we wrap up 2025 and look ahead to 2026, Coquitlam property owners are facing what experts are calling the "renewal cliff." With over 1.2 million Canadians set to renew their mortgages in the coming year, the stakes have never been higher. Yet many homeowners are making costly mistakes that could cost them thousands of dollars: or worse, jeopardize their homeownership entirely.</p>
+
+<p>Varun Chaudhry, a Surrey-based mortgage broker and Financial Advisor specializing in Insurance & Living Benefits at Kraft Mortgages Canada Inc., has helped clients save over $200,000 in premiums through strategic programs like MLI Select. His Surrey market expertise reveals seven critical mistakes that Coquitlam homeowners are making as they approach their 2026 renewals.</p>
+
+<h2>The Reality Check: What's Changed Since Your Last Renewal</h2>
+
+<p>The mortgage landscape has shifted dramatically since most homeowners last renewed. Interest rates have fluctuated significantly, the stress test requirements have evolved, and new regulations: including the Mortgage Services Act taking effect October 13, 2026: are reshaping the entire industry.</p>
+
+<p>For Coquitlam property owners, these changes mean your old renewal strategy won't cut it anymore. Here's what's going wrong: and how to fix it.</p>
+
+<h2>Mistake #1: Playing the Waiting Game</h2>
+
+<p><strong>The Problem:</strong> Too many Coquitlam homeowners wait until their renewal notice arrives (usually 30-60 days before maturity) to start thinking about their options.</p>
+
+<p>By then, you're working with a compressed timeline and limited negotiating power. Banks know you're under pressure, and they'll use that to their advantage.</p>
+
+<p><strong>The Fix:</strong> Start your renewal process 120 days early. This gives you time to shop around, compare offers, and potentially switch lenders if needed. A <strong>mortgage broker Surrey BC</strong> like Kraft Mortgages can begin working on your renewal up to 4 months in advance, securing rate holds and exploring all your options for Coquitlam and Burnaby homeowners.</p>
+
+<img src="https://cdn.marblism.com/H9pAzlDS79U.webp" alt="Renewal Timeline" style="width:100%;height:auto;border-radius:8px;margin:1rem 0;" />
+
+<h2>Mistake #2: Auto-Pilot Renewals with Your Current Bank</h2>
+
+<p><strong>The Reality:</strong> Your bank sends a renewal offer, and you sign it without question. Sound familiar?</p>
+
+<p>This is perhaps the costliest mistake Coquitlam property owners make. Banks typically offer their "standard" renewal rates, which are rarely their best rates. They're banking (literally) on your inertia.</p>
+
+<p><strong>The Smart Move:</strong> Treat your renewal like you're buying a new mortgage. Shop around. Compare rates, terms, and features across multiple lenders. A <strong>coquitlam mortgage broker</strong> can access wholesale rates that aren't available to the general public, potentially saving you thousands annually.</p>
+
+<p><strong>Real Example:</strong> Varun recently helped a Coquitlam family avoid their bank's 5.89% renewal offer by securing a 4.79% rate with better terms from an alternative lender: saving them $2,400 annually on their $400,000 mortgage.</p>
+
+<h2>Mistake #3: Ignoring the Rate Environment Reality</h2>
+
+<p><strong>The Mistake:</strong> Many homeowners are still mentally anchored to the ultra-low rates of 2020-2021, making unrealistic assumptions about 2026 renewals.</p>
+
+<p>The current rate environment is dramatically different. What worked three years ago won't work today.</p>
+
+<p><strong>The Strategy:</strong> Work with current market realities, not past rates. Focus on securing the best available rate with terms that provide flexibility for future rate changes. Consider features like:</p>
+<ul>
+<li>Prepayment privileges for faster payoff</li>
+<li>Portability options if you plan to move</li>
+<li>Conversion options from variable to fixed</li>
+</ul>
+
+<p>Your Surrey mortgage broker (serving Burnaby and Coquitlam) can help you navigate these decisions based on current market conditions, not outdated expectations.</p>
+
+<h2>Mistake #4: Missing the Big Picture Financial Review</h2>
+
+<p><strong>The Oversight:</strong> Renewals aren't just about rates: they're opportunities to optimize your entire financial strategy.</p>
+
+<p>Many Coquitlam homeowners focus solely on the interest rate while missing chances to consolidate debt, access equity, or restructure their mortgage to better align with their life goals.</p>
+
+<p><strong>The Opportunity:</strong> Use your renewal to:</p>
+<ul>
+<li>Consolidate high-interest debt into your mortgage</li>
+<li>Access equity for renovations or investments</li>
+<li>Adjust your amortization to match retirement plans</li>
+<li>Switch between fixed and variable based on your risk tolerance</li>
+</ul>
+
+<p><a href="/refinance-calculator">Check out our refinance calculator</a> to explore how restructuring could benefit your situation.</p>
+
+<h2>Mistake #5: Underestimating the Stress Test Impact</h2>
+
+<p><strong>The Reality Check:</strong> Even existing homeowners face stress test requirements when switching lenders during renewal.</p>
+
+<p>Many Coquitlam property owners assume they can easily move their mortgage to any lender. However, if your financial situation has changed: income decreased, debts increased, credit issues: you might not qualify with new lenders at today's stress test rates.</p>
+
+<p><strong>The Solution:</strong> Get pre-qualified early. If you don't pass the stress test with alternative lenders, you'll know to focus on negotiating better terms with your current lender rather than assuming you can switch.</p>
+
+<p><strong>Pro Tip:</strong> Self-employed Coquitlam residents face additional challenges here. Stated income and alternative documentation programs can help, but these require advance planning and the right broker connections.</p>
+
+<img src="https://cdn.marblism.com/fQjcE_rNdfp.webp" alt="Stress Test Impact" style="width:100%;height:auto;border-radius:8px;margin:1rem 0;" />
+
+<h2>Mistake #6: Forgetting Alternative Lender Options</h2>
+
+<p><strong>The Blind Spot:</strong> Most homeowners only consider major banks for renewals, missing out on credit unions, trust companies, and private lenders that might offer better solutions.</p>
+
+<p>This is especially critical for Coquitlam property owners with:</p>
+<ul>
+<li>Self-employment income</li>
+<li>Recent credit challenges</li>
+<li>Unique property types</li>
+<li>Complex financial situations</li>
+</ul>
+
+<p><strong>The Advantage:</strong> Alternative lenders often offer:</p>
+<ul>
+<li>More flexible income verification</li>
+<li>Better rates for specific scenarios</li>
+<li>Unique product features</li>
+<li>Faster processing times</li>
+</ul>
+
+<p>Surrey-based mortgage broker Varun Chaudhry's expertise with programs like MLI Select: where he's saved clients over $200,000 in premiums: demonstrates the value of exploring all available options, not just traditional bank products.</p>
+
+<h2>Mistake #7: Going It Alone Instead of Consulting an Expert</h2>
+
+<p><strong>The Costly Error:</strong> Trying to navigate 2026's complex mortgage renewal landscape without professional guidance.</p>
+
+<p>With new regulations taking effect in October 2026, changing lender policies, and an increasingly complex market, the DIY approach often leads to suboptimal outcomes.</p>
+
+<p><strong>The Expert Advantage:</strong> Working with a Surrey-based specialist like mortgage broker Varun Chaudhry provides:</p>
+<ul>
+<li>Access to wholesale rates and exclusive products</li>
+<li>Deep knowledge of alternative lenders and programs</li>
+<li>Expertise in complex scenarios and documentation</li>
+<li>Ongoing support throughout the renewal process</li>
+<li>Strategic advice aligned with your long-term goals</li>
+</ul>
+
+<p><strong>The Numbers Speak:</strong> Kraft Mortgages clients regularly save thousands annually through expert guidance and access to better products and rates.</p>
+
+<h2>Why Choose a Surrey-Based Broker for Your Coquitlam Renewal</h2>
+
+<p>Geographic proximity matters in mortgage brokering. A <strong>mortgage broker Surrey BC</strong> like Kraft Mortgages offers several advantages for Coquitlam homeowners, and we regularly serve nearby Burnaby as well:</p>
+<ul>
+<li>Deep understanding of local market conditions</li>
+<li>Established relationships with regional lenders</li>
+<li>Quick access for in-person consultations</li>
+<li>Knowledge of BC-specific programs and regulations</li>
+<li>Understanding of local property values and trends</li>
+</ul>
+
+<h2>The 2026 Renewal Action Plan</h2>
+
+<h3>Start Now (120+ Days Before Renewal):</h3>
+<ol>
+<li>Connect with Varun at Kraft Mortgages for a comprehensive review</li>
+<li>Gather current financial documentation</li>
+<li><a href="/calculators/pre-approval">Use our pre-approval calculator</a> to understand your qualifying position</li>
+</ol>
+
+<h3>90 Days Before Renewal:</h3>
+<ol>
+<li>Compare multiple lender options</li>
+<li>Secure rate holds where beneficial</li>
+<li>Review and optimize your mortgage structure</li>
+</ol>
+
+<h3>60 Days Before Renewal:</h3>
+<ol>
+<li>Finalize your best option</li>
+<li>Complete application processes</li>
+<li>Arrange for funding and documentation</li>
+</ol>
+
+<img src="https://cdn.marblism.com/KOzH_-cXLD0.webp" alt="Renewal Action Plan" style="width:100%;height:auto;border-radius:8px;margin:1rem 0;" />
+
+<h2>The Bottom Line</h2>
+
+<p>Your 2026 mortgage renewal is too important to leave to chance. With interest rates in flux, new regulations taking effect, and lenders adjusting their criteria, the cost of mistakes has never been higher.</p>
+
+<p>Don't become another statistic in the renewal crisis. Work with a <strong>coquitlam mortgage broker</strong> who understands both the current market and your specific situation.</p>
+
+<p>Ready to secure your best renewal outcome? <a href="/contact">Contact Kraft Mortgages</a> today to connect with Surrey-based mortgage broker Varun Chaudhry and discover how expert guidance can save you thousands on your 2026 renewal.</p>
+
+<p><em>The mortgage renewal cliff is real, but with the right strategy and expert support, you can turn it into an opportunity. Don't wait: your future financial success depends on the decisions you make today.</em></p>`;
+
+    return {
+      slug: 'coquitlam-mortgage-renewal-mistakes-2026',
+      title: "Mortgage Renewal in 2026? 7 Mistakes Coquitlam Property Owners Are Making (And How Surrey Mortgage Brokers Can Help)",
+      markdown: blogContent,
+      html: blogContent,
+      status: 'published' as const,
+      publishedAt: new Date('2025-12-25T00:00:00Z'),
+      author: {
+        name: 'Varun Chaudhry',
+        title: 'President, CEO, Sr. Mortgage Professional',
+        license: 'BCFSA #M08001935'
+      },
+      metaDescription: "7 critical mortgage renewal mistakes Coquitlam homeowners are making in 2026. Learn how Surrey mortgage brokers can help you save thousands and avoid the renewal cliff.",
+      keywords: ['mortgage-renewal-2026', 'Coquitlam', 'Surrey-mortgage-broker', 'renewal-mistakes', 'mortgage-broker-BC', 'stress-test'],
+      categories: ['Mortgage Renewals', 'Coquitlam Real Estate']
+    };
+  }
 
   const doc = await (await postsCol()).doc(slug).get();
   if (!doc.exists) return null;
@@ -2723,6 +2901,23 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
     categories: ['Mortgage Renewals', 'Burnaby Real Estate']
   };
 
+  const mockPost16: Post = {
+    slug: 'coquitlam-mortgage-renewal-mistakes-2026',
+    title: "Mortgage Renewal in 2026? 7 Mistakes Coquitlam Property Owners Are Making (And How Surrey Mortgage Brokers Can Help)",
+    markdown: `<p>1.2 million Canadians set to renew their mortgages in 2026. Coquitlam property owners are making 7 critical mistakes. Learn how to avoid the renewal cliff with expert guidance.</p>`,
+    html: `<p>1.2 million Canadians set to renew their mortgages in 2026. Coquitlam property owners are making 7 critical mistakes. Learn how to avoid the renewal cliff with expert guidance.</p>`,
+    status: 'published' as const,
+    publishedAt: new Date('2025-12-25T00:00:00Z'),
+    author: {
+      name: 'Varun Chaudhry',
+      title: 'President, CEO, Sr. Mortgage Professional',
+      license: 'BCFSA #M08001935'
+    },
+    metaDescription: "7 critical mortgage renewal mistakes Coquitlam homeowners are making in 2026. Learn how Surrey mortgage brokers can help you save thousands.",
+    keywords: ['mortgage-renewal-2026', 'Coquitlam', 'Surrey-mortgage-broker', 'renewal-mistakes'],
+    categories: ['Mortgage Renewals', 'Coquitlam Real Estate']
+  };
+
   try {
     const snapshot = await (await postsCol())
       .orderBy('publishedAt', 'desc')
@@ -2735,7 +2930,7 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
     })) as Post[];
 
     // Combine our mock post with Firestore posts and sort by date
-    const allPosts = [mockPost, mockPost2, mockPost3, mockPost4, mockPost5, mockPost6, mockPost7, mockPost8, mockPost9, mockPost10, mockPost11, mockPost12, mockPost13, mockPost14, mockPost15, ...firestorePosts].sort((a, b) =>
+    const allPosts = [mockPost, mockPost2, mockPost3, mockPost4, mockPost5, mockPost6, mockPost7, mockPost8, mockPost9, mockPost10, mockPost11, mockPost12, mockPost13, mockPost14, mockPost15, mockPost16, ...firestorePosts].sort((a, b) =>
       new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
     );
 
@@ -2743,6 +2938,6 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
   } catch (error) {
     console.error('Error fetching recent posts:', error);
     // Return only our mock post if Firestore fails
-    return [mockPost, mockPost2, mockPost3, mockPost4, mockPost5, mockPost6, mockPost7, mockPost8, mockPost9, mockPost10, mockPost11, mockPost12, mockPost13, mockPost14, mockPost15];
+    return [mockPost, mockPost2, mockPost3, mockPost4, mockPost5, mockPost6, mockPost7, mockPost8, mockPost9, mockPost10, mockPost11, mockPost12, mockPost13, mockPost14, mockPost15, mockPost16];
   }
 }
