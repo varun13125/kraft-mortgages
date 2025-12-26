@@ -12,39 +12,64 @@ export default function ContactPage() {
     <>
       <Navigation />
       <main className="min-h-screen mt-16">
-        {/* Hero Section */}
-        <section className="py-20 px-4">
+        {/* Compact Hero Section */}
+        <section className="py-10 px-4">
           <div className="max-w-6xl mx-auto">
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
+              transition={{ duration: 0.6 }}
               className="text-center"
             >
-              <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold bg-gold-500/20 text-gold-400 border border-gold-500/30 mb-6">
-                <Phone className="w-4 h-4" />
-                Contact Our Experts
-              </div>
-              <h1 className="text-4xl sm:text-6xl font-bold tracking-tight text-gray-100 mb-6">
+              <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-gray-100 mb-3">
                 <span className="bg-gradient-to-r from-gold-400 to-amber-500 bg-clip-text text-transparent">Contact</span> Us
               </h1>
-              <p className="text-xl text-gray-400 max-w-3xl mx-auto mb-8">
-                Get in touch with our mortgage specialists for personalized assistance and expert guidance on your mortgage needs.
+              <p className="text-lg text-gray-400 max-w-2xl mx-auto">
+                Get in touch with our mortgage specialists for personalized assistance.
               </p>
             </motion.div>
           </div>
         </section>
 
-        {/* Contact Content */}
+        {/* Contact Content - Form First */}
         <section className="pb-20 px-4">
           <div className="max-w-6xl mx-auto">
             <div className="grid gap-8 lg:grid-cols-2">
-              {/* Contact Information */}
+              {/* GHL Form Embed - NOW FIRST */}
               <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                className="bg-gray-800/50 backdrop-blur-sm rounded-xl shadow-2xl border border-gray-700/50 p-8"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="bg-gray-800/50 backdrop-blur-sm rounded-xl shadow-2xl border border-gray-700/50 p-6 overflow-hidden lg:order-1"
+              >
+                <h2 className="text-2xl font-semibold text-gray-100 mb-4">Send us a Message</h2>
+                <div className="w-full" style={{ minHeight: '740px' }}>
+                  <iframe
+                    src="https://api.leadconnectorhq.com/widget/form/EWgpdDb4vZV81EZXxWHf"
+                    style={{ width: '100%', height: '740px', border: 'none', borderRadius: '8px' }}
+                    id="inline-EWgpdDb4vZV81EZXxWHf"
+                    data-layout="{'id':'INLINE'}"
+                    data-trigger-type="alwaysShow"
+                    data-trigger-value=""
+                    data-activation-type="alwaysActivated"
+                    data-activation-value=""
+                    data-deactivation-type="neverDeactivate"
+                    data-deactivation-value=""
+                    data-form-name="Mortgage Lead Capture"
+                    data-height="740"
+                    data-layout-iframe-id="inline-EWgpdDb4vZV81EZXxWHf"
+                    data-form-id="EWgpdDb4vZV81EZXxWHf"
+                    title="Mortgage Lead Capture"
+                  />
+                </div>
+              </motion.div>
+
+              {/* Contact Information - NOW SECOND */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.1 }}
+                className="bg-gray-800/50 backdrop-blur-sm rounded-xl shadow-2xl border border-gray-700/50 p-8 lg:order-2"
               >
                 <h2 className="text-2xl font-semibold text-gray-100 mb-6">Get In Touch</h2>
                 <div className="space-y-6">
@@ -101,35 +126,6 @@ export default function ContactPage() {
                       </div>
                     </div>
                   </div>
-                </div>
-              </motion.div>
-
-              {/* GHL Form Embed */}
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                className="bg-gray-800/50 backdrop-blur-sm rounded-xl shadow-2xl border border-gray-700/50 p-6 overflow-hidden"
-              >
-                <h2 className="text-2xl font-semibold text-gray-100 mb-4">Send us a Message</h2>
-                <div className="w-full" style={{ minHeight: '740px' }}>
-                  <iframe
-                    src="https://api.leadconnectorhq.com/widget/form/EWgpdDb4vZV81EZXxWHf"
-                    style={{ width: '100%', height: '740px', border: 'none', borderRadius: '8px' }}
-                    id="inline-EWgpdDb4vZV81EZXxWHf"
-                    data-layout="{'id':'INLINE'}"
-                    data-trigger-type="alwaysShow"
-                    data-trigger-value=""
-                    data-activation-type="alwaysActivated"
-                    data-activation-value=""
-                    data-deactivation-type="neverDeactivate"
-                    data-deactivation-value=""
-                    data-form-name="Mortgage Lead Capture"
-                    data-height="740"
-                    data-layout-iframe-id="inline-EWgpdDb4vZV81EZXxWHf"
-                    data-form-id="EWgpdDb4vZV81EZXxWHf"
-                    title="Mortgage Lead Capture"
-                  />
                 </div>
               </motion.div>
             </div>
