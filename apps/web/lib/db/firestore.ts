@@ -2254,6 +2254,178 @@ A contractor assumed his $900,000 calculator result was solid. His actual pre-ap
       categories: ['Mortgage Renewals', 'Coquitlam Real Estate']
     };
   }
+  if (slug === 'canada-mortgage-crisis-taxpayer-relief-2026') {
+    const blogContent = `<img src="https://cdn.marblism.com/7WjGdhIAilY.webp" alt="Canadian Mortgage Crisis" style="width:100%;height:auto;border-radius:12px;margin:1.5rem 0;" />
+
+<p>When international aid commitments make headlines while Canadian families face mortgage payment shock, it's time for an honest conversation about priorities. As a <strong>Surrey mortgage broker with 18+ years of front-line experience</strong> working with families across the Lower Mainland, I see daily how cost-of-living pressure and renewal math compress real after-tax budgets—while billions in taxpayer dollars flow overseas.</p>
+
+<h2>Surrey/Coquitlam: The Real Monthly Reality</h2>
+
+<p>Here's the transactional reality in Surrey, Coquitlam, and across the Lower Mainland right now: Many active mortgages sit between $800,000 and $1,000,000. Advertised sub-4% rates you see online are for high-ratio purchases only; renewal borrowers rarely qualify for those. Fixed renewals typically land between 4.25% and 4.75%, with variable renewals clustering around ~4%. On a $900,000 mortgage at a 30-year amortization, the jump from 2.5% (~$3,554) to 4.5% (~$4,560) is roughly $1,000/month—over $12,000 a year.</p>
+
+<p>That's not theoretical math. That's rent money. That's grocery money. That's the difference between staying in your home and selling.</p>
+
+<img src="https://cdn.marblism.com/zcvZDzfyV6T.webp" alt="Mortgage Payment Reality" style="width:100%;height:auto;border-radius:8px;margin:1rem 0;" />
+
+<h2>2026: The Mortgage Renewal Cliff</h2>
+
+<p>The numbers paint a stark picture. Approximately <strong>1.8 million Canadian mortgages are set to renew in the next 12 months</strong>, with peak pressure landing in 2026. In BC alone, hundreds of thousands of families will roll off pandemic-era rates into materially higher payments.</p>
+
+<p>Rates check (Dec 2025): fixed renewals are typically 4.25%–4.75%; variable renewals cluster around ~4%. Sub-4% headline rates are generally for high-ratio purchases and rarely apply to renewals. Even with cooling from 2023–2024 highs, the renewal cliff and the broader cost-of-living squeeze still weigh heavily on taxpayers.</p>
+
+<p>Use our <a href="/calculators/affordability">mortgage affordability calculator BC</a> to model your numbers and plan ahead before renewal—especially if you originated at ultra-low pandemic rates. Building a buffer now can prevent payment shock later.</p>
+
+<p>For working households, the $5,000–$12,000 annual increase hits disposable, after-tax cash flow first. It's classic budget compression: higher mortgage outflows crowd out savings, childcare, transportation, and groceries—long before any lifestyle upgrades are considered.</p>
+
+<h2>The Taxpayer Frustration: Priorities Under the Microscope</h2>
+
+<p>While families struggle to keep their homes, watching billions in aid flow to international causes creates understandable frustration. Canadian taxpayers fund these commitments through the same paychecks being stretched thinner each month.</p>
+
+<p>Consider this perspective from my Surrey clients:</p>
+<ul>
+<li>Young professionals who saved for years to afford a BC home now question if they can sustain the payments</li>
+<li>Empty nesters approaching retirement see their renewal payments consuming fixed incomes</li>
+<li>Growing families weighing whether to move farther from Vancouver just to afford housing</li>
+</ul>
+
+<p>The disconnect is real. Families using <a href="/calculators/pre-approval">pre approval for mortgage loan calculators</a> discover they qualify for significantly less than two years ago, while government spending priorities appear disconnected from domestic financial stress.</p>
+
+<h2>What Surrey and Coquitlam Families Are Actually Experiencing</h2>
+
+<p>As a <strong>Surrey mortgage broker</strong>, I see the human impact daily. Three scenarios dominate my conversations:</p>
+
+<p><strong>The Renewal Shock</strong>: Clients who locked in at 1.8% now facing 4.25%–4.75% fixed or ~4% variable renewals. Sub-4% rates are typically high-ratio purchase promos and rarely available on renewals. Options: extend amortization, add a co-signer, or sell.</p>
+
+<p><strong>The First-Time Buyer Freeze</strong>: Young professionals earning good incomes who discover their buying power has dropped 40% since 2021.</p>
+
+<p><strong>The Refinancing Desperation</strong>: Homeowners extracting equity just to manage increased carrying costs on their primary residence.</p>
+
+<img src="https://cdn.marblism.com/qXVVBB5fdQz.webp" alt="Family Financial Stress" style="width:100%;height:auto;border-radius:8px;margin:1rem 0;" />
+
+<h2>Strategic Solutions: What Smart Homeowners Are Doing</h2>
+
+<p>While government relief programs remain limited, proactive homeowners are taking control:</p>
+
+<h3>1. Early Renewal Negotiations (6-12 Months Ahead)</h3>
+<p>Smart borrowers aren't waiting. They're securing rates now, even if it means breaking current terms. Varun Chaudhry at Kraft Mortgages will model whether penalty costs justify immediate action and shop 4.25%–4.5% fixed and ~4% variable options for you.</p>
+
+<h3>2. Product Optimization</h3>
+<p>Investor and multi-unit files can leverage <a href="/mli-select/calculators">MLI Select</a> to reduce CMHC premiums—where we've saved clients $200,000+ on large projects. For regular homeowners, review CMHC Eco/energy-efficiency premium refunds and insurer-specific credits that can put real dollars back into your budget.</p>
+
+<h3>3. Amortization Strategy Shifts</h3>
+<p>Extended amortizations (30-35 years) reduce payments but increase total interest. However, families prioritizing immediate affordability are making this trade-off consciously.</p>
+
+<h2>The Math That Matters: Payment Shock Calculator</h2>
+
+<p>Surrey-scale examples at today's fixed renewal rate of 4.5% (30-year amortization):</p>
+
+<h3>$800,000 Mortgage:</h3>
+<ul>
+<li>At 2.5%: ~$3,160/month</li>
+<li>At 4.5%: ~$4,056/month</li>
+<li>Increase: ~$896/month (~$10,752 annually)</li>
+</ul>
+
+<h3>$900,000 Mortgage:</h3>
+<ul>
+<li>At 2.5%: ~$3,554/month</li>
+<li>At 4.5%: ~$4,560/month</li>
+<li>Increase: ~$1,000/month ($12,000+ annually)</li>
+</ul>
+
+<h3>$1,000,000 Mortgage:</h3>
+<ul>
+<li>At 2.5%: ~$3,950/month</li>
+<li>At 4.5%: ~$5,070/month</li>
+<li>Increase: ~$1,120/month (~$13,440 annually)</li>
+</ul>
+
+<p>Prefer variable? Renewal variables around ~4% typically price between the 2.5% and 4.5% examples above, but they still represent a material increase versus pandemic lows.</p>
+
+<p>These aren't small adjustments. These are mortgage-sized increases in monthly housing costs.</p>
+
+<img src="https://cdn.marblism.com/SKLpBrsWgAa.webp" alt="Payment Shock Numbers" style="width:100%;height:auto;border-radius:8px;margin:1rem 0;" />
+
+<h2>Policy Disconnect: International Aid vs. Domestic Crisis</h2>
+
+<p>The frustration stems from visible government capacity to mobilize billions internationally while domestic relief remains limited. Current federal programs offer:</p>
+<ul>
+<li>First Home Savings Account (FHSA) and the Home Buyers' Plan (HBP) to build or access down payments</li>
+<li>GST removal on new rental construction (longer-term supply impact, limited immediate relief for owners)</li>
+<li>Available federal renovation and energy-efficiency tax credits</li>
+<li>Stress test framework remains in place (under review, no timeline)</li>
+</ul>
+
+<p>Meanwhile, mortgage payment increases are immediate and substantial. The timing disconnect creates legitimate taxpayer questions about priority setting.</p>
+
+<h2>What You Can Do Right Now</h2>
+
+<p>Don't wait for government solutions that may never come. Take control of your mortgage situation:</p>
+
+<h3>Immediate Actions (This Week):</h3>
+<ol>
+<li><strong>Get Current</strong>: Use our <a href="/mortgage-calculator">mortgage calculator</a> to project your renewal payment</li>
+<li><strong>Explore Options</strong>: Book a consultation with Varun Chaudhry to review refinancing, renewal, and product optimization strategies</li>
+<li><strong>Compare Products</strong>: Investigate whether your current mortgage insurance is optimized</li>
+</ol>
+
+<h3>Medium-Term Strategy (Next 3 Months):</h3>
+<ol>
+<li><strong>Rate Shopping</strong>: Different lenders offer varying rates and terms</li>
+<li><strong>Qualification Review</strong>: Understand exactly what you qualify for today</li>
+<li><strong>Contingency Planning</strong>: Develop backup strategies if rates continue rising</li>
+</ol>
+
+<h2>The Surrey Advantage: Local Expertise for Complex Times</h2>
+
+<p>Working with Varun Chaudhry, a Surrey-based mortgage broker, means your file is structured with Lower Mainland realities in mind. I know which Surrey neighborhoods offer value, which Coquitlam developments provide affordability, and how regional employment patterns affect approval odds.</p>
+
+<p>Local expertise matters when navigating complex renewal scenarios. National banks apply standard formulas. Local brokers understand regional nuances that can save thousands annually.</p>
+
+<h2>Beyond the Headlines: Real Solutions for Real Families</h2>
+
+<p>While policy debates continue, families need immediate help. Here's what I'm doing for Surrey and Coquitlam clients:</p>
+
+<p><strong>Renewal Optimization</strong>: Finding the best available rates and terms for your specific situation</p>
+<p><strong>Product Analysis</strong>: Ensuring you're not overpaying for mortgage insurance or features you don't need</p>
+<p><strong>Cash Flow Management</strong>: Structuring mortgages to preserve monthly budget flexibility</p>
+<p><strong>Long-term Planning</strong>: Building strategies that work regardless of rate direction</p>
+
+<h2>The Bottom Line for BC Homeowners</h2>
+
+<p>International aid commitments will continue regardless of domestic mortgage stress. Your financial security depends on proactive planning, not government relief programs.</p>
+
+<p>Smart homeowners are acting now:</p>
+<ul>
+<li>Securing renewal rates early when beneficial</li>
+<li>Optimizing mortgage insurance costs</li>
+<li>Exploring refinancing opportunities</li>
+<li>Building payment flexibility into their structure</li>
+</ul>
+
+<p>The 2026 renewal cliff is real. The payment shock is coming. But with proper planning and local expertise, you can navigate these challenges successfully.</p>
+
+<p><strong>Ready to take control of your mortgage situation?</strong> <a href="/contact">Contact Varun Chaudhry at Kraft Mortgages Canada Inc.</a> Let's build a strategy that protects your financial future, regardless of what headlines dominate tomorrow.</p>
+
+<p><em>Your home. Your family. Your financial security. These deserve the same attention government gives to international commitments.</em></p>`;
+
+    return {
+      slug: 'canada-mortgage-crisis-taxpayer-relief-2026',
+      title: "$2.5 Billion to Ukraine vs. The Canadian Mortgage Crisis: Where is the Relief for Taxpayers?",
+      markdown: blogContent,
+      html: blogContent,
+      status: 'published' as const,
+      publishedAt: new Date('2025-12-29T17:00:00Z'),
+      author: {
+        name: 'Varun Chaudhry',
+        title: 'President, CEO, Sr. Mortgage Professional',
+        license: 'BCFSA #M08001935'
+      },
+      metaDescription: "1.8 million Canadian mortgages renewing in 2026. Surrey families face $1,000+/month payment shock while billions flow overseas. Local mortgage broker solutions for the renewal cliff.",
+      keywords: ['mortgage-crisis-canada', 'renewal-cliff-2026', 'Surrey-mortgage-broker', 'payment-shock', 'taxpayer-relief', 'BC-mortgages'],
+      categories: ['Mortgage Renewals', 'Market Commentary']
+    };
+  }
 
   const doc = await (await postsCol()).doc(slug).get();
   if (!doc.exists) return null;
@@ -2918,6 +3090,23 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
     categories: ['Mortgage Renewals', 'Coquitlam Real Estate']
   };
 
+  const mockPost17: Post = {
+    slug: 'canada-mortgage-crisis-taxpayer-relief-2026',
+    title: "$2.5 Billion to Ukraine vs. The Canadian Mortgage Crisis: Where is the Relief for Taxpayers?",
+    markdown: `<p>1.8 million Canadian mortgages renewing in 2026. Surrey families face $1,000+/month payment shock while billions flow overseas. Local mortgage broker solutions for the renewal cliff.</p>`,
+    html: `<p>1.8 million Canadian mortgages renewing in 2026. Surrey families face $1,000+/month payment shock while billions flow overseas. Local mortgage broker solutions for the renewal cliff.</p>`,
+    status: 'published' as const,
+    publishedAt: new Date('2025-12-29T17:00:00Z'),
+    author: {
+      name: 'Varun Chaudhry',
+      title: 'President, CEO, Sr. Mortgage Professional',
+      license: 'BCFSA #M08001935'
+    },
+    metaDescription: "1.8 million Canadian mortgages renewing in 2026. Surrey families face $1,000+/month payment shock. Local mortgage broker solutions for the renewal cliff.",
+    keywords: ['mortgage-crisis-canada', 'renewal-cliff-2026', 'Surrey-mortgage-broker', 'payment-shock'],
+    categories: ['Mortgage Renewals', 'Market Commentary']
+  };
+
   try {
     const snapshot = await (await postsCol())
       .orderBy('publishedAt', 'desc')
@@ -2930,7 +3119,7 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
     })) as Post[];
 
     // Combine our mock post with Firestore posts and sort by date
-    const allPosts = [mockPost, mockPost2, mockPost3, mockPost4, mockPost5, mockPost6, mockPost7, mockPost8, mockPost9, mockPost10, mockPost11, mockPost12, mockPost13, mockPost14, mockPost15, mockPost16, ...firestorePosts].sort((a, b) =>
+    const allPosts = [mockPost, mockPost2, mockPost3, mockPost4, mockPost5, mockPost6, mockPost7, mockPost8, mockPost9, mockPost10, mockPost11, mockPost12, mockPost13, mockPost14, mockPost15, mockPost16, mockPost17, ...firestorePosts].sort((a, b) =>
       new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
     );
 
@@ -2938,6 +3127,6 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
   } catch (error) {
     console.error('Error fetching recent posts:', error);
     // Return only our mock post if Firestore fails
-    return [mockPost, mockPost2, mockPost3, mockPost4, mockPost5, mockPost6, mockPost7, mockPost8, mockPost9, mockPost10, mockPost11, mockPost12, mockPost13, mockPost14, mockPost15, mockPost16];
+    return [mockPost, mockPost2, mockPost3, mockPost4, mockPost5, mockPost6, mockPost7, mockPost8, mockPost9, mockPost10, mockPost11, mockPost12, mockPost13, mockPost14, mockPost15, mockPost16, mockPost17];
   }
 }
