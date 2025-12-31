@@ -44,6 +44,18 @@ async function initializeAdmin() {
   if (process.env.FIREBASE_SERVICE_ACCOUNT_JSON) {
     try {
       serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_JSON);
+      console.log('Parsed FIREBASE_SERVICE_ACCOUNT_JSON successfully:', {
+        hasProjectId: !!serviceAccount?.project_id,
+        hasPrivateKey: !!serviceAccount?.private_key,
+        hasClientEmail: !!serviceAccount?.client_email,
+        keys: Object.keys(serviceAccount || {}),
+        projectIdType: typeof serviceAccount?.project_id,
+      });
+      // Firebase Admin expects camelCase, but service account JSON uses snake_case
+      // Convert if needed
+      if (serviceAccount?.project_id && !serviceAccount?.projectId) {
+        serviceAccount.projectId = serviceAccount.project_id;
+      }
     } catch (e) {
       console.error('Failed to parse FIREBASE_SERVICE_ACCOUNT_JSON:', e);
       return;
@@ -84,12 +96,21 @@ async function initializeAdmin() {
   }
 
   // Initialize admin
-  if (serviceAccount && serviceAccount.projectId) {
+  // Check for projectId in both camelCase and snake_case (Google's JSON uses snake_case)
+  const projectId = serviceAccount?.projectId || serviceAccount?.project_id;
+  console.log('Pre-initialization check:', {
+    hasServiceAccount: !!serviceAccount,
+    projectId: projectId,
+    hasPrivateKey: !!(serviceAccount?.privateKey || serviceAccount?.private_key),
+    hasClientEmail: !!(serviceAccount?.clientEmail || serviceAccount?.client_email),
+  });
+
+  if (serviceAccount && projectId) {
     try {
-      console.log('Initializing Firebase Admin with project:', serviceAccount.projectId);
+      console.log('Initializing Firebase Admin with project:', projectId);
       admin.initializeApp({
         credential: admin.credential.cert(serviceAccount),
-        projectId: serviceAccount.projectId, // Explicitly set project ID
+        projectId: projectId, // Explicitly set project ID
       });
       isInitialized = true;
       console.log('Firebase Admin initialized successfully');
