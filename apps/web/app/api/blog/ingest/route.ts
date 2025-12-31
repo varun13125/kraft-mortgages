@@ -35,6 +35,7 @@ export async function POST(req: NextRequest) {
     const metaDescription: string = body.excerpt || body.metaDescription || '';
     const keywords: string[] = Array.isArray(body.tags) ? body.tags : (typeof body.tags === 'string' ? JSON.parse(body.tags || '[]') : []);
     const publishedAt = body.publishedAt ? new Date(body.publishedAt) : new Date();
+    const status: 'published' | 'draft' = body.status === 'draft' ? 'draft' : 'published';
 
     if (!slug || !title) {
       return NextResponse.json({ error: 'Missing slug/title' }, { status: 400 });
@@ -45,7 +46,7 @@ export async function POST(req: NextRequest) {
       title,
       markdown,
       html,
-      status: 'published',
+      status,
       publishedAt,
       author: {
         name: body.author || 'Varun Chaudhry',
