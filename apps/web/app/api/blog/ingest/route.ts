@@ -14,14 +14,18 @@ function slugify(input: string): string {
 
 export async function POST(req: NextRequest) {
   try {
-    // Temporary: allow unauthenticated ingestion to unblock deployment.
-    // If you want to require a token, set CREWAPI_SECRET and uncomment below.
-    // const auth = req.headers.get('authorization') || '';
-    // const required = process.env.CREWAPI_SECRET || process.env.BLOG_INGEST_TOKEN || 'n8n';
-    // const token = auth.startsWith('Bearer ') ? auth.replace('Bearer ', '') : '';
-    // if (token !== required && token !== 'n8n') {
-    //   return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    // }
+    // Require authentication via Bearer token
+    const auth = req.headers.get('authorization') || '';
+    const required = process.env.CREWAPI_SECRET || process.env.BLOG_INGEST_TOKEN;
+
+    if (!required) {
+      return NextResponse.json({ error: 'API not configured - set CREWAPI_SECRET or BLOG_INGEST_TOKEN' }, { status: 500 });
+    }
+
+    const token = auth.startsWith('Bearer ') ? auth.replace('Bearer ', '') : '';
+    if (token !== required) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
 
     const body = await req.json();
     const title: string = body.title || '';

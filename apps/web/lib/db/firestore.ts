@@ -14,21 +14,8 @@ async function initializeFirebase() {
 // Initialize Firebase Admin - completely lazy
 async function initializeAdmin() {
   if (isInitialized || (admin && admin.apps.length > 0)) {
-    console.log('Firebase already initialized');
     return;
   }
-
-  console.log('Initializing Firebase Admin...');
-
-  // Debug: Log which env vars are present (not their values for security)
-  console.log('Firebase env var check:', {
-    hasServiceAccountJson: !!process.env.FIREBASE_SERVICE_ACCOUNT_JSON,
-    serviceAccountJsonLength: process.env.FIREBASE_SERVICE_ACCOUNT_JSON?.length || 0,
-    hasProjectId: !!process.env.FIREBASE_PROJECT_ID,
-    hasClientEmail: !!process.env.FIREBASE_CLIENT_EMAIL,
-    hasPrivateKey: !!process.env.FIREBASE_PRIVATE_KEY,
-    privateKeyLength: process.env.FIREBASE_PRIVATE_KEY?.length || 0,
-  });
 
   // Skip during build or if no credentials
   if (!process.env.FIREBASE_SERVICE_ACCOUNT_JSON && !process.env.FIREBASE_PROJECT_ID) {
@@ -44,15 +31,7 @@ async function initializeAdmin() {
   if (process.env.FIREBASE_SERVICE_ACCOUNT_JSON) {
     try {
       serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_JSON);
-      console.log('Parsed FIREBASE_SERVICE_ACCOUNT_JSON successfully:', {
-        hasProjectId: !!serviceAccount?.project_id,
-        hasPrivateKey: !!serviceAccount?.private_key,
-        hasClientEmail: !!serviceAccount?.client_email,
-        keys: Object.keys(serviceAccount || {}),
-        projectIdType: typeof serviceAccount?.project_id,
-      });
       // Firebase Admin expects camelCase, but service account JSON uses snake_case
-      // Convert if needed
       if (serviceAccount?.project_id && !serviceAccount?.projectId) {
         serviceAccount.projectId = serviceAccount.project_id;
       }
@@ -98,27 +77,19 @@ async function initializeAdmin() {
   // Initialize admin
   // Check for projectId in both camelCase and snake_case (Google's JSON uses snake_case)
   const projectId = serviceAccount?.projectId || serviceAccount?.project_id;
-  console.log('Pre-initialization check:', {
-    hasServiceAccount: !!serviceAccount,
-    projectId: projectId,
-    hasPrivateKey: !!(serviceAccount?.privateKey || serviceAccount?.private_key),
-    hasClientEmail: !!(serviceAccount?.clientEmail || serviceAccount?.client_email),
-  });
 
   if (serviceAccount && projectId) {
     try {
-      console.log('Initializing Firebase Admin with project:', projectId);
       admin.initializeApp({
         credential: admin.credential.cert(serviceAccount),
-        projectId: projectId, // Explicitly set project ID
+        projectId: projectId,
       });
       isInitialized = true;
-      console.log('Firebase Admin initialized successfully');
     } catch (initError) {
       console.error('Firebase admin initialization error:', initError);
     }
   } else {
-    console.log('Missing serviceAccount or projectId');
+    // Missing serviceAccount or projectId - Firebase won't be available
   }
 }
 
@@ -126,16 +97,7 @@ async function initializeAdmin() {
 async function getDb() {
   await initializeAdmin();
 
-  // Debug logging
-  console.log('getDb debug:', {
-    isInitialized,
-    hasAdmin: !!admin,
-    hasGetFirestore: !!getFirestore,
-    adminAppsLength: admin?.apps?.length || 0
-  });
-
   if (!isInitialized || !admin || !getFirestore) {
-    console.log('Using mock database - Firebase not properly initialized');
     // Return a mock object for build time or when Firebase isn't available
     const mockCollection = {
       add: () => Promise.resolve({ id: 'mock' }),
