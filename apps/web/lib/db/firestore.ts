@@ -281,9 +281,26 @@ export async function savePost(post: Post): Promise<void> {
 }
 
 export async function getPost(slug: string): Promise<Post | null> {
+  // FIRST: Try Firestore - API-ingested posts take priority
+  try {
+    const doc = await (await postsCol()).doc(slug).get();
+    if (doc.exists) {
+      const data = doc.data()!;
+      console.log(`[getPost] Found post in Firestore: ${slug}`);
+      return {
+        ...data,
+        publishedAt: data.publishedAt?.toDate(),
+      } as Post;
+    }
+  } catch (error) {
+    console.error('[getPost] Error fetching from Firestore:', error);
+    // Continue to mock posts on error
+  }
+
+  // SECOND: Fall back to hardcoded mock posts
   // Mock data for our specific blog post
   if (slug === 'the-blueprint-construction-mortgages') {
-    const blogContent = `<h2>The Blueprint: A Step-by-Step Guide to Construction Mortgages in BC</h2><p>In British Columbia’s dynamic real estate market, building your own custom home or developing a property is one of the most rewarding financial ventures you can undertake. It's also one of the most complex, especially when it comes to financing.</p><p>Unlike a traditional mortgage where funds are advanced in a single lump sum, a construction mortgage is a specialized product designed to mitigate risk for both the lender and the builder. It's a staged financing tool that releases funds in intervals—known as \"draws\"—as the project reaches specific, predetermined milestones.</p><p>Navigating this process requires meticulous planning, a solid team, and a mortgage broker who specializes in construction financing. At Kraft Mortgages, we don't just arrange the loan; we become a key part of your project management team, ensuring a smooth financial flow from foundation to finish.</p><h3>Everyday Expert Translation: What Exactly is a \"Draw Mortgage\"?</h3><p>Think of it as a \"pay-as-you-go\" system for your build. Instead of getting all the money upfront, the lender releases portions of the approved loan at key stages of completion. An appraiser must visit the site and verify that each stage is complete before the next draw is released. This ensures the lender's investment is protected and that the project is progressing as planned.</p><p>The loan is typically interest-only during the construction phase, meaning you only pay interest on the funds that have been drawn to date. This keeps your carrying costs manageable before the property is complete.</p><h3>The 4 Key Stages of a Construction Mortgage</h3><p>Every construction project is unique, but the financing process follows a clear, structured path.</p><h4>Stage 1: The Foundation - Land & The First Draw</h4><p>Before any construction begins, you need the land and the initial funds to get started.</p><p><strong>The Loan:</strong> The first advance typically covers a percentage of the land value and the initial \"soft costs\" (permits, architectural plans). Lenders will also want to see your detailed construction budget and building plans at this stage.</p><p><strong>Your Equity:</strong> You will need to have a significant down payment. Lenders want to see that you have a substantial amount of your own capital invested in the project from day one.</p><h4>Stage 2: The Build - The Progressive Draw Schedule</h4><p>This is the core of the construction mortgage. As your builder completes each phase, we coordinate with the lender and appraiser to release the next draw. A typical schedule looks like this:</p><ul><li><strong>Draw #2 (30-40% Complete):</strong> Released after the foundation is poured, the subfloor is in, and framing is complete. The house is \"weather-protected\" with the roof on and windows installed (known as \"lock-up\").</li><li><strong>Draw #3 (65-75% Complete):</strong> Released once the interior systems are in place—plumbing, electrical, heating, and insulation are done, and the drywall is up and ready for finishing.</li><li><strong>Draw #4 (85-95% Complete):</strong> Released after the kitchen cabinets and bathrooms are installed, flooring is down, and painting is complete. The house is starting to look finished.</li></ul><img src=\"/images/blog-4.png\" alt=\"A construction site with framing complete, representing the lock-up stage.\" style=\"width:100%;height:auto;border-radius:8px;margin:1rem 0;\" /><h4>Stage 3: The Finish - The Final Draw</h4><p>The final draw, often around 10-15% of the total loan, is released upon 100% completion. This means the home has passed its final municipal inspection, an occupancy permit has been issued, and the lender's appraiser has confirmed the project is fully finished according to the plans.</p><h4>Stage 4: The Conversion - From Construction Loan to Traditional Mortgage</h4><p>Once the final draw is advanced and the project is complete, the construction loan is typically converted into a standard residential mortgage. This is when you begin making regular principal and interest payments. We work to ensure you get the best possible rates and terms for this \"take-out\" financing, setting you up for long-term success.</p><h3>The Biggest Risk: Managing Costs & Delays</h3><p>The number one challenge in any construction project is staying on budget and on schedule. Cost overruns or delays can disrupt the draw schedule and, in a worst-case scenario, halt your project.</p><p>This is where having an expert broker is non-negotiable. We help you build a realistic budget with a built-in contingency fund. We act as the critical communication link between your builder, the appraiser, and the lender to ensure draws are requested on time and released without delay. Our job is to prevent financial friction so you and your builder can focus on what you do best.</p><p>Planning a build in Surrey, White Rock, or anywhere in BC?</p><p><a href=\"https://calendar.app.google/HcbcfrKKtBvcPQqd8\" target=\"_blank\" rel=\"noopener noreferrer\" style=\"display: inline-block; background-color: #1e3a8a; color: white; padding: 12px 24px; border: none; border-radius: 6px; font-size: 16px; font-weight: 600; cursor: pointer; transition: background-color 0.3s ease; text-decoration: none;\">Book a 15 min Free Consultation Now to structure a financing blueprint that ensures your project's success.</a></p>`;
+    const blogContent = `<h2>The Blueprint: A Step-by-Step Guide to Construction Mortgages in BC</h2><p>In British Columbia's dynamic real estate market, building your own custom home or developing a property is one of the most rewarding financial ventures you can undertake. It's also one of the most complex, especially when it comes to financing.</p><p>Unlike a traditional mortgage where funds are advanced in a single lump sum, a construction mortgage is a specialized product designed to mitigate risk for both the lender and the builder. It's a staged financing tool that releases funds in intervals—known as \"draws\"—as the project reaches specific, predetermined milestones.</p><p>Navigating this process requires meticulous planning, a solid team, and a mortgage broker who specializes in construction financing. At Kraft Mortgages, we don't just arrange the loan; we become a key part of your project management team, ensuring a smooth financial flow from foundation to finish.</p><h3>Everyday Expert Translation: What Exactly is a \"Draw Mortgage\"?</h3><p>Think of it as a \"pay-as-you-go\" system for your build. Instead of getting all the money upfront, the lender releases portions of the approved loan at key stages of completion. An appraiser must visit the site and verify that each stage is complete before the next draw is released. This ensures the lender's investment is protected and that the project is progressing as planned.</p><p>The loan is typically interest-only during the construction phase, meaning you only pay interest on the funds that have been drawn to date. This keeps your carrying costs manageable before the property is complete.</p><h3>The 4 Key Stages of a Construction Mortgage</h3><p>Every construction project is unique, but the financing process follows a clear, structured path.</p><h4>Stage 1: The Foundation - Land & The First Draw</h4><p>Before any construction begins, you need the land and the initial funds to get started.</p><p><strong>The Loan:</strong> The first advance typically covers a percentage of the land value and the initial \"soft costs\" (permits, architectural plans). Lenders will also want to see your detailed construction budget and building plans at this stage.</p><p><strong>Your Equity:</strong> You will need to have a significant down payment. Lenders want to see that you have a substantial amount of your own capital invested in the project from day one.</p><h4>Stage 2: The Build - The Progressive Draw Schedule</h4><p>This is the core of the construction mortgage. As your builder completes each phase, we coordinate with the lender and appraiser to release the next draw. A typical schedule looks like this:</p><ul><li><strong>Draw #2 (30-40% Complete):</strong> Released after the foundation is poured, the subfloor is in, and framing is complete. The house is \"weather-protected\" with the roof on and windows installed (known as \"lock-up\").</li><li><strong>Draw #3 (65-75% Complete):</strong> Released once the interior systems are in place—plumbing, electrical, heating, and insulation are done, and the drywall is up and ready for finishing.</li><li><strong>Draw #4 (85-95% Complete):</strong> Released after the kitchen cabinets and bathrooms are installed, flooring is down, and painting is complete. The house is starting to look finished.</li></ul><img src=\"/images/blog-4.png\" alt=\"A construction site with framing complete, representing the lock-up stage.\" style=\"width:100%;height:auto;border-radius:8px;margin:1rem 0;\" /><h4>Stage 3: The Finish - The Final Draw</h4><p>The final draw, often around 10-15% of the total loan, is released upon 100% completion. This means the home has passed its final municipal inspection, an occupancy permit has been issued, and the lender's appraiser has confirmed the project is fully finished according to the plans.</p><h4>Stage 4: The Conversion - From Construction Loan to Traditional Mortgage</h4><p>Once the final draw is advanced and the project is complete, the construction loan is typically converted into a standard residential mortgage. This is when you begin making regular principal and interest payments. We work to ensure you get the best possible rates and terms for this \"take-out\" financing, setting you up for long-term success.</p><h3>The Biggest Risk: Managing Costs & Delays</h3><p>The number one challenge in any construction project is staying on budget and on schedule. Cost overruns or delays can disrupt the draw schedule and, in a worst-case scenario, halt your project.</p><p>This is where having an expert broker is non-negotiable. We help you build a realistic budget with a built-in contingency fund. We act as the critical communication link between your builder, the appraiser, and the lender to ensure draws are requested on time and released without delay. Our job is to prevent financial friction so you and your builder can focus on what you do best.</p><p>Planning a build in Surrey, White Rock, or anywhere in BC?</p><p><a href=\"https://calendar.app.google/HcbcfrKKtBvcPQqd8\" target=\"_blank\" rel=\"noopener noreferrer\" style=\"display: inline-block; background-color: #1e3a8a; color: white; padding: 12px 24px; border: none; border-radius: 6px; font-size: 16px; font-weight: 600; cursor: pointer; transition: background-color 0.3s ease; text-decoration: none;\">Book a 15 min Free Consultation Now to structure a financing blueprint that ensures your project's success.</a></p>`;
 
     return {
       slug: 'the-blueprint-construction-mortgages',
@@ -2427,14 +2444,8 @@ A contractor assumed his $900,000 calculator result was solid. His actual pre-ap
     };
   }
 
-  const doc = await (await postsCol()).doc(slug).get();
-  if (!doc.exists) return null;
-
-  const data = doc.data()!;
-  return {
-    ...data,
-    publishedAt: data.publishedAt?.toDate(),
-  } as Post;
+  // Not found in Firestore or mock posts
+  return null;
 }
 
 export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
@@ -3108,9 +3119,10 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
   };
 
   try {
+    // FIRST: Fetch from Firestore - API-ingested posts take priority
     const snapshot = await (await postsCol())
       .orderBy('publishedAt', 'desc')
-      .limit(limit)
+      .limit(50) // Get more to ensure comprehensive results
       .get();
 
     const firestorePosts = snapshot.docs.map((doc: any) => ({
@@ -3118,15 +3130,26 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
       publishedAt: doc.data().publishedAt?.toDate(),
     })) as Post[];
 
-    // Combine our mock post with Firestore posts and sort by date
-    const allPosts = [mockPost, mockPost2, mockPost3, mockPost4, mockPost5, mockPost6, mockPost7, mockPost8, mockPost9, mockPost10, mockPost11, mockPost12, mockPost13, mockPost14, mockPost15, mockPost16, mockPost17, ...firestorePosts].sort((a, b) =>
+    // Track which slugs are in Firestore (these take priority)
+    const firestoreSlugs = new Set(firestorePosts.map(p => p.slug));
+    console.log(`[getRecentPosts] Found ${firestorePosts.length} posts in Firestore`);
+
+    // Collect all mock posts
+    const allMockPosts = [mockPost, mockPost2, mockPost3, mockPost4, mockPost5, mockPost6, mockPost7, mockPost8, mockPost9, mockPost10, mockPost11, mockPost12, mockPost13, mockPost14, mockPost15, mockPost16, mockPost17];
+
+    // Filter mocks - only include those NOT already in Firestore (prevent duplicates)
+    const uniqueMockPosts = allMockPosts.filter(mock => !firestoreSlugs.has(mock.slug));
+    console.log(`[getRecentPosts] Using ${uniqueMockPosts.length} mock posts (${allMockPosts.length - uniqueMockPosts.length} duplicates filtered)`);
+
+    // Combine Firestore posts + unique mock posts and sort by date
+    const allPosts = [...firestorePosts, ...uniqueMockPosts].sort((a, b) =>
       new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
     );
 
     return allPosts.slice(0, limit);
   } catch (error) {
-    console.error('Error fetching recent posts:', error);
-    // Return only our mock post if Firestore fails
-    return [mockPost, mockPost2, mockPost3, mockPost4, mockPost5, mockPost6, mockPost7, mockPost8, mockPost9, mockPost10, mockPost11, mockPost12, mockPost13, mockPost14, mockPost15, mockPost16, mockPost17];
+    console.error('[getRecentPosts] Error fetching from Firestore:', error);
+    // Return only our mock posts if Firestore fails
+    return [mockPost, mockPost2, mockPost3, mockPost4, mockPost5, mockPost6, mockPost7, mockPost8, mockPost9, mockPost10, mockPost11, mockPost12, mockPost13, mockPost14, mockPost15, mockPost16, mockPost17].slice(0, limit);
   }
 }
