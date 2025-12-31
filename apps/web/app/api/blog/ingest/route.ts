@@ -50,7 +50,6 @@ export async function POST(req: NextRequest) {
       },
       metaDescription,
       keywords,
-      embeddings: undefined,
     });
 
     return NextResponse.json({ success: true, slug });
