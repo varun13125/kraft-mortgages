@@ -20,6 +20,16 @@ async function initializeAdmin() {
 
   console.log('Initializing Firebase Admin...');
 
+  // Debug: Log which env vars are present (not their values for security)
+  console.log('Firebase env var check:', {
+    hasServiceAccountJson: !!process.env.FIREBASE_SERVICE_ACCOUNT_JSON,
+    serviceAccountJsonLength: process.env.FIREBASE_SERVICE_ACCOUNT_JSON?.length || 0,
+    hasProjectId: !!process.env.FIREBASE_PROJECT_ID,
+    hasClientEmail: !!process.env.FIREBASE_CLIENT_EMAIL,
+    hasPrivateKey: !!process.env.FIREBASE_PRIVATE_KEY,
+    privateKeyLength: process.env.FIREBASE_PRIVATE_KEY?.length || 0,
+  });
+
   // Skip during build or if no credentials
   if (!process.env.FIREBASE_SERVICE_ACCOUNT_JSON && !process.env.FIREBASE_PROJECT_ID) {
     console.log('No Firebase credentials found, skipping initialization');
