@@ -57,6 +57,12 @@ export async function POST(req: NextRequest) {
     const html: string = decodeHtmlEntities(body.html || '');
     const metaDescription: string = decodeHtmlEntities(body.excerpt || body.metaDescription || '');
     const keywords: string[] = Array.isArray(body.tags) ? body.tags : (typeof body.tags === 'string' ? JSON.parse(body.tags || '[]') : []);
+    // Default category to 'Mortgage Advice' instead of 'Uncategorized'
+    const categories: string[] = Array.isArray(body.categories)
+      ? body.categories
+      : (typeof body.categories === 'string' && body.categories.trim()
+        ? [body.categories]
+        : ['Mortgage Advice']);
     const publishedAt = body.publishedAt ? new Date(body.publishedAt) : new Date();
     const status: 'published' | 'draft' = body.status === 'draft' ? 'draft' : 'published';
 
@@ -78,6 +84,7 @@ export async function POST(req: NextRequest) {
       },
       metaDescription,
       keywords,
+      categories,
     });
 
     return NextResponse.json({ success: true, slug });
