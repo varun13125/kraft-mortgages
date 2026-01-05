@@ -12,6 +12,28 @@ function slugify(input: string): string {
     .slice(0, 80);
 }
 
+// Decode common HTML entities from WordPress/Marblism content
+function decodeHtmlEntities(text: string): string {
+  if (!text) return text;
+  return text
+    .replace(/&#39;/g, "'")
+    .replace(/&#x27;/g, "'")
+    .replace(/&apos;/g, "'")
+    .replace(/&#34;/g, '"')
+    .replace(/&#x22;/g, '"')
+    .replace(/&quot;/g, '"')
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&#8217;/g, "'")  // Right single quote
+    .replace(/&#8216;/g, "'")  // Left single quote
+    .replace(/&#8220;/g, '"')  // Left double quote
+    .replace(/&#8221;/g, '"')  // Right double quote
+    .replace(/&#8211;/g, '–')  // En dash
+    .replace(/&#8212;/g, '—'); // Em dash
+}
+
 export async function POST(req: NextRequest) {
   try {
     // Require authentication via Bearer token
@@ -28,11 +50,12 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-    const title: string = body.title || '';
+    // Decode HTML entities from WordPress/Marblism content
+    const title: string = decodeHtmlEntities(body.title || '');
     const slug: string = body.slug || slugify(title);
-    const markdown: string = body.content || body.markdown || '';
-    const html: string = body.html || '';
-    const metaDescription: string = body.excerpt || body.metaDescription || '';
+    const markdown: string = decodeHtmlEntities(body.content || body.markdown || '');
+    const html: string = decodeHtmlEntities(body.html || '');
+    const metaDescription: string = decodeHtmlEntities(body.excerpt || body.metaDescription || '');
     const keywords: string[] = Array.isArray(body.tags) ? body.tags : (typeof body.tags === 'string' ? JSON.parse(body.tags || '[]') : []);
     const publishedAt = body.publishedAt ? new Date(body.publishedAt) : new Date();
     const status: 'published' | 'draft' = body.status === 'draft' ? 'draft' : 'published';
