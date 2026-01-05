@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Calendar, User, ArrowLeft, Clock, Tag } from 'lucide-react';
 import { getPost as getFsPost } from '@/lib/db/firestore';
 import Navigation from '@/components/Navigation';
-import { processPostContent } from '@/lib/utils/blog-content';
+import { processPostContent, decodeHtmlEntities } from '@/lib/utils/blog-content';
 
 // Transform Google Sheets post to our component format
 function transformGoogleSheetsPost(post: any) {
@@ -15,11 +15,15 @@ function transformGoogleSheetsPost(post: any) {
   const tags = post.tags ? (typeof post.tags === 'string' ? JSON.parse(post.tags || '[]') : post.tags) : [];
   const categories = post.categories ? (typeof post.categories === 'string' ? JSON.parse(post.categories || '[]') : post.categories) : ['Mortgage Advice'];
 
+  // Decode HTML entities in text fields (fixes &#39; from WordPress)
+  const decodedTitle = decodeHtmlEntities(post.title || '');
+  const decodedExcerpt = decodeHtmlEntities(post.excerpt || post.metaDescription || '');
+
   return {
     slug: post.slug || '',
-    title: post.title || '',
+    title: decodedTitle,
     content: post.markdown || post.content || '',
-    excerpt: post.excerpt || post.metaDescription || '',
+    excerpt: decodedExcerpt,
     author: post.author?.name || post.author || 'Varun Chaudhry',
     authorEmail: post.authoremail || 'varun@kraftmortgages.ca',
     publishedAt: post.publishedat || new Date().toISOString(),
@@ -29,8 +33,8 @@ function transformGoogleSheetsPost(post: any) {
     categories,
     tags,
     seo: {
-      title: post.seotitle || post.title || '',
-      description: post.seodescription || post.excerpt || post.metaDescription || '',
+      title: decodeHtmlEntities(post.seotitle || post.title || ''),
+      description: decodeHtmlEntities(post.seodescription || post.excerpt || post.metaDescription || ''),
       keywords: post.seokeywords ? (typeof post.seokeywords === 'string' ? post.seokeywords.split(',').map((k: string) => k.trim()) : post.seokeywords) : tags,
       ogImage: post.seoimage || '/images/blog-default.jpg',
       canonicalUrl: post.seocanonicalurl || `https://kraftmortgages.ca/blog/${post.slug}`

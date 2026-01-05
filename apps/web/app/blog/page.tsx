@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { Calendar, User, ArrowRight, Clock, Tag, Star, Mail, Phone, FileText } from 'lucide-react';
 import { getRecentPosts } from '@/lib/db/firestore';
 import Navigation from '@/components/Navigation';
-import { generateExcerpt } from '@/lib/utils/blog-content';
+import { generateExcerpt, decodeHtmlEntities } from '@/lib/utils/blog-content';
 
 export const metadata: Metadata = {
   title: 'Mortgage Insights Blog | Kraft Mortgages',
@@ -39,10 +39,14 @@ function transformPost(post: any) {
   // Generate dynamic excerpt from content (25-30 words)
   const dynamicExcerpt = generateExcerpt(content, 30);
 
+  // Decode HTML entities in text fields (fixes &#39; from WordPress)
+  const decodedTitle = decodeHtmlEntities(post.title || '');
+  const decodedExcerpt = decodeHtmlEntities(post.metaDescription || post.excerpt || dynamicExcerpt);
+
   return {
     slug: post.slug || '',
-    title: post.title || '',
-    excerpt: post.metaDescription || post.excerpt || dynamicExcerpt,
+    title: decodedTitle,
+    excerpt: decodedExcerpt,
     author: post.author?.name || post.author || 'Varun Chaudhry',
     authorEmail: post.authoremail || 'varun@kraftmortgages.ca',
     publishedAt: (new Date(post.publishedAt || post.publishedat || new Date())),
@@ -52,8 +56,8 @@ function transformPost(post: any) {
     categories,
     tags,
     seo: {
-      title: post.seotitle || post.title || '',
-      description: post.seodescription || generateExcerpt(content, 30),
+      title: decodeHtmlEntities(post.seotitle || post.title || ''),
+      description: decodeHtmlEntities(post.seodescription || dynamicExcerpt),
       keywords: post.seokeywords ? (typeof post.seokeywords === 'string' ? post.seokeywords.split(',').map((k: string) => k.trim()) : post.seokeywords) : tags,
       ogImage: post.seoimage || '/images/blog-default.jpg',
       canonicalUrl: post.seocanonicalurl || `https://kraftmortgages.ca/blog/${post.slug}`
