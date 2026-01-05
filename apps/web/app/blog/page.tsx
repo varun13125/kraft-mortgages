@@ -26,15 +26,60 @@ export const metadata: Metadata = {
   },
 };
 
+// Auto-categorize based on content analysis (same logic as ingest API)
+function autoCategories(title: string, content: string): string[] {
+  const text = (title + ' ' + content).toLowerCase();
+  const categories: string[] = [];
+
+  // Topic-based categories
+  if (text.includes('mli select') || text.includes('cmhc') || text.includes('multi-unit')) {
+    categories.push('MLI Select');
+  }
+  if (text.includes('construction') || text.includes('builder') || text.includes('draw mortgage')) {
+    categories.push('Construction Financing');
+  }
+  if (text.includes('self-employed') || text.includes('self employed') || text.includes('business owner')) {
+    categories.push('Self-Employed Mortgages');
+  }
+  if (text.includes('renewal') || text.includes('renew') || text.includes('refinance')) {
+    categories.push('Mortgage Renewals');
+  }
+  if (text.includes('first-time') || text.includes('first time buyer') || text.includes('first home')) {
+    categories.push('First-Time Buyers');
+  }
+  if (text.includes('bank of canada') || text.includes('interest rate') || text.includes('rate cut') || text.includes('rate hold')) {
+    categories.push('Market Commentary');
+  }
+
+  // Location-based categories
+  if (text.includes('surrey')) categories.push('Surrey Real Estate');
+  if (text.includes('burnaby')) categories.push('Burnaby Real Estate');
+  if (text.includes('coquitlam')) categories.push('Coquitlam Real Estate');
+  if (text.includes('vancouver') && !text.includes('surrey') && !text.includes('burnaby')) categories.push('Vancouver Real Estate');
+  if (text.includes('abbotsford') || text.includes('fraser valley')) categories.push('Fraser Valley Real Estate');
+  if (text.includes('kelowna')) categories.push('Kelowna Real Estate');
+  if (text.includes('kamloops')) categories.push('Kamloops Real Estate');
+
+  if (categories.length === 0) return ['Mortgage Advice'];
+  return categories.slice(0, 2);
+}
+
 // Normalize Firestore post to page format
 function transformPost(post: any) {
   if (!post) return null;
 
   const tags = post.keywords || [];
-  const categories = post.categories ? (typeof post.categories === 'string' ? JSON.parse(post.categories || '[]') : post.categories) : ['Mortgage Advice'];
-
-  // Get the content for excerpt generation
   const content = post.markdown || post.content || '';
+
+  // Parse existing categories or auto-generate from content
+  let categories: string[] = [];
+  if (post.categories) {
+    categories = typeof post.categories === 'string' ? JSON.parse(post.categories || '[]') : post.categories;
+  }
+  // If no valid categories or contains "Uncategorized", auto-categorize
+  if (!categories.length || categories.includes('Uncategorized') || categories.includes('uncategorized')) {
+    categories = autoCategories(post.title || '', content);
+  }
 
   // Generate dynamic excerpt from content (25-30 words)
   const dynamicExcerpt = generateExcerpt(content, 30);
@@ -62,7 +107,7 @@ function transformPost(post: any) {
       ogImage: post.seoimage || '/images/blog-default.jpg',
       canonicalUrl: post.seocanonicalurl || `https://kraftmortgages.ca/blog/${post.slug}`
     },
-    readingTime: parseInt(post.readingtime) || Math.ceil(((post.markdown || post.content || '').length) / 1000) || 5,
+    readingTime: parseInt(post.readingtime) || Math.ceil((content.length) / 1000) || 5,
     brief: post.brief
   };
 }
