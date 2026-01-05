@@ -7,13 +7,61 @@ import { getPost as getFsPost } from '@/lib/db/firestore';
 import Navigation from '@/components/Navigation';
 import { processPostContent, decodeHtmlEntities } from '@/lib/utils/blog-content';
 
+// Auto-categorize based on content analysis (same logic as blog listing)
+function autoCategories(title: string, content: string): string[] {
+  const text = (title + ' ' + content).toLowerCase();
+  const categories: string[] = [];
+
+  // Topic-based categories
+  if (text.includes('mli select') || text.includes('cmhc') || text.includes('multi-unit')) {
+    categories.push('MLI Select');
+  }
+  if (text.includes('construction') || text.includes('builder') || text.includes('draw mortgage')) {
+    categories.push('Construction Financing');
+  }
+  if (text.includes('self-employed') || text.includes('self employed') || text.includes('business owner')) {
+    categories.push('Self-Employed Mortgages');
+  }
+  if (text.includes('renewal') || text.includes('renew') || text.includes('refinance')) {
+    categories.push('Mortgage Renewals');
+  }
+  if (text.includes('first-time') || text.includes('first time buyer') || text.includes('first home')) {
+    categories.push('First-Time Buyers');
+  }
+  if (text.includes('bank of canada') || text.includes('interest rate') || text.includes('rate cut') || text.includes('rate hold')) {
+    categories.push('Market Commentary');
+  }
+
+  // Location-based categories
+  if (text.includes('surrey')) categories.push('Surrey Real Estate');
+  if (text.includes('burnaby')) categories.push('Burnaby Real Estate');
+  if (text.includes('coquitlam')) categories.push('Coquitlam Real Estate');
+  if (text.includes('vancouver') && !text.includes('surrey') && !text.includes('burnaby')) categories.push('Vancouver Real Estate');
+  if (text.includes('abbotsford') || text.includes('fraser valley')) categories.push('Fraser Valley Real Estate');
+  if (text.includes('kelowna')) categories.push('Kelowna Real Estate');
+  if (text.includes('kamloops')) categories.push('Kamloops Real Estate');
+
+  if (categories.length === 0) return ['Mortgage Advice'];
+  return categories.slice(0, 2);
+}
+
 // Transform Google Sheets post to our component format
 function transformGoogleSheetsPost(post: any) {
   if (!post) return null;
 
   // Parse JSON strings if they exist
   const tags = post.tags ? (typeof post.tags === 'string' ? JSON.parse(post.tags || '[]') : post.tags) : [];
-  const categories = post.categories ? (typeof post.categories === 'string' ? JSON.parse(post.categories || '[]') : post.categories) : ['Mortgage Advice'];
+  const content = post.markdown || post.content || '';
+
+  // Parse existing categories or auto-generate from content
+  let categories: string[] = [];
+  if (post.categories) {
+    categories = typeof post.categories === 'string' ? JSON.parse(post.categories || '[]') : post.categories;
+  }
+  // If no valid categories or contains "Uncategorized", auto-categorize
+  if (!categories.length || categories.includes('Uncategorized') || categories.includes('uncategorized')) {
+    categories = autoCategories(post.title || '', content);
+  }
 
   // Decode HTML entities in text fields (fixes &#39; from WordPress)
   const decodedTitle = decodeHtmlEntities(post.title || '');
@@ -22,7 +70,7 @@ function transformGoogleSheetsPost(post: any) {
   return {
     slug: post.slug || '',
     title: decodedTitle,
-    content: post.markdown || post.content || '',
+    content: content,
     excerpt: decodedExcerpt,
     author: post.author?.name || post.author || 'Varun Chaudhry',
     authorEmail: post.authoremail || 'varun@kraftmortgages.ca',
@@ -39,7 +87,7 @@ function transformGoogleSheetsPost(post: any) {
       ogImage: post.seoimage || '/images/blog-default.jpg',
       canonicalUrl: post.seocanonicalurl || `https://kraftmortgages.ca/blog/${post.slug}`
     },
-    readingTime: parseInt(post.readingtime) || Math.ceil((post.markdown || post.content || '').length / 1000),
+    readingTime: parseInt(post.readingtime) || Math.ceil(content.length / 1000),
     brief: post.brief
   };
 }
