@@ -239,18 +239,6 @@ export default async function BlogPage() {
                         </div>
                       </div>
 
-                      {post?.tags?.length > 0 && (
-                        <div className="flex flex-wrap gap-2 mb-6">
-                          {post.tags.slice(0, 4).map((tag: string) => (
-                            <span
-                              key={tag}
-                              className="bg-gray-700/50 text-gray-300 px-3 py-1 rounded-full text-xs border border-gray-600/50"
-                            >
-                              {tag}
-                            </span>
-                          ))}
-                        </div>
-                      )}
 
                       <Link
                         href={`/blog/${post?.slug}`}
@@ -368,19 +356,6 @@ export default async function BlogPage() {
                             </div>
                           </div>
                         </div>
-
-                        {post?.tags?.length > 0 && (
-                          <div className="flex flex-wrap gap-1 mb-4">
-                            {post.tags.slice(0, 3).map((tag: string) => (
-                              <span
-                                key={tag}
-                                className="bg-gray-700/50 text-gray-300 px-2 py-1 rounded text-xs border border-gray-600/50"
-                              >
-                                {tag}
-                              </span>
-                            ))}
-                          </div>
-                        )}
 
                         <Link
                           href={`/blog/${post?.slug}`}
