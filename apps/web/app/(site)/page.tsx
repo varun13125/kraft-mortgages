@@ -106,8 +106,49 @@ export default function ModernHomepage() {
     setLeadData({ ...leadData, calculatorType: calcType });
   };
 
+  const organizationSchema = {
+    "@context": "https://schema.org",
+    "@type": ["Organization", "LocalBusiness", "FinancialService"],
+    name: "Kraft Mortgages Canada Inc.",
+    url: "https://kraftmortgages.ca",
+    logo: "https://kraftmortgages.ca/kraft-logo.png",
+    image: "https://kraftmortgages.ca/kraft-logo.png",
+    description: "Licensed mortgage brokerage offering residential, commercial, construction, private lending, and equity lending solutions across Canada.",
+    telephone: "+1-604-593-1550",
+    email: "varun@kraftmortgages.ca",
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: "#301 - 1688 152nd Street",
+      addressLocality: "Surrey",
+      addressRegion: "BC",
+      postalCode: "V4A 4N2",
+      addressCountry: "CA"
+    },
+    geo: {
+      "@type": "GeoCoordinates",
+      latitude: 49.1014,
+      longitude: -122.7927
+    },
+    areaServed: {
+      "@type": "Country",
+      name: "Canada"
+    },
+    priceRange: "$$",
+    openingHoursSpecification: {
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+      opens: "09:00",
+      closes: "17:00"
+    },
+    sameAs: []
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+      />
       <Navigation />
       <div className="min-h-screen">
         {/* Hero Section */}
