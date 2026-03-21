@@ -156,7 +156,7 @@ export function generateSitemap(blogPosts: BlogPost[] = []): MetadataRoute.Sitem
       url: `${SITE_URL}/blog`,
       lastModified: currentDate,
       changeFrequency: 'daily' as const,
-      priority: 0.9,
+      priority: 0.7,
     },
     ...blogPosts.map((post) => ({
       url: `${SITE_URL}/blog/${post.slug}`,
