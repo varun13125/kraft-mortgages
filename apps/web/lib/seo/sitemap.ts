@@ -2,75 +2,66 @@ import { MetadataRoute } from 'next';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.kraftmortgages.ca';
 
-// Static pages with their priorities and change frequencies
-const STATIC_PAGES = [
+// Homepage - highest priority
+const HOMEPAGE = {
+  url: '',
+  priority: 1.0,
+  changeFrequency: 'daily' as const,
+};
+
+// Service Hubs - high priority landing pages
+const SERVICE_HUBS = [
   {
-    url: '',
-    priority: 1.0,
-    changeFrequency: 'daily' as const,
+    url: '/residential',
+    priority: 0.9,
+    changeFrequency: 'weekly' as const,
   },
   {
-    url: '/about',
-    priority: 0.8,
-    changeFrequency: 'monthly' as const,
+    url: '/construction',
+    priority: 0.9,
+    changeFrequency: 'weekly' as const,
   },
   {
-    url: '/contact',
-    priority: 0.8,
-    changeFrequency: 'monthly' as const,
+    url: '/commercial',
+    priority: 0.9,
+    changeFrequency: 'weekly' as const,
   },
   {
-    url: '/services',
+    url: '/equity-lending',
+    priority: 0.9,
+    changeFrequency: 'weekly' as const,
+  },
+  {
+    url: '/private-lending',
+    priority: 0.9,
+    changeFrequency: 'weekly' as const,
+  },
+  {
+    url: '/mli-select',
     priority: 0.9,
     changeFrequency: 'weekly' as const,
   },
 ];
 
-// Calculator pages - high priority for SEO
-const CALCULATOR_PAGES = [
+// Main calculators index
+const CALCULATOR_INDEX = [
   {
-    url: '/mortgage-calculator',
-    priority: 0.95,
+    url: '/calculators',
+    priority: 0.85,
     changeFrequency: 'weekly' as const,
   },
+];
+
+// Core calculators (under /calculators)
+const CORE_CALCULATORS = [
   {
-    url: '/affordability-calculator', 
-    priority: 0.95,
-    changeFrequency: 'weekly' as const,
-  },
-  {
-    url: '/refinance-calculator',
-    priority: 0.9,
-    changeFrequency: 'weekly' as const,
-  },
-  {
-    url: '/investment-calculator',
-    priority: 0.9,
-    changeFrequency: 'weekly' as const,
-  },
-  {
-    url: '/calculators/payment-calculator',
+    url: '/calculators/affordability',
     priority: 0.85,
     changeFrequency: 'weekly' as const,
   },
   {
-    url: '/calculators/amortization-calculator',
+    url: '/calculators/payment',
     priority: 0.85,
-    changeFrequency: 'weekly' as const,
-  },
-  {
-    url: '/calculators/prepayment-calculator',
-    priority: 0.8,
-    changeFrequency: 'weekly' as const,
-  },
-  {
-    url: '/calculators/heloc-calculator',
-    priority: 0.8,
-    changeFrequency: 'weekly' as const,
-  },
-  {
-    url: '/calculators/mortgage-vs-rent',
-    priority: 0.8,
     changeFrequency: 'weekly' as const,
   },
   {
@@ -79,48 +70,234 @@ const CALCULATOR_PAGES = [
     changeFrequency: 'weekly' as const,
   },
   {
-    url: '/calculators/construction-draw',
-    priority: 0.75,
-    changeFrequency: 'weekly' as const,
-  },
-  {
-    url: '/calculators/bi-weekly-vs-monthly',
-    priority: 0.8,
-    changeFrequency: 'weekly' as const,
-  },
-  {
-    url: '/calculators/extra-payment-savings',
-    priority: 0.8,
-    changeFrequency: 'weekly' as const,
-  },
-  {
-    url: '/calculators/debt-consolidation',
-    priority: 0.8,
-    changeFrequency: 'weekly' as const,
-  },
-  {
-    url: '/calculators/compound-growth',
-    priority: 0.75,
-    changeFrequency: 'weekly' as const,
-  },
-  {
-    url: '/calculators/mli-select',
-    priority: 0.8,
-    changeFrequency: 'weekly' as const,
-  },
-  {
-    url: '/calculators/stress-test',
+    url: '/calculators/renewal',
     priority: 0.85,
     changeFrequency: 'weekly' as const,
   },
   {
-    url: '/calculators/closing-costs',
+    url: '/calculators/self-employed',
+    priority: 0.85,
+    changeFrequency: 'weekly' as const,
+  },
+  {
+    url: '/calculators/investment',
+    priority: 0.85,
+    changeFrequency: 'weekly' as const,
+  },
+  {
+    url: '/calculators/construction-pro',
+    priority: 0.85,
+    changeFrequency: 'weekly' as const,
+  },
+];
+
+// MLI Select calculators
+const MLI_SELECT_CALCULATORS = [
+  {
+    url: '/mli-select/calculators',
     priority: 0.8,
     changeFrequency: 'weekly' as const,
   },
   {
-    url: '/calculators/land-transfer-tax',
+    url: '/mli-select/calculators/amortization',
     priority: 0.8,
+    changeFrequency: 'weekly' as const,
+  },
+  {
+    url: '/mli-select/calculators/break-even',
+    priority: 0.8,
+    changeFrequency: 'weekly' as const,
+  },
+  {
+    url: '/mli-select/calculators/dscr',
+    priority: 0.8,
+    changeFrequency: 'weekly' as const,
+  },
+  {
+    url: '/mli-select/calculators/eligibility-checklist',
+    priority: 0.8,
+    changeFrequency: 'weekly' as const,
+  },
+  {
+    url: '/mli-select/calculators/max-loan',
+    priority: 0.8,
+    changeFrequency: 'weekly' as const,
+  },
+  {
+    url: '/mli-select/calculators/points',
+    priority: 0.8,
+    changeFrequency: 'weekly' as const,
+  },
+  {
+    url: '/mli-select/calculators/premium',
+    priority: 0.8,
+    changeFrequency: 'weekly' as const,
+  },
+  {
+    url: '/mli-select/calculators/rent-cap',
+    priority: 0.8,
+    changeFrequency: 'weekly' as const,
+  },
+  {
+    url: '/mli-select/calculators/scenario-compare',
+    priority: 0.8,
+    changeFrequency: 'weekly' as const,
+  },
+];
+
+// Equity lending calculators
+const EQUITY_LENDING_CALCULATORS = [
+  {
+    url: '/equity-lending/calculators/debt-consolidation',
+    priority: 0.8,
+    changeFrequency: 'weekly' as const,
+  },
+  {
+    url: '/equity-lending/calculators/heloc',
+    priority: 0.8,
+    changeFrequency: 'weekly' as const,
+  },
+  {
+    url: '/equity-lending/calculators/home-equity',
+    priority: 0.8,
+    changeFrequency: 'weekly' as const,
+  },
+];
+
+// Construction calculators
+const CONSTRUCTION_CALCULATORS = [
+  {
+    url: '/construction/calculators/budget',
+    priority: 0.8,
+    changeFrequency: 'weekly' as const,
+  },
+  {
+    url: '/construction/calculators/construction-draw',
+    priority: 0.8,
+    changeFrequency: 'weekly' as const,
+  },
+  {
+    url: '/construction/calculators/cost-to-complete',
+    priority: 0.8,
+    changeFrequency: 'weekly' as const,
+  },
+  {
+    url: '/construction/calculators/progressive-draw',
+    priority: 0.8,
+    changeFrequency: 'weekly' as const,
+  },
+];
+
+// Commercial calculators
+const COMMERCIAL_CALCULATORS = [
+  {
+    url: '/commercial/calculators/cap-rate',
+    priority: 0.75,
+    changeFrequency: 'weekly' as const,
+  },
+  {
+    url: '/commercial/calculators/cash-flow',
+    priority: 0.75,
+    changeFrequency: 'weekly' as const,
+  },
+  {
+    url: '/commercial/calculators/noi-analysis',
+    priority: 0.75,
+    changeFrequency: 'weekly' as const,
+  },
+  {
+    url: '/commercial/calculators/refinance',
+    priority: 0.75,
+    changeFrequency: 'weekly' as const,
+  },
+];
+
+// Residential calculators
+const RESIDENTIAL_CALCULATORS = [
+  {
+    url: '/residential/calculators/stress-test',
+    priority: 0.8,
+    changeFrequency: 'weekly' as const,
+  },
+];
+
+// Private lending calculators
+const PRIVATE_LENDING_CALCULATORS = [
+  {
+    url: '/private-lending/calculators/alternative-income',
+    priority: 0.75,
+    changeFrequency: 'weekly' as const,
+  },
+];
+
+// Location pages
+const LOCATION_PAGES = [
+  {
+    url: '/mortgage-broker-surrey',
+    priority: 0.7,
+    changeFrequency: 'monthly' as const,
+  },
+  {
+    url: '/mortgage-broker-kelowna',
+    priority: 0.7,
+    changeFrequency: 'monthly' as const,
+  },
+  {
+    url: '/mortgage-broker-kamloops',
+    priority: 0.7,
+    changeFrequency: 'monthly' as const,
+  },
+  {
+    url: '/mortgage-broker-abbotsford',
+    priority: 0.7,
+    changeFrequency: 'monthly' as const,
+  },
+];
+
+// Province pages
+const PROVINCE_PAGES = [
+  {
+    url: '/provinces/bc',
+    priority: 0.7,
+    changeFrequency: 'monthly' as const,
+  },
+  {
+    url: '/provinces/ab',
+    priority: 0.7,
+    changeFrequency: 'monthly' as const,
+  },
+  {
+    url: '/provinces/on',
+    priority: 0.7,
+    changeFrequency: 'monthly' as const,
+  },
+];
+
+// Info pages
+const INFO_PAGES = [
+  {
+    url: '/about',
+    priority: 0.5,
+    changeFrequency: 'monthly' as const,
+  },
+  {
+    url: '/contact',
+    priority: 0.5,
+    changeFrequency: 'monthly' as const,
+  },
+  {
+    url: '/privacy',
+    priority: 0.5,
+    changeFrequency: 'yearly' as const,
+  },
+  {
+    url: '/terms',
+    priority: 0.5,
+    changeFrequency: 'yearly' as const,
+  },
+  {
+    url: '/learn',
+    priority: 0.5,
     changeFrequency: 'weekly' as const,
   },
 ];
@@ -133,24 +310,33 @@ export interface BlogPost {
 
 export function generateSitemap(blogPosts: BlogPost[] = []): MetadataRoute.Sitemap {
   const currentDate = new Date();
-  
-  // Static pages
-  const staticUrls = STATIC_PAGES.map((page) => ({
+
+  // Combine all static pages
+  const staticPages = [
+    HOMEPAGE,
+    ...SERVICE_HUBS,
+    ...CALCULATOR_INDEX,
+    ...CORE_CALCULATORS,
+    ...MLI_SELECT_CALCULATORS,
+    ...EQUITY_LENDING_CALCULATORS,
+    ...CONSTRUCTION_CALCULATORS,
+    ...COMMERCIAL_CALCULATORS,
+    ...RESIDENTIAL_CALCULATORS,
+    ...PRIVATE_LENDING_CALCULATORS,
+    ...LOCATION_PAGES,
+    ...PROVINCE_PAGES,
+    ...INFO_PAGES,
+  ];
+
+  // Generate URLs for static pages
+  const staticUrls = staticPages.map((page) => ({
     url: `${SITE_URL}${page.url}`,
     lastModified: currentDate,
     changeFrequency: page.changeFrequency,
     priority: page.priority,
   }));
-  
-  // Calculator pages
-  const calculatorUrls = CALCULATOR_PAGES.map((page) => ({
-    url: `${SITE_URL}${page.url}`,
-    lastModified: currentDate,
-    changeFrequency: page.changeFrequency,
-    priority: page.priority,
-  }));
-  
-  // Blog pages
+
+  // Blog index and posts
   const blogUrls = [
     {
       url: `${SITE_URL}/blog`,
@@ -165,14 +351,14 @@ export function generateSitemap(blogPosts: BlogPost[] = []): MetadataRoute.Sitem
       priority: 0.7,
     })),
   ];
-  
-  return [...staticUrls, ...calculatorUrls, ...blogUrls];
+
+  return [...staticUrls, ...blogUrls];
 }
 
 // Generate XML sitemap string (for custom implementation if needed)
 export function generateXMLSitemap(blogPosts: BlogPost[] = []): string {
   const urls = generateSitemap(blogPosts);
-  
+
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${urls.map((url) => `  <url>
@@ -182,7 +368,7 @@ ${urls.map((url) => `  <url>
     <priority>${url.priority}</priority>
   </url>`).join('\n')}
 </urlset>`;
-  
+
   return xml;
 }
 
@@ -192,13 +378,31 @@ export function generateRobotsTxt(): string {
 User-agent: *
 Allow: /
 
+# Allow access to all service hubs
+Allow: /residential
+Allow: /construction
+Allow: /commercial
+Allow: /equity-lending
+Allow: /private-lending
+Allow: /mli-select
+
 # Allow access to all calculator pages
+Allow: /calculators
 Allow: /calculators/*
-Allow: /mortgage-calculator
-Allow: /affordability-calculator
+Allow: /mli-select/calculators/*
+Allow: /equity-lending/calculators/*
+Allow: /construction/calculators/*
+Allow: /commercial/calculators/*
+Allow: /residential/calculators/*
+Allow: /private-lending/calculators/*
 
 # Allow access to blog
+Allow: /blog
 Allow: /blog/*
+
+# Allow location and province pages
+Allow: /mortgage-broker-*
+Allow: /provinces/*
 
 # Disallow admin and API routes
 Disallow: /admin/*
