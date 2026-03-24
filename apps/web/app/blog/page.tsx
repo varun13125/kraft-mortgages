@@ -7,11 +7,11 @@ import Navigation from '@/components/Navigation';
 import { generateExcerpt, decodeHtmlEntities } from '@/lib/utils/blog-content';
 
 export const metadata: Metadata = {
-  title: 'Mortgage Insights Blog | Kraft Mortgages',
-  description: 'Expert mortgage advice, market insights, and Canadian homebuying tips from licensed broker Varun Chaudhry with 18+ years experience.',
-  keywords: 'mortgage advice, Canadian mortgages, home buying, mortgage broker, BC mortgages, Alberta mortgages, Ontario mortgages',
+  title: 'Surrey Mortgage Broker Blog | Expert Advice & Rates | Kraft Mortgages',
+  description: 'Expert Surrey mortgage advice, BC rate updates, and homebuying guides from licensed broker Varun Chaudhry. $5B+ funded, 18+ years experience. Updated weekly.',
+  keywords: 'Surrey mortgage broker blog, mortgage advice BC, mortgage rates Surrey, home buying tips Surrey, BC mortgage news, first-time buyer guide Surrey',
   openGraph: {
-    title: 'Mortgage Insights Blog | Kraft Mortgages',
+    title: 'Surrey Mortgage Broker Blog | Expert Advice & Rates | Kraft Mortgages',
     description: 'Expert mortgage advice and market insights from licensed broker Varun Chaudhry.',
     type: 'website',
     url: 'https://kraftmortgages.ca/blog',
