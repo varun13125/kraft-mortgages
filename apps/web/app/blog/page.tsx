@@ -14,10 +14,10 @@ export const metadata: Metadata = {
     title: 'Surrey Mortgage Broker Blog | Expert Advice & Rates | Kraft Mortgages',
     description: 'Expert mortgage advice and market insights from licensed broker Varun Chaudhry.',
     type: 'website',
-    url: 'https://kraftmortgages.ca/blog',
+    url: 'https://www.kraftmortgages.ca/blog',
     images: [
       {
-        url: 'https://kraftmortgages.ca/images/blog-default.jpg',
+        url: 'https://www.kraftmortgages.ca/images/blog-default.jpg',
         width: 1200,
         height: 630,
         alt: 'Kraft Mortgages Blog',
@@ -105,7 +105,7 @@ function transformPost(post: any) {
       description: decodeHtmlEntities(post.seodescription || dynamicExcerpt),
       keywords: post.seokeywords ? (typeof post.seokeywords === 'string' ? post.seokeywords.split(',').map((k: string) => k.trim()) : post.seokeywords) : tags,
       ogImage: post.seoimage || '/images/blog-default.jpg',
-      canonicalUrl: post.seocanonicalurl || `https://kraftmortgages.ca/blog/${post.slug}`
+      canonicalUrl: post.seocanonicalurl || `https://www.kraftmortgages.ca/blog/${post.slug}`
     },
     readingTime: parseInt(post.readingtime) || Math.ceil((content.length) / 1000) || 5,
     brief: post.brief
@@ -132,7 +132,7 @@ export default async function BlogPage() {
             '@type': 'Blog',
             name: 'Kraft Mortgages Blog',
             description: 'Expert mortgage advice and market insights from licensed broker Varun Chaudhry',
-            url: 'https://kraftmortgages.ca/blog',
+            url: 'https://www.kraftmortgages.ca/blog',
             author: {
               '@type': 'Person',
               name: 'Varun Chaudhry',
@@ -148,7 +148,7 @@ export default async function BlogPage() {
               name: 'Kraft Mortgages',
               logo: {
                 '@type': 'ImageObject',
-                url: 'https://kraftmortgages.ca/kraft-logo.png',
+                url: 'https://www.kraftmortgages.ca/kraft-logo.png',
               },
             },
           }),
