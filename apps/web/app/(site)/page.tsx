@@ -123,9 +123,9 @@ export default function ModernHomepage() {
           "@type": "PostalAddress",
           streetAddress: "#301 - 1688 152nd Street",
           addressLocality: "Surrey",
-          addressRegion": "BC",
+          addressRegion: "BC",
           postalCode: "V4A 4N2",
-          addressCountry": "CA"
+          addressCountry: "CA"
         },
         geo: {
           "@type": "GeoCoordinates",
