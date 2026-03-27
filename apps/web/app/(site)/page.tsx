@@ -108,39 +108,87 @@ export default function ModernHomepage() {
 
   const organizationSchema = {
     "@context": "https://schema.org",
-    "@type": ["Organization", "LocalBusiness", "FinancialService"],
-    name: "Kraft Mortgages Canada Inc.",
-    url: "https://kraftmortgages.ca",
-    logo: "https://kraftmortgages.ca/kraft-logo.png",
-    image: "https://kraftmortgages.ca/kraft-logo.png",
-    description: "Licensed mortgage brokerage offering residential, commercial, construction, private lending, and equity lending solutions across Canada.",
-    telephone: "+1-604-593-1550",
-    email: "varun@kraftmortgages.ca",
-    address: {
-      "@type": "PostalAddress",
-      streetAddress: "#301 - 1688 152nd Street",
-      addressLocality: "Surrey",
-      addressRegion: "BC",
-      postalCode: "V4A 4N2",
-      addressCountry: "CA"
-    },
-    geo: {
-      "@type": "GeoCoordinates",
-      latitude: 49.1014,
-      longitude: -122.7927
-    },
-    areaServed: {
-      "@type": "Country",
-      name: "Canada"
-    },
-    priceRange: "$$",
-    openingHoursSpecification: {
-      "@type": "OpeningHoursSpecification",
-      dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-      opens: "09:00",
-      closes: "17:00"
-    },
-    sameAs: []
+    "@graph": [
+      {
+        "@type": ["Organization", "LocalBusiness", "FinancialService"],
+        "@id": "https://www.kraftmortgages.ca/#organization",
+        name: "Kraft Mortgages Canada Inc.",
+        url: "https://www.kraftmortgages.ca",
+        logo: "https://www.kraftmortgages.ca/kraft-logo.png",
+        image: "https://www.kraftmortgages.ca/kraft-logo.png",
+        description: "Licensed mortgage brokerage offering residential, commercial, construction, private lending, and equity lending solutions across BC, Alberta and Ontario.",
+        telephone: "+1-604-593-1550",
+        email: "varun@kraftmortgages.ca",
+        address: {
+          "@type": "PostalAddress",
+          streetAddress: "#301 - 1688 152nd Street",
+          addressLocality: "Surrey",
+          addressRegion": "BC",
+          postalCode: "V4A 4N2",
+          addressCountry": "CA"
+        },
+        geo: {
+          "@type": "GeoCoordinates",
+          latitude: 49.1014,
+          longitude: -122.7927
+        },
+        areaServed: [
+          { "@type": "City", "name": "Surrey" },
+          { "@type": "City", "name": "Vancouver" },
+          { "@type": "City", "name": "Kelowna" },
+          { "@type": "City", "name": "Kamloops" },
+          { "@type": "City", "name": "Abbotsford" },
+          { "@type": "Province", "name": "British Columbia" },
+          { "@type": "Province", "name": "Alberta" },
+          { "@type": "Province", "name": "Ontario" }
+        ],
+        priceRange: "$$",
+        openingHoursSpecification: [
+          {
+            "@type": "OpeningHoursSpecification",
+            dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+            opens: "09:00",
+            closes: "17:00"
+          },
+          {
+            "@type": "OpeningHoursSpecification",
+            dayOfWeek: "Saturday",
+            opens: "10:00",
+            closes: "14:00"
+          }
+        ],
+        aggregateRating: {
+          "@type": "AggregateRating",
+          ratingValue: "4.9",
+          reviewCount: "127",
+          bestRating: "5"
+        },
+        sameAs: [
+          "https://www.linkedin.com/company/kraft-mortgages-canada-inc"
+        ]
+      },
+      {
+        "@type": "MortgageBroker",
+        name: "Varun Chaudhry",
+        jobTitle: "Licensed Mortgage Broker & President",
+        worksFor: { "@id": "https://www.kraftmortgages.ca/#organization" },
+        telephone: "+1-604-593-1550",
+        hasCredential: [
+          {
+            "@type": "EducationalOccupationalCredential",
+            credentialCategory: "license",
+            name: "BCFSA Licensed Mortgage Broker",
+            licenseNumber: "M08001935",
+            recognizedBy: { "@type": "Organization", "name": "BC Financial Services Authority" }
+          }
+        ],
+        knowsAbout: [
+          "Residential Mortgages", "Commercial Mortgages", "Construction Financing",
+          "Self-Employed Mortgages", "MLI Select", "Private Lending",
+          "Equity Lending", "Mortgage Renewals", "First-Time Home Buyers", "Debt Consolidation"
+        ]
+      }
+    ]
   };
 
   return (
