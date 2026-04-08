@@ -243,3 +243,42 @@
     @apply bg-transparent;
   }
 }
+
+/* Force blog article content to use dark theme colors
+   Overrides inline styles from HTML content */
+article .prose [style*="color"],
+article .prose *[style*="color: #1"],
+article .prose *[style*="color: #2"],
+article .prose *[style*="color: #3"],
+article .prose *[style*="color: #4"],
+article .prose *[style*="color: #5"],
+article .prose *[style*="color: #6"] {
+  color: inherit !important;
+}
+
+article .prose h1,
+article .prose h2,
+article .prose h3,
+article .prose h4,
+article .prose h5,
+article .prose h6 {
+  color: #f3f4f6 !important; /* gray-100 */
+}
+
+article .prose p,
+article .prose li,
+article .prose td,
+article .prose th,
+article .prose span,
+article .prose div {
+  color: #d1d5db !important; /* gray-300 */
+}
+
+article .prose a {
+  color: #fbbf24 !important; /* amber-400 / gold */
+}
+
+article .prose strong,
+article .prose b {
+  color: #f3f4f6 !important; /* gray-100 */
+}
