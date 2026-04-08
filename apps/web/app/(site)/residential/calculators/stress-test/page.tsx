@@ -16,10 +16,8 @@ export default function StressTestCalculator() {
   const [principal, setPrincipal] = useState(650000);
   const [amortization, setAmortization] = useState(25);
 
-  // Stress test rate (contract rate + buffer or floor rate, whichever is higher)
   const stressRate = useMemo(() => Math.max(contractRate + stressBuffer, 5.25), [contractRate, stressBuffer]);
   
-  // Monthly payment calculation at stress test rate
   const monthlyRate = stressRate / 100 / 12;
   const numPayments = amortization * 12;
   const monthlyPayment = (principal * monthlyRate * Math.pow(1 + monthlyRate, numPayments)) / 
@@ -112,8 +110,26 @@ export default function StressTestCalculator() {
                     value={contractRate}
                     onChange={(e) => setContractRate(Number(e.target.value))}
                     className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white"
-                    placeholder="e.g. 4.79"
                   />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-200 mb-2">
+                    Stress Test Buffer (%)
+                  </label>
+                  <div className="flex items-center gap-3">
+                    <input
+                      type="range"
+                      min="0"
+                      max="5"
+                      step="0.25"
+                      value={stressBuffer}
+                      onChange={(e) => setStressBuffer(Number(e.target.value))}
+                      className="flex-1"
+                    />
+                    <span className="text-white font-semibold w-12 text-right">{stressBuffer.toFixed(2)}%</span>
+                  </div>
+                  <p className="text-xs text-gray-500 mt-1">OSFI minimum is 2%. Adjust to test different scenarios.</p>
                 </div>
 
                 <div>
@@ -142,21 +158,14 @@ export default function StressTestCalculator() {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-200 mb-2">
-                    Stress Test Buffer (%)
+                    Annual Heating Costs
                   </label>
-                  <div className="flex items-center gap-3">
-                    <input
-                      type="range"
-                      min="0"
-                      max="5"
-                      step="0.25"
-                      value={stressBuffer}
-                      onChange={(e) => setStressBuffer(Number(e.target.value))}
-                      className="flex-1"
-                    />
-                    <span className="text-white font-semibold w-12 text-right">{stressBuffer.toFixed(2)}%</span>
-                  </div>
-                  <p className="text-xs text-gray-500 mt-1">OSFI minimum is 2%. Adjust to test different scenarios.</p>
+                  <input
+                    type="number"
+                    value={heat}
+                    onChange={(e) => setHeat(Number(e.target.value))}
+                    className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white"
+                  />
                 </div>
 
                 <div>
@@ -174,18 +183,7 @@ export default function StressTestCalculator() {
                     <option value={15}>15 years</option>
                   </select>
                 </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-200 mb-2">
-                    Annual Heating Costs
-                  </label>
-                  <input
-                    type="number"
-                    value={heat}
-                    onChange={(e) => setHeat(Number(e.target.value))}
-                    className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white"
-                  />
-                </div>
+              </div>
               <div className="bg-gray-700/50 rounded-xl p-6 mb-6">
                 <h3 className="text-lg font-semibold text-gray-100 mb-4">Stress Test Results</h3>
                 
