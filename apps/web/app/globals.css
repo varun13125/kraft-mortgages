@@ -282,3 +282,51 @@ article .prose strong,
 article .prose b {
   color: #f3f4f6 !important; /* gray-100 */
 }
+
+/* Fix: elements inside light-background boxes need dark text */
+article .prose [style*="background: #fff"],
+article .prose [style*="background:#fff"],
+article .prose [style*="background: white"],
+article .prose [style*="background-color: #fff"],
+article .prose [style*="background-color:#fff"],
+article .prose [style*="background-color: white"],
+article .prose [style*="background:#f"],
+article .prose [style*="background: #f"],
+article .prose [style*="background: rgb(255"],
+article .prose [style*="background-color: rgb(255"] {
+  color: #1f2937 !important; /* gray-800 - dark text for light bg */
+}
+article .prose [style*="background: #fff"] p,
+article .prose [style*="background: #fff"] li,
+article .prose [style*="background: #fff"] span,
+article .prose [style*="background: #fff"] h1,
+article .prose [style*="background: #fff"] h2,
+article .prose [style*="background: #fff"] h3,
+article .prose [style*="background: #fff"] h4,
+article .prose [style*="background: #fff"] h5,
+article .prose [style*="background: #fff"] h6,
+article .prose [style*="background: #fff"] strong,
+article .prose [style*="background: #fff"] b,
+article .prose [style*="background: #fff"] a {
+  color: #1f2937 !important; /* gray-800 */
+}
+
+/* Also fix elements nested inside light-background parents */
+article .prose blockquote[style*="background"] p,
+article .prose blockquote[style*="background"] li,
+article .prose blockquote[style*="background"] span,
+article .prose blockquote[style*="background"] strong,
+article .prose blockquote[style*="background"] b,
+article .prose blockquote[style*="background"] h1,
+article .prose blockquote[style*="background"] h2,
+article .prose blockquote[style*="background"] h3,
+article .prose div[style*="background"] p,
+article .prose div[style*="background"] li,
+article .prose div[style*="background"] span,
+article .prose div[style*="background"] strong,
+article .prose div[style*="background"] b,
+article .prose div[style*="background"] h1,
+article .prose div[style*="background"] h2,
+article .prose div[style*="background"] h3 {
+  color: #1f2937 !important; /* gray-800 */
+}
