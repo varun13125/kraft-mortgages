@@ -244,89 +244,104 @@
   }
 }
 
-/* Force blog article content to use dark theme colors
-   Overrides inline styles from HTML content */
-article .prose [style*="color"],
-article .prose *[style*="color: #1"],
-article .prose *[style*="color: #2"],
-article .prose *[style*="color: #3"],
-article .prose *[style*="color: #4"],
-article .prose *[style*="color: #5"],
-article .prose *[style*="color: #6"] {
+/* =====================================================
+   Blog article content — smart color override system
+   =====================================================
+   Problem: Blog HTML has inline styles designed for light themes.
+   Solution: Detect background color and set text accordingly.
+   ===================================================== */
+
+/* 1. Strip problematic inline color values from ANY element
+   (dark navy headings, dark body text, etc. on dark site bg) */
+article .prose *[style*="color: #1a3a5c"],
+article .prose *[style*="color:#1a3a5c"],
+article .prose *[style*="color: #222"],
+article .prose *[style*="color:#222"],
+article .prose *[style*="color: #333"],
+article .prose *[style*="color:#333"],
+article .prose *[style*="color: #444"],
+article .prose *[style*="color:#444"],
+article .prose *[style*="color: #555"],
+article .prose *[style*="color:#555"],
+article .prose *[style*="color: #666"],
+article .prose *[style*="color:#666"],
+article .prose *[style*="color: #2c5282"],
+article .prose *[style*="color:#2c5282"] {
   color: inherit !important;
 }
 
-article .prose h1,
-article .prose h2,
-article .prose h3,
-article .prose h4,
-article .prose h5,
-article .prose h6 {
+/* 2. Default text colors on dark site background (no inline bg) */
+article .prose h1, article .prose h2, article .prose h3,
+article .prose h4, article .prose h5, article .prose h6 {
   color: #f3f4f6 !important; /* gray-100 */
 }
-
-article .prose p,
-article .prose li,
-article .prose td,
-article .prose th,
-article .prose span,
-article .prose div {
+article .prose p, article .prose li, article .prose td, article .prose th {
   color: #d1d5db !important; /* gray-300 */
 }
-
-article .prose a {
-  color: #fbbf24 !important; /* amber-400 / gold */
-}
-
-article .prose strong,
-article .prose b {
+article .prose strong, article .prose b {
   color: #f3f4f6 !important; /* gray-100 */
 }
 
-/* Fix: elements inside light-background boxes need dark text */
+/* 3. Light-background boxes → dark text for all children
+   Matches: #fff, #f7f4ef, #f0f4f8, #eef3f8, white, rgb(255... */
+article .prose [style*="background: #f7"],
+article .prose [style*="background: #f0"],
+article .prose [style*="background: #ee"],
 article .prose [style*="background: #fff"],
 article .prose [style*="background:#fff"],
 article .prose [style*="background: white"],
+article .prose [style*="background-color: #f7"],
+article .prose [style*="background-color: #f0"],
+article .prose [style*="background-color: #ee"],
 article .prose [style*="background-color: #fff"],
 article .prose [style*="background-color:#fff"],
 article .prose [style*="background-color: white"],
-article .prose [style*="background:#f"],
-article .prose [style*="background: #f"],
 article .prose [style*="background: rgb(255"],
 article .prose [style*="background-color: rgb(255"] {
-  color: #1f2937 !important; /* gray-800 - dark text for light bg */
-}
-article .prose [style*="background: #fff"] p,
-article .prose [style*="background: #fff"] li,
-article .prose [style*="background: #fff"] span,
-article .prose [style*="background: #fff"] h1,
-article .prose [style*="background: #fff"] h2,
-article .prose [style*="background: #fff"] h3,
-article .prose [style*="background: #fff"] h4,
-article .prose [style*="background: #fff"] h5,
-article .prose [style*="background: #fff"] h6,
-article .prose [style*="background: #fff"] strong,
-article .prose [style*="background: #fff"] b,
-article .prose [style*="background: #fff"] a {
   color: #1f2937 !important; /* gray-800 */
+}
+article .prose [style*="background: #f7"] *,
+article .prose [style*="background: #f0"] *,
+article .prose [style*="background: #ee"] *,
+article .prose [style*="background: #fff"] *,
+article .prose [style*="background:#fff"] *,
+article .prose [style*="background: white"] *,
+article .prose [style*="background-color: #f7"] *,
+article .prose [style*="background-color: #f0"] *,
+article .prose [style*="background-color: #ee"] *,
+article .prose [style*="background-color: #fff"] *,
+article .prose [style*="background-color:#fff"] *,
+article .prose [style*="background-color: white"] *,
+article .prose [style*="background: rgb(255"] *,
+article .prose [style*="background-color: rgb(255"] * {
+  color: inherit !important;
 }
 
-/* Also fix elements nested inside light-background parents */
-article .prose blockquote[style*="background"] p,
-article .prose blockquote[style*="background"] li,
-article .prose blockquote[style*="background"] span,
-article .prose blockquote[style*="background"] strong,
-article .prose blockquote[style*="background"] b,
-article .prose blockquote[style*="background"] h1,
-article .prose blockquote[style*="background"] h2,
-article .prose blockquote[style*="background"] h3,
-article .prose div[style*="background"] p,
-article .prose div[style*="background"] li,
-article .prose div[style*="background"] span,
-article .prose div[style*="background"] strong,
-article .prose div[style*="background"] b,
-article .prose div[style*="background"] h1,
-article .prose div[style*="background"] h2,
-article .prose div[style*="background"] h3 {
-  color: #1f2937 !important; /* gray-800 */
+/* 4. Dark-background CTA boxes → force light text
+   Matches: #1a3a5c, #192236, dark navy colors */
+article .prose [style*="background: #1a"],
+article .prose [style*="background:#1a"],
+article .prose [style*="background: #19"],
+article .prose [style*="background:#19"],
+article .prose [style*="background: #0f"],
+article .prose [style*="background:#0f"] {
+  color: #f3f4f6 !important; /* gray-100 */
+}
+article .prose [style*="background: #1a"] *,
+article .prose [style*="background:#1a"] *,
+article .prose [style*="background: #19"] *,
+article .prose [style*="background:#19"] *,
+article .prose [style*="background: #0f"] *,
+article .prose [style*="background:#0f"] * {
+  color: inherit !important;
+}
+
+/* 5. Gold/amber CTA buttons → white text for readability */
+article .prose [style*="background: #c9963a"] {
+  color: #ffffff !important;
+}
+
+/* 6. Links stay gold everywhere */
+article .prose a {
+  color: #fbbf24 !important;
 }
