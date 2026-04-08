@@ -81,8 +81,7 @@ export default function MLISelectPage() {
                 Informational + promotional guide: scoring, benefits, and why Kraft Mortgages is your partner.
               </p>
               <a 
-                href="/guide.pdf" 
-                download
+                href="/mli-select" 
                 className="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-gold-500 to-gold-600 text-gray-900 font-semibold rounded-lg hover:from-gold-400 hover:to-gold-500 transition-all"
               >
                 Download Guide

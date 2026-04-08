@@ -20,9 +20,8 @@ const nextConfig = {
       {
         source: '/pages/home',
         destination: '/',
-        permanent: true, // 301 redirect for SEO
+        permanent: true,
       },
-      // Add other common old URL patterns if needed
       {
         source: '/home',
         destination: '/',
@@ -31,6 +30,130 @@ const nextConfig = {
       {
         source: '/index',
         destination: '/',
+        permanent: true,
+      },
+      // Application/consult redirects
+      {
+        source: '/apply',
+        destination: 'https://r.mtg-app.com/varun-chaudhry',
+        permanent: false,
+      },
+      {
+        source: '/consult',
+        destination: 'https://r.mtg-app.com/varun-chaudhry',
+        permanent: false,
+      },
+      // Calculator URL fixes (blog posts used wrong slugs)
+      {
+        source: '/calculators/payment-calculator',
+        destination: '/calculators/payment',
+        permanent: true,
+      },
+      {
+        source: '/calculators/affordability-calculator',
+        destination: '/calculators/affordability',
+        permanent: true,
+      },
+      {
+        source: '/calculators/land-transfer-tax',
+        destination: '/calculators/payment',
+        permanent: true,
+      },
+      {
+        source: '/calculators/pre-approval-calculator',
+        destination: '/calculators/pre-approval',
+        permanent: true,
+      },
+      {
+        source: '/calculators/renewal-calculator',
+        destination: '/calculators/renewal',
+        permanent: true,
+      },
+      {
+        source: '/calculators/self-employed-calculator',
+        destination: '/calculators/self-employed',
+        permanent: true,
+      },
+      {
+        source: '/calculators/investment-calculator',
+        destination: '/calculators/investment',
+        permanent: true,
+      },
+      // Misc calculator redirects from blog posts
+      {
+        source: '/calculators/debt-consolidation',
+        destination: '/calculators/payment',
+        permanent: true,
+      },
+      {
+        source: '/calculators/heloc-calculator',
+        destination: '/equity-lending/calculators/heloc',
+        permanent: true,
+      },
+      {
+        source: '/calculators/refinance-calculator',
+        destination: '/calculators/payment',
+        permanent: true,
+      },
+      {
+        source: '/calculators/stress-test',
+        destination: '/residential/calculators/stress-test',
+        permanent: true,
+      },
+      {
+        source: '/mortgage-calculator',
+        destination: '/calculators/payment',
+        permanent: true,
+      },
+      {
+        source: '/affordability-calculator',
+        destination: '/calculators/affordability',
+        permanent: true,
+      },
+      {
+        source: '/refinance-calculator',
+        destination: '/calculators/payment',
+        permanent: true,
+      },
+      {
+        source: '/investment-calculator',
+        destination: '/calculators/investment',
+        permanent: true,
+      },
+      // Service page calculator redirects
+      {
+        source: '/equity-lending/calculators/cash-out-refinance',
+        destination: '/equity-lending/calculators/home-equity',
+        permanent: true,
+      },
+      {
+        source: '/equity-lending/calculators/investment-opportunity',
+        destination: '/equity-lending/calculators/home-equity',
+        permanent: true,
+      },
+      {
+        source: '/private-lending/calculators/asset-based',
+        destination: '/private-lending/calculators/alternative-income',
+        permanent: true,
+      },
+      {
+        source: '/private-lending/calculators/bridge-financing',
+        destination: '/private-lending/calculators/alternative-income',
+        permanent: true,
+      },
+      {
+        source: '/private-lending/calculators/quick-approval',
+        destination: '/private-lending/calculators/alternative-income',
+        permanent: true,
+      },
+      {
+        source: '/mli-select/calculators',
+        destination: '/mli-select',
+        permanent: true,
+      },
+      {
+        source: '/calculators/construction-draw',
+        destination: '/construction/calculators/construction-draw',
         permanent: true,
       },
     ];
