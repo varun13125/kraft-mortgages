@@ -18,9 +18,9 @@ export default function ModernHomepage() {
   });
 
   // Counter animation states
-  const [yearsCount, setYearsCount] = useState(0);
-  const [clientsCount, setClientsCount] = useState(0);
-  const [fundedCount, setFundedCount] = useState(0);
+  const [yearsCount, setYearsCount] = useState(23);
+  const [clientsCount, setClientsCount] = useState(5000);
+  const [fundedCount, setFundedCount] = useState(2);
   const statsRef = useRef<HTMLDivElement>(null);
 
   // Animated counter
