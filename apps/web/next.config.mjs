@@ -54,11 +54,7 @@ const nextConfig = {
         destination: '/calculators/affordability',
         permanent: true,
       },
-      {
-        source: '/calculators/land-transfer-tax',
-        destination: '/calculators/payment',
-        permanent: true,
-      },
+
       {
         source: '/calculators/pre-approval-calculator',
         destination: '/calculators/pre-approval',

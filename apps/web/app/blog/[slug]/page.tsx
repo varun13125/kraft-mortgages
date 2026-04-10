@@ -170,8 +170,11 @@ export default async function BlogPostPage({
             image: post.seo.ogImage,
             author: {
               '@type': 'Person',
-              name: post.author,
-              email: post.authorEmail,
+              name: 'Varun Chaudhry',
+              url: 'https://www.kraftmortgages.ca/about',
+              jobTitle: 'Licensed Mortgage Broker',
+              honorificPrefix: 'BCFSA #M08001935',
+              email: 'varun@kraftmortgages.ca',
             },
             publisher: {
               '@type': 'Organization',

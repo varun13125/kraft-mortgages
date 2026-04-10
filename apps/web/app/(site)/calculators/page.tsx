@@ -14,7 +14,11 @@ import {
   Users,
   Shield,
   Clock,
-  Target
+  Target,
+  AlertTriangle,
+  FileText,
+  Award,
+  Receipt
 } from "lucide-react";
 
 export default function CalculatorsHub() {
@@ -131,6 +135,30 @@ export default function CalculatorsHub() {
       description: "Alternative income verification",
       href: "/calculators/self-employed", 
       icon: Users
+    },
+    {
+      title: "Mortgage Penalty Calculator",
+      description: "Estimate prepayment penalties",
+      href: "/calculators/mortgage-penalty",
+      icon: AlertTriangle
+    },
+    {
+      title: "Closing Costs Calculator",
+      description: "Total purchase costs breakdown",
+      href: "/calculators/closing-costs",
+      icon: FileText
+    },
+    {
+      title: "First-Time Home Buyer Calculator",
+      description: "Incentives, rebates & costs",
+      href: "/calculators/first-time-home-buyer",
+      icon: Award
+    },
+    {
+      title: "Land Transfer Tax Calculator",
+      description: "Tax estimates by province",
+      href: "/calculators/land-transfer-tax",
+      icon: Receipt
     }
   ];
 

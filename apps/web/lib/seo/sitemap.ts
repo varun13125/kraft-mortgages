@@ -89,6 +89,26 @@ const CORE_CALCULATORS = [
     priority: 0.85,
     changeFrequency: 'weekly' as const,
   },
+  {
+    url: '/calculators/mortgage-penalty',
+    priority: 0.85,
+    changeFrequency: 'weekly' as const,
+  },
+  {
+    url: '/calculators/closing-costs',
+    priority: 0.85,
+    changeFrequency: 'weekly' as const,
+  },
+  {
+    url: '/calculators/first-time-home-buyer',
+    priority: 0.85,
+    changeFrequency: 'weekly' as const,
+  },
+  {
+    url: '/calculators/land-transfer-tax',
+    priority: 0.85,
+    changeFrequency: 'weekly' as const,
+  },
 ];
 
 // MLI Select calculators
@@ -249,6 +269,41 @@ const LOCATION_PAGES = [
   },
   {
     url: '/mortgage-broker-abbotsford',
+    priority: 0.7,
+    changeFrequency: 'monthly' as const,
+  },
+  {
+    url: '/mortgage-broker-nanaimo',
+    priority: 0.7,
+    changeFrequency: 'monthly' as const,
+  },
+  {
+    url: '/mortgage-broker-coquitlam',
+    priority: 0.7,
+    changeFrequency: 'monthly' as const,
+  },
+  {
+    url: '/mortgage-broker-victoria',
+    priority: 0.7,
+    changeFrequency: 'monthly' as const,
+  },
+  {
+    url: '/mortgage-broker-red-deer',
+    priority: 0.7,
+    changeFrequency: 'monthly' as const,
+  },
+  {
+    url: '/mortgage-broker-lethbridge',
+    priority: 0.7,
+    changeFrequency: 'monthly' as const,
+  },
+  {
+    url: '/mortgage-broker-airdrie',
+    priority: 0.7,
+    changeFrequency: 'monthly' as const,
+  },
+  {
+    url: '/mortgage-broker-windsor',
     priority: 0.7,
     changeFrequency: 'monthly' as const,
   },

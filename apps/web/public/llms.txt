@@ -29,6 +29,32 @@ Kraft Mortgages is a licensed Canadian mortgage brokerage based in Surrey, BC, s
 - Abbotsford BC
 - Licensed in BC, Alberta, and Ontario
 
+## Calculators
+- Payment Calculator: https://www.kraftmortgages.ca/calculators/payment
+- Affordability Calculator: https://www.kraftmortgages.ca/calculators/affordability
+- Investment Calculator: https://www.kraftmortgages.ca/calculators/investment
+- Self-Employed Calculator: https://www.kraftmortgages.ca/calculators/self-employed
+- Mortgage Penalty Calculator: https://www.kraftmortgages.ca/calculators/mortgage-penalty
+- Closing Costs Calculator: https://www.kraftmortgages.ca/calculators/closing-costs
+- First-Time Home Buyer Calculator: https://www.kraftmortgages.ca/calculators/first-time-home-buyer
+- Land Transfer Tax Calculator: https://www.kraftmortgages.ca/calculators/land-transfer-tax
+- Pre-Approval Calculator: https://www.kraftmortgages.ca/calculators/pre-approval
+- Renewal Calculator: https://www.kraftmortgages.ca/calculators/renewal
+- Construction Pro Calculator: https://www.kraftmortgages.ca/calculators/construction-pro
+
+## Locations
+- Mortgage Broker Surrey BC: https://www.kraftmortgages.ca/mortgage-broker-surrey
+- Mortgage Broker Kelowna BC: https://www.kraftmortgages.ca/mortgage-broker-kelowna
+- Mortgage Broker Kamloops BC: https://www.kraftmortgages.ca/mortgage-broker-kamloops
+- Mortgage Broker Abbotsford BC: https://www.kraftmortgages.ca/mortgage-broker-abbotsford
+- Mortgage Broker Nanaimo BC: https://www.kraftmortgages.ca/mortgage-broker-nanaimo
+- Mortgage Broker Coquitlam BC: https://www.kraftmortgages.ca/mortgage-broker-coquitlam
+- Mortgage Broker Victoria BC: https://www.kraftmortgages.ca/mortgage-broker-victoria
+- Mortgage Broker Red Deer AB: https://www.kraftmortgages.ca/mortgage-broker-red-deer
+- Mortgage Broker Lethbridge AB: https://www.kraftmortgages.ca/mortgage-broker-lethbridge
+- Mortgage Broker Airdrie AB: https://www.kraftmortgages.ca/mortgage-broker-airdrie
+- Mortgage Broker Windsor ON: https://www.kraftmortgages.ca/mortgage-broker-windsor
+
 ## Contact
 - Phone: 604-593-1550
 - Email: varun@kraftmortgages.ca
