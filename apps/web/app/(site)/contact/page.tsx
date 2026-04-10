@@ -118,12 +118,11 @@ export default function ContactPage() {
                       <MapPin className="w-6 h-6 text-gold-400" />
                     </div>
                     <div>
-                      <h3 className="text-lg font-medium text-gray-100 mb-2">Service Areas</h3>
-                      <div className="text-gray-400">
-                        <div>British Columbia</div>
-                        <div>Alberta</div>
-                        <div>Ontario</div>
-                      </div>
+                      <h3 className="text-lg font-medium text-gray-100 mb-2">Office Address</h3>
+                      <a href="https://maps.google.com/?q=%23301+1688+152nd+Street+Surrey+BC+V4A+4N2" target="_blank" rel="noopener noreferrer" className="text-gold-400 hover:text-gold-300 transition-colors">
+                        #301 - 1688 152nd Street<br />Surrey, BC V4A 4N2
+                      </a>
+                      <p className="text-gray-500 text-sm mt-2">Serving BC, AB & ON</p>
                     </div>
                   </div>
                 </div>

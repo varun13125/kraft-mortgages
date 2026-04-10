@@ -7,4 +7,9 @@ export const aboutMetadata: Metadata = {
   alternates: {
     canonical: 'https://www.kraftmortgages.ca/about',
   },
+  openGraph: {
+    title: 'About Kraft Mortgages | $2B+ Funded | 23+ Years Experience',
+    description: 'Surrey-based mortgage brokerage. $2B+ funded, 23+ years. Licensed BC, AB & ON.',
+    url: 'https://www.kraftmortgages.ca/about',
+  },
 };

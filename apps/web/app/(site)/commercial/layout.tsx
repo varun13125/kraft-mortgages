@@ -15,5 +15,35 @@ export const metadata: Metadata = {
 };
 
 export default function CommercialLayout({ children }: { children: React.ReactNode }) {
-  return children;
+  const schema = {
+    "@context": "https://schema.org",
+    "@graph": [{
+      "@type": "FinancialService",
+      "@id": "https://www.kraftmortgages.ca/#commercial",
+      name: "Kraft Mortgages Canada",
+      url: "https://www.kraftmortgages.ca/commercial",
+      telephone: "+1-604-593-1550",
+      description: "Commercial mortgage financing for multi-unit, office, retail, and industrial properties across BC, AB & ON.",
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: "#301 - 1688 152nd Street",
+        addressLocality: "Surrey",
+        addressRegion: "BC",
+        postalCode: "V4A 4N2",
+        addressCountry: "CA"
+      },
+      areaServed: [
+        { "@type": "CanadianProvince", "name": "British Columbia" },
+        { "@type": "CanadianProvince", "name": "Alberta" },
+        { "@type": "CanadianProvince", "name": "Ontario" }
+      ],
+      serviceType: "commercial mortgages"
+    }]
+  };
+  return (
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
+      {children}
+    </>
+  );
 }
