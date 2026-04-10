@@ -7,7 +7,7 @@ import { useState, type FormEvent } from "react";
 
 export const dynamic = "force-dynamic";
 
-const WEBHOOK_URL = "https://webhook.srv848694.hstgr.cloud/webhook/contact-form";
+const API_URL = "/api/contact";
 
 const mortgageTypes = ["Purchase", "Refinance", "Renewal", "Pre-approval", "Other"];
 
@@ -30,7 +30,7 @@ export default function ContactPage() {
     setStatus("loading");
 
     try {
-      const res = await fetch(WEBHOOK_URL, {
+      const res = await fetch(API_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...form, source: "website-contact" }),
