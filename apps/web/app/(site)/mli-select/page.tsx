@@ -1,4 +1,13 @@
 import Link from "next/link";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "MLI Select Mortgage Program | Complete Guide & Calculators | Kraft Mortgages",
+  description: "Complete guide to CMHC MLI Select program for developers and investors. Eligibility, scoring, calculators, and application roadmap.",
+  alternates: {
+    canonical: "https://www.kraftmortgages.ca/mli-select",
+  },
+};
 import { Calculator, BookOpenCheck, ListChecks, BarChartBig } from "lucide-react";
 
 export default function MLISelectPage() {
