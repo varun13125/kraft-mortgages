@@ -85,7 +85,7 @@ function transformGoogleSheetsPost(post: any) {
       description: decodeHtmlEntities(post.seodescription || post.excerpt || post.metaDescription || ''),
       keywords: post.seokeywords ? (typeof post.seokeywords === 'string' ? post.seokeywords.split(',').map((k: string) => k.trim()) : post.seokeywords) : tags,
       ogImage: post.seoimage || '/images/blog-default.jpg',
-      canonicalUrl: post.seocanonicalurl || `https://kraftmortgages.ca/blog/${post.slug}`
+      canonicalUrl: post.seocanonicalurl || `https://www.kraftmortgages.ca/blog/${post.slug}`
     },
     readingTime: parseInt(post.readingtime) || Math.ceil(content.length / 1000),
     brief: post.brief
@@ -310,7 +310,7 @@ export default async function BlogPostPage({
                         About {typeof post.author === 'string' ? post.author : post.author.name}
                       </h3>
                       <p className="text-gray-400 mb-4">
-                        Licensed mortgage broker with over 18 years of experience in the Canadian mortgage industry.
+                        Licensed mortgage broker with over 23 years of experience in the Canadian mortgage industry.
                         Specializing in MLI Select, construction financing, and self-employed mortgages across BC, AB, and ON.
                       </p>
                       <div className="flex flex-wrap gap-4 text-sm text-gray-500">

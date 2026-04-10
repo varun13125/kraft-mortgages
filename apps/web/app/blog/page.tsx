@@ -8,8 +8,11 @@ import { generateExcerpt, decodeHtmlEntities } from '@/lib/utils/blog-content';
 
 export const metadata: Metadata = {
   title: 'Surrey Mortgage Broker Blog | Expert Advice & Rates | Kraft Mortgages',
-  description: 'Expert Surrey mortgage advice, BC rate updates, and homebuying guides from licensed broker Varun Chaudhry. $5B+ funded, 18+ years experience. Updated weekly.',
+  description: 'Expert Surrey mortgage advice, BC rate updates, and homebuying guides from licensed broker Varun Chaudhry. $2B+ funded, 23+ years experience. Updated weekly.',
   keywords: 'Surrey mortgage broker blog, mortgage advice BC, mortgage rates Surrey, home buying tips Surrey, BC mortgage news, first-time buyer guide Surrey',
+  alternates: {
+    canonical: 'https://www.kraftmortgages.ca/blog',
+  },
   openGraph: {
     title: 'Surrey Mortgage Broker Blog | Expert Advice & Rates | Kraft Mortgages',
     description: 'Expert mortgage advice and market insights from licensed broker Varun Chaudhry.',
@@ -165,7 +168,7 @@ export default async function BlogPage() {
                 <span className="bg-gradient-to-r from-gold-400 to-amber-500 bg-clip-text text-transparent"> Expert Advice</span>
               </h1>
               <p className="text-xl text-gray-400 mb-8 max-w-3xl mx-auto">
-                Expert advice from 18+ years in the Canadian mortgage industry. Navigate complex scenarios with industry-leading expertise.
+                Expert advice from 23+ years in the Canadian mortgage industry. Navigate complex scenarios with industry-leading expertise.
               </p>
               <div className="flex items-center justify-center gap-4 text-gray-400 mb-8">
                 <User className="w-5 h-5" />

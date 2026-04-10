@@ -452,7 +452,7 @@ export default function ModernHomepage() {
             <div>
               <h3 className="text-xl font-semibold text-gold-400 mb-4">Kraft Mortgages</h3>
               <p className="text-gray-400 text-sm leading-relaxed">
-                18+ years of excellence in complex mortgage solutions across British Columbia, Alberta, and Ontario.
+                23+ years of excellence in complex mortgage solutions across British Columbia, Alberta, and Ontario.
               </p>
             </div>
 

@@ -77,7 +77,7 @@ export default function ResidentialLending() {
   const benefits = [
     {
       title: "Expert Guidance",
-      description: "18+ years of residential mortgage expertise across BC, AB, and ON"
+      description: "23+ years of residential mortgage expertise across BC, AB, and ON"
     },
     {
       title: "Multiple Lenders",

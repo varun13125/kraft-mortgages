@@ -11,9 +11,13 @@ const ChatWidget = dynamic(() => import("@/components/ChatWidget/ChatWidget").th
 });
 
 export const metadata = {
-  title: "Kraft Mortgages | Surrey Mortgage Broker | BC, AB & ON | $5B+ Funded",
-  description: "Top-rated Surrey mortgage broker with $5B+ funded and 18+ years experience. Expert in MLI Select, construction financing, self-employed mortgages, and private lending. Serving BC, Alberta & Ontario.",
+  metadataBase: new URL('https://www.kraftmortgages.ca'),
+  title: "Kraft Mortgages | Surrey Mortgage Broker | BC, AB & ON",
+  description: "Top-rated Surrey mortgage broker with $2B+ funded and 23+ years experience. Expert in MLI Select, construction financing, self-employed mortgages, and private lending. Serving BC, Alberta & Ontario.",
   keywords: "mortgage broker Surrey, Surrey mortgage broker, mortgage broker BC, mortgage broker Alberta, mortgage broker Ontario, MLI Select, construction financing, self-employed mortgages, private lending, best mortgage broker Surrey",
+  alternates: {
+    canonical: 'https://www.kraftmortgages.ca',
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

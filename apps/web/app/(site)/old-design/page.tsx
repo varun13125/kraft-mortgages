@@ -280,7 +280,7 @@ export default function Home() {
               {
                 step: "2",
                 title: "Strategic Analysis",
-                description: "Leverage 18+ years of expertise to identify optimal solutions",
+                description: "Leverage 23+ years of expertise to identify optimal solutions",
                 icon: Target
               },
               {

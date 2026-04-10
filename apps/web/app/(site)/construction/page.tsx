@@ -148,7 +148,7 @@ export default function ConstructionFinancing() {
                 <span className="bg-gradient-to-r from-orange-400 to-red-500 bg-clip-text text-transparent">Construction</span> Financing
               </h1>
               <p className="text-xl text-gray-400 max-w-3xl mx-auto mb-8">
-                Expert construction financing with progressive draws, builder programs, and construction-to-permanent solutions. 18+ years of construction lending expertise.
+                Expert construction financing with progressive draws, builder programs, and construction-to-permanent solutions. 23+ years of construction lending expertise.
               </p>
 
               <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-orange-500/20 p-4 max-w-2xl mx-auto mb-8">

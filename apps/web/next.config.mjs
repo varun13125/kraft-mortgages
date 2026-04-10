@@ -156,6 +156,17 @@ const nextConfig = {
         destination: '/construction/calculators/construction-draw',
         permanent: true,
       },
+      // Blog slug redirects ( Firestore slug != URL slug )
+      {
+        source: '/blog/private-mortgage-bc-spring-2026',
+        destination: '/blog/private-mortgage-bc',
+        permanent: true,
+      },
+      {
+        source: '/blog/b-lending-bc-complete-guide-spring-2026',
+        destination: '/blog/b-lending-bc-alternative-mortgage-guide-2026',
+        permanent: true,
+      },
     ];
   },
   webpack: (config) => {

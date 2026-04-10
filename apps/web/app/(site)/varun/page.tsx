@@ -389,7 +389,7 @@ export default function VarunLandingPage() {
                             <div>
                                 <h3 className="text-xl sm:text-2xl font-semibold text-zinc-100 mb-3">Licensed & Experienced</h3>
                                 <p className="text-zinc-400 leading-relaxed text-base">
-                                    BCFSA licensed broker with 18+ years helping Canadians secure mortgages across BC, Alberta, and Ontario.
+                                    BCFSA licensed broker with 23+ years helping Canadians secure mortgages across BC, Alberta, and Ontario.
                                 </p>
                             </div>
                         </motion.div>
