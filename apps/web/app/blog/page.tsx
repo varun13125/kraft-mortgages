@@ -7,8 +7,8 @@ import Navigation from '@/components/Navigation';
 import { generateExcerpt, decodeHtmlEntities } from '@/lib/utils/blog-content';
 
 export const metadata: Metadata = {
-  title: 'Surrey Mortgage Broker Blog | Expert Advice & Rates | Kraft Mortgages',
-  description: 'Expert Surrey mortgage advice, BC rate updates, and homebuying guides from licensed broker Varun Chaudhry. $2B+ funded, 23+ years experience. Updated weekly.',
+  title: 'Mortgage Blog | Expert Advice & Rates | Kraft Mortgages',
+  description: 'Mortgage advice, BC rate updates & homebuying guides from licensed broker Varun Chaudhry. $2B+ funded. Updated weekly.',
   keywords: 'Surrey mortgage broker blog, mortgage advice BC, mortgage rates Surrey, home buying tips Surrey, BC mortgage news, first-time buyer guide Surrey',
   alternates: {
     canonical: 'https://www.kraftmortgages.ca/blog',

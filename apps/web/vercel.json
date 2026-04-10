@@ -2,6 +2,22 @@
   "framework": "nextjs",
   "buildCommand": "npm run build",
   "installCommand": "npm install",
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Robots-Tag", "value": "all" }
+      ]
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "destination": "https://www.kraftmortgages.ca/$1",
+      "permanent": true,
+      "has": [{ "type": "host", "value": "kraftmortgages.ca" }]
+    }
+  ],
   "rewrites": [
     { 
       "source": "/crewapi/(.*)", 

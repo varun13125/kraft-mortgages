@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Commercial Mortgages BC | Kraft Mortgages",
-  description: "Commercial mortgage financing across BC, Alberta & Ontario. Multi-unit residential, office, retail, industrial properties, and commercial refinancing. Free cash flow calculators.",
+  description: "Commercial mortgages for multi-unit, office, retail & industrial properties across BC, AB & ON. Free DSCR calculators.",
   keywords: "commercial mortgage BC, commercial real estate loan, multi-unit financing, apartment building mortgage, commercial refinance, DSCR calculator",
   alternates: {
     canonical: 'https://www.kraftmortgages.ca/commercial',

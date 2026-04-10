@@ -13,7 +13,7 @@ const ChatWidget = dynamic(() => import("@/components/ChatWidget/ChatWidget").th
 export const metadata = {
   metadataBase: new URL('https://www.kraftmortgages.ca'),
   title: "Kraft Mortgages | Surrey Mortgage Broker | BC, AB & ON",
-  description: "Top-rated Surrey mortgage broker with $2B+ funded and 23+ years experience. Expert in MLI Select, construction financing, self-employed mortgages, and private lending. Serving BC, Alberta & Ontario.",
+  description: "Top-rated Surrey mortgage broker. $2B+ funded, 23+ years. Expert in MLI Select, construction, self-employed & private lending across BC, AB & ON.",
   keywords: "mortgage broker Surrey, Surrey mortgage broker, mortgage broker BC, mortgage broker Alberta, mortgage broker Ontario, MLI Select, construction financing, self-employed mortgages, private lending, best mortgage broker Surrey",
   alternates: {
     canonical: 'https://www.kraftmortgages.ca',
@@ -29,6 +29,14 @@ export const metadata = {
     ],
   },
   manifest: '/manifest.webmanifest',
+  openGraph: {
+    title: 'Kraft Mortgages | Surrey Mortgage Broker | BC, AB & ON',
+    description: 'Top-rated Surrey mortgage broker. $2B+ funded, 23+ years. Expert in MLI Select, construction, self-employed & private lending.',
+    url: 'https://www.kraftmortgages.ca',
+    siteName: 'Kraft Mortgages',
+    locale: 'en_CA',
+    type: 'website',
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
