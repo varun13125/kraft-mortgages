@@ -109,7 +109,7 @@ export default function StressTestPage() {
                   <div className="space-y-6">
                     <ValidatedInput label="Purchase Price" value={purchasePrice} onChange={setPurchasePrice} validation={{ min: 100000, max: 5000000 }} type="currency" />
                     <ValidatedSlider label={`Down Payment (${downPaymentPct}%)`} value={downPaymentPct} onChange={setDownPaymentPct} min={5} max={50} step={1} formatValue={(v) => `${v}% (${formatCurrency(purchasePrice * v / 100, 0)})`} />
-                    <ValidatedInput label="Mortgage Rate" value={contractRate} onChange={setContractRate} validation={{ min: 1, max: 15 }} type="percent" />
+                    <ValidatedInput label="Mortgage Rate" value={contractRate} onChange={setContractRate} validation={{ min: 1, max: 15 }} type="percentage" />
                     <ValidatedSlider label={`Amortization (${amortYears} years)`} value={amortYears} onChange={setAmortYears} min={5} max={30} step={5} formatValue={(v) => `${v} years`} />
                   </div>
                 </div>

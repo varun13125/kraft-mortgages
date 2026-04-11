@@ -122,7 +122,7 @@ export default function RefinanceBreakEvenPage() {
                   <ComplianceBanner feature="LEAD_FORM" />
                   <div className="space-y-6">
                     <ValidatedInput label="Current Mortgage Balance" value={currentBalance} onChange={setCurrentBalance} validation={{ min: 10000, max: 5000000 }} type="currency" />
-                    <ValidatedInput label="Current Interest Rate" value={currentRate} onChange={setCurrentRate} validation={{ min: 0.5, max: 15 }} type="percent" />
+                    <ValidatedInput label="Current Interest Rate" value={currentRate} onChange={setCurrentRate} validation={{ min: 0.5, max: 15 }} type="percentage" />
                     <ValidatedInput label="Current Monthly Payment" value={currentPayment} onChange={setCurrentPayment} validation={{ min: 500, max: 20000 }} type="currency" />
                     <ValidatedInput label="Remaining Amortization (months)" value={remainingMonths} onChange={setRemainingMonths} validation={{ min: 12, max: 360 }} type="number" />
                   </div>
@@ -134,7 +134,7 @@ export default function RefinanceBreakEvenPage() {
                     New Mortgage & Costs
                   </h2>
                   <div className="space-y-6">
-                    <ValidatedInput label="New Interest Rate" value={newRate} onChange={setNewRate} validation={{ min: 0.5, max: 15 }} type="percent" />
+                    <ValidatedInput label="New Interest Rate" value={newRate} onChange={setNewRate} validation={{ min: 0.5, max: 15 }} type="percentage" />
                     <div>
                       <label className="block text-sm font-medium text-gray-300 mb-2">New Term</label>
                       <div className="flex gap-2">

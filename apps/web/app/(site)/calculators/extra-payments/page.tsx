@@ -167,7 +167,7 @@ export default function ExtraPaymentsPage() {
                   <ComplianceBanner feature="LEAD_FORM" />
                   <div className="space-y-6">
                     <ValidatedInput label="Mortgage Amount" value={mortgage} onChange={setMortgage} validation={{ min: 50000, max: 5000000 }} type="currency" />
-                    <ValidatedInput label="Interest Rate" value={rate} onChange={setRate} validation={{ min: 0.5, max: 15 }} type="percent" />
+                    <ValidatedInput label="Interest Rate" value={rate} onChange={setRate} validation={{ min: 0.5, max: 15 }} type="percentage" />
                     <ValidatedSlider label={`Amortization (${amortYears} years)`} value={amortYears} onChange={setAmortYears} min={5} max={30} step={1} formatValue={(v) => `${v} years`} />
                   </div>
                 </div>
