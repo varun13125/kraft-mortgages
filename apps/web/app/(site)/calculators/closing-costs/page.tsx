@@ -16,11 +16,18 @@ type Province = "BC" | "AB" | "ON";
 /* ── Land Transfer Tax ──────────────────────────────── */
 
 function bcLTT(price: number, firstTime: boolean): number {
+  // BC First-Time Home Buyers' Program (2025):
+  // Full exemption: ≤ $500,000
+  // Partial exemption: $500,001 - $536,000 (gradual phase-out)
+  // No exemption: > $536,000
   if (firstTime && price <= 500000) return 0;
-  if (firstTime && price <= 525000) {
-    const exempt = 500000;
-    return (price - exempt) * 0.02;
+  if (firstTime && price <= 536000) {
+    // Phase-out: 2% on amount over $500K, reduced proportionally
+    const phaseOut = 1 - ((price - 500000) / 36000);
+    return (price - 500000) * 0.02 * (1 - phaseOut);
   }
+  // Standard BC Property Transfer Tax brackets:
+  // 1% on first $200K, 2% on $200K-$2M, 3% over $2M
   let tax = 0;
   if (price <= 200000) tax = price * 0.01;
   else {
@@ -87,7 +94,7 @@ const faqs = [
   },
   {
     q: "How do first-time home buyer programs help with closing costs?",
-    a: "BC's First-Time Home Buyers' Program exempts or reduces land transfer tax on homes up to $525,000. Ontario offers a rebate of up to $4,000 for first-time buyers. These programs can save thousands at closing — check eligibility based on your province and purchase price."
+    a: "BC's First-Time Home Buyers' Program fully exempts land transfer tax on homes up to $500,000, with a partial exemption up to $536,000. Ontario offers a rebate of up to $4,000 for first-time buyers. These programs can save thousands at closing — check eligibility based on your province and purchase price."
   },
   {
     q: "Can I roll closing costs into my mortgage?",
@@ -366,7 +373,7 @@ export default function ClosingCostsPage() {
 
               <h3 className="text-2xl font-semibold text-gray-100 mt-8">Closing Costs by Province</h3>
 
-              <p><strong>British Columbia:</strong> BC charges land transfer tax (officially Property Transfer Tax) at 1% on the first $200,000, 2% up to $2,000,000, and 3% above that. The First-Time Home Buyers&apos; Program fully exempts homes priced at $500,000 or less, with partial exemptions up to $525,000. For a $700,000 home, expect about $12,000 in LTT without the exemption.</p>
+              <p><strong>British Columbia:</strong> BC charges land transfer tax (officially Property Transfer Tax) at 1% on the first $200,000, 2% up to $2,000,000, and 3% above that. The First-Time Home Buyers&apos; Program fully exempts homes priced at $500,000 or less, with partial exemptions up to $536,000. For a $700,000 home, expect about $12,000 in LTT without the exemption.</p>
 
               <p><strong>Alberta:</strong> Alberta is the only province without a land transfer tax. Instead, you pay a small title registration fee (approximately $50) and mortgage registration fee. This makes Alberta significantly more affordable for closing costs — often saving buyers $10,000 or more compared to BC or Ontario on equivalent purchases.</p>
 
