@@ -25,7 +25,8 @@ import {
   PiggyBank,
   BarChart3,
   MapPin,
-  Wallet
+  Wallet,
+  Layers
 } from "lucide-react";
 
 export default function CalculatorsHub() {
@@ -244,6 +245,18 @@ export default function CalculatorsHub() {
       description: "Self-employed tax-aware cost comparison",
       href: "/calculators/a-vs-equity",
       icon: Scale
+    },
+    {
+      title: "B-Lender vs Equity Lending",
+      description: "Compare alternative vs private lender costs",
+      href: "/calculators/b-vs-equity",
+      icon: Shield
+    },
+    {
+      title: "Refinance vs HELOC vs 2nd",
+      description: "Compare three equity access options",
+      href: "/calculators/refinance-vs-heloc-vs-second",
+      icon: Layers
     }
   ];
 
