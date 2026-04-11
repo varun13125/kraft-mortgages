@@ -87,7 +87,7 @@ function estimatedPropertyTax(price: number, propertyType: string): number {
 const faqs = [
   {
     q: "How much are closing costs on average in BC?",
-    a: "Closing costs in BC typically range from 1.5% to 4% of the purchase price. For a $700,000 home, expect to pay $10,500 to $28,000. The biggest variable is land transfer tax, which for first-time buyers on homes under $500,000 is fully exempt."
+    a: "Closing costs in BC typically range from 1.5% to 4% of the purchase price. For a $700,000 home, expect to pay $10,500 to $28,000. The biggest variable is land transfer tax, which for first-time buyers on homes up to $835,000 is fully exempt."
   },
   {
     q: "Does Alberta really have no land transfer tax?",

@@ -32,9 +32,9 @@ function calcLandTransferTax(price: number, province: Province, isFirstTime: boo
     else tax = 200000 * 0.01 + 1800000 * 0.02 + (price - 2000000) * 0.03;
 
     if (isFirstTime) {
-      if (price <= 500000) return { tax, rebate: tax };
-      if (price <= 525000) {
-        const partial = tax * ((525000 - price) / 25000);
+      if (price <= 835000) return { tax, rebate: tax };
+      if (price <= 860000) {
+        const partial = tax * ((860000 - price) / 25000);
         return { tax, rebate: partial };
       }
     }
@@ -49,7 +49,7 @@ function calcLandTransferTax(price: number, province: Province, isFirstTime: boo
   else tax = 55000 * 0.005 + 195000 * 0.01 + 150000 * 0.015 + 1600000 * 0.02 + (price - 2000000) * 0.025;
 
   if (isFirstTime) {
-    const rebate = Math.min(tax, 4475);
+    const rebate = Math.min(tax, 4000);
     return { tax, rebate };
   }
   return { tax, rebate: 0 };
