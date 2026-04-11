@@ -2,18 +2,18 @@ import { NextRequest } from "next/server";
 import { rateToolsInstance } from "@/lib/ai/tools/rate-tools";
 import { PageContext, generatePageContextPrompt } from "@/lib/ai/page-context";
 
-// Free models to try first (via OpenRouter)
+// Free models to try first (via OpenRouter) — updated April 2026
 const FREE_MODELS = [
-  "moonshotai/kimi-k2:free",           // Primary: Kimi K2 (Long context, high quality)
-  "tngtech/deepseek-r1t2-chimera:free", // Fallback 1: DeepSeek Chimera (Reasoning)
-  "qwen/qwen3-coder:free",              // Fallback 2: Qwen Coder
-  "mistralai/devstral-2512:free",       // Fallback 3: Devstral
+  "deepseek/deepseek-chat-v3-0324:free",  // Primary: DeepSeek V3 (strong, fast)
+  "google/gemma-3-27b-it:free",            // Fallback 1: Gemma 3 27B
+  "meta-llama/llama-4-maverick:free",      // Fallback 2: Llama 4 Maverick
+  "qwen/qwen3-235b-a22b:free",             // Fallback 3: Qwen 3 235B (MoE)
 ];
 
 // Paid models for final fallback (direct API)
 const PAID_MODELS = {
-  openai: "gpt-5.2",      // ChatGPT 5.2 via OPENAI_API_KEY
-  google: "gemini-3", // Gemini 3 via GOOGLE_API_KEY
+  openai: "gpt-4o-mini",          // GPT-4o-mini via OPENAI_API_KEY (reliable, cheap)
+  google: "gemini-2.0-flash-lite", // Gemini 2.0 Flash Lite via GOOGLE_API_KEY
 };
 
 async function callOpenRouter(model: string, systemPrompt: string, userPrompt: string, apiKey: string) {
