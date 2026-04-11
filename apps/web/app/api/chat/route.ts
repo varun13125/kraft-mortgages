@@ -10,11 +10,7 @@ const FREE_MODELS = [
   "nousresearch/hermes-3-llama-3.1-405b:free", // Fallback 3: Hermes 3 405B (strong)
 ];
 
-// Paid models for final fallback (direct API)
-const PAID_MODELS = {
-  openai: "gpt-4o-mini",          // GPT-4o-mini via OPENAI_API_KEY (reliable, cheap)
-  google: "gemini-2.0-flash-lite", // Gemini 2.0 Flash Lite via GOOGLE_API_KEY
-};
+// No paid fallbacks — Kraft uses free OpenRouter models only
 
 async function callOpenRouter(model: string, systemPrompt: string, userPrompt: string, apiKey: string) {
   const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
@@ -45,57 +41,7 @@ async function callOpenRouter(model: string, systemPrompt: string, userPrompt: s
   return response;
 }
 
-async function callOpenAI(systemPrompt: string, userPrompt: string, apiKey: string) {
-  const response = await fetch("https://api.openai.com/v1/chat/completions", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${apiKey}`,
-    },
-    body: JSON.stringify({
-      model: PAID_MODELS.openai,
-      messages: [
-        { role: "system", content: systemPrompt },
-        { role: "user", content: userPrompt }
-      ],
-      max_tokens: 4096,
-      temperature: 0.3,
-      stream: true,
-    }),
-  });
 
-  if (!response.ok) {
-    const error = await response.text();
-    throw new Error(`OpenAI error: ${response.status} - ${error}`);
-  }
-
-  return response;
-}
-
-async function callGoogleAI(systemPrompt: string, userPrompt: string, apiKey: string) {
-  const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${PAID_MODELS.google}:streamGenerateContent?key=${apiKey}`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      contents: [
-        { role: "user", parts: [{ text: `${systemPrompt}\n\n${userPrompt}` }] }
-      ],
-      generationConfig: {
-        maxOutputTokens: 4096,
-        temperature: 0.3,
-      },
-    }),
-  });
-
-  if (!response.ok) {
-    const error = await response.text();
-    throw new Error(`Google AI error: ${response.status} - ${error}`);
-  }
-
-  return response;
-}
 
 // Transform OpenRouter/OpenAI SSE stream to plain text
 function createSSETransformStream() {
@@ -125,37 +71,10 @@ function createSSETransformStream() {
   });
 }
 
-// Transform Google AI stream to plain text
-function createGoogleTransformStream() {
-  return new TransformStream({
-    transform(chunk, controller) {
-      const text = new TextDecoder().decode(chunk);
-      try {
-        // Google returns JSON array chunks
-        const lines = text.split('\n').filter(l => l.trim());
-        for (const line of lines) {
-          if (line.startsWith('[')) continue; // Skip array start
-          if (line === ']') continue; // Skip array end
-          const cleaned = line.replace(/^,/, '').trim();
-          if (!cleaned) continue;
 
-          const json = JSON.parse(cleaned);
-          const content = json.candidates?.[0]?.content?.parts?.[0]?.text;
-          if (content) {
-            controller.enqueue(new TextEncoder().encode(content));
-          }
-        }
-      } catch (e) {
-        // Skip parse errors
-      }
-    }
-  });
-}
 
 export async function POST(req: NextRequest) {
   const openRouterKey = process.env.OPEN_ROUTER_API_KEY;
-  const openAIKey = process.env.OPENAI_API_KEY;
-  const googleKey = process.env.GOOGLE_API_KEY;
 
   try {
     const { input, province, language, currentPage, pageContext } = await req.json();
@@ -277,48 +196,6 @@ ${pageContextPrompt}`;
           errors.push(`${model}: ${errorMsg}`);
           // Continue to next free model
         }
-      }
-    }
-
-    // TIER 2: Try OpenAI (ChatGPT)
-    if (openAIKey) {
-      try {
-        console.log(`[Chat API] Falling back to OpenAI: ${PAID_MODELS.openai}`);
-        const response = await callOpenAI(systemPrompt, userPrompt, openAIKey);
-
-        return new Response(response.body?.pipeThrough(createSSETransformStream()), {
-          headers: {
-            "content-type": "text/plain; charset=utf-8",
-            "X-Model-Used": PAID_MODELS.openai,
-            "X-Provider": "openai",
-            "X-Is-Free": "false",
-          }
-        });
-      } catch (e) {
-        const errorMsg = e instanceof Error ? e.message : String(e);
-        console.error(`[Chat API] OpenAI failed:`, errorMsg);
-        errors.push(`openai: ${errorMsg}`);
-      }
-    }
-
-    // TIER 3: Try Google AI (Gemini)
-    if (googleKey) {
-      try {
-        console.log(`[Chat API] Falling back to Google AI: ${PAID_MODELS.google}`);
-        const response = await callGoogleAI(systemPrompt, userPrompt, googleKey);
-
-        return new Response(response.body?.pipeThrough(createGoogleTransformStream()), {
-          headers: {
-            "content-type": "text/plain; charset=utf-8",
-            "X-Model-Used": PAID_MODELS.google,
-            "X-Provider": "google",
-            "X-Is-Free": "false",
-          }
-        });
-      } catch (e) {
-        const errorMsg = e instanceof Error ? e.message : String(e);
-        console.error(`[Chat API] Google AI failed:`, errorMsg);
-        errors.push(`google: ${errorMsg}`);
       }
     }
 
