@@ -157,11 +157,11 @@ export default function AVsEquityPage() {
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <label className="block text-sm font-medium text-gray-300 mb-2">Term (years)</label>
-                        <ValidatedSlider value={term} onChange={setTerm} min={1} max={5} step={1} formatValue={(v) => `${v} year${v > 1 ? 's' : ''}`} />
+                        <ValidatedSlider label="Term" value={term} onChange={setTerm} min={1} max={5} step={1} formatValue={(v) => `${v} year${v > 1 ? "s" : ""}`} />
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-300 mb-2">Amortization (years)</label>
-                        <ValidatedSlider value={amortization} onChange={setAmortization} min={5} max={30} step={5} formatValue={(v) => `${v} years`} />
+                        <ValidatedSlider label="Amortization" value={amortization} onChange={setAmortization} min={5} max={30} step={5} formatValue={(v) => `${v} years`} />
                       </div>
                     </div>
 
@@ -170,7 +170,7 @@ export default function AVsEquityPage() {
                         <Building2 className="w-4 h-4 text-blue-400" /> A-Lender Settings
                       </h3>
                       <div className="space-y-4">
-                        <ValidatedInput label="A-Lender Rate (%)" value={aRate} onChange={setARate} validation={{ min: 1, max: 15 }} type="percent" suffix="%" />
+                        <ValidatedInput label="A-Lender Rate (%)" value={aRate} onChange={setARate} validation={{ min: 1, max: 15 }} type="percentage" suffix="%" />
                       </div>
                     </div>
 
@@ -179,8 +179,8 @@ export default function AVsEquityPage() {
                         <TrendingUp className="w-4 h-4 text-emerald-400" /> Equity Lender Settings
                       </h3>
                       <div className="space-y-4">
-                        <ValidatedInput label="Equity Lender Rate (%)" value={eqRate} onChange={setEqRate} validation={{ min: 1, max: 20 }} type="percent" suffix="%" />
-                        <ValidatedInput label="Equity Lender Fee (%)" value={eqFee} onChange={setEqFee} validation={{ min: 0, max: 5 }} type="percent" suffix="%" />
+                        <ValidatedInput label="Equity Lender Rate (%)" value={eqRate} onChange={setEqRate} validation={{ min: 1, max: 20 }} type="percentage" suffix="%" />
+                        <ValidatedInput label="Equity Lender Fee (%)" value={eqFee} onChange={setEqFee} validation={{ min: 0, max: 5 }} type="percentage" suffix="%" />
                       </div>
                     </div>
 
@@ -201,7 +201,7 @@ export default function AVsEquityPage() {
                           </div>
                         </div>
                         <ValidatedInput label="Additional Income Needed to Qualify ($/year)" value={additionalIncome} onChange={setAdditionalIncome} validation={{ min: 0, max: 500000 }} type="currency" />
-                        <ValidatedInput label="Your Marginal Tax Rate (%)" value={marginalRate} onChange={setMarginalRate} validation={{ min: 0, max: 55 }} type="percent" suffix="%" />
+                        <ValidatedInput label="Your Marginal Tax Rate (%)" value={marginalRate} onChange={setMarginalRate} validation={{ min: 0, max: 55 }} type="percentage" suffix="%" />
                         <p className="text-xs text-gray-500">This is the extra income you&apos;d need to declare on your T1 to qualify with an A-lender.</p>
                       </div>
                     </div>

@@ -178,10 +178,9 @@ export default function SelfEmployedAVsBPage() {
                     ))}
                   </div>
                 </div>
-                <ValidatedInput label={`Additional Income to Qualify ($/year)`} value={additionalIncome} onChange={setAdditionalIncome} validation={{ min: 0, max: 500000 }} type="currency"
-                  tooltip="The extra personal income you'd need to declare on tax returns to qualify at an A-lender" />
-                <ValidatedInput label="A-Lender Rate (%)" value={aRate} onChange={setARate} validation={{ min: 1, max: 15 }} type="percent" />
-                <ValidatedInput label="B-Lender Rate (%)" value={bRate} onChange={setBRate} validation={{ min: 1, max: 15 }} type="percent" />
+                <ValidatedInput label={`Additional Income to Qualify ($/year)`} value={additionalIncome} onChange={setAdditionalIncome} validation={{ min: 0, max: 500000 }} type="currency" />
+                <ValidatedInput label="A-Lender Rate (%)" value={aRate} onChange={setARate} validation={{ min: 1, max: 15 }} type="percentage" />
+                <ValidatedInput label="B-Lender Rate (%)" value={bRate} onChange={setBRate} validation={{ min: 1, max: 15 }} type="percentage" />
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-2">Marginal Tax Rate ({effectiveTaxRate.toFixed(2)}%)</label>
                   <div className="flex items-center gap-3 mb-2">
@@ -197,7 +196,7 @@ export default function SelfEmployedAVsBPage() {
                 </div>
                 <ValidatedSlider label={`Term (${term} years)`} value={term} onChange={setTerm} min={1} max={10} step={1} formatValue={(v) => `${v} years`} />
                 <ValidatedSlider label={`Amortization (${amortization} years)`} value={amortization} onChange={setAmortization} min={5} max={30} step={5} formatValue={(v) => `${v} years`} />
-                <ValidatedInput label="B-Lender Fee (%)" value={bFee} onChange={setBFee} validation={{ min: 0, max: 3 }} type="percent" />
+                <ValidatedInput label="B-Lender Fee (%)" value={bFee} onChange={setBFee} validation={{ min: 0, max: 3 }} type="percentage" />
                 <div className="flex items-center gap-3 py-2">
                   <button onClick={() => setIsInvestment(!isInvestment)}
                     className={`w-12 h-6 rounded-full transition-all ${isInvestment ? "bg-gold-500" : "bg-gray-600"} relative`}>

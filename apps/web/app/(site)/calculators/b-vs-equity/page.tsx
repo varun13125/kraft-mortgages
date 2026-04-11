@@ -184,12 +184,12 @@ export default function BvsEquityPage() {
                     <ValidatedSlider label={`Term (${term} years)`} value={term} onChange={setTerm} min={1} max={5} step={1} formatValue={(v) => `${v} year${v > 1 ? "s" : ""}`} />
                     <ValidatedSlider label={`Amortization (${amortization} years)`} value={amortization} onChange={setAmortization} min={5} max={30} step={5} formatValue={(v) => `${v} years`} />
                     <div className="grid grid-cols-2 gap-4">
-                      <ValidatedInput label="B-Lender Rate (%)" value={bRate} onChange={setBRate} validation={{ min: 3, max: 15 }} type="percent" />
-                      <ValidatedInput label="Equity Lender Rate (%)" value={eRate} onChange={setERate} validation={{ min: 5, max: 18 }} type="percent" />
+                      <ValidatedInput label="B-Lender Rate (%)" value={bRate} onChange={setBRate} validation={{ min: 3, max: 15 }} type="percentage" />
+                      <ValidatedInput label="Equity Lender Rate (%)" value={eRate} onChange={setERate} validation={{ min: 5, max: 18 }} type="percentage" />
                     </div>
                     <div className="grid grid-cols-2 gap-4">
-                      <ValidatedInput label="B-Lender Fee (%)" value={bFee} onChange={setBFee} validation={{ min: 0, max: 5 }} type="percent" />
-                      <ValidatedInput label="Equity Lender Fee (%)" value={eFee} onChange={setEFee} validation={{ min: 0, max: 5 }} type="percent" />
+                      <ValidatedInput label="B-Lender Fee (%)" value={bFee} onChange={setBFee} validation={{ min: 0, max: 5 }} type="percentage" />
+                      <ValidatedInput label="Equity Lender Fee (%)" value={eFee} onChange={setEFee} validation={{ min: 0, max: 5 }} type="percentage" />
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-300 mb-2">Credit Score Range</label>

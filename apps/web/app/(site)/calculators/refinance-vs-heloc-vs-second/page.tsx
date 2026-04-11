@@ -184,7 +184,7 @@ export default function RefinanceVsHelocVsSecondPage() {
                   <div className="space-y-6">
                     <ValidatedInput label="Current Home Value" value={homeValue} onChange={setHomeValue} validation={{ min: 200000, max: 10000000 }} type="currency" />
                     <ValidatedInput label="Current First Mortgage Balance" value={firstBalance} onChange={setFirstBalance} validation={{ min: 50000, max: 9000000 }} type="currency" />
-                    <ValidatedInput label="Current First Mortgage Rate (%)" value={firstRate} onChange={setFirstRate} validation={{ min: 2, max: 15 }} type="percent" />
+                    <ValidatedInput label="Current First Mortgage Rate (%)" value={firstRate} onChange={setFirstRate} validation={{ min: 2, max: 15 }} type="percentage" />
                     <ValidatedInput label="Remaining Amortization (years)" value={firstAmort} onChange={setFirstAmort} validation={{ min: 1, max: 30 }} type="number" />
                     <ValidatedInput label="Cash Needed" value={cashNeeded} onChange={setCashNeeded} validation={{ min: 10000, max: 5000000 }} type="currency" />
 
