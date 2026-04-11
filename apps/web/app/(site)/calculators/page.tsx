@@ -232,6 +232,12 @@ export default function CalculatorsHub() {
       description: "Income needed to qualify",
       href: "/calculators/required-income",
       icon: TrendingUp
+    },
+    {
+      title: "Self-Employed: A vs B Lender",
+      description: "Bank vs alternative cost comparison",
+      href: "/calculators/self-employed-a-vs-b",
+      icon: DollarSign
     }
   ];
 
