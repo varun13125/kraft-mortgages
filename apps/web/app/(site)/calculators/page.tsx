@@ -24,7 +24,8 @@ import {
   TrendingDown,
   PiggyBank,
   BarChart3,
-  MapPin
+  MapPin,
+  Wallet
 } from "lucide-react";
 
 export default function CalculatorsHub() {

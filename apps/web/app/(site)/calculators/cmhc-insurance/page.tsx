@@ -152,7 +152,7 @@ export default function CMHCInsurancePage() {
                       value={mortgageRate}
                       onChange={setMortgageRate}
                       validation={{ min: 0.5, max: 15 }}
-                      type="percent"
+                      type="percentage"
                     />
                     <div>
                       <label className="block text-sm font-medium text-gray-300 mb-2">Amortization</label>
