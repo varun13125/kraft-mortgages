@@ -14,7 +14,7 @@ interface ContactFormData {
   _hp?: string;
 }
 
-// Forward to Twenty CRM webhook
+// Forward to Twenty CRM webhook — single source of truth for leads
 async function sendToTwenty(data: Record<string, string>) {
   try {
     const response = await fetch(
@@ -29,67 +29,21 @@ async function sendToTwenty(data: Record<string, string>) {
     if (!response.ok) {
       const text = await response.text();
       console.error("Twenty CRM error:", response.status, text);
-      return { success: false };
+      return false;
     }
 
     const result = await response.json();
-    return { success: result.success, personId: result.personId };
+    return result.success === true;
   } catch (error) {
     console.error("Twenty CRM fetch failed:", error);
-    return { success: false };
-  }
-}
-
-// Send email via Brevo
-async function sendEmail(data: ContactFormData) {
-  const apiKey = process.env.BREVO_API_KEY;
-  if (!apiKey) {
-    console.warn("BREVO_API_KEY not set — skipping email");
-    return false;
-  }
-
-  const fullName = data.firstName
-    ? `${data.firstName} ${data.lastName || ""}`.trim()
-    : data.name || "Unknown";
-
-  try {
-    const res = await fetch("https://api.brevo.com/v3/smtp/email", {
-      method: "POST",
-      headers: {
-        accept: "application/json",
-        "api-key": apiKey,
-        "content-type": "application/json",
-      },
-      body: JSON.stringify({
-        sender: { name: "Kraft Mortgages", email: "noreply@kraftmortgages.ca" },
-        to: [{ email: "varun@kraftmortgages.ca", name: "Varun" }],
-        subject: `New Lead: ${data.mortgageType || data.subject || "Contact"} — ${fullName}`,
-        htmlContent: `
-<h2>New Lead from Website</h2>
-<table style="border-collapse:collapse;width:100%;max-width:600px">
-<tr><td style="padding:8px;border:1px solid #ddd;font-weight:bold">Name</td><td style="padding:8px;border:1px solid #ddd">${fullName}</td></tr>
-<tr><td style="padding:8px;border:1px solid #ddd;font-weight:bold">Email</td><td style="padding:8px;border:1px solid #ddd">${data.email}</td></tr>
-<tr><td style="padding:8px;border:1px solid #ddd;font-weight:bold">Phone</td><td style="padding:8px;border:1px solid #ddd">${data.phone || "—"}</td></tr>
-<tr><td style="padding:8px;border:1px solid #ddd;font-weight:bold">Type</td><td style="padding:8px;border:1px solid #ddd">${data.mortgageType || "—"}</td></tr>
-<tr><td style="padding:8px;border:1px solid #ddd;font-weight:bold">Amount</td><td style="padding:8px;border:1px solid #ddd">${data.amount || "—"}</td></tr>
-<tr><td style="padding:8px;border:1px solid #ddd;font-weight:bold">Message</td><td style="padding:8px;border:1px solid #ddd">${data.message || "—"}</td></tr>
-</table>`,
-      }),
-    });
-    return res.ok;
-  } catch (error) {
-    console.error("Brevo error:", error);
     return false;
   }
 }
 
-// Post to Discord for real-time notification
+// Discord notification for real-time alerts
 async function sendDiscordNotification(data: ContactFormData) {
   const webhookUrl = process.env.DISCORD_LEAD_WEBHOOK_URL;
-  if (!webhookUrl) {
-    console.warn("DISCORD_LEAD_WEBHOOK_URL not set — skipping Discord");
-    return;
-  }
+  if (!webhookUrl) return;
 
   const fullName = data.firstName
     ? `${data.firstName} ${data.lastName || ""}`.trim()
@@ -102,14 +56,14 @@ async function sendDiscordNotification(data: ContactFormData) {
       body: JSON.stringify({
         embeds: [
           {
-            title: "🆕 New Lead from Website",
+            title: "🆕 New Lead — Website Contact Form",
             color: 0xc8a962,
             fields: [
               { name: "Name", value: fullName, inline: true },
               { name: "Email", value: data.email, inline: true },
               { name: "Phone", value: data.phone || "—", inline: true },
-              { name: "Type", value: data.mortgageType || "General", inline: true },
-              { name: "Amount", value: data.amount || "—", inline: true },
+              { name: "Mortgage Type", value: data.mortgageType || "General", inline: true },
+              { name: "Loan Amount", value: data.amount || "—", inline: true },
               { name: "Message", value: data.message?.slice(0, 500) || "—" },
             ],
             timestamp: new Date().toISOString(),
@@ -118,7 +72,7 @@ async function sendDiscordNotification(data: ContactFormData) {
       }),
     });
   } catch (error) {
-    console.error("Discord notification error:", error);
+    console.error("Discord error:", error);
   }
 }
 
@@ -126,7 +80,7 @@ export async function POST(req: NextRequest) {
   try {
     const body: ContactFormData = await req.json();
 
-    // Honeypot
+    // Honeypot — bots fill hidden fields
     if (body._hp) {
       return NextResponse.json({ success: true });
     }
@@ -151,28 +105,23 @@ export async function POST(req: NextRequest) {
       _hp: "",
     };
 
-    // Fire all three in parallel — don't block on any
-    const [twentyResult, emailResult] = await Promise.all([
-      sendToTwenty(twentyData),
-      sendEmail(body),
-    ]);
+    // Send to Twenty CRM (lead creation — primary)
+    const crmSuccess = await sendToTwenty(twentyData);
 
-    // Discord is fire-and-forget (no await needed)
+    // Discord notification (fire-and-forget, for real-time alerts)
     sendDiscordNotification(body);
 
-    const crmOk = twentyResult.success;
-    const emailOk = emailResult;
-
-    console.log("Contact form:", {
+    console.log("Lead submitted:", {
       name: twentyData.firstName + " " + twentyData.lastName,
       email: body.email,
-      crm: crmOk ? "✅" : "❌",
-      email: emailOk ? "✅" : "❌ (BREVO_API_KEY missing)",
+      crm: crmSuccess ? "✅" : "❌",
     });
 
     return NextResponse.json({
-      success: crmOk || emailOk,
-      message: "Thank you! We'll be in touch within 24 hours.",
+      success: crmSuccess,
+      message: crmSuccess
+        ? "Thank you! We'll be in touch within 24 hours."
+        : "Something went wrong. Please call us at 604-593-1550.",
     });
   } catch (error) {
     console.error("Contact form error:", error);
