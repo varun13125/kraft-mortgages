@@ -23,21 +23,21 @@ const creditMap: Record<CreditRange, { label: string; min: number; max: number }
 };
 
 const bLenderData = [
-  { name: "Bridgewater Bank", rate: "4.99–6.04%", fee: "1%", ltv: "80%", beacon: "550+" },
-  { name: "National Bank Optimum Mortgage", rate: "4.89–5.99%", fee: "1%", ltv: "80%", beacon: "500+" },
-  { name: "Equitable Bank", rate: "6.44–8.14%", fee: "$995 setup", ltv: "varies", beacon: "—" },
-  { name: "Home Trust", rate: "7.49–14.49%", fee: "1–2%", ltv: "80%", beacon: "—" },
-  { name: "CMLS AVEO", rate: "N/S", fee: "$350-450", ltv: "80%", beacon: "—" },
-  { name: "B2B Bank", rate: "N/S", fee: "varies", ltv: "50–75%", beacon: "—" },
+  { name: "National Bank Optimum Mortgage", rate: "from 4.89%", fee: "1%", ltv: "80%", beacon: "500+" },
+  { name: "Bridgewater Bank", rate: "from 4.99%", fee: "1%", ltv: "80%", beacon: "550+" },
+  { name: "Equitable Bank", rate: "from 6.44%", fee: "$995 setup", ltv: "varies", beacon: "—" },
+  { name: "Home Trust", rate: "from 7.49%", fee: "1–2%", ltv: "80%", beacon: "—" },
+  { name: "CMLS AVEO", rate: "Contact for rate", fee: "$350-450", ltv: "80%", beacon: "—" },
+  { name: "B2B Bank", rate: "Contact for rate", fee: "varies", ltv: "50–75%", beacon: "—" },
 ];
 
 const equityLenderData = [
-  { name: "Capital Direct", first: "4.89–6.39%", second: "7.49–8.59%", fee: "1% / 2.5%" },
-  { name: "Neighbourhood Holdings", first: "5.80–9.25%", second: "N/S", fee: "1% (open) / 0 (closed)" },
-  { name: "Vault Capital", first: "5.25–7.25%", second: "N/S", fee: "1–2%" },
-  { name: "Sequence Capital", first: "5.99–7.75%", second: "N/S", fee: "1%" },
-  { name: "Antrim Investments", first: "6.95–7.49%", second: "8.95–10.95%", fee: "1% / 2%" },
-  { name: "VWR Capital", first: "Province-based", second: "Province-based", fee: "$750–$5,750" },
+  { name: "Capital Direct", first: "from 4.89%", second: "from 7.49%", fee: "1% / 2.5%" },
+  { name: "Vault Capital", first: "from 5.25%", second: "N/S", fee: "1–2%" },
+  { name: "Neighbourhood Holdings", first: "from 5.80%", second: "N/S", fee: "0–1%" },
+  { name: "Sequence Capital", first: "from 5.99%", second: "N/S", fee: "1%" },
+  { name: "Antrim Investments", first: "from 6.95%", second: "from 8.95%", fee: "1% / 2%" },
+  { name: "VWR Capital", first: "Contact for rate", second: "Contact for rate", fee: "$750–$5,750" },
   { name: "Secure Capital MIC", first: "6.99–9.99%", second: "N/S", fee: "2–3% / 3–4%" },
   { name: "LCM Capital", first: "7.45%+", second: "10.45%+", fee: "1% / 1.5%" },
   { name: "First Circle Financial", first: "N/S", second: "N/S", fee: "1% / 1.5–2%" },
@@ -439,6 +439,10 @@ export default function BvsEquityPage() {
             <p className="text-xs text-gray-500 text-center mt-4">Rates current as of April 2025. Subject to change. Contact us for current pricing.</p>
           </div>
         </section>
+
+        <p className="text-center text-xs text-gray-500 mb-8">
+          Rates shown are estimated starting rates for comparison purposes. Actual rates vary based on credit, LTV, property type, and location. Contact a broker to confirm rates for your specific situation.
+        </p>
 
         {/* FAQ */}
         <section className="py-16 px-4">

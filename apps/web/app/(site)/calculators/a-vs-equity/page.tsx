@@ -488,6 +488,10 @@ export default function AVsEquityPage() {
           </div>
         </section>
 
+        <p className="text-center text-xs text-gray-500 mb-8">
+          Rates shown are estimated starting rates for comparison purposes. Actual rates vary based on credit, LTV, property type, and location. Contact a broker to confirm rates for your specific situation.
+        </p>
+
         {/* FAQ */}
         <section className="py-16 px-4 bg-gray-800/30">
           <div className="max-w-4xl mx-auto">

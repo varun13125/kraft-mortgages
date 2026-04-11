@@ -128,15 +128,15 @@ export default function SelfEmployed() {
                     <div className="text-2xl font-bold text-gold-400">
                       ${r.qualifyingIncome.toLocaleString()}
                     </div>
-                    <div className="text-xs text-gray-500">Annual (estimated)</div>
+                    <div className="text-xs text-gray-500">Lower of latest year or 2-year avg + addbacks</div>
                   </div>
 
                   <div className="bg-gray-800/50 rounded-lg p-4">
-                    <div className="text-sm text-gray-400 mb-1">3-Year Average</div>
+                    <div className="text-sm text-gray-400 mb-1">3-Year Average (Reference)</div>
                     <div className="text-2xl font-bold text-gold-400">
                       ${r.threeYearAvg.toLocaleString()}
                     </div>
-                    <div className="text-xs text-gray-500">For reference</div>
+                    <div className="text-xs text-gray-500">Some lenders use for trend analysis</div>
                   </div>
                 </div>
 
@@ -160,14 +160,25 @@ export default function SelfEmployed() {
               {/* Educational Content */}
               <div className="bg-gold-500/10 rounded-xl p-6 mb-6 border border-gold-500/20">
                 <h4 className="text-lg font-semibold text-gold-400 mb-3">Self-Employed Documentation Tips</h4>
-                <div className="grid gap-4 md:grid-cols-2 text-sm text-gray-400">
+                <div className="grid gap-4 md:grid-cols-3 text-sm text-gray-400">
                   <div>
-                    <div className="font-semibold text-gray-200 mb-2">Required Documents</div>
+                    <div className="font-semibold text-blue-300 mb-2">A-Lender Documents</div>
                     <ul className="space-y-1 text-xs">
-                      <li>• 2+ years Notice of Assessment</li>
-                      <li>• T1 Generals (personal returns)</li>
-                      <li>• Financial statements</li>
+                      <li>• 2 years T1 Generals</li>
+                      <li>• 2 years Notice of Assessment</li>
+                      <li>• 2 years Financial statements</li>
                       <li>• Business license/registration</li>
+                      <li>• Articles of incorporation</li>
+                    </ul>
+                  </div>
+                  <div>
+                    <div className="font-semibold text-gold-300 mb-2">B-Lender Documents</div>
+                    <ul className="space-y-1 text-xs">
+                      <li>• <strong>12 months business bank statements</strong></li>
+                      <li>• Beacon score 500+</li>
+                      <li>• Property appraisal</li>
+                      <li>• No tax returns required</li>
+                      <li>• No NOA required</li>
                     </ul>
                   </div>
                   <div>
