@@ -170,7 +170,7 @@ export default function AVsEquityPage() {
                         <Building2 className="w-4 h-4 text-blue-400" /> A-Lender Settings
                       </h3>
                       <div className="space-y-4">
-                        <ValidatedInput label="A-Lender Rate (%)" value={aRate} onChange={setARate} validation={{ min: 1, max: 15 }} type="percentage" suffix="%" />
+                        <ValidatedInput label="A-Lender Rate (%)" value={aRate} onChange={setARate} validation={{ min: 1, max: 15 }} type="percentage" />
                       </div>
                     </div>
 
@@ -179,8 +179,8 @@ export default function AVsEquityPage() {
                         <TrendingUp className="w-4 h-4 text-emerald-400" /> Equity Lender Settings
                       </h3>
                       <div className="space-y-4">
-                        <ValidatedInput label="Equity Lender Rate (%)" value={eqRate} onChange={setEqRate} validation={{ min: 1, max: 20 }} type="percentage" suffix="%" />
-                        <ValidatedInput label="Equity Lender Fee (%)" value={eqFee} onChange={setEqFee} validation={{ min: 0, max: 5 }} type="percentage" suffix="%" />
+                        <ValidatedInput label="Equity Lender Rate (%)" value={eqRate} onChange={setEqRate} validation={{ min: 1, max: 20 }} type="percentage" />
+                        <ValidatedInput label="Equity Lender Fee (%)" value={eqFee} onChange={setEqFee} validation={{ min: 0, max: 5 }} type="percentage" />
                       </div>
                     </div>
 
@@ -201,7 +201,7 @@ export default function AVsEquityPage() {
                           </div>
                         </div>
                         <ValidatedInput label="Additional Income Needed to Qualify ($/year)" value={additionalIncome} onChange={setAdditionalIncome} validation={{ min: 0, max: 500000 }} type="currency" />
-                        <ValidatedInput label="Your Marginal Tax Rate (%)" value={marginalRate} onChange={setMarginalRate} validation={{ min: 0, max: 55 }} type="percentage" suffix="%" />
+                        <ValidatedInput label="Your Marginal Tax Rate (%)" value={marginalRate} onChange={setMarginalRate} validation={{ min: 0, max: 55 }} type="percentage" />
                         <p className="text-xs text-gray-500">This is the extra income you&apos;d need to declare on your T1 to qualify with an A-lender.</p>
                       </div>
                     </div>
