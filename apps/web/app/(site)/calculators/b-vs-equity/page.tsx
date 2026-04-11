@@ -44,7 +44,7 @@ const equityLenderData = [
 const faqs = [
   {
     q: "What is the main difference between B-lenders and equity lenders?",
-    a: "B-lenders are licensed financial institutions that offer alternative lending with relaxed income requirements — they accept bank statements instead of tax returns but still verify your ability to make payments. Equity lenders (also called private lenders) lend primarily based on the property's equity, with minimal or no income verification. B-lender rates are typically 5–9%, while equity lender rates range from 7–11%+."
+    a: "B-lenders are licensed financial institutions that offer alternative lending with relaxed income requirements — they accept bank statements instead of tax returns but still verify your ability to make payments. Equity lenders (also called private lenders) lend primarily based on the property's equity, with minimal or no income verification. B-lender rates are typically 5–9%, while equity lender rates range from 4.89–11%+."
   },
   {
     q: "When should I choose equity lending over a B-lender?",
@@ -56,7 +56,7 @@ const faqs = [
   },
   {
     q: "How do lender fees affect the total cost?",
-    a: "A 1% fee on a $500,000 mortgage is $5,000 upfront. Over a 5-year term at 6.49% vs 8.49%, the rate difference alone costs roughly $55,000 more in interest — far more than the fee. When comparing options, always look at total cost (interest + fees) over the full term, not just the rate."
+    a: "A 1% fee on a $500,000 mortgage is $5,000 upfront. Over a 5-year term at 6.49% vs 6.95%, the rate difference alone costs roughly $12,000 more in interest — far more than the fee. When comparing options, always look at total cost (interest + fees) over the full term, not just the rate."
   },
   {
     q: "Can I switch from an equity lender to a B-lender or A-lender later?",
@@ -78,7 +78,7 @@ export default function BvsEquityPage() {
   const [term, setTerm] = useState(5);
   const [amortization, setAmortization] = useState(25);
   const [bRate, setBRate] = useState(6.49);
-  const [eRate, setERate] = useState(8.49);
+  const [eRate, setERate] = useState(6.95);
   const [bFee, setBFee] = useState(1.0);
   const [eFee, setEFee] = useState(1.0);
   const [creditRange, setCreditRange] = useState<CreditRange>("good");
@@ -388,7 +388,7 @@ export default function BvsEquityPage() {
 
               <h3 className="text-2xl font-semibold text-gray-100 mt-8">Real Example: $500,000 Mortgage Over 5 Years</h3>
               <p>
-                Let&apos;s say you need $500,000 with a property worth $750,000 (66.7% LTV), 25-year amortization, and you qualify for both B-lender and equity options. At a B-lender rate of 6.49%, your monthly payment is approximately $3,358. Over 5 years, you&apos;d pay about $101,500 in interest plus a 1% fee ($5,000), for a total cost of $106,500. At an equity lender rate of 8.49%, your monthly payment rises to approximately $4,014. Over the same 5 years, interest totals about $140,800 plus fees ($5,000), for a total of $145,800. The difference? Roughly $39,300 more with the equity lender over 5 years — but with minimal documentation and potentially a week faster closing.
+                Let&apos;s say you need $500,000 with a property worth $750,000 (66.7% LTV), 25-year amortization, and you qualify for both B-lender and equity options. At a B-lender rate of 6.49%, your monthly payment is approximately $3,358. Over 5 years, you&apos;d pay about $101,500 in interest plus a 1% fee ($5,000), for a total cost of $106,500. At an equity lender rate of 6.95%, your monthly payment rises to approximately $3,457. Over the same 5 years, interest totals about $107,400 plus fees ($5,000), for a total of $112,400. The difference? Roughly $5,900 more with the equity lender over 5 years — but with minimal documentation and potentially a week faster closing.
               </p>
 
               <div className="mt-8">

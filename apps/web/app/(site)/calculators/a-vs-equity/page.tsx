@@ -51,7 +51,7 @@ const faqs = [
   },
   {
     q: "What LTV do equity lenders typically require?",
-    a: "Most equity lenders lend up to 65-75% of the property value for first mortgages, and up to 85% combined LTV for second mortgages. Lower LTV means lower rates — for example, Antrim Investments offers 7.49% at 50-65% LTV vs 7.95% at 70-75% LTV. Having more equity in the property translates to better terms."
+    a: "Most equity lenders lend up to 65-75% of the property value for first mortgages, and up to 85% combined LTV for second mortgages. Lower LTV means lower rates — for example, Capital Direct starts at 4.89% at 50% LTV, while Antrim Investments offers 6.95% at 50-65% LTV vs 7.49% at 70-75% LTV. Having more equity in the property translates to better terms."
   },
   {
     q: "Why would I choose equity lending over an A-lender?",
@@ -66,7 +66,7 @@ export default function AVsEquityPage() {
   const [term, setTerm] = useState(2);
   const [amortization, setAmortization] = useState(25);
   const [aRate, setARate] = useState(4.49);
-  const [eqRate, setEqRate] = useState(7.95);
+  const [eqRate, setEqRate] = useState(6.95);
   const [province, setProvince] = useState<Province>("BC");
   const [additionalIncome, setAdditionalIncome] = useState(80000);
   const [marginalRate, setMarginalRate] = useState(defaultTaxRates.BC);
@@ -410,7 +410,7 @@ export default function AVsEquityPage() {
                 The Canadian mortgage market has three tiers. A-lenders (banks, credit unions, monoline lenders like Marathon Mortgage and Neo Financial) offer the lowest rates — currently 3.74% to 5.99% — but require full income verification, strong credit scores (typically 680+), and standard qualification criteria including GDS/TDS ratios. B-lenders sit in the middle, offering slightly higher rates with more flexible qualification, but still generally require some form of income verification.
               </p>
               <p>
-                Equity lenders operate on an entirely different model. They assess the property value, the loan amount relative to that value, and the exit strategy. Income verification is typically not required at all. Current equity lending rates range from approximately 5.99% to 9.99% depending on the lender, LTV, and province. Lender fees typically range from 1% to 3% of the loan amount, though some lenders like VWR Capital charge flat administrative fees ($750 to $5,750) rather than percentage-based fees — a significant cost advantage on larger mortgages.
+                Equity lenders operate on an entirely different model. They assess the property value, the loan amount relative to that value, and the exit strategy. Income verification is typically not required at all. Current equity lending rates range from approximately 4.89% to 9.99% depending on the lender, LTV, and province. Capital Direct offers first mortgages starting at 4.89% (50% LTV), while Neighbourhood Holdings offers closed-term products starting at 6.60% with no lender fee. Lender fees typically range from 1% to 3% of the loan amount, though some lenders like VWR Capital charge flat administrative fees ($750 to $5,750) rather than percentage-based fees — a significant cost advantage on larger mortgages.
               </p>
 
               <h3 className="text-2xl font-semibold text-gray-100 mt-8">The Hidden Tax Cost of Qualifying with an A-Lender</h3>
@@ -418,7 +418,7 @@ export default function AVsEquityPage() {
                 Here&apos;s the insight most self-employed borrowers miss: qualifying with an A-lender may require declaring significantly more personal income on your tax returns. If your business nets $120,000 but you currently declare $60,000 after legitimate deductions, an A-lender might require you to declare $140,000 or more to qualify for the mortgage you need. That extra $80,000 of declared income isn&apos;t free — it comes with a real tax cost.
               </p>
               <p>
-                In British Columbia, an additional $80,000 of declared income at a marginal rate of approximately 20.5% costs you $16,400 per year in personal income tax. Over a 2-year term, that&apos;s $32,800 in additional taxes. Over a 5-year term, it&apos;s $82,000. This tax cost must be factored into any comparison between A-lender and equity lending rates. When you see an A-lender at 4.49% vs an equity lender at 7.95%, the rate difference seems enormous — but the tax math often tells a different story.
+                In British Columbia, an additional $80,000 of declared income at a marginal rate of approximately 20.5% costs you $16,400 per year in personal income tax. Over a 2-year term, that&apos;s $32,800 in additional taxes. Over a 5-year term, it&apos;s $82,000. This tax cost must be factored into any comparison between A-lender and equity lending rates. When you see an A-lender at 4.49% vs an equity lender at 6.95%, the rate difference seems enormous — but the tax math often tells a different story.
               </p>
 
               <h3 className="text-2xl font-semibold text-gray-100 mt-8">When Equity Lending Makes Mathematical Sense</h3>
@@ -441,10 +441,10 @@ export default function AVsEquityPage() {
                 <strong>A-Lender Path:</strong> $600,000 at 4.49% over a 2-year term with 25-year amortization costs approximately $52,700 in interest. The additional income tax on $80,000 × 20.5% × 2 years = $32,800. Total all-in cost: approximately $85,500.
               </p>
               <p>
-                <strong>Equity Lender Path (Antrim-style):</strong> $600,000 at 7.95% with a 1% fee ($6,000) over the same 2-year term costs approximately $94,400 in interest. Total all-in cost: approximately $100,400. In this scenario, the A-lender saves roughly $14,900 — but the self-employed borrower avoids declaring additional income and closes in days instead of weeks.
+                <strong>Equity Lender Path (Capital Direct-style):</strong> $600,000 at 6.95% with a 1% fee ($6,000) over the same 2-year term costs approximately $82,300 in interest. Total all-in cost: approximately $88,300. With Capital Direct's 4.89% rate at 50% LTV, the savings are even greater. In this scenario, the A-lender saves roughly $14,900 — but the self-employed borrower avoids declaring additional income and closes in days instead of weeks.
               </p>
               <p>
-                Now consider the same borrower in Ontario with a 43.4% marginal rate: the tax on $80,000 × 43.4% × 2 years = $69,440. A-lender total: $122,140. Equity lender total: $100,400. In Ontario, equity lending saves approximately $21,740 over the 2-year term despite the much higher interest rate. This is the power of factoring in the full picture.
+                Now consider the same borrower in Ontario with a 43.4% marginal rate: the tax on $80,000 × 43.4% × 2 years = $69,440. A-lender total: $122,140. Equity lender total: $88,300. In Ontario, equity lending saves approximately $33,840 over the 2-year term despite the higher interest rate. This is the power of factoring in the full picture.
               </p>
 
               <h3 className="text-2xl font-semibold text-gray-100 mt-8">Equity Lending for Investment Properties: Interest Is Tax-Deductible</h3>
@@ -459,7 +459,13 @@ export default function AVsEquityPage() {
 
               <h3 className="text-2xl font-semibold text-gray-100 mt-8">Top Equity Lenders in Canada: Antrim, VWR Capital, First Circle</h3>
               <p>
-                <strong>Antrim Investments:</strong> One of Canada&apos;s most established equity lenders. First mortgage rates from 7.49% at lower LTVs (50-65%), 7.95% at 70-75% LTV. Standard 1% lender fee. No income verification required — qualification is based entirely on property equity and a professional appraisal. Available across Canada.
+                <strong>Capital Direct:</strong> One of Canada&apos;s largest equity lenders. First mortgage rates from 4.89% at 50% LTV, 5.89% at 60%, 6.39% at 65% — with a 1% lender fee. Their FlexiLine product offers revolving credit from 5.99% (50% LTV) with a 2% fee. No income verification required. Available across Canada.
+              </p>
+              <p>
+                <strong>Neighbourhood Holdings:</strong> Offers open, closed, and partial open mortgages. Closed-term products start at 6.60% with no lender fee — a competitive option for borrowers who want to minimize upfront costs. Open terms start at 5.80% with a 1% fee. Rates are LTV and beacon score dependent.
+              </p>
+              <p>
+                <strong>Antrim Investments:</strong> One of Canada&apos;s most established equity lenders. First mortgage rates from 6.95% at lower LTVs (50-65%), 7.49% at 70-75% LTV. Standard 1% lender fee. No income verification required — qualification is based entirely on property equity and a professional appraisal. Available across Canada.
               </p>
               <p>
                 <strong>VWR Capital:</strong> A unique player in the equity lending space because they charge flat administrative fees ($750 to $5,750 depending on province and LTV) rather than percentage-based fees. This can save borrowers thousands on larger mortgages. Rates are province and LTV-dependent.

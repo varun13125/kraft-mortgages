@@ -73,8 +73,8 @@ export default function RefinanceVsHelocVsSecondPage() {
     const refiTotal = firstBalance + cashNeeded;
     let refiRate: number;
     if (firstType === "a-lender") refiRate = 4.49; // blended estimate
-    else if (firstType === "b-lender") refiRate = 6.49;
-    else refiRate = 8.49;
+    else if (firstType === "b-lender") refiRate = 6.04;
+    else refiRate = 6.95;
 
     const refiFee = firstType === "b-lender" ? refiTotal * 0.01 : 0;
     const penalty = currentMonthly * 3; // 3 months interest estimate
@@ -85,7 +85,7 @@ export default function RefinanceVsHelocVsSecondPage() {
     const refiPaymentChange = refiMonthly - currentMonthly;
 
     // Option 2: HELOC
-    const helocRate = firstType === "a-lender" ? 7.49 : 9.49;
+    const helocRate = firstType === "a-lender" ? 7.49 : 8.49;
     const helocMonthly = cashNeeded * (helocRate / 100) / 12; // interest-only
     const helocFee = cashNeeded * 0.015;
     const helocSetupFee = 500;
@@ -93,7 +93,7 @@ export default function RefinanceVsHelocVsSecondPage() {
     const combinedMonthly = currentMonthly + helocMonthly;
 
     // Option 3: Second Mortgage
-    const secondRate = 9.95;
+    const secondRate = 8.95;
     const secondAmort = 15;
     const secondMonthly = calcMonthly(cashNeeded, secondRate, secondAmort);
     const secondFee = cashNeeded * 0.02;
@@ -440,6 +440,7 @@ export default function RefinanceVsHelocVsSecondPage() {
               <div className="bg-white/5 rounded-xl p-5 border border-white/10">
                 <h3 className="text-lg font-bold text-amber-400 mb-3">Second Mortgage Rates</h3>
                 <div className="space-y-2 text-sm">
+                  <div className="flex justify-between"><span className="text-gray-400">Capital Direct 2nd</span><span className="text-gray-200">7.49–8.59%</span></div>
                   <div className="flex justify-between"><span className="text-gray-400">Antrim 2nd</span><span className="text-gray-200">8.95–10.95%</span></div>
                   <div className="flex justify-between"><span className="text-gray-400">First Circle 2nd</span><span className="text-gray-200">1.5–2% fee</span></div>
                   <div className="flex justify-between"><span className="text-gray-400">Secure Capital 2nd</span><span className="text-gray-200">3–4% fee</span></div>
