@@ -330,6 +330,37 @@ export default function SelfEmployedAVsBPage() {
               </div>
             </motion.div>
 
+            {/* Document Requirements Comparison */}
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.6 }}
+              className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-white/20 mb-10">
+              <h3 className="text-lg font-bold mb-6 text-center text-gray-200">What You Need to Apply</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="bg-blue-500/5 rounded-xl p-5 border border-blue-500/20">
+                  <h4 className="font-semibold text-blue-300 mb-3">A-Lender (Bank) Requirements</h4>
+                  <ul className="space-y-2 text-sm text-gray-300">
+                    <li className="flex items-start gap-2"><span className="text-blue-400 mt-0.5">•</span>2 years personal T1 Generals (tax returns)</li>
+                    <li className="flex items-start gap-2"><span className="text-blue-400 mt-0.5">•</span>Notice of Assessment (NOA) for 2 years</li>
+                    <li className="flex items-start gap-2"><span className="text-blue-400 mt-0.5">•</span>Beacon score 680+</li>
+                    <li className="flex items-start gap-2"><span className="text-blue-400 mt-0.5">•</span>GDS/TDS ratio within limits (39%/44%)</li>
+                    <li className="flex items-start gap-2"><span className="text-blue-400 mt-0.5">•</span>Property appraisal</li>
+                    <li className="flex items-start gap-2"><span className="text-blue-400 mt-0.5">•</span>Employment letter or business registration</li>
+                  </ul>
+                </div>
+                <div className="bg-gold-500/5 rounded-xl p-5 border border-gold-500/20">
+                  <h4 className="font-semibold text-gold-300 mb-3">B-Lender (Alternative) Requirements</h4>
+                  <ul className="space-y-2 text-sm text-gray-300">
+                    <li className="flex items-start gap-2"><span className="text-gold-400 mt-0.5">•</span><strong>12 months business bank statements</strong> (most lenders)</li>
+                    <li className="flex items-start gap-2"><span className="text-gold-400 mt-0.5">•</span>Beacon score 500+ (some accept lower)</li>
+                    <li className="flex items-start gap-2"><span className="text-gold-400 mt-0.5">•</span>No GDS/TDS limits (most lenders)</li>
+                    <li className="flex items-start gap-2"><span className="text-gold-400 mt-0.5">•</span>Property appraisal</li>
+                    <li className="flex items-start gap-2"><span className="text-gold-400 mt-0.5">•</span>No tax returns or NOAs required</li>
+                    <li className="flex items-start gap-2"><span className="text-gold-400 mt-0.5">•</span>Lender fee (0.5-2% of mortgage)</li>
+                  </ul>
+                </div>
+              </div>
+              <p className="text-center text-xs text-gray-500 mt-4">Requirements vary by lender. A mortgage broker can match you with the right lender based on your specific situation.</p>
+            </motion.div>
+
             {/* CTA */}
             <div className="flex flex-col sm:flex-row gap-4">
               <Link href="/contact" className="flex-1 bg-gold-500 text-black font-semibold py-4 px-6 rounded-xl hover:bg-gold-400 transition-colors text-center">
