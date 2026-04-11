@@ -213,6 +213,24 @@ export default function CalculatorsHub() {
       description: "SVT estimates for BC properties",
       href: "/calculators/bc-speculation-tax",
       icon: MapPin
+    },
+    {
+      title: "Down Payment Calculator",
+      description: "Minimum down payment & CMHC",
+      href: "/calculators/down-payment",
+      icon: Wallet
+    },
+    {
+      title: "CMHC Insurance Calculator",
+      description: "Premium rates & monthly impact",
+      href: "/calculators/cmhc-insurance",
+      icon: Shield
+    },
+    {
+      title: "Required Income Calculator",
+      description: "Income needed to qualify",
+      href: "/calculators/required-income",
+      icon: TrendingUp
     }
   ];
 
