@@ -234,7 +234,7 @@ export default function RentVsBuyPage() {
                       {results.buyMonthly > monthlyRent ? (
                         <>Buying costs <span className="text-amber-400 font-semibold">{formatCurrency(results.buyMonthly - monthlyRent, 0)}/mo more</span> than renting</>
                       ) : (
-                        <>Buying costs <span className="text-green-400 font-semibold">{formatCurrency(monthlyRent - results.buyMonthly, 0)/mo less</span> than renting</>
+                        <>Buying costs <span className="text-green-400 font-semibold">{formatCurrency(monthlyRent - results.buyMonthly, 0)}/mo less</span> than renting</>
                       )}
                     </p>
                   </div>
