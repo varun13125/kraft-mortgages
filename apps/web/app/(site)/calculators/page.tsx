@@ -238,6 +238,12 @@ export default function CalculatorsHub() {
       description: "Bank vs alternative cost comparison",
       href: "/calculators/self-employed-a-vs-b",
       icon: DollarSign
+    },
+    {
+      title: "A-Lender vs Equity Lending",
+      description: "Self-employed tax-aware cost comparison",
+      href: "/calculators/a-vs-equity",
+      icon: Scale
     }
   ];
 
