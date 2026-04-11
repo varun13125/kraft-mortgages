@@ -20,7 +20,11 @@ import {
   Award,
   Receipt,
   Scale,
-  Percent
+  Percent,
+  TrendingDown,
+  PiggyBank,
+  BarChart3,
+  MapPin
 } from "lucide-react";
 
 export default function CalculatorsHub() {
@@ -179,6 +183,36 @@ export default function CalculatorsHub() {
       description: "GDS/TDS qualification check",
       href: "/calculators/debt-service-ratio",
       icon: Shield
+    },
+    {
+      title: "Refinance Break-Even Calculator",
+      description: "Should you refinance?",
+      href: "/calculators/refinance-break-even",
+      icon: TrendingDown
+    },
+    {
+      title: "Extra Payment Savings Calculator",
+      description: "Interest savings from extra payments",
+      href: "/calculators/extra-payments",
+      icon: PiggyBank
+    },
+    {
+      title: "Amortization Calculator",
+      description: "Full payment schedule",
+      href: "/calculators/amortization",
+      icon: BarChart3
+    },
+    {
+      title: "Stress Test Calculator",
+      description: "OSFI qualification check",
+      href: "/calculators/stress-test",
+      icon: Shield
+    },
+    {
+      title: "BC Speculation & Vacancy Tax",
+      description: "SVT estimates for BC properties",
+      href: "/calculators/bc-speculation-tax",
+      icon: MapPin
     }
   ];
 
