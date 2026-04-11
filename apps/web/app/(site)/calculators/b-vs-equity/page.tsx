@@ -24,7 +24,7 @@ const creditMap: Record<CreditRange, { label: string; min: number; max: number }
 
 const bLenderData = [
   { name: "Bridgewater Bank", rate: "4.99–6.04%", fee: "1%", ltv: "80%", beacon: "550+" },
-  { name: "Optimum Mortgage (CWB)", rate: "5.09–5.99%", fee: "1%", ltv: "80%", beacon: "—" },
+  { name: "National Bank Optimum Mortgage", rate: "4.89–5.99%", fee: "1%", ltv: "80%", beacon: "500+" },
   { name: "Equitable Bank", rate: "6.44–8.14%", fee: "$995 setup", ltv: "varies", beacon: "—" },
   { name: "Home Trust", rate: "7.49–14.49%", fee: "1–2%", ltv: "80%", beacon: "—" },
   { name: "CMLS AVEO", rate: "N/S", fee: "$350-450", ltv: "80%", beacon: "—" },
