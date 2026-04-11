@@ -2,7 +2,7 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import Navigation from "@/components/Navigation";
-import { 
+import {
   Calculator, 
   Home, 
   Building, 
@@ -18,7 +18,9 @@ import {
   AlertTriangle,
   FileText,
   Award,
-  Receipt
+  Receipt,
+  Scale,
+  Percent
 } from "lucide-react";
 
 export default function CalculatorsHub() {
@@ -32,7 +34,7 @@ export default function CalculatorsHub() {
       href: "/mli-select/calculators",
       calculators: [
         "Points & Tier Calculator",
-        "Premium Calculator", 
+        "Premium Calculator",
         "DSCR Calculator",
         "Maximum Loan Calculator",
         "Rent Cap Calculator"
@@ -43,7 +45,7 @@ export default function CalculatorsHub() {
       title: "Residential Lending",
       description: "Home buying, refinancing, and renewal calculators",
       icon: Home,
-      color: "from-blue-500 to-cyan-500", 
+      color: "from-blue-500 to-cyan-500",
       bgGradient: "from-blue-500/10 to-cyan-500/10",
       href: "/residential",
       calculators: [
@@ -58,7 +60,7 @@ export default function CalculatorsHub() {
       description: "Professional equity solutions with institutional rates",
       icon: TrendingUp,
       color: "from-emerald-500 to-green-500",
-      bgGradient: "from-emerald-500/10 to-green-500/10", 
+      bgGradient: "from-emerald-500/10 to-green-500/10",
       href: "/equity-lending",
       calculators: [
         "Home Equity Calculator",
@@ -75,14 +77,14 @@ export default function CalculatorsHub() {
       bgGradient: "from-orange-500/10 to-red-500/10",
       href: "/construction",
       calculators: [
-        "Construction Budget Calculator", 
+        "Construction Budget Calculator",
         "Progressive Draw Calculator",
         "Cost-to-Complete Calculator",
         "Builder Program Calculator"
       ]
     },
     {
-      title: "Commercial Lending", 
+      title: "Commercial Lending",
       description: "Commercial properties and multi-unit investment analysis",
       icon: Building,
       color: "from-purple-500 to-violet-500",
@@ -90,7 +92,7 @@ export default function CalculatorsHub() {
       href: "/commercial",
       calculators: [
         "Commercial Cash Flow Calculator",
-        "NOI Analysis Calculator", 
+        "NOI Analysis Calculator",
         "Cap Rate Calculator",
         "Commercial Refinance Calculator"
       ]
@@ -99,12 +101,12 @@ export default function CalculatorsHub() {
       title: "Private Lending",
       description: "Alternative lending solutions for unique scenarios",
       icon: Shield,
-      color: "from-rose-500 to-pink-500", 
+      color: "from-rose-500 to-pink-500",
       bgGradient: "from-rose-500/10 to-pink-500/10",
       href: "/private-lending",
       calculators: [
         "Alternative Income Calculator",
-        "Asset-Based Calculator", 
+        "Asset-Based Calculator",
         "Bridge Financing Calculator",
         "Quick Approval Calculator"
       ]
@@ -119,21 +121,21 @@ export default function CalculatorsHub() {
       icon: Calculator
     },
     {
-      title: "Affordability Calculator", 
+      title: "Affordability Calculator",
       description: "Determine buying power",
       href: "/calculators/affordability",
       icon: DollarSign
     },
     {
       title: "Investment Calculator",
-      description: "Analyze rental properties", 
+      description: "Analyze rental properties",
       href: "/calculators/investment",
       icon: TrendingUp
     },
     {
       title: "Self-Employed Calculator",
       description: "Alternative income verification",
-      href: "/calculators/self-employed", 
+      href: "/calculators/self-employed",
       icon: Users
     },
     {
@@ -159,6 +161,24 @@ export default function CalculatorsHub() {
       description: "Tax estimates by province",
       href: "/calculators/land-transfer-tax",
       icon: Receipt
+    },
+    {
+      title: "Rent vs Buy Calculator",
+      description: "Renting vs buying comparison",
+      href: "/calculators/rent-vs-buy",
+      icon: Scale
+    },
+    {
+      title: "Rate Comparison Calculator",
+      description: "Compare up to 4 mortgage rates",
+      href: "/calculators/rate-comparison",
+      icon: Percent
+    },
+    {
+      title: "Debt Service Ratio Calculator",
+      description: "GDS/TDS qualification check",
+      href: "/calculators/debt-service-ratio",
+      icon: Shield
     }
   ];
 
@@ -169,7 +189,7 @@ export default function CalculatorsHub() {
         {/* Hero Section */}
         <section className="py-20 px-4">
           <div className="max-w-6xl mx-auto">
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
@@ -192,7 +212,7 @@ export default function CalculatorsHub() {
         {/* Quick Access Calculators */}
         <section className="py-12 px-4">
           <div className="max-w-6xl mx-auto">
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
@@ -236,7 +256,7 @@ export default function CalculatorsHub() {
         {/* Lending Sections */}
         <section className="py-20 px-4 bg-gradient-to-br from-gray-900/50 to-gray-800/30">
           <div className="max-w-6xl mx-auto">
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
@@ -266,7 +286,7 @@ export default function CalculatorsHub() {
                     }`}>
                       {/* Background Gradient */}
                       <div className={`absolute inset-0 bg-gradient-to-br ${section.bgGradient} opacity-20`}></div>
-                      
+
                       {/* Featured Badge */}
                       {section.featured && (
                         <div className="absolute top-4 right-4">
@@ -275,7 +295,7 @@ export default function CalculatorsHub() {
                           </div>
                         </div>
                       )}
-                      
+
                       <div className="relative z-10">
                         <div className="flex items-center gap-4 mb-4">
                           <div className={`w-12 h-12 bg-gradient-to-br ${section.color}/20 rounded-xl flex items-center justify-center border border-gray-700/50`}>
@@ -321,7 +341,7 @@ export default function CalculatorsHub() {
         {/* Why Choose Our Calculators */}
         <section className="py-20 px-4">
           <div className="max-w-6xl mx-auto">
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
@@ -340,7 +360,7 @@ export default function CalculatorsHub() {
                   description: "Calculators designed for specific lending scenarios with accurate formulas and current market data."
                 },
                 {
-                  icon: Clock, 
+                  icon: Clock,
                   title: "Real-Time Results",
                   description: "Instant calculations with export functionality and personalized reports delivered to your inbox."
                 },
@@ -372,7 +392,7 @@ export default function CalculatorsHub() {
         {/* CTA Section */}
         <section className="py-20 px-4 bg-gradient-to-br from-gold-900/20 to-amber-900/20 border-t border-gold-500/20">
           <div className="max-w-4xl mx-auto text-center">
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -383,9 +403,9 @@ export default function CalculatorsHub() {
               <p className="text-xl mb-8 text-gray-400">
                 Our mortgage specialists can provide personalized analysis and guidance.
               </p>
-              
+
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <a 
+                <a
                   href="https://r.mtg-app.com/varun-chaudhry"
                   target="_blank"
                   rel="noopener noreferrer"
@@ -393,8 +413,8 @@ export default function CalculatorsHub() {
                 >
                   Get Expert Analysis
                 </a>
-                <a 
-                  href="tel:604-593-1550" 
+                <a
+                  href="tel:604-593-1550"
                   className="inline-flex items-center justify-center px-8 py-4 border-2 border-gold-500/50 text-gold-400 rounded-lg hover:bg-gold-500/10 transition-colors"
                 >
                   Call 604-593-1550
