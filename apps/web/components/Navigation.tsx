@@ -267,6 +267,30 @@ export default function Navigation() {
                         >
                           Self-Employed Calculator
                         </Link>
+                        <Link
+                          href="/calculators/mortgage-penalty"
+                          className="block px-3 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-gold-400 transition-all rounded"
+                        >
+                          Mortgage Penalty Calculator
+                        </Link>
+                        <Link
+                          href="/calculators/closing-costs"
+                          className="block px-3 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-gold-400 transition-all rounded"
+                        >
+                          Closing Costs Calculator
+                        </Link>
+                        <Link
+                          href="/calculators/first-time-home-buyer"
+                          className="block px-3 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-gold-400 transition-all rounded"
+                        >
+                          First-Time Home Buyer Calculator
+                        </Link>
+                        <Link
+                          href="/calculators/land-transfer-tax"
+                          className="block px-3 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-gold-400 transition-all rounded"
+                        >
+                          Land Transfer Tax Calculator
+                        </Link>
                       </div>
                     </motion.div>
                   )}
@@ -483,6 +507,34 @@ export default function Navigation() {
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     Payment Calculator
+                  </Link>
+                  <Link
+                    href="/calculators/mortgage-penalty"
+                    className="block px-4 py-2 text-sm text-gray-400 hover:text-gold-400 transition-colors"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Mortgage Penalty Calculator
+                  </Link>
+                  <Link
+                    href="/calculators/closing-costs"
+                    className="block px-4 py-2 text-sm text-gray-400 hover:text-gold-400 transition-colors"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Closing Costs Calculator
+                  </Link>
+                  <Link
+                    href="/calculators/first-time-home-buyer"
+                    className="block px-4 py-2 text-sm text-gray-400 hover:text-gold-400 transition-colors"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    First-Time Home Buyer Calculator
+                  </Link>
+                  <Link
+                    href="/calculators/land-transfer-tax"
+                    className="block px-4 py-2 text-sm text-gray-400 hover:text-gold-400 transition-colors"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Land Transfer Tax Calculator
                   </Link>
                 </div>
               </div>
