@@ -70,8 +70,10 @@ function ontLTT(price: number): { brackets: { label: string; amount: number; rat
 }
 
 function bcFTHRRebate(price: number): number {
-  if (price <= 500000) return 1.0; // full exemption
-  if (price <= 536000) return (536000 - price) / 36000;
+  // BC FTHB PTT Exemption 2025/2026
+  // Full exemption: ≤ $835,000 | Partial: $835,001 - $860,000
+  if (price <= 835000) return 1.0;
+  if (price <= 860000) return (860000 - price) / 25000;
   return 0;
 }
 
@@ -342,7 +344,7 @@ export default function LandTransferTax() {
               BC charges a Property Transfer Tax (PTT) based on tiered brackets: 1% on the first $200,000, 2% between $200,000 and $2,000,000, and 3% on the portion over $2,000,000. An additional 2% applies to properties over $3,000,000 for foreign entities and satellite families (exempt for Canadian citizens and permanent residents living in BC).
             </p>
             <p className="text-gray-300 leading-relaxed mb-4">
-              <strong>First-Time Home Buyers&apos; Program:</strong> First-time buyers in BC may be fully exempt from the PTT on homes up to $500,000. A partial exemption applies for homes between $500,000 and $536,000. To qualify, you must be a Canadian citizen or permanent resident, have lived in BC for at least 12 months, have never owned an interest in a principal residence anywhere, and the home must be your principal residence.
+              <strong>First-Time Home Buyers&apos; Program:</strong> First-time buyers in BC may be fully exempt from the PTT on homes up to $835,000. A partial exemption applies for homes between $835,000 and $860,000. To qualify, you must be a Canadian citizen or permanent resident, have lived in BC for at least 12 months, have never owned an interest in a principal residence anywhere, and the home must be your principal residence.
             </p>
 
             <h3 className="text-2xl font-semibold text-gold-400 mt-8 mb-4">Alberta Land Registration</h3>
