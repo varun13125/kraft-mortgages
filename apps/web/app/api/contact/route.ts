@@ -108,8 +108,8 @@ export async function POST(req: NextRequest) {
     // Send to Twenty CRM (lead creation — primary)
     const crmSuccess = await sendToTwenty(twentyData);
 
-    // Discord notification (fire-and-forget, for real-time alerts)
-    sendDiscordNotification(body);
+    // Discord notification (real-time alert)
+    await sendDiscordNotification(body);
 
     console.log("Lead submitted:", {
       name: twentyData.firstName + " " + twentyData.lastName,
