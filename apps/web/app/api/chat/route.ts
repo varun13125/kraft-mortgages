@@ -4,10 +4,10 @@ import { PageContext, generatePageContextPrompt } from "@/lib/ai/page-context";
 
 // Free models to try first (via OpenRouter) — updated April 2026
 const FREE_MODELS = [
-  "deepseek/deepseek-chat-v3-0324:free",  // Primary: DeepSeek V3 (strong, fast)
-  "google/gemma-3-27b-it:free",            // Fallback 1: Gemma 3 27B
-  "meta-llama/llama-4-maverick:free",      // Fallback 2: Llama 4 Maverick
-  "qwen/qwen3-235b-a22b:free",             // Fallback 3: Qwen 3 235B (MoE)
+  "meta-llama/llama-3.3-70b-instruct:free", // Primary: Llama 3.3 70B (reliable, fast)
+  "google/gemma-4-31b-it:free",              // Fallback 1: Gemma 4 31B
+  "minimax/minimax-m2.5:free",                // Fallback 2: MiniMax M2.5
+  "nousresearch/hermes-3-llama-3.1-405b:free", // Fallback 3: Hermes 3 405B (strong)
 ];
 
 // Paid models for final fallback (direct API)
