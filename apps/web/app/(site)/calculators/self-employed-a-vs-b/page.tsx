@@ -47,7 +47,7 @@ export default function SelfEmployedAVsBPage() {
   const [mortgageAmount, setMortgageAmount] = useState(500000);
   const [propertyValue, setPropertyValue] = useState(750000);
   const [aRate, setARate] = useState(4.99);
-  const [bRate, setBRate] = useState(6.49);
+  const [bRate, setBRate] = useState(5.49);
   const [term, setTerm] = useState(5);
   const [amortization, setAmortization] = useState(25);
   const [province, setProvince] = useState<Province>("BC");
@@ -371,7 +371,7 @@ export default function SelfEmployedAVsBPage() {
                 Consider a concrete example: You need a $500,000 mortgage. Your current declared income is $80,000, but to qualify you need to show $140,000. That&apos;s $60,000 in additional declared income per year. At a 38% marginal tax rate in BC, that&apos;s $22,800 per year in extra taxes — or <strong>$114,000 over a 5-year term</strong>. And here&apos;s the critical point: you pay this tax whether or not the bank actually lends to you. Once you declare the income, CRA expects their share.
               </p>
               <p>
-                Meanwhile, the same mortgage with a B-lender at 6.49% (vs 4.99% at a bank) costs roughly $37,500 more in interest over 5 years, plus a $5,000 lender fee. Total B-lender premium: $42,500. The tax savings by going with the B-lender: $71,500 — and you keep your business capital working for you instead of sending it to CRA.
+                Meanwhile, the same mortgage with a B-lender at 5.49% (vs 4.99% at a bank) costs roughly $37,500 more in interest over 5 years, plus a $5,000 lender fee. Total B-lender premium: $42,500. The tax savings by going with the B-lender: $71,500 — and you keep your business capital working for you instead of sending it to CRA.
               </p>
 
               <h3 className="text-2xl font-semibold text-gray-100 mt-8">When B-Lending Makes Mathematical Sense</h3>
@@ -396,7 +396,7 @@ export default function SelfEmployedAVsBPage() {
 
               <h3 className="text-2xl font-semibold text-gray-100 mt-8">Investment Property Bonus: B-Lender Interest Is Tax-Deductible</h3>
               <p>
-                For investment properties, there&apos;s an additional advantage to B-lending: <strong>mortgage interest on rental properties is tax-deductible against rental income</strong>. Since B-lender rates are higher, you deduct more interest, generating larger tax savings. A $500,000 B-lender mortgage at 6.49% generates approximately $158,750 in interest over 5 years. At a 38% marginal rate, that&apos;s roughly $60,325 in tax deductions — savings that partially offset the higher interest rate.
+                For investment properties, there&apos;s an additional advantage to B-lending: <strong>mortgage interest on rental properties is tax-deductible against rental income</strong>. Since B-lender rates are higher, you deduct more interest, generating larger tax savings. A $500,000 B-lender mortgage at B-lender at 5.49% generates approximately $158,750 in interest over 5 years. At a 38% marginal rate, that&apos;s roughly $60,325 in tax deductions — savings that partially offset the higher interest rate.
               </p>
               <p>
                 This creates a counterintuitive but mathematically sound result: for investment properties, the after-tax cost of a B-lender mortgage can be significantly closer to an A-lender than the headline rates suggest. Toggle the investment property switch in this calculator to see the exact impact for your situation.

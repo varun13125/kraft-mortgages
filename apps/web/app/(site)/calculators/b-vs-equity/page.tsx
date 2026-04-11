@@ -24,20 +24,22 @@ const creditMap: Record<CreditRange, { label: string; min: number; max: number }
 
 const bLenderData = [
   { name: "Bridgewater Bank", rate: "4.99–6.04%", fee: "1%", ltv: "80%", beacon: "550+" },
-  { name: "Vault Capital", rate: "5.25–7.25%", fee: "1–2%", ltv: "80%", beacon: "—" },
-  { name: "Sequence Capital", rate: "5.99–7.75%", fee: "1%", ltv: "50–75%", beacon: "—" },
+  { name: "Optimum Mortgage (CWB)", rate: "5.09–5.99%", fee: "1%", ltv: "80%", beacon: "—" },
   { name: "Equitable Bank", rate: "6.44–8.14%", fee: "$995 setup", ltv: "varies", beacon: "—" },
-  { name: "Premiere Mortgage", rate: "5.95–9.95%", fee: "0–2%", ltv: "75% urban", beacon: "—" },
   { name: "Home Trust", rate: "7.49–14.49%", fee: "1–2%", ltv: "80%", beacon: "—" },
-  { name: "First Circle Financial", rate: "N/S", fee: "1%", ltv: "80%", beacon: "—" },
+  { name: "CMLS AVEO", rate: "N/S", fee: "$350-450", ltv: "80%", beacon: "—" },
+  { name: "B2B Bank", rate: "N/S", fee: "varies", ltv: "50–75%", beacon: "—" },
 ];
 
 const equityLenderData = [
-  { name: "Antrim Investments", first: "7.49–7.95%", second: "8.95–10.95%", fee: "1% / 2%" },
+  { name: "Capital Direct", first: "4.89–6.39%", second: "7.49–8.59%", fee: "1% / 2.5%" },
+  { name: "Neighbourhood Holdings", first: "5.80–9.25%", second: "N/S", fee: "1% (open) / 0 (closed)" },
+  { name: "Vault Capital", first: "5.25–7.25%", second: "N/S", fee: "1–2%" },
+  { name: "Sequence Capital", first: "5.99–7.75%", second: "N/S", fee: "1%" },
+  { name: "Antrim Investments", first: "6.95–7.49%", second: "8.95–10.95%", fee: "1% / 2%" },
   { name: "VWR Capital", first: "Province-based", second: "Province-based", fee: "$750–$5,750" },
   { name: "Secure Capital MIC", first: "6.99–9.99%", second: "N/S", fee: "2–3% / 3–4%" },
   { name: "LCM Capital", first: "7.45%+", second: "10.45%+", fee: "1% / 1.5%" },
-  { name: "Sequence Capital", first: "5.99–7.75%", second: "N/S", fee: "1%" },
   { name: "First Circle Financial", first: "N/S", second: "N/S", fee: "1% / 1.5–2%" },
 ];
 
@@ -77,7 +79,7 @@ export default function BvsEquityPage() {
   const [position, setPosition] = useState<LoanPosition>("1st");
   const [term, setTerm] = useState(5);
   const [amortization, setAmortization] = useState(25);
-  const [bRate, setBRate] = useState(6.49);
+  const [bRate, setBRate] = useState(5.49);
   const [eRate, setERate] = useState(6.95);
   const [bFee, setBFee] = useState(1.0);
   const [eFee, setEFee] = useState(1.0);
@@ -388,7 +390,7 @@ export default function BvsEquityPage() {
 
               <h3 className="text-2xl font-semibold text-gray-100 mt-8">Real Example: $500,000 Mortgage Over 5 Years</h3>
               <p>
-                Let&apos;s say you need $500,000 with a property worth $750,000 (66.7% LTV), 25-year amortization, and you qualify for both B-lender and equity options. At a B-lender rate of 6.49%, your monthly payment is approximately $3,358. Over 5 years, you&apos;d pay about $101,500 in interest plus a 1% fee ($5,000), for a total cost of $106,500. At an equity lender rate of 6.95%, your monthly payment rises to approximately $3,457. Over the same 5 years, interest totals about $107,400 plus fees ($5,000), for a total of $112,400. The difference? Roughly $5,900 more with the equity lender over 5 years — but with minimal documentation and potentially a week faster closing.
+                Let&apos;s say you need $500,000 with a property worth $750,000 (66.7% LTV), 25-year amortization, and you qualify for both B-lender and equity options. At a B-lender rate of 5.49%, your monthly payment is approximately $3,358. Over 5 years, you&apos;d pay about $101,500 in interest plus a 1% fee ($5,000), for a total cost of $106,500. At an equity lender rate of 6.95%, your monthly payment rises to approximately $3,457. Over the same 5 years, interest totals about $107,400 plus fees ($5,000), for a total of $112,400. The difference? Roughly $5,900 more with the equity lender over 5 years — but with minimal documentation and potentially a week faster closing.
               </p>
 
               <div className="mt-8">
