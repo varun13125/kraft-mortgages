@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 
-export const runtime = "edge";
-
 interface ContactFormData {
   firstName?: string;
   lastName?: string;
@@ -18,36 +16,36 @@ interface ContactFormData {
 
 // Forward to Twenty CRM webhook
 async function sendToTwenty(data: Record<string, string>) {
-  const webhookUrl = "https://webhook.srv848694.hstgr.cloud/webhook/contact-form";
-
   try {
-    const response = await fetch(webhookUrl, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    });
+    const response = await fetch(
+      "https://webhook.srv848694.hstgr.cloud/webhook/contact-form",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      }
+    );
 
     if (!response.ok) {
-      const errorText = await response.text();
-      console.error("Twenty CRM webhook error:", errorText);
-      return { success: false, reason: `Twenty webhook error: ${response.status}` };
+      const text = await response.text();
+      console.error("Twenty CRM error:", response.status, text);
+      return { success: false };
     }
 
     const result = await response.json();
-    return { success: true, personId: result.personId };
+    return { success: result.success, personId: result.personId };
   } catch (error) {
-    console.error("Error sending to Twenty CRM:", error);
-    return { success: false, reason: "Twenty CRM webhook failed" };
+    console.error("Twenty CRM fetch failed:", error);
+    return { success: false };
   }
 }
 
-// Send email notification using Brevo
-async function sendEmailNotification(data: ContactFormData) {
+// Send email via Brevo
+async function sendEmail(data: ContactFormData) {
   const apiKey = process.env.BREVO_API_KEY;
-
   if (!apiKey) {
-    console.warn("BREVO_API_KEY not configured, skipping email notification");
-    return { success: false, reason: "Email service not configured" };
+    console.warn("BREVO_API_KEY not set — skipping email");
+    return false;
   }
 
   const fullName = data.firstName
@@ -55,7 +53,7 @@ async function sendEmailNotification(data: ContactFormData) {
     : data.name || "Unknown";
 
   try {
-    const response = await fetch("https://api.brevo.com/v3/smtp/email", {
+    const res = await fetch("https://api.brevo.com/v3/smtp/email", {
       method: "POST",
       headers: {
         accept: "application/json",
@@ -63,37 +61,64 @@ async function sendEmailNotification(data: ContactFormData) {
         "content-type": "application/json",
       },
       body: JSON.stringify({
-        sender: {
-          name: "Kraft Mortgages Website",
-          email: "noreply@kraftmortgages.ca",
-        },
+        sender: { name: "Kraft Mortgages", email: "noreply@kraftmortgages.ca" },
         to: [{ email: "varun@kraftmortgages.ca", name: "Varun" }],
-        subject: `New Contact Form: ${data.mortgageType || data.subject || "General Inquiry"}`,
+        subject: `New Lead: ${data.mortgageType || data.subject || "Contact"} — ${fullName}`,
         htmlContent: `
-          <h2>New Contact Form Submission</h2>
-          <table style="border-collapse: collapse; width: 100%; max-width: 600px;">
-            <tr><td style="padding: 10px; border: 1px solid #ddd; font-weight: bold;">Name</td><td style="padding: 10px; border: 1px solid #ddd;">${fullName}</td></tr>
-            <tr><td style="padding: 10px; border: 1px solid #ddd; font-weight: bold;">Email</td><td style="padding: 10px; border: 1px solid #ddd;">${data.email}</td></tr>
-            <tr><td style="padding: 10px; border: 1px solid #ddd; font-weight: bold;">Phone</td><td style="padding: 10px; border: 1px solid #ddd;">${data.phone || "Not provided"}</td></tr>
-            <tr><td style="padding: 10px; border: 1px solid #ddd; font-weight: bold;">Mortgage Type</td><td style="padding: 10px; border: 1px solid #ddd;">${data.mortgageType || "N/A"}</td></tr>
-            <tr><td style="padding: 10px; border: 1px solid #ddd; font-weight: bold;">Amount</td><td style="padding: 10px; border: 1px solid #ddd;">${data.amount || "N/A"}</td></tr>
-            <tr><td style="padding: 10px; border: 1px solid #ddd; font-weight: bold;">Message</td><td style="padding: 10px; border: 1px solid #ddd;">${data.message || "No message"}</td></tr>
-          </table>
-          <p style="margin-top: 20px; color: #666;">Source: Kraft Mortgages website contact form</p>
-        `,
+<h2>New Lead from Website</h2>
+<table style="border-collapse:collapse;width:100%;max-width:600px">
+<tr><td style="padding:8px;border:1px solid #ddd;font-weight:bold">Name</td><td style="padding:8px;border:1px solid #ddd">${fullName}</td></tr>
+<tr><td style="padding:8px;border:1px solid #ddd;font-weight:bold">Email</td><td style="padding:8px;border:1px solid #ddd">${data.email}</td></tr>
+<tr><td style="padding:8px;border:1px solid #ddd;font-weight:bold">Phone</td><td style="padding:8px;border:1px solid #ddd">${data.phone || "—"}</td></tr>
+<tr><td style="padding:8px;border:1px solid #ddd;font-weight:bold">Type</td><td style="padding:8px;border:1px solid #ddd">${data.mortgageType || "—"}</td></tr>
+<tr><td style="padding:8px;border:1px solid #ddd;font-weight:bold">Amount</td><td style="padding:8px;border:1px solid #ddd">${data.amount || "—"}</td></tr>
+<tr><td style="padding:8px;border:1px solid #ddd;font-weight:bold">Message</td><td style="padding:8px;border:1px solid #ddd">${data.message || "—"}</td></tr>
+</table>`,
       }),
     });
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error("Brevo API error:", errorText);
-      return { success: false, reason: `Email API error: ${response.status}` };
-    }
-
-    return { success: true };
+    return res.ok;
   } catch (error) {
-    console.error("Error sending email:", error);
-    return { success: false, reason: "Email sending failed" };
+    console.error("Brevo error:", error);
+    return false;
+  }
+}
+
+// Post to Discord for real-time notification
+async function sendDiscordNotification(data: ContactFormData) {
+  const webhookUrl = process.env.DISCORD_LEAD_WEBHOOK_URL;
+  if (!webhookUrl) {
+    console.warn("DISCORD_LEAD_WEBHOOK_URL not set — skipping Discord");
+    return;
+  }
+
+  const fullName = data.firstName
+    ? `${data.firstName} ${data.lastName || ""}`.trim()
+    : data.name || "Unknown";
+
+  try {
+    await fetch(webhookUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        embeds: [
+          {
+            title: "🆕 New Lead from Website",
+            color: 0xc8a962,
+            fields: [
+              { name: "Name", value: fullName, inline: true },
+              { name: "Email", value: data.email, inline: true },
+              { name: "Phone", value: data.phone || "—", inline: true },
+              { name: "Type", value: data.mortgageType || "General", inline: true },
+              { name: "Amount", value: data.amount || "—", inline: true },
+              { name: "Message", value: data.message?.slice(0, 500) || "—" },
+            ],
+            timestamp: new Date().toISOString(),
+          },
+        ],
+      }),
+    });
+  } catch (error) {
+    console.error("Discord notification error:", error);
   }
 }
 
@@ -101,12 +126,19 @@ export async function POST(req: NextRequest) {
   try {
     const body: ContactFormData = await req.json();
 
-    // Honeypot check — bots fill hidden fields
+    // Honeypot
     if (body._hp) {
       return NextResponse.json({ success: true });
     }
 
-    // Build data for Twenty CRM
+    // Validate
+    if (!body.email || (!body.firstName && !body.name)) {
+      return NextResponse.json(
+        { error: "Name and email are required" },
+        { status: 400 }
+      );
+    }
+
     const twentyData: Record<string, string> = {
       firstName: body.firstName || body.name?.split(" ")[0] || "",
       lastName: body.lastName || body.name?.split(" ").slice(1).join(" ") || "",
@@ -119,30 +151,33 @@ export async function POST(req: NextRequest) {
       _hp: "",
     };
 
-    // Send to Twenty CRM (primary) and email (notification) in parallel
+    // Fire all three in parallel — don't block on any
     const [twentyResult, emailResult] = await Promise.all([
       sendToTwenty(twentyData),
-      sendEmailNotification(body),
+      sendEmail(body),
     ]);
 
-    console.log("Contact form submission:", {
-      twenty: twentyResult,
-      email: emailResult,
-      email_address: body.email,
+    // Discord is fire-and-forget (no await needed)
+    sendDiscordNotification(body);
+
+    const crmOk = twentyResult.success;
+    const emailOk = emailResult;
+
+    console.log("Contact form:", {
+      name: twentyData.firstName + " " + twentyData.lastName,
+      email: body.email,
+      crm: crmOk ? "✅" : "❌",
+      email: emailOk ? "✅" : "❌ (BREVO_API_KEY missing)",
     });
 
-    const success = twentyResult.success || emailResult.success;
-
     return NextResponse.json({
-      success,
-      message: success
-        ? "Thank you! We'll be in touch within 24 hours."
-        : "Something went wrong. Please call us at 604-593-1550.",
+      success: crmOk || emailOk,
+      message: "Thank you! We'll be in touch within 24 hours.",
     });
   } catch (error) {
     console.error("Contact form error:", error);
     return NextResponse.json(
-      { error: "Failed to process contact form" },
+      { error: "Something went wrong" },
       { status: 500 }
     );
   }
