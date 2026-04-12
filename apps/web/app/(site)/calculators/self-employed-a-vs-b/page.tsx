@@ -10,6 +10,7 @@ import {
 import Link from "next/link";
 import { ValidatedInput, ValidatedSlider } from "@/components/ui/ValidatedInput";
 import { formatCurrency } from "@/lib/utils/validation";
+import PdfLeadModal from "@/components/PdfLeadModal";
 
 type Province = "BC" | "AB" | "ON";
 
@@ -57,6 +58,7 @@ export default function SelfEmployedAVsBPage() {
   const [bFee, setBFee] = useState(1);
   const [autoTax, setAutoTax] = useState(true);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [pdfModalOpen, setPdfModalOpen] = useState(false);
 
   const effectiveTaxRate = autoTax ? marginalTaxRates[province] : taxRate;
 
@@ -362,7 +364,7 @@ export default function SelfEmployedAVsBPage() {
             </motion.div>
 
             {/* CTA */}
-            <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex flex-col sm:flex-row gap-4 mb-4">
               <Link href="/contact" className="flex-1 bg-gold-500 text-black font-semibold py-4 px-6 rounded-xl hover:bg-gold-400 transition-colors text-center">
                 Get Expert Advice
               </Link>
@@ -370,6 +372,22 @@ export default function SelfEmployedAVsBPage() {
                 All Calculators
               </Link>
             </div>
+            <motion.button
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+              onClick={() => setPdfModalOpen(true)}
+              className="w-full bg-gradient-to-r from-gold-500 to-amber-500 text-black font-semibold py-4 px-6 rounded-xl hover:from-gold-400 hover:to-amber-400 transition-all flex items-center justify-center gap-2 shadow-lg shadow-gold-500/20"
+            >
+              <DollarSign className="w-5 h-5" />
+              Download Your Free Report (PDF)
+            </motion.button>
+            <PdfLeadModal
+              isOpen={pdfModalOpen}
+              onClose={() => setPdfModalOpen(false)}
+              results={results}
+              inputs={{ mortgageAmount, propertyValue, aRate, bRate, term, amortization, province, additionalIncome, effectiveTaxRate, isInvestment, bFee }}
+            />
           </div>
         </section>
 
