@@ -3,14 +3,13 @@ import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
 import { ComplianceBanner } from "@/components/ComplianceBanner";
-import {
-  Calculator, ArrowRight, Info, ChevronDown, ChevronUp, FileText,
+import { Calculator, ArrowRight, Info, ChevronDown, ChevronUp, FileText,
   AlertTriangle, Home, CreditCard, Layers, CheckCircle2, TrendingDown,
-  Lightbulb, Shield, Banknote
-} from "lucide-react";
+  Lightbulb, Shield, Banknote, Download } from "lucide-react";
 import Link from "next/link";
 import { ValidatedInput } from "@/components/ui/ValidatedInput";
 import { formatCurrency } from "@/lib/utils/validation";
+import PdfLeadModal from "@/components/PdfLeadModal";
 
 type FirstMortgageType = "a-lender" | "b-lender" | "equity";
 type Purpose = "debt-consolidation" | "investment" | "renovation" | "purchase-property";
@@ -53,6 +52,7 @@ function calcMonthly(principal: number, annualRate: number, amortYears: number):
 }
 
 export default function RefinanceVsHelocVsSecondPage() {
+  const [showPdfModal, setShowPdfModal] = useState(false);
   const [homeValue, setHomeValue] = useState(900000);
   const [firstBalance, setFirstBalance] = useState(500000);
   const [firstRate, setFirstRate] = useState(4.79);
@@ -180,6 +180,78 @@ export default function RefinanceVsHelocVsSecondPage() {
                     <Calculator className="w-6 h-6 text-gold-400" />
                     Your Home Details
                   </h2>
+            {/* PDF Report Download */}
+            <div className="mt-4">
+              <motion.button
+                onClick={() => setShowPdfModal(true)}
+                className="w-full bg-gradient-to-r from-gold-500 to-amber-500 text-black font-semibold py-4 px-6 rounded-xl hover:from-gold-400 hover:to-amber-400 transition-all flex items-center justify-center gap-2 shadow-lg shadow-gold-500/20"
+              >
+                <Download className="w-5 h-5" />
+                Download Your Free Report (PDF)
+              </motion.button>
+              <PdfLeadModal
+                isOpen={showPdfModal}
+                onClose={() => setShowPdfModal(false)}
+                source="calculator-pdf-refinance-vs-heloc-vs-second"
+                title="Your Equity Options Comparison"
+                subtitle="Get a personalized PDF comparing your equity access options"
+                leadMessage="PDF Report Download — Refinance vs HELOC vs Second Calculator"
+                mortgageType="Refinance"
+                amount={homeValue.toString()}
+                onGeneratePdf={async (userName) => {
+                  const { generateGenericReport } = await import("@/components/calculator-report/generateGenericReport");
+                  generateGenericReport({
+                    title: "Your Equity Options Comparison",
+                    calculatorName: "Refinance vs HELOC vs Second Calculator",
+                    userName,
+                    sections: [
+                      {
+                        title: "Your Inputs",
+                        rows: [
+                          { label: "Home Value", value: "$" + Math.round(homeValue).toLocaleString("en-CA") },
+                          { label: "Current Balance", value: "$" + Math.round(firstBalance).toLocaleString("en-CA") },
+                          { label: "Current Rate", value: firstRate + "%" },
+                          { label: "Cash Needed", value: "$" + Math.round(cashNeeded).toLocaleString("en-CA") },
+                          { label: "Available Equity", value: "$" + Math.round(equity).toLocaleString("en-CA") },
+                          { label: "LTV", value: ltv.toFixed(1) + "%" },
+                        ]
+                      },
+                      {
+                        title: "Refinance",
+                        rows: [
+                          { label: "New Payment", value: "$" + Math.round(results.refiMonthly).toLocaleString("en-CA") },
+                          { label: "Payment Change", value: "$" + Math.round(results.refiPaymentChange).toLocaleString("en-CA") },
+                          { label: "Total Cost (5yr)", value: "$" + Math.round(results.refiTotalCost5yr).toLocaleString("en-CA") },
+                        ]
+                      },
+                      {
+                        title: "HELOC",
+                        rows: [
+                          { label: "Amount", value: "$" + Math.round(cashNeeded).toLocaleString("en-CA") },
+                          { label: "Rate", value: results.helocRate + "%" },
+                          { label: "Monthly Interest Only", value: "$" + Math.round(results.helocMonthly).toLocaleString("en-CA") },
+                        ]
+                      },
+                      {
+                        title: "Second Mortgage",
+                        rows: [
+                          { label: "Amount", value: "$" + Math.round(cashNeeded).toLocaleString("en-CA") },
+                          { label: "Rate", value: results.secondRate + "%" },
+                          { label: "Monthly Payment", value: "$" + Math.round(results.secondMonthly).toLocaleString("en-CA") },
+                        ]
+                      },
+                      {
+                        title: "Recommendation",
+                        rows: [
+                          { label: "Lowest Cost Option", value: results.cheapest, highlight: true },
+                        ]
+                      }
+                    ],
+                    educationalContent: "Each equity option has different costs and terms. Refinancing replaces your mortgage. HELOC offers flexible access. Second mortgage keeps your first intact."
+                  });
+                }}
+              />
+            </div>
                   <ComplianceBanner feature="LEAD_FORM" />
                   <div className="space-y-6">
                     <ValidatedInput label="Current Home Value" value={homeValue} onChange={setHomeValue} validation={{ min: 200000, max: 10000000 }} type="currency" />

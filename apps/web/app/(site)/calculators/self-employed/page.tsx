@@ -4,10 +4,12 @@ import { motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
 import { normalizedIncome } from "@/lib/calc/selfEmployed";
 import { ComplianceBanner } from "@/components/ComplianceBanner";
-import { Briefcase, Calculator, DollarSign, ArrowRight, TrendingUp, FileText } from "lucide-react";
+import { Briefcase, Calculator, DollarSign, ArrowRight, TrendingUp, FileText, Download } from "lucide-react";
 import Link from "next/link";
+import PdfLeadModal from "@/components/PdfLeadModal";
 
 export default function SelfEmployed() {
+  const [showPdfModal, setShowPdfModal] = useState(false);
   const [y1, setY1] = useState(90000);
   const [y2, setY2] = useState(110000);
   const [y3, setY3] = useState(80000);
@@ -61,6 +63,54 @@ export default function SelfEmployed() {
               <h2 className="text-2xl font-semibold text-gray-100 mb-6">Self-Employed Income Calculator</h2>
               
               <div className="mb-6">
+            {/* PDF Report Download */}
+            <div className="mt-4">
+              <motion.button
+                onClick={() => setShowPdfModal(true)}
+                className="w-full bg-gradient-to-r from-gold-500 to-amber-500 text-black font-semibold py-4 px-6 rounded-xl hover:from-gold-400 hover:to-amber-400 transition-all flex items-center justify-center gap-2 shadow-lg shadow-gold-500/20"
+              >
+                <Download className="w-5 h-5" />
+                Download Your Free Report (PDF)
+              </motion.button>
+              <PdfLeadModal
+                isOpen={showPdfModal}
+                onClose={() => setShowPdfModal(false)}
+                source="calculator-pdf-self-employed"
+                title="Your Self-Employed Income Analysis"
+                subtitle="Get a personalized PDF with your normalized income"
+                leadMessage="PDF Report Download — Self-Employed Calculator"
+                mortgageType="Self-Employed"
+                amount=""
+                onGeneratePdf={async (userName) => {
+                  const { generateGenericReport } = await import("@/components/calculator-report/generateGenericReport");
+                  generateGenericReport({
+                    title: "Your Self-Employed Income Analysis",
+                    calculatorName: "Self-Employed Calculator",
+                    userName,
+                    sections: [
+                      {
+                        title: "Your Inputs",
+                        rows: [
+                          { label: "Latest Year NOA", value: "$" + Math.round(y2).toLocaleString("en-CA") },
+                          { label: "Prior Year NOA", value: "$" + Math.round(y1).toLocaleString("en-CA") },
+                          { label: "Two Years Ago NOA", value: "$" + Math.round(y3).toLocaleString("en-CA") },
+                          { label: "Annual Addbacks", value: "$" + Math.round(addbacks).toLocaleString("en-CA") },
+                        ]
+                      },
+                      {
+                        title: "Results",
+                        rows: [
+                          { label: "Normalized Annual Income", value: "$" + Math.round(r.qualifyingIncome).toLocaleString("en-CA"), highlight: true },
+                          { label: "3-Year Average", value: "$" + Math.round(r.threeYearAvg).toLocaleString("en-CA") },
+                          { label: "Normalized Monthly", value: "$" + Math.round(r.qualifyingIncome / 12).toLocaleString("en-CA") },
+                        ]
+                      }
+                    ],
+                    educationalContent: "Lenders average your last 2 years of NOA income. Addbacks like business-use-of-home and CCA can significantly increase qualifying income."
+                  });
+                }}
+              />
+            </div>
                 <ComplianceBanner feature="LEAD_FORM" />
               </div>
 

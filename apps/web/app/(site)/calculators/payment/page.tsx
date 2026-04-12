@@ -4,10 +4,12 @@ import { motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
 import { payment, biweeklySavings } from "@/lib/calc/payment";
 import { ComplianceBanner } from "@/components/ComplianceBanner";
-import { Calculator, DollarSign, TrendingUp, ArrowRight, Clock } from "lucide-react";
+import { Calculator, DollarSign, TrendingUp, ArrowRight, Clock, Download } from "lucide-react";
 import Link from "next/link";
+import PdfLeadModal from "@/components/PdfLeadModal";
 
 export default function PaymentCalculatorPage() {
+  const [showPdfModal, setShowPdfModal] = useState(false);
   const [principal, setPrincipal] = useState(700000);
   const [rate, setRate] = useState(5.34);
   const [years, setYears] = useState(25);
@@ -62,7 +64,55 @@ export default function PaymentCalculatorPage() {
               <h2 className="text-2xl font-semibold text-gray-100 mb-6">Smart Mortgage Payment Calculator</h2>
               
               <div className="mb-6">
-                <ComplianceBanner feature="LEAD_FORM" />
+            {/* PDF Report Download */}
+            <div className="mt-4">
+              <motion.button
+                onClick={() => setShowPdfModal(true)}
+                className="w-full bg-gradient-to-r from-gold-500 to-amber-500 text-black font-semibold py-4 px-6 rounded-xl hover:from-gold-400 hover:to-amber-400 transition-all flex items-center justify-center gap-2 shadow-lg shadow-gold-500/20"
+              >
+                <Download className="w-5 h-5" />
+                Download Your Free Report (PDF)
+              </motion.button>
+              <PdfLeadModal
+                isOpen={showPdfModal}
+                onClose={() => setShowPdfModal(false)}
+                source="calculator-pdf-payment"
+                title="Your Payment Analysis"
+                subtitle="Get a personalized PDF with your payment breakdown"
+                leadMessage="PDF Report Download — Payment"
+                mortgageType="Mortgage"
+                amount={principal.toString()}
+                onGeneratePdf={async (userName) => {
+                  const { generateGenericReport } = await import("@/components/calculator-report/generateGenericReport");
+                  generateGenericReport({
+                    title: "Your Payment Analysis",
+                    calculatorName: "Payment Calculator",
+                    userName,
+                    sections: [
+                      {
+                        title: "Your Inputs",
+                        rows: [
+                          { label: "Mortgage Amount", value: "$" + Math.round(principal).toLocaleString("en-CA") },
+                          { label: "Interest Rate", value: rate + "%" },
+                          { label: "Amortization", value: years + " years" },
+                        ]
+                      },
+                      {
+                        title: "Your Results",
+                        rows: [
+                          { label: "Monthly Payment", value: "$" + Math.round(monthly).toLocaleString("en-CA"), highlight: true },
+                          { label: "Accelerated Biweekly", value: "$" + Math.round(acceleratedBiweekly).toLocaleString("en-CA") },
+                          { label: "Annual Savings (Biweekly)", value: "$" + Math.round(annualSavings).toLocaleString("en-CA") },
+                          { label: "Total Paid (Monthly, over amortization)", value: "$" + Math.round(monthly * years * 12).toLocaleString("en-CA") },
+                        ]
+                      }
+                    ],
+                    educationalContent: "Switching from monthly to accelerated biweekly payments can save you thousands in interest and help you pay off your mortgage years faster."
+                  });
+                }}
+              />
+            </div>
+                                <ComplianceBanner feature="LEAD_FORM" />
               </div>
 
               <div className="grid gap-6 md:grid-cols-3 mb-8">

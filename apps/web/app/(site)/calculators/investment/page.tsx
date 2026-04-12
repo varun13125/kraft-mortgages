@@ -4,10 +4,12 @@ import { motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
 import { cashflow } from "@/lib/calc/investment";
 import { ComplianceBanner } from "@/components/ComplianceBanner";
-import { TrendingUp, Calculator, DollarSign, ArrowRight, Building, Percent, AlertTriangle, CheckCircle } from "lucide-react";
+import { TrendingUp, Calculator, DollarSign, ArrowRight, Building, Percent, AlertTriangle, CheckCircle, Download } from "lucide-react";
 import Link from "next/link";
+import PdfLeadModal from "@/components/PdfLeadModal";
 
 export default function Investment() {
+  const [showPdfModal, setShowPdfModal] = useState(false);
   const [price, setPrice] = useState(800000);
   const [down, setDown] = useState(200000);
   const [rate, setRate] = useState(5.45);
@@ -75,6 +77,55 @@ export default function Investment() {
               <h2 className="text-2xl font-semibold text-gray-100 mb-6">Investment Property Analysis</h2>
               
               <div className="mb-6">
+            {/* PDF Report Download */}
+            <div className="mt-4">
+              <motion.button
+                onClick={() => setShowPdfModal(true)}
+                className="w-full bg-gradient-to-r from-gold-500 to-amber-500 text-black font-semibold py-4 px-6 rounded-xl hover:from-gold-400 hover:to-amber-400 transition-all flex items-center justify-center gap-2 shadow-lg shadow-gold-500/20"
+              >
+                <Download className="w-5 h-5" />
+                Download Your Free Report (PDF)
+              </motion.button>
+              <PdfLeadModal
+                isOpen={showPdfModal}
+                onClose={() => setShowPdfModal(false)}
+                source="calculator-pdf-investment"
+                title="Your Investment Property Analysis"
+                subtitle="Get a personalized PDF with your investment analysis"
+                leadMessage="PDF Report Download — Investment Calculator"
+                mortgageType="Investment"
+                amount={price.toString()}
+                onGeneratePdf={async (userName) => {
+                  const { generateGenericReport } = await import("@/components/calculator-report/generateGenericReport");
+                  generateGenericReport({
+                    title: "Your Investment Property Analysis",
+                    calculatorName: "Investment Calculator",
+                    userName,
+                    sections: [
+                      {
+                        title: "Your Inputs",
+                        rows: [
+                          { label: "Property Value", value: "$" + Math.round(price).toLocaleString("en-CA") },
+                          { label: "Down Payment", value: "$" + Math.round(down).toLocaleString("en-CA") },
+                          { label: "Mortgage Rate", value: rate + "%" },
+                          { label: "Monthly Rent", value: "$" + Math.round(rent).toLocaleString("en-CA") },
+                        ]
+                      },
+                      {
+                        title: "Your Results",
+                        rows: [
+                          { label: "Monthly Cash Flow", value: "$" + Math.round(r.cf).toLocaleString("en-CA"), highlight: true },
+                          { label: "Cap Rate", value: r.capRate.toFixed(2) + "%", highlight: true },
+                          { label: "DSCR", value: r.dscr.toFixed(2) },
+                          { label: "NOI", value: "$" + Math.round(r.noi).toLocaleString("en-CA") },
+                        ]
+                      }
+                    ],
+                    educationalContent: "A good investment typically has positive cash flow, DSCR >= 1.2, and cap rate >= 4%. Lenders focus heavily on DSCR."
+                  });
+                }}
+              />
+            </div>
                 <ComplianceBanner feature="LEAD_FORM" />
               </div>
 

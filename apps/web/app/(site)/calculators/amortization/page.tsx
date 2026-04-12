@@ -3,13 +3,12 @@ import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
 import { ComplianceBanner } from "@/components/ComplianceBanner";
-import {
-  Calculator, HelpCircle, ChevronDown, ChevronUp, Info,
-  Table, BarChart3
-} from "lucide-react";
+import { Calculator, HelpCircle, ChevronDown, ChevronUp, Info,
+  Table, BarChart3, Download } from "lucide-react";
 import Link from "next/link";
 import { ValidatedInput, ValidatedSlider } from "@/components/ui/ValidatedInput";
 import { formatCurrency } from "@/lib/utils/validation";
+import PdfLeadModal from "@/components/PdfLeadModal";
 
 interface ScheduleRow {
   month: number;
@@ -62,6 +61,7 @@ const faqs = [
 ];
 
 export default function AmortizationPage() {
+  const [showPdfModal, setShowPdfModal] = useState(false);
   const [mortgage, setMortgage] = useState(500000);
   const [rate, setRate] = useState(5.0);
   const [amortYears, setAmortYears] = useState(25);
@@ -113,7 +113,56 @@ export default function AmortizationPage() {
               <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }} className="lg:col-span-2 space-y-6">
                 <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-white/20">
                   <h2 className="text-xl font-bold mb-6 flex items-center gap-3"><Calculator className="w-6 h-6 text-gold-400" /> Mortgage Details</h2>
-                  <ComplianceBanner feature="LEAD_FORM" />
+            {/* PDF Report Download */}
+            <div className="mt-4">
+              <motion.button
+                onClick={() => setShowPdfModal(true)}
+                className="w-full bg-gradient-to-r from-gold-500 to-amber-500 text-black font-semibold py-4 px-6 rounded-xl hover:from-gold-400 hover:to-amber-400 transition-all flex items-center justify-center gap-2 shadow-lg shadow-gold-500/20"
+              >
+                <Download className="w-5 h-5" />
+                Download Your Free Report (PDF)
+              </motion.button>
+              <PdfLeadModal
+                isOpen={showPdfModal}
+                onClose={() => setShowPdfModal(false)}
+                source="calculator-pdf-amortization"
+                title="Your Amortization Schedule"
+                subtitle="Get a personalized PDF with your amortization details"
+                leadMessage="PDF Report Download — Amortization"
+                mortgageType="Mortgage"
+                amount={mortgage.toString()}
+                onGeneratePdf={async (userName) => {
+                  const { generateGenericReport } = await import("@/components/calculator-report/generateGenericReport");
+                  generateGenericReport({
+                    title: "Your Amortization Schedule",
+                    calculatorName: "Amortization Calculator",
+                    userName,
+                    sections: [
+                      {
+                        title: "Your Inputs",
+                        rows: [
+                          { label: "Mortgage Amount", value: "$" + Math.round(mortgage).toLocaleString("en-CA") },
+                          { label: "Interest Rate", value: rate + "%" },
+                          { label: "Amortization", value: amortYears + " years" },
+                          { label: "Extra Monthly", value: "$" + Math.round(extraMonthly).toLocaleString("en-CA") },
+                        ]
+                      },
+                      {
+                        title: "Summary",
+                        rows: [
+                          { label: "Total Paid", value: "$" + Math.round(totalPaid).toLocaleString("en-CA"), highlight: true },
+                          { label: "Total Interest", value: "$" + Math.round(totalInterest).toLocaleString("en-CA"), highlight: true },
+                          { label: "Actual Payoff", value: actualMonths + " months" },
+                          { label: "Interest as % of Total", value: ((totalInterest / totalPaid) * 100).toFixed(1) + "%" },
+                        ]
+                      }
+                    ],
+                    educationalContent: "In early years, most of your payment goes toward interest. Extra payments go directly to principal, dramatically reducing total interest."
+                  });
+                }}
+              />
+            </div>
+                                    <ComplianceBanner feature="LEAD_FORM" />
                   <div className="space-y-6">
                     <ValidatedInput label="Mortgage Amount" value={mortgage} onChange={setMortgage} validation={{ min: 50000, max: 5000000 }} type="currency" />
                     <ValidatedInput label="Interest Rate" value={rate} onChange={setRate} validation={{ min: 0.5, max: 15 }} type="percentage" />

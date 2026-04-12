@@ -3,13 +3,12 @@ import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
 import { ComplianceBanner } from "@/components/ComplianceBanner";
-import {
-  Calculator, AlertTriangle, ArrowRight, Info, Scale, Percent,
-  Clock, HelpCircle, ChevronDown, ChevronUp, Shield
-} from "lucide-react";
+import { Calculator, AlertTriangle, ArrowRight, Info, Scale, Percent,
+  Clock, HelpCircle, ChevronDown, ChevronUp, Shield, Download } from "lucide-react";
 import Link from "next/link";
 import { ValidatedInput, ValidatedSlider } from "@/components/ui/ValidatedInput";
 import { formatCurrency, formatPercentage } from "@/lib/utils/validation";
+import PdfLeadModal from "@/components/PdfLeadModal";
 
 function ThreeMonthsInterest(balance: number, annualRate: number): number {
   return (balance * annualRate) / 12 * 3;
@@ -74,6 +73,7 @@ const faqs = [
 ];
 
 export default function MortgagePenaltyPage() {
+  const [showPdfModal, setShowPdfModal] = useState(false);
   const [balance, setBalance] = useState(400000);
   const [contractRate, setContractRate] = useState(5.49);
   const [remainingMonths, setRemainingMonths] = useState(24);
@@ -153,7 +153,55 @@ export default function MortgagePenaltyPage() {
                     <Calculator className="w-6 h-6 text-gold-400" />
                     Mortgage Details
                   </h2>
-                  <ComplianceBanner feature="LEAD_FORM" />
+            {/* PDF Report Download */}
+            <div className="mt-4">
+              <motion.button
+                onClick={() => setShowPdfModal(true)}
+                className="w-full bg-gradient-to-r from-gold-500 to-amber-500 text-black font-semibold py-4 px-6 rounded-xl hover:from-gold-400 hover:to-amber-400 transition-all flex items-center justify-center gap-2 shadow-lg shadow-gold-500/20"
+              >
+                <Download className="w-5 h-5" />
+                Download Your Free Report (PDF)
+              </motion.button>
+              <PdfLeadModal
+                isOpen={showPdfModal}
+                onClose={() => setShowPdfModal(false)}
+                source="calculator-pdf-mortgage-penalty"
+                title="Your Mortgage Penalty Estimate"
+                subtitle="Get a personalized PDF with your penalty breakdown"
+                leadMessage="PDF Report Download — Mortgage Penalty"
+                mortgageType="Mortgage"
+                amount={balance.toString()}
+                onGeneratePdf={async (userName) => {
+                  const { generateGenericReport } = await import("@/components/calculator-report/generateGenericReport");
+                  generateGenericReport({
+                    title: "Your Mortgage Penalty Estimate",
+                    calculatorName: "Mortgage Penalty Calculator",
+                    userName,
+                    sections: [
+                      {
+                        title: "Your Inputs",
+                        rows: [
+                          { label: "Mortgage Balance", value: "$" + Math.round(balance).toLocaleString("en-CA") },
+                          { label: "Contract Rate", value: contractRate + "%" },
+                          { label: "Remaining Term", value: remainingMonths + " months" },
+                          { label: "Mortgage Type", value: mortgageType === "fixed" ? "Fixed" : "Variable" },
+                        ]
+                      },
+                      {
+                        title: "Your Results",
+                        rows: [
+                          { label: "Estimated Penalty", value: "$" + Math.round(results.penalty).toLocaleString("en-CA"), highlight: true },
+                          { label: "Penalty Type", value: results.type },
+                          ...(monthlyInterestSaved > 0 ? [{ label: "Monthly Interest Saved", value: "$" + Math.round(monthlyInterestSaved).toLocaleString("en-CA") }] : []),
+                        ]
+                      }
+                    ],
+                    educationalContent: "Variable-rate mortgages typically carry a 3-month interest penalty. Fixed-rate mortgages use the Interest Rate Differential (IRD), which can be significantly higher."
+                  });
+                }}
+              />
+            </div>
+                                    <ComplianceBanner feature="LEAD_FORM" />
                   <div className="space-y-6">
                     <ValidatedInput
                       label="Current Mortgage Balance"

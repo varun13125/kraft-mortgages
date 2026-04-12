@@ -3,13 +3,12 @@ import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
 import { ComplianceBanner } from "@/components/ComplianceBanner";
-import {
-  Calculator, ChevronDown, ChevronUp, AlertTriangle, CheckCircle, XCircle,
-  ArrowRight, Users, Shield, Info, HelpCircle, TrendingUp
-} from "lucide-react";
+import { Calculator, ChevronDown, ChevronUp, AlertTriangle, CheckCircle, XCircle,
+  ArrowRight, Users, Shield, Info, HelpCircle, TrendingUp, Download } from "lucide-react";
 import Link from "next/link";
 import { ValidatedInput, ValidatedSlider } from "@/components/ui/ValidatedInput";
 import { formatCurrency } from "@/lib/utils/validation";
+import PdfLeadModal from "@/components/PdfLeadModal";
 
 const faqs = [
   {
@@ -58,6 +57,7 @@ function cmhcPremium(downPayment: number, price: number): number {
 }
 
 export default function DebtServiceRatioPage() {
+  const [showPdfModal, setShowPdfModal] = useState(false);
   const [annualIncome, setAnnualIncome] = useState(120000);
   const [coApplicantIncome, setCoApplicantIncome] = useState(0);
   const [calcMethod, setCalcMethod] = useState<"manual" | "auto">("manual");
@@ -172,7 +172,56 @@ export default function DebtServiceRatioPage() {
                     <Users className="w-6 h-6 text-gold-400" />
                     Income
                   </h2>
-                  <ComplianceBanner feature="LEAD_FORM" />
+            {/* PDF Report Download */}
+            <div className="mt-4">
+              <motion.button
+                onClick={() => setShowPdfModal(true)}
+                className="w-full bg-gradient-to-r from-gold-500 to-amber-500 text-black font-semibold py-4 px-6 rounded-xl hover:from-gold-400 hover:to-amber-400 transition-all flex items-center justify-center gap-2 shadow-lg shadow-gold-500/20"
+              >
+                <Download className="w-5 h-5" />
+                Download Your Free Report (PDF)
+              </motion.button>
+              <PdfLeadModal
+                isOpen={showPdfModal}
+                onClose={() => setShowPdfModal(false)}
+                source="calculator-pdf-debt-service-ratio"
+                title="Your Debt Service Ratio Analysis"
+                subtitle="Get a personalized PDF with your DSR results"
+                leadMessage="PDF Report Download — Debt Service Ratio"
+                mortgageType="Mortgage"
+                amount={homePrice.toString()}
+                onGeneratePdf={async (userName) => {
+                  const { generateGenericReport } = await import("@/components/calculator-report/generateGenericReport");
+                  generateGenericReport({
+                    title: "Your Debt Service Ratio Analysis",
+                    calculatorName: "Debt Service Ratio Calculator",
+                    userName,
+                    sections: [
+                      {
+                        title: "Your Inputs",
+                        rows: [
+                          { label: "Total Annual Income", value: "$" + Math.round(annualIncome + coApplicantIncome).toLocaleString("en-CA") },
+                          { label: "Monthly Housing", value: "$" + Math.round(results.housingCosts).toLocaleString("en-CA") },
+                          { label: "Total Monthly Debts", value: "$" + Math.round(results.totalDebts).toLocaleString("en-CA") },
+                        ]
+                      },
+                      {
+                        title: "Your Results",
+                        rows: [
+                          { label: "GDS Ratio", value: results.gds.toFixed(1) + "%", highlight: true },
+                          { label: "GDS Limit", value: (results.gdsPass ? 39 : 44 * 100) + "%" },
+                          { label: "TDS Ratio", value: results.tds.toFixed(1) + "%", highlight: true },
+                          { label: "TDS Limit", value: (results.tdsPass ? 44 : 50 * 100) + "%" },
+                          { label: "Max Mortgage", value: "$" + Math.round(results.cmhcMaxMortgage).toLocaleString("en-CA"), highlight: true },
+                        ]
+                      }
+                    ],
+                    educationalContent: "Your GDS and TDS ratios are key metrics lenders use to assess affordability. Exceeding limits doesn't mean you can't get a mortgage — alternative lenders may have flexible requirements."
+                  });
+                }}
+              />
+            </div>
+                                    <ComplianceBanner feature="LEAD_FORM" />
                   <div className="space-y-6">
                     <ValidatedInput label="Your Annual Gross Income" value={annualIncome} onChange={setAnnualIncome} validation={{ min: 20000, max: 1000000 }} type="currency" />
                     <ValidatedInput label="Co-Applicant Annual Gross Income" value={coApplicantIncome} onChange={setCoApplicantIncome} validation={{ min: 0, max: 1000000 }} type="currency" />

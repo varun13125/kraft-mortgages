@@ -3,14 +3,13 @@ import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
 import { ComplianceBanner } from "@/components/ComplianceBanner";
-import {
-  Calculator, ArrowRight, Info, HelpCircle, ChevronDown, ChevronUp,
+import { Calculator, ArrowRight, Info, HelpCircle, ChevronDown, ChevronUp,
   Building2, TrendingUp, AlertTriangle, CheckCircle2, XCircle, Clock,
-  DollarSign, FileText, BarChart3, Scale, Shield
-} from "lucide-react";
+  DollarSign, FileText, BarChart3, Scale, Shield, Download } from "lucide-react";
 import Link from "next/link";
 import { ValidatedInput, ValidatedSlider } from "@/components/ui/ValidatedInput";
 import { formatCurrency } from "@/lib/utils/validation";
+import PdfLeadModal from "@/components/PdfLeadModal";
 
 type Province = "BC" | "AB" | "ON";
 type LoanPosition = "1st" | "2nd";
@@ -60,6 +59,7 @@ const faqs = [
 ];
 
 export default function AVsEquityPage() {
+  const [showPdfModal, setShowPdfModal] = useState(false);
   const [mortgageAmount, setMortgageAmount] = useState(600000);
   const [propertyValue, setPropertyValue] = useState(800000);
   const [loanPosition, setLoanPosition] = useState<LoanPosition>("1st");
@@ -136,7 +136,61 @@ export default function AVsEquityPage() {
                     <Calculator className="w-6 h-6 text-gold-400" />
                     Loan Details
                   </h2>
-                  <ComplianceBanner feature="LEAD_FORM" />
+            {/* PDF Report Download */}
+            <div className="mt-4">
+              <motion.button
+                onClick={() => setShowPdfModal(true)}
+                className="w-full bg-gradient-to-r from-gold-500 to-amber-500 text-black font-semibold py-4 px-6 rounded-xl hover:from-gold-400 hover:to-amber-400 transition-all flex items-center justify-center gap-2 shadow-lg shadow-gold-500/20"
+              >
+                <Download className="w-5 h-5" />
+                Download Your Free Report (PDF)
+              </motion.button>
+              <PdfLeadModal
+                isOpen={showPdfModal}
+                onClose={() => setShowPdfModal(false)}
+                source="calculator-pdf-a-vs-equity"
+                title="Your A-Lender vs Equity Lender Analysis"
+                subtitle="Get a personalized PDF comparing bank and equity options"
+                leadMessage="PDF Report Download — A Vs Equity"
+                mortgageType="Alternative"
+                amount={mortgageAmount.toString()}
+                onGeneratePdf={async (userName) => {
+                  const { generateGenericReport } = await import("@/components/calculator-report/generateGenericReport");
+                  generateGenericReport({
+                    title: "Your A-Lender vs Equity Lender Analysis",
+                    calculatorName: "A Vs Equity Calculator",
+                    userName,
+                    sections: [
+                      {
+                        title: "Your Inputs",
+                        rows: [
+                          { label: "Mortgage Amount", value: "$" + Math.round(mortgageAmount).toLocaleString("en-CA") },
+                          { label: "Property Value", value: "$" + Math.round(propertyValue).toLocaleString("en-CA") },
+                          { label: "A-Lender Rate", value: aRate + "%" },
+                          { label: "Equity Rate", value: eqRate + "%" },
+                          { label: "Term", value: term + " years" },
+                          { label: "LTV", value: ltv.toFixed(1) + "%" },
+                        ]
+                      },
+                      {
+                        title: "Comparison",
+                        rows: [
+                          { label: "A-Lender Monthly", value: "$" + Math.round(aMonthly).toLocaleString("en-CA") },
+                          { label: "Equity Monthly", value: "$" + Math.round(eqMonthly).toLocaleString("en-CA") },
+                          { label: "A-Lender Interest", value: "$" + Math.round(aInterest).toLocaleString("en-CA") },
+                          { label: "Equity Interest", value: "$" + Math.round(eqInterest).toLocaleString("en-CA") },
+                          { label: "Equity Fee", value: "$" + Math.round(eqFeeAmount).toLocaleString("en-CA") },
+                          { label: "Additional Tax Cost", value: "$" + Math.round(additionalTax).toLocaleString("en-CA") },
+                          ...(isInvestment && investmentTaxSaving > 0 ? [{ label: "Investment Tax Savings", value: "$" + Math.round(investmentTaxSaving).toLocaleString("en-CA") }] : []),
+                        ]
+                      }
+                    ],
+                    educationalContent: "This comparison helps self-employed borrowers decide between bank and equity lending. Consider total cost including fees and tax implications."
+                  });
+                }}
+              />
+            </div>
+                                    <ComplianceBanner feature="LEAD_FORM" />
                   <div className="space-y-6">
                     <ValidatedInput label="Mortgage Amount Needed" value={mortgageAmount} onChange={setMortgageAmount} validation={{ min: 50000, max: 5000000 }} type="currency" />
                     <ValidatedInput label="Property Value" value={propertyValue} onChange={setPropertyValue} validation={{ min: 100000, max: 10000000 }} type="currency" />

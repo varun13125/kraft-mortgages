@@ -3,13 +3,12 @@ import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
 import { ComplianceBanner } from "@/components/ComplianceBanner";
-import {
-  Calculator, ArrowRight, Info, Home, DollarSign,
-  HelpCircle, ChevronDown, ChevronUp, Shield, TrendingUp, Users
-} from "lucide-react";
+import { Calculator, ArrowRight, Info, Home, DollarSign,
+  HelpCircle, ChevronDown, ChevronUp, Shield, TrendingUp, Users, Download } from "lucide-react";
 import Link from "next/link";
 import { ValidatedInput, ValidatedSlider } from "@/components/ui/ValidatedInput";
 import { formatCurrency } from "@/lib/utils/validation";
+import PdfLeadModal from "@/components/PdfLeadModal";
 
 /* ── Helpers ───────────────────────────────────────── */
 
@@ -65,6 +64,7 @@ const faqs = [
 ];
 
 export default function RequiredIncomePage() {
+  const [showPdfModal, setShowPdfModal] = useState(false);
   const [homePrice, setHomePrice] = useState(700000);
   const [downPaymentPct, setDownPaymentPct] = useState(20);
   const [mortgageRate, setMortgageRate] = useState(4.79);
@@ -186,7 +186,59 @@ export default function RequiredIncomePage() {
                     <Calculator className="w-6 h-6 text-gold-400" />
                     {tab === "income" ? "Property & Financing Details" : "Your Financial Details"}
                   </h2>
-                  <ComplianceBanner feature="LEAD_FORM" />
+            {/* PDF Report Download */}
+            <div className="mt-4">
+              <motion.button
+                onClick={() => setShowPdfModal(true)}
+                className="w-full bg-gradient-to-r from-gold-500 to-amber-500 text-black font-semibold py-4 px-6 rounded-xl hover:from-gold-400 hover:to-amber-400 transition-all flex items-center justify-center gap-2 shadow-lg shadow-gold-500/20"
+              >
+                <Download className="w-5 h-5" />
+                Download Your Free Report (PDF)
+              </motion.button>
+              <PdfLeadModal
+                isOpen={showPdfModal}
+                onClose={() => setShowPdfModal(false)}
+                source="calculator-pdf-required-income"
+                title="Your Required Income Analysis"
+                subtitle="Get a personalized PDF with your income requirements"
+                leadMessage="PDF Report Download — Required Income"
+                mortgageType="Purchase"
+                amount={homePrice.toString()}
+                onGeneratePdf={async (userName) => {
+                  const { generateGenericReport } = await import("@/components/calculator-report/generateGenericReport");
+                  generateGenericReport({
+                    title: "Your Required Income Analysis",
+                    calculatorName: "Required Income Calculator",
+                    userName,
+                    sections: [
+                      {
+                        title: "Your Inputs",
+                        rows: [
+                          { label: "Home Price", value: "$" + Math.round(homePrice).toLocaleString("en-CA") },
+                          { label: "Down Payment", value: downPaymentPct + "%" },
+                          { label: "Mortgage Rate", value: mortgageRate + "%" },
+                          { label: "Stress Test Rate", value: stRate.toFixed(2) + "%" },
+                          { label: "Amortization", value: amortization + " years" },
+                        ]
+                      },
+                      {
+                        title: "Your Results",
+                        rows: [
+                          { label: "Required Income (GDS)", value: "$" + Math.round(annualIncomeGDS).toLocaleString("en-CA") + "/yr" },
+                          { label: "Required Income (TDS)", value: "$" + Math.round(annualIncomeTDS).toLocaleString("en-CA") + "/yr" },
+                          { label: "Minimum Required", value: "$" + Math.round(requiredAnnualIncome).toLocaleString("en-CA") + "/yr", highlight: true },
+                          { label: "Total Mortgage", value: "$" + Math.round(totalMortgage).toLocaleString("en-CA") },
+                          { label: "Monthly Payment (Actual)", value: "$" + Math.round(actualMonthly).toLocaleString("en-CA") },
+                          { label: "Monthly Payment (Stress Test)", value: "$" + Math.round(stMonthly).toLocaleString("en-CA") },
+                        ]
+                      }
+                    ],
+                    educationalContent: "This shows the minimum income needed to qualify for a specific purchase. Lenders use the stress test rate for qualification."
+                  });
+                }}
+              />
+            </div>
+                                    <ComplianceBanner feature="LEAD_FORM" />
                   <div className="space-y-6">
                     <ValidatedInput
                       label="Home Purchase Price"

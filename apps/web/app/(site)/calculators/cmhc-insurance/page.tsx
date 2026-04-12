@@ -3,13 +3,12 @@ import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
 import { ComplianceBanner } from "@/components/ComplianceBanner";
-import {
-  Calculator, ArrowRight, Info, Home, Shield,
-  HelpCircle, ChevronDown, ChevronUp, DollarSign, AlertTriangle
-} from "lucide-react";
+import { Calculator, ArrowRight, Info, Home, Shield,
+  HelpCircle, ChevronDown, ChevronUp, DollarSign, AlertTriangle, Download } from "lucide-react";
 import Link from "next/link";
 import { ValidatedInput, ValidatedSlider } from "@/components/ui/ValidatedInput";
 import { formatCurrency } from "@/lib/utils/validation";
+import PdfLeadModal from "@/components/PdfLeadModal";
 
 /* ── CMHC Premium Rates (2025) ─────────────────────── */
 
@@ -61,6 +60,7 @@ const faqs = [
 ];
 
 export default function CMHCInsurancePage() {
+  const [showPdfModal, setShowPdfModal] = useState(false);
   const [homePrice, setHomePrice] = useState(700000);
   const [downPaymentPct, setDownPaymentPct] = useState(10);
   const [mortgageRate, setMortgageRate] = useState(4.79);
@@ -129,7 +129,67 @@ export default function CMHCInsurancePage() {
                     <Calculator className="w-6 h-6 text-gold-400" />
                     Mortgage Details
                   </h2>
-                  <ComplianceBanner feature="LEAD_FORM" />
+            {/* PDF Report Download */}
+            <div className="mt-4">
+              <motion.button
+                onClick={() => setShowPdfModal(true)}
+                className="w-full bg-gradient-to-r from-gold-500 to-amber-500 text-black font-semibold py-4 px-6 rounded-xl hover:from-gold-400 hover:to-amber-400 transition-all flex items-center justify-center gap-2 shadow-lg shadow-gold-500/20"
+              >
+                <Download className="w-5 h-5" />
+                Download Your Free Report (PDF)
+              </motion.button>
+              <PdfLeadModal
+                isOpen={showPdfModal}
+                onClose={() => setShowPdfModal(false)}
+                source="calculator-pdf-cmhc-insurance"
+                title="Your CMHC Insurance Analysis"
+                subtitle="Get a personalized PDF with your CMHC breakdown"
+                leadMessage="PDF Report Download — Cmhc Insurance"
+                mortgageType="Purchase"
+                amount={homePrice.toString()}
+                onGeneratePdf={async (userName) => {
+                  const { generateGenericReport } = await import("@/components/calculator-report/generateGenericReport");
+                  generateGenericReport({
+                    title: "Your CMHC Insurance Analysis",
+                    calculatorName: "Cmhc Insurance Calculator",
+                    userName,
+                    sections: [
+                      {
+                        title: "Your Inputs",
+                        rows: [
+                          { label: "Home Price", value: "$" + Math.round(homePrice).toLocaleString("en-CA") },
+                          { label: "Down Payment", value: downPaymentPct + "% (" + "$" + Math.round(downPayment).toLocaleString("en-CA") + ")" },
+                          { label: "Mortgage Rate", value: mortgageRate + "%" },
+                          { label: "Amortization", value: amortization + " years" },
+                        ]
+                      },
+                      {
+                        title: "CMHC Details",
+                        rows: [
+                          { label: "Base Mortgage", value: "$" + Math.round(baseMortgage).toLocaleString("en-CA") },
+                          { label: "Premium Rate", value: (rate * 100).toFixed(2) + "%" },
+                          { label: "CMHC Premium", value: "$" + Math.round(premium).toLocaleString("en-CA"), highlight: true },
+                          { label: "Premium Tier", value: tier },
+                          { label: "Total Mortgage (with CMHC)", value: "$" + Math.round(totalMortgage).toLocaleString("en-CA"), highlight: true },
+                          { label: "Insurance Required?", value: needsInsurance ? "Yes" : "No" },
+                        ]
+                      },
+                      {
+                        title: "Payment Impact",
+                        rows: [
+                          { label: "Monthly (without CMHC)", value: "$" + Math.round(monthlyBase).toLocaleString("en-CA") },
+                          { label: "Monthly (with CMHC)", value: "$" + Math.round(monthlyWithCMHC).toLocaleString("en-CA") },
+                          { label: "Monthly Increase", value: "$" + Math.round(monthlyImpact).toLocaleString("en-CA") },
+                          { label: "Interest Cost of CMHC", value: "$" + Math.round(interestCostOfCMHC).toLocaleString("en-CA") },
+                        ]
+                      }
+                    ],
+                    educationalContent: "CMHC mortgage loan insurance is required when your down payment is less than 20%. The premium is added to your mortgage and ranges from 4% to 15% of the loan amount."
+                  });
+                }}
+              />
+            </div>
+                                    <ComplianceBanner feature="LEAD_FORM" />
                   <div className="space-y-6">
                     <ValidatedInput
                       label="Home Purchase Price"

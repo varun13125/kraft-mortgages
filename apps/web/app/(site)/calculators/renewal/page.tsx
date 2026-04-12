@@ -4,10 +4,12 @@ import { motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
 import { payment } from "@/lib/calc/payment";
 import { ComplianceBanner } from "@/components/ComplianceBanner";
-import { Clock, Calculator, TrendingUp, ArrowRight, DollarSign, AlertTriangle, CheckCircle } from "lucide-react";
+import { Clock, Calculator, TrendingUp, ArrowRight, DollarSign, AlertTriangle, CheckCircle, Download } from "lucide-react";
 import Link from "next/link";
+import PdfLeadModal from "@/components/PdfLeadModal";
 
 export default function Renewal() {
+  const [showPdfModal, setShowPdfModal] = useState(false);
   const [balance, setBalance] = useState(450000);
   const [monthsLeft, setMonthsLeft] = useState(36);
   const [currentRate, setCurrentRate] = useState(5.89);
@@ -67,6 +69,57 @@ export default function Renewal() {
               <h2 className="text-2xl font-semibold text-gray-100 mb-6">Renewal Optimizer</h2>
               
               <div className="mb-6">
+            {/* PDF Report Download */}
+            <div className="mt-4">
+              <motion.button
+                onClick={() => setShowPdfModal(true)}
+                className="w-full bg-gradient-to-r from-gold-500 to-amber-500 text-black font-semibold py-4 px-6 rounded-xl hover:from-gold-400 hover:to-amber-400 transition-all flex items-center justify-center gap-2 shadow-lg shadow-gold-500/20"
+              >
+                <Download className="w-5 h-5" />
+                Download Your Free Report (PDF)
+              </motion.button>
+              <PdfLeadModal
+                isOpen={showPdfModal}
+                onClose={() => setShowPdfModal(false)}
+                source="calculator-pdf-renewal"
+                title="Your Mortgage Renewal Analysis"
+                subtitle="Get a personalized PDF with your renewal comparison"
+                leadMessage="PDF Report Download — Renewal Calculator"
+                mortgageType="Renewal"
+                amount={balance.toString()}
+                onGeneratePdf={async (userName) => {
+                  const { generateGenericReport } = await import("@/components/calculator-report/generateGenericReport");
+                  generateGenericReport({
+                    title: "Your Mortgage Renewal Analysis",
+                    calculatorName: "Renewal Calculator",
+                    userName,
+                    sections: [
+                      {
+                        title: "Your Inputs",
+                        rows: [
+                          { label: "Current Balance", value: "$" + Math.round(balance).toLocaleString("en-CA") },
+                          { label: "Current Rate", value: currentRate + "%" },
+                          { label: "Months Remaining", value: String(monthsLeft) },
+                          { label: "Market Rate", value: marketRate + "%" },
+                          { label: "Prepayment Penalty", value: "$" + Math.round(penalty).toLocaleString("en-CA") },
+                        ]
+                      },
+                      {
+                        title: "Results",
+                        rows: [
+                          { label: "Current Payment", value: "$" + Math.round(currPay).toLocaleString("en-CA") },
+                          { label: "New Payment", value: "$" + Math.round(newPay).toLocaleString("en-CA"), highlight: true },
+                          { label: "Monthly Savings", value: "$" + Math.round(monthlySavings).toLocaleString("en-CA") },
+                          { label: "Break-Even Months", value: String(breakEvenMonths) },
+                          { label: "Worth Switching?", value: worthSwitching ? "Yes" : "Consider waiting", highlight: true },
+                        ]
+                      }
+                    ],
+                    educationalContent: "Always shop around at renewal. A broker can negotiate better rates across 40+ lenders at no cost."
+                  });
+                }}
+              />
+            </div>
                 <ComplianceBanner feature="LEAD_FORM" />
               </div>
 

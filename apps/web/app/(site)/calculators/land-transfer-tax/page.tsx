@@ -3,12 +3,11 @@ import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
 import { ComplianceBanner } from "@/components/ComplianceBanner";
-import {
-  DollarSign, Calculator, Home, CheckCircle, AlertTriangle, ArrowRight, Receipt, Info
-} from "lucide-react";
+import { DollarSign, Calculator, Home, CheckCircle, AlertTriangle, ArrowRight, Receipt, Info, Download } from "lucide-react";
 import Link from "next/link";
 import { ValidatedInput } from "@/components/ui/ValidatedInput";
 import { formatCurrency } from "@/lib/utils/validation";
+import PdfLeadModal from "@/components/PdfLeadModal";
 
 const PROVINCES = ["BC", "Alberta", "Ontario"] as const;
 type Province = (typeof PROVINCES)[number];
@@ -107,6 +106,7 @@ function torontoMLTT(price: number): { brackets: { label: string; amount: number
 }
 
 export default function LandTransferTax() {
+  const [showPdfModal, setShowPdfModal] = useState(false);
   const [purchasePrice, setPurchasePrice] = useState(650000);
   const [province, setProvince] = useState<Province>("BC");
   const [isFirstTime, setIsFirstTime] = useState(false);
@@ -400,6 +400,54 @@ export default function LandTransferTax() {
           </div>
         </section>
 
+            {/* PDF Report Download */}
+            <div className="mt-4">
+              <motion.button
+                onClick={() => setShowPdfModal(true)}
+                className="w-full bg-gradient-to-r from-gold-500 to-amber-500 text-black font-semibold py-4 px-6 rounded-xl hover:from-gold-400 hover:to-amber-400 transition-all flex items-center justify-center gap-2 shadow-lg shadow-gold-500/20"
+              >
+                <Download className="w-5 h-5" />
+                Download Your Free Report (PDF)
+              </motion.button>
+              <PdfLeadModal
+                isOpen={showPdfModal}
+                onClose={() => setShowPdfModal(false)}
+                source="calculator-pdf-land-transfer-tax"
+                title="Your Land Transfer Tax Estimate"
+                subtitle="Get a personalized PDF with your LTT details"
+                leadMessage="PDF Report Download — Land Transfer Tax Calculator"
+                mortgageType="Purchase"
+                amount={purchasePrice.toString()}
+                onGeneratePdf={async (userName) => {
+                  const { generateGenericReport } = await import("@/components/calculator-report/generateGenericReport");
+                  generateGenericReport({
+                    title: "Your Land Transfer Tax Estimate",
+                    calculatorName: "Land Transfer Tax Calculator",
+                    userName,
+                    sections: [
+                      {
+                        title: "Your Inputs",
+                        rows: [
+                          { label: "Purchase Price", value: "$" + Math.round(purchasePrice).toLocaleString("en-CA") },
+                          { label: "Province", value: province },
+                          { label: "First-Time Buyer?", value: isFirstTime ? "Yes" : "No" },
+                        ]
+                      },
+                      {
+                        title: "Tax Results",
+                        rows: [
+                          { label: "Provincial LTT", value: "$" + Math.round(results.tax).toLocaleString("en-CA"), highlight: true },
+                          ...(results.mltt ? [{ label: "Municipal LTT", value: "$" + Math.round(results.mltt.total).toLocaleString("en-CA") }] : []),
+                          { label: "Rebate", value: "$" + Math.round(results.rebate).toLocaleString("en-CA") },
+                          { label: "Total Owing", value: "$" + Math.round(results.totalOwing).toLocaleString("en-CA"), highlight: true },
+                        ]
+                      }
+                    ],
+                    educationalContent: "Land transfer tax is a one-time fee paid when you purchase property. Rates vary by province. First-time buyers may qualify for rebates."
+                  });
+                }}
+              />
+            </div>
         <ComplianceBanner feature="LEAD_FORM" />
       </main>
     </>

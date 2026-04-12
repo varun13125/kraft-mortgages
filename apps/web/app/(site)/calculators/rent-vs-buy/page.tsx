@@ -3,13 +3,12 @@ import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
 import { ComplianceBanner } from "@/components/ComplianceBanner";
-import {
-  Calculator, ArrowRight, ChevronDown, ChevronUp, Home, TrendingUp,
-  HelpCircle, Scale, DollarSign, BarChart3, Clock, AlertTriangle, Shield
-} from "lucide-react";
+import { Calculator, ArrowRight, ChevronDown, ChevronUp, Home, TrendingUp,
+  HelpCircle, Scale, DollarSign, BarChart3, Clock, AlertTriangle, Shield, Download } from "lucide-react";
 import Link from "next/link";
 import { ValidatedInput, ValidatedSlider } from "@/components/ui/ValidatedInput";
 import { formatCurrency } from "@/lib/utils/validation";
+import PdfLeadModal from "@/components/PdfLeadModal";
 
 const faqs = [
   {
@@ -58,6 +57,7 @@ function monthlyPayment(principal: number, annualRate: number, years: number): n
 }
 
 export default function RentVsBuyPage() {
+  const [showPdfModal, setShowPdfModal] = useState(false);
   const [homePrice, setHomePrice] = useState(700000);
   const [downPaymentPct, setDownPaymentPct] = useState(20);
   const [mortgageRate, setMortgageRate] = useState(5.0);
@@ -187,7 +187,59 @@ export default function RentVsBuyPage() {
                     <Home className="w-6 h-6 text-gold-400" />
                     Home Purchase Details
                   </h2>
-                  <ComplianceBanner feature="LEAD_FORM" />
+            {/* PDF Report Download */}
+            <div className="mt-4">
+              <motion.button
+                onClick={() => setShowPdfModal(true)}
+                className="w-full bg-gradient-to-r from-gold-500 to-amber-500 text-black font-semibold py-4 px-6 rounded-xl hover:from-gold-400 hover:to-amber-400 transition-all flex items-center justify-center gap-2 shadow-lg shadow-gold-500/20"
+              >
+                <Download className="w-5 h-5" />
+                Download Your Free Report (PDF)
+              </motion.button>
+              <PdfLeadModal
+                isOpen={showPdfModal}
+                onClose={() => setShowPdfModal(false)}
+                source="calculator-pdf-rent-vs-buy"
+                title="Your Rent vs Buy Analysis"
+                subtitle="Get a personalized PDF with your rent vs buy comparison"
+                leadMessage="PDF Report Download — Rent Vs Buy"
+                mortgageType="Purchase"
+                amount={homePrice.toString()}
+                onGeneratePdf={async (userName) => {
+                  const { generateGenericReport } = await import("@/components/calculator-report/generateGenericReport");
+                  generateGenericReport({
+                    title: "Your Rent vs Buy Analysis",
+                    calculatorName: "Rent Vs Buy Calculator",
+                    userName,
+                    sections: [
+                      {
+                        title: "Your Inputs",
+                        rows: [
+                          { label: "Home Price", value: "$" + Math.round(homePrice).toLocaleString("en-CA") },
+                          { label: "Down Payment", value: downPaymentPct + "%" },
+                          { label: "Mortgage Rate", value: mortgageRate + "%" },
+                          { label: "Monthly Rent", value: "$" + Math.round(monthlyRent).toLocaleString("en-CA") },
+                          { label: "Appreciation Rate", value: appreciation + "%/yr" },
+                          { label: "Investment Return", value: investmentReturn + "%/yr" },
+                        ]
+                      },
+                      {
+                        title: "Your Results",
+                        rows: [
+                          { label: "Monthly Cost of Buying", value: "$" + Math.round(results.buyMonthly).toLocaleString("en-CA"), highlight: true },
+                          { label: "Monthly Rent", value: "$" + Math.round(monthlyRent).toLocaleString("en-CA") },
+                          { label: "Monthly Difference", value: "$" + Math.round(Math.abs(results.buyMonthly - monthlyRent)).toLocaleString("en-CA") },
+                          { label: "Mortgage Amount", value: "$" + Math.round(results.mortgage).toLocaleString("en-CA") },
+                          ...(results.breakEvenYear ? [{ label: "Break-Even Year", value: "Year " + results.breakEvenYear, highlight: true }] : []),
+                        ]
+                      }
+                    ],
+                    educationalContent: "The rent vs buy decision depends on more than just monthly costs. Consider long-term wealth building through home equity, flexibility of renting, and your personal goals."
+                  });
+                }}
+              />
+            </div>
+                                    <ComplianceBanner feature="LEAD_FORM" />
                   <div className="space-y-6">
                     <ValidatedInput label="Home Purchase Price" value={homePrice} onChange={setHomePrice} validation={{ min: 100000, max: 5000000 }} type="currency" />
                     <ValidatedSlider label={`Down Payment (${downPaymentPct}%)`} value={downPaymentPct} onChange={setDownPaymentPct} min={5} max={50} step={1} formatValue={(v) => `${v}% (${formatCurrency(homePrice * v / 100, 0)})`} />

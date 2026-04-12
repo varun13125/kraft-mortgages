@@ -3,13 +3,12 @@ import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
 import { ComplianceBanner } from "@/components/ComplianceBanner";
-import {
-  Calculator, ChevronDown, ChevronUp, BarChart3, TrendingDown,
-  ArrowRight, Percent, Info, AlertTriangle, Shield
-} from "lucide-react";
+import { Calculator, ChevronDown, ChevronUp, BarChart3, TrendingDown,
+  ArrowRight, Percent, Info, AlertTriangle, Shield, Download } from "lucide-react";
 import Link from "next/link";
 import { ValidatedInput, ValidatedSlider } from "@/components/ui/ValidatedInput";
 import { formatCurrency } from "@/lib/utils/validation";
+import PdfLeadModal from "@/components/PdfLeadModal";
 
 const faqs = [
   {
@@ -43,6 +42,7 @@ function monthlyPayment(principal: number, annualRate: number, years: number): n
 }
 
 export default function RateComparisonPage() {
+  const [showPdfModal, setShowPdfModal] = useState(false);
   const [loanAmount, setLoanAmount] = useState(500000);
   const [amortization, setAmortization] = useState(25);
   const [term, setTerm] = useState(5);
@@ -123,7 +123,64 @@ export default function RateComparisonPage() {
                     <Calculator className="w-6 h-6 text-gold-400" />
                     Loan Details
                   </h2>
-                  <ComplianceBanner feature="LEAD_FORM" />
+            {/* PDF Report Download */}
+            <div className="mt-4">
+              <motion.button
+                onClick={() => setShowPdfModal(true)}
+                className="w-full bg-gradient-to-r from-gold-500 to-amber-500 text-black font-semibold py-4 px-6 rounded-xl hover:from-gold-400 hover:to-amber-400 transition-all flex items-center justify-center gap-2 shadow-lg shadow-gold-500/20"
+              >
+                <Download className="w-5 h-5" />
+                Download Your Free Report (PDF)
+              </motion.button>
+              <PdfLeadModal
+                isOpen={showPdfModal}
+                onClose={() => setShowPdfModal(false)}
+                source="calculator-pdf-rate-comparison"
+                title="Your Rate Comparison Report"
+                subtitle="Get a personalized PDF with your rate comparison"
+                leadMessage="PDF Report Download — Rate Comparison"
+                mortgageType="Mortgage"
+                amount={loanAmount.toString()}
+                onGeneratePdf={async (userName) => {
+                  const { generateGenericReport } = await import("@/components/calculator-report/generateGenericReport");
+                  generateGenericReport({
+                    title: "Your Rate Comparison Report",
+                    calculatorName: "Rate Comparison Calculator",
+                    userName,
+                    sections: (() => {
+                      return [
+                        {
+                          title: "Loan Details",
+                          rows: [
+                            { label: "Loan Amount", value: "$" + Math.round(loanAmount).toLocaleString("en-CA") },
+                            { label: "Amortization", value: amortization + " years" },
+                            { label: "Term", value: term + " years" },
+                          ]
+                        },
+                        ...rates.map(r => ({
+                          title: r.label,
+                          rows: [
+                            { label: "Rate", value: r.rate + "%" },
+                            { label: "Monthly Payment", value: "$" + Math.round(r.monthly).toLocaleString("en-CA"), highlight: true },
+                            { label: "Total Interest (Term)", value: "$" + Math.round(r.totalInterestTerm).toLocaleString("en-CA") },
+                            { label: "Total Paid (Term)", value: "$" + Math.round(r.totalPaidTerm).toLocaleString("en-CA") },
+                          ]
+                        })),
+                        {
+                          title: "Savings",
+                          rows: [
+                            { label: "Monthly Savings (best vs worst)", value: "$" + Math.round(monthlySavings).toLocaleString("en-CA") },
+                            { label: "5-Year Savings", value: "$" + Math.round(monthlySavings * term * 12).toLocaleString("en-CA") },
+                          ]
+                        }
+                      ];
+                    })(),
+                    educationalContent: "Even a 0.25% rate difference on a $500K mortgage saves ~$7,500 over 5 years. Always compare rates from multiple lenders."
+                  });
+                }}
+              />
+            </div>
+                                    <ComplianceBanner feature="LEAD_FORM" />
                   <div className="space-y-6">
                     <ValidatedInput label="Loan Amount" value={loanAmount} onChange={setLoanAmount} validation={{ min: 50000, max: 3000000 }} type="currency" />
                     <ValidatedSlider label={`Amortization (${amortization} years)`} value={amortization} onChange={setAmortization} min={5} max={30} step={5} formatValue={(v) => `${v} years`} />

@@ -3,13 +3,12 @@ import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
 import { ComplianceBanner } from "@/components/ComplianceBanner";
-import {
-  DollarSign, Calculator, Home, CheckCircle, ArrowRight, Gift, PiggyBank, Landmark, Shield, Building, Percent
-} from "lucide-react";
+import { DollarSign, Calculator, Home, CheckCircle, ArrowRight, Gift, PiggyBank, Landmark, Shield, Building, Percent, Download } from "lucide-react";
 import Link from "next/link";
 import { ValidatedInput, ValidatedSlider } from "@/components/ui/ValidatedInput";
 import { formatCurrency, formatPercentage } from "@/lib/utils/validation";
 import { payment } from "@/lib/calc/payment";
+import PdfLeadModal from "@/components/PdfLeadModal";
 
 const PROVINCES = ["BC", "Alberta", "Ontario"] as const;
 type Province = (typeof PROVINCES)[number];
@@ -65,6 +64,7 @@ function calcGSTRebate(price: number, isNewBuild: boolean): number {
 }
 
 export default function FirstTimeHomeBuyer() {
+  const [showPdfModal, setShowPdfModal] = useState(false);
   const [purchasePrice, setPurchasePrice] = useState(550000);
   const [annualIncome, setAnnualIncome] = useState(120000);
   const [savings, setSavings] = useState(55000);
@@ -354,7 +354,66 @@ export default function FirstTimeHomeBuyer() {
           </div>
         </section>
 
-        <ComplianceBanner feature="LEAD_FORM" />
+            {/* PDF Report Download */}
+            <div className="mt-4">
+              <motion.button
+                onClick={() => setShowPdfModal(true)}
+                className="w-full bg-gradient-to-r from-gold-500 to-amber-500 text-black font-semibold py-4 px-6 rounded-xl hover:from-gold-400 hover:to-amber-400 transition-all flex items-center justify-center gap-2 shadow-lg shadow-gold-500/20"
+              >
+                <Download className="w-5 h-5" />
+                Download Your Free Report (PDF)
+              </motion.button>
+              <PdfLeadModal
+                isOpen={showPdfModal}
+                onClose={() => setShowPdfModal(false)}
+                source="calculator-pdf-first-time-home-buyer"
+                title="Your First-Time Home Buyer Report"
+                subtitle="Get a personalized PDF with your first-time buyer analysis"
+                leadMessage="PDF Report Download — First Time Home Buyer"
+                mortgageType="First-Time Buyer"
+                amount={purchasePrice.toString()}
+                onGeneratePdf={async (userName) => {
+                  const { generateGenericReport } = await import("@/components/calculator-report/generateGenericReport");
+                  generateGenericReport({
+                    title: "Your First-Time Home Buyer Report",
+                    calculatorName: "First Time Home Buyer Calculator",
+                    userName,
+                    sections: [
+                      {
+                        title: "Your Inputs",
+                        rows: [
+                          { label: "Purchase Price", value: "$" + Math.round(purchasePrice).toLocaleString("en-CA") },
+                          { label: "Savings/Down Payment", value: "$" + Math.round(savings).toLocaleString("en-CA") },
+                          { label: "Province", value: province },
+                          { label: "Marginal Tax Rate", value: marginalRate + "%" },
+                          { label: "Is Couple?", value: isCouple ? "Yes" : "No" },
+                          { label: "New Build?", value: isNewBuild ? "Yes" : "No" },
+                        ]
+                      },
+                      {
+                        title: "First-Time Buyer Benefits",
+                        rows: [
+                          { label: "HBP Withdrawal", value: "$" + Math.round(results.hbpWithdrawal || 0).toLocaleString("en-CA"), highlight: true },
+                          { label: "FHSA Tax Savings", value: "$" + Math.round(results.fhsaTaxSavings || 0).toLocaleString("en-CA") },
+                          { label: "LTT Savings", value: "$" + Math.round(results.lttSavings || 0).toLocaleString("en-CA") },
+                          { label: "GST Rebate", value: "$" + Math.round(results.gstRebate || 0).toLocaleString("en-CA") },
+                        ]
+                      },
+                      {
+                        title: "Mortgage Summary",
+                        rows: [
+                          { label: "Mortgage Amount", value: "$" + Math.round(results.mortgageAmount || 0).toLocaleString("en-CA"), highlight: true },
+                          { label: "CMHC Premium", value: "$" + Math.round(results.cmhcPremium || 0).toLocaleString("en-CA") },
+                          { label: "Gap to Purchase", value: "$" + Math.round(results.mortgageAmount - savings || 0).toLocaleString("en-CA") },
+                        ]
+                      }
+                    ],
+                    educationalContent: "First-time home buyers have access to the Home Buyers' Plan (RRSP withdrawal), FHSA ($40K tax-free), and provincial land transfer tax rebates."
+                  });
+                }}
+              />
+            </div>
+                <ComplianceBanner feature="LEAD_FORM" />
       </main>
     </>
   );

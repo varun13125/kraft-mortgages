@@ -4,10 +4,13 @@ import { motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
 import { interestOnlyCost } from "@/lib/calc/construction";
 import { ComplianceBanner } from "@/components/ComplianceBanner";
-import { Hammer, Calculator, Plus, Trash2, ArrowRight, Clock, DollarSign, AlertTriangle } from "lucide-react";
+import { Hammer, Calculator, Plus, Trash2, ArrowRight, Clock, DollarSign, AlertTriangle, Download } from "lucide-react";
 import Link from "next/link";
 
+import PdfLeadModal from "@/components/PdfLeadModal";
+
 export default function ConstructionPro() {
+  const [showPdfModal, setShowPdfModal] = useState(false);
   const [rate, setRate] = useState(7.25);
   const [draws, setDraws] = useState([
     { month: 1, amount: 200000 }, 
@@ -216,6 +219,52 @@ export default function ConstructionPro() {
                     <p>During construction, you typically pay only interest on drawn funds. Upon completion, the loan converts to a traditional amortizing mortgage.</p>
                   </div>
                 </div>
+              </div>
+
+              {/* PDF Report Download */}
+              <div className="mt-4">
+                <motion.button
+                  onClick={() => setShowPdfModal(true)}
+                  className="w-full bg-gradient-to-r from-gold-500 to-amber-500 text-black font-semibold py-4 px-6 rounded-xl hover:from-gold-400 hover:to-amber-400 transition-all flex items-center justify-center gap-2 shadow-lg shadow-gold-500/20"
+                >
+                  <Download className="w-5 h-5" />
+                  Download Your Free Report (PDF)
+                </motion.button>
+                <PdfLeadModal
+                  isOpen={showPdfModal}
+                  onClose={() => setShowPdfModal(false)}
+                  source="calculator-pdf-construction-pro"
+                  title="Your Construction Cost Report"
+                  subtitle="Get a personalized PDF with your construction financing details"
+                  leadMessage="PDF Report Download — Construction Pro Calculator"
+                  mortgageType="Construction"
+                  amount={totalProjectCost.toString()}
+                  onGeneratePdf={async (userName) => {
+                    const { generateGenericReport } = await import("@/components/calculator-report/generateGenericReport");
+                    generateGenericReport({
+                      title: "Your Construction Cost Report",
+                      calculatorName: "Construction Pro Calculator",
+                      userName,
+                      sections: [
+                        {
+                          title: "Your Inputs",
+                          rows: [
+                            { label: "Construction Rate", value: rate + "%" },
+                            { label: "Total Project Cost", value: "$" + Math.round(totalProjectCost).toLocaleString("en-CA") },
+                            { label: "Number of Draws", value: String(draws.length) },
+                          ]
+                        },
+                        {
+                          title: "Results",
+                          rows: [
+                            { label: "Total Interest Cost", value: "$" + Math.round(result.totalInterest).toLocaleString("en-CA"), highlight: true },
+                          ]
+                        }
+                      ],
+                      educationalContent: "Construction financing uses draw-based payments where you only pay interest on amounts drawn at each stage."
+                    });
+                  }}
+                />
               </div>
 
               {/* Related Calculators */}

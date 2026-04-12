@@ -3,13 +3,12 @@ import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
 import { ComplianceBanner } from "@/components/ComplianceBanner";
-import {
-  Calculator, Shield, CheckCircle, AlertTriangle, HelpCircle,
-  ChevronDown, ChevronUp, Home, DollarSign, TrendingUp
-} from "lucide-react";
+import { Calculator, Shield, CheckCircle, AlertTriangle, HelpCircle,
+  ChevronDown, ChevronUp, Home, DollarSign, TrendingUp, Download } from "lucide-react";
 import Link from "next/link";
 import { ValidatedInput, ValidatedSlider } from "@/components/ui/ValidatedInput";
 import { formatCurrency } from "@/lib/utils/validation";
+import PdfLeadModal from "@/components/PdfLeadModal";
 
 /* ── Math ───────────────────────────────────────────── */
 function monthlyPayment(principal: number, annualRate: number, months: number): number {
@@ -45,6 +44,7 @@ const faqs = [
 ];
 
 export default function StressTestPage() {
+  const [showPdfModal, setShowPdfModal] = useState(false);
   const [purchasePrice, setPurchasePrice] = useState(700000);
   const [downPaymentPct, setDownPaymentPct] = useState(20);
   const [contractRate, setContractRate] = useState(4.79);
@@ -105,7 +105,58 @@ export default function StressTestPage() {
               <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }} className="space-y-8">
                 <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-white/20">
                   <h2 className="text-xl sm:text-2xl font-bold mb-6 flex items-center gap-3"><Calculator className="w-6 h-6 text-gold-400" /> Property & Mortgage</h2>
-                  <ComplianceBanner feature="LEAD_FORM" />
+            {/* PDF Report Download */}
+            <div className="mt-4">
+              <motion.button
+                onClick={() => setShowPdfModal(true)}
+                className="w-full bg-gradient-to-r from-gold-500 to-amber-500 text-black font-semibold py-4 px-6 rounded-xl hover:from-gold-400 hover:to-amber-400 transition-all flex items-center justify-center gap-2 shadow-lg shadow-gold-500/20"
+              >
+                <Download className="w-5 h-5" />
+                Download Your Free Report (PDF)
+              </motion.button>
+              <PdfLeadModal
+                isOpen={showPdfModal}
+                onClose={() => setShowPdfModal(false)}
+                source="calculator-pdf-stress-test"
+                title="Your Stress Test Analysis"
+                subtitle="Get a personalized PDF with your stress test results"
+                leadMessage="PDF Report Download — Stress Test"
+                mortgageType="Mortgage"
+                amount={purchasePrice.toString()}
+                onGeneratePdf={async (userName) => {
+                  const { generateGenericReport } = await import("@/components/calculator-report/generateGenericReport");
+                  generateGenericReport({
+                    title: "Your Stress Test Analysis",
+                    calculatorName: "Stress Test Calculator",
+                    userName,
+                    sections: [
+                      {
+                        title: "Your Inputs",
+                        rows: [
+                          { label: "Purchase Price", value: "$" + Math.round(purchasePrice).toLocaleString("en-CA") },
+                          { label: "Down Payment", value: downPaymentPct + "%" },
+                          { label: "Contract Rate", value: contractRate + "%" },
+                          { label: "Stress Test Rate", value: stressRate.toFixed(2) + "%" },
+                          { label: "Amortization", value: amortYears + " years" },
+                        ]
+                      },
+                      {
+                        title: "Your Results",
+                        rows: [
+                          { label: "Monthly Payment (Contract Rate)", value: "$" + Math.round(regularPayment).toLocaleString("en-CA") },
+                          { label: "Monthly Payment (Stress Test)", value: "$" + Math.round(stressPayment).toLocaleString("en-CA"), highlight: true },
+                          { label: "Monthly Increase", value: "$" + Math.round(stressPayment - regularPayment).toLocaleString("en-CA") },
+                          { label: "Income Needed (GDS)", value: "$" + Math.round(incomeNeededGDS).toLocaleString("en-CA") + "/yr", highlight: true },
+                          { label: "Income Needed (TDS)", value: "$" + Math.round(incomeNeededTDS).toLocaleString("en-CA") + "/yr" },
+                        ]
+                      }
+                    ],
+                    educationalContent: "The mortgage stress test ensures you can afford your payments if rates rise. You must qualify at the higher of your contract rate + 2% or 5.25%."
+                  });
+                }}
+              />
+            </div>
+                                    <ComplianceBanner feature="LEAD_FORM" />
                   <div className="space-y-6">
                     <ValidatedInput label="Purchase Price" value={purchasePrice} onChange={setPurchasePrice} validation={{ min: 100000, max: 5000000 }} type="currency" />
                     <ValidatedSlider label={`Down Payment (${downPaymentPct}%)`} value={downPaymentPct} onChange={setDownPaymentPct} min={5} max={50} step={1} formatValue={(v) => `${v}% (${formatCurrency(purchasePrice * v / 100, 0)})`} />

@@ -3,13 +3,12 @@ import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
 import { ComplianceBanner } from "@/components/ComplianceBanner";
-import {
-  Calculator, ArrowRight, Info, Home, Receipt,
-  HelpCircle, ChevronDown, ChevronUp, PiggyBank, Wallet, Shield
-} from "lucide-react";
+import { Calculator, ArrowRight, Info, Home, Receipt,
+  HelpCircle, ChevronDown, ChevronUp, PiggyBank, Wallet, Shield, Download } from "lucide-react";
 import Link from "next/link";
 import { ValidatedInput } from "@/components/ui/ValidatedInput";
 import { formatCurrency } from "@/lib/utils/validation";
+import PdfLeadModal from "@/components/PdfLeadModal";
 
 /* ── Down Payment Calculation ──────────────────────── */
 
@@ -60,6 +59,7 @@ const faqs = [
 ];
 
 export default function DownPaymentPage() {
+  const [showPdfModal, setShowPdfModal] = useState(false);
   const [homePrice, setHomePrice] = useState(700000);
   const [downPaymentOverride, setDownPaymentOverride] = useState<number | null>(null);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
@@ -122,7 +122,55 @@ export default function DownPaymentPage() {
                     <Calculator className="w-6 h-6 text-gold-400" />
                     Home Details
                   </h2>
-                  <ComplianceBanner feature="LEAD_FORM" />
+            {/* PDF Report Download */}
+            <div className="mt-4">
+              <motion.button
+                onClick={() => setShowPdfModal(true)}
+                className="w-full bg-gradient-to-r from-gold-500 to-amber-500 text-black font-semibold py-4 px-6 rounded-xl hover:from-gold-400 hover:to-amber-400 transition-all flex items-center justify-center gap-2 shadow-lg shadow-gold-500/20"
+              >
+                <Download className="w-5 h-5" />
+                Download Your Free Report (PDF)
+              </motion.button>
+              <PdfLeadModal
+                isOpen={showPdfModal}
+                onClose={() => setShowPdfModal(false)}
+                source="calculator-pdf-down-payment"
+                title="Your Down Payment Analysis"
+                subtitle="Get a personalized PDF with your down payment breakdown"
+                leadMessage="PDF Report Download — Down Payment"
+                mortgageType="Purchase"
+                amount={homePrice.toString()}
+                onGeneratePdf={async (userName) => {
+                  const { generateGenericReport } = await import("@/components/calculator-report/generateGenericReport");
+                  generateGenericReport({
+                    title: "Your Down Payment Analysis",
+                    calculatorName: "Down Payment Calculator",
+                    userName,
+                    sections: [
+                      {
+                        title: "Your Inputs",
+                        rows: [
+                          { label: "Home Price", value: "$" + Math.round(homePrice).toLocaleString("en-CA") },
+                          { label: "Down Payment", value: downPct.toFixed(1) + "% (" + "$" + Math.round(downPayment).toLocaleString("en-CA") + ")" },
+                        ]
+                      },
+                      {
+                        title: "Your Results",
+                        rows: [
+                          { label: "Mortgage Amount", value: "$" + Math.round(mortgageAmount).toLocaleString("en-CA"), highlight: true },
+                          { label: "CMHC Required?", value: needsInsurance ? "Yes" : "No" },
+                          { label: "CMHC Premium", value: needsInsurance ? "$" + Math.round(cmhc).toLocaleString("en-CA") : "N/A" },
+                          { label: "Total Mortgage", value: "$" + Math.round(totalMortgage).toLocaleString("en-CA"), highlight: true },
+                          { label: "Cash to Close", value: "$" + Math.round(cashToClose).toLocaleString("en-CA") },
+                        ]
+                      }
+                    ],
+                    educationalContent: "The minimum down payment is 5% on the first $500K and 10% above. Under 20% requires CMHC insurance."
+                  });
+                }}
+              />
+            </div>
+                                    <ComplianceBanner feature="LEAD_FORM" />
                   <div className="space-y-6">
                     <ValidatedInput
                       label="Home Purchase Price"

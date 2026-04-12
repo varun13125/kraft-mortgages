@@ -3,8 +3,9 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
 import { ComplianceBanner } from "@/components/ComplianceBanner";
-import { CheckCircle, Calculator, DollarSign, Percent, Clock, Home, CreditCard, AlertTriangle } from "lucide-react";
+import { CheckCircle, Calculator, DollarSign, Percent, Clock, Home, CreditCard, AlertTriangle, Download } from "lucide-react";
 import Link from "next/link";
+import PdfLeadModal from "@/components/PdfLeadModal";
 
 // Pre-approval calculation logic
 function calculatePreApproval({
@@ -124,6 +125,7 @@ function calculatePreApproval({
 }
 
 export default function PreApprovalCalculator() {
+  const [showPdfModal, setShowPdfModal] = useState(false);
   const [grossIncome, setGrossIncome] = useState(85000);
   const [monthlyDebts, setMonthlyDebts] = useState(800);
   const [downPayment, setDownPayment] = useState(0.10); // 10%
@@ -478,6 +480,57 @@ export default function PreApprovalCalculator() {
           </div>
         </section>
 
+            {/* PDF Report Download */}
+            <div className="mt-4">
+              <motion.button
+                onClick={() => setShowPdfModal(true)}
+                className="w-full bg-gradient-to-r from-gold-500 to-amber-500 text-black font-semibold py-4 px-6 rounded-xl hover:from-gold-400 hover:to-amber-400 transition-all flex items-center justify-center gap-2 shadow-lg shadow-gold-500/20"
+              >
+                <Download className="w-5 h-5" />
+                Download Your Free Report (PDF)
+              </motion.button>
+              <PdfLeadModal
+                isOpen={showPdfModal}
+                onClose={() => setShowPdfModal(false)}
+                source="calculator-pdf-pre-approval"
+                title="Your Pre-Approval Estimate"
+                subtitle="Get a personalized PDF with your pre-qualification details"
+                leadMessage="PDF Report Download — Pre-Approval Calculator"
+                mortgageType="Pre-Approval"
+                amount={grossIncome.toString()}
+                onGeneratePdf={async (userName) => {
+                  const { generateGenericReport } = await import("@/components/calculator-report/generateGenericReport");
+                  generateGenericReport({
+                    title: "Your Pre-Approval Estimate",
+                    calculatorName: "Pre-Approval Calculator",
+                    userName,
+                    sections: [
+                      {
+                        title: "Your Inputs",
+                        rows: [
+                          { label: "Gross Annual Income", value: "$" + Math.round(grossIncome).toLocaleString("en-CA") },
+                          { label: "Down Payment", value: "$" + Math.round(downPayment).toLocaleString("en-CA") },
+                          { label: "Monthly Debts", value: "$" + Math.round(monthlyDebts).toLocaleString("en-CA") },
+                          { label: "Credit Score", value: String(creditScore) },
+                        ]
+                      },
+                      {
+                        title: "Pre-Approval Results",
+                        rows: [
+                          { label: "Max Purchase Price", value: "$" + Math.round(results.maxPurchasePrice).toLocaleString("en-CA"), highlight: true },
+                          { label: "Max Mortgage Amount", value: "$" + Math.round(results.maxMortgageAmount).toLocaleString("en-CA") },
+                          { label: "Monthly Payment", value: "$" + Math.round(results.monthlyPayment).toLocaleString("en-CA") },
+                          { label: "GDS Ratio", value: results.gdsRatio.toFixed(1) + "%" },
+                          { label: "TDS Ratio", value: results.tdsRatio.toFixed(1) + "%" },
+                          { label: "Qualifies?", value: results.qualifies ? "Yes" : "No", highlight: true },
+                        ]
+                      }
+                    ],
+                    educationalContent: "Pre-approval gives you a clear picture of your purchasing power before you start house hunting. A mortgage broker can get you pre-approved across multiple lenders."
+                  });
+                }}
+              />
+            </div>
         <ComplianceBanner feature="LEAD_FORM" />
       </main>
     </>

@@ -5,12 +5,14 @@ import Navigation from "@/components/Navigation";
 import { stressTestRate, gdsTds } from "@/lib/calc/affordability";
 import { payment } from "@/lib/calc/payment";
 import { ComplianceBanner } from "@/components/ComplianceBanner";
-import { DollarSign, Calculator, Home, AlertTriangle, CheckCircle, ArrowRight, CreditCard } from "lucide-react";
+import { DollarSign, Calculator, Home, AlertTriangle, CheckCircle, ArrowRight, CreditCard, Download } from "lucide-react";
 import Link from "next/link";
 import { ValidatedInput, ValidatedSlider } from "@/components/ui/ValidatedInput";
 import { validationRules, formatCurrency, formatPercentage } from "@/lib/utils/validation";
+import PdfLeadModal from "@/components/PdfLeadModal";
 
 export default function Affordability() {
+  const [showPdfModal, setShowPdfModal] = useState(false);
   const [income, setIncome] = useState(120000);
   const [debts, setDebts] = useState(6000); // annual non‑housing
   const [propTax, setPropTax] = useState(3000);
@@ -83,7 +85,61 @@ export default function Affordability() {
                   </h2>
                   
                   <div className="mb-6">
-                    <ComplianceBanner feature="LEAD_FORM" />
+            {/* PDF Report Download */}
+            <div className="mt-4">
+              <motion.button
+                onClick={() => setShowPdfModal(true)}
+                className="w-full bg-gradient-to-r from-gold-500 to-amber-500 text-black font-semibold py-4 px-6 rounded-xl hover:from-gold-400 hover:to-amber-400 transition-all flex items-center justify-center gap-2 shadow-lg shadow-gold-500/20"
+              >
+                <Download className="w-5 h-5" />
+                Download Your Free Report (PDF)
+              </motion.button>
+              <PdfLeadModal
+                isOpen={showPdfModal}
+                onClose={() => setShowPdfModal(false)}
+                source="calculator-pdf-affordability"
+                title="Your Affordability Analysis"
+                subtitle="Get a personalized PDF with your affordability analysis"
+                leadMessage="PDF Report Download — Affordability"
+                mortgageType="Mortgage"
+                amount={principal.toString()}
+                onGeneratePdf={async (userName) => {
+                  const { generateGenericReport } = await import("@/components/calculator-report/generateGenericReport");
+                  generateGenericReport({
+                    title: "Your Affordability Analysis",
+                    calculatorName: "Affordability Calculator",
+                    userName,
+                    sections: [
+                      {
+                        title: "Your Inputs",
+                        rows: [
+                          { label: "Annual Income", value: "$" + Math.round(income).toLocaleString("en-CA") },
+                          { label: "Annual Debts", value: "$" + Math.round(debts).toLocaleString("en-CA") },
+                          { label: "Property Tax (annual)", value: "$" + Math.round(propTax).toLocaleString("en-CA") },
+                          { label: "Heating (annual)", value: "$" + Math.round(heat).toLocaleString("en-CA") },
+                          { label: "Condo Fees (monthly)", value: "$" + Math.round(condoFees).toLocaleString("en-CA") },
+                          { label: "Interest Rate", value: rate + "%" },
+                          { label: "Qualifying Rate (Stress Test)", value: qualRate + "%" },
+                        ]
+                      },
+                      {
+                        title: "Your Results",
+                        rows: [
+                          { label: "Maximum Mortgage Amount", value: "$" + Math.round(principal).toLocaleString("en-CA"), highlight: true },
+                          { label: "Monthly P&I Payment", value: "$" + Math.round(monthlyPI).toLocaleString("en-CA") },
+                          { label: "Annual Housing Costs", value: "$" + Math.round(housingAnnual).toLocaleString("en-CA") },
+                          { label: "GDS Ratio", value: gds.toFixed(1) + "%" + " (max 39%)" },
+                          { label: "TDS Ratio", value: tds.toFixed(1) + "%" + " (max 44%)" },
+                          { label: "Passes Affordability Test", value: pass ? "Yes" : "No", highlight: true },
+                        ]
+                      }
+                    ],
+                    educationalContent: "Your Gross Debt Service (GDS) ratio shows what percentage of your income goes to housing costs. The Total Debt Service (TDS) ratio includes all debts. Most lenders require GDS ≤ 39% and TDS ≤ 44%. If you don't pass, consider reducing debts, increasing your down payment, or exploring alternative lending options."
+                  });
+                }}
+              />
+            </div>
+                        <ComplianceBanner feature="LEAD_FORM" />
                   </div>
 
                   <div className="space-y-6">

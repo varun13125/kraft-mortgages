@@ -3,13 +3,12 @@ import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
 import { ComplianceBanner } from "@/components/ComplianceBanner";
-import {
-  Calculator, ArrowRight, Info, ChevronDown, ChevronUp, Shield, FileText,
-  AlertTriangle, HelpCircle, Building2, Landmark, TrendingDown, CheckCircle2, XCircle
-} from "lucide-react";
+import { Calculator, ArrowRight, Info, ChevronDown, ChevronUp, Shield, FileText,
+  AlertTriangle, HelpCircle, Building2, Landmark, TrendingDown, CheckCircle2, XCircle, Download } from "lucide-react";
 import Link from "next/link";
 import { ValidatedInput, ValidatedSlider } from "@/components/ui/ValidatedInput";
 import { formatCurrency } from "@/lib/utils/validation";
+import PdfLeadModal from "@/components/PdfLeadModal";
 
 type LoanPosition = "1st" | "2nd";
 type CreditRange = "excellent" | "good" | "fair" | "poor";
@@ -74,6 +73,7 @@ function calcMonthly(principal: number, annualRate: number, amortYears: number):
 }
 
 export default function BvsEquityPage() {
+  const [showPdfModal, setShowPdfModal] = useState(false);
   const [mortgageAmount, setMortgageAmount] = useState(500000);
   const [propertyValue, setPropertyValue] = useState(750000);
   const [position, setPosition] = useState<LoanPosition>("1st");
@@ -158,7 +158,67 @@ export default function BvsEquityPage() {
                     <Calculator className="w-6 h-6 text-gold-400" />
                     Mortgage Details
                   </h2>
-                  <ComplianceBanner feature="LEAD_FORM" />
+            {/* PDF Report Download */}
+            <div className="mt-4">
+              <motion.button
+                onClick={() => setShowPdfModal(true)}
+                className="w-full bg-gradient-to-r from-gold-500 to-amber-500 text-black font-semibold py-4 px-6 rounded-xl hover:from-gold-400 hover:to-amber-400 transition-all flex items-center justify-center gap-2 shadow-lg shadow-gold-500/20"
+              >
+                <Download className="w-5 h-5" />
+                Download Your Free Report (PDF)
+              </motion.button>
+              <PdfLeadModal
+                isOpen={showPdfModal}
+                onClose={() => setShowPdfModal(false)}
+                source="calculator-pdf-b-vs-equity"
+                title="Your B-Lender vs Equity Lender Analysis"
+                subtitle="Get a personalized PDF comparing B-lender and equity options"
+                leadMessage="PDF Report Download — B Vs Equity"
+                mortgageType="Alternative"
+                amount={mortgageAmount.toString()}
+                onGeneratePdf={async (userName) => {
+                  const { generateGenericReport } = await import("@/components/calculator-report/generateGenericReport");
+                  generateGenericReport({
+                    title: "Your B-Lender vs Equity Lender Analysis",
+                    calculatorName: "B Vs Equity Calculator",
+                    userName,
+                    sections: [
+                      {
+                        title: "Your Inputs",
+                        rows: [
+                          { label: "Mortgage Amount", value: "$" + Math.round(mortgageAmount).toLocaleString("en-CA") },
+                          { label: "Property Value", value: "$" + Math.round(propertyValue).toLocaleString("en-CA") },
+                          { label: "B-Lender Rate", value: bRate + "%" },
+                          { label: "Equity Rate", value: eRate + "%" },
+                          { label: "Term", value: term + " years" },
+                          { label: "LTV", value: ((mortgageAmount / propertyValue) * 100).toFixed(1) + "%" },
+                        ]
+                      },
+                      {
+                        title: "B-Lender",
+                        rows: [
+                          { label: "Monthly Payment", value: "$" + Math.round(bMonthly).toLocaleString("en-CA") },
+                          { label: "Total Interest", value: "$" + Math.round(bTotalInterest).toLocaleString("en-CA") },
+                          { label: "Fees", value: "$" + Math.round(bFees).toLocaleString("en-CA") },
+                          { label: "Total Cost", value: "$" + Math.round(bTotalCost).toLocaleString("en-CA") },
+                        ]
+                      },
+                      {
+                        title: "Equity Lender",
+                        rows: [
+                          { label: "Monthly Payment", value: "$" + Math.round(eMonthly).toLocaleString("en-CA") },
+                          { label: "Total Interest", value: "$" + Math.round(eTotalInterest).toLocaleString("en-CA") },
+                          { label: "Fees", value: "$" + Math.round(eFees).toLocaleString("en-CA") },
+                          { label: "Total Cost", value: "$" + Math.round(eTotalCost).toLocaleString("en-CA") },
+                        ]
+                      }
+                    ],
+                    educationalContent: "B-lenders offer competitive rates with flexible verification. Equity lenders provide maximum flexibility at higher rates."
+                  });
+                }}
+              />
+            </div>
+                                    <ComplianceBanner feature="LEAD_FORM" />
                   <div className="space-y-6">
                     <ValidatedInput label="Mortgage Amount Needed" value={mortgageAmount} onChange={setMortgageAmount} validation={{ min: 50000, max: 5000000 }} type="currency" />
                     <ValidatedInput label="Property Value" value={propertyValue} onChange={setPropertyValue} validation={{ min: 100000, max: 10000000 }} type="currency" />

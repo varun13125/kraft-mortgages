@@ -3,13 +3,12 @@ import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
 import { ComplianceBanner } from "@/components/ComplianceBanner";
-import {
-  Calculator, AlertTriangle, ArrowRight, Info, Home, Receipt,
-  HelpCircle, ChevronDown, ChevronUp, Shield, FileText
-} from "lucide-react";
+import { Calculator, AlertTriangle, ArrowRight, Info, Home, Receipt,
+  HelpCircle, ChevronDown, ChevronUp, Shield, FileText, Download } from "lucide-react";
 import Link from "next/link";
 import { ValidatedInput, ValidatedSlider } from "@/components/ui/ValidatedInput";
 import { formatCurrency } from "@/lib/utils/validation";
+import PdfLeadModal from "@/components/PdfLeadModal";
 
 type Province = "BC" | "AB" | "ON";
 
@@ -115,6 +114,7 @@ interface CostItem {
 }
 
 export default function ClosingCostsPage() {
+  const [showPdfModal, setShowPdfModal] = useState(false);
   const [purchasePrice, setPurchasePrice] = useState(700000);
   const [downPaymentPct, setDownPaymentPct] = useState(20);
   const [province, setProvince] = useState<Province>("BC");
@@ -198,7 +198,55 @@ export default function ClosingCostsPage() {
                     <Calculator className="w-6 h-6 text-gold-400" />
                     Purchase Details
                   </h2>
-                  <ComplianceBanner feature="LEAD_FORM" />
+            {/* PDF Report Download */}
+            <div className="mt-4">
+              <motion.button
+                onClick={() => setShowPdfModal(true)}
+                className="w-full bg-gradient-to-r from-gold-500 to-amber-500 text-black font-semibold py-4 px-6 rounded-xl hover:from-gold-400 hover:to-amber-400 transition-all flex items-center justify-center gap-2 shadow-lg shadow-gold-500/20"
+              >
+                <Download className="w-5 h-5" />
+                Download Your Free Report (PDF)
+              </motion.button>
+              <PdfLeadModal
+                isOpen={showPdfModal}
+                onClose={() => setShowPdfModal(false)}
+                source="calculator-pdf-closing-costs"
+                title="Your Closing Costs Estimate"
+                subtitle="Get a personalized PDF with your closing costs breakdown"
+                leadMessage="PDF Report Download — Closing Costs Calculator"
+                mortgageType="Purchase"
+                amount={purchasePrice.toString()}
+                onGeneratePdf={async (userName) => {
+                  const { generateGenericReport } = await import("@/components/calculator-report/generateGenericReport");
+                  generateGenericReport({
+                    title: "Your Closing Costs Estimate",
+                    calculatorName: "Closing Costs Calculator",
+                    userName,
+                    sections: [
+                      {
+                        title: "Your Inputs",
+                        rows: [
+                          { label: "Purchase Price", value: "$" + Math.round(purchasePrice).toLocaleString("en-CA") },
+                          { label: "Down Payment", value: downPaymentPct + "% (" + "$" + Math.round(downPayment).toLocaleString("en-CA") + ")" },
+                          { label: "Province", value: province },
+                          { label: "First-Time Buyer?", value: firstTime ? "Yes" : "No" },
+                        ]
+                      },
+                      {
+                        title: "Closing Costs Breakdown",
+                        rows: costs.map(c => ({
+                          label: c.label,
+                          value: "$" + Math.round(c.amount).toLocaleString("en-CA"),
+                          highlight: c.label.toLowerCase().includes("total") || c.label.toLowerCase().includes("land transfer"),
+                        }))
+                      }
+                    ],
+                    educationalContent: "Closing costs typically range from 1.5% to 4% of the purchase price. Always budget for these on top of your down payment."
+                  });
+                }}
+              />
+            </div>
+                                    <ComplianceBanner feature="LEAD_FORM" />
                   <div className="space-y-6">
                     <ValidatedInput
                       label="Home Purchase Price"

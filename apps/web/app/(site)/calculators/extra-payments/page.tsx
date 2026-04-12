@@ -3,13 +3,12 @@ import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
 import { ComplianceBanner } from "@/components/ComplianceBanner";
-import {
-  Calculator, ArrowRight, HelpCircle, ChevronDown, ChevronUp,
-  Info, TrendingDown, Clock, PiggyBank, Zap
-} from "lucide-react";
+import { Calculator, ArrowRight, HelpCircle, ChevronDown, ChevronUp,
+  Info, TrendingDown, Clock, PiggyBank, Zap, Download } from "lucide-react";
 import Link from "next/link";
 import { ValidatedInput, ValidatedSlider } from "@/components/ui/ValidatedInput";
 import { formatCurrency } from "@/lib/utils/validation";
+import PdfLeadModal from "@/components/PdfLeadModal";
 
 /* ── Amortization helpers ───────────────────────────── */
 interface YearRow {
@@ -108,6 +107,7 @@ const faqs = [
 ];
 
 export default function ExtraPaymentsPage() {
+  const [showPdfModal, setShowPdfModal] = useState(false);
   const [mortgage, setMortgage] = useState(500000);
   const [rate, setRate] = useState(5.0);
   const [amortYears, setAmortYears] = useState(25);
@@ -164,7 +164,60 @@ export default function ExtraPaymentsPage() {
                     <Calculator className="w-6 h-6 text-gold-400" />
                     Mortgage Details
                   </h2>
-                  <ComplianceBanner feature="LEAD_FORM" />
+            {/* PDF Report Download */}
+            <div className="mt-4">
+              <motion.button
+                onClick={() => setShowPdfModal(true)}
+                className="w-full bg-gradient-to-r from-gold-500 to-amber-500 text-black font-semibold py-4 px-6 rounded-xl hover:from-gold-400 hover:to-amber-400 transition-all flex items-center justify-center gap-2 shadow-lg shadow-gold-500/20"
+              >
+                <Download className="w-5 h-5" />
+                Download Your Free Report (PDF)
+              </motion.button>
+              <PdfLeadModal
+                isOpen={showPdfModal}
+                onClose={() => setShowPdfModal(false)}
+                source="calculator-pdf-extra-payments"
+                title="Your Extra Payments Analysis"
+                subtitle="Get a personalized PDF with your extra payments impact"
+                leadMessage="PDF Report Download — Extra Payments"
+                mortgageType="Mortgage"
+                amount={mortgage.toString()}
+                onGeneratePdf={async (userName) => {
+                  const { generateGenericReport } = await import("@/components/calculator-report/generateGenericReport");
+                  generateGenericReport({
+                    title: "Your Extra Payments Analysis",
+                    calculatorName: "Extra Payments Calculator",
+                    userName,
+                    sections: [
+                      {
+                        title: "Your Inputs",
+                        rows: [
+                          { label: "Mortgage Amount", value: "$" + Math.round(mortgage).toLocaleString("en-CA") },
+                          { label: "Interest Rate", value: rate + "%" },
+                          { label: "Amortization", value: amortYears + " years" },
+                          { label: "Extra Monthly", value: "$" + Math.round(extraMonthly).toLocaleString("en-CA") },
+                          { label: "Lump Sum", value: "$" + Math.round(lumpSum).toLocaleString("en-CA") },
+                          { label: "Start Year", value: "Year " + startYear },
+                        ]
+                      },
+                      {
+                        title: "Results",
+                        rows: [
+                          { label: "Interest Saved", value: "$" + Math.round(results.interestSaved).toLocaleString("en-CA"), highlight: true },
+                          { label: "Original Total Interest", value: "$" + Math.round(results.originalTotalInterest).toLocaleString("en-CA") },
+                          { label: "Accelerated Total Interest", value: "$" + Math.round(results.acceleratedTotalInterest).toLocaleString("en-CA") },
+                          { label: "Original Payoff", value: results.originalPayoffMonths + " months" },
+                          { label: "Accelerated Payoff", value: results.acceleratedPayoffMonths + " months", highlight: true },
+                          { label: "Time Saved", value: (results.originalPayoffMonths - results.acceleratedPayoffMonths) + " months" },
+                        ]
+                      }
+                    ],
+                    educationalContent: "Extra payments go directly to principal. Even $200/month extra can save tens of thousands and cut years off your mortgage."
+                  });
+                }}
+              />
+            </div>
+                                    <ComplianceBanner feature="LEAD_FORM" />
                   <div className="space-y-6">
                     <ValidatedInput label="Mortgage Amount" value={mortgage} onChange={setMortgage} validation={{ min: 50000, max: 5000000 }} type="currency" />
                     <ValidatedInput label="Interest Rate" value={rate} onChange={setRate} validation={{ min: 0.5, max: 15 }} type="percentage" />

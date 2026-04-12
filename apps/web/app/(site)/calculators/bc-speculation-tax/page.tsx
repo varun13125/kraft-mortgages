@@ -3,13 +3,12 @@ import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
 import { ComplianceBanner } from "@/components/ComplianceBanner";
-import {
-  Calculator, HelpCircle, ChevronDown, ChevronUp, AlertTriangle,
-  Info, Building, CheckCircle, XCircle
-} from "lucide-react";
+import { Calculator, HelpCircle, ChevronDown, ChevronUp, AlertTriangle,
+  Info, Building, CheckCircle, XCircle, Download } from "lucide-react";
 import Link from "next/link";
 import { ValidatedInput } from "@/components/ui/ValidatedInput";
 import { formatCurrency } from "@/lib/utils/validation";
+import PdfLeadModal from "@/components/PdfLeadModal";
 
 type Ownership = "citizen" | "pr" | "other";
 type Occupancy = "principal" | "rental" | "vacant" | "shortterm";
@@ -34,6 +33,7 @@ const faqs = [
 ];
 
 export default function BCSpeculationTaxPage() {
+  const [showPdfModal, setShowPdfModal] = useState(false);
   const [assessedValue, setAssessedValue] = useState(1000000);
   const [ownership, setOwnership] = useState<Ownership>("citizen");
   const [occupancy, setOccupancy] = useState<Occupancy>("principal");
@@ -84,7 +84,56 @@ export default function BCSpeculationTaxPage() {
               <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }} className="space-y-8">
                 <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-white/20">
                   <h2 className="text-xl sm:text-2xl font-bold mb-6 flex items-center gap-3"><Calculator className="w-6 h-6 text-gold-400" /> Property Details</h2>
-                  <ComplianceBanner feature="LEAD_FORM" />
+            {/* PDF Report Download */}
+            <div className="mt-4">
+              <motion.button
+                onClick={() => setShowPdfModal(true)}
+                className="w-full bg-gradient-to-r from-gold-500 to-amber-500 text-black font-semibold py-4 px-6 rounded-xl hover:from-gold-400 hover:to-amber-400 transition-all flex items-center justify-center gap-2 shadow-lg shadow-gold-500/20"
+              >
+                <Download className="w-5 h-5" />
+                Download Your Free Report (PDF)
+              </motion.button>
+              <PdfLeadModal
+                isOpen={showPdfModal}
+                onClose={() => setShowPdfModal(false)}
+                source="calculator-pdf-bc-speculation-tax"
+                title="Your BC Speculation Tax Report"
+                subtitle="Get a personalized PDF with your SVT details"
+                leadMessage="PDF Report Download — Bc Speculation Tax"
+                mortgageType="BC Tax"
+                amount={assessedValue.toString()}
+                onGeneratePdf={async (userName) => {
+                  const { generateGenericReport } = await import("@/components/calculator-report/generateGenericReport");
+                  generateGenericReport({
+                    title: "Your BC Speculation Tax Report",
+                    calculatorName: "Bc Speculation Tax Calculator",
+                    userName,
+                    sections: [
+                      {
+                        title: "Your Inputs",
+                        rows: [
+                          { label: "Assessed Value", value: "$" + Math.round(assessedValue).toLocaleString("en-CA") },
+                          { label: "Ownership", value: ownership },
+                          { label: "Occupancy", value: occupancy },
+                          { label: "Region", value: region },
+                        ]
+                      },
+                      {
+                        title: "Results",
+                        rows: [
+                          { label: "Tax Rate", value: (taxRate * 100) + "%" },
+                          { label: "Annual Tax", value: "$" + Math.round(taxAmount).toLocaleString("en-CA"), highlight: true },
+                          { label: "Exempt?", value: exempt ? "Yes" : "No" },
+                          ...(reason ? [{ label: "Reason", value: reason }] : []),
+                        ]
+                      }
+                    ],
+                    educationalContent: "The BC SVT ranges from 0.5% to 2% of assessed value in designated areas. Exemptions exist for principal residences and long-term rentals."
+                  });
+                }}
+              />
+            </div>
+                                    <ComplianceBanner feature="LEAD_FORM" />
                   <div className="space-y-6">
                     <ValidatedInput label="Assessed Property Value" value={assessedValue} onChange={setAssessedValue} validation={{ min: 100000, max: 10000000 }} type="currency" />
 

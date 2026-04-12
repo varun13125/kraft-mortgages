@@ -3,13 +3,12 @@ import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
 import { ComplianceBanner } from "@/components/ComplianceBanner";
-import {
-  Calculator, ArrowRight, Home, HelpCircle, ChevronDown, ChevronUp,
-  AlertTriangle, Info, TrendingDown, Clock, DollarSign
-} from "lucide-react";
+import { Calculator, ArrowRight, Home, HelpCircle, ChevronDown, ChevronUp,
+  AlertTriangle, Info, TrendingDown, Clock, DollarSign, Download } from "lucide-react";
 import Link from "next/link";
 import { ValidatedInput } from "@/components/ui/ValidatedInput";
 import { formatCurrency } from "@/lib/utils/validation";
+import PdfLeadModal from "@/components/PdfLeadModal";
 
 /* ── Mortgage Math ──────────────────────────────────── */
 function monthlyPayment(principal: number, annualRate: number, months: number): number {
@@ -42,6 +41,7 @@ const faqs = [
 ];
 
 export default function RefinanceBreakEvenPage() {
+  const [showPdfModal, setShowPdfModal] = useState(false);
   const [currentBalance, setCurrentBalance] = useState(450000);
   const [currentRate, setCurrentRate] = useState(5.89);
   const [currentPayment, setCurrentPayment] = useState(2850);
@@ -119,7 +119,60 @@ export default function RefinanceBreakEvenPage() {
                     <Calculator className="w-6 h-6 text-gold-400" />
                     Current Mortgage
                   </h2>
-                  <ComplianceBanner feature="LEAD_FORM" />
+            {/* PDF Report Download */}
+            <div className="mt-4">
+              <motion.button
+                onClick={() => setShowPdfModal(true)}
+                className="w-full bg-gradient-to-r from-gold-500 to-amber-500 text-black font-semibold py-4 px-6 rounded-xl hover:from-gold-400 hover:to-amber-400 transition-all flex items-center justify-center gap-2 shadow-lg shadow-gold-500/20"
+              >
+                <Download className="w-5 h-5" />
+                Download Your Free Report (PDF)
+              </motion.button>
+              <PdfLeadModal
+                isOpen={showPdfModal}
+                onClose={() => setShowPdfModal(false)}
+                source="calculator-pdf-refinance-break-even"
+                title="Your Refinance Break-Even Analysis"
+                subtitle="Get a personalized PDF with your refinance analysis"
+                leadMessage="PDF Report Download — Refinance Break Even"
+                mortgageType="Refinance"
+                amount={currentBalance.toString()}
+                onGeneratePdf={async (userName) => {
+                  const { generateGenericReport } = await import("@/components/calculator-report/generateGenericReport");
+                  generateGenericReport({
+                    title: "Your Refinance Break-Even Analysis",
+                    calculatorName: "Refinance Break Even Calculator",
+                    userName,
+                    sections: [
+                      {
+                        title: "Your Inputs",
+                        rows: [
+                          { label: "Current Balance", value: "$" + Math.round(currentBalance).toLocaleString("en-CA") },
+                          { label: "Current Rate", value: currentRate + "%" },
+                          { label: "Current Payment", value: "$" + Math.round(currentPayment).toLocaleString("en-CA") },
+                          { label: "Remaining Term", value: Math.round(remainingMonths / 12) + " years" },
+                          { label: "New Rate", value: newRate + "%" },
+                          { label: "Penalty Estimate", value: "$" + Math.round(penaltyEstimate).toLocaleString("en-CA") },
+                          { label: "Legal + Appraisal", value: "$" + Math.round(legalFees + appraisalFees).toLocaleString("en-CA") },
+                        ]
+                      },
+                      {
+                        title: "Your Results",
+                        rows: [
+                          { label: "New Monthly Payment", value: "$" + Math.round(results.newPayment).toLocaleString("en-CA"), highlight: true },
+                          { label: "Monthly Savings", value: "$" + Math.round(results.monthlySavings).toLocaleString("en-CA") },
+                          { label: "Break-Even", value: results.breakEvenMonths === Infinity ? "Never" : results.breakEvenMonths + " months", highlight: true },
+                          { label: "Interest Saved", value: "$" + Math.round(results.interestSaved).toLocaleString("en-CA") },
+                          { label: "Net Savings", value: "$" + Math.round(results.netSavings).toLocaleString("en-CA"), highlight: true },
+                        ]
+                      }
+                    ],
+                    educationalContent: "A refinance makes sense when your monthly savings recoup the switching costs within a reasonable timeframe — typically under 24 months."
+                  });
+                }}
+              />
+            </div>
+                                    <ComplianceBanner feature="LEAD_FORM" />
                   <div className="space-y-6">
                     <ValidatedInput label="Current Mortgage Balance" value={currentBalance} onChange={setCurrentBalance} validation={{ min: 10000, max: 5000000 }} type="currency" />
                     <ValidatedInput label="Current Interest Rate" value={currentRate} onChange={setCurrentRate} validation={{ min: 0.5, max: 15 }} type="percentage" />
