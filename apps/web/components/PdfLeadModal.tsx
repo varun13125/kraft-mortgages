@@ -4,47 +4,28 @@ import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Download, FileText, Loader2 } from "lucide-react";
 
-interface CalculatorResults {
-  aMonthly: number;
-  bMonthly: number;
-  aInterest: number;
-  bInterest: number;
-  aTotalCost: number;
-  bTotalCost: number;
-  bFeeAmount: number;
-  additionalTax: number;
-  netSavings: number;
-  bWins: boolean;
-  investmentTaxSavings: number;
-  monthlyDiff: number;
-}
-
-interface CalculatorInputs {
-  mortgageAmount: number;
-  propertyValue: number;
-  aRate: number;
-  bRate: number;
-  term: number;
-  amortization: number;
-  province: string;
-  additionalIncome: number;
-  effectiveTaxRate: number;
-  isInvestment: boolean;
-  bFee: number;
-}
-
 interface PdfLeadModalProps {
   isOpen: boolean;
   onClose: () => void;
-  results: CalculatorResults;
-  inputs: CalculatorInputs;
+  source: string; // e.g., "calculator-pdf-affordability"
+  title: string;  // e.g., "Your Mortgage Analysis"
+  subtitle?: string; // e.g., "Get a personalized PDF with your complete analysis"
+  leadMessage?: string; // context for the lead CRM submission
+  mortgageType?: string;
+  amount?: string;
+  onGeneratePdf: (userName: string) => void;
 }
 
 export default function PdfLeadModal({
   isOpen,
   onClose,
-  results,
-  inputs,
+  source,
+  title,
+  subtitle,
+  leadMessage,
+  mortgageType,
+  amount,
+  onGeneratePdf,
 }: PdfLeadModalProps) {
   const [step, setStep] = useState<"form" | "downloading" | "done">("form");
   const [name, setName] = useState("");
@@ -57,14 +38,15 @@ export default function PdfLeadModal({
     setStep("form");
     setLoading(false);
     setError("");
+    setName("");
+    setEmail("");
+    setPhone("");
   }, []);
 
-  // Reset when modal opens
   useEffect(() => {
     if (isOpen) resetForm();
   }, [isOpen, resetForm]);
 
-  // Escape to close
   useEffect(() => {
     if (!isOpen) return;
     const handler = (e: KeyboardEvent) => {
@@ -81,7 +63,6 @@ export default function PdfLeadModal({
     setError("");
 
     try {
-      // Submit lead to CRM
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -89,28 +70,19 @@ export default function PdfLeadModal({
           name,
           email,
           phone,
-          message: `PDF Report Download — Self-Employed A vs B Calculator. Property Value: $${inputs.propertyValue.toLocaleString()}, Mortgage: $${inputs.mortgageAmount.toLocaleString()}`,
-          source: "calculator-pdf-self-employed-a-vs-b",
-          mortgageType: "Self-Employed",
-          amount: inputs.mortgageAmount.toString(),
+          message: leadMessage || `PDF Report Download — ${title}. Source: ${source}`,
+          source,
+          mortgageType: mortgageType || "",
+          amount: amount || "",
         }),
       });
 
       if (!res.ok) {
         console.error("Lead submission failed:", await res.text());
-        // Don't block PDF on lead submission failure
       }
 
-      // Generate and download PDF
       setStep("downloading");
-      const { generateCalculatorReport } = await import(
-        "./calculator-report/generateReport"
-      );
-      await generateCalculatorReport({
-        userName: name,
-        results,
-        inputs,
-      });
+      await onGeneratePdf(name);
       setStep("done");
     } catch (err) {
       console.error(err);
@@ -128,20 +100,17 @@ export default function PdfLeadModal({
           exit={{ opacity: 0 }}
           className="fixed inset-0 z-50 flex items-center justify-center p-4"
         >
-          {/* Backdrop */}
           <div
             className="absolute inset-0 bg-black/70 backdrop-blur-sm"
             onClick={onClose}
           />
 
-          {/* Modal */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             className="relative bg-[#1a1a2e] border border-gold-500/30 rounded-2xl w-full max-w-md overflow-hidden shadow-2xl"
           >
-            {/* Close button */}
             <button
               onClick={onClose}
               className="absolute top-4 right-4 z-10 p-1 rounded-full hover:bg-white/10 transition-colors"
@@ -157,10 +126,10 @@ export default function PdfLeadModal({
                     <FileText className="w-6 h-6 text-gold-400" />
                   </div>
                   <h3 className="text-xl font-bold text-gray-100 mb-2">
-                    Download Your Free Report
+                    {title}
                   </h3>
                   <p className="text-sm text-gray-400">
-                    Get a personalized PDF with your complete mortgage analysis
+                    {subtitle || "Get a personalized PDF with your complete mortgage analysis"}
                   </p>
                 </div>
 

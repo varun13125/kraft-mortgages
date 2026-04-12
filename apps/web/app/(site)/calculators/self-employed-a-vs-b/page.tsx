@@ -385,8 +385,20 @@ export default function SelfEmployedAVsBPage() {
             <PdfLeadModal
               isOpen={pdfModalOpen}
               onClose={() => setPdfModalOpen(false)}
-              results={results}
-              inputs={{ mortgageAmount, propertyValue, aRate, bRate, term, amortization, province, additionalIncome, effectiveTaxRate, isInvestment, bFee }}
+              source="calculator-pdf-self-employed-a-vs-b"
+              title="Download Your Free Report"
+              subtitle="Get a personalized PDF with your complete A-Lender vs B-Lender analysis"
+              leadMessage={`PDF Report Download — Self-Employed A vs B Calculator. Property Value: $${propertyValue.toLocaleString()}, Mortgage: $${mortgageAmount.toLocaleString()}`}
+              mortgageType="Self-Employed"
+              amount={mortgageAmount.toString()}
+              onGeneratePdf={async (userName) => {
+                const { generateCalculatorReport } = await import("@/components/calculator-report/generateAvsBReport");
+                await generateCalculatorReport({
+                  userName,
+                  results,
+                  inputs: { mortgageAmount, propertyValue, aRate, bRate, term, amortization, province, additionalIncome, effectiveTaxRate, isInvestment, bFee },
+                });
+              }}
             />
           </div>
         </section>
