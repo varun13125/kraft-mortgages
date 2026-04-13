@@ -3120,7 +3120,7 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
 
     const firestorePosts = snapshot.docs.map((doc: any) => ({
       ...doc.data(),
-      publishedAt: doc.data().publishedAt?.toDate(),
+      publishedAt: (() => { const p = doc.data().publishedAt; return p?.toDate ? p.toDate() : (p ? new Date(p) : null); })(),
     })) as Post[];
 
     // Track which slugs are in Firestore (these take priority)
