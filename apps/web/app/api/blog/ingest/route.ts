@@ -4,6 +4,56 @@ import { savePost } from '@/lib/db/firestore';
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
+// Pillar pages for internal linking
+const PILLAR_PAGES: { keywords: string[]; title: string; url: string }[] = [
+  { keywords: ['private mortgage', 'private lender', 'private lending', 'alternative lender', 'b-lender', 'b lender'], title: 'Private Mortgages', url: '/private-mortgages' },
+  { keywords: ['commercial', 'office building', 'retail space', 'industrial', 'multi-unit', 'commercial mortgage'], title: 'Commercial Financing', url: '/commercial' },
+  { keywords: ['construction', 'builder', 'draw mortgage', 'build your', 'construction loan', 'construction financing'], title: 'Construction Financing', url: '/construction-financing' },
+  { keywords: ['self-employed', 'self employed', 'business owner', 'stated income'], title: 'Self-Employed Mortgages', url: '/self-employed-mortgages' },
+  { keywords: ['refinance', 'refinancing', 'equity take out', 'cash out', 'debt consolidation'], title: 'Mortgage Refinancing', url: '/refinancing' },
+  { keywords: ['investment property', 'rental property', 'investor', 'rental income', 'income property'], title: 'Investment Property Mortgages', url: '/investment-properties' },
+  { keywords: ['first-time', 'first time buyer', 'first home', 'first home buyer'], title: 'First-Time Home Buyer Programs', url: '/first-time-home-buyers' },
+  { keywords: ['mlb select', 'ml i select', 'cmhc insured', 'multi-family insurance'], title: 'MLI Select Program', url: '/mli-select' },
+];
+
+const SITE_URL = 'https://kraftmortgages.ca';
+
+// Count existing internal links in content
+function countInternalLinks(content: string): number {
+  // Match markdown links [text](/path) or [text](https://kraftmortgages.ca/path)
+  const internalLinkPattern = /\[([^\]]+)\]\(\/?[a-z][^)]*\)|\[([^\]]+)\]\(https?:\/\/kraftmortgages\.ca[^)]*\)/gi;
+  return (content.match(internalLinkPattern) || []).length;
+}
+
+// Find relevant pillar pages based on content keywords
+function findRelevantPillars(content: string, title: string): typeof PILLAR_PAGES {
+  const text = (title + ' ' + content).toLowerCase();
+  return PILLAR_PAGES.filter(p => p.keywords.some(kw => text.includes(kw)));
+}
+
+// Append internal links section if post lacks them
+function ensureInternalLinks(markdown: string, title: string): { markdown: string; linksAdded: string[] } {
+  const existingCount = countInternalLinks(markdown);
+  if (existingCount >= 2) {
+    return { markdown, linksAdded: [] };
+  }
+
+  const relevantPillars = findRelevantPillars(markdown, title);
+  if (relevantPillars.length === 0) {
+    // No topic match — add a generic CTA to /contact as minimum
+    if (existingCount === 0) {
+      const append = `\n\n---\n\n**Looking for expert mortgage advice?** [Contact Kraft Mortgages](${SITE_URL}/contact) for a free consultation.\n`;
+      return { markdown: markdown + append, linksAdded: ['/contact'] };
+    }
+    return { markdown, linksAdded: [] };
+  }
+
+  // Build a "Related Resources" section with matched pillars
+  const linkLines = relevantPillars.slice(0, 3).map(p => `- [${p.title}](${SITE_URL}${p.url})`).join('\n');
+  const append = `\n\n---\n\n### Related Resources\n\n${linkLines}\n`;
+  return { markdown: markdown + append, linksAdded: relevantPillars.map(p => p.url) };
+}
+
 function slugify(input: string): string {
   return String(input || '')
     .toLowerCase()
@@ -122,6 +172,13 @@ export async function POST(req: NextRequest) {
     const slug: string = body.slug || slugify(title);
     const markdown: string = decodeHtmlEntities(body.content || body.markdown || '');
     const html: string = decodeHtmlEntities(body.html || '');
+
+    // Auto-inject internal links if post has fewer than 2
+    const { markdown: enrichedMarkdown, linksAdded } = ensureInternalLinks(markdown, title);
+    const finalMarkdown = body.skipAutoLinks ? markdown : enrichedMarkdown;
+    if (linksAdded.length > 0 && !body.skipAutoLinks) {
+      console.log(`[ingest] Auto-added ${linksAdded.length} internal links to "${title}": ${linksAdded.join(', ')}`);
+    }
     const metaDescription: string = decodeHtmlEntities(body.excerpt || body.metaDescription || '');
     const keywords: string[] = Array.isArray(body.tags) ? body.tags : (typeof body.tags === 'string' ? JSON.parse(body.tags || '[]') : []);
 
@@ -141,7 +198,7 @@ export async function POST(req: NextRequest) {
     await savePost({
       slug,
       title,
-      markdown,
+      markdown: finalMarkdown,
       html,
       status,
       publishedAt,
@@ -155,7 +212,7 @@ export async function POST(req: NextRequest) {
       categories,
     });
 
-    return NextResponse.json({ success: true, slug });
+    return NextResponse.json({ success: true, slug, autoLinks: linksAdded });
   } catch (e: any) {
     return NextResponse.json({ error: e?.message || String(e) }, { status: 500 });
   }
