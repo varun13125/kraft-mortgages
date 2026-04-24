@@ -54,205 +54,126 @@
     @apply border-border;
   }
   body {
-    @apply text-gray-100;
-    background: radial-gradient(ellipse at center, #1f2937 0%, #111827 50%, #0f172a 100%);
+    background: #0A1729;
+    color: #E8E1D2;
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
     font-feature-settings: "rlig" 1, "calt" 1;
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
-  
+
   body > * {
     position: relative;
     z-index: 2;
   }
 }
 
-
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
-  
+
   .gradient-bg {
     @apply bg-gradient-to-br from-slate-50 via-slate-100 to-slate-200;
   }
-  
+
   .gradient-text {
     @apply bg-gradient-to-r from-gold-500 via-gold-400 to-gold-600 bg-clip-text text-transparent;
   }
-  
+
   .glass {
     @apply backdrop-blur-xl bg-slate-50/10 border border-slate-200/20 shadow-2xl;
-    box-shadow: 
+    box-shadow:
       0 8px 32px rgba(15, 23, 42, 0.3),
       inset 0 1px 0 rgba(255, 255, 255, 0.1),
       inset 0 -1px 0 rgba(15, 23, 42, 0.1);
   }
-  
+
   .glass-dark {
     @apply backdrop-blur-xl bg-slate-800/30 border border-slate-700/30;
-    box-shadow: 
+    box-shadow:
       0 8px 32px rgba(15, 23, 42, 0.4),
       inset 0 1px 0 rgba(255, 255, 255, 0.05);
   }
-  
+
   .glow {
     @apply shadow-2xl;
-    box-shadow: 
-      0 0 60px rgba(100, 181, 246, 0.15),
-      0 8px 32px rgba(30, 58, 95, 0.2);
+    box-shadow:
+      0 0 60px rgba(201, 169, 110, 0.15),
+      0 8px 32px rgba(10, 23, 41, 0.2);
   }
-  
+
   .glow-intense {
     animation: glow 3s ease-in-out infinite;
   }
-  
-  .neumorphic {
-    background: linear-gradient(145deg, #f1f5f9, #e2e8f0);
-    box-shadow: 
-      12px 12px 24px rgba(15, 23, 42, 0.1),
-      -12px -12px 24px rgba(255, 255, 255, 0.7),
-      inset 0 1px 0 rgba(255, 255, 255, 0.9);
-  }
-  
-  .neumorphic-pressed {
-    background: linear-gradient(145deg, #e2e8f0, #f1f5f9);
-    box-shadow: 
-      inset 12px 12px 24px rgba(15, 23, 42, 0.1),
-      inset -12px -12px 24px rgba(255, 255, 255, 0.7);
-  }
-  
-  .shimmer {
-    @apply relative overflow-hidden;
-  }
-  
-  .shimmer::before {
-    @apply absolute inset-0 -translate-x-full animate-shimmer bg-gradient-to-r from-transparent via-white/20 to-transparent content-[''];
-  }
-  
+
   .mesh-gradient {
-    background-image: 
-      radial-gradient(at 40% 20%, hsla(42, 78%, 60%, 0.1) 0px, transparent 50%),
+    background-image:
+      radial-gradient(at 40% 20%, hsla(42, 43%, 58%, 0.1) 0px, transparent 50%),
       radial-gradient(at 80% 0%, hsla(0, 0%, 50%, 0.08) 0px, transparent 50%),
-      radial-gradient(at 0% 50%, hsla(42, 78%, 70%, 0.06) 0px, transparent 50%);
-  }
-
-  .metallic-grey {
-    background: linear-gradient(135deg, 
-      #374151 0%, 
-      #4b5563 25%, 
-      #374151 50%, 
-      #6b7280 75%, 
-      #4b5563 100%
-    );
-    box-shadow: 
-      inset 0 1px 0 rgba(156, 163, 175, 0.2),
-      inset 0 -1px 0 rgba(17, 24, 39, 0.3),
-      0 1px 3px rgba(0, 0, 0, 0.1);
-  }
-
-  .metallic-dark {
-    background: linear-gradient(135deg, 
-      #1f2937 0%, 
-      #374151 25%, 
-      #1f2937 50%, 
-      #4b5563 75%, 
-      #374151 100%
-    );
-    box-shadow: 
-      inset 0 1px 0 rgba(107, 114, 128, 0.15),
-      inset 0 -1px 0 rgba(0, 0, 0, 0.4),
-      0 2px 8px rgba(0, 0, 0, 0.25);
-  }
-
-  .metallic-card {
-    background: linear-gradient(145deg, 
-      #374151 0%, 
-      #4b5563 20%, 
-      #374151 40%, 
-      #6b7280 60%, 
-      #4b5563 80%, 
-      #374151 100%
-    );
-    border: 1px solid rgba(156, 163, 175, 0.2);
-    box-shadow: 
-      inset 0 1px 0 rgba(156, 163, 175, 0.1),
-      inset 0 -1px 0 rgba(17, 24, 39, 0.2),
-      0 4px 16px rgba(0, 0, 0, 0.15),
-      0 1px 2px rgba(0, 0, 0, 0.1);
-  }
-  
-  .gradient-border {
-    @apply relative;
-  }
-  
-  .gradient-border::before {
-    @apply absolute inset-0 rounded-lg p-[2px] bg-gradient-to-r from-brand-400 to-brand-600 content-[''] -z-10;
+      radial-gradient(at 0% 50%, hsla(42, 43%, 67%, 0.06) 0px, transparent 50%);
   }
 }
 
-/* MLI Select Page Classes - Dark Theme Compatible */
 @layer components {
   .container-tight {
     @apply max-w-6xl mx-auto px-4 sm:px-6 lg:px-8;
   }
-  
+
   .section-pad {
     @apply py-16 sm:py-20;
   }
-  
+
   .badge {
     @apply inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold border;
   }
-  
+
   .badge-tier {
     @apply bg-gold-500/20 text-gold-400 border-gold-500/30;
   }
-  
+
   .card {
     @apply bg-gray-800/50 backdrop-blur-sm rounded-xl shadow-2xl border border-gray-700/50 overflow-hidden;
   }
-  
+
   .card-body {
     @apply p-6;
   }
-  
+
   .prose {
     @apply text-gray-300 leading-relaxed;
   }
-  
+
   .prose p {
     @apply mb-4 text-gray-300;
   }
-  
+
   .prose h1, .prose h2, .prose h3 {
     @apply text-gray-100 font-semibold;
   }
-  
+
   .text-brand-blue {
     @apply text-gray-100;
   }
-  
+
   .text-slate-700 {
     @apply text-gray-400;
   }
-  
+
   .bg-gradient-to-b.from-white.to-slate-50 {
     @apply bg-transparent;
   }
+
+  .term-grid-bg {
+    background-image:
+      linear-gradient(rgba(255,255,255,0.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.08) 1px, transparent 1px);
+    background-size: 80px 80px;
+  }
 }
 
-/* =====================================================
-   Blog article content — smart color override system
-   =====================================================
-   Problem: Blog HTML has inline styles designed for light themes.
-   Solution: Detect background color and set text accordingly.
-   ===================================================== */
-
-/* 1. Strip problematic inline color values from ANY element
-   (dark navy headings, dark body text, etc. on dark site bg) */
+/* Blog article content overrides */
 article .prose *[style*="color: #1a3a5c"],
 article .prose *[style*="color:#1a3a5c"],
 article .prose *[style*="color: #222"],
@@ -270,36 +191,17 @@ article .prose *[style*="color:#2c5282"] {
   color: inherit !important;
 }
 
-/* 2. Default text colors on dark site background (no inline bg) */
 article .prose h1, article .prose h2, article .prose h3,
 article .prose h4, article .prose h5, article .prose h6 {
-  color: #f3f4f6 !important; /* gray-100 */
+  color: #f3f4f6 !important;
 }
 article .prose p, article .prose li, article .prose td, article .prose th {
-  color: #d1d5db !important; /* gray-300 */
+  color: #d1d5db !important;
 }
 article .prose strong, article .prose b {
-  color: #f3f4f6 !important; /* gray-100 */
+  color: #f3f4f6 !important;
 }
 
-/* 3. Light-background boxes → dark text for all children
-   Matches: #fff, #f7f4ef, #f0f4f8, #eef3f8, white, rgb(255... */
-article .prose [style*="background: #f7"],
-article .prose [style*="background: #f0"],
-article .prose [style*="background: #ee"],
-article .prose [style*="background: #fff"],
-article .prose [style*="background:#fff"],
-article .prose [style*="background: white"],
-article .prose [style*="background-color: #f7"],
-article .prose [style*="background-color: #f0"],
-article .prose [style*="background-color: #ee"],
-article .prose [style*="background-color: #fff"],
-article .prose [style*="background-color:#fff"],
-article .prose [style*="background-color: white"],
-article .prose [style*="background: rgb(255"],
-article .prose [style*="background-color: rgb(255"] {
-  color: #1f2937 !important; /* gray-800 */
-}
 article .prose [style*="background: #f7"] *,
 article .prose [style*="background: #f0"] *,
 article .prose [style*="background: #ee"] *,
@@ -317,16 +219,6 @@ article .prose [style*="background-color: rgb(255"] * {
   color: inherit !important;
 }
 
-/* 4. Dark-background CTA boxes → force light text
-   Matches: #1a3a5c, #192236, dark navy colors */
-article .prose [style*="background: #1a"],
-article .prose [style*="background:#1a"],
-article .prose [style*="background: #19"],
-article .prose [style*="background:#19"],
-article .prose [style*="background: #0f"],
-article .prose [style*="background:#0f"] {
-  color: #f3f4f6 !important; /* gray-100 */
-}
 article .prose [style*="background: #1a"] *,
 article .prose [style*="background:#1a"] *,
 article .prose [style*="background: #19"] *,
@@ -336,12 +228,10 @@ article .prose [style*="background:#0f"] * {
   color: inherit !important;
 }
 
-/* 5. Gold/amber CTA buttons → white text for readability */
 article .prose [style*="background: #c9963a"] {
   color: #ffffff !important;
 }
 
-/* 6. Links stay gold everywhere */
 article .prose a {
-  color: #fbbf24 !important;
+  color: #C9A96E !important;
 }

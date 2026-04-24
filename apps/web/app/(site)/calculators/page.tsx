@@ -1,507 +1,235 @@
 "use client";
-import { motion } from "framer-motion";
 import Link from "next/link";
 import Navigation from "@/components/Navigation";
-import {
-  Calculator, 
-  Home, 
-  Building, 
-  DollarSign, 
-  TrendingUp, 
-  Hammer, 
-  ArrowRight,
-  Zap,
-  Users,
-  Shield,
-  Clock,
-  Target,
-  AlertTriangle,
-  FileText,
-  Award,
-  Receipt,
-  Scale,
-  Percent,
-  TrendingDown,
-  PiggyBank,
-  BarChart3,
-  MapPin,
-  Wallet,
-  Layers
-} from "lucide-react";
+import Footer from "@/components/Footer";
+
+const SECTIONS = [
+  {
+    code: "MLI",
+    title: "MLI Select Calculators",
+    tag: "CMHC · Multi-Unit",
+    priority: "CORE",
+    body: "Specialized calculators for developers and investors navigating CMHC's multi-unit insurance program.",
+    href: "/mli-select/calculators",
+    calculators: ["Points & Tier Calculator", "Premium Calculator", "DSCR Calculator", "Max Loan Calculator", "Rent Cap Calculator"],
+  },
+  {
+    code: "RES",
+    title: "Residential Lending",
+    tag: "Home · Refinance · Renewal",
+    priority: "STD",
+    body: "Home buying, refinancing, and renewal calculators for every residential scenario.",
+    href: "/residential",
+    calculators: ["Affordability Calculator", "Payment Calculator", "Stress Test Calculator", "Renewal Calculator"],
+  },
+  {
+    code: "EQY",
+    title: "Equity Lending",
+    tag: "HELOC · Consolidate",
+    priority: "STD",
+    body: "Professional equity solutions with institutional rates for debt consolidation and investment.",
+    href: "/equity-lending",
+    calculators: ["Home Equity Calculator", "Debt Consolidation Calculator", "Cash-Out Refinance", "HELOC Calculator"],
+  },
+  {
+    code: "CST",
+    title: "Construction Financing",
+    tag: "Builders · Developers",
+    priority: "CORE",
+    body: "Progressive draws and construction-to-permanent financing calculators.",
+    href: "/construction",
+    calculators: ["Construction Budget", "Progressive Draw", "Cost-to-Complete", "Builder Program"],
+  },
+  {
+    code: "COM",
+    title: "Commercial Lending",
+    tag: "Investment · NOI",
+    priority: "STD",
+    body: "Commercial properties and multi-unit investment analysis tools.",
+    href: "/commercial",
+    calculators: ["Cash Flow Calculator", "NOI Analysis", "Cap Rate Calculator", "Commercial Refinance"],
+  },
+  {
+    code: "PRV",
+    title: "Private Lending",
+    tag: "Bridge · Alternative",
+    priority: "SPEC",
+    body: "Alternative lending solutions for unique scenarios and fast closings.",
+    href: "/private-lending",
+    calculators: ["Alternative Income", "Asset-Based Calculator", "Bridge Financing", "Quick Approval"],
+  },
+];
+
+const QUICK_CALCULATORS = [
+  { title: "Payment Calculator", sub: "Monthly payments", href: "/calculators/payment" },
+  { title: "Affordability", sub: "Buying power", href: "/calculators/affordability" },
+  { title: "Investment ROI", sub: "Rental analysis", href: "/calculators/investment" },
+  { title: "Self-Employed", sub: "Alt income verification", href: "/calculators/self-employed" },
+  { title: "Mortgage Penalty", sub: "Prepayment costs", href: "/calculators/mortgage-penalty" },
+  { title: "Closing Costs", sub: "Full purchase costs", href: "/calculators/closing-costs" },
+  { title: "First-Time Buyer", sub: "Incentives & rebates", href: "/calculators/first-time-home-buyer" },
+  { title: "Land Transfer Tax", sub: "By province", href: "/calculators/land-transfer-tax" },
+  { title: "Rent vs Buy", sub: "Side-by-side compare", href: "/calculators/rent-vs-buy" },
+  { title: "Rate Comparison", sub: "Up to 4 rates", href: "/calculators/rate-comparison" },
+  { title: "Debt Service Ratio", sub: "GDS/TDS check", href: "/calculators/debt-service-ratio" },
+  { title: "Refinance Break-Even", sub: "Should you refi?", href: "/calculators/refinance-break-even" },
+  { title: "Extra Payments", sub: "Interest savings", href: "/calculators/extra-payments" },
+  { title: "Amortization", sub: "Full schedule", href: "/calculators/amortization" },
+  { title: "Stress Test", sub: "OSFI qualification", href: "/calculators/stress-test" },
+  { title: "Down Payment", sub: "Min down & CMHC", href: "/calculators/down-payment" },
+  { title: "CMHC Insurance", sub: "Premium rates", href: "/calculators/cmhc-insurance" },
+  { title: "Required Income", sub: "Income to qualify", href: "/calculators/required-income" },
+  { title: "Self-Emp A vs B", sub: "Bank vs alt lender", href: "/calculators/self-employed-a-vs-b" },
+  { title: "A vs Equity", sub: "Tax-aware compare", href: "/calculators/a-vs-equity" },
+  { title: "B vs Equity", sub: "Alt vs private costs", href: "/calculators/b-vs-equity" },
+  { title: "Refi vs HELOC vs 2nd", sub: "3 equity options", href: "/calculators/refinance-vs-heloc-vs-second" },
+  { title: "BC Speculation Tax", sub: "SVT estimates", href: "/calculators/bc-speculation-tax" },
+];
 
 export default function CalculatorsHub() {
-  const sections = [
-    {
-      title: "MLI Select Calculators",
-      description: "CMHC multi-unit specialized calculators for developers and investors",
-      icon: Building,
-      color: "from-gold-500 to-amber-500",
-      bgGradient: "from-gold-500/10 to-amber-500/10",
-      href: "/mli-select/calculators",
-      calculators: [
-        "Points & Tier Calculator",
-        "Premium Calculator",
-        "DSCR Calculator",
-        "Maximum Loan Calculator",
-        "Rent Cap Calculator"
-      ],
-      featured: true
-    },
-    {
-      title: "Residential Lending",
-      description: "Home buying, refinancing, and renewal calculators",
-      icon: Home,
-      color: "from-blue-500 to-cyan-500",
-      bgGradient: "from-blue-500/10 to-cyan-500/10",
-      href: "/residential",
-      calculators: [
-        "Affordability Calculator",
-        "Payment Calculator",
-        "Stress Test Calculator",
-        "Renewal Calculator"
-      ]
-    },
-    {
-      title: "Equity Lending",
-      description: "Professional equity solutions with institutional rates",
-      icon: TrendingUp,
-      color: "from-emerald-500 to-green-500",
-      bgGradient: "from-emerald-500/10 to-green-500/10",
-      href: "/equity-lending",
-      calculators: [
-        "Home Equity Calculator",
-        "Debt Consolidation Calculator",
-        "Cash-Out Refinance Calculator",
-        "Investment Opportunity Calculator"
-      ]
-    },
-    {
-      title: "Construction Financing",
-      description: "Progressive draws and construction-to-permanent financing",
-      icon: Hammer,
-      color: "from-orange-500 to-red-500",
-      bgGradient: "from-orange-500/10 to-red-500/10",
-      href: "/construction",
-      calculators: [
-        "Construction Budget Calculator",
-        "Progressive Draw Calculator",
-        "Cost-to-Complete Calculator",
-        "Builder Program Calculator"
-      ]
-    },
-    {
-      title: "Commercial Lending",
-      description: "Commercial properties and multi-unit investment analysis",
-      icon: Building,
-      color: "from-purple-500 to-violet-500",
-      bgGradient: "from-purple-500/10 to-violet-500/10",
-      href: "/commercial",
-      calculators: [
-        "Commercial Cash Flow Calculator",
-        "NOI Analysis Calculator",
-        "Cap Rate Calculator",
-        "Commercial Refinance Calculator"
-      ]
-    },
-    {
-      title: "Private Lending",
-      description: "Alternative lending solutions for unique scenarios",
-      icon: Shield,
-      color: "from-rose-500 to-pink-500",
-      bgGradient: "from-rose-500/10 to-pink-500/10",
-      href: "/private-lending",
-      calculators: [
-        "Alternative Income Calculator",
-        "Asset-Based Calculator",
-        "Bridge Financing Calculator",
-        "Quick Approval Calculator"
-      ]
-    }
-  ];
-
-  const quickCalculators = [
-    {
-      title: "Payment Calculator",
-      description: "Calculate monthly payments",
-      href: "/calculators/payment",
-      icon: Calculator
-    },
-    {
-      title: "Affordability Calculator",
-      description: "Determine buying power",
-      href: "/calculators/affordability",
-      icon: DollarSign
-    },
-    {
-      title: "Investment Calculator",
-      description: "Analyze rental properties",
-      href: "/calculators/investment",
-      icon: TrendingUp
-    },
-    {
-      title: "Self-Employed Calculator",
-      description: "Alternative income verification",
-      href: "/calculators/self-employed",
-      icon: Users
-    },
-    {
-      title: "Mortgage Penalty Calculator",
-      description: "Estimate prepayment penalties",
-      href: "/calculators/mortgage-penalty",
-      icon: AlertTriangle
-    },
-    {
-      title: "Closing Costs Calculator",
-      description: "Total purchase costs breakdown",
-      href: "/calculators/closing-costs",
-      icon: FileText
-    },
-    {
-      title: "First-Time Home Buyer Calculator",
-      description: "Incentives, rebates & costs",
-      href: "/calculators/first-time-home-buyer",
-      icon: Award
-    },
-    {
-      title: "Land Transfer Tax Calculator",
-      description: "Tax estimates by province",
-      href: "/calculators/land-transfer-tax",
-      icon: Receipt
-    },
-    {
-      title: "Rent vs Buy Calculator",
-      description: "Renting vs buying comparison",
-      href: "/calculators/rent-vs-buy",
-      icon: Scale
-    },
-    {
-      title: "Rate Comparison Calculator",
-      description: "Compare up to 4 mortgage rates",
-      href: "/calculators/rate-comparison",
-      icon: Percent
-    },
-    {
-      title: "Debt Service Ratio Calculator",
-      description: "GDS/TDS qualification check",
-      href: "/calculators/debt-service-ratio",
-      icon: Shield
-    },
-    {
-      title: "Refinance Break-Even Calculator",
-      description: "Should you refinance?",
-      href: "/calculators/refinance-break-even",
-      icon: TrendingDown
-    },
-    {
-      title: "Extra Payment Savings Calculator",
-      description: "Interest savings from extra payments",
-      href: "/calculators/extra-payments",
-      icon: PiggyBank
-    },
-    {
-      title: "Amortization Calculator",
-      description: "Full payment schedule",
-      href: "/calculators/amortization",
-      icon: BarChart3
-    },
-    {
-      title: "Stress Test Calculator",
-      description: "OSFI qualification check",
-      href: "/calculators/stress-test",
-      icon: Shield
-    },
-    {
-      title: "BC Speculation & Vacancy Tax",
-      description: "SVT estimates for BC properties",
-      href: "/calculators/bc-speculation-tax",
-      icon: MapPin
-    },
-    {
-      title: "Down Payment Calculator",
-      description: "Minimum down payment & CMHC",
-      href: "/calculators/down-payment",
-      icon: Wallet
-    },
-    {
-      title: "CMHC Insurance Calculator",
-      description: "Premium rates & monthly impact",
-      href: "/calculators/cmhc-insurance",
-      icon: Shield
-    },
-    {
-      title: "Required Income Calculator",
-      description: "Income needed to qualify",
-      href: "/calculators/required-income",
-      icon: TrendingUp
-    },
-    {
-      title: "Self-Employed: A vs B Lender",
-      description: "Bank vs alternative cost comparison",
-      href: "/calculators/self-employed-a-vs-b",
-      icon: DollarSign
-    },
-    {
-      title: "A-Lender vs Equity Lending",
-      description: "Self-employed tax-aware cost comparison",
-      href: "/calculators/a-vs-equity",
-      icon: Scale
-    },
-    {
-      title: "B-Lender vs Equity Lending",
-      description: "Compare alternative vs private lender costs",
-      href: "/calculators/b-vs-equity",
-      icon: Shield
-    },
-    {
-      title: "Refinance vs HELOC vs 2nd",
-      description: "Compare three equity access options",
-      href: "/calculators/refinance-vs-heloc-vs-second",
-      icon: Layers
-    }
-  ];
-
   return (
     <>
       <Navigation />
-      <main className="min-h-screen mt-16">
-        {/* Hero Section */}
-        <section className="py-20 px-4">
-          <div className="max-w-6xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              className="text-center"
-            >
-              <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold bg-gold-500/20 text-gold-400 border border-gold-500/30 mb-6">
-                <Calculator className="w-4 h-4" />
-                Professional Calculator Suite
-              </div>
-              <h1 className="text-4xl sm:text-6xl font-bold tracking-tight text-gray-100 mb-6">
-                Mortgage <span className="bg-gradient-to-r from-gold-400 to-amber-500 bg-clip-text text-transparent">Calculators</span>
-              </h1>
-              <p className="text-xl text-gray-400 max-w-3xl mx-auto">
-                Professional-grade calculators for every lending scenario. From residential mortgages to complex commercial deals.
-              </p>
-            </motion.div>
+      <main className="bg-term-bg text-term-text font-sans text-sm leading-relaxed">
+
+        {/* ──── HERO ──── */}
+        <section className="pt-28 sm:pt-36 pb-16 px-4 sm:px-8 relative overflow-hidden">
+          <div className="absolute inset-0 term-grid-bg opacity-20 pointer-events-none" />
+          <div className="max-w-[1400px] mx-auto relative">
+            <div className="flex items-center gap-2.5 mb-7 font-mono text-[11px] text-term-gold tracking-[0.15em]">
+              <span className="w-1.5 h-1.5 rounded-full bg-term-green shadow-[0_0_8px_rgba(95,179,128,0.8)]" />
+              §01 · CALCULATOR SUITE · 23+ TOOLS
+            </div>
+            <h1 className="font-serif font-normal text-5xl sm:text-7xl lg:text-[80px] leading-[0.9] tracking-[-0.04em] mb-8 max-w-[900px]">
+              Mortgage <em className="text-term-gold italic font-normal">Calculators.</em>
+            </h1>
+            <p className="text-lg text-term-text-dim max-w-[640px] leading-relaxed">
+              Professional-grade calculators for every lending scenario. From residential mortgages to complex commercial deals.
+            </p>
           </div>
         </section>
 
-        {/* Quick Access Calculators */}
-        <section className="py-12 px-4">
-          <div className="max-w-6xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              className="text-center mb-12"
-            >
-              <h2 className="text-2xl font-bold text-gray-100 mb-4">
-                <Zap className="w-6 h-6 inline mr-2 text-gold-400" />
-                Quick Calculators
-              </h2>
-              <p className="text-gray-400">Most popular calculators for immediate use</p>
-            </motion.div>
-
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-16">
-              {quickCalculators.map((calc, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.1 }}
-                  viewport={{ once: true }}
-                >
-                  <Link href={calc.href as any} className="group">
-                    <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl shadow-2xl border border-gray-700/50 p-4 transition-all hover:shadow-gold-500/20 hover:shadow-2xl hover:-translate-y-1">
-                      <div className="flex items-center gap-3 mb-3">
-                        <div className="w-10 h-10 bg-gradient-to-br from-gold-500/20 to-amber-500/20 rounded-lg flex items-center justify-center border border-gold-500/30">
-                          <calc.icon className="w-5 h-5 text-gold-400" />
-                        </div>
-                        <div>
-                          <h3 className="text-sm font-semibold text-gray-100">{calc.title}</h3>
-                          <p className="text-xs text-gray-400">{calc.description}</p>
-                        </div>
-                      </div>
-                    </div>
-                  </Link>
-                </motion.div>
+        {/* ──── QUICK CALCULATORS ──── */}
+        <section className="py-14 px-4 sm:px-8 border-t border-term-line-dim bg-term-deep">
+          <div className="max-w-[1400px] mx-auto">
+            <div className="font-mono text-[11px] text-term-gold tracking-[0.15em] mb-8">
+              §02 · QUICK ACCESS
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-term-line-dim">
+              {QUICK_CALCULATORS.map((calc, i) => (
+                <Link key={i} href={calc.href as any} className="bg-term-bg p-5 group block hover:bg-white/[0.02] transition-colors">
+                  <div className="font-serif text-base tracking-[-0.02em] mb-1 group-hover:text-term-gold transition-colors">{calc.title}</div>
+                  <div className="font-mono text-[10px] text-term-text-mute tracking-[0.1em]">{calc.sub}</div>
+                </Link>
               ))}
             </div>
           </div>
         </section>
 
-        {/* Lending Sections */}
-        <section className="py-20 px-4 bg-gradient-to-br from-gray-900/50 to-gray-800/30">
-          <div className="max-w-6xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              className="text-center mb-16"
-            >
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-100 mb-4">
-                Specialized <span className="bg-gradient-to-r from-gold-400 to-amber-500 bg-clip-text text-transparent">Calculator Suites</span>
-              </h2>
-              <p className="text-lg text-gray-400">
-                Advanced calculators organized by lending expertise
-              </p>
-            </motion.div>
-
-            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-              {sections.map((section, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.1 }}
-                  viewport={{ once: true }}
-                  className={`relative overflow-hidden ${section.featured ? 'lg:col-span-2' : ''}`}
-                >
-                  <Link href={section.href as any} className="group">
-                    <div className={`bg-gray-800/50 backdrop-blur-sm rounded-xl shadow-2xl border border-gray-700/50 p-6 transition-all hover:shadow-2xl hover:-translate-y-1 relative overflow-hidden ${
-                      section.featured ? 'border-gold-500/30 ring-1 ring-gold-500/20' : ''
-                    }`}>
-                      {/* Background Gradient */}
-                      <div className={`absolute inset-0 bg-gradient-to-br ${section.bgGradient} opacity-20`}></div>
-
-                      {/* Featured Badge */}
-                      {section.featured && (
-                        <div className="absolute top-4 right-4">
-                          <div className="bg-gradient-to-r from-gold-500 to-gold-600 text-gray-900 text-xs font-semibold px-2 py-1 rounded-full">
-                            Featured
-                          </div>
-                        </div>
-                      )}
-
-                      <div className="relative z-10">
-                        <div className="flex items-center gap-4 mb-4">
-                          <div className={`w-12 h-12 bg-gradient-to-br ${section.color}/20 rounded-xl flex items-center justify-center border border-gray-700/50`}>
-                            <section.icon className={`w-6 h-6 bg-gradient-to-r ${section.color} bg-clip-text text-transparent`} />
-                          </div>
-                          <div>
-                            <h3 className="text-xl font-semibold text-gray-100">{section.title}</h3>
-                            <p className="text-gray-400 text-sm">{section.description}</p>
-                          </div>
-                        </div>
-
-                        {/* Calculator List */}
-                        <div className="space-y-2 mb-4">
-                          {section.calculators.slice(0, section.featured ? 5 : 3).map((calc, j) => (
-                            <div key={j} className="flex items-center gap-2 text-sm text-gray-400">
-                              <div className={`w-1.5 h-1.5 rounded-full bg-gradient-to-r ${section.color}`}></div>
-                              {calc}
-                            </div>
-                          ))}
-                          {section.calculators.length > (section.featured ? 5 : 3) && (
-                            <div className="text-xs text-gray-500">
-                              +{section.calculators.length - (section.featured ? 5 : 3)} more calculators
-                            </div>
-                          )}
-                        </div>
-
-                        {/* Action Button */}
-                        <div className="flex items-center justify-between">
-                          <div className={`text-sm font-medium bg-gradient-to-r ${section.color} bg-clip-text text-transparent`}>
-                            Explore Section
-                          </div>
-                          <ArrowRight className={`w-4 h-4 bg-gradient-to-r ${section.color} bg-clip-text text-transparent group-hover:translate-x-1 transition-transform`} />
-                        </div>
-                      </div>
-                    </div>
-                  </Link>
-                </motion.div>
-              ))}
+        {/* ──── SPECIALIZED SUITES ──── */}
+        <section className="py-20 sm:py-24 px-4 sm:px-8 border-t border-term-line-dim">
+          <div className="max-w-[1400px] mx-auto">
+            <div className="font-mono text-[11px] text-term-gold tracking-[0.15em] mb-2">
+              §03 · SPECIALIZED CALCULATOR SUITES
             </div>
-          </div>
-        </section>
+            <h2 className="font-serif font-normal text-3xl sm:text-5xl tracking-[-0.02em] mb-3">
+              Advanced Tools by <em className="text-term-gold italic">Category.</em>
+            </h2>
+            <p className="text-base text-term-text-dim mb-12 max-w-[720px]">
+              Organized by lending expertise. Each suite contains purpose-built calculators with professional-grade accuracy.
+            </p>
 
-        {/* Why Choose Our Calculators */}
-        <section className="py-20 px-4">
-          <div className="max-w-6xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              className="text-center mb-16"
-            >
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-100 mb-4">
-                Why Choose Our <span className="bg-gradient-to-r from-gold-400 to-amber-500 bg-clip-text text-transparent">Calculators</span>
-              </h2>
-            </motion.div>
-
-            <div className="grid gap-8 md:grid-cols-3">
-              {[
-                {
-                  icon: Target,
-                  title: "Industry-Specific",
-                  description: "Calculators designed for specific lending scenarios with accurate formulas and current market data."
-                },
-                {
-                  icon: Clock,
-                  title: "Real-Time Results",
-                  description: "Instant calculations with export functionality and personalized reports delivered to your inbox."
-                },
-                {
-                  icon: Shield,
-                  title: "Professional Grade",
-                  description: "Used by mortgage professionals across BC, AB, and ON. Trusted by developers and investors."
-                }
-              ].map((feature, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.1 }}
-                  viewport={{ once: true }}
-                  className="text-center"
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-px bg-term-line-dim">
+              {SECTIONS.map((s) => (
+                <Link
+                  key={s.code}
+                  href={s.href as any}
+                  className="bg-term-bg p-8 relative group block border-t-2 hover:bg-white/[0.02] transition-colors"
+                  style={{
+                    borderTopColor: s.priority === "CORE" ? "#C9A96E" : s.priority === "SPEC" ? "#D46A5F" : "rgba(232,225,210,0.35)"
+                  }}
                 >
-                  <div className="w-16 h-16 bg-gradient-to-br from-gold-500/20 to-amber-500/20 rounded-full flex items-center justify-center border border-gold-500/30 mx-auto mb-4">
-                    <feature.icon className="w-8 h-8 text-gold-400" />
+                  <div className="flex justify-between items-center mb-6 font-mono text-[11px]">
+                    <span className="text-term-gold tracking-[0.1em]">{s.code}</span>
+                    <span className="text-term-text-mute tracking-[0.1em]">[{s.priority}]</span>
                   </div>
-                  <h3 className="text-xl font-semibold text-gray-100 mb-3">{feature.title}</h3>
-                  <p className="text-gray-400">{feature.description}</p>
-                </motion.div>
+                  <h3 className="font-serif text-2xl tracking-[-0.02em] mb-1.5 leading-tight">{s.title}</h3>
+                  <div className="font-mono text-[10px] text-term-text-dim tracking-[0.1em] mb-5">{s.tag}</div>
+                  <div className="text-[13px] text-term-text-dim leading-relaxed mb-6">{s.body}</div>
+
+                  <div className="space-y-1.5 mb-6">
+                    {s.calculators.map((calc) => (
+                      <div key={calc} className="flex items-center gap-2 text-[12px] text-term-text-mute">
+                        <span className="text-term-green text-[10px]">▸</span> {calc}
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="font-mono text-[11px] text-term-gold tracking-[0.1em] group-hover:underline">EXPLORE →</div>
+                </Link>
               ))}
             </div>
           </div>
         </section>
 
-        {/* CTA Section */}
-        <section className="py-20 px-4 bg-gradient-to-br from-gold-900/20 to-amber-900/20 border-t border-gold-500/20">
-          <div className="max-w-4xl mx-auto text-center">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-            >
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-100 mb-6">
-                Need Help with <span className="bg-gradient-to-r from-gold-400 to-amber-500 bg-clip-text text-transparent">Complex Scenarios?</span>
-              </h2>
-              <p className="text-xl mb-8 text-gray-400">
-                Our mortgage specialists can provide personalized analysis and guidance.
-              </p>
+        {/* ──── WHY OUR CALCULATORS ──── */}
+        <section className="py-20 sm:py-24 px-4 sm:px-8 bg-term-deep border-t border-term-line-dim">
+          <div className="max-w-[1400px] mx-auto">
+            <div className="font-mono text-[11px] text-term-gold tracking-[0.15em] mb-2">
+              §04 · PROFESSIONAL GRADE
+            </div>
+            <h2 className="font-serif font-normal text-3xl sm:text-5xl tracking-[-0.02em] mb-12">
+              Why Our <em className="text-term-gold italic">Calculators.</em>
+            </h2>
+            <div className="grid sm:grid-cols-3 gap-px bg-term-line-dim">
+              {[
+                { num: "01", title: "Industry-Specific", body: "Calculators designed for specific lending scenarios with accurate formulas and current market data." },
+                { num: "02", title: "Real-Time Results", body: "Instant calculations with export functionality and personalized reports delivered to your inbox." },
+                { num: "03", title: "Professional Grade", body: "Used by mortgage professionals across BC, AB, and ON. Trusted by developers and investors." },
+              ].map((item) => (
+                <div key={item.num} className="bg-term-bg p-8 border-t-2 border-t-term-gold">
+                  <div className="font-mono text-[10px] text-term-gold tracking-[0.15em] mb-6">{item.num}</div>
+                  <h3 className="font-serif text-xl tracking-[-0.02em] mb-3">{item.title}</h3>
+                  <div className="text-[13px] text-term-text-dim leading-relaxed">{item.body}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
 
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+        {/* ──── CTA ──── */}
+        <section className="py-20 sm:py-24 px-4 sm:px-8 border-t border-term-line-dim">
+          <div className="max-w-[1400px] mx-auto">
+            <div className="max-w-[900px]">
+              <div className="font-mono text-[11px] text-term-gold tracking-[0.15em] mb-4">§05 · NEED HELP?</div>
+              <h2 className="font-serif font-normal text-4xl sm:text-6xl leading-[0.95] tracking-[-0.03em] mb-6">
+                Complex Scenarios?<br />
+                <em className="text-term-gold italic">We Can Help.</em>
+              </h2>
+              <p className="text-lg text-term-text-dim mb-10 max-w-[680px] leading-relaxed">
+                Our mortgage specialists provide personalized analysis and guidance for every scenario.
+              </p>
+              <div className="flex flex-wrap gap-3">
                 <a
                   href="https://r.mtg-app.com/varun-chaudhry"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-gold-500 to-gold-600 text-gray-900 font-semibold rounded-lg hover:from-gold-400 hover:to-gold-500 transition-all transform hover:scale-105"
+                  className="bg-term-gold text-term-deep font-mono text-[13px] font-semibold tracking-[0.1em] px-7 py-4 hover:bg-term-gold-bright transition-colors"
                 >
-                  Get Expert Analysis
+                  GET EXPERT ANALYSIS →
                 </a>
                 <a
                   href="tel:604-593-1550"
-                  className="inline-flex items-center justify-center px-8 py-4 border-2 border-gold-500/50 text-gold-400 rounded-lg hover:bg-gold-500/10 transition-colors"
+                  className="border border-term-gold text-term-text font-mono text-[13px] tracking-[0.1em] px-7 py-4 hover:bg-term-gold/10 transition-colors"
                 >
-                  Call 604-593-1550
+                  CALL 604-593-1550
                 </a>
               </div>
-            </motion.div>
+            </div>
           </div>
         </section>
       </main>
+      <Footer />
     </>
   );
 }

@@ -1,408 +1,316 @@
 "use client";
-import { motion } from "framer-motion";
-import { Award, Shield, Users, Building, Target, Clock, Briefcase, CheckCircle, MapPin, Phone, Mail } from "lucide-react";
-import Link from "next/link";
 import Navigation from "@/components/Navigation";
+import Footer from "@/components/Footer";
+import Link from "next/link";
+
+const STATS = [
+  { value: "$2B+", label: "TOTAL FUNDED" },
+  { value: "5,000+", label: "HAPPY CLIENTS" },
+  { value: "23+", label: "YEARS EXPERIENCE" },
+  { value: "3", label: "PROVINCES LICENSED" },
+];
+
+const TEAM = [
+  {
+    initials: "VC",
+    name: "Varun Chaudhry",
+    role: "Founder & Principal Broker",
+    badges: ["18+ YRS", "BCFSA", "RECA", "FSRAO"],
+    specialties: ["MLI Select & Construction Specialist", "Multi-provincial transactions", "Complex financing architecture"],
+    bio: "With over two decades in the mortgage industry, Varun has built a reputation as the go-to expert for complex financing scenarios. His deep understanding of MLI Select programs has saved developers millions in insurance premiums.",
+    licenses: "BCFSA #X303985 · RECA #M22001447 · FSRAO #M22001447",
+  },
+  {
+    initials: "GD",
+    name: "Gursharan Dhaliwal",
+    role: "Co-Founder & Senior Mortgage Advisor",
+    badges: ["18+ YRS", "COMMERCIAL", "INVESTMENT"],
+    specialties: ["Commercial & investment property financing", "First-time buyer education", "Multi-lingual client support"],
+    bio: "Gursharan brings extensive expertise in commercial mortgages and investment property financing. His analytical approach and deep understanding of cash flow analysis has helped hundreds of investors build profitable real estate portfolios.",
+    licenses: "Specialties: Commercial lending, Investment properties, New immigrant programs",
+  },
+];
+
+const EXPERTISE = [
+  { code: "MLI", title: "MLI Select Program", points: ["CMHC multi-unit specialist", "Energy efficiency optimization", "Affordability scoring expertise", "Premium reduction strategies"] },
+  { code: "CST", title: "Construction Financing", points: ["Progressive draw scheduling", "Cost-to-complete analysis", "Builder mortgage programs", "Land development loans"] },
+  { code: "SEL", title: "Self-Employed Solutions", points: ["Stated income programs", "Bank statement programs", "Business-for-self mortgages", "Alternative documentation"] },
+];
+
+const VALUES = [
+  { num: "01", title: "Solution-Focused", body: "We don't just find mortgages, we architect financial solutions for scenarios others turn away." },
+  { num: "02", title: "Speed & Efficiency", body: "Complex files approved in days, not weeks. Same-day pre-approvals across 30+ lenders." },
+  { num: "03", title: "Triple Licensed", body: "Full coverage across British Columbia, Alberta, and Ontario markets with local expertise." },
+  { num: "04", title: "Proven Track Record", body: "$2B+ funded with 98% approval rate on submitted files. Over 5,000 satisfied clients." },
+];
 
 export default function AboutUs() {
   return (
     <>
       <Navigation />
-      <main className="min-h-screen">
-        {/* Hero Section */}
-        <section className="py-20 px-4 mt-16">
-          <div className="max-w-6xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              className="text-center"
-            >
-              <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold bg-gold-500/20 text-gold-400 border border-gold-500/30 mb-6">
-                About Kraft Mortgages
-              </div>
-              <h1 className="text-4xl sm:text-6xl font-bold tracking-tight text-gray-100 mb-6">
-                <span className="bg-gradient-to-r from-gold-400 to-amber-500 bg-clip-text text-transparent">About</span> Kraft Mortgages
-              </h1>
-              <p className="text-xl text-gray-400 max-w-3xl mx-auto">
-                Two decades of expertise. Three provinces. One mission: Making complex mortgages simple.
-              </p>
-            </motion.div>
+      <main className="bg-term-bg text-term-text font-sans text-sm leading-relaxed">
+
+        {/* ──── HERO ──── */}
+        <section className="pt-28 sm:pt-36 pb-16 px-4 sm:px-8 relative overflow-hidden">
+          <div className="absolute inset-0 term-grid-bg opacity-20 pointer-events-none" />
+          <div className="max-w-[1400px] mx-auto relative">
+            <div className="flex items-center gap-2.5 mb-7 font-mono text-[11px] text-term-gold tracking-[0.15em]">
+              <span className="w-1.5 h-1.5 rounded-full bg-term-green shadow-[0_0_8px_rgba(95,179,128,0.8)]" />
+              §01 · ABOUT KRAFT MORTGAGES · EST. 2002
+            </div>
+            <h1 className="font-serif font-normal text-5xl sm:text-7xl lg:text-[80px] leading-[0.9] tracking-[-0.04em] mb-8 max-w-[900px]">
+              Two Decades of <em className="text-term-gold italic font-normal">Mortgage</em><br />
+              Excellence.
+            </h1>
+            <p className="text-lg text-term-text-dim max-w-[640px] leading-relaxed">
+              Making complex mortgages simple across <span className="text-term-text font-medium">British Columbia, Alberta, and Ontario</span>.
+              Specialists in MLI Select, construction financing, and self-employed solutions.
+            </p>
           </div>
         </section>
 
-        {/* Company Overview */}
-        <section className="py-20 px-4">
-          <div className="max-w-6xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              className="grid md:grid-cols-2 gap-12 items-center"
-            >
-              <div>
-                <h2 className="text-3xl md:text-4xl font-bold text-gray-100 mb-6">
-                  Established in <span className="bg-gradient-to-r from-gold-400 to-amber-500 bg-clip-text text-transparent">2014</span>
-                </h2>
-                <p className="text-gray-400 mb-4 leading-relaxed">
+        {/* ──── STATS ──── */}
+        <section className="py-14 px-4 sm:px-8 border-t border-b border-term-line-dim bg-term-deep">
+          <div className="max-w-[1400px] mx-auto grid grid-cols-2 sm:grid-cols-4">
+            {STATS.map((s, i) => (
+              <div
+                key={i}
+                className={`py-8 px-6 ${i === 0 ? "border-l border-l-term-gold" : "border-l border-l-term-line-dim"} ${i === 3 ? "border-r border-r-term-line-dim" : ""}`}
+              >
+                <div className="font-serif text-[42px] sm:text-[52px] font-normal leading-none text-term-gold tracking-[-0.02em]">
+                  {s.value}
+                </div>
+                <div className="mt-2.5 font-mono text-[10px] text-term-text-mute tracking-[0.15em]">
+                  {s.label}
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ──── COMPANY OVERVIEW ──── */}
+        <section className="py-20 sm:py-24 px-4 sm:px-8">
+          <div className="max-w-[1400px] mx-auto grid lg:grid-cols-[1.25fr_1fr] gap-16">
+            <div>
+              <div className="font-mono text-[11px] text-term-gold tracking-[0.15em] mb-2">
+                §02 · OUR STORY
+              </div>
+              <h2 className="font-serif font-normal text-3xl sm:text-5xl tracking-[-0.02em] mb-8">
+                Founded on <em className="text-term-gold italic">Expertise.</em>
+              </h2>
+              <div className="space-y-5 text-[15px] text-term-text-dim leading-relaxed">
+                <p>
                   Kraft Mortgages Canada Inc. was founded with a clear vision: to provide sophisticated mortgage solutions
                   that go beyond traditional brokering. We recognized that the Canadian mortgage landscape was becoming
                   increasingly complex, with borrowers facing unique challenges that required specialized expertise.
                 </p>
-                <p className="text-gray-400 mb-4 leading-relaxed">
-                  Today, we're proud to be recognized as specialists in three critical areas: MLI Select multi-unit financing,
+                <p>
+                  Today, we&apos;re recognized as specialists in three critical areas: <span className="text-term-gold">MLI Select multi-unit financing</span>,
                   construction mortgages with progressive draws, and self-employed mortgage solutions. Our expertise in these
                   complex scenarios sets us apart from conventional brokers.
                 </p>
-                <p className="text-gray-400 leading-relaxed">
-                  With licenses across British Columbia, Alberta, and Ontario, we bring local market knowledge combined with
+                <p>
+                  With licenses across <span className="text-term-text font-medium">British Columbia, Alberta, and Ontario</span>, we bring local market knowledge combined with
                   national lending relationships to deliver optimal outcomes for our clients.
                 </p>
               </div>
-              <div className="grid grid-cols-2 gap-4">
-                {[
-                  { number: "$2B+", label: "Total Funded" },
-                  { number: "10,000+", label: "Families Helped" },
-                  { number: "500+", label: "Complex Cases" },
-                  { number: "11", label: "Years of Excellence" }
-                ].map((stat, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: i * 0.1 }}
-                    viewport={{ once: true }}
-                    className="bg-gray-800/50 backdrop-blur-sm rounded-xl shadow-2xl border border-gray-700/50 p-6 text-center"
-                  >
-                    <div className="text-3xl font-bold text-gold-400 mb-2">{stat.number}</div>
-                    <div className="text-sm text-gray-500">{stat.label}</div>
-                  </motion.div>
-                ))}
+            </div>
+
+            {/* Terminal-style info block */}
+            <div className="bg-term-deep border border-term-line font-mono text-xs leading-relaxed overflow-hidden">
+              <div className="flex items-center justify-between px-3.5 py-2.5 border-b border-term-line-dim text-[10px] text-term-text-dim tracking-[0.1em]">
+                <div className="flex gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-red-500/60" />
+                  <span className="w-2 h-2 rounded-full bg-term-gold/60" />
+                  <span className="w-2 h-2 rounded-full bg-term-green/60" />
+                </div>
+                <span>kraft@terminal · ~/profile</span>
+                <span className="text-term-green">● verified</span>
               </div>
-            </motion.div>
+              <div className="p-5 text-term-text-dim space-y-1.5">
+                <div><span className="text-term-gold">{'>'}</span> kraft --info</div>
+                <div>  NAME:     Kraft Mortgages Canada Inc.</div>
+                <div>  FOUNDED:  2002</div>
+                <div>  HQ:       #301 1688 152nd Street, Surrey BC</div>
+                <div>  LICENSED: BC · AB · ON</div>
+                <div>  FSRA:     #M08001935</div>
+                <div className="mt-3"><span className="text-term-gold">{'>'}</span> kraft --specializations</div>
+                <div>  ✓ MLI Select (CMHC Multi-Unit)</div>
+                <div>  ✓ Construction Financing</div>
+                <div>  ✓ Self-Employed Solutions</div>
+                <div>  ✓ Private & Equity Lending</div>
+                <div>  ✓ Commercial Mortgages</div>
+                <div className="mt-3"><span className="text-term-gold">{'>'}</span> kraft --lenders</div>
+                <div>  ACTIVE_LENDERS: 30+</div>
+                <div>  APPROVAL_RATE:  98%</div>
+                <div className="mt-3"><span className="text-term-gold">{'>'}</span> _<span className="text-term-text animate-pulse">▊</span></div>
+              </div>
+            </div>
           </div>
         </section>
 
-        {/* Leadership Team */}
-        <section className="py-20 px-4 bg-gradient-to-br from-gray-900/50 to-gray-800/30">
-          <div className="max-w-6xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-            >
-              <div className="text-center mb-16">
-                <h2 className="text-3xl md:text-4xl font-bold text-gray-100 mb-4">
-                  Our <span className="bg-gradient-to-r from-gold-400 to-amber-500 bg-clip-text text-transparent">Leadership Team</span>
-                </h2>
-                <p className="text-lg text-gray-400">
-                  Decades of combined experience in Canadian mortgage markets
-                </p>
-              </div>
+        {/* ──── LEADERSHIP ──── */}
+        <section className="py-20 sm:py-24 px-4 sm:px-8 bg-term-deep border-t border-term-line-dim">
+          <div className="max-w-[1400px] mx-auto">
+            <div className="font-mono text-[11px] text-term-gold tracking-[0.15em] mb-2">
+              §03 · LEADERSHIP TEAM
+            </div>
+            <h2 className="font-serif font-normal text-3xl sm:text-5xl tracking-[-0.02em] mb-12">
+              Our <em className="text-term-gold italic">Team.</em>
+            </h2>
 
-              <div className="grid md:grid-cols-2 gap-8">
-                {/* Varun Chaudhry */}
-                <motion.div
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.2 }}
-                  viewport={{ once: true }}
-                  className="bg-gray-800/50 backdrop-blur-sm rounded-xl shadow-2xl border border-gray-700/50 p-8"
-                >
-                  <div className="flex items-start gap-4 mb-6">
-                    <div className="w-20 h-20 bg-gradient-to-br from-gold-500/20 to-amber-500/20 rounded-full flex items-center justify-center border border-gold-500/30">
-                      <span className="text-2xl font-bold text-gold-400">VC</span>
+            <div className="grid md:grid-cols-2 gap-px bg-term-line-dim">
+              {TEAM.map((member) => (
+                <div key={member.initials} className="bg-term-bg p-8 sm:p-10">
+                  {/* Header */}
+                  <div className="flex items-start gap-5 mb-6">
+                    <div className="w-16 h-16 bg-term-gold text-term-deep flex items-center justify-center font-serif text-xl font-semibold shrink-0">
+                      {member.initials}
                     </div>
                     <div>
-                      <h3 className="text-2xl font-bold text-gray-100">Varun Chaudhry</h3>
-                      <p className="text-gold-400">Founder & Principal Broker</p>
+                      <h3 className="font-serif text-2xl text-term-text">{member.name}</h3>
+                      <div className="font-mono text-[11px] text-term-gold tracking-[0.1em] mt-1">{member.role}</div>
                     </div>
                   </div>
 
-                  <div className="space-y-3 mb-6">
-                    <div className="flex items-center gap-2">
-                      <Shield className="w-4 h-4 text-gold-400" />
-                      <span className="text-sm text-gray-400">18+ Years Industry Experience</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Award className="w-4 h-4 text-gold-400" />
-                      <span className="text-sm text-gray-400">Licensed in BC, AB, ON</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Target className="w-4 h-4 text-gold-400" />
-                      <span className="text-sm text-gray-400">MLI Select & Construction Specialist</span>
-                    </div>
+                  {/* Badges */}
+                  <div className="flex flex-wrap gap-2 mb-6">
+                    {member.badges.map((badge) => (
+                      <span key={badge} className="font-mono text-[10px] tracking-[0.1em] text-term-text-dim border border-term-line-dim px-2.5 py-1">
+                        {badge}
+                      </span>
+                    ))}
                   </div>
 
-                  <p className="text-gray-400 mb-4 leading-relaxed">
-                    With over two decades in the mortgage industry, Varun has built a reputation as the go-to expert
-                    for complex financing scenarios. His deep understanding of MLI Select programs has saved developers
-                    millions in insurance premiums.
-                  </p>
-
-                  <p className="text-gray-400 mb-4 leading-relaxed">
-                    Varun's expertise spans construction financing with progressive draws, self-employed mortgage solutions,
-                    and multi-provincial transactions. He has successfully navigated challenging files that other brokers
-                    deemed impossible.
-                  </p>
-
-                  <div className="pt-4 border-t border-gray-700/50">
-                    <p className="text-sm text-gray-500">
-                      <strong>Licenses:</strong> BCFSA #X303985 | RECA #M22001447 | FSRAO #M22001447
-                    </p>
-                  </div>
-                </motion.div>
-
-                {/* Gursharan Dhaliwal */}
-                <motion.div
-                  initial={{ opacity: 0, x: 20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.4 }}
-                  viewport={{ once: true }}
-                  className="bg-gray-800/50 backdrop-blur-sm rounded-xl shadow-2xl border border-gray-700/50 p-8"
-                >
-                  <div className="flex items-start gap-4 mb-6">
-                    <div className="w-20 h-20 bg-gradient-to-br from-gold-500/20 to-amber-500/20 rounded-full flex items-center justify-center border border-gold-500/30">
-                      <span className="text-2xl font-bold text-gold-400">GD</span>
-                    </div>
-                    <div>
-                      <h3 className="text-2xl font-bold text-gray-100">Gursharan Dhaliwal</h3>
-                      <p className="text-gold-400">Co-Founder & Senior Mortgage Advisor</p>
-                    </div>
+                  {/* Specialties */}
+                  <div className="space-y-2 mb-6">
+                    {member.specialties.map((spec) => (
+                      <div key={spec} className="flex items-center gap-2 text-[13px] text-term-text-dim">
+                        <span className="text-term-green">✓</span> {spec}
+                      </div>
+                    ))}
                   </div>
 
-                  <div className="space-y-3 mb-6">
-                    <div className="flex items-center gap-2">
-                      <Shield className="w-4 h-4 text-gold-400" />
-                      <span className="text-sm text-gray-400">18+ Years Industry Experience</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Building className="w-4 h-4 text-gold-400" />
-                      <span className="text-sm text-gray-400">Commercial & Investment Specialist</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Users className="w-4 h-4 text-gold-400" />
-                      <span className="text-sm text-gray-400">First-Time Buyer Expert</span>
-                    </div>
+                  {/* Bio */}
+                  <p className="text-[13px] text-term-text-dim leading-relaxed mb-5">{member.bio}</p>
+
+                  {/* Licenses */}
+                  <div className="pt-4 border-t border-term-line-dim font-mono text-[10px] text-term-text-mute tracking-[0.08em]">
+                    {member.licenses}
                   </div>
-
-                  <p className="text-gray-400 mb-4 leading-relaxed">
-                    Gursharan brings extensive expertise in commercial mortgages and investment property financing.
-                    His analytical approach and deep understanding of cash flow analysis has helped hundreds of investors
-                    build profitable real estate portfolios.
-                  </p>
-
-                  <p className="text-gray-400 mb-4 leading-relaxed">
-                    Known for his patient, educational approach with first-time buyers, Gursharan ensures clients understand
-                    every aspect of their mortgage. His multi-lingual capabilities serve our diverse client base across
-                    Western Canada.
-                  </p>
-
-                  <div className="pt-4 border-t border-gray-700/50">
-                    <p className="text-sm text-gray-500">
-                      <strong>Specialties:</strong> Commercial lending, Investment properties, New immigrant programs
-                    </p>
-                  </div>
-                </motion.div>
-              </div>
-            </motion.div>
+                </div>
+              ))}
+            </div>
           </div>
         </section>
 
-        {/* Our Expertise */}
-        <section className="py-20 px-4">
-          <div className="max-w-6xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-            >
-              <div className="text-center mb-16">
-                <h2 className="text-3xl md:text-4xl font-bold text-gray-100 mb-4">
-                  Our Core <span className="bg-gradient-to-r from-gold-400 to-amber-500 bg-clip-text text-transparent">Expertise</span>
-                </h2>
-                <p className="text-lg text-gray-400">
-                  Specialized knowledge in complex mortgage scenarios
-                </p>
-              </div>
-
-              <div className="grid md:grid-cols-3 gap-6">
-                {[
-                  {
-                    icon: Building,
-                    title: "MLI Select Program",
-                    points: [
-                      "CMHC multi-unit specialist",
-                      "Energy efficiency optimization",
-                      "Affordability scoring expertise",
-                      "Premium reduction strategies"
-                    ]
-                  },
-                  {
-                    icon: Briefcase,
-                    title: "Construction Financing",
-                    points: [
-                      "Progressive draw scheduling",
-                      "Cost-to-complete analysis",
-                      "Builder mortgage programs",
-                      "Land development loans"
-                    ]
-                  },
-                  {
-                    icon: Users,
-                    title: "Self-Employed Solutions",
-                    points: [
-                      "Stated income programs",
-                      "Bank statement programs",
-                      "Business-for-self mortgages",
-                      "Alternative documentation"
-                    ]
-                  }
-                ].map((expertise, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ delay: i * 0.1 }}
-                    viewport={{ once: true }}
-                    className="bg-gray-800/50 backdrop-blur-sm rounded-xl shadow-2xl border border-gray-700/50 p-6 transition-all hover:shadow-gold-500/20 hover:shadow-2xl hover:-translate-y-1"
-                  >
-                    <div className="w-12 h-12 bg-gradient-to-br from-gold-500/20 to-amber-500/20 rounded-xl flex items-center justify-center border border-gold-500/30 mb-4">
-                      <expertise.icon className="w-6 h-6 text-gold-400" />
-                    </div>
-                    <h3 className="text-xl font-semibold text-gray-100 mb-4">{expertise.title}</h3>
-                    <ul className="space-y-2">
-                      {expertise.points.map((point, j) => (
-                        <li key={j} className="flex items-start gap-2">
-                          <CheckCircle className="w-4 h-4 text-green-400 mt-0.5 flex-shrink-0" />
-                          <span className="text-sm text-gray-400">{point}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
+        {/* ──── EXPERTISE ──── */}
+        <section className="py-20 sm:py-24 px-4 sm:px-8 border-t border-term-line-dim">
+          <div className="max-w-[1400px] mx-auto">
+            <div className="font-mono text-[11px] text-term-gold tracking-[0.15em] mb-2">
+              §04 · CORE EXPERTISE
+            </div>
+            <h2 className="font-serif font-normal text-3xl sm:text-5xl tracking-[-0.02em] mb-12">
+              Specialized <em className="text-term-gold italic">Knowledge.</em>
+            </h2>
+            <div className="grid sm:grid-cols-3 gap-px bg-term-line-dim">
+              {EXPERTISE.map((item) => (
+                <div key={item.code} className="bg-term-bg p-8 border-t-2 border-t-term-gold">
+                  <div className="flex justify-between items-center mb-6 font-mono text-[11px]">
+                    <span className="text-term-gold tracking-[0.1em]">{item.code}</span>
+                  </div>
+                  <h3 className="font-serif text-2xl tracking-[-0.02em] mb-5">{item.title}</h3>
+                  <ul className="space-y-2.5">
+                    {item.points.map((pt) => (
+                      <li key={pt} className="flex items-center gap-2 text-[13px] text-term-text-dim">
+                        <span className="text-term-green text-[10px]">▸</span> {pt}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
           </div>
         </section>
 
-        {/* Why Choose Us */}
-        <section className="py-20 px-4 bg-gradient-to-br from-gray-900/50 to-gray-800/30">
-          <div className="max-w-6xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-            >
-              <div className="text-center mb-16">
-                <h2 className="text-3xl md:text-4xl font-bold text-gray-100 mb-4">
-                  Why Choose <span className="bg-gradient-to-r from-gold-400 to-amber-500 bg-clip-text text-transparent">Kraft Mortgages</span>
-                </h2>
-              </div>
-
-              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {[
-                  {
-                    icon: Target,
-                    title: "Solution-Focused",
-                    description: "We don't just find mortgages, we architect financial solutions"
-                  },
-                  {
-                    icon: Clock,
-                    title: "Speed & Efficiency",
-                    description: "Complex files approved in days, not weeks"
-                  },
-                  {
-                    icon: Shield,
-                    title: "Triple Licensed",
-                    description: "Full coverage across BC, Alberta, and Ontario markets"
-                  },
-                  {
-                    icon: Award,
-                    title: "Proven Track Record",
-                    description: "$2B+ funded with 98% approval rate on submitted files"
-                  }
-                ].map((item, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: i * 0.1 }}
-                    viewport={{ once: true }}
-                    className="text-center"
-                  >
-                    <div className="w-16 h-16 bg-gradient-to-br from-gold-500/20 to-amber-500/20 rounded-full flex items-center justify-center border border-gold-500/30 mx-auto mb-4">
-                      <item.icon className="w-8 h-8 text-gold-400" />
-                    </div>
-                    <h3 className="text-lg font-semibold text-gray-100 mb-2">{item.title}</h3>
-                    <p className="text-sm text-gray-400">{item.description}</p>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
+        {/* ──── WHY CHOOSE US ──── */}
+        <section className="py-20 sm:py-24 px-4 sm:px-8 bg-term-deep border-t border-term-line-dim">
+          <div className="max-w-[1400px] mx-auto">
+            <div className="font-mono text-[11px] text-term-gold tracking-[0.15em] mb-2">
+              §05 · WHY KRAFT MORTGAGES
+            </div>
+            <h2 className="font-serif font-normal text-3xl sm:text-5xl tracking-[-0.02em] mb-12">
+              The Kraft <em className="text-term-gold italic">Difference.</em>
+            </h2>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-px bg-term-line-dim">
+              {VALUES.map((v) => (
+                <div key={v.num} className="bg-term-bg p-8 border-t-2 border-t-term-gold">
+                  <div className="font-mono text-[10px] text-term-gold tracking-[0.15em] mb-6">{v.num}</div>
+                  <h3 className="font-serif text-xl tracking-[-0.02em] mb-3">{v.title}</h3>
+                  <div className="text-[13px] text-term-text-dim leading-relaxed">{v.body}</div>
+                </div>
+              ))}
+            </div>
           </div>
         </section>
 
-        {/* Contact CTA */}
-        <section className="py-20 px-4 bg-gradient-to-br from-gold-900/20 to-amber-900/20 border-t border-gold-500/20">
-          <div className="max-w-4xl mx-auto text-center">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-            >
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-100 mb-6">
-                Ready to Experience the <span className="bg-gradient-to-r from-gold-400 to-amber-500 bg-clip-text text-transparent">Kraft Difference</span>?
+        {/* ──── CTA ──── */}
+        <section className="py-20 sm:py-24 px-4 sm:px-8 border-t border-b border-term-line-dim">
+          <div className="max-w-[1400px] mx-auto">
+            <div className="max-w-[900px]">
+              <div className="font-mono text-[11px] text-term-gold tracking-[0.15em] mb-4">§06 · GET STARTED</div>
+              <h2 className="font-serif font-normal text-4xl sm:text-6xl lg:text-[80px] leading-[0.95] tracking-[-0.03em] mb-6">
+                Ready to Experience<br />
+                <em className="text-term-gold italic">the Kraft Difference?</em>
               </h2>
-              <p className="text-xl mb-8 text-gray-400">
-                Let's discuss your unique mortgage needs and find the perfect solution.
+              <p className="text-lg text-term-text-dim mb-10 max-w-[680px] leading-relaxed">
+                Let&apos;s discuss your unique mortgage needs and find the perfect solution. Free consultations available.
               </p>
-
-              <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+              <div className="flex flex-wrap gap-3 mb-14">
                 <a
                   href="https://r.mtg-app.com/varun-chaudhry"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-gold-500 to-gold-600 text-gray-900 font-semibold rounded-lg hover:from-gold-400 hover:to-gold-500 transition-all transform hover:scale-105"
+                  className="bg-term-gold text-term-deep font-mono text-[13px] font-semibold tracking-[0.1em] px-7 py-4 hover:bg-term-gold-bright transition-colors"
                 >
-                  Start Your Application
+                  START APPLICATION →
                 </a>
                 <a
                   href="tel:604-593-1550"
-                  className="inline-flex items-center justify-center px-8 py-4 border-2 border-gold-500/50 text-gold-400 rounded-lg hover:bg-gold-500/10 transition-colors"
+                  className="border border-term-gold text-term-text font-mono text-[13px] tracking-[0.1em] px-7 py-4 hover:bg-term-gold/10 transition-colors"
                 >
-                  <Phone className="w-4 h-4 mr-2" />
-                  Call 604-593-1550
+                  CALL 604-593-1550
                 </a>
               </div>
+            </div>
 
-              <div className="grid md:grid-cols-3 gap-6 text-left max-w-3xl mx-auto">
-                <div className="flex items-start gap-3">
-                  <MapPin className="w-5 h-5 text-gold-400 mt-0.5" />
-                  <div>
-                    <p className="font-semibold text-gray-100">Head Office</p>
-                    <p className="text-sm text-gray-400">#301 1688 152nd Street<br />Surrey, BC V4A 4N2</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <Phone className="w-5 h-5 text-gold-400 mt-0.5" />
-                  <div>
-                    <p className="font-semibold text-gray-100">Phone</p>
-                    <p className="text-sm text-gray-400">604-593-1550 (Office)<br />604-727-1579 (Mobile)</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <Mail className="w-5 h-5 text-gold-400 mt-0.5" />
-                  <div>
-                    <p className="font-semibold text-gray-100">Email</p>
-                    <p className="text-sm text-gray-400">info@kraftmortgages.ca<br />varun@kraftmortgages.ca<br />gursharan@kraftmortgages.ca</p>
-                  </div>
+            {/* Contact Details */}
+            <div className="grid sm:grid-cols-3 gap-px bg-term-line-dim max-w-[900px]">
+              <div className="bg-term-deep p-6">
+                <div className="font-mono text-[10px] text-term-gold tracking-[0.1em] mb-3">HEAD OFFICE</div>
+                <div className="text-[13px] text-term-text-dim leading-relaxed">
+                  #301 1688 152nd Street<br />Surrey, BC V4A 4N2
                 </div>
               </div>
-            </motion.div>
+              <div className="bg-term-deep p-6">
+                <div className="font-mono text-[10px] text-term-gold tracking-[0.1em] mb-3">PHONE</div>
+                <div className="text-[13px] text-term-text-dim">
+                  <a href="tel:604-593-1550" className="hover:text-term-text transition-colors">604-593-1550</a> (Office)<br />
+                  <a href="tel:604-727-1579" className="hover:text-term-text transition-colors">604-727-1579</a> (Mobile)
+                </div>
+              </div>
+              <div className="bg-term-deep p-6">
+                <div className="font-mono text-[10px] text-term-gold tracking-[0.1em] mb-3">EMAIL</div>
+                <div className="text-[13px] text-term-text-dim">
+                  <a href="mailto:varun@kraftmortgages.ca" className="hover:text-term-text transition-colors">varun@kraftmortgages.ca</a><br />
+                  <a href="mailto:gursharan@kraftmortgages.ca" className="hover:text-term-text transition-colors">gursharan@kraftmortgages.ca</a>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
       </main>
+      <Footer />
     </>
   );
 }

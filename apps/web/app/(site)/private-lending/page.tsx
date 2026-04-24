@@ -1,470 +1,254 @@
 "use client";
-import { motion } from "framer-motion";
 import Link from "next/link";
 import Navigation from "@/components/Navigation";
-import { 
-  Shield, 
-  Calculator, 
-  Clock, 
-  CheckCircle, 
-  TrendingUp,
-  DollarSign,
-  Zap,
-  Users,
-  Phone,
-  ArrowRight,
-  AlertTriangle,
-  Target,
-  CreditCard
-} from "lucide-react";
+import Footer from "@/components/Footer";
+
+const SCENARIOS = [
+  { code: "CRD", title: "Credit Challenges", body: "Previous bankruptcy, consumer proposals, or credit issues — we look beyond the score.", features: ["Recent credit events", "Self-employed income", "Non-traditional employment", "Asset-based approval"], rate: "8% - 12%" },
+  { code: "SPD", title: "Speed Requirements", body: "Time-sensitive transactions requiring fast approvals and quick closings.", features: ["Same-day approvals", "Quick closings", "Bridge financing", "Minimal documentation"], rate: "9% - 15%" },
+  { code: "UNQ", title: "Unique Properties", body: "Properties that don't fit traditional lending criteria.", features: ["Rural properties", "Unique constructions", "Mixed-use buildings", "Special purpose properties"], rate: "10% - 14%" },
+  { code: "ALT", title: "Alternative Income", body: "Non-traditional income sources and documentation methods.", features: ["Cash businesses", "Foreign income", "Investment income", "Bank statement programs"], rate: "8% - 13%" },
+];
+
+const CALCULATORS = [
+  { title: "Alternative Income", sub: "Non-traditional income calc", href: "/private-lending/calculators/alternative-income", tag: "CORE" },
+  { title: "Asset-Based Calculator", sub: "Property value vs income", href: "/private-lending/calculators/asset-based", tag: "CORE" },
+  { title: "Bridge Financing", sub: "Short-term bridge costs", href: "/private-lending/calculators/bridge-financing", tag: "STD" },
+  { title: "Quick Approval", sub: "Approval probability check", href: "/private-lending/calculators/quick-approval", tag: "STD" },
+];
+
+const SPECTRUM = [
+  { type: "Traditional", tag: "BANK", rates: "3.5% - 6.5%", timeline: "30-45 days", docs: "Extensive", credit: "Excellent", approval: "70-80%" },
+  { type: "Equity Lending", tag: "EQUITY", rates: "Prime + 0.50-2.00%", timeline: "1-2 weeks", docs: "Standard", credit: "Good", approval: "85-90%" },
+  { type: "Private Lending", tag: "PRIVATE", rates: "8% - 15%+", timeline: "24-48 hours", docs: "Minimal", credit: "Flexible", approval: "95%+", highlight: true },
+];
+
+const WHEN_TO_CONSIDER = [
+  "Traditional lenders have declined your application",
+  "You need funding within 24-48 hours",
+  "Credit challenges prevent bank approval",
+  "Self-employed with complex income",
+  "Unique property or transaction structure",
+  "Bridge financing for time-sensitive deals",
+];
+
+const ADVANTAGES = [
+  { num: "01", title: "High Approval Rates", body: "95%+ approval rate for deals that qualify, even with credit challenges." },
+  { num: "02", title: "Fast Decisions", body: "Same-day approvals available for time-sensitive transactions." },
+  { num: "03", title: "Flexible Terms", body: "Customizable repayment options and creative deal structuring." },
+  { num: "04", title: "Asset-Based Approval", body: "Focus on property value and equity rather than just income and credit." },
+];
 
 export default function PrivateLending() {
-  const scenarios = [
-    {
-      title: "Credit Challenges",
-      description: "Previous bankruptcy, consumer proposals, or credit issues",
-      features: ["Recent credit events", "Self-employed income", "Non-traditional employment", "Asset-based approval"],
-      icon: CreditCard,
-      typical: "8% - 12%"
-    },
-    {
-      title: "Speed Requirements",
-      description: "Time-sensitive transactions requiring fast approvals",
-      features: ["Same-day approvals", "Quick closings", "Bridge financing", "Minimal documentation"],
-      icon: Zap,
-      typical: "9% - 15%"
-    },
-    {
-      title: "Unique Properties", 
-      description: "Properties that don't fit traditional lending criteria",
-      features: ["Rural properties", "Unique constructions", "Mixed-use buildings", "Special purpose properties"],
-      icon: Target,
-      typical: "10% - 14%"
-    },
-    {
-      title: "Alternative Income",
-      description: "Non-traditional income sources and documentation",
-      features: ["Cash businesses", "Foreign income", "Investment income", "Bank statement programs"],
-      icon: Users,
-      typical: "8% - 13%"
-    }
-  ];
-
-  const calculators = [
-    {
-      title: "Alternative Income Calculator",
-      description: "Calculate approval amounts using non-traditional income",
-      href: "/private-lending/calculators/alternative-income",
-      icon: Users,
-      popular: true
-    },
-    {
-      title: "Asset-Based Calculator",
-      description: "Determine loan amounts based on property value vs income",
-      href: "/private-lending/calculators/asset-based", 
-      icon: DollarSign,
-      popular: true
-    },
-    {
-      title: "Bridge Financing Calculator",
-      description: "Calculate short-term bridge loan costs and timeline",
-      href: "/private-lending/calculators/bridge-financing",
-      icon: Clock,
-      popular: false
-    },
-    {
-      title: "Quick Approval Calculator",
-      description: "Estimate approval probability and terms for fast decisions",
-      href: "/private-lending/calculators/quick-approval",
-      icon: Zap,
-      popular: false
-    }
-  ];
-
-  const comparison = {
-    traditional: {
-      title: "Traditional Lending",
-      rates: "3.5% - 6.5%",
-      timeline: "30-45 days",
-      docs: "Extensive",
-      credit: "Excellent required",
-      approval: "70-80%",
-      color: "blue"
-    },
-    equity: {
-      title: "Equity Lending", 
-      rates: "Prime + 0.50-2.00%",
-      timeline: "1-2 weeks",
-      docs: "Standard",
-      credit: "Good required",
-      approval: "85-90%",
-      color: "emerald"
-    },
-    private: {
-      title: "Private Lending",
-      rates: "8% - 15%+",
-      timeline: "24-48 hours",
-      docs: "Minimal",
-      credit: "Flexible",
-      approval: "95%+",
-      color: "rose"
-    }
-  };
-
-  const advantages = [
-    {
-      title: "High Approval Rates",
-      description: "95%+ approval rate for deals that qualify, even with credit challenges"
-    },
-    {
-      title: "Fast Decisions", 
-      description: "Same-day approvals available for time-sensitive transactions"
-    },
-    {
-      title: "Flexible Terms",
-      description: "Customizable repayment options and creative deal structuring"
-    },
-    {
-      title: "Asset-Based Approval",
-      description: "Focus on property value and equity rather than just income and credit"
-    }
-  ];
-
-  const whenToConsider = [
-    "Traditional lenders have declined your application",
-    "You need funding within 24-48 hours", 
-    "Credit challenges prevent bank approval",
-    "Self-employed with complex income",
-    "Unique property or transaction structure",
-    "Bridge financing for time-sensitive deals"
-  ];
-
   return (
     <>
       <Navigation />
-      <main className="min-h-screen mt-16">
-        {/* Hero Section */}
-        <section className="py-20 px-4">
-          <div className="max-w-6xl mx-auto">
-            <motion.div 
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              className="text-center"
-            >
-              <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold bg-rose-500/20 text-rose-400 border border-rose-500/30 mb-6">
-                <Shield className="w-4 h-4" />
-                Alternative Lending Solutions
+      <main className="bg-term-bg text-term-text font-sans text-sm leading-relaxed">
+
+        {/* ──── HERO ──── */}
+        <section className="pt-28 sm:pt-36 pb-16 px-4 sm:px-8 relative overflow-hidden">
+          <div className="absolute inset-0 term-grid-bg opacity-20 pointer-events-none" />
+          <div className="max-w-[1400px] mx-auto relative">
+            <div className="flex items-center gap-2.5 mb-7 font-mono text-[11px] text-term-gold tracking-[0.15em]">
+              <span className="w-1.5 h-1.5 rounded-full bg-term-green shadow-[0_0_8px_rgba(95,179,128,0.8)]" />
+              §01 · PRIVATE LENDING · ALTERNATIVE SOLUTIONS
+            </div>
+            <h1 className="font-serif font-normal text-5xl sm:text-7xl lg:text-[80px] leading-[0.9] tracking-[-0.04em] mb-8 max-w-[900px]">
+              Private<br />
+              <em className="text-term-gold italic font-normal">Lending.</em>
+            </h1>
+            <p className="text-lg text-term-text-dim max-w-[640px] leading-relaxed mb-6">
+              Alternative lending solutions when traditional financing isn't an option. Fast approvals, flexible terms, and creative solutions for unique scenarios.
+            </p>
+            <div className="inline-block border border-term-line-dim bg-term-deep p-5 mb-10">
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-term-red text-sm">▲</span>
+                <span className="font-mono text-lg text-term-red font-semibold">Higher Cost · Higher Approval</span>
               </div>
-              <h1 className="text-4xl sm:text-6xl font-bold tracking-tight text-gray-100 mb-6">
-                <span className="bg-gradient-to-r from-rose-400 to-pink-500 bg-clip-text text-transparent">Private</span> Lending
-              </h1>
-              <p className="text-xl text-gray-400 max-w-3xl mx-auto mb-8">
-                Alternative lending solutions when traditional financing isn't an option. Fast approvals, flexible terms, and creative solutions for unique scenarios.
-              </p>
-              
-              <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-rose-500/20 p-4 max-w-2xl mx-auto mb-8">
-                <div className="flex items-center justify-center gap-2 mb-2">
-                  <AlertTriangle className="w-5 h-5 text-rose-400" />
-                  <div className="text-lg font-semibold text-rose-400">Higher Cost • Higher Approval</div>
+              <div className="font-mono text-[11px] text-term-text-mute tracking-[0.1em]">8-15%+ rates · 24-48 hour approvals · 95%+ approval rates</div>
+            </div>
+            <div className="flex flex-wrap gap-3">
+              <a
+                href="https://r.mtg-app.com/varun-chaudhry"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-term-gold text-term-deep font-mono text-[13px] font-semibold tracking-[0.1em] px-7 py-4 hover:bg-term-gold-bright transition-colors"
+              >
+                GET FAST APPROVAL →
+              </a>
+              <Link
+                href="/calculators"
+                className="border border-term-gold text-term-text font-mono text-[13px] tracking-[0.1em] px-7 py-4 hover:bg-term-gold/10 transition-colors"
+              >
+                CALCULATE OPTIONS
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* ──── LENDING SPECTRUM ──── */}
+        <section className="py-20 sm:py-24 px-4 sm:px-8 border-t border-term-line-dim bg-term-deep">
+          <div className="max-w-[1400px] mx-auto">
+            <div className="font-mono text-[11px] text-term-gold tracking-[0.15em] mb-2">
+              §02 · LENDING SPECTRUM
+            </div>
+            <h2 className="font-serif font-normal text-3xl sm:text-5xl tracking-[-0.02em] mb-12">
+              Understand Your <em className="text-term-gold italic">Options.</em>
+            </h2>
+            <div className="grid sm:grid-cols-3 gap-px bg-term-line-dim">
+              {SPECTRUM.map((s) => (
+                <div key={s.tag} className={`bg-term-bg p-8 ${s.highlight ? "border-t-2 border-t-term-gold" : "border-t border-t-term-line-dim"}`}>
+                  <div className="flex justify-between items-center mb-6">
+                    <span className="font-serif text-xl">{s.type}</span>
+                    <span className={`font-mono text-[10px] tracking-[0.1em] ${s.highlight ? "text-term-gold" : "text-term-text-mute"}`}>[{s.tag}]</span>
+                  </div>
+                  <div className="space-y-3">
+                    <div className="flex justify-between text-[13px]">
+                      <span className="text-term-text-dim">Rates:</span>
+                      <span className={s.highlight ? "text-term-gold font-medium" : "text-term-text"}>{s.rates}</span>
+                    </div>
+                    <div className="flex justify-between text-[13px]">
+                      <span className="text-term-text-dim">Timeline:</span>
+                      <span className="text-term-text">{s.timeline}</span>
+                    </div>
+                    <div className="flex justify-between text-[13px]">
+                      <span className="text-term-text-dim">Docs:</span>
+                      <span className="text-term-text">{s.docs}</span>
+                    </div>
+                    <div className="flex justify-between text-[13px]">
+                      <span className="text-term-text-dim">Credit:</span>
+                      <span className="text-term-text">{s.credit}</span>
+                    </div>
+                    <div className="flex justify-between text-[13px]">
+                      <span className="text-term-text-dim">Approval:</span>
+                      <span className={s.highlight ? "text-term-gold font-medium" : "text-term-text"}>{s.approval}</span>
+                    </div>
+                  </div>
                 </div>
-                <div className="text-sm text-gray-400">8-15%+ rates • 24-48 hour approvals • 95%+ approval rates</div>
-              </div>
-              
-              <div className="flex flex-wrap gap-4 justify-center">
-                <a 
-                  href="https://r.mtg-app.com/varun-chaudhry"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-rose-500 to-rose-600 text-white font-semibold rounded-lg hover:from-rose-400 hover:to-rose-500 transition-all transform hover:scale-105"
-                >
-                  Get Fast Approval
-                </a>
-                <Link 
-                  href="#calculators"
-                  className="inline-flex items-center justify-center px-6 py-3 border border-rose-500/50 text-rose-400 rounded-lg hover:bg-rose-500/10 transition-colors"
-                >
-                  Calculate Options
-                </Link>
-              </div>
-            </motion.div>
-          </div>
-        </section>
-
-        {/* Lending Spectrum Comparison */}
-        <section className="py-20 px-4 bg-gradient-to-br from-gray-900/50 to-gray-800/30">
-          <div className="max-w-6xl mx-auto">
-            <motion.div 
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              className="text-center mb-16"
-            >
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-100 mb-4">
-                Lending <span className="bg-gradient-to-r from-rose-400 to-pink-500 bg-clip-text text-transparent">Spectrum</span>
-              </h2>
-              <p className="text-lg text-gray-400">
-                Understanding your options across the lending spectrum
-              </p>
-            </motion.div>
-
-            <div className="grid gap-8 md:grid-cols-3">
-              {Object.entries(comparison).map(([key, option], i) => (
-                <motion.div
-                  key={key}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.1 }}
-                  viewport={{ once: true }}
-                  className={`bg-gray-800/50 backdrop-blur-sm rounded-xl shadow-2xl border border-gray-700/50 p-6 relative ${
-                    key === 'private' ? 'ring-2 ring-rose-500/30' : ''
-                  }`}
-                >
-                  {key === 'private' && (
-                    <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                      <div className="bg-gradient-to-r from-rose-500 to-rose-600 text-white text-xs font-semibold px-3 py-1 rounded-full">
-                        This Section
-                      </div>
-                    </div>
-                  )}
-                  
-                  <h3 className="text-xl font-semibold text-gray-100 mb-6 text-center">{option.title}</h3>
-                  
-                  <div className="space-y-4">
-                    <div className="flex justify-between">
-                      <span className="text-gray-400">Interest Rates:</span>
-                      <span className={`font-semibold ${
-                        key === 'traditional' ? 'text-blue-400' : 
-                        key === 'equity' ? 'text-emerald-400' : 'text-rose-400'
-                      }`}>{option.rates}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-400">Timeline:</span>
-                      <span className="text-gray-300">{option.timeline}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-400">Documentation:</span>
-                      <span className="text-gray-300">{option.docs}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-400">Credit Required:</span>
-                      <span className="text-gray-300">{option.credit}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-400">Approval Rate:</span>
-                      <span className={`font-semibold ${
-                        key === 'traditional' ? 'text-blue-400' : 
-                        key === 'equity' ? 'text-emerald-400' : 'text-rose-400'
-                      }`}>{option.approval}</span>
-                    </div>
-                  </div>
-                </motion.div>
               ))}
             </div>
           </div>
         </section>
 
-        {/* Scenarios Grid */}
-        <section className="py-20 px-4">
-          <div className="max-w-6xl mx-auto">
-            <motion.div 
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              className="text-center mb-16"
-            >
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-100 mb-4">
-                Private Lending <span className="bg-gradient-to-r from-rose-400 to-pink-500 bg-clip-text text-transparent">Scenarios</span>
-              </h2>
-              <p className="text-lg text-gray-400">
-                When private lending provides the best solution
-              </p>
-            </motion.div>
-
-            <div className="grid gap-8 md:grid-cols-2">
-              {scenarios.map((scenario, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.1 }}
-                  viewport={{ once: true }}
-                  className="bg-gray-800/50 backdrop-blur-sm rounded-xl shadow-2xl border border-gray-700/50 p-6 transition-all hover:shadow-rose-500/20 hover:shadow-2xl hover:-translate-y-1"
-                >
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className="w-12 h-12 bg-gradient-to-br from-rose-500/20 to-pink-500/20 rounded-xl flex items-center justify-center border border-rose-500/30">
-                      <scenario.icon className="w-6 h-6 text-rose-400" />
-                    </div>
-                    <div className="flex-grow">
-                      <h3 className="text-xl font-semibold text-gray-100">{scenario.title}</h3>
-                      <p className="text-gray-400 text-sm">{scenario.description}</p>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-rose-400 font-semibold text-sm">{scenario.typical}</div>
-                    </div>
+        {/* ──── SCENARIOS ──── */}
+        <section className="py-20 sm:py-24 px-4 sm:px-8 border-t border-term-line-dim">
+          <div className="max-w-[1400px] mx-auto">
+            <div className="font-mono text-[11px] text-term-gold tracking-[0.15em] mb-2">
+              §03 · PRIVATE LENDING SCENARIOS
+            </div>
+            <h2 className="font-serif font-normal text-3xl sm:text-5xl tracking-[-0.02em] mb-12">
+              When Private Lending <em className="text-term-gold italic">Fits.</em>
+            </h2>
+            <div className="grid sm:grid-cols-2 gap-px bg-term-line-dim">
+              {SCENARIOS.map((s) => (
+                <div key={s.code} className="bg-term-bg p-8 border-t-2 border-t-term-gold">
+                  <div className="flex justify-between items-center mb-6 font-mono text-[11px]">
+                    <span className="text-term-gold tracking-[0.1em]">{s.code}</span>
+                    <span className="text-term-red">{s.rate}</span>
                   </div>
-                  
-                  <ul className="space-y-2">
-                    {scenario.features.map((feature, j) => (
-                      <li key={j} className="flex items-center gap-2 text-sm text-gray-400">
-                        <CheckCircle className="w-4 h-4 text-green-400 flex-shrink-0" />
-                        {feature}
-                      </li>
+                  <h3 className="font-serif text-2xl tracking-[-0.02em] mb-2 leading-tight">{s.title}</h3>
+                  <div className="text-[13px] text-term-text-dim leading-relaxed mb-5">{s.body}</div>
+                  <div className="space-y-2">
+                    {s.features.map((f) => (
+                      <div key={f} className="flex items-center gap-2 text-[12px] text-term-text-mute">
+                        <span className="text-term-green text-[10px]">▸</span> {f}
+                      </div>
                     ))}
-                  </ul>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* When to Consider */}
-        <section className="py-20 px-4 bg-gradient-to-br from-gray-900/50 to-gray-800/30">
-          <div className="max-w-6xl mx-auto">
-            <motion.div 
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              className="text-center mb-16"
-            >
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-100 mb-4">
-                When to Consider <span className="bg-gradient-to-r from-rose-400 to-pink-500 bg-clip-text text-transparent">Private Lending</span>
-              </h2>
-            </motion.div>
-
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="bg-gray-800/50 backdrop-blur-sm rounded-xl shadow-2xl border border-gray-700/50 p-8"
-            >
-              <div className="grid gap-4 md:grid-cols-2">
-                {whenToConsider.map((reason, i) => (
-                  <div key={i} className="flex items-start gap-3">
-                    <CheckCircle className="w-5 h-5 text-rose-400 mt-0.5 flex-shrink-0" />
-                    <span className="text-gray-300">{reason}</span>
                   </div>
-                ))}
-              </div>
-            </motion.div>
-          </div>
-        </section>
-
-        {/* Calculators Section */}
-        <section id="calculators" className="py-20 px-4">
-          <div className="max-w-6xl mx-auto">
-            <motion.div 
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              className="text-center mb-16"
-            >
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-100 mb-4">
-                Private Lending <span className="bg-gradient-to-r from-rose-400 to-pink-500 bg-clip-text text-transparent">Calculators</span>
-              </h2>
-              <p className="text-lg text-gray-400">
-                Specialized calculators for alternative lending scenarios
-              </p>
-            </motion.div>
-
-            <div className="grid gap-6 md:grid-cols-2">
-              {calculators.map((calc, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.1 }}
-                  viewport={{ once: true }}
-                  className={`relative ${calc.popular ? 'ring-2 ring-rose-500/30' : ''}`}
-                >
-                  {calc.popular && (
-                    <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
-                      <div className="bg-gradient-to-r from-rose-500 to-rose-600 text-white text-xs font-semibold px-3 py-1 rounded-full">
-                        Popular
-                      </div>
-                    </div>
-                  )}
-                  
-                  <Link href={calc.href as any} className="group">
-                    <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl shadow-2xl border border-gray-700/50 p-6 transition-all hover:shadow-rose-500/20 hover:shadow-2xl hover:-translate-y-1">
-                      <div className="flex items-center gap-4 mb-4">
-                        <div className="w-12 h-12 bg-gradient-to-br from-rose-500/20 to-pink-500/20 rounded-xl flex items-center justify-center border border-rose-500/30">
-                          <calc.icon className="w-6 h-6 text-rose-400" />
-                        </div>
-                        <div className="flex-grow">
-                          <h3 className="text-lg font-semibold text-gray-100">{calc.title}</h3>
-                          <p className="text-gray-400 text-sm">{calc.description}</p>
-                        </div>
-                        <ArrowRight className="w-5 h-5 text-rose-400 group-hover:translate-x-1 transition-transform" />
-                      </div>
-                    </div>
-                  </Link>
-                </motion.div>
+                </div>
               ))}
             </div>
           </div>
         </section>
 
-        {/* Advantages */}
-        <section className="py-20 px-4">
-          <div className="max-w-6xl mx-auto">
-            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-              {advantages.map((advantage, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: i * 0.1 }}
-                  viewport={{ once: true }}
-                  className="text-center"
-                >
-                  <div className="w-16 h-16 bg-gradient-to-br from-rose-500/20 to-pink-500/20 rounded-full flex items-center justify-center border border-rose-500/30 mx-auto mb-4">
-                    <span className="text-2xl font-bold text-rose-400">{i + 1}</span>
+        {/* ──── WHEN TO CONSIDER ──── */}
+        <section className="py-20 sm:py-24 px-4 sm:px-8 bg-term-deep border-t border-term-line-dim">
+          <div className="max-w-[1400px] mx-auto">
+            <div className="font-mono text-[11px] text-term-gold tracking-[0.15em] mb-8">
+              §04 · WHEN TO CONSIDER PRIVATE LENDING
+            </div>
+            <div className="grid sm:grid-cols-2 gap-px bg-term-line-dim">
+              {WHEN_TO_CONSIDER.map((reason, i) => (
+                <div key={i} className="bg-term-bg p-6 flex items-start gap-3">
+                  <span className="text-term-green text-[10px] mt-1">▸</span>
+                  <span className="text-[14px] text-term-text-dim">{reason}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ──── CALCULATORS ──── */}
+        <section className="py-14 px-4 sm:px-8 border-t border-term-line-dim">
+          <div className="max-w-[1400px] mx-auto">
+            <div className="font-mono text-[11px] text-term-gold tracking-[0.15em] mb-8">
+              §05 · CALCULATORS
+            </div>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-px bg-term-line-dim">
+              {CALCULATORS.map((calc, i) => (
+                <Link key={i} href={calc.href as any} className="bg-term-bg p-6 group block hover:bg-white/[0.02] transition-colors border-t-2 border-t-term-gold">
+                  <div className="flex justify-between items-center mb-4 font-mono text-[10px]">
+                    <span className="text-term-gold tracking-[0.1em]">{calc.tag}</span>
                   </div>
-                  <h3 className="text-lg font-semibold text-gray-100 mb-2">{advantage.title}</h3>
-                  <p className="text-sm text-gray-400">{advantage.description}</p>
-                </motion.div>
+                  <div className="font-serif text-base tracking-[-0.02em] mb-1 group-hover:text-term-gold transition-colors">{calc.title}</div>
+                  <div className="font-mono text-[10px] text-term-text-mute tracking-[0.1em]">{calc.sub}</div>
+                </Link>
               ))}
             </div>
           </div>
         </section>
 
-        {/* CTA Section */}
-        <section className="py-20 px-4 bg-gradient-to-br from-rose-900/20 to-pink-900/20 border-t border-rose-500/20">
-          <div className="max-w-4xl mx-auto text-center">
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-            >
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-100 mb-6">
-                Need <span className="bg-gradient-to-r from-rose-400 to-pink-500 bg-clip-text text-transparent">Fast Approval?</span>
-              </h2>
-              <p className="text-xl mb-8 text-gray-400">
-                When traditional lenders say no, we find a way. Fast approvals for unique scenarios.
-              </p>
-              
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <a 
-                  href="https://r.mtg-app.com/varun-chaudhry"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-rose-500 to-rose-600 text-white font-semibold rounded-lg hover:from-rose-400 hover:to-rose-500 transition-all transform hover:scale-105"
-                >
-                  Get Fast Approval Today
-                </a>
-                <a 
-                  href="tel:604-593-1550" 
-                  className="inline-flex items-center justify-center px-8 py-4 border-2 border-rose-500/50 text-rose-400 rounded-lg hover:bg-rose-500/10 transition-colors"
-                >
-                  <Phone className="w-5 h-5 mr-2" />
-                  Call 604-593-1550
-                </a>
-              </div>
-            </motion.div>
+        {/* ──── ADVANTAGES ──── */}
+        <section className="py-20 sm:py-24 px-4 sm:px-8 bg-term-deep border-t border-term-line-dim">
+          <div className="max-w-[1400px] mx-auto">
+            <div className="font-mono text-[11px] text-term-gold tracking-[0.15em] mb-2">
+              §06 · ADVANTAGES
+            </div>
+            <h2 className="font-serif font-normal text-3xl sm:text-5xl tracking-[-0.02em] mb-12">
+              Private Lending <em className="text-term-gold italic">Advantages.</em>
+            </h2>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-px bg-term-line-dim">
+              {ADVANTAGES.map((a) => (
+                <div key={a.num} className="bg-term-bg p-8 border-t-2 border-t-term-gold">
+                  <div className="font-mono text-[10px] text-term-gold tracking-[0.15em] mb-6">{a.num}</div>
+                  <h3 className="font-serif text-xl tracking-[-0.02em] mb-3">{a.title}</h3>
+                  <div className="text-[13px] text-term-text-dim leading-relaxed">{a.body}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ──── CTA ──── */}
+        <section className="py-20 sm:py-24 px-4 sm:px-8 border-t border-term-line-dim">
+          <div className="max-w-[900px] mx-auto">
+            <div className="font-mono text-[11px] text-term-gold tracking-[0.15em] mb-4">§07 · GET STARTED</div>
+            <h2 className="font-serif font-normal text-4xl sm:text-6xl leading-[0.95] tracking-[-0.03em] mb-6">
+              Need <em className="text-term-gold italic">Fast Approval?</em>
+            </h2>
+            <p className="text-lg text-term-text-dim mb-10 max-w-[680px] leading-relaxed">
+              When traditional lenders say no, we find a way. Fast approvals for unique scenarios.
+            </p>
+            <div className="flex flex-wrap gap-3">
+              <a
+                href="https://r.mtg-app.com/varun-chaudhry"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-term-gold text-term-deep font-mono text-[13px] font-semibold tracking-[0.1em] px-7 py-4 hover:bg-term-gold-bright transition-colors"
+              >
+                GET FAST APPROVAL TODAY →
+              </a>
+              <a
+                href="tel:604-593-1550"
+                className="border border-term-gold text-term-text font-mono text-[13px] tracking-[0.1em] px-7 py-4 hover:bg-term-gold/10 transition-colors"
+              >
+                CALL 604-593-1550
+              </a>
+            </div>
           </div>
         </section>
       </main>
+      <Footer />
     </>
   );
 }

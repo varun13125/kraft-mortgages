@@ -1,406 +1,202 @@
 "use client";
-import { motion } from "framer-motion";
 import Link from "next/link";
 import Navigation from "@/components/Navigation";
-import {
-  Hammer,
-  Calculator,
-  Building,
-  CheckCircle,
-  TrendingUp,
-  DollarSign,
-  Clock,
-  Shield,
-  Phone,
-  ArrowRight,
-  Layers,
-  Target,
-  Users
-} from "lucide-react";
+import Footer from "@/components/Footer";
+
+const SERVICES = [
+  { code: "DRW", title: "Progressive Draw Construction", body: "Construction financing with scheduled draw releases tied to project milestones.", features: ["Progress-based funding", "Hold back management", "Site inspection coordination", "Completion guarantees"], rate: "Prime + 1.00%" },
+  { code: "CTP", title: "Construction-to-Permanent", body: "Single-close financing from build to permanent mortgage — no second closing.", features: ["No second closing", "Rate lock options", "Simplified process", "Permanent conversion"], rate: "Competitive rates" },
+  { code: "BLD", title: "Builder Programs", body: "Specialized financing for professional builders with volume discounts.", features: ["Volume discounts", "Fast approvals", "Dedicated support", "Portfolio management"], rate: "Preferred rates" },
+  { code: "LND", title: "Land Development", body: "Financing for land acquisition and development with phased disbursement.", features: ["Site servicing", "Infrastructure funding", "Phased development", "Exit strategies"], rate: "Market rates" },
+];
+
+const PROCESS = [
+  { step: "01", title: "Pre-Construction Planning", body: "Budget approval, plan review, and financing structure", dur: "1-2 weeks" },
+  { step: "02", title: "Construction Loan Approval", body: "Final approval and construction loan documentation", dur: "1-2 weeks" },
+  { step: "03", title: "Progressive Draws", body: "Scheduled funding based on construction milestones", dur: "6-18 months" },
+  { step: "04", title: "Permanent Conversion", body: "Convert to permanent mortgage upon completion", dur: "1-2 weeks" },
+];
+
+const CALCULATORS = [
+  { title: "Construction Budget", sub: "Full cost breakdown", href: "/construction/calculators/budget", tag: "CORE" },
+  { title: "Progressive Draw", sub: "Draw schedules & interest", href: "/construction/calculators/progressive-draw", tag: "CORE" },
+  { title: "Cost-to-Complete", sub: "Remaining costs tracker", href: "/construction/calculators/cost-to-complete", tag: "STD" },
+  { title: "Builder Program", sub: "Volume discount analysis", href: "/construction/calculators/builder-program", tag: "STD" },
+];
+
+const EXPERTISE = [
+  { num: "01", title: "18+ Years Construction Experience", body: "Deep understanding of construction financing across residential and commercial projects." },
+  { num: "02", title: "Builder Relationships", body: "Established partnerships with reputable builders and contractors across BC, AB, ON." },
+  { num: "03", title: "Progress Monitoring", body: "Professional site inspections and progress verification for draw releases." },
+  { num: "04", title: "Risk Management", body: "Comprehensive insurance requirements and completion guarantees protection." },
+];
 
 export default function ConstructionFinancing() {
-  const services = [
-    {
-      title: "Progressive Draw Construction",
-      description: "Construction financing with scheduled draw releases",
-      features: ["Progress-based funding", "Hold back management", "Site inspection coordination", "Completion guarantees"],
-      icon: Layers,
-      typical: "Prime + 1.00%"
-    },
-    {
-      title: "Construction-to-Permanent",
-      description: "Single-close financing from build to permanent mortgage",
-      features: ["No second closing", "Rate lock options", "Simplified process", "Permanent conversion"],
-      icon: Building,
-      typical: "Competitive rates"
-    },
-    {
-      title: "Builder Programs",
-      description: "Specialized financing for professional builders",
-      features: ["Volume discounts", "Fast approvals", "Dedicated support", "Portfolio management"],
-      icon: Users,
-      typical: "Preferred rates"
-    },
-    {
-      title: "Land Development",
-      description: "Financing for land acquisition and development",
-      features: ["Site servicing", "Infrastructure funding", "Phased development", "Exit strategies"],
-      icon: Target,
-      typical: "Market rates"
-    }
-  ];
-
-  const calculators = [
-    {
-      title: "Construction Budget Calculator",
-      description: "Plan your construction budget with detailed cost breakdown",
-      href: "/construction/calculators/budget",
-      icon: DollarSign,
-      popular: true
-    },
-    {
-      title: "Progressive Draw Calculator",
-      description: "Calculate draw schedules and interest during construction",
-      href: "/construction/calculators/progressive-draw",
-      icon: Layers,
-      popular: true
-    },
-    {
-      title: "Cost-to-Complete Calculator",
-      description: "Track remaining costs and funding requirements",
-      href: "/construction/calculators/cost-to-complete",
-      icon: Target,
-      popular: false
-    },
-    {
-      title: "Builder Program Calculator",
-      description: "Analyze builder financing options and volume discounts",
-      href: "/construction/calculators/builder-program",
-      icon: Building,
-      popular: false
-    }
-  ];
-
-  const process = [
-    {
-      step: "01",
-      title: "Pre-Construction Planning",
-      description: "Budget approval, plan review, and financing structure",
-      duration: "1-2 weeks"
-    },
-    {
-      step: "02",
-      title: "Construction Loan Approval",
-      description: "Final approval and construction loan documentation",
-      duration: "1-2 weeks"
-    },
-    {
-      step: "03",
-      title: "Progressive Draws",
-      description: "Scheduled funding based on construction milestones",
-      duration: "6-18 months"
-    },
-    {
-      step: "04",
-      title: "Permanent Conversion",
-      description: "Convert to permanent mortgage upon completion",
-      duration: "1-2 weeks"
-    }
-  ];
-
-  const expertise = [
-    {
-      title: "18+ Years Construction Experience",
-      description: "Deep understanding of construction financing across residential and commercial projects"
-    },
-    {
-      title: "Builder Relationships",
-      description: "Established partnerships with reputable builders and contractors across BC, AB, ON"
-    },
-    {
-      title: "Progress Monitoring",
-      description: "Professional site inspections and progress verification for draw releases"
-    },
-    {
-      title: "Risk Management",
-      description: "Comprehensive insurance requirements and completion guarantees protection"
-    }
-  ];
-
   return (
     <>
       <Navigation />
-      <main className="min-h-screen mt-16">
-        {/* Hero Section */}
-        <section className="py-20 px-4">
-          <div className="max-w-6xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              className="text-center"
-            >
-              <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold bg-orange-500/20 text-orange-400 border border-orange-500/30 mb-6">
-                <Hammer className="w-4 h-4" />
-                Construction Finance Specialists
-              </div>
-              <h1 className="text-4xl sm:text-6xl font-bold tracking-tight text-gray-100 mb-6">
-                <span className="bg-gradient-to-r from-orange-400 to-red-500 bg-clip-text text-transparent">Construction</span> Financing
-              </h1>
-              <p className="text-xl text-gray-400 max-w-3xl mx-auto mb-8">
-                Expert construction financing with progressive draws, builder programs, and construction-to-permanent solutions. 23+ years of construction lending expertise.
-              </p>
+      <main className="bg-term-bg text-term-text font-sans text-sm leading-relaxed">
 
-              <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-orange-500/20 p-4 max-w-2xl mx-auto mb-8">
-                <div className="text-lg font-semibold text-orange-400 mb-2">Starting from Prime + 1.00%</div>
-                <div className="text-sm text-gray-400">Progressive draws • Professional inspections • Completion guarantees</div>
-              </div>
-
-              <div className="flex flex-wrap gap-4 justify-center">
-                <a
-                  href="https://r.mtg-app.com/varun-chaudhry"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-semibold rounded-lg hover:from-orange-400 hover:to-orange-500 transition-all transform hover:scale-105"
-                >
-                  Start Your Project
-                </a>
-                <Link
-                  href="#calculators"
-                  className="inline-flex items-center justify-center px-6 py-3 border border-orange-500/50 text-orange-400 rounded-lg hover:bg-orange-500/10 transition-colors"
-                >
-                  Calculate Budget
-                </Link>
-              </div>
-            </motion.div>
+        {/* ──── HERO ──── */}
+        <section className="pt-28 sm:pt-36 pb-16 px-4 sm:px-8 relative overflow-hidden">
+          <div className="absolute inset-0 term-grid-bg opacity-20 pointer-events-none" />
+          <div className="max-w-[1400px] mx-auto relative">
+            <div className="flex items-center gap-2.5 mb-7 font-mono text-[11px] text-term-gold tracking-[0.15em]">
+              <span className="w-1.5 h-1.5 rounded-full bg-term-green shadow-[0_0_8px_rgba(95,179,128,0.8)]" />
+              §01 · CONSTRUCTION FINANCING · BUILDER SPECIALISTS
+            </div>
+            <h1 className="font-serif font-normal text-5xl sm:text-7xl lg:text-[80px] leading-[0.9] tracking-[-0.04em] mb-8 max-w-[900px]">
+              Construction<br />
+              <em className="text-term-gold italic font-normal">Financing.</em>
+            </h1>
+            <p className="text-lg text-term-text-dim max-w-[640px] leading-relaxed mb-6">
+              Expert construction financing with progressive draws, builder programs, and construction-to-permanent solutions. 23+ years of construction lending expertise across BC, AB, and ON.
+            </p>
+            <div className="inline-block border border-term-line-dim bg-term-deep p-5 mb-10">
+              <div className="font-mono text-lg text-term-gold font-semibold mb-1">Starting from Prime + 1.00%</div>
+              <div className="font-mono text-[11px] text-term-text-mute tracking-[0.1em]">Progressive draws · Professional inspections · Completion guarantees</div>
+            </div>
+            <div className="flex flex-wrap gap-3">
+              <a
+                href="https://r.mtg-app.com/varun-chaudhry"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-term-gold text-term-deep font-mono text-[13px] font-semibold tracking-[0.1em] px-7 py-4 hover:bg-term-gold-bright transition-colors"
+              >
+                START YOUR PROJECT →
+              </a>
+              <Link
+                href="/calculators"
+                className="border border-term-gold text-term-text font-mono text-[13px] tracking-[0.1em] px-7 py-4 hover:bg-term-gold/10 transition-colors"
+              >
+                USE CALCULATORS
+              </Link>
+            </div>
           </div>
         </section>
 
-        {/* Construction Process */}
-        <section className="py-20 px-4 bg-gradient-to-br from-gray-900/50 to-gray-800/30">
-          <div className="max-w-6xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              className="text-center mb-16"
-            >
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-100 mb-4">
-                Construction <span className="bg-gradient-to-r from-orange-400 to-red-500 bg-clip-text text-transparent">Process</span>
-              </h2>
-              <p className="text-lg text-gray-400">
-                Streamlined construction financing from planning to permanent conversion
-              </p>
-            </motion.div>
-
-            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-              {process.map((step, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.1 }}
-                  viewport={{ once: true }}
-                  className="relative"
-                >
-                  {i < process.length - 1 && (
-                    <div className="hidden lg:block absolute top-12 left-full w-full h-0.5 bg-gradient-to-r from-orange-500/50 to-transparent transform -translate-y-1/2"></div>
-                  )}
-
-                  <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl shadow-2xl border border-gray-700/50 p-6 text-center relative z-10">
-                    <div className="w-12 h-12 bg-gradient-to-br from-orange-500/20 to-red-500/20 rounded-full flex items-center justify-center border border-orange-500/30 mx-auto mb-4">
-                      <span className="text-lg font-bold text-orange-400">{step.step}</span>
-                    </div>
-                    <h3 className="text-lg font-semibold text-gray-100 mb-2">{step.title}</h3>
-                    <p className="text-gray-400 text-sm mb-3">{step.description}</p>
-                    <div className="text-orange-400 text-xs font-medium">{step.duration}</div>
-                  </div>
-                </motion.div>
+        {/* ──── PROCESS TIMELINE ──── */}
+        <section className="py-14 px-4 sm:px-8 border-t border-b border-term-line-dim bg-term-deep">
+          <div className="max-w-[1400px] mx-auto">
+            <div className="font-mono text-[11px] text-term-gold tracking-[0.15em] mb-8">
+              §02 · CONSTRUCTION PROCESS
+            </div>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-px bg-term-line-dim">
+              {PROCESS.map((step) => (
+                <div key={step.step} className="bg-term-bg p-6 border-t-2 border-t-term-gold">
+                  <div className="font-mono text-[10px] text-term-gold tracking-[0.15em] mb-4">STEP {step.step}</div>
+                  <h3 className="font-serif text-xl tracking-[-0.02em] mb-2">{step.title}</h3>
+                  <div className="text-[13px] text-term-text-dim mb-3">{step.body}</div>
+                  <div className="font-mono text-[10px] text-term-text-mute tracking-[0.1em]">{step.dur}</div>
+                </div>
               ))}
             </div>
           </div>
         </section>
 
-        {/* Services Grid */}
-        <section className="py-20 px-4">
-          <div className="max-w-6xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              className="text-center mb-16"
-            >
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-100 mb-4">
-                Construction <span className="bg-gradient-to-r from-orange-400 to-red-500 bg-clip-text text-transparent">Solutions</span>
-              </h2>
-              <p className="text-lg text-gray-400">
-                Comprehensive construction financing for every project type
-              </p>
-            </motion.div>
-
-            <div className="grid gap-8 md:grid-cols-2">
-              {services.map((service, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.1 }}
-                  viewport={{ once: true }}
-                  className="bg-gray-800/50 backdrop-blur-sm rounded-xl shadow-2xl border border-gray-700/50 p-6 transition-all hover:shadow-orange-500/20 hover:shadow-2xl hover:-translate-y-1"
-                >
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className="w-12 h-12 bg-gradient-to-br from-orange-500/20 to-red-500/20 rounded-xl flex items-center justify-center border border-orange-500/30">
-                      <service.icon className="w-6 h-6 text-orange-400" />
-                    </div>
-                    <div className="flex-grow">
-                      <h3 className="text-xl font-semibold text-gray-100">{service.title}</h3>
-                      <p className="text-gray-400 text-sm">{service.description}</p>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-orange-400 font-semibold text-sm">{service.typical}</div>
-                    </div>
+        {/* ──── SERVICES GRID ──── */}
+        <section className="py-20 sm:py-24 px-4 sm:px-8 border-t border-term-line-dim">
+          <div className="max-w-[1400px] mx-auto">
+            <div className="font-mono text-[11px] text-term-gold tracking-[0.15em] mb-2">
+              §03 · CONSTRUCTION SOLUTIONS
+            </div>
+            <h2 className="font-serif font-normal text-3xl sm:text-5xl tracking-[-0.02em] mb-12">
+              Financing for Every <em className="text-term-gold italic">Project.</em>
+            </h2>
+            <div className="grid sm:grid-cols-2 gap-px bg-term-line-dim">
+              {SERVICES.map((s) => (
+                <div key={s.code} className="bg-term-bg p-8 border-t-2 border-t-term-gold">
+                  <div className="flex justify-between items-center mb-6 font-mono text-[11px]">
+                    <span className="text-term-gold tracking-[0.1em]">{s.code}</span>
+                    <span className="text-term-text-dim">{s.rate}</span>
                   </div>
-
-                  <ul className="space-y-2">
-                    {service.features.map((feature, j) => (
-                      <li key={j} className="flex items-center gap-2 text-sm text-gray-400">
-                        <CheckCircle className="w-4 h-4 text-green-400 flex-shrink-0" />
-                        {feature}
-                      </li>
+                  <h3 className="font-serif text-2xl tracking-[-0.02em] mb-2 leading-tight">{s.title}</h3>
+                  <div className="text-[13px] text-term-text-dim leading-relaxed mb-5">{s.body}</div>
+                  <div className="space-y-2">
+                    {s.features.map((f) => (
+                      <div key={f} className="flex items-center gap-2 text-[12px] text-term-text-mute">
+                        <span className="text-term-green text-[10px]">▸</span> {f}
+                      </div>
                     ))}
-                  </ul>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Calculators Section */}
-        <section id="calculators" className="py-20 px-4 bg-gradient-to-br from-gray-900/50 to-gray-800/30">
-          <div className="max-w-6xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              className="text-center mb-16"
-            >
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-100 mb-4">
-                Construction <span className="bg-gradient-to-r from-orange-400 to-red-500 bg-clip-text text-transparent">Calculators</span>
-              </h2>
-              <p className="text-lg text-gray-400">
-                Professional calculators for construction project planning
-              </p>
-            </motion.div>
-
-            <div className="grid gap-6 md:grid-cols-2">
-              {calculators.map((calc, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.1 }}
-                  viewport={{ once: true }}
-                  className={`relative ${calc.popular ? 'ring-2 ring-orange-500/30' : ''}`}
-                >
-                  {calc.popular && (
-                    <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
-                      <div className="bg-gradient-to-r from-orange-500 to-orange-600 text-white text-xs font-semibold px-3 py-1 rounded-full">
-                        Popular
-                      </div>
-                    </div>
-                  )}
-
-                  <Link href={calc.href as any} className="group">
-                    <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl shadow-2xl border border-gray-700/50 p-6 transition-all hover:shadow-orange-500/20 hover:shadow-2xl hover:-translate-y-1">
-                      <div className="flex items-center gap-4 mb-4">
-                        <div className="w-12 h-12 bg-gradient-to-br from-orange-500/20 to-red-500/20 rounded-xl flex items-center justify-center border border-orange-500/30">
-                          <calc.icon className="w-6 h-6 text-orange-400" />
-                        </div>
-                        <div className="flex-grow">
-                          <h3 className="text-lg font-semibold text-gray-100">{calc.title}</h3>
-                          <p className="text-gray-400 text-sm">{calc.description}</p>
-                        </div>
-                        <ArrowRight className="w-5 h-5 text-orange-400 group-hover:translate-x-1 transition-transform" />
-                      </div>
-                    </div>
-                  </Link>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Why Choose Us */}
-        <section className="py-20 px-4">
-          <div className="max-w-6xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              className="text-center mb-16"
-            >
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-100 mb-4">
-                Construction <span className="bg-gradient-to-r from-orange-400 to-red-500 bg-clip-text text-transparent">Expertise</span>
-              </h2>
-            </motion.div>
-
-            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-              {expertise.map((item, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: i * 0.1 }}
-                  viewport={{ once: true }}
-                  className="text-center"
-                >
-                  <div className="w-16 h-16 bg-gradient-to-br from-orange-500/20 to-red-500/20 rounded-full flex items-center justify-center border border-orange-500/30 mx-auto mb-4">
-                    <span className="text-2xl font-bold text-orange-400">{i + 1}</span>
                   </div>
-                  <h3 className="text-lg font-semibold text-gray-100 mb-2">{item.title}</h3>
-                  <p className="text-sm text-gray-400">{item.description}</p>
-                </motion.div>
+                </div>
               ))}
             </div>
           </div>
         </section>
 
-        {/* CTA Section */}
-        <section className="py-20 px-4 bg-gradient-to-br from-orange-900/20 to-red-900/20 border-t border-orange-500/20">
-          <div className="max-w-4xl mx-auto text-center">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-            >
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-100 mb-6">
-                Ready to Build Your <span className="bg-gradient-to-r from-orange-400 to-red-500 bg-clip-text text-transparent">Dream Project?</span>
-              </h2>
-              <p className="text-xl mb-8 text-gray-400">
-                Our construction financing experts will guide your project from foundation to completion.
-              </p>
+        {/* ──── CALCULATORS ──── */}
+        <section className="py-14 px-4 sm:px-8 bg-term-deep border-t border-term-line-dim">
+          <div className="max-w-[1400px] mx-auto">
+            <div className="font-mono text-[11px] text-term-gold tracking-[0.15em] mb-8">
+              §04 · CALCULATORS
+            </div>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-px bg-term-line-dim">
+              {CALCULATORS.map((calc, i) => (
+                <Link key={i} href={calc.href as any} className="bg-term-bg p-6 group block hover:bg-white/[0.02] transition-colors border-t-2 border-t-term-gold">
+                  <div className="flex justify-between items-center mb-4 font-mono text-[10px]">
+                    <span className="text-term-gold tracking-[0.1em]">{calc.tag}</span>
+                  </div>
+                  <div className="font-serif text-base tracking-[-0.02em] mb-1 group-hover:text-term-gold transition-colors">{calc.title}</div>
+                  <div className="font-mono text-[10px] text-term-text-mute tracking-[0.1em]">{calc.sub}</div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
 
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <a
-                  href="https://r.mtg-app.com/varun-chaudhry"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-semibold rounded-lg hover:from-orange-400 hover:to-orange-500 transition-all transform hover:scale-105"
-                >
-                  Start Your Construction Loan
-                </a>
-                <a
-                  href="tel:604-593-1550"
-                  className="inline-flex items-center justify-center px-8 py-4 border-2 border-orange-500/50 text-orange-400 rounded-lg hover:bg-orange-500/10 transition-colors"
-                >
-                  <Phone className="w-5 h-5 mr-2" />
-                  Call 604-593-1550
-                </a>
-              </div>
-            </motion.div>
+        {/* ──── EXPERTISE ──── */}
+        <section className="py-20 sm:py-24 px-4 sm:px-8 border-t border-term-line-dim">
+          <div className="max-w-[1400px] mx-auto">
+            <div className="font-mono text-[11px] text-term-gold tracking-[0.15em] mb-2">
+              §05 · WHY KRAFT FOR CONSTRUCTION
+            </div>
+            <h2 className="font-serif font-normal text-3xl sm:text-5xl tracking-[-0.02em] mb-12">
+              Construction <em className="text-term-gold italic">Expertise.</em>
+            </h2>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-px bg-term-line-dim">
+              {EXPERTISE.map((e) => (
+                <div key={e.num} className="bg-term-bg p-8 border-t-2 border-t-term-gold">
+                  <div className="font-mono text-[10px] text-term-gold tracking-[0.15em] mb-6">{e.num}</div>
+                  <h3 className="font-serif text-xl tracking-[-0.02em] mb-3">{e.title}</h3>
+                  <div className="text-[13px] text-term-text-dim leading-relaxed">{e.body}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ──── CTA ──── */}
+        <section className="py-20 sm:py-24 px-4 sm:px-8 bg-term-deep border-t border-term-line-dim">
+          <div className="max-w-[900px] mx-auto">
+            <div className="font-mono text-[11px] text-term-gold tracking-[0.15em] mb-4">§06 · GET STARTED</div>
+            <h2 className="font-serif font-normal text-4xl sm:text-6xl leading-[0.95] tracking-[-0.03em] mb-6">
+              Ready to Build Your<br />
+              <em className="text-term-gold italic">Dream Project?</em>
+            </h2>
+            <p className="text-lg text-term-text-dim mb-10 max-w-[680px] leading-relaxed">
+              Our construction financing experts will guide your project from foundation to completion.
+            </p>
+            <div className="flex flex-wrap gap-3">
+              <a
+                href="https://r.mtg-app.com/varun-chaudhry"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-term-gold text-term-deep font-mono text-[13px] font-semibold tracking-[0.1em] px-7 py-4 hover:bg-term-gold-bright transition-colors"
+              >
+                START CONSTRUCTION LOAN →
+              </a>
+              <a
+                href="tel:604-593-1550"
+                className="border border-term-gold text-term-text font-mono text-[13px] tracking-[0.1em] px-7 py-4 hover:bg-term-gold/10 transition-colors"
+              >
+                CALL 604-593-1550
+              </a>
+            </div>
           </div>
         </section>
       </main>
+      <Footer />
     </>
   );
 }

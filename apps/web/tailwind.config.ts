@@ -48,7 +48,7 @@ const config: Config = {
         },
         brand: {
           50: "#ffffff",
-          100: "#f8f9fa", 
+          100: "#f8f9fa",
           200: "#e9ecef",
           300: "#dee2e6",
           400: "#ced4da",
@@ -82,6 +82,21 @@ const config: Config = {
           800: "#654321",
           900: "#3d2914",
         },
+        term: {
+          bg: "#0A1729",
+          deep: "#050E1C",
+          panel: "#0F1F35",
+          footer: "#040810",
+          gold: "#C9A96E",
+          "gold-bright": "#E8C98A",
+          green: "#5FB380",
+          red: "#D46A5F",
+          text: "#E8E1D2",
+          "text-dim": "rgba(232,225,210,0.55)",
+          "text-mute": "rgba(232,225,210,0.35)",
+          line: "rgba(201,169,110,0.18)",
+          "line-dim": "rgba(255,255,255,0.08)",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -90,6 +105,8 @@ const config: Config = {
       },
       fontFamily: {
         sans: ["var(--font-sans)", "system-ui", "sans-serif"],
+        serif: ["var(--font-serif)", "Georgia", "serif"],
+        mono: ["var(--font-mono)", "ui-monospace", "monospace"],
       },
       keyframes: {
         "accordion-down": {
@@ -133,33 +150,15 @@ const config: Config = {
         },
         glow: {
           "0%, 100%": {
-            boxShadow: "0 0 20px rgba(100, 181, 246, 0.4), 0 0 60px rgba(100, 181, 246, 0.1)",
+            boxShadow: "0 0 20px rgba(201,169,110,0.4), 0 0 60px rgba(201,169,110,0.1)",
           },
           "50%": {
-            boxShadow: "0 0 40px rgba(100, 181, 246, 0.6), 0 0 100px rgba(100, 181, 246, 0.2)",
+            boxShadow: "0 0 40px rgba(201,169,110,0.6), 0 0 100px rgba(201,169,110,0.2)",
           },
         },
-        morphing: {
-          "0%": {
-            borderRadius: "60% 40% 30% 70%/60% 30% 70% 40%",
-          },
-          "50%": {
-            borderRadius: "30% 60% 70% 40%/50% 60% 30% 60%",
-          },
-          "100%": {
-            borderRadius: "60% 40% 30% 70%/60% 30% 70% 40%",
-          },
-        },
-        tilt: {
-          "0%, 50%, 100%": {
-            transform: "rotate(0deg)",
-          },
-          "25%": {
-            transform: "rotate(1deg)",
-          },
-          "75%": {
-            transform: "rotate(-1deg)",
-          },
+        "terminal-blink": {
+          "0%, 100%": { opacity: "1" },
+          "50%": { opacity: "0" },
         },
         fadeInScale: {
           "0%": {
@@ -192,8 +191,7 @@ const config: Config = {
         pulse: "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
         float: "float 3s ease-in-out infinite",
         glow: "glow 3s ease-in-out infinite",
-        morphing: "morphing 8s ease-in-out infinite",
-        tilt: "tilt 10s ease-in-out infinite",
+        "terminal-blink": "terminal-blink 540ms ease-in-out infinite",
         "fade-in-scale": "fadeInScale 0.6s ease-out",
         "slide-in-blur": "slideInBlur 0.8s ease-out",
       },

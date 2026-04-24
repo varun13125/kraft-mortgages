@@ -4,8 +4,26 @@ import { Analytics as VercelAnalytics } from "@vercel/analytics/react";
 import { PrefSync } from "@/components/PrefSync";
 import { PWA } from "@/components/PWA";
 import dynamic from "next/dynamic";
+import { Fraunces, Inter, JetBrains_Mono } from "next/font/google";
 
-// Dynamically import ChatWidget to avoid hydration issues
+const fraunces = Fraunces({
+  subsets: ["latin"],
+  variable: "--font-serif",
+  display: "swap",
+});
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-sans",
+  display: "swap",
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
+  display: "swap",
+});
+
 const ChatWidget = dynamic(() => import("@/components/ChatWidget/ChatWidget").then(mod => ({ default: mod.ChatWidget })), {
   ssr: false
 });
@@ -41,15 +59,12 @@ export const metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${fraunces.variable} ${inter.variable} ${jetbrainsMono.variable}`}>
       <body className="min-h-screen">
         <PrefSync />
         {children}
 
-        {/* Global AI Chat Widget - Available on every page */}
         <ChatWidget />
-
-        {/* Voice Agent Widget removed - will be replaced with new implementation */}
 
         <Analytics />
         <VercelAnalytics />

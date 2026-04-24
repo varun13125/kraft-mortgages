@@ -1,15 +1,55 @@
-// Deployment: April 10, 2026 - Twenty CRM Webhook Form
 "use client";
-import { motion, AnimatePresence } from "framer-motion";
 import Navigation from "@/components/Navigation";
-import { Phone, Mail, Clock, MapPin, Award, DollarSign, Zap, Loader2, CheckCircle, AlertCircle } from "lucide-react";
+import Footer from "@/components/Footer";
 import { useState, type FormEvent } from "react";
+import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
 const API_URL = "/api/contact";
+const mortgageTypes = ["Purchase", "Refinance", "Renewal", "Pre-approval", "Construction", "MLI Select", "Private Lending", "Other"];
 
-const mortgageTypes = ["Purchase", "Refinance", "Renewal", "Pre-approval", "Other"];
+const CONTACT_INFO = [
+  {
+    label: "PHONE",
+    content: (
+      <>
+        <a href="tel:604-593-1550" className="hover:text-term-text transition-colors">604-593-1550</a> (Office)
+        <br />
+        <a href="tel:604-727-1579" className="hover:text-term-text transition-colors">604-727-1579</a> (Mobile)
+      </>
+    ),
+  },
+  {
+    label: "EMAIL",
+    content: (
+      <>
+        <a href="mailto:varun@kraftmortgages.ca" className="hover:text-term-text transition-colors">varun@kraftmortgages.ca</a>
+        <br />
+        <a href="mailto:gursharan@kraftmortgages.ca" className="hover:text-term-text transition-colors">gursharan@kraftmortgages.ca</a>
+      </>
+    ),
+  },
+  {
+    label: "OFFICE HOURS",
+    content: "Mon–Fri: 9:00 AM – 6:00 PM\nSat: 10:00 AM – 4:00 PM\nSun: Closed",
+  },
+  {
+    label: "ADDRESS",
+    content: (
+      <>
+        <a
+          href="https://maps.google.com/?q=%23301+1688+152nd+Street+Surrey+BC+V4A+4N2"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover:text-term-text transition-colors"
+        >
+          #301 1688 152nd Street<br />Surrey, BC V4A 4N2
+        </a>
+      </>
+    ),
+  },
+];
 
 export default function ContactPage() {
   const [form, setForm] = useState({
@@ -20,15 +60,14 @@ export default function ContactPage() {
     mortgageType: "",
     amount: "",
     message: "",
-    _hp: "", // honeypot
+    _hp: "",
   });
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    if (form._hp) return; // bot caught
+    if (form._hp) return;
     setStatus("loading");
-
     try {
       const res = await fetch(API_URL, {
         method: "POST",
@@ -43,241 +82,191 @@ export default function ContactPage() {
   };
 
   const inputClass =
-    "w-full bg-gray-900/60 border border-gray-600/50 rounded-lg px-4 py-3 text-gray-100 placeholder-gray-500 focus:outline-none focus:border-gold-500/60 focus:ring-1 focus:ring-gold-500/40 transition-all duration-200";
-  const labelClass = "block text-sm font-medium text-gray-300 mb-1.5";
+    "w-full bg-term-bg border border-term-line-dim px-4 py-3 text-term-text placeholder-term-text-mute focus:outline-none focus:border-term-gold/50 transition-colors font-sans text-sm";
+  const labelClass = "block font-mono text-[10px] text-term-gold tracking-[0.1em] mb-2 uppercase";
 
   return (
     <>
       <Navigation />
-      <main className="min-h-screen mt-16">
-        {/* Compact Hero Section */}
-        <section className="py-10 px-4">
-          <div className="max-w-6xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="text-center"
-            >
-              <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-gray-100 mb-3">
-                <span className="bg-gradient-to-r from-gold-400 to-amber-500 bg-clip-text text-transparent">Contact</span> Us
-              </h1>
-              <p className="text-lg text-gray-400 max-w-2xl mx-auto">
-                Get in touch with our mortgage specialists for personalized assistance.
-              </p>
-            </motion.div>
+      <main className="bg-term-bg text-term-text font-sans text-sm leading-relaxed">
+
+        {/* ──── HERO ──── */}
+        <section className="pt-28 sm:pt-36 pb-12 px-4 sm:px-8 relative overflow-hidden">
+          <div className="absolute inset-0 term-grid-bg opacity-20 pointer-events-none" />
+          <div className="max-w-[1400px] mx-auto relative">
+            <div className="flex items-center gap-2.5 mb-7 font-mono text-[11px] text-term-gold tracking-[0.15em]">
+              <span className="w-1.5 h-1.5 rounded-full bg-term-green shadow-[0_0_8px_rgba(95,179,128,0.8)]" />
+              §01 · CONTACT · LIVE
+            </div>
+            <h1 className="font-serif font-normal text-5xl sm:text-7xl leading-[0.9] tracking-[-0.04em] mb-6">
+              Get in <em className="text-term-gold italic font-normal">Touch.</em>
+            </h1>
+            <p className="text-lg text-term-text-dim max-w-[640px] leading-relaxed">
+              Speak directly with our mortgage specialists. Free consultations, same-day pre-approvals.
+            </p>
           </div>
         </section>
 
-        {/* Contact Content */}
-        <section className="pb-20 px-4">
-          <div className="max-w-6xl mx-auto">
-            <div className="grid gap-8 lg:grid-cols-2">
-              {/* Contact Form */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-                className="bg-gray-800/50 backdrop-blur-sm rounded-xl shadow-2xl border border-gray-700/50 p-6 lg:order-1"
-              >
-                <h2 className="text-2xl font-semibold text-gray-100 mb-6">Send us a Message</h2>
+        {/* ──── MAIN CONTENT ──── */}
+        <section className="pb-20 px-4 sm:px-8">
+          <div className="max-w-[1400px] mx-auto grid lg:grid-cols-[1fr_400px] gap-px bg-term-line-dim">
 
-                <AnimatePresence mode="wait">
-                  {status === "success" ? (
-                    <motion.div
-                      key="success"
-                      initial={{ opacity: 0, scale: 0.95 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      className="flex flex-col items-center justify-center py-16 text-center"
-                    >
-                      <CheckCircle className="w-16 h-16 text-green-400 mb-4" />
-                      <h3 className="text-xl font-semibold text-gray-100 mb-2">Thank you!</h3>
-                      <p className="text-gray-400">We&apos;ll be in touch within 24 hours.</p>
-                    </motion.div>
-                  ) : status === "error" ? (
-                    <motion.div
-                      key="error"
-                      initial={{ opacity: 0, scale: 0.95 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      className="flex flex-col items-center justify-center py-16 text-center"
-                    >
-                      <AlertCircle className="w-16 h-16 text-red-400 mb-4" />
-                      <h3 className="text-xl font-semibold text-gray-100 mb-2">Something went wrong</h3>
-                      <p className="text-gray-400 mb-4">Please call us at <a href="tel:604-593-1550" className="text-gold-400 hover:underline">604-593-1550</a>.</p>
-                      <button onClick={() => setStatus("idle")} className="text-gold-400 hover:text-gold-300 underline text-sm">Try again</button>
-                    </motion.div>
-                  ) : (
-                    <motion.form key="form" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onSubmit={handleSubmit} className="space-y-4">
-                      {/* Honeypot */}
-                      <input type="text" name="_hp" value={form._hp} onChange={(e) => setForm((f) => ({ ...f, _hp: e.target.value }))} className="hidden" tabIndex={-1} autoComplete="off" aria-hidden="true" />
+            {/* Contact Form */}
+            <div className="bg-term-bg p-8 sm:p-10">
+              <div className="font-mono text-[11px] text-term-gold tracking-[0.15em] mb-6">
+                SEND A MESSAGE
+              </div>
 
-                      <div className="grid gap-4 sm:grid-cols-2">
-                        <div>
-                          <label htmlFor="firstName" className={labelClass}>First Name *</label>
-                          <input id="firstName" required value={form.firstName} onChange={(e) => setForm((f) => ({ ...f, firstName: e.target.value }))} className={inputClass} placeholder="John" />
-                        </div>
-                        <div>
-                          <label htmlFor="lastName" className={labelClass}>Last Name</label>
-                          <input id="lastName" value={form.lastName} onChange={(e) => setForm((f) => ({ ...f, lastName: e.target.value }))} className={inputClass} placeholder="Doe" />
-                        </div>
-                      </div>
-
-                      <div>
-                        <label htmlFor="email" className={labelClass}>Email *</label>
-                        <input id="email" type="email" required value={form.email} onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))} className={inputClass} placeholder="john@example.com" />
-                      </div>
-
-                      <div>
-                        <label htmlFor="phone" className={labelClass}>Phone</label>
-                        <input id="phone" type="tel" value={form.phone} onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))} className={inputClass} placeholder="604-123-4567" />
-                      </div>
-
-                      <div className="grid gap-4 sm:grid-cols-2">
-                        <div>
-                          <label htmlFor="mortgageType" className={labelClass}>Mortgage Type</label>
-                          <select id="mortgageType" value={form.mortgageType} onChange={(e) => setForm((f) => ({ ...f, mortgageType: e.target.value }))} className={inputClass}>
-                            <option value="">Select...</option>
-                            {mortgageTypes.map((t) => (
-                              <option key={t} value={t}>{t}</option>
-                            ))}
-                          </select>
-                        </div>
-                        <div>
-                          <label htmlFor="amount" className={labelClass}>Loan Amount</label>
-                          <input id="amount" type="text" value={form.amount} onChange={(e) => setForm((f) => ({ ...f, amount: e.target.value }))} className={inputClass} placeholder="$500,000" />
-                        </div>
-                      </div>
-
-                      <div>
-                        <label htmlFor="message" className={labelClass}>Message</label>
-                        <textarea id="message" rows={4} value={form.message} onChange={(e) => setForm((f) => ({ ...f, message: e.target.value }))} className={inputClass + " resize-none"} placeholder="Tell us about your situation..." />
-                      </div>
-
-                      <button
-                        type="submit"
-                        disabled={status === "loading"}
-                        className="w-full py-3 px-6 bg-gradient-to-r from-gold-500 to-amber-600 text-gray-900 font-semibold rounded-lg hover:from-gold-400 hover:to-amber-500 transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                      >
-                        {status === "loading" ? (
-                          <>
-                            <Loader2 className="w-5 h-5 animate-spin" />
-                            Sending...
-                          </>
-                        ) : (
-                          "Send Message"
-                        )}
-                      </button>
-                    </motion.form>
-                  )}
-                </AnimatePresence>
-              </motion.div>
-
-              {/* Contact Information */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.1 }}
-                className="bg-gray-800/50 backdrop-blur-sm rounded-xl shadow-2xl border border-gray-700/50 p-8 lg:order-2"
-              >
-                <h2 className="text-2xl font-semibold text-gray-100 mb-6">Get In Touch</h2>
-                <div className="space-y-6">
-                  <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 bg-gradient-to-br from-gold-500/20 to-amber-500/20 rounded-xl flex items-center justify-center border border-gold-500/30">
-                      <Phone className="w-6 h-6 text-gold-400" />
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-medium text-gray-100 mb-2">Phone</h3>
-                      <p className="text-gray-400 mb-2">Call us for immediate assistance</p>
-                      <a href="tel:604-593-1550" className="text-gold-400 hover:text-gold-300 transition-colors font-semibold">
-                        604-593-1550
-                      </a>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 bg-gradient-to-br from-gold-500/20 to-amber-500/20 rounded-xl flex items-center justify-center border border-gold-500/30">
-                      <Mail className="w-6 h-6 text-gold-400" />
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-medium text-gray-100 mb-2">Email</h3>
-                      <p className="text-gray-400 mb-2">Send us your questions anytime</p>
-                      <a href="mailto:varun@kraftmortgages.ca" className="text-gold-400 hover:text-gold-300 transition-colors font-semibold">
-                        varun@kraftmortgages.ca
-                      </a>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 bg-gradient-to-br from-gold-500/20 to-amber-500/20 rounded-xl flex items-center justify-center border border-gold-500/30">
-                      <Clock className="w-6 h-6 text-gold-400" />
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-medium text-gray-100 mb-2">Office Hours</h3>
-                      <div className="text-gray-400">
-                        <div>Monday - Friday: 9:00 AM - 6:00 PM</div>
-                        <div>Saturday: 10:00 AM - 4:00 PM</div>
-                        <div>Sunday: Closed</div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 bg-gradient-to-br from-gold-500/20 to-amber-500/20 rounded-xl flex items-center justify-center border border-gold-500/30">
-                      <MapPin className="w-6 h-6 text-gold-400" />
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-medium text-gray-100 mb-2">Office Address</h3>
-                      <a href="https://maps.google.com/?q=%23301+1688+152nd+Street+Surrey+BC+V4A+4N2" target="_blank" rel="noopener noreferrer" className="text-gold-400 hover:text-gold-300 transition-colors">
-                        #301 - 1688 152nd Street<br />Surrey, BC V4A 4N2
-                      </a>
-                      <p className="text-gray-500 text-sm mt-2">Serving BC, AB &amp; ON</p>
-                    </div>
-                  </div>
+              {status === "success" ? (
+                <div className="flex flex-col items-center justify-center py-20 text-center">
+                  <div className="font-mono text-[11px] text-term-green tracking-[0.15em] mb-4">✓ MESSAGE SENT</div>
+                  <h3 className="font-serif text-2xl mb-3">Thank you!</h3>
+                  <p className="text-term-text-dim">We&apos;ll be in touch within 24 hours.</p>
                 </div>
-              </motion.div>
+              ) : status === "error" ? (
+                <div className="flex flex-col items-center justify-center py-20 text-center">
+                  <div className="font-mono text-[11px] text-term-red tracking-[0.15em] mb-4">✕ ERROR</div>
+                  <h3 className="font-serif text-2xl mb-3">Something went wrong</h3>
+                  <p className="text-term-text-dim mb-4">
+                    Please call us at <a href="tel:604-593-1550" className="text-term-gold hover:underline">604-593-1550</a>.
+                  </p>
+                  <button onClick={() => setStatus("idle")} className="text-term-gold hover:underline font-mono text-xs">
+                    TRY AGAIN →
+                  </button>
+                </div>
+              ) : (
+                <form onSubmit={handleSubmit} className="space-y-5">
+                  <input
+                    type="text" name="_hp" value={form._hp}
+                    onChange={(e) => setForm((f) => ({ ...f, _hp: e.target.value }))}
+                    className="hidden" tabIndex={-1} autoComplete="off" aria-hidden="true"
+                  />
+
+                  <div className="grid gap-5 sm:grid-cols-2">
+                    <div>
+                      <label htmlFor="firstName" className={labelClass}>First Name *</label>
+                      <input id="firstName" required value={form.firstName}
+                        onChange={(e) => setForm((f) => ({ ...f, firstName: e.target.value }))}
+                        className={inputClass} placeholder="John" />
+                    </div>
+                    <div>
+                      <label htmlFor="lastName" className={labelClass}>Last Name</label>
+                      <input id="lastName" value={form.lastName}
+                        onChange={(e) => setForm((f) => ({ ...f, lastName: e.target.value }))}
+                        className={inputClass} placeholder="Doe" />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label htmlFor="email" className={labelClass}>Email *</label>
+                    <input id="email" type="email" required value={form.email}
+                      onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
+                      className={inputClass} placeholder="john@example.com" />
+                  </div>
+
+                  <div>
+                    <label htmlFor="phone" className={labelClass}>Phone</label>
+                    <input id="phone" type="tel" value={form.phone}
+                      onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))}
+                      className={inputClass} placeholder="604-123-4567" />
+                  </div>
+
+                  <div className="grid gap-5 sm:grid-cols-2">
+                    <div>
+                      <label htmlFor="mortgageType" className={labelClass}>Mortgage Type</label>
+                      <select id="mortgageType" value={form.mortgageType}
+                        onChange={(e) => setForm((f) => ({ ...f, mortgageType: e.target.value }))}
+                        className={inputClass}>
+                        <option value="">Select...</option>
+                        {mortgageTypes.map((t) => (
+                          <option key={t} value={t}>{t}</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div>
+                      <label htmlFor="amount" className={labelClass}>Loan Amount</label>
+                      <input id="amount" type="text" value={form.amount}
+                        onChange={(e) => setForm((f) => ({ ...f, amount: e.target.value }))}
+                        className={inputClass} placeholder="$500,000" />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label htmlFor="message" className={labelClass}>Message</label>
+                    <textarea id="message" rows={5} value={form.message}
+                      onChange={(e) => setForm((f) => ({ ...f, message: e.target.value }))}
+                      className={inputClass + " resize-none"} placeholder="Tell us about your situation..." />
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={status === "loading"}
+                    className="w-full bg-term-gold text-term-deep font-mono text-[13px] font-semibold tracking-[0.1em] px-7 py-4 hover:bg-term-gold-bright transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+                  >
+                    {status === "loading" ? "SENDING..." : "SEND MESSAGE →"}
+                  </button>
+                </form>
+              )}
+            </div>
+
+            {/* Contact Info Sidebar */}
+            <div className="bg-term-deep p-8 sm:p-10">
+              <div className="font-mono text-[11px] text-term-gold tracking-[0.15em] mb-8">
+                CONTACT INFO
+              </div>
+              <div className="space-y-8">
+                {CONTACT_INFO.map((info) => (
+                  <div key={info.label}>
+                    <div className="font-mono text-[10px] text-term-text-mute tracking-[0.12em] mb-2">{info.label}</div>
+                    <div className="text-[13px] text-term-text-dim leading-relaxed whitespace-pre-line">
+                      {info.content}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Quick Apply */}
+              <div className="mt-10 pt-8 border-t border-term-line-dim">
+                <div className="font-mono text-[10px] text-term-text-mute tracking-[0.12em] mb-3">PREFER TO APPLY ONLINE?</div>
+                <a
+                  href="https://r.mtg-app.com/varun-chaudhry"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block text-center bg-term-gold text-term-deep font-mono text-[12px] font-semibold tracking-[0.1em] px-5 py-3 hover:bg-term-gold-bright transition-colors"
+                >
+                  START APPLICATION →
+                </a>
+              </div>
             </div>
           </div>
         </section>
 
-        {/* Why Choose Us */}
-        <section className="py-20 px-4 bg-gradient-to-br from-gray-900/50 to-gray-800/30">
-          <div className="max-w-6xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              className="text-center mb-16"
-            >
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-100 mb-4">
-                Why Choose <span className="bg-gradient-to-r from-gold-400 to-amber-500 bg-clip-text text-transparent">Kraft Mortgages?</span>
-              </h2>
-            </motion.div>
-
-            <div className="grid gap-8 md:grid-cols-3">
+        {/* ──── WHY CONTACT US ──── */}
+        <section className="py-20 sm:py-24 px-4 sm:px-8 border-t border-term-line-dim bg-term-deep">
+          <div className="max-w-[1400px] mx-auto">
+            <div className="font-mono text-[11px] text-term-gold tracking-[0.15em] mb-2">
+              §03 · WHY KRAFT MORTGAGES
+            </div>
+            <h2 className="font-serif font-normal text-3xl sm:text-5xl tracking-[-0.02em] mb-12">
+              Why Clients <em className="text-term-gold italic">Choose Us.</em>
+            </h2>
+            <div className="grid sm:grid-cols-3 gap-px bg-term-line-dim">
               {[
-                { Icon: Award, title: "18+ Years Experience", desc: "Decades of expertise helping clients navigate complex mortgage solutions across Canada" },
-                { Icon: DollarSign, title: "Competitive Rates", desc: "Access to exclusive rates and specialized programs like MLI Select for multi-unit properties" },
-                { Icon: Zap, title: "Fast Processing", desc: "Streamlined application process with quick approvals and dedicated support" },
-              ].map((item, i) => (
-                <motion.div
-                  key={item.title}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ delay: (i + 1) * 0.1 }}
-                  viewport={{ once: true }}
-                  className="text-center"
-                >
-                  <div className="w-16 h-16 bg-gradient-to-br from-gold-500/20 to-amber-500/20 rounded-full flex items-center justify-center border border-gold-500/30 mx-auto mb-4">
-                    <item.Icon className="w-8 h-8 text-gold-400" />
-                  </div>
-                  <h3 className="text-lg font-semibold text-gray-100 mb-2">{item.title}</h3>
-                  <p className="text-gray-400">{item.desc}</p>
-                </motion.div>
+                { num: "01", title: "23+ Years Experience", body: "Decades of expertise helping clients navigate complex mortgage solutions across Canada." },
+                { num: "02", title: "Competitive Rates", body: "Access to exclusive rates and specialized programs like MLI Select across 30+ lenders." },
+                { num: "03", title: "Fast Processing", body: "Streamlined application process with quick approvals and dedicated support." },
+              ].map((item) => (
+                <div key={item.num} className="bg-term-bg p-8 border-t-2 border-t-term-gold">
+                  <div className="font-mono text-[10px] text-term-gold tracking-[0.15em] mb-5">{item.num}</div>
+                  <h3 className="font-serif text-xl tracking-[-0.02em] mb-3">{item.title}</h3>
+                  <p className="text-[13px] text-term-text-dim leading-relaxed">{item.body}</p>
+                </div>
               ))}
             </div>
           </div>
         </section>
       </main>
+      <Footer />
     </>
   );
 }
