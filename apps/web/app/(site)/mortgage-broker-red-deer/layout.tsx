@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Red Deer Mortgage Broker | Best Rates & Fast Approval | Kraft Mortgages',
-  description: 'Top-rated Red Deer mortgage broker with $2B+ funded. Expert in first-time buyers, self-employed mortgages, rural property financing, and refinancing. Licensed BCFSA #M08001935. Serving Red Deer, Blackfalds, Lacombe, Sylvan Lake & central Alberta.',
+  description: 'Top-rated Red Deer mortgage broker with $2B+ funded. Expert in first-time buyers, self-employed mortgages, rural property financing, and refinancing. Licensed BCFSA #SR220230 | RECA LIC-00655428 | FSRA #12918. Serving Red Deer, Blackfalds, Lacombe, Sylvan Lake & central Alberta.',
   keywords: 'mortgage broker Red Deer, Red Deer mortgage broker, best mortgage broker Red Deer Alberta, Red Deer mortgage rates, first-time home buyer Red Deer, self-employed mortgage Red Deer, rural property mortgage Red Deer, mortgage broker near me',
   alternates: {
     canonical: 'https://www.kraftmortgages.ca/mortgage-broker-red-deer',

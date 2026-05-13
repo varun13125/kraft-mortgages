@@ -43,7 +43,7 @@ Enhancement requirements:
 Author Details:
 - Name: Varun Chaudhry
 - Title: Licensed Mortgage Broker  
-- License: BCFSA #M08001935
+- License: BCFSA #SR220230 | RECA LIC-00655428 | FSRA #12918
 - Experience: 18+ years in Canadian mortgage industry
 - Specialties: MLI Select, Construction Financing, Self-Employed mortgages
 - Office: 301-1688 152nd Street, Surrey, BC V4A 4N2
@@ -93,7 +93,7 @@ Return the enhanced article in Markdown format.
 
 **Varun Chaudhry** is a licensed mortgage broker with over 18 years of experience in the Canadian mortgage industry. Specializing in MLI Select, construction financing, and self-employed mortgages across BC, AB, and ON.
 
-- **License**: BCFSA #M08001935
+- **License**: BCFSA #SR220230 | RECA LIC-00655428 | FSRA #12918
 - **Office**: 301-1688 152nd Street, Surrey, BC V4A 4N2  
 - **Phone**: [604-593-1550](tel:604-593-1550)
 - **Specialties**: MLI Select Program, Construction Financing, Self-Employed Mortgages

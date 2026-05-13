@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Richmond Mortgage Broker | Best Rates | Kraft Mortgages',
-  description: 'Trusted Richmond mortgage broker with 23+ years experience. Expert in newcomer mortgages, investor financing, Steveston properties, and condo purchases. Licensed BCFSA #M08001935.',
+  description: 'Trusted Richmond mortgage broker with 23+ years experience. Expert in newcomer mortgages, investor financing, Steveston properties, and condo purchases. Licensed BCFSA #SR220230 | RECA LIC-00655428 | FSRA #12918.',
   keywords: 'mortgage broker Richmond, Richmond mortgage broker, best mortgage broker Richmond BC, Richmond mortgage rates, newcomer mortgage Richmond, Steveston mortgage, Richmond investor mortgage, first-time home buyer Richmond, mortgage broker near me',
   alternates: {
     canonical: 'https://www.kraftmortgages.ca/mortgage-broker-richmond',

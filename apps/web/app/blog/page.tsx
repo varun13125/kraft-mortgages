@@ -174,7 +174,7 @@ export default async function BlogPage() {
                 <User className="w-5 h-5" />
                 <span>Varun Chaudhry, Licensed Mortgage Broker</span>
                 <span className="text-gray-600">•</span>
-                <span>BCFSA #M08001935</span>
+                <span>BCFSA #SR220230 | RECA LIC-00655428 | FSRA #12918</span>
               </div>
               <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold bg-gold-500/20 text-gold-400 border border-gold-500/30">
                 <Star className="w-3 h-3" />

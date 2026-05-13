@@ -209,7 +209,7 @@ Ready to discover your real pre-approval potential? Our BC-based team specialize
     author: {
         name: 'Varun Chaudhry',
         title: 'Senior Mortgage Strategist',
-        license: 'BCFSA #M08001935'
+        license: 'BCFSA #SR220230 | RECA LIC-00655428 | FSRA #12918'
     },
     metaDescription: "Discover why 73% of homebuyers find their actual borrowing power is 15-25% lower than online calculators predict. Learn how BC's new CMHC changes are reshaping pre-approval strategies and why professional analysis beats algorithms.",
     keywords: [

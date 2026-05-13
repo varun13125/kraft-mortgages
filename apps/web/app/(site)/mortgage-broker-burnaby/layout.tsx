@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Burnaby Mortgage Broker | Best Rates | Kraft Mortgages',
-  description: 'Top-rated Burnaby mortgage broker with 23+ years experience. Expert in Metrotown condos, Brentwood pre-sales, and SFU area homes. Licensed BCFSA #M08001935. Free pre-approval.',
+  description: 'Top-rated Burnaby mortgage broker with 23+ years experience. Expert in Metrotown condos, Brentwood pre-sales, and SFU area homes. Licensed BCFSA #SR220230 | RECA LIC-00655428 | FSRA #12918. Free pre-approval.',
   keywords: 'mortgage broker Burnaby, Burnaby mortgage broker, best mortgage broker Burnaby BC, Burnaby mortgage rates, Metrotown mortgage, Brentwood condo mortgage, SFU area mortgage, first-time home buyer Burnaby, mortgage broker near me',
   alternates: {
     canonical: 'https://www.kraftmortgages.ca/mortgage-broker-burnaby',

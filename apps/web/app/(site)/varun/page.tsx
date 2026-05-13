@@ -44,7 +44,7 @@ export default function VarunLandingPage() {
                             >
                                 <span className="inline-flex items-center gap-2 bg-gold-500/10 border border-gold-500/20 rounded-full px-5 py-2 text-gold-400 text-sm font-medium">
                                     <Shield className="w-4 h-4" />
-                                    Licensed in BC, AB & ON • BCFSA #M08001935
+                                    Licensed in BC, AB & ON • BCFSA #SR220230 | RECA LIC-00655428 | FSRA #12918
                                 </span>
                             </motion.div>
 
@@ -557,7 +557,7 @@ export default function VarunLandingPage() {
 
                         {/* Legal */}
                         <div className="text-zinc-500 text-sm space-y-1">
-                            <p>BCFSA License #M08001935</p>
+                            <p>BCFSA #SR220230 | RECA LIC-00655428 | FSRA #12918</p>
                             <p>Licensed in British Columbia, Alberta, and Ontario</p>
                         </div>
 

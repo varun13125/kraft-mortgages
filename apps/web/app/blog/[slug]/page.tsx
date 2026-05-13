@@ -173,7 +173,7 @@ export default async function BlogPostPage({
               name: 'Varun Chaudhry',
               url: 'https://www.kraftmortgages.ca/about',
               jobTitle: 'Licensed Mortgage Broker',
-              honorificPrefix: 'BCFSA #M08001935',
+              honorificPrefix: 'BCFSA #SR220230 | RECA LIC-00655428 | FSRA #12918',
               email: 'varun@kraftmortgages.ca',
             },
             publisher: {
@@ -318,7 +318,7 @@ export default async function BlogPostPage({
                       </p>
                       <div className="flex flex-wrap gap-4 text-sm text-gray-500">
                         <span>📧 {post.authorEmail}</span>
-                        <span>🏢 BCFSA #M08001935</span>
+                        <span>🏢 BCFSA #SR220230 | RECA LIC-00655428 | FSRA #12918</span>
                         <span>📍 Surrey, BC</span>
                       </div>
                     </div>

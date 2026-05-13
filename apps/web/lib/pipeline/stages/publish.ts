@@ -92,7 +92,7 @@ export async function publishStage(run: Run): Promise<{ success: boolean; data?:
         author: {
           name: 'Varun Chaudhry',
           title: 'Licensed Mortgage Broker',
-          license: 'BCFSA #M08001935'
+          license: 'BCFSA #SR220230 | RECA LIC-00655428 | FSRA #12918'
         },
         metaDescription,
         keywords: brief.keywords || [],

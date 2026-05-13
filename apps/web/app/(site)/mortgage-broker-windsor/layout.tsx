@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Windsor Mortgage Broker | Best Rates & Fast Approval | Kraft Mortgages',
-  description: 'Top-rated Windsor mortgage broker with $2B+ funded. Expert in first-time buyers, self-employed mortgages, investment properties, and cross-border considerations. Licensed BCFSA #M08001935. Serving Windsor, Tecumseh, LaSalle, Amherstburg & Essex County.',
+  description: 'Top-rated Windsor mortgage broker with $2B+ funded. Expert in first-time buyers, self-employed mortgages, investment properties, and cross-border considerations. Licensed BCFSA #SR220230 | RECA LIC-00655428 | FSRA #12918. Serving Windsor, Tecumseh, LaSalle, Amherstburg & Essex County.',
   keywords: 'mortgage broker Windsor, Windsor mortgage broker, best mortgage broker Windsor Ontario, Windsor mortgage rates, first-time home buyer Windsor, self-employed mortgage Windsor, investment property Windsor, mortgage broker near me',
   alternates: {
     canonical: 'https://www.kraftmortgages.ca/mortgage-broker-windsor',

@@ -1,0 +1,31 @@
+{
+  "mcpServers": {
+    "n8n-mcp": {
+      "command": "cmd",
+      "args": ["/c", "npx", "n8n-mcp"],
+      "env": {
+        "MCP_MODE": "stdio",
+        "LOG_LEVEL": "error",
+        "DISABLE_CONSOLE_OUTPUT": "true",
+        "N8N_API_URL": "https://n8n.srv848694.hstgr.cloud/",
+        "N8N_API_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjODQyNzE5ZS03ZmNkLTQ2NjgtOTczMS03ZGU5ZjkzNDFhNTciLCJpc3MiOiJuOG4iLCJhdWQiOiJwdWJsaWMtYXBpIiwiaWF0IjoxNzUzMTQzMTcwfQ.lhW-A7jvniuOepEef65fwXBwTUmV_1T-40H_3LSQNwA"
+      }
+    },
+    "context7": {
+      "command": "cmd",
+      "args": ["/c", "npx", "-y", "mcp-remote", "https://gitmcp.io/upstash/context7"]
+    },
+    "n8n-workflows": {
+      "command": "cmd",
+      "args": ["/c", "npx", "-y", "mcp-remote", "https://gitmcp.io/Zie619/n8n-workflows"]
+    },
+    "outlook-mcp": {
+      "command": "node",
+      "args": ["C:\\Users\\varun\\Documents\\AI Application Development\\outlook-mcp\\server\\index.js"],
+      "env": {
+        "AZURE_CLIENT_ID": "4908d9b1-d6e8-4d2f-88d2-9fa3ce2674ee",
+        "AZURE_TENANT_ID": "e0c49f10-c3da-4ee9-b1d0-2889dd51c92f"
+      }
+    }
+  }
+}

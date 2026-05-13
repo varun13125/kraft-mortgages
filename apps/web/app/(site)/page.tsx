@@ -177,9 +177,23 @@ export default function ModernHomepage() {
           {
             "@type": "EducationalOccupationalCredential",
             credentialCategory: "license",
-            name: "BCFSA Licensed Mortgage Broker",
-            licenseNumber: "M08001935",
+            name: "BCFSA Licensed Mortgage Brokerage",
+            licenseNumber: "SR220230",
             recognizedBy: { "@type": "Organization", "name": "BC Financial Services Authority" }
+          },
+          {
+            "@type": "EducationalOccupationalCredential",
+            credentialCategory: "license",
+            name: "RECA Licensed Mortgage Brokerage",
+            licenseNumber: "LIC-00655428",
+            recognizedBy: { "@type": "Organization", "name": "Real Estate Council of Alberta" }
+          },
+          {
+            "@type": "EducationalOccupationalCredential",
+            credentialCategory: "license",
+            name: "FSRA Licensed Mortgage Brokerage",
+            licenseNumber: "12918",
+            recognizedBy: { "@type": "Organization", "name": "Financial Services Regulatory Authority of Ontario" }
           }
         ],
         knowsAbout: [
@@ -680,7 +694,7 @@ export default function ModernHomepage() {
                 <div>✓ Alberta</div>
                 <div>✓ Ontario</div>
                 <div className="mt-4 pt-4 border-t border-gray-700/50">
-                  <span className="text-xs">FSRA License: #M08001935</span>
+                  <span className="text-xs">BCFSA #SR220230 | RECA LIC-00655428 | FSRA #12918</span>
                 </div>
               </div>
             </div>

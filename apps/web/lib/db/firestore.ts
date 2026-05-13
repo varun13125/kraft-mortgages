@@ -305,7 +305,7 @@ export async function getPost(slug: string): Promise<Post | null> {
       author: {
         name: 'Varun Chaudhry',
         title: 'Licensed Mortgage Broker',
-        license: 'BCFSA #M08001935'
+        license: 'BCFSA #SR220230 | RECA LIC-00655428 | FSRA #12918'
       },
       metaDescription: 'A comprehensive guide to construction mortgages in BC, demystifying the process and positioning Kraft Mortgages as the essential partner for any building project.',
       keywords: ['construction-mortgage', 'bc-real-estate', 'building-finance', 'draw-mortgage'],
@@ -325,7 +325,7 @@ export async function getPost(slug: string): Promise<Post | null> {
       author: {
         name: 'Varun Chaudhry',
         title: 'Licensed Mortgage Broker',
-        license: 'BCFSA #M08001935'
+        license: 'BCFSA #SR220230 | RECA LIC-00655428 | FSRA #12918'
       },
       metaDescription: "For multi-unit residential developers in British Columbia, profit margins are everything. Learn how the CMHC MLI Select program can unlock up to 95% LTV...",
       keywords: ['mli-select', 'cmhc', 'development-financing', 'surrey', 'vancouver'],
@@ -414,7 +414,7 @@ export async function getPost(slug: string): Promise<Post | null> {
       author: {
         name: 'Varun Chaudhry',
         title: 'Licensed Mortgage Broker',
-        license: 'BCFSA #M08001935'
+        license: 'BCFSA #SR220230 | RECA LIC-00655428 | FSRA #12918'
       },
       metaDescription: 'Bank of Canada announced holding its key overnight rate at 2.25%. After a year of aggressive cuts, the easing cycle is likely over. What this new reality means for your mortgage strategy in 2026.',
       keywords: ['Bank of Canada', 'interest-rates', 'mortgage-strategy', '2026', 'vancouver-real-estate', 'surrey-mortgages', 'fixed-vs-variable'],
@@ -588,7 +588,7 @@ export async function getPost(slug: string): Promise<Post | null> {
       author: {
         name: 'Varun Chaudhry',
         title: 'Licensed Mortgage Broker',
-        license: 'BCFSA #M08001935'
+        license: 'BCFSA #SR220230 | RECA LIC-00655428 | FSRA #12918'
       },
       metaDescription: 'Discover why CMHC MLI Select creates infinite returns in Alberta but negative cash flow in Vancouver. Compare 95% LTV multi-family deals in BC vs. Edmonton.',
       keywords: ['MLI-Select', 'CMHC', 'Alberta-investing', 'infinite-returns', 'multi-family', '95-LTV', '50-year-amortization', 'Edmonton'],
@@ -722,7 +722,7 @@ export async function getPost(slug: string): Promise<Post | null> {
       author: {
         name: 'Varun Chaudhry',
         title: 'Licensed Mortgage Broker',
-        license: 'BCFSA #M08001935'
+        license: 'BCFSA #SR220230 | RECA LIC-00655428 | FSRA #12918'
       },
       metaDescription: 'Presale condo appraisal came in low? Learn how Kraft Mortgages 85% LTV rescue mortgage can save your deposit and close your Surrey or Vancouver condo.',
       keywords: ['low-appraisal', 'presale-condo', 'Surrey', 'Vancouver', '85-LTV', 'rescue-mortgage', 'condo-completion', 'appraisal-gap'],
@@ -849,7 +849,7 @@ export async function getPost(slug: string): Promise<Post | null> {
       author: {
         name: 'Varun Chaudhry',
         title: 'Licensed Mortgage Broker',
-        license: 'BCFSA #M08001935'
+        license: 'BCFSA #SR220230 | RECA LIC-00655428 | FSRA #12918'
       },
       metaDescription: '60% of Canadian mortgages renew by 2026. Learn 3 strategies to handle payment shock from pandemic-low rates including amortization reset and switch market options.',
       keywords: ['renewal-cliff', 'mortgage-renewal', '2026', 'payment-shock', 'amortization-reset', 'Surrey', 'Vancouver', 'interest-rates'],
@@ -985,7 +985,7 @@ export async function getPost(slug: string): Promise<Post | null> {
       author: {
         name: 'Varun Chaudhry',
         title: 'Licensed Mortgage Broker',
-        license: 'BCFSA #M08001935'
+        license: 'BCFSA #SR220230 | RECA LIC-00655428 | FSRA #12918'
       },
       metaDescription: 'Learn how to turn your Surrey townhouse equity into a mortgage-free home in Alberta. Bridge financing, no PTT, and lower costs. Your Mortgage Broker Surrey to Alberta specialist.',
       keywords: ['geographic-arbitrage', 'mortgage-broker-surrey', 'moving-to-alberta', 'bridge-financing', 'edmonton-real-estate', 'calgary-mortgages', 'BC-to-Alberta'],
@@ -1113,7 +1113,7 @@ export async function getPost(slug: string): Promise<Post | null> {
       author: {
         name: 'Varun Chaudhry',
         title: 'Licensed Mortgage Broker',
-        license: 'BCFSA #M08001935'
+        license: 'BCFSA #SR220230 | RECA LIC-00655428 | FSRA #12918'
       },
       metaDescription: 'BCREA reports sales down 13.3% in November. While headlines scream doom, smart buyers are locking 4.39% rates and negotiating 5-10% below asking.',
       keywords: ['bc-real-estate-2025', 'mortgage-rates-surrey', 'buyers-market-bc', 'bcrea-report', 'fixed-rates'],
@@ -1238,7 +1238,7 @@ export async function getPost(slug: string): Promise<Post | null> {
       author: {
         name: 'Varun Chaudhry',
         title: 'Senior Mortgage Strategist',
-        license: 'BCFSA #M08001935'
+        license: 'BCFSA #SR220230 | RECA LIC-00655428 | FSRA #12918'
       },
       metaDescription: 'The rate cut is here but the BC Flipping Tax changed everything. Smart investors are now building density in BC or pivoting to Alberta. Here is the playbook.',
       keywords: ['rate-cut', 'bc-build', 'alberta-buy', 'bill-44', 'mli-select', 'construction-mortgage', 'calgary-real-estate', 'surrey-real-estate'],
@@ -1375,7 +1375,7 @@ export async function getPost(slug: string): Promise<Post | null> {
       author: {
         name: 'Varun Chaudhry',
         title: 'Licensed Mortgage Broker',
-        license: 'BCFSA #M08001935'
+        license: 'BCFSA #SR220230 | RECA LIC-00655428 | FSRA #12918'
       },
       metaDescription: 'New December 2025 rules raise the insured mortgage cap to $1.5M. First-time buyers in BC can now buy with less than 20% down and access 30-year amortizations.',
       keywords: ['insured-mortgage-cap', '30-year-amortization', 'mortgage-broker-surrey', 'first-time-home-buyer-bc', 'down-payment-rules-2025'],
@@ -1463,7 +1463,7 @@ export async function getPost(slug: string): Promise<Post | null> {
       author: {
         name: 'Varun Chaudhry',
         title: 'Licensed Mortgage Broker',
-        license: 'BCFSA #M08001935'
+        license: 'BCFSA #SR220230 | RECA LIC-00655428 | FSRA #12918'
       },
       metaDescription: 'The Alberta Migration continues but Calgary may be played out. Discover why Edmonton is the 2026 opportunity for BC real estate investors seeking positive cash flow.',
       keywords: ['Alberta-investing', 'Edmonton-real-estate', 'Calgary-vs-Edmonton', '2026', 'investment-property', 'cash-flow', 'BC-investors'],
@@ -1519,7 +1519,7 @@ export async function getPost(slug: string): Promise<Post | null> {
       author: {
         name: 'Varun Chaudhry',
         title: 'Licensed Mortgage Broker',
-        license: 'BCFSA #M08001935'
+        license: 'BCFSA #SR220230 | RECA LIC-00655428 | FSRA #12918'
       },
       metaDescription: 'We specialize in helping self-employed business owners and new Canadians get mortgage approval when traditional banks say no. Learn our expert strategies for passing the stress test.',
       keywords: ['stress-test', 'self-employed', 'mortgage-approval', 'complex-files', 'alternative-lenders'],
@@ -1759,7 +1759,7 @@ A contractor assumed his $900,000 calculator result was solid. His actual pre-ap
       author: {
         name: 'Varun Chaudhry',
         title: 'Senior Mortgage Strategist',
-        license: 'BCFSA #M08001935'
+        license: 'BCFSA #SR220230 | RECA LIC-00655428 | FSRA #12918'
       },
       metaDescription: "Discover why 73% of homebuyers find their actual borrowing power is 15-25% lower than online calculators predict. Learn how BC's new CMHC changes are reshaping pre-approval strategies.",
       keywords: ['pre-approval-mortgage-calculator', 'BC-mortgage', 'CMHC-changes-2025', 'mortgage-broker-BC', 'Vancouver-mortgage', 'Surrey-mortgage'],
@@ -1952,7 +1952,7 @@ A contractor assumed his $900,000 calculator result was solid. His actual pre-ap
       author: {
         name: 'Varun Chaudhry',
         title: 'President, CEO, Sr. Mortgage Professional',
-        license: 'BCFSA #M08001935'
+        license: 'BCFSA #SR220230 | RECA LIC-00655428 | FSRA #12918'
       },
       metaDescription: "Learn how Kraft Mortgages saved a Surrey developer $214,000+ in CMHC premiums using MLI Select. Expert guide to the point system, 2025 changes, and common mistakes.",
       keywords: ['MLI-Select', 'CMHC', 'multi-unit-financing', 'Surrey-developer', '95-LTV', '50-year-amortization', 'insurance-premium-savings'],
@@ -2079,7 +2079,7 @@ A contractor assumed his $900,000 calculator result was solid. His actual pre-ap
       author: {
         name: 'Varun Chaudhry',
         title: 'President, CEO, Sr. Mortgage Professional',
-        license: 'BCFSA #M08001935'
+        license: 'BCFSA #SR220230 | RECA LIC-00655428 | FSRA #12918'
       },
       metaDescription: "1.5 million Canadians face mortgage renewals in 2025-2026. Burnaby homeowners could see $400-600/month payment increases. Learn why a mortgage broker is essential for navigating the renewal crisis.",
       keywords: ['mortgage-renewal', 'Burnaby', 'payment-shock', 'mortgage-broker', 'renewal-crisis-2025', 'BC-mortgages'],
@@ -2257,7 +2257,7 @@ A contractor assumed his $900,000 calculator result was solid. His actual pre-ap
       author: {
         name: 'Varun Chaudhry',
         title: 'President, CEO, Sr. Mortgage Professional',
-        license: 'BCFSA #M08001935'
+        license: 'BCFSA #SR220230 | RECA LIC-00655428 | FSRA #12918'
       },
       metaDescription: "7 critical mortgage renewal mistakes Coquitlam homeowners are making in 2026. Learn how Surrey mortgage brokers can help you save thousands and avoid the renewal cliff.",
       keywords: ['mortgage-renewal-2026', 'Coquitlam', 'Surrey-mortgage-broker', 'renewal-mistakes', 'mortgage-broker-BC', 'stress-test'],
@@ -2429,7 +2429,7 @@ A contractor assumed his $900,000 calculator result was solid. His actual pre-ap
       author: {
         name: 'Varun Chaudhry',
         title: 'President, CEO, Sr. Mortgage Professional',
-        license: 'BCFSA #M08001935'
+        license: 'BCFSA #SR220230 | RECA LIC-00655428 | FSRA #12918'
       },
       metaDescription: "1.8 million Canadian mortgages renewing in 2026. Surrey families face $1,000+/month payment shock while billions flow overseas. Local mortgage broker solutions for the renewal cliff.",
       keywords: ['mortgage-crisis-canada', 'renewal-cliff-2026', 'Surrey-mortgage-broker', 'payment-shock', 'taxpayer-relief', 'BC-mortgages'],
@@ -2490,7 +2490,7 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
     author: {
       name: 'Varun Chaudhry',
       title: 'Licensed Mortgage Broker',
-      license: 'BCFSA #M08001935'
+      license: 'BCFSA #SR220230 | RECA LIC-00655428 | FSRA #12918'
     },
     metaDescription: 'We specialize in helping self-employed business owners and new Canadians get mortgage approval when traditional banks say no. Learn our expert strategies for passing the stress test.',
     keywords: ['stress-test', 'self-employed', 'mortgage-approval', 'complex-files', 'alternative-lenders'],
@@ -2507,7 +2507,7 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
     author: {
       name: 'Varun Chaudhry',
       title: 'Licensed Mortgage Broker',
-      license: 'BCFSA #M08001935'
+      license: 'BCFSA #SR220230 | RECA LIC-00655428 | FSRA #12918'
     },
     metaDescription: "For multi-unit residential developers in British Columbia, profit margins are everything. Learn how the CMHC MLI Select program can unlock up to 95% LTV...",
     keywords: ['mli-select', 'cmhc', 'development-financing', 'surrey', 'vancouver'],
@@ -2524,7 +2524,7 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
     author: {
       name: 'Varun Chaudhry',
       title: 'Licensed Mortgage Broker',
-      license: 'BCFSA #M08001935'
+      license: 'BCFSA #SR220230 | RECA LIC-00655428 | FSRA #12918'
     },
     metaDescription: 'A comprehensive guide to construction mortgages in BC, demystifying the process and positioning Kraft Mortgages as the essential partner for any building project.',
     keywords: ['construction-mortgage', 'bc-real-estate', 'building-finance', 'draw-mortgage'],
@@ -2679,7 +2679,7 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
     author: {
       name: 'Varun Chaudhry',
       title: 'Licensed Mortgage Broker',
-      license: 'BCFSA #M08001935'
+      license: 'BCFSA #SR220230 | RECA LIC-00655428 | FSRA #12918'
     },
     metaDescription: 'Bank of Canada announced holding its key overnight rate at 2.25%. After a year of aggressive cuts, the easing cycle is likely over. What this new reality means for your mortgage strategy in 2026.',
     keywords: ['Bank of Canada', 'interest-rates', 'mortgage-strategy', '2026', 'vancouver-real-estate', 'surrey-mortgages', 'fixed-vs-variable'],
@@ -2782,7 +2782,7 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
     author: {
       name: 'Varun Chaudhry',
       title: 'Licensed Mortgage Broker',
-      license: 'BCFSA #M08001935'
+      license: 'BCFSA #SR220230 | RECA LIC-00655428 | FSRA #12918'
     },
     metaDescription: 'The Alberta Migration continues but Calgary may be played out. Discover why Edmonton is the 2026 opportunity for BC real estate investors seeking positive cash flow.',
     keywords: ['Alberta-investing', 'Edmonton-real-estate', 'Calgary-vs-Edmonton', '2026', 'investment-property', 'cash-flow', 'BC-investors'],
@@ -2823,7 +2823,7 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
     author: {
       name: 'Varun Chaudhry',
       title: 'Licensed Mortgage Broker',
-      license: 'BCFSA #M08001935'
+      license: 'BCFSA #SR220230 | RECA LIC-00655428 | FSRA #12918'
     },
     metaDescription: 'Discover why CMHC MLI Select creates infinite returns in Alberta but negative cash flow in Vancouver. Compare 95% LTV multi-family deals.',
     keywords: ['MLI-Select', 'CMHC', 'Alberta-investing', 'infinite-returns', 'multi-family', '95-LTV', '50-year-amortization'],
@@ -2864,7 +2864,7 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
     author: {
       name: 'Varun Chaudhry',
       title: 'Licensed Mortgage Broker',
-      license: 'BCFSA #M08001935'
+      license: 'BCFSA #SR220230 | RECA LIC-00655428 | FSRA #12918'
     },
     metaDescription: 'Presale condo appraisal came in low? Learn how Kraft Mortgages 85% LTV rescue mortgage can save your deposit and close your Surrey or Vancouver condo.',
     keywords: ['low-appraisal', 'presale-condo', 'Surrey', 'Vancouver', '85-LTV', 'rescue-mortgage'],
@@ -2899,7 +2899,7 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
     author: {
       name: 'Varun Chaudhry',
       title: 'Licensed Mortgage Broker',
-      license: 'BCFSA #M08001935'
+      license: 'BCFSA #SR220230 | RECA LIC-00655428 | FSRA #12918'
     },
     metaDescription: '60% of Canadian mortgages renew by 2026. Learn 3 strategies to handle payment shock from pandemic-low rates.',
     keywords: ['renewal-cliff', 'mortgage-renewal', '2026', 'payment-shock', 'amortization-reset'],
@@ -2934,7 +2934,7 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
     author: {
       name: 'Varun Chaudhry',
       title: 'Licensed Mortgage Broker',
-      license: 'BCFSA #M08001935'
+      license: 'BCFSA #SR220230 | RECA LIC-00655428 | FSRA #12918'
     },
     metaDescription: 'Learn how to turn your Surrey townhouse equity into a mortgage-free home in Alberta with bridge financing.',
     keywords: ['geographic-arbitrage', 'mortgage-broker-surrey', 'moving-to-alberta', 'bridge-financing', 'edmonton-real-estate'],
@@ -2965,7 +2965,7 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
     author: {
       name: 'Varun Chaudhry',
       title: 'Licensed Mortgage Broker',
-      license: 'BCFSA #M08001935'
+      license: 'BCFSA #SR220230 | RECA LIC-00655428 | FSRA #12918'
     },
     metaDescription: 'New December 2025 rules raise the insured mortgage cap to $1.5M. First-time buyers in BC can now buy with less than 20% down.',
     keywords: ['insured-mortgage-cap', '30-year-amortization', 'mortgage-broker-surrey', 'first-time-home-buyer-bc'],
@@ -2992,7 +2992,7 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
     author: {
       name: 'Varun Chaudhry',
       title: 'Senior Mortgage Strategist',
-      license: 'BCFSA #M08001935'
+      license: 'BCFSA #SR220230 | RECA LIC-00655428 | FSRA #12918'
     },
     metaDescription: 'The rate cut is here but the BC Flipping Tax changed everything. Smart investors are now building density in BC or pivoting to Alberta.',
     keywords: ['rate-cut', 'bc-build', 'alberta-buy', 'bill-44', 'mli-select'],
@@ -3019,7 +3019,7 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
     author: {
       name: 'Varun Chaudhry',
       title: 'Licensed Mortgage Broker',
-      license: 'BCFSA #M08001935'
+      license: 'BCFSA #SR220230 | RECA LIC-00655428 | FSRA #12918'
     },
     metaDescription: 'BCREA reports sales down 13.3% in November. Smart buyers are locking 4.39% rates and negotiating 5-10% below asking.',
     keywords: ['bc-real-estate-2025', 'mortgage-rates-surrey', 'buyers-market-bc', 'bcrea-report'],
@@ -3036,7 +3036,7 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
     author: {
       name: 'Varun Chaudhry',
       title: 'Senior Mortgage Strategist',
-      license: 'BCFSA #M08001935'
+      license: 'BCFSA #SR220230 | RECA LIC-00655428 | FSRA #12918'
     },
     metaDescription: "Discover why 73% of homebuyers find their actual borrowing power is 15-25% lower than online calculators predict. Learn how BC's new CMHC changes are reshaping pre-approval strategies.",
     keywords: ['pre-approval-mortgage-calculator', 'BC-mortgage', 'CMHC-changes-2025', 'mortgage-broker-BC'],
@@ -3053,7 +3053,7 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
     author: {
       name: 'Varun Chaudhry',
       title: 'President, CEO, Sr. Mortgage Professional',
-      license: 'BCFSA #M08001935'
+      license: 'BCFSA #SR220230 | RECA LIC-00655428 | FSRA #12918'
     },
     metaDescription: "Learn how Kraft Mortgages saved a Surrey developer $214,000+ in CMHC premiums using MLI Select. Expert guide to the point system, 2025 changes, and common mistakes.",
     keywords: ['MLI-Select', 'CMHC', 'multi-unit-financing', 'Surrey-developer'],
@@ -3070,7 +3070,7 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
     author: {
       name: 'Varun Chaudhry',
       title: 'President, CEO, Sr. Mortgage Professional',
-      license: 'BCFSA #M08001935'
+      license: 'BCFSA #SR220230 | RECA LIC-00655428 | FSRA #12918'
     },
     metaDescription: "1.5 million Canadians face mortgage renewals in 2025-2026. Burnaby homeowners could see $400-600/month payment increases. Learn why a mortgage broker is essential.",
     keywords: ['mortgage-renewal', 'Burnaby', 'payment-shock', 'mortgage-broker'],
@@ -3087,7 +3087,7 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
     author: {
       name: 'Varun Chaudhry',
       title: 'President, CEO, Sr. Mortgage Professional',
-      license: 'BCFSA #M08001935'
+      license: 'BCFSA #SR220230 | RECA LIC-00655428 | FSRA #12918'
     },
     metaDescription: "7 critical mortgage renewal mistakes Coquitlam homeowners are making in 2026. Learn how Surrey mortgage brokers can help you save thousands.",
     keywords: ['mortgage-renewal-2026', 'Coquitlam', 'Surrey-mortgage-broker', 'renewal-mistakes'],
@@ -3104,7 +3104,7 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
     author: {
       name: 'Varun Chaudhry',
       title: 'President, CEO, Sr. Mortgage Professional',
-      license: 'BCFSA #M08001935'
+      license: 'BCFSA #SR220230 | RECA LIC-00655428 | FSRA #12918'
     },
     metaDescription: "1.8 million Canadian mortgages renewing in 2026. Surrey families face $1,000+/month payment shock. Local mortgage broker solutions for the renewal cliff.",
     keywords: ['mortgage-crisis-canada', 'renewal-cliff-2026', 'Surrey-mortgage-broker', 'payment-shock'],

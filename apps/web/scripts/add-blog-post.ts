@@ -70,7 +70,7 @@ Serving Clients Across British Columbia and Alberta
     author: {
         name: 'Varun Chaudhry',
         title: 'Senior Mortgage Strategist',
-        license: 'BCFSA #M08001935'
+        license: 'BCFSA #SR220230 | RECA LIC-00655428 | FSRA #12918'
     },
     metaDescription: 'BC Real Estate sales are down 13% and vacancy rates have doubled. Smart investors see this as peak negotiating power. Learn how to capitalize on the 2025 market downturn.',
     keywords: [

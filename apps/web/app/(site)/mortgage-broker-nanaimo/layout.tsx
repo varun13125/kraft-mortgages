@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Nanaimo Mortgage Broker | Best Rates & Fast Approval | Kraft Mortgages',
-  description: 'Top-rated Nanaimo mortgage broker with $2B+ funded. Expert in first-time buyers, self-employed mortgages, investment properties, and refinancing. Licensed BCFSA #M08001935. Serving Nanaimo, Parksville, Ladysmith & central Vancouver Island.',
+  description: 'Top-rated Nanaimo mortgage broker with $2B+ funded. Expert in first-time buyers, self-employed mortgages, investment properties, and refinancing. Licensed BCFSA #SR220230 | RECA LIC-00655428 | FSRA #12918. Serving Nanaimo, Parksville, Ladysmith & central Vancouver Island.',
   keywords: 'mortgage broker Nanaimo, Nanaimo mortgage broker, best mortgage broker Nanaimo BC, Nanaimo mortgage rates, first-time home buyer Nanaimo, self-employed mortgage Nanaimo, investment property Nanaimo, mortgage broker near me',
   alternates: {
     canonical: 'https://www.kraftmortgages.ca/mortgage-broker-nanaimo',

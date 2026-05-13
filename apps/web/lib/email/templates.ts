@@ -122,7 +122,7 @@ const getBaseTemplate = (content: string, data: EmailTemplateData): string => {
         
         <div class="footer">
             <div><strong>Varun Chaudhry</strong> | Licensed Mortgage Broker</div>
-            <div>BCFSA License #M08001935</div>
+            <div>BCFSA #SR220230 | RECA LIC-00655428 | FSRA #12918</div>
             <div style="margin: 15px 0;">
                 📞 <a href="tel:+16045931550">604-593-1550</a> | 
                 📧 <a href="mailto:varun@kraftmortgages.ca">varun@kraftmortgages.ca</a>

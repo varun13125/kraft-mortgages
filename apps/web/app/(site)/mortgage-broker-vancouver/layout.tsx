@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Vancouver Mortgage Broker | Best Rates | Kraft Mortgages',
-  description: 'Trusted Vancouver mortgage broker with 23+ years experience. Expert in downtown condos, East Van homes, West Side luxury, and first-time buyer programs. Licensed BCFSA #M08001935.',
+  description: 'Trusted Vancouver mortgage broker with 23+ years experience. Expert in downtown condos, East Van homes, West Side luxury, and first-time buyer programs. Licensed BCFSA #SR220230 | RECA LIC-00655428 | FSRA #12918.',
   keywords: 'mortgage broker Vancouver, Vancouver mortgage broker, best mortgage broker Vancouver BC, Vancouver mortgage rates, first-time home buyer Vancouver, downtown Vancouver mortgage, West Vancouver mortgage, East Van mortgage, mortgage broker near me',
   alternates: {
     canonical: 'https://www.kraftmortgages.ca/mortgage-broker-vancouver',

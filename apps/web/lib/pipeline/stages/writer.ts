@@ -133,7 +133,7 @@ Contact a licensed mortgage broker to discuss your specific situation and explor
 
 ---
 
-*This analysis is provided by Varun Chaudhry, Licensed Mortgage Broker (BCFSA #M08001935), with 18+ years of Canadian mortgage experience.*`;
+*This analysis is provided by Varun Chaudhry, Licensed Mortgage Broker (BCFSA #SR220230 | RECA LIC-00655428 | FSRA #12918), with 18+ years of Canadian mortgage experience.*`;
     }
 
     // Add sources section
