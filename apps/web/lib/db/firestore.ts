@@ -3115,7 +3115,7 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
     // FIRST: Fetch from Firestore - API-ingested posts take priority
     const snapshot = await (await postsCol())
       .orderBy('publishedAt', 'desc')
-      .limit(50) // Get more to ensure comprehensive results
+      .limit(200) // Get more to ensure comprehensive results
       .get();
 
     const firestorePosts = snapshot.docs.map((doc: any) => ({
