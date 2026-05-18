@@ -116,7 +116,7 @@ function transformPost(post: any) {
 }
 
 export default async function BlogPage() {
-  const fsPosts = await getRecentPosts(30);
+  const fsPosts = await getRecentPosts(100);
   const posts = (fsPosts || []).map(transformPost).filter(Boolean); // Filter out null posts
   const featuredPosts = posts.filter(post => post?.featured);
   const regularPosts = posts.filter(post => !post?.featured);
