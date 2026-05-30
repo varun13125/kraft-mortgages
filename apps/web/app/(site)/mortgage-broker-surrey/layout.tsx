@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: 'Surrey Mortgage Broker | Kraft Mortgages Canada',
-    description: 'Top-rated Surrey mortgage broker with $2B+ funded and 23+ years experience. Free pre-approval in 24 hours.',
+    description: 'Top-rated Surrey mortgage broker with $2B+ funded and 18+ Years Combined Experience. Free pre-approval in 24 hours.',
     url: 'https://www.kraftmortgages.ca/mortgage-broker-surrey',
     type: 'website',
   },

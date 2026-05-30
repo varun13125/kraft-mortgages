@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: 'Lethbridge Mortgage Broker | Kraft Mortgages Canada',
-    description: 'Top-rated Lethbridge mortgage broker with $2B+ funded and 23+ years experience. Free pre-approval in 24 hours.',
+    description: 'Top-rated Lethbridge mortgage broker with $2B+ funded and 18+ Years Combined Experience. Free pre-approval in 24 hours.',
     url: 'https://www.kraftmortgages.ca/mortgage-broker-lethbridge',
     type: 'website',
   },

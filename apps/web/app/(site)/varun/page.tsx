@@ -84,7 +84,7 @@ export default function VarunLandingPage() {
                             >
                                 <div className="flex items-center gap-2 text-zinc-300">
                                     <CheckCircle className="w-5 h-5 text-gold-400" />
-                                    <span className="text-sm sm:text-base">18+ Years Experience</span>
+                                    <span className="text-sm sm:text-base">16+ Years Experience</span>
                                 </div>
                                 <div className="flex items-center gap-2 text-zinc-300">
                                     <CheckCircle className="w-5 h-5 text-gold-400" />
@@ -389,7 +389,7 @@ export default function VarunLandingPage() {
                             <div>
                                 <h3 className="text-xl sm:text-2xl font-semibold text-zinc-100 mb-3">Licensed & Experienced</h3>
                                 <p className="text-zinc-400 leading-relaxed text-base">
-                                    BCFSA licensed broker with 23+ years helping Canadians secure mortgages across BC, Alberta, and Ontario.
+                                    BCFSA licensed broker with 16+ years helping Canadians secure mortgages across BC, Alberta, and Ontario.
                                 </p>
                             </div>
                         </motion.div>

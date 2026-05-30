@@ -19,7 +19,7 @@ export default function RichmondPage() {
                             Richmond's Go-To Mortgage Broker
                         </h1>
                         <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-8">
-                            Richmond is one of Canada's most diverse and dynamic real estate markets. Kraft Mortgages brings 23+ years of experience, multilingual service, and deep lender relationships to every Richmond transaction.
+                            Richmond is one of Canada's most diverse and dynamic real estate markets. Kraft Mortgages brings 18+ Years Combined Experience, multilingual service, and deep lender relationships to every Richmond transaction.
                         </p>
                         <Link
                             href="/contact"

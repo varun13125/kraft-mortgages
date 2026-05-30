@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Residential Mortgages BC | Kraft Mortgages",
-  description: "Residential mortgages in BC, AB & ON. First-time buyers, refinancing, renewals & purchase financing. 23+ years experience.",
+  description: "Residential mortgages in BC, AB & ON. First-time buyers, refinancing, renewals & purchase financing. 18+ Years Combined Experience.",
   keywords: "residential mortgage BC, first time home buyer mortgage, mortgage refinance, mortgage renewal, purchase financing, home loan BC",
   alternates: {
     canonical: 'https://www.kraftmortgages.ca/residential',

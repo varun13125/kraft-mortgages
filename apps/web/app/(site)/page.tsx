@@ -18,7 +18,7 @@ export default function ModernHomepage() {
   });
 
   // Counter animation states
-  const [yearsCount, setYearsCount] = useState(23);
+  const [yearsCount, setYearsCount] = useState(18);
   const [clientsCount, setClientsCount] = useState(5000);
   const [fundedCount, setFundedCount] = useState(2);
   const statsRef = useRef<HTMLDivElement>(null);
@@ -47,7 +47,7 @@ export default function ModernHomepage() {
   const animateCounters = () => {
     const duration = 2000;
     const steps = 60;
-    const yearTarget = 23;
+    const yearTarget = 18;
     const clientTarget = 5000;
     const fundedTarget = 2;
 
@@ -223,7 +223,7 @@ export default function ModernHomepage() {
                 transition={{ duration: 0.8 }}
               >
                 <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold bg-gold-500/20 text-gold-400 border border-gold-500/30 mb-6">
-                  Mortgage Experts • 23+ Years of Excellence
+                  Mortgage Experts • 18+ Years Combined Experience
                 </div>
                 <h1 className="text-4xl sm:text-6xl font-bold tracking-tight text-gray-100 mb-6">
                   Expert Mortgage Solutions Across
@@ -314,7 +314,7 @@ export default function ModernHomepage() {
                     Canada's mortgage market has shifted dramatically in recent years. Rising interest rates, tightened lending guidelines, and new stress-test requirements have made it harder than ever for Canadians to secure financing — especially if your situation doesn't fit a traditional bank's checklist. Whether you're self-employed, purchasing an investment property, building a custom home, or looking to refinance during a renewal, the right guidance can be the difference between approval and frustration.
                   </p>
                   <p>
-                    That's where Kraft Mortgages comes in. Headquartered in Surrey, BC, and licensed across <strong className="text-gray-200">British Columbia, Alberta, and Ontario</strong>, we bring over 23 years of frontline experience to every file. Our team specializes in the mortgage scenarios that other brokers turn away — including MLI Select multi-unit financing, construction draw management, stated-income programs for entrepreneurs, equity lending, and private mortgage solutions. With access to more than 30 lenders, we shop the market on your behalf so you don't have to.
+                    That\'s where Kraft Mortgages comes in. Headquartered in Surrey, BC, and licensed across <strong className="text-gray-200">British Columbia, Alberta, and Ontario</strong>, we bring over 18 years of combined frontline experience to every file. Our team specializes in the mortgage scenarios that other brokers turn away — including MLI Select multi-unit financing, construction draw management, stated-income programs for entrepreneurs, equity lending, and private mortgage solutions. With access to more than 30 lenders, we shop the market on your behalf so you don\'t have to.
                   </p>
                   <p>
                     From the Lower Mainland and the Okanagan to Calgary, Edmonton, Toronto, and Ottawa — Kraft Mortgages has helped over 5,000 clients and funded more than $2 billion in mortgages. Whether you're buying your first home, expanding your portfolio, or restructuring your debt, we deliver personalized strategies backed by decades of lender relationships and deep product knowledge.
@@ -341,7 +341,7 @@ export default function ModernHomepage() {
 
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {[
-                { icon: TrendingUp, title: '23+ Years of Experience', desc: 'Over two decades in the mortgage industry with more than $2 billion in funded deals. Deep lender relationships and institutional knowledge that translates into better terms for every client.' },
+                { icon: TrendingUp, title: '18+ Years Combined Experience', desc: 'Over 18 years of combined experience in the mortgage industry with more than $2 billion in funded deals. Deep lender relationships and institutional knowledge that translates into better terms for every client.' },
                 { icon: Shield, title: 'Licensed in 3 Provinces', desc: 'Fully licensed to operate in British Columbia, Alberta, and Ontario. Whether you are buying in Vancouver, investing in Calgary, or relocating to Toronto — we have you covered coast to coast.' },
                 { icon: Users, title: 'Access to 30+ Lenders', desc: 'We work with major banks, credit unions, trust companies, and private lenders. That means more options, better rates, and solutions tailored to your unique financial situation.' },
                 { icon: Building, title: 'Complex Mortgage Specialists', desc: 'MLI Select multi-unit financing, construction draws, self-employed stated income, equity lending, and private mortgages — these are not side services for us. They are our core expertise.' },
@@ -651,7 +651,7 @@ export default function ModernHomepage() {
             <div>
               <h3 className="text-xl font-semibold text-gold-400 mb-4">Kraft Mortgages</h3>
               <p className="text-gray-400 text-sm leading-relaxed">
-                23+ years of excellence in complex mortgage solutions across British Columbia, Alberta, and Ontario.
+                18+ Years Combined Experience in complex mortgage solutions across British Columbia, Alberta, and Ontario.
               </p>
             </div>
 

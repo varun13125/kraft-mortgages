@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: 'Nanaimo Mortgage Broker | Kraft Mortgages Canada',
-    description: 'Top-rated Nanaimo mortgage broker with $2B+ funded and 23+ years experience. Free pre-approval in 24 hours.',
+    description: 'Top-rated Nanaimo mortgage broker with $2B+ funded and 18+ Years Combined Experience. Free pre-approval in 24 hours.',
     url: 'https://www.kraftmortgages.ca/mortgage-broker-nanaimo',
     type: 'website',
   },

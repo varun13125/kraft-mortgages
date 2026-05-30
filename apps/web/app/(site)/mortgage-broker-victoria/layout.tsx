@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: 'Victoria Mortgage Broker | Kraft Mortgages Canada',
-    description: 'Top-rated Victoria mortgage broker with $2B+ funded and 23+ years experience. Free pre-approval in 24 hours.',
+    description: 'Top-rated Victoria mortgage broker with $2B+ funded and 18+ Years Combined Experience. Free pre-approval in 24 hours.',
     url: 'https://www.kraftmortgages.ca/mortgage-broker-victoria',
     type: 'website',
   },

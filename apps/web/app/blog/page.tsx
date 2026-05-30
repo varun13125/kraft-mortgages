@@ -168,7 +168,7 @@ export default async function BlogPage() {
                 <span className="bg-gradient-to-r from-gold-400 to-amber-500 bg-clip-text text-transparent"> Expert Advice</span>
               </h1>
               <p className="text-xl text-gray-400 mb-8 max-w-3xl mx-auto">
-                Expert advice from 23+ years in the Canadian mortgage industry. Navigate complex scenarios with industry-leading expertise.
+                Expert advice from 18+ years of combined experience in the Canadian mortgage industry. Navigate complex scenarios with industry-leading expertise.
               </p>
               <div className="flex items-center justify-center gap-4 text-gray-400 mb-8">
                 <User className="w-5 h-5" />
@@ -384,7 +384,7 @@ export default async function BlogPage() {
                 Ready to Discuss Your Mortgage Needs?
               </h2>
               <p className="text-xl text-gray-400 mb-8">
-                Every situation is unique. Get personalized advice from a licensed professional with over two decades of experience.
+                Every situation is unique. Get personalized advice from a licensed professional with 18+ years of combined experience.
               </p>
               <div className="grid md:grid-cols-3 gap-6 mb-8">
                 <div className="bg-gray-800/50 backdrop-blur-sm border border-gray-700/50 rounded-lg p-6">

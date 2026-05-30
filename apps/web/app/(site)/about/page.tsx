@@ -25,7 +25,7 @@ export default function AboutUs() {
                 <span className="bg-gradient-to-r from-gold-400 to-amber-500 bg-clip-text text-transparent">About</span> Kraft Mortgages
               </h1>
               <p className="text-xl text-gray-400 max-w-3xl mx-auto">
-                Two decades of expertise. Three provinces. One mission: Making complex mortgages simple.
+                18+ Years Combined Experience. Three provinces. One mission: Making complex mortgages simple.
               </p>
             </motion.div>
           </div>
@@ -64,7 +64,7 @@ export default function AboutUs() {
                   { number: "$2B+", label: "Total Funded" },
                   { number: "10,000+", label: "Families Helped" },
                   { number: "500+", label: "Complex Cases" },
-                  { number: "11", label: "Years of Excellence" }
+                  { number: "12", label: "Years of Excellence" }
                 ].map((stat, i) => (
                   <motion.div
                     key={i}
@@ -95,8 +95,8 @@ export default function AboutUs() {
                 <h2 className="text-3xl md:text-4xl font-bold text-gray-100 mb-4">
                   Our <span className="bg-gradient-to-r from-gold-400 to-amber-500 bg-clip-text text-transparent">Leadership Team</span>
                 </h2>
-                <p className="text-lg text-gray-400">
-                  Decades of combined experience in Canadian mortgage markets
+                <p className="text-lg text-gray-400 max-w-2xl mx-auto">
+                  Varun has been in the mortgage industry since 2010, and Gursharan since 2008, bringing over 18 years of combined expertise to every file.
                 </p>
               </div>
 
@@ -122,7 +122,7 @@ export default function AboutUs() {
                   <div className="space-y-3 mb-6">
                     <div className="flex items-center gap-2">
                       <Shield className="w-4 h-4 text-gold-400" />
-                      <span className="text-sm text-gray-400">18+ Years Industry Experience</span>
+                      <span className="text-sm text-gray-400">16+ Years Industry Experience</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <Award className="w-4 h-4 text-gold-400" />
@@ -135,7 +135,7 @@ export default function AboutUs() {
                   </div>
 
                   <p className="text-gray-400 mb-4 leading-relaxed">
-                    With over two decades in the mortgage industry, Varun has built a reputation as the go-to expert
+                    With over 16 years in the mortgage industry, Varun has built a reputation as the go-to expert
                     for complex financing scenarios. His deep understanding of MLI Select programs has saved developers
                     millions in insurance premiums.
                   </p>

@@ -255,7 +255,7 @@ export default function ContactPage() {
 
             <div className="grid gap-8 md:grid-cols-3">
               {[
-                { Icon: Award, title: "18+ Years Experience", desc: "Decades of expertise helping clients navigate complex mortgage solutions across Canada" },
+                { Icon: Award, title: "18+ Years Combined Experience", desc: "Proven expertise helping clients navigate complex mortgage solutions across Canada" },
                 { Icon: DollarSign, title: "Competitive Rates", desc: "Access to exclusive rates and specialized programs like MLI Select for multi-unit properties" },
                 { Icon: Zap, title: "Fast Processing", desc: "Streamlined application process with quick approvals and dedicated support" },
               ].map((item, i) => (
