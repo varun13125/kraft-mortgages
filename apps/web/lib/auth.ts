@@ -1,8 +1,11 @@
 import { getAuth } from 'firebase-admin/auth';
 import { initializeApp, getApps, cert } from 'firebase-admin/app';
 
-// Initialize Firebase Admin
-if (!getApps().length) {
+function ensureFirebaseAdmin() {
+  if (getApps().length) {
+    return;
+  }
+
   let serviceAccount;
   
   // Try using complete service account JSON first (recommended)
@@ -40,16 +43,29 @@ if (!getApps().length) {
     };
   }
 
-  initializeApp({
-    credential: cert(serviceAccount),
-  });
+  // Only initialize if we have at least the basic fields to avoid build-time errors
+  const projectId = serviceAccount?.projectId || (serviceAccount as any)?.project_id;
+  if (projectId && serviceAccount?.clientEmail && serviceAccount?.privateKey) {
+    try {
+      initializeApp({
+        credential: cert(serviceAccount),
+      });
+    } catch (err) {
+      console.error('Firebase Admin initialization error:', err);
+    }
+  } else {
+    console.warn('Firebase Admin credentials missing or incomplete. Authentication features may fail at runtime.');
+  }
 }
-
-const auth = getAuth();
 
 export async function verifyFirebaseToken(token: string) {
   try {
-    const decodedToken = await auth.verifyIdToken(token);
+    ensureFirebaseAdmin();
+    if (!getApps().length) {
+      throw new Error('Firebase Admin not initialized - missing credentials');
+    }
+    const authInstance = getAuth();
+    const decodedToken = await authInstance.verifyIdToken(token);
     return decodedToken;
   } catch (error) {
     console.error('Token verification failed:', error);
@@ -57,4 +73,12 @@ export async function verifyFirebaseToken(token: string) {
   }
 }
 
-export { auth };
+export const auth = {
+  verifyIdToken: async (token: string) => {
+    ensureFirebaseAdmin();
+    if (!getApps().length) {
+      throw new Error('Firebase Admin not initialized');
+    }
+    return getAuth().verifyIdToken(token);
+  }
+} as any;
