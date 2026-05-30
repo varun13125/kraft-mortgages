@@ -78,14 +78,14 @@ export function totalPointsCalc(a: number, e: number, acc: number) {
 
 export function amortByTier(tier: number) {
   if (tier >= 100) return 50;
-  if (tier >= 70) return 45;
-  if (tier >= 50) return 40;
+  if (tier >= 70) return 35;
+  if (tier >= 50) return 30;
   return 25;
 }
 
 export function leverageFor(isNew: boolean, tier: number) {
-  if (isNew) return 0.95;
-  return tier >= 70 ? 0.95 : tier >= 50 ? 0.85 : 0;
+  if (tier >= 50) return 0.95;
+  return 0.80; // conventional baseline LTV is 80%
 }
 
 export function premiumDiscountFor(tier: number) {

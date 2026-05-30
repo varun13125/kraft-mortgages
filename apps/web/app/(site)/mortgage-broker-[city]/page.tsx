@@ -5,11 +5,29 @@ interface CityPageProps {
   params: { city: string };
 }
 
-// Pre-generated static boundaries to protect edge performance speeds
-const VALID_REGIONAL_CITIES = ['surrey', 'vancouver', 'calgary', 'toronto', 'edmonton', 'ottawa'];
+interface RegionalMetadata {
+  name: string;
+  province: string;
+  regulatoryBody: string;
+  license: string;
+}
+
+const CITY_METADATA: Record<string, RegionalMetadata> = {
+  surrey: { name: 'Surrey', province: 'British Columbia', regulatoryBody: 'BCFSA', license: 'BCFSA License #SR220230' },
+  vancouver: { name: 'Vancouver', province: 'British Columbia', regulatoryBody: 'BCFSA', license: 'BCFSA License #SR220230' },
+  burnaby: { name: 'Burnaby', province: 'British Columbia', regulatoryBody: 'BCFSA', license: 'BCFSA License #SR220230' },
+  richmond: { name: 'Richmond', province: 'British Columbia', regulatoryBody: 'BCFSA', license: 'BCFSA License #SR220230' },
+  kelowna: { name: 'Kelowna', province: 'British Columbia', regulatoryBody: 'BCFSA', license: 'BCFSA License #SR220230' },
+  calgary: { name: 'Calgary', province: 'Alberta', regulatoryBody: 'RECA', license: 'LIC-00655428' },
+  edmonton: { name: 'Edmonton', province: 'Alberta', regulatoryBody: 'RECA', license: 'LIC-00655428' },
+  toronto: { name: 'Toronto', province: 'Ontario', regulatoryBody: 'FSRA', license: 'FSRA #12918' },
+  ottawa: { name: 'Ottawa', province: 'Ontario', regulatoryBody: 'FSRA', license: 'FSRA #12918' },
+  mississauga: { name: 'Mississauga', province: 'Ontario', regulatoryBody: 'FSRA', license: 'FSRA #12918' },
+  brampton: { name: 'Brampton', province: 'Ontario', regulatoryBody: 'FSRA', license: 'FSRA #12918' },
+};
 
 export async function generateStaticParams() {
-  return VALID_REGIONAL_CITIES.map((city) => ({
+  return Object.keys(CITY_METADATA).map((city) => ({
     city: city,
   }));
 }
@@ -17,11 +35,11 @@ export async function generateStaticParams() {
 export default async function CityBrokerageLandingPage({ params }: CityPageProps) {
   const targetCityNormalized = params?.city?.toLowerCase();
 
-  if (!targetCityNormalized || !VALID_REGIONAL_CITIES.includes(targetCityNormalized)) {
+  if (!targetCityNormalized || !CITY_METADATA[targetCityNormalized]) {
     notFound();
   }
 
-  const cityDisplayTitle = targetCityNormalized.charAt(0).toUpperCase() + targetCityNormalized.slice(1);
+  const meta = CITY_METADATA[targetCityNormalized];
 
   return (
     <main className="min-h-screen bg-slate-950 text-white p-12 flex flex-col justify-center items-center">
@@ -30,14 +48,15 @@ export default async function CityBrokerageLandingPage({ params }: CityPageProps
           Regional Compliance Pipeline Activated
         </span>
         <h1 className="text-3xl font-extrabold mt-4 mb-2">
-          Premier Mortgage Broker in {cityDisplayTitle}, Canada
+          Premier Mortgage Broker in {meta.name}, {meta.province}
         </h1>
         <p className="text-slate-400 text-sm mb-6">
           Providing specialized alternative equity extraction solutions, commercial development draw pipelines, and CMHC MLI Select multi-unit lending options under localized cross-provincial regulatory oversight.
         </p>
-        <div className="p-4 bg-slate-950 rounded border border-slate-800 text-xs text-slate-500 text-left space-y-1">
-          <div>📍 Operational Footprint Vector: {cityDisplayTitle} Hub</div>
-          <div>🛡️ Compliance Licensing: BCFSA | RECA | FSRA Multi-Jurisdictional Framework</div>
+        <div className="p-4 bg-slate-950 rounded border border-slate-800 text-xs text-slate-400 text-left space-y-2">
+          <div>📍 Operational Footprint Vector: {meta.name} Hub</div>
+          <div>🛡️ Compliance Licensing: {meta.regulatoryBody} Multi-Jurisdictional Framework</div>
+          <div>📋 License Identifier: {meta.license}</div>
         </div>
       </div>
     </main>

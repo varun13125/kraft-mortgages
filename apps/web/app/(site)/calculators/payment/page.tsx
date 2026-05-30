@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { motion } from "framer-motion";
-import Navigation from "@/components/Navigation";
+
 import { payment, biweeklySavings } from "@/lib/calc/payment";
 import { ComplianceBanner } from "@/components/ComplianceBanner";
 import { Calculator, DollarSign, TrendingUp, ArrowRight, Clock, Download } from "lucide-react";
@@ -14,13 +14,25 @@ export default function PaymentCalculatorPage() {
   const [rate, setRate] = useState(5.34);
   const [years, setYears] = useState(25);
 
-  const monthly = payment({ principal, annualRatePct: rate, amortYears: years, paymentsPerYear: 12 });
-  const { acceleratedBiweekly, annualSavings } = biweeklySavings({ principal, annualRatePct: rate, amortYears: years });
+  let validationError: string | null = null;
+  if (principal <= 0) {
+    validationError = "Mortgage principal must be greater than $0";
+  } else if (rate < 0) {
+    validationError = "Interest rate cannot be negative";
+  } else if (rate > 30) {
+    validationError = "Interest rate cannot exceed 30%";
+  } else if (years <= 0) {
+    validationError = "Amortization period must be greater than 0 years";
+  }
+
+  const monthly = validationError ? 0 : payment({ principal, annualRatePct: rate, amortYears: years, paymentsPerYear: 12 });
+  const { acceleratedBiweekly, annualSavings } = validationError 
+    ? { acceleratedBiweekly: 0, annualSavings: 0 } 
+    : biweeklySavings({ principal, annualRatePct: rate, amortYears: years });
 
   return (
     <>
-      <Navigation />
-      <main className="min-h-screen mt-16">
+<main className="min-h-screen mt-16">
         {/* Breadcrumb */}
         <section className="py-6 px-4 bg-gray-800/30">
           <div className="max-w-6xl mx-auto">
@@ -63,6 +75,13 @@ export default function PaymentCalculatorPage() {
             <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl shadow-2xl border border-gray-700/50 p-8">
               <h2 className="text-2xl font-semibold text-gray-100 mb-6">Smart Mortgage Payment Calculator</h2>
               
+              {validationError && (
+                <div className="mb-6 p-4 bg-red-950/50 border border-red-800 text-red-200 rounded-xl text-sm flex items-center gap-2">
+                  <span>⚠️</span>
+                  <span>{validationError}</span>
+                </div>
+              )}
+
               <div className="mb-6">
             {/* PDF Report Download */}
             <div className="mt-4">
@@ -101,7 +120,7 @@ export default function PaymentCalculatorPage() {
                         title: "Your Results",
                         rows: [
                           { label: "Monthly Payment", value: "$" + Math.round(monthly).toLocaleString("en-CA"), highlight: true },
-                          { label: "Accelerated Biweekly", value: "$" + Math.round(acceleratedBiweekly).toLocaleString("en-CA") },
+                          { label: "Accelerated Biweekly", value: "$" + acceleratedBiweekly.toLocaleString("en-CA", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) },
                           { label: "Annual Savings (Biweekly)", value: "$" + Math.round(annualSavings).toLocaleString("en-CA") },
                           { label: "Total Paid (Monthly, over amortization)", value: "$" + Math.round(monthly * years * 12).toLocaleString("en-CA") },
                         ]
@@ -174,7 +193,7 @@ export default function PaymentCalculatorPage() {
                   <div className="bg-gray-800/50 rounded-lg p-4">
                     <div className="text-sm text-gray-400 mb-1">Bi-weekly Payment</div>
                     <div className="text-2xl font-bold text-gold-400">
-                      ${acceleratedBiweekly.toLocaleString(undefined, {maximumFractionDigits: 0})}
+                      ${acceleratedBiweekly.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}
                     </div>
                     <div className="text-xs text-gray-500">26 payments/year</div>
                   </div>
