@@ -298,7 +298,7 @@ export default function RefinanceBreakEvenPage() {
 
               <h3 className="text-2xl font-semibold text-gray-100 mt-8">How to Minimize Break-Even Time</h3>
               <p>The fastest path to break-even is to minimize costs and maximize monthly savings. Negotiate legal fees (typical range $1,200 to $2,000), ask your new lender about appraisal waivers or credits, and consider a slightly shorter new term — a 3-year fixed at a competitive rate can sometimes save more than a 5-year term when rate differentials are large. The key is to compare the total cost of each scenario, not just the monthly payment.</p>
-              <p>With 23 years of experience and over $2 billion in funded mortgages, Kraft Mortgages has helped thousands of homeowners evaluate refinancing decisions. We compare offers from 40+ lenders to find the best rate and terms for your specific situation.</p>
+              <p>With 18+ years of combined experience and over $2 billion in funded mortgages, Kraft Mortgages has helped thousands of homeowners evaluate refinancing decisions. We compare offers from 40+ lenders to find the best rate and terms for your specific situation.</p>
 
               <div className="mt-8">
                 <Link href="/calculators/mortgage-penalty" className="text-gold-400 hover:text-gold-300 underline">Mortgage Penalty Calculator</Link>

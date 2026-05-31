@@ -18,6 +18,7 @@ export function decodeHtmlEntities(text: string): string {
     .replace(/&#8216;/g, "'")  // Left single quote
     .replace(/&#8220;/g, '"')  // Left double quote
     .replace(/&#8221;/g, '"')  // Right double quote
+    .replace(/&#038;/g, '&')  // WordPress ampersand
     .replace(/&#8211;/g, '–')  // En dash
     .replace(/&#8212;/g, '—'); // Em dash
 }

@@ -365,7 +365,7 @@ export default function CMHCInsurancePage() {
               </p>
 
               <p>
-                Kraft Mortgages has been helping Canadian homebuyers navigate CMHC requirements for over 23 years. With $2 billion in funded mortgages, we understand how to structure your deal to minimize insurance costs. Call <a href="tel:604-593-1550" className="text-gold-400 hover:text-gold-300">604-593-1550</a> or visit us at #301 - 1688 152nd Street, Surrey, BC.
+                Kraft Mortgages has been helping Canadian homebuyers navigate CMHC requirements for over 18+ years. With $2 billion in funded mortgages, we understand how to structure your deal to minimize insurance costs. Call <a href="tel:604-593-1550" className="text-gold-400 hover:text-gold-300">604-593-1550</a> or visit us at #301 - 1688 152nd Street, Surrey, BC.
               </p>
 
               <div className="mt-8">

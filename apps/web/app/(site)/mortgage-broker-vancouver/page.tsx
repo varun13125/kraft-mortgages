@@ -41,7 +41,7 @@ export default function VancouverPage() {
                             What makes Vancouver unique is its diversity of property types and price points. East Vancouver has become one of the hottest markets in the country, attracting young families and investors alike with its character homes and rising condo developments. The corridor along the Burnaby border — areas like Renfrew-Collingwood and Victoria-Fraserview — offers relative value compared to the West Side while still delivering strong appreciation.
                         </p>
                         <p className="text-gray-300 text-lg">
-                            Whether you are buying your first condo in Mount Pleasant, upgrading to a detached home in Kerrisdale, or investing in a rental property in East Van, having a mortgage broker who understands Vancouver's micro-markets is essential. Kraft Mortgages has been serving Vancouver families and investors for over 23 years, with access to 40+ lenders and $2 billion in funded mortgages.
+                            Whether you are buying your first condo in Mount Pleasant, upgrading to a detached home in Kerrisdale, or investing in a rental property in East Van, having a mortgage broker who understands Vancouver's micro-markets is essential. Kraft Mortgages has been serving Vancouver families and investors for over 18+ years, with access to 40+ lenders and $2 billion in funded mortgages.
                         </p>
                     </div>
                 </section>

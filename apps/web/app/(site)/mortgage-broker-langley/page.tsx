@@ -19,7 +19,7 @@ export default function LangleyPage() {
                             Langley's Trusted Mortgage Broker
                         </h1>
                         <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-8">
-                            From acreage properties to Willowbrook townhomes, Kraft Mortgages has been helping Langley families and farmers find the right mortgage for over 23 years.
+                            From acreage properties to Willowbrook townhomes, Kraft Mortgages has been helping Langley families and farmers find the right mortgage for over 18+ years.
                         </p>
                         <Link
                             href="/contact"

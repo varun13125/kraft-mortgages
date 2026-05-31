@@ -555,7 +555,7 @@ export default function RequiredIncomePage() {
               </p>
 
               <p>
-                Kraft Mortgages has helped thousands of Canadian homebuyers understand their qualification. With 23 years of experience and over $2 billion in funded mortgages, we know how to structure your application for success. Call <a href="tel:604-593-1550" className="text-gold-400 hover:text-gold-300">604-593-1550</a> or visit us at #301 - 1688 152nd Street, Surrey, BC.
+                Kraft Mortgages has helped thousands of Canadian homebuyers understand their qualification. With 18+ years of combined experience and over $2 billion in funded mortgages, we know how to structure your application for success. Call <a href="tel:604-593-1550" className="text-gold-400 hover:text-gold-300">604-593-1550</a> or visit us at #301 - 1688 152nd Street, Surrey, BC.
               </p>
 
               <div className="mt-8">

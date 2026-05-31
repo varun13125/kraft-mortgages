@@ -297,7 +297,7 @@ export default async function CityBrokerageLandingPage({ params }: CityPageProps
                 {meta.marketOverview}
               </p>
               <p className="text-gray-300 text-lg leading-relaxed">
-                Whether you are buying your first home, upgrading to a detached property, or building a high-yield real estate portfolio, having local market insights is essential. Kraft Mortgages brings over 23 years of combined experience and access to over 40 top lenders to help you optimize your financing structure.
+                Whether you are buying your first home, upgrading to a detached property, or building a high-yield real estate portfolio, having local market insights is essential. Kraft Mortgages brings over 18+ years of combined experience and access to over 40 top lenders to help you optimize your financing structure.
               </p>
             </div>
           </div>

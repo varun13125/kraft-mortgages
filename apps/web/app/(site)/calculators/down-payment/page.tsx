@@ -394,7 +394,7 @@ export default function DownPaymentPage() {
               </ul>
 
               <p>
-                With 23 years of experience and over $2 billion in funded mortgages, Kraft Mortgages helps buyers across BC, Alberta, and Ontario navigate down payment strategies and find the best mortgage solutions. Call us at <a href="tel:604-593-1550" className="text-gold-400 hover:text-gold-300">604-593-1550</a> or visit our office at #301 - 1688 152nd Street, Surrey, BC.
+                With 18+ years of combined experience and over $2 billion in funded mortgages, Kraft Mortgages helps buyers across BC, Alberta, and Ontario navigate down payment strategies and find the best mortgage solutions. Call us at <a href="tel:604-593-1550" className="text-gold-400 hover:text-gold-300">604-593-1550</a> or visit our office at #301 - 1688 152nd Street, Surrey, BC.
               </p>
 
               <div className="mt-8">
