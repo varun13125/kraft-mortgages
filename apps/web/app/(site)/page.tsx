@@ -3,6 +3,8 @@ import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import Navigation from "@/components/Navigation";
+import { BorderRotate } from "@/components/ui/animated-gradient-border";
+import { HeroGeometric } from "@/components/ui/shape-landing-hero";
 import { DollarSign, Home, Building, Users, Shield, TrendingUp, Calculator, Phone, Mail, MapPin, CheckCircle, ArrowRight } from "lucide-react";
 
 export default function ModernHomepage() {
@@ -212,9 +214,11 @@ export default function ModernHomepage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
       />
       <Navigation />
-      <div className="min-h-screen">
-        {/* Hero Section */}
-        <section className="py-20 px-4 mt-16">
+      <div className="min-h-screen relative overflow-hidden bg-transparent">
+
+
+        {/* Hero Section with Kokonut UI floating geometry background */}
+        <HeroGeometric className="py-20 px-4 mt-16 z-10">
           <div className="max-w-6xl mx-auto">
             <div className="grid gap-12 lg:grid-cols-2 items-center">
               <motion.div
@@ -222,57 +226,58 @@ export default function ModernHomepage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8 }}
               >
-                <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold bg-gold-500/20 text-gold-400 border border-gold-500/30 mb-6">
+                <div className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-semibold bg-gradient-to-r from-gold-500/20 via-amber-500/10 to-transparent text-gold-400 border border-gold-500/30 mb-6">
+                  <span className="w-1.5 h-1.5 rounded-full bg-gold-400 animate-ping"></span>
                   Mortgage Experts • 18+ Years Combined Experience
                 </div>
-                <h1 className="text-4xl sm:text-6xl font-bold tracking-tight text-gray-100 mb-6">
+                <h1 className="text-4xl sm:text-6xl font-bold tracking-tight text-gray-100 mb-6 leading-[1.1]">
                   Expert Mortgage Solutions Across
-                  <span className="bg-gradient-to-r from-gold-400 to-amber-500 bg-clip-text text-transparent"> BC, Alberta & Ontario</span>
+                  <span className="bg-gradient-to-r from-gold-400 via-amber-400 to-amber-600 bg-clip-text text-transparent block sm:inline"> BC, Alberta & Ontario</span>
                 </h1>
-                <p className="text-xl text-gray-400 mb-8">
+                <p className="text-xl text-gray-400 mb-8 leading-relaxed">
                   From first-time homebuyers to seasoned developers — navigate construction financing, MLI Select, self-employed mortgages, and private lending with a brokerage that has funded over $2 billion.
                 </p>
-
+ 
                 <div ref={statsRef} className="grid grid-cols-3 gap-6 mb-8">
-                  <div className="text-center">
-                    <div className="text-3xl font-bold text-gold-400">{yearsCount}+</div>
-                    <div className="text-sm text-gray-500 uppercase tracking-wider">Years Experience</div>
+                  <div className="text-center p-3 rounded-lg bg-gray-900/30 border border-gray-800/40 backdrop-blur-sm">
+                    <div className="text-3xl font-bold bg-gradient-to-br from-gold-300 to-amber-500 bg-clip-text text-transparent">{yearsCount}+</div>
+                    <div className="text-[10px] text-gray-500 uppercase tracking-widest mt-1">Years Experience</div>
                   </div>
-                  <div className="text-center">
-                    <div className="text-3xl font-bold text-gold-400">{clientsCount.toLocaleString()}+</div>
-                    <div className="text-sm text-gray-500 uppercase tracking-wider">Happy Clients</div>
+                  <div className="text-center p-3 rounded-lg bg-gray-900/30 border border-gray-800/40 backdrop-blur-sm">
+                    <div className="text-3xl font-bold bg-gradient-to-br from-gold-300 to-amber-500 bg-clip-text text-transparent">{clientsCount.toLocaleString()}+</div>
+                    <div className="text-[10px] text-gray-500 uppercase tracking-widest mt-1">Happy Clients</div>
                   </div>
-                  <div className="text-center">
-                    <div className="text-3xl font-bold text-gold-400">${fundedCount}B+</div>
-                    <div className="text-sm text-gray-500 uppercase tracking-wider">Funded</div>
+                  <div className="text-center p-3 rounded-lg bg-gray-900/30 border border-gray-800/40 backdrop-blur-sm">
+                    <div className="text-3xl font-bold bg-gradient-to-br from-gold-300 to-amber-500 bg-clip-text text-transparent">${fundedCount}B+</div>
+                    <div className="text-[10px] text-gray-500 uppercase tracking-widest mt-1">Funded</div>
                   </div>
                 </div>
-
+ 
                 <div className="flex flex-wrap gap-4">
                   <a
                     href="https://r.mtg-app.com/varun-chaudhry"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-gold-500 to-gold-600 text-gray-900 font-semibold rounded-lg hover:from-gold-400 hover:to-gold-500 transition-all transform hover:scale-105"
+                    className="inline-flex items-center justify-center px-6 py-3.5 bg-gradient-to-r from-gold-500 to-gold-600 text-gray-900 font-bold rounded-lg hover:from-gold-400 hover:to-gold-500 transition-all transform hover:scale-105 shadow-lg hover:shadow-[0_0_25px_rgba(212,175,55,0.4)]"
                   >
                     Start Application
                   </a>
                   <a
                     href="tel:604-593-1550"
-                    className="inline-flex items-center justify-center px-6 py-3 border border-gold-500/50 text-gold-400 rounded-lg hover:bg-gold-500/10 transition-colors"
+                    className="inline-flex items-center justify-center px-6 py-3.5 border border-gold-500/40 text-gold-400 rounded-lg hover:bg-gold-500/10 transition-all hover:border-gold-400 hover:shadow-[0_0_15px_rgba(212,175,55,0.15)]"
                   >
                     Call 604-593-1550
                   </a>
                 </div>
               </motion.div>
-
+ 
               <motion.div
                 initial={{ opacity: 0, x: 30 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.8, delay: 0.2 }}
-                className="bg-gray-800/50 backdrop-blur-sm rounded-xl shadow-2xl border border-gray-700/50 p-8"
+                className="bg-gradient-to-br from-gray-800/40 via-gray-900/50 to-gray-800/40 backdrop-blur-md rounded-2xl shadow-2xl border border-gray-700/40 p-8 hover:border-gold-500/30 hover:shadow-[0_0_30px_rgba(212,175,55,0.12)] transition-all duration-500"
               >
-                <h2 className="text-xl font-semibold text-gray-100 mb-4">Why Industry Leaders Choose Us</h2>
+                <h2 className="text-xl font-bold text-gray-100 mb-6 bg-gradient-to-r from-gold-200 to-amber-400 bg-clip-text text-transparent">Why Industry Leaders Choose Us</h2>
                 <div className="space-y-6">
                   {[
                     { icon: Building, title: 'Construction Specialists', desc: 'Progressive draws & builder expertise' },
@@ -323,7 +328,7 @@ export default function ModernHomepage() {
               </div>
             </motion.div>
           </div>
-        </section>
+        </HeroGeometric>
 
         {/* Why Choose Kraft Mortgages */}
         <section className="py-20 px-4 bg-gradient-to-br from-gray-900/50 to-gray-800/30">
@@ -716,60 +721,73 @@ export default function ModernHomepage() {
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.9, opacity: 0 }}
                 onClick={(e) => e.stopPropagation()}
-                className="bg-gray-800/90 backdrop-blur-xl rounded-2xl shadow-2xl border border-gray-700/50 p-8 max-w-md w-full"
+                className="max-w-md w-full"
               >
-                <h3 className="text-xl font-bold text-gray-100 mb-6">
-                  {selectedCalculator ? 'Get Your Personalized Report' : 'Get Free Mortgage Analysis'}
-                </h3>
-                <form onSubmit={handleLeadSubmit} className="space-y-4">
-                  <input
-                    type="text"
-                    placeholder="Full Name"
-                    required
-                    className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg text-gray-100 placeholder-gray-400 focus:ring-2 focus:ring-gold-500/50 focus:border-gold-500 transition-all"
-                    value={leadData.name}
-                    onChange={(e) => setLeadData({ ...leadData, name: e.target.value })}
-                  />
-                  <input
-                    type="email"
-                    placeholder="Email Address"
-                    required
-                    className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg text-gray-100 placeholder-gray-400 focus:ring-2 focus:ring-gold-500/50 focus:border-gold-500 transition-all"
-                    value={leadData.email}
-                    onChange={(e) => setLeadData({ ...leadData, email: e.target.value })}
-                  />
-                  <input
-                    type="tel"
-                    placeholder="Phone Number"
-                    required
-                    className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg text-gray-100 placeholder-gray-400 focus:ring-2 focus:ring-gold-500/50 focus:border-gold-500 transition-all"
-                    value={leadData.phone}
-                    onChange={(e) => setLeadData({ ...leadData, phone: e.target.value })}
-                  />
-                  <input
-                    type="text"
-                    placeholder="Loan Amount Needed (e.g. $500,000)"
-                    className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg text-gray-100 placeholder-gray-400 focus:ring-2 focus:ring-gold-500/50 focus:border-gold-500 transition-all"
-                    value={leadData.loanAmount}
-                    onChange={(e) => setLeadData({ ...leadData, loanAmount: e.target.value })}
-                  />
-                  <textarea
-                    placeholder="Tell us about your mortgage needs..."
-                    rows={3}
-                    className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg text-gray-100 placeholder-gray-400 focus:ring-2 focus:ring-gold-500/50 focus:border-gold-500 transition-all resize-none"
-                    value={leadData.message}
-                    onChange={(e) => setLeadData({ ...leadData, message: e.target.value })}
-                  />
-                  <button
-                    type="submit"
-                    className="w-full py-3 px-6 bg-gradient-to-r from-gold-500 to-gold-600 text-gray-900 font-semibold rounded-lg hover:from-gold-400 hover:to-gold-500 transition-all transform hover:scale-105 shadow-lg"
-                  >
-                    {selectedCalculator ? 'Get Calculator Report' : 'Get Free Analysis'}
-                  </button>
-                </form>
-                <p className="text-xs text-gray-400 mt-4 text-center">
-                  Your information is secure and will never be shared
-                </p>
+                <BorderRotate
+                  animationSpeed={4}
+                  borderRadius={16}
+                  borderWidth={2}
+                  backgroundColor="#1f2937"
+                  className="w-full p-8 shadow-2xl backdrop-blur-xl"
+                  gradientColors={{
+                    primary: '#584827',
+                    secondary: '#c7a03c',
+                    accent: '#f9de90'
+                  }}
+                >
+                  <h3 className="text-xl font-bold text-gray-100 mb-6">
+                    {selectedCalculator ? 'Get Your Personalized Report' : 'Get Free Mortgage Analysis'}
+                  </h3>
+                  <form onSubmit={handleLeadSubmit} className="space-y-4">
+                    <input
+                      type="text"
+                      placeholder="Full Name"
+                      required
+                      className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg text-gray-100 placeholder-gray-400 focus:ring-2 focus:ring-gold-500/50 focus:border-gold-500 transition-all"
+                      value={leadData.name}
+                      onChange={(e) => setLeadData({ ...leadData, name: e.target.value })}
+                    />
+                    <input
+                      type="email"
+                      placeholder="Email Address"
+                      required
+                      className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg text-gray-100 placeholder-gray-400 focus:ring-2 focus:ring-gold-500/50 focus:border-gold-500 transition-all"
+                      value={leadData.email}
+                      onChange={(e) => setLeadData({ ...leadData, email: e.target.value })}
+                    />
+                    <input
+                      type="tel"
+                      placeholder="Phone Number"
+                      required
+                      className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg text-gray-100 placeholder-gray-400 focus:ring-2 focus:ring-gold-500/50 focus:border-gold-500 transition-all"
+                      value={leadData.phone}
+                      onChange={(e) => setLeadData({ ...leadData, phone: e.target.value })}
+                    />
+                    <input
+                      type="text"
+                      placeholder="Loan Amount Needed (e.g. $500,000)"
+                      className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg text-gray-100 placeholder-gray-400 focus:ring-2 focus:ring-gold-500/50 focus:border-gold-500 transition-all"
+                      value={leadData.loanAmount}
+                      onChange={(e) => setLeadData({ ...leadData, loanAmount: e.target.value })}
+                    />
+                    <textarea
+                      placeholder="Tell us about your mortgage needs..."
+                      rows={3}
+                      className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg text-gray-100 placeholder-gray-400 focus:ring-2 focus:ring-gold-500/50 focus:border-gold-500 transition-all resize-none"
+                      value={leadData.message}
+                      onChange={(e) => setLeadData({ ...leadData, message: e.target.value })}
+                    />
+                    <button
+                      type="submit"
+                      className="w-full py-3 px-6 bg-gradient-to-r from-gold-500 to-gold-600 text-gray-900 font-semibold rounded-lg hover:from-gold-400 hover:to-gold-500 transition-all transform hover:scale-105 shadow-lg"
+                    >
+                      {selectedCalculator ? 'Get Calculator Report' : 'Get Free Analysis'}
+                    </button>
+                  </form>
+                  <p className="text-xs text-gray-400 mt-4 text-center">
+                    Your information is secure and will never be shared
+                  </p>
+                </BorderRotate>
               </motion.div>
             </motion.div>
           )}

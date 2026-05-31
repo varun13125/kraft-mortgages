@@ -2,6 +2,7 @@
 "use client";
 import { motion, AnimatePresence } from "framer-motion";
 import Navigation from "@/components/Navigation";
+import { BorderRotate } from "@/components/ui/animated-gradient-border";
 import { Phone, Mail, Clock, MapPin, Award, DollarSign, Zap, Loader2, CheckCircle, AlertCircle } from "lucide-react";
 import { useState, type FormEvent } from "react";
 
@@ -49,9 +50,10 @@ export default function ContactPage() {
   return (
     <>
       <Navigation />
-      <main className="min-h-screen mt-16">
+      <main className="min-h-screen mt-16 relative overflow-hidden bg-transparent">
+
         {/* Compact Hero Section */}
-        <section className="py-10 px-4">
+        <section className="py-10 px-4 relative z-10">
           <div className="max-w-6xl mx-auto">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -70,7 +72,7 @@ export default function ContactPage() {
         </section>
 
         {/* Contact Content */}
-        <section className="pb-20 px-4">
+        <section className="pb-20 px-4 relative z-10">
           <div className="max-w-6xl mx-auto">
             <div className="grid gap-8 lg:grid-cols-2">
               {/* Contact Form */}
@@ -78,98 +80,111 @@ export default function ContactPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
-                className="bg-gray-800/50 backdrop-blur-sm rounded-xl shadow-2xl border border-gray-700/50 p-6 lg:order-1"
+                className="lg:order-1"
               >
-                <h2 className="text-2xl font-semibold text-gray-100 mb-6">Send us a Message</h2>
+                <BorderRotate
+                  animationSpeed={6}
+                  borderRadius={12}
+                  borderWidth={2}
+                  backgroundColor="#1f293780"
+                  className="w-full p-6 shadow-2xl backdrop-blur-sm"
+                  gradientColors={{
+                    primary: '#584827',
+                    secondary: '#c7a03c',
+                    accent: '#f9de90'
+                  }}
+                >
+                  <h2 className="text-2xl font-semibold text-gray-100 mb-6">Send us a Message</h2>
 
-                <AnimatePresence mode="wait">
-                  {status === "success" ? (
-                    <motion.div
-                      key="success"
-                      initial={{ opacity: 0, scale: 0.95 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      className="flex flex-col items-center justify-center py-16 text-center"
-                    >
-                      <CheckCircle className="w-16 h-16 text-green-400 mb-4" />
-                      <h3 className="text-xl font-semibold text-gray-100 mb-2">Thank you!</h3>
-                      <p className="text-gray-400">We&apos;ll be in touch within 24 hours.</p>
-                    </motion.div>
-                  ) : status === "error" ? (
-                    <motion.div
-                      key="error"
-                      initial={{ opacity: 0, scale: 0.95 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      className="flex flex-col items-center justify-center py-16 text-center"
-                    >
-                      <AlertCircle className="w-16 h-16 text-red-400 mb-4" />
-                      <h3 className="text-xl font-semibold text-gray-100 mb-2">Something went wrong</h3>
-                      <p className="text-gray-400 mb-4">Please call us at <a href="tel:604-593-1550" className="text-gold-400 hover:underline">604-593-1550</a>.</p>
-                      <button onClick={() => setStatus("idle")} className="text-gold-400 hover:text-gold-300 underline text-sm">Try again</button>
-                    </motion.div>
-                  ) : (
-                    <motion.form key="form" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onSubmit={handleSubmit} className="space-y-4">
-                      {/* Honeypot */}
-                      <input type="text" name="_hp" value={form._hp} onChange={(e) => setForm((f) => ({ ...f, _hp: e.target.value }))} className="hidden" tabIndex={-1} autoComplete="off" aria-hidden="true" />
-
-                      <div className="grid gap-4 sm:grid-cols-2">
-                        <div>
-                          <label htmlFor="firstName" className={labelClass}>First Name *</label>
-                          <input id="firstName" required value={form.firstName} onChange={(e) => setForm((f) => ({ ...f, firstName: e.target.value }))} className={inputClass} placeholder="John" />
-                        </div>
-                        <div>
-                          <label htmlFor="lastName" className={labelClass}>Last Name</label>
-                          <input id="lastName" value={form.lastName} onChange={(e) => setForm((f) => ({ ...f, lastName: e.target.value }))} className={inputClass} placeholder="Doe" />
-                        </div>
-                      </div>
-
-                      <div>
-                        <label htmlFor="email" className={labelClass}>Email *</label>
-                        <input id="email" type="email" required value={form.email} onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))} className={inputClass} placeholder="john@example.com" />
-                      </div>
-
-                      <div>
-                        <label htmlFor="phone" className={labelClass}>Phone</label>
-                        <input id="phone" type="tel" value={form.phone} onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))} className={inputClass} placeholder="604-123-4567" />
-                      </div>
-
-                      <div className="grid gap-4 sm:grid-cols-2">
-                        <div>
-                          <label htmlFor="mortgageType" className={labelClass}>Mortgage Type</label>
-                          <select id="mortgageType" value={form.mortgageType} onChange={(e) => setForm((f) => ({ ...f, mortgageType: e.target.value }))} className={inputClass}>
-                            <option value="">Select...</option>
-                            {mortgageTypes.map((t) => (
-                              <option key={t} value={t}>{t}</option>
-                            ))}
-                          </select>
-                        </div>
-                        <div>
-                          <label htmlFor="amount" className={labelClass}>Loan Amount</label>
-                          <input id="amount" type="text" value={form.amount} onChange={(e) => setForm((f) => ({ ...f, amount: e.target.value }))} className={inputClass} placeholder="$500,000" />
-                        </div>
-                      </div>
-
-                      <div>
-                        <label htmlFor="message" className={labelClass}>Message</label>
-                        <textarea id="message" rows={4} value={form.message} onChange={(e) => setForm((f) => ({ ...f, message: e.target.value }))} className={inputClass + " resize-none"} placeholder="Tell us about your situation..." />
-                      </div>
-
-                      <button
-                        type="submit"
-                        disabled={status === "loading"}
-                        className="w-full py-3 px-6 bg-gradient-to-r from-gold-500 to-amber-600 text-gray-900 font-semibold rounded-lg hover:from-gold-400 hover:to-amber-500 transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  <AnimatePresence mode="wait">
+                    {status === "success" ? (
+                      <motion.div
+                        key="success"
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="flex flex-col items-center justify-center py-16 text-center"
                       >
-                        {status === "loading" ? (
-                          <>
-                            <Loader2 className="w-5 h-5 animate-spin" />
-                            Sending...
-                          </>
-                        ) : (
-                          "Send Message"
-                        )}
-                      </button>
-                    </motion.form>
-                  )}
-                </AnimatePresence>
+                        <CheckCircle className="w-16 h-16 text-green-400 mb-4" />
+                        <h3 className="text-xl font-semibold text-gray-100 mb-2">Thank you!</h3>
+                        <p className="text-gray-400">We&apos;ll be in touch within 24 hours.</p>
+                      </motion.div>
+                    ) : status === "error" ? (
+                      <motion.div
+                        key="error"
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="flex flex-col items-center justify-center py-16 text-center"
+                      >
+                        <AlertCircle className="w-16 h-16 text-red-400 mb-4" />
+                        <h3 className="text-xl font-semibold text-gray-100 mb-2">Something went wrong</h3>
+                        <p className="text-gray-400 mb-4">Please call us at <a href="tel:604-593-1550" className="text-gold-400 hover:underline">604-593-1550</a>.</p>
+                        <button onClick={() => setStatus("idle")} className="text-gold-400 hover:text-gold-300 underline text-sm">Try again</button>
+                      </motion.div>
+                    ) : (
+                      <motion.form key="form" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onSubmit={handleSubmit} className="space-y-4">
+                        {/* Honeypot */}
+                        <input type="text" name="_hp" value={form._hp} onChange={(e) => setForm((f) => ({ ...f, _hp: e.target.value }))} className="hidden" tabIndex={-1} autoComplete="off" aria-hidden="true" />
+
+                        <div className="grid gap-4 sm:grid-cols-2">
+                          <div>
+                            <label htmlFor="firstName" className={labelClass}>First Name *</label>
+                            <input id="firstName" required value={form.firstName} onChange={(e) => setForm((f) => ({ ...f, firstName: e.target.value }))} className={inputClass} placeholder="John" />
+                          </div>
+                          <div>
+                            <label htmlFor="lastName" className={labelClass}>Last Name</label>
+                            <input id="lastName" value={form.lastName} onChange={(e) => setForm((f) => ({ ...f, lastName: e.target.value }))} className={inputClass} placeholder="Doe" />
+                          </div>
+                        </div>
+
+                        <div>
+                          <label htmlFor="email" className={labelClass}>Email *</label>
+                          <input id="email" type="email" required value={form.email} onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))} className={inputClass} placeholder="john@example.com" />
+                        </div>
+
+                        <div>
+                          <label htmlFor="phone" className={labelClass}>Phone</label>
+                          <input id="phone" type="tel" value={form.phone} onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))} className={inputClass} placeholder="604-123-4567" />
+                        </div>
+
+                        <div className="grid gap-4 sm:grid-cols-2">
+                          <div>
+                            <label htmlFor="mortgageType" className={labelClass}>Mortgage Type</label>
+                            <select id="mortgageType" value={form.mortgageType} onChange={(e) => setForm((f) => ({ ...f, mortgageType: e.target.value }))} className={inputClass}>
+                              <option value="">Select...</option>
+                              {mortgageTypes.map((t) => (
+                                <option key={t} value={t}>{t}</option>
+                              ))}
+                            </select>
+                          </div>
+                          <div>
+                            <label htmlFor="amount" className={labelClass}>Loan Amount</label>
+                            <input id="amount" type="text" value={form.amount} onChange={(e) => setForm((f) => ({ ...f, amount: e.target.value }))} className={inputClass} placeholder="$500,000" />
+                          </div>
+                        </div>
+
+                        <div>
+                          <label htmlFor="message" className={labelClass}>Message</label>
+                          <textarea id="message" rows={4} value={form.message} onChange={(e) => setForm((f) => ({ ...f, message: e.target.value }))} className={inputClass + " resize-none"} placeholder="Tell us about your situation..." />
+                        </div>
+
+                        <button
+                          type="submit"
+                          disabled={status === "loading"}
+                          className="w-full py-3 px-6 bg-gradient-to-r from-gold-500 to-amber-600 text-gray-900 font-semibold rounded-lg hover:from-gold-400 hover:to-amber-500 transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                        >
+                          {status === "loading" ? (
+                            <>
+                              <Loader2 className="w-5 h-5 animate-spin" />
+                              Sending...
+                            </>
+                          ) : (
+                            "Send Message"
+                          )}
+                        </button>
+                      </motion.form>
+                    )}
+                  </AnimatePresence>
+                </BorderRotate>
               </motion.div>
 
               {/* Contact Information */}
@@ -240,7 +255,7 @@ export default function ContactPage() {
         </section>
 
         {/* Why Choose Us */}
-        <section className="py-20 px-4 bg-gradient-to-br from-gray-900/50 to-gray-800/30">
+        <section className="py-20 px-4 bg-gradient-to-br from-gray-900/50 to-gray-800/30 relative z-10">
           <div className="max-w-6xl mx-auto">
             <motion.div
               initial={{ opacity: 0 }}

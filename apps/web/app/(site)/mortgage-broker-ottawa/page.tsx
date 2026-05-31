@@ -7,9 +7,9 @@ export default function OttawaPage() {
   return (
     <>
       <Navigation />
-      <main className="min-h-screen mt-16 text-gray-100 bg-slate-950">
+      <main className="min-h-screen mt-16 text-gray-100 bg-transparent">
         {/* Hero */}
-        <section className="py-20 px-4 bg-gradient-to-b from-gray-900 to-gray-800">
+        <section className="py-20 px-4 bg-transparent">
           <div className="max-w-5xl mx-auto text-center">
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-gold-500/20 rounded-full text-gold-400 text-sm font-semibold mb-6 border border-gold-500/30">
               <MapPin className="w-4 h-4" />
@@ -132,7 +132,7 @@ export default function OttawaPage() {
         </section>
 
         {/* Compliance details */}
-        <section className="py-12 px-4 border-t border-slate-900 bg-slate-950">
+        <section className="py-12 px-4 border-t border-slate-900 bg-transparent">
           <div className="max-w-4xl mx-auto text-center">
             <span className="px-3 py-1 bg-emerald-950 border border-emerald-800 rounded-full text-xs text-emerald-400 font-bold tracking-wider uppercase inline-block mb-4">
               Regional Compliance Active
@@ -146,7 +146,7 @@ export default function OttawaPage() {
         </section>
 
         {/* CTA */}
-        <section className="py-16 px-4 bg-gradient-to-t from-slate-950 via-slate-900 to-slate-950">
+        <section className="py-16 px-4 bg-transparent">
           <div className="max-w-4xl mx-auto text-center">
             <h2 className="text-3xl font-bold mb-6">Ready to Make Your Move in Ottawa?</h2>
             <p className="text-gray-400 mb-8">Get a free, no-obligation mortgage consultation. We respond within 24 hours.</p>

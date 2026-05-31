@@ -93,7 +93,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   };
 
   return (
-    <html lang="en">
+    <html lang="en" className="dark">
       <head>
         {/* Preconnect to external domains for faster resource loading */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -106,8 +106,33 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body className="min-h-screen">
-        <PrefSync />
-        {children}
+        <div className="relative min-h-screen overflow-x-hidden bg-slate-950 text-gray-100 antialiased selection:bg-gold-500/30 selection:text-gold-200">
+          {/* Unified Site-wide Animated Background */}
+          <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+            {/* Subtle Grid Overlay */}
+            <div className="absolute inset-0 subtle-grid-bg opacity-70" />
+
+            {/* Floating Ambient Glowing Gradients */}
+            <div className="glowing-mesh-container">
+              <div className="glowing-mesh-blob blob-gold-1 opacity-[0.08]" />
+              <div className="glowing-mesh-blob blob-gold-2 opacity-[0.07]" />
+              <div className="glowing-mesh-blob blob-gold-3 opacity-[0.06]" />
+              <div className="glowing-mesh-blob blob-gold-4 opacity-[0.08]" />
+            </div>
+
+            {/* Sweeping Stage Spotlights */}
+            <div className="spotlight-overlay">
+              <div className="spotlight spotlight-left" />
+              <div className="spotlight spotlight-mid" />
+              <div className="spotlight spotlight-right" />
+            </div>
+          </div>
+
+          <div className="relative z-10">
+            <PrefSync />
+            {children}
+          </div>
+        </div>
 
         {/* Global AI Chat Widget - Available on every page */}
         <ChatWidget />

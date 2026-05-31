@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Award, Shield, Users, Building, Target, Clock, Briefcase, CheckCircle, MapPin, Phone, Mail } from "lucide-react";
 import Link from "next/link";
 import Navigation from "@/components/Navigation";
+import { BorderRotate } from "@/components/ui/animated-gradient-border";
 
 export default function AboutUs() {
   return (
@@ -72,10 +73,24 @@ export default function AboutUs() {
                     whileInView={{ opacity: 1, scale: 1 }}
                     transition={{ delay: i * 0.1 }}
                     viewport={{ once: true }}
-                    className="bg-gray-800/50 backdrop-blur-sm rounded-xl shadow-2xl border border-gray-700/50 p-6 text-center"
+                    className="h-full"
                   >
-                    <div className="text-3xl font-bold text-gold-400 mb-2">{stat.number}</div>
-                    <div className="text-sm text-gray-500">{stat.label}</div>
+                    <BorderRotate
+                      animationMode="rotate-on-hover"
+                      animationSpeed={6}
+                      borderRadius={12}
+                      borderWidth={2}
+                      backgroundColor="#1f293780"
+                      className="h-full p-6 text-center shadow-2xl backdrop-blur-sm"
+                      gradientColors={{
+                        primary: '#584827',
+                        secondary: '#c7a03c',
+                        accent: '#f9de90'
+                      }}
+                    >
+                      <div className="text-3xl font-bold text-gold-400 mb-2">{stat.number}</div>
+                      <div className="text-sm text-gray-500">{stat.label}</div>
+                    </BorderRotate>
                   </motion.div>
                 ))}
               </div>
@@ -107,50 +122,64 @@ export default function AboutUs() {
                   whileInView={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.2 }}
                   viewport={{ once: true }}
-                  className="bg-gray-800/50 backdrop-blur-sm rounded-xl shadow-2xl border border-gray-700/50 p-8"
+                  className="h-full"
                 >
-                  <div className="flex items-start gap-4 mb-6">
-                    <div className="w-20 h-20 bg-gradient-to-br from-gold-500/20 to-amber-500/20 rounded-full flex items-center justify-center border border-gold-500/30">
-                      <span className="text-2xl font-bold text-gold-400">VC</span>
+                  <BorderRotate
+                    animationMode="rotate-on-hover"
+                    animationSpeed={6}
+                    borderRadius={12}
+                    borderWidth={2}
+                    backgroundColor="#1f293780"
+                    className="h-full p-8 shadow-2xl backdrop-blur-sm"
+                    gradientColors={{
+                      primary: '#584827',
+                      secondary: '#c7a03c',
+                      accent: '#f9de90'
+                    }}
+                  >
+                    <div className="flex items-start gap-4 mb-6">
+                      <div className="w-20 h-20 bg-gradient-to-br from-gold-500/20 to-amber-500/20 rounded-full flex items-center justify-center border border-gold-500/30">
+                        <span className="text-2xl font-bold text-gold-400">VC</span>
+                      </div>
+                      <div>
+                        <h3 className="text-2xl font-bold text-gray-100">Varun Chaudhry</h3>
+                        <p className="text-gold-400">Founder & Principal Broker</p>
+                      </div>
                     </div>
-                    <div>
-                      <h3 className="text-2xl font-bold text-gray-100">Varun Chaudhry</h3>
-                      <p className="text-gold-400">Founder & Principal Broker</p>
-                    </div>
-                  </div>
 
-                  <div className="space-y-3 mb-6">
-                    <div className="flex items-center gap-2">
-                      <Shield className="w-4 h-4 text-gold-400" />
-                      <span className="text-sm text-gray-400">16+ Years Industry Experience</span>
+                    <div className="space-y-3 mb-6">
+                      <div className="flex items-center gap-2">
+                        <Shield className="w-4 h-4 text-gold-400" />
+                        <span className="text-sm text-gray-400">16+ Years Industry Experience</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Award className="w-4 h-4 text-gold-400" />
+                        <span className="text-sm text-gray-400">Licensed in BC, AB, ON</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Target className="w-4 h-4 text-gold-400" />
+                        <span className="text-sm text-gray-400">MLI Select & Construction Specialist</span>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <Award className="w-4 h-4 text-gold-400" />
-                      <span className="text-sm text-gray-400">Licensed in BC, AB, ON</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Target className="w-4 h-4 text-gold-400" />
-                      <span className="text-sm text-gray-400">MLI Select & Construction Specialist</span>
-                    </div>
-                  </div>
 
-                  <p className="text-gray-400 mb-4 leading-relaxed">
-                    With over 16 years in the mortgage industry, Varun has built a reputation as the go-to expert
-                    for complex financing scenarios. His deep understanding of MLI Select programs has saved developers
-                    millions in insurance premiums.
-                  </p>
-
-                  <p className="text-gray-400 mb-4 leading-relaxed">
-                    Varun's expertise spans construction financing with progressive draws, self-employed mortgage solutions,
-                    and multi-provincial transactions. He has successfully navigated challenging files that other brokers
-                    deemed impossible.
-                  </p>
-
-                  <div className="pt-4 border-t border-gray-700/50">
-                    <p className="text-sm text-gray-500">
-                      <strong>Licenses:</strong> BCFSA #X303985 | RECA #M22001447 | FSRAO #M22001447
+                    <p className="text-gray-400 mb-4 leading-relaxed">
+                      With over 16 years in the mortgage industry, Varun has built a reputation as the go-to expert
+                      for complex financing scenarios. His deep understanding of MLI Select programs has saved developers
+                      millions in insurance premiums.
                     </p>
-                  </div>
+
+                    <p className="text-gray-400 mb-4 leading-relaxed">
+                      Varun's expertise spans construction financing with progressive draws, self-employed mortgage solutions,
+                      and multi-provincial transactions. He has successfully navigated challenging files that other brokers
+                      deemed impossible.
+                    </p>
+
+                    <div className="pt-4 border-t border-gray-700/50">
+                      <p className="text-sm text-gray-500">
+                        <strong>Licenses:</strong> BCFSA #X303985 | RECA #M22001447 | FSRAO #M22001447
+                      </p>
+                    </div>
+                  </BorderRotate>
                 </motion.div>
 
                 {/* Gursharan Dhaliwal */}
@@ -159,50 +188,64 @@ export default function AboutUs() {
                   whileInView={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.4 }}
                   viewport={{ once: true }}
-                  className="bg-gray-800/50 backdrop-blur-sm rounded-xl shadow-2xl border border-gray-700/50 p-8"
+                  className="h-full"
                 >
-                  <div className="flex items-start gap-4 mb-6">
-                    <div className="w-20 h-20 bg-gradient-to-br from-gold-500/20 to-amber-500/20 rounded-full flex items-center justify-center border border-gold-500/30">
-                      <span className="text-2xl font-bold text-gold-400">GD</span>
+                  <BorderRotate
+                    animationMode="rotate-on-hover"
+                    animationSpeed={6}
+                    borderRadius={12}
+                    borderWidth={2}
+                    backgroundColor="#1f293780"
+                    className="h-full p-8 shadow-2xl backdrop-blur-sm"
+                    gradientColors={{
+                      primary: '#584827',
+                      secondary: '#c7a03c',
+                      accent: '#f9de90'
+                    }}
+                  >
+                    <div className="flex items-start gap-4 mb-6">
+                      <div className="w-20 h-20 bg-gradient-to-br from-gold-500/20 to-amber-500/20 rounded-full flex items-center justify-center border border-gold-500/30">
+                        <span className="text-2xl font-bold text-gold-400">GD</span>
+                      </div>
+                      <div>
+                        <h3 className="text-2xl font-bold text-gray-100">Gursharan Dhaliwal</h3>
+                        <p className="text-gold-400">Co-Founder & Senior Mortgage Advisor</p>
+                      </div>
                     </div>
-                    <div>
-                      <h3 className="text-2xl font-bold text-gray-100">Gursharan Dhaliwal</h3>
-                      <p className="text-gold-400">Co-Founder & Senior Mortgage Advisor</p>
-                    </div>
-                  </div>
 
-                  <div className="space-y-3 mb-6">
-                    <div className="flex items-center gap-2">
-                      <Shield className="w-4 h-4 text-gold-400" />
-                      <span className="text-sm text-gray-400">18+ Years Industry Experience</span>
+                    <div className="space-y-3 mb-6">
+                      <div className="flex items-center gap-2">
+                        <Shield className="w-4 h-4 text-gold-400" />
+                        <span className="text-sm text-gray-400">18+ Years Industry Experience</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Building className="w-4 h-4 text-gold-400" />
+                        <span className="text-sm text-gray-400">Commercial & Investment Specialist</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Users className="w-4 h-4 text-gold-400" />
+                        <span className="text-sm text-gray-400">First-Time Buyer Expert</span>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <Building className="w-4 h-4 text-gold-400" />
-                      <span className="text-sm text-gray-400">Commercial & Investment Specialist</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Users className="w-4 h-4 text-gold-400" />
-                      <span className="text-sm text-gray-400">First-Time Buyer Expert</span>
-                    </div>
-                  </div>
 
-                  <p className="text-gray-400 mb-4 leading-relaxed">
-                    Gursharan brings extensive expertise in commercial mortgages and investment property financing.
-                    His analytical approach and deep understanding of cash flow analysis has helped hundreds of investors
-                    build profitable real estate portfolios.
-                  </p>
-
-                  <p className="text-gray-400 mb-4 leading-relaxed">
-                    Known for his patient, educational approach with first-time buyers, Gursharan ensures clients understand
-                    every aspect of their mortgage. His multi-lingual capabilities serve our diverse client base across
-                    Western Canada.
-                  </p>
-
-                  <div className="pt-4 border-t border-gray-700/50">
-                    <p className="text-sm text-gray-500">
-                      <strong>Specialties:</strong> Commercial lending, Investment properties, New immigrant programs
+                    <p className="text-gray-400 mb-4 leading-relaxed">
+                      Gursharan brings extensive expertise in commercial mortgages and investment property financing.
+                      His analytical approach and deep understanding of cash flow analysis has helped hundreds of investors
+                      build profitable real estate portfolios.
                     </p>
-                  </div>
+
+                    <p className="text-gray-400 mb-4 leading-relaxed">
+                      Known for his patient, educational approach with first-time buyers, Gursharan ensures clients understand
+                      every aspect of their mortgage. His multi-lingual capabilities serve our diverse client base across
+                      Western Canada.
+                    </p>
+
+                    <div className="pt-4 border-t border-gray-700/50">
+                      <p className="text-sm text-gray-500">
+                        <strong>Specialties:</strong> Commercial lending, Investment properties, New immigrant programs
+                      </p>
+                    </div>
+                  </BorderRotate>
                 </motion.div>
               </div>
             </motion.div>

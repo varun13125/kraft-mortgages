@@ -2,6 +2,8 @@ import { MetadataRoute } from 'next';
 import { generateSitemap } from '@/lib/seo/sitemap';
 import { getRecentPosts, Post } from '@/lib/db/firestore';
 
+export const dynamic = 'force-dynamic';
+
 // Fetch blog posts from Firestore for sitemap
 async function getBlogPosts(): Promise<Array<{ slug: string; publishedAt: Date; updatedAt?: Date }>> {
   try {
