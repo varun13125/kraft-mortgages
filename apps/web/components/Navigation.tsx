@@ -370,6 +370,14 @@ export default function Navigation() {
               </div>
 
               <Link
+                href="/business-funding"
+                className="flex items-center gap-2 px-4 py-2 text-gray-300 hover:text-gold-400 transition-colors font-medium"
+              >
+                <Briefcase className="w-4 h-4" />
+                Business Funding
+              </Link>
+
+              <Link
                 href="/about"
                 className="px-4 py-2 text-gray-300 hover:text-gold-400 transition-colors"
               >
@@ -597,6 +605,14 @@ export default function Navigation() {
               </div>
 
               <div className="border-t border-gray-700 pt-4">
+                <Link
+                  href="/business-funding"
+                  className="flex items-center gap-3 px-4 py-3 text-lg text-gray-300 hover:text-gold-400 transition-colors"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  <Briefcase className="w-5 h-5 text-gold-400" />
+                  Business Funding
+                </Link>
                 <Link
                   href="/about"
                   className="block px-4 py-3 text-lg text-gray-300 hover:text-gold-400 transition-colors"

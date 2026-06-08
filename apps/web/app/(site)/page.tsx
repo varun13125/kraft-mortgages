@@ -5,7 +5,7 @@ import Link from "next/link";
 import Navigation from "@/components/Navigation";
 import { BorderRotate } from "@/components/ui/animated-gradient-border";
 import { HeroGeometric } from "@/components/ui/shape-landing-hero";
-import { DollarSign, Home, Building, Users, Shield, TrendingUp, Calculator, Phone, Mail, MapPin, CheckCircle, ArrowRight } from "lucide-react";
+import { DollarSign, Home, Building, Users, Shield, TrendingUp, Calculator, Phone, Mail, MapPin, CheckCircle, ArrowRight, Briefcase } from "lucide-react";
 
 export default function ModernHomepage() {
   const [showLeadForm, setShowLeadForm] = useState(false);
@@ -393,7 +393,8 @@ export default function ModernHomepage() {
                 { icon: Users, title: 'Self-Employed Solutions', desc: 'Traditional banks often struggle to qualify entrepreneurs, freelancers, and small business owners. We offer stated-income and alternative-verification programs that recognize the full picture of your earnings — not just your T4.', href: '/self-employed-mortgages' },
                 { icon: Shield, title: 'Purchase Financing', desc: 'Whether it\'s your first home, an investment property, or a vacation retreat, we match you with the right lender and the right product. We handle single-family, condo, duplex, and multi-unit purchases across all three provinces.', href: '/purchase-financing' },
                 { icon: DollarSign, title: 'Refinancing & Equity', desc: 'Your home equity is a powerful financial tool. We help clients consolidate high-interest debt, fund renovations, access cash for investments, or simply secure a better rate at renewal. Strategic refinancing can save you tens of thousands over your mortgage term.', href: '/refinancing' },
-                { icon: TrendingUp, title: 'Private Lending', desc: 'When timeline, credit, or property type falls outside conventional guidelines, private lending bridges the gap. We work with a vetted network of private lenders to deliver fast approvals — often within 24 to 48 hours — for short-term and alternative financing needs.', href: '/private-lending' }
+                { icon: TrendingUp, title: 'Private Lending', desc: 'When timeline, credit, or property type falls outside conventional guidelines, private lending bridges the gap. We work with a vetted network of private lenders to deliver fast approvals — often within 24 to 48 hours — for short-term and alternative financing needs.', href: '/private-lending' },
+                { icon: Briefcase, title: 'Business Funding', desc: 'Secure working capital, lines of credit, or equipment financing to grow operations. Check qualification offers in under 2 minutes with no impact on your credit score through our dedicated portal.', href: 'https://ca.referral.mpowerfunds.com/form?referral_name=varun@kraftmortgages.ca', external: true }
               ].map((service, i) => (
                 <motion.div
                   key={i}
@@ -408,9 +409,15 @@ export default function ModernHomepage() {
                   </div>
                   <h3 className="text-xl font-semibold text-gray-100 mb-3">{service.title}</h3>
                   <p className="text-gray-400 leading-relaxed mb-4">{service.desc}</p>
-                  <Link href={service.href as any} className="inline-flex items-center text-gold-400 hover:text-gold-300 transition-colors text-sm font-medium">
-                    Learn More <ArrowRight className="w-4 h-4 ml-1" />
-                  </Link>
+                  {service.external ? (
+                    <a href={service.href} target="_blank" rel="noopener noreferrer" className="inline-flex items-center text-gold-400 hover:text-gold-300 transition-colors text-sm font-medium">
+                      Apply Now <ArrowRight className="w-4 h-4 ml-1" />
+                    </a>
+                  ) : (
+                    <Link href={service.href as any} className="inline-flex items-center text-gold-400 hover:text-gold-300 transition-colors text-sm font-medium">
+                      Learn More <ArrowRight className="w-4 h-4 ml-1" />
+                    </Link>
+                  )}
                 </motion.div>
               ))}
             </div>
