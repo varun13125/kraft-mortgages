@@ -544,26 +544,6 @@ export default function BusinessFundingPage() {
                     </li>
                   </ul>
                 </div>
-
-                <div className="bg-gray-800/40 border border-gray-700/50 rounded-2xl p-6 backdrop-blur-sm">
-                  <h3 className="text-lg font-bold text-gray-100 mb-4 flex items-center gap-2">
-                    <Phone className="w-5 h-5 text-gold-400" />
-                    Need Immediate Help?
-                  </h3>
-                  <p className="text-sm text-gray-400 mb-4 leading-relaxed">
-                    Have questions about our business lending solutions or qualification criteria? Connect with a specialist directly.
-                  </p>
-                  <div className="space-y-3 text-sm">
-                    <a href="tel:604-593-1550" className="flex items-center gap-3 text-gray-300 hover:text-gold-400 transition-colors">
-                      <Phone className="w-4 h-4 text-gold-400 shrink-0" />
-                      604-593-1550
-                    </a>
-                    <a href="mailto:varun@kraftmortgages.ca" className="flex items-center gap-3 text-gray-300 hover:text-gold-400 transition-colors">
-                      <Mail className="w-4 h-4 text-gold-400 shrink-0" />
-                      varun@kraftmortgages.ca
-                    </a>
-                  </div>
-                </div>
               </motion.div>
 
             </div>
