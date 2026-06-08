@@ -409,15 +409,9 @@ export default function ModernHomepage() {
                   </div>
                   <h3 className="text-xl font-semibold text-gray-100 mb-3">{service.title}</h3>
                   <p className="text-gray-400 leading-relaxed mb-4">{service.desc}</p>
-                  {service.external ? (
-                    <a href={service.href} target="_blank" rel="noopener noreferrer" className="inline-flex items-center text-gold-400 hover:text-gold-300 transition-colors text-sm font-medium">
-                      Apply Now <ArrowRight className="w-4 h-4 ml-1" />
-                    </a>
-                  ) : (
-                    <Link href={service.href as any} className="inline-flex items-center text-gold-400 hover:text-gold-300 transition-colors text-sm font-medium">
-                      Learn More <ArrowRight className="w-4 h-4 ml-1" />
-                    </Link>
-                  )}
+                  <Link href={service.href as any} className="inline-flex items-center text-gold-400 hover:text-gold-300 transition-colors text-sm font-medium">
+                    Learn More <ArrowRight className="w-4 h-4 ml-1" />
+                  </Link>
                 </motion.div>
               ))}
             </div>
