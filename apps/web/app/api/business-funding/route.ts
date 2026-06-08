@@ -58,7 +58,7 @@ async function sendDiscordNotification(data: BusinessFundingData) {
       body: JSON.stringify({
         embeds: [
           {
-            title: "💼 New Lead — Business Funding Application",
+            title: "💼 New Lead — Business Funding (Forwarded to MPower)",
             color: 0xc8a962,
             fields: [
               { name: "Name", value: fullName, inline: true },
@@ -73,6 +73,7 @@ async function sendDiscordNotification(data: BusinessFundingData) {
               { name: "Requested Amount", value: data.funding_amount ? `$${data.funding_amount}` : "—", inline: true },
               { name: "Purpose", value: data.purpose_of_funding === "Other" ? `Other: ${data.other_purpose || ""}` : data.purpose_of_funding || "—", inline: true },
               { name: "Timeline", value: data.when_are_funds_needed || "—", inline: true },
+              { name: "Integration Status", value: "Forwarded to MPower GHL", inline: true },
               { name: "Notes", value: data.notes?.slice(0, 500) || "—" },
             ],
             timestamp: new Date().toISOString(),
