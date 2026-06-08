@@ -18,7 +18,8 @@ import {
   Shield,
   Users,
   DollarSign,
-  FileText
+  FileText,
+  Briefcase
 } from "lucide-react";
 import { usePathname } from "next/navigation";
 
@@ -155,6 +156,16 @@ export default function Navigation() {
                           <div>
                             <div className="font-semibold">Commercial Lending</div>
                             <div className="text-xs text-gray-500">Multi-unit, office, retail, industrial</div>
+                          </div>
+                        </Link>
+                        <Link
+                          href="/business-funding"
+                          className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-gold-400 transition-all rounded-lg"
+                        >
+                          <Briefcase className="w-5 h-5 text-gold-400" />
+                          <div>
+                            <div className="font-semibold">Business Funding</div>
+                            <div className="text-xs text-gray-500">Working capital, lines of credit, business loans</div>
                           </div>
                         </Link>
                         <Link
@@ -468,6 +479,14 @@ export default function Navigation() {
                   >
                     <Building className="w-4 h-4 text-purple-400" />
                     Commercial Lending
+                  </Link>
+                  <Link
+                    href="/business-funding"
+                    className="flex items-center gap-3 px-4 py-2 text-gray-300 hover:text-gold-400 transition-colors"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <Briefcase className="w-4 h-4 text-gold-400" />
+                    Business Funding
                   </Link>
                   <Link
                     href="/private-lending"
