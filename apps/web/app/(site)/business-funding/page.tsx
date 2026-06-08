@@ -545,38 +545,25 @@ export default function BusinessFundingPage() {
                   </ul>
                 </div>
 
-                <BorderRotate
-                  animationMode="rotate-on-hover"
-                  animationSpeed={6}
-                  borderRadius={16}
-                  borderWidth={2}
-                  backgroundColor="#1f293780"
-                  className="w-full p-6 shadow-2xl backdrop-blur-sm relative overflow-hidden"
-                  gradientColors={{
-                    primary: '#d4af37',
-                    secondary: '#f59e0b',
-                    accent: '#ffffff'
-                  }}
-                >
-                  <div className="text-center">
-                    <div className="w-12 h-12 bg-gold-500/20 rounded-xl flex items-center justify-center border border-gold-500/30 mx-auto mb-4">
-                      <Globe className="w-6 h-6 text-gold-400" />
-                    </div>
-                    <h3 className="text-xl font-bold text-gray-100 mb-2">Direct Referral Channel</h3>
-                    <p className="text-sm text-gray-400 mb-6 leading-relaxed">
-                      Prefer to apply directly through our funding partner portal? Connect instantly to check qualification options.
-                    </p>
-                    <a
-                      href="https://ca.referral.mpowerfunds.com/form?referral_name=varun@kraftmortgages.ca"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-full inline-flex items-center justify-center gap-2 px-5 py-3 border border-gold-500/50 text-gold-400 rounded-lg hover:bg-gold-500/10 transition-all font-semibold"
-                    >
-                      Apply via MPower Funds
-                      <ArrowRight className="w-4 h-4" />
+                <div className="bg-gray-800/40 border border-gray-700/50 rounded-2xl p-6 backdrop-blur-sm">
+                  <h3 className="text-lg font-bold text-gray-100 mb-4 flex items-center gap-2">
+                    <Phone className="w-5 h-5 text-gold-400" />
+                    Need Immediate Help?
+                  </h3>
+                  <p className="text-sm text-gray-400 mb-4 leading-relaxed">
+                    Have questions about our business lending solutions or qualification criteria? Connect with a specialist directly.
+                  </p>
+                  <div className="space-y-3 text-sm">
+                    <a href="tel:604-593-1550" className="flex items-center gap-3 text-gray-300 hover:text-gold-400 transition-colors">
+                      <Phone className="w-4 h-4 text-gold-400 shrink-0" />
+                      604-593-1550
+                    </a>
+                    <a href="mailto:varun@kraftmortgages.ca" className="flex items-center gap-3 text-gray-300 hover:text-gold-400 transition-colors">
+                      <Mail className="w-4 h-4 text-gold-400 shrink-0" />
+                      varun@kraftmortgages.ca
                     </a>
                   </div>
-                </BorderRotate>
+                </div>
               </motion.div>
 
             </div>
