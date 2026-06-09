@@ -16,6 +16,11 @@ const FOOTER_LINKS = {
     { label: "#301 1688 152nd Street", href: undefined },
     { label: "Surrey, BC V4A 4N2", href: undefined },
   ],
+  "LEGAL & TRUST": [
+    { label: "Compliance & FINTRAC Disclosures", href: "/compliance-security" },
+    { label: "Privacy Policy", href: "/privacy-policy" },
+    { label: "Terms of Service", href: "/terms-of-service" },
+  ],
   "LICENSED IN": [
     { label: "✓ British Columbia", href: undefined },
     { label: "✓ Alberta", href: undefined },
@@ -27,7 +32,7 @@ const FOOTER_LINKS = {
 export default function Footer() {
   return (
     <footer className="bg-term-footer border-t border-term-line text-term-text-dim px-6 sm:px-8 pt-16 pb-8">
-      <div className="max-w-[1400px] mx-auto grid gap-14 sm:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr_1fr] mb-14">
+      <div className="max-w-[1400px] mx-auto grid gap-14 sm:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr_1fr_1fr] mb-14">
         {/* Brand Column */}
         <div>
           <Image

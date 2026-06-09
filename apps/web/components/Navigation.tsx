@@ -19,7 +19,8 @@ import {
   Users,
   DollarSign,
   FileText,
-  Briefcase
+  Briefcase,
+  Lock
 } from "lucide-react";
 import { usePathname } from "next/navigation";
 
@@ -29,6 +30,7 @@ export default function Navigation() {
   const [servicesDropdown, setServicesDropdown] = useState(false);
   const [calculatorsDropdown, setCalculatorsDropdown] = useState(false);
   const [mliDropdown, setMliDropdown] = useState(false);
+  const [aboutDropdown, setAboutDropdown] = useState(false);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -377,12 +379,53 @@ export default function Navigation() {
                 Business Funding
               </Link>
 
-              <Link
-                href="/about"
-                className="lg:px-2 xl:px-4 py-2 text-gray-300 hover:text-gold-400 transition-colors lg:text-xs xl:text-base whitespace-nowrap"
-              >
-                About
-              </Link>
+              {/* About Dropdown */}
+              <div className="relative">
+                <button
+                  onMouseEnter={() => setAboutDropdown(true)}
+                  onMouseLeave={() => setAboutDropdown(false)}
+                  className="flex items-center gap-2 lg:px-2 xl:px-4 py-2 text-gray-300 hover:text-gold-400 transition-colors lg:text-xs xl:text-base whitespace-nowrap"
+                >
+                  About
+                  <ChevronDown className={`w-4 h-4 transition-transform ${aboutDropdown ? 'rotate-180' : ''}`} />
+                </button>
+
+                <AnimatePresence>
+                  {aboutDropdown && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      onMouseEnter={() => setAboutDropdown(true)}
+                      onMouseLeave={() => setAboutDropdown(false)}
+                      className="absolute top-full left-0 mt-2 w-72 bg-gray-900/95 backdrop-blur-xl rounded-xl shadow-xl border border-gray-800 overflow-hidden z-50"
+                    >
+                      <div className="grid grid-cols-1 gap-1 p-2">
+                        <Link
+                          href="/about"
+                          className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-gold-400 transition-all rounded-lg"
+                        >
+                          <Users className="w-5 h-5 text-gold-400" />
+                          <div>
+                            <div className="font-semibold">About Us</div>
+                            <div className="text-xs text-gray-500">Our team, mission, and story</div>
+                          </div>
+                        </Link>
+                        <Link
+                          href="/compliance-security"
+                          className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-blue-400 transition-all rounded-lg"
+                        >
+                          <Lock className="w-5 h-5 text-blue-400" />
+                          <div>
+                            <div className="font-semibold">Compliance &amp; Security</div>
+                            <div className="text-xs text-gray-500">FINTRAC, licensing &amp; consumer protection</div>
+                          </div>
+                        </Link>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
 
               <Link
                 href="/blog"
@@ -622,6 +665,14 @@ export default function Navigation() {
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   About
+                </Link>
+                <Link
+                  href="/compliance-security"
+                  className="flex items-center gap-3 px-4 py-3 text-lg text-gray-300 hover:text-blue-400 transition-colors"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  <Lock className="w-5 h-5 text-blue-400" />
+                  Compliance &amp; Security
                 </Link>
                 <Link
                   href="/blog"
