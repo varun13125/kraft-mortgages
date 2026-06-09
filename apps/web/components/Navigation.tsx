@@ -52,7 +52,7 @@ export default function Navigation() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Logo and Back Button */}
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4 shrink-0">
               {/* Back Button for Calculator Pages */}
               {isCalculator && (
                 <motion.button
@@ -66,13 +66,13 @@ export default function Navigation() {
               )}
 
               {/* Logo */}
-              <Link href="/" className="flex items-center group">
+              <Link href="/" className="flex items-center group shrink-0">
                 <Image
                   src="/kraft-logo-dark.png"
                   alt="Kraft Mortgages"
                   width={200}
                   height={50}
-                  className="h-10 w-auto group-hover:scale-105 transition-transform duration-200"
+                  className="h-10 w-auto group-hover:scale-105 transition-transform duration-200 shrink-0"
                   priority
                 />
               </Link>
@@ -86,10 +86,10 @@ export default function Navigation() {
             </div>
 
             {/* Desktop Navigation */}
-            <div className="hidden lg:flex items-center gap-6">
+            <div className="hidden lg:flex items-center lg:gap-2 xl:gap-6 shrink-0">
               <Link
                 href="/"
-                className="flex items-center gap-2 px-4 py-2 text-gray-300 hover:text-gold-400 transition-colors"
+                className="flex items-center gap-2 lg:px-2 xl:px-4 py-2 text-gray-300 hover:text-gold-400 transition-colors lg:text-xs xl:text-base whitespace-nowrap"
               >
                 <Home className="w-4 h-4" />
                 Home
@@ -100,7 +100,7 @@ export default function Navigation() {
                 <button
                   onMouseEnter={() => setServicesDropdown(true)}
                   onMouseLeave={() => setServicesDropdown(false)}
-                  className="flex items-center gap-2 px-4 py-2 text-gray-300 hover:text-gold-400 transition-colors"
+                  className="flex items-center gap-2 lg:px-2 xl:px-4 py-2 text-gray-300 hover:text-gold-400 transition-colors lg:text-xs xl:text-base whitespace-nowrap"
                 >
                   <Building className="w-4 h-4" />
                   Services
@@ -229,7 +229,7 @@ export default function Navigation() {
                 <button
                   onMouseEnter={() => setCalculatorsDropdown(true)}
                   onMouseLeave={() => setCalculatorsDropdown(false)}
-                  className="flex items-center gap-2 px-4 py-2 text-gray-300 hover:text-gold-400 transition-colors"
+                  className="flex items-center gap-2 lg:px-2 xl:px-4 py-2 text-gray-300 hover:text-gold-400 transition-colors lg:text-xs xl:text-base whitespace-nowrap"
                 >
                   <Calculator className="w-4 h-4" />
                   Calculators
@@ -313,7 +313,7 @@ export default function Navigation() {
                 <button
                   onMouseEnter={() => setMliDropdown(true)}
                   onMouseLeave={() => setMliDropdown(false)}
-                  className="flex items-center gap-2 px-4 py-2 text-gray-300 hover:text-gold-400 transition-colors"
+                  className="flex items-center gap-2 lg:px-2 xl:px-4 py-2 text-gray-300 hover:text-gold-400 transition-colors lg:text-xs xl:text-base whitespace-nowrap"
                 >
                   <DollarSign className="w-4 h-4" />
                   MLI Select
@@ -371,7 +371,7 @@ export default function Navigation() {
 
               <Link
                 href="/business-funding"
-                className="flex items-center gap-2 px-4 py-2 text-gray-300 hover:text-gold-400 transition-colors font-medium"
+                className="flex items-center gap-2 lg:px-2 xl:px-4 py-2 text-gray-300 hover:text-gold-400 transition-colors font-medium lg:text-xs xl:text-base whitespace-nowrap"
               >
                 <Briefcase className="w-4 h-4" />
                 Business Funding
@@ -379,14 +379,14 @@ export default function Navigation() {
 
               <Link
                 href="/about"
-                className="px-4 py-2 text-gray-300 hover:text-gold-400 transition-colors"
+                className="lg:px-2 xl:px-4 py-2 text-gray-300 hover:text-gold-400 transition-colors lg:text-xs xl:text-base whitespace-nowrap"
               >
                 About
               </Link>
 
               <Link
                 href="/blog"
-                className="flex items-center gap-2 px-4 py-2 text-gray-300 hover:text-gold-400 transition-colors"
+                className="flex items-center gap-2 lg:px-2 xl:px-4 py-2 text-gray-300 hover:text-gold-400 transition-colors lg:text-xs xl:text-base whitespace-nowrap"
               >
                 <FileText className="w-4 h-4" />
                 Blog
@@ -394,7 +394,7 @@ export default function Navigation() {
 
               <Link
                 href="/contact"
-                className="flex items-center gap-2 px-4 py-2 text-gray-300 hover:text-gold-400 transition-colors"
+                className="flex items-center gap-2 lg:px-2 xl:px-4 py-2 text-gray-300 hover:text-gold-400 transition-colors lg:text-xs xl:text-base whitespace-nowrap"
               >
                 <Phone className="w-4 h-4" />
                 Contact
@@ -407,7 +407,7 @@ export default function Navigation() {
                 rel="noopener noreferrer"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="px-6 py-2 bg-gradient-to-r from-gold-500 to-amber-600 text-gray-900 font-semibold rounded-lg shadow-lg shadow-gold-500/30 hover:shadow-gold-500/50 transition-all"
+                className="lg:px-3 xl:px-6 py-2 bg-gradient-to-r from-gold-500 to-amber-600 text-gray-900 font-semibold rounded-lg shadow-lg shadow-gold-500/30 hover:shadow-gold-500/50 transition-all lg:text-xs xl:text-base whitespace-nowrap"
                 onClick={() => track('Book_Call_Click', { location: 'navbar_desktop' })}
               >
                 Apply Now
