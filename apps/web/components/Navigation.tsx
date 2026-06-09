@@ -85,8 +85,8 @@ export default function Navigation() {
               )}
             </div>
 
-            {/* Desktop Navigation */}
-            <div className="hidden lg:flex items-center lg:gap-2 xl:gap-6 shrink-0">
+            {/* Desktop Navigation Links */}
+            <div className="hidden lg:flex items-center justify-center flex-1 lg:gap-2 xl:gap-6 mx-6">
               <Link
                 href="/"
                 className="flex items-center gap-2 lg:px-2 xl:px-4 py-2 text-gray-300 hover:text-gold-400 transition-colors lg:text-xs xl:text-base whitespace-nowrap"
@@ -399,7 +399,10 @@ export default function Navigation() {
                 <Phone className="w-4 h-4" />
                 Contact
               </Link>
+            </div>
 
+            {/* Desktop CTA */}
+            <div className="hidden lg:flex items-center shrink-0">
               {/* CTA Button */}
               <motion.a
                 href="https://r.mtg-app.com/varun-chaudhry"
