@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 import {
   Shield,
   ChevronDown,
@@ -175,12 +176,13 @@ export default function ComplianceSecurityPage() {
             className="relative z-10 px-4 sm:px-6 py-20 md:py-28 max-w-7xl mx-auto"
           >
             <div className="text-center">
-              <img
-                src="/kraft-logo-placeholder.png"
+              <Image
+                src="/kraft-logo-dark.png"
                 alt="Kraft Mortgages Canada Inc."
                 className="mx-auto mb-8 h-12 w-auto"
                 width={200}
                 height={48}
+                priority
               />
 
               <motion.div
@@ -261,7 +263,7 @@ export default function ComplianceSecurityPage() {
               viewport={{ once: true }}
               className="text-center mb-16"
             >
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-red-900/20 border border-red-700/30 text-red-300 text-sm font-medium mb-6">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gold-900/20 border border-gold-700/30 text-gold-700 text-sm font-medium mb-6">
                 <Eye className="w-4 h-4" />
                 <span>FINTRAC Compliance</span>
               </div>
@@ -285,7 +287,7 @@ export default function ComplianceSecurityPage() {
                   description:
                     "Client presents a valid government-issued photo identification document. Document undergoes digital forensic validation to confirm authenticity, detect tampering, and verify security features. Combined with a biometric liveness/selfie test to confirm the client is the rightful holder of the identification.",
                   icon: FileSearch,
-                  color: "from-blue-500 to-indigo-600",
+                  color: "from-[#0A192F] to-[#1A237E]",
                 },
                 {
                   number: "02",
@@ -293,7 +295,7 @@ export default function ComplianceSecurityPage() {
                   description:
                     "Verification is completed by matching the client's legal name, residential address, and date of birth against an active Canadian credit bureau file that has been in continuous existence for a minimum of three years. This method leverages established credit history as a reliable identity anchor.",
                   icon: CreditCard,
-                  color: "from-emerald-500 to-teal-600",
+                  color: "from-[#1A237E] to-[#283593]",
                 },
                 {
                   number: "03",
@@ -301,7 +303,7 @@ export default function ComplianceSecurityPage() {
                   description:
                     "Identity is confirmed by cross-referencing two separate, independent, and reliable data sources. Each source must confirm the client's existence and identity, providing dual-layer verification that satisfies federal regulatory requirements for client onboarding.",
                   icon: FileCheck,
-                  color: "from-amber-500 to-orange-600",
+                  color: "from-[#0A192F] to-blue-900",
                 },
               ].map((method, i) => (
                 <motion.div

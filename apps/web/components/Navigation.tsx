@@ -445,7 +445,7 @@ export default function Navigation() {
             </div>
 
             {/* Desktop CTA */}
-            <div className="hidden lg:flex items-center shrink-0">
+            <div className="hidden lg:flex items-center shrink-0 pl-4">
               {/* CTA Button */}
               <motion.a
                 href="https://r.mtg-app.com/varun-chaudhry"
