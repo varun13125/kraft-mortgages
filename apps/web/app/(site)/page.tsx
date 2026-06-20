@@ -388,11 +388,11 @@ export default function ModernHomepage() {
 
             <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
               {[
-                { icon: Building, title: 'Construction Financing', desc: 'Building a new home or developing a multi-unit project? We structure progressive draw schedules, manage holdback requirements, and optimize cash flow so your construction stays on track. Our team has decades of experience working with builders across BC, Alberta, and Ontario.', href: '/construction-financing' },
+                { icon: Building, title: 'Construction Financing', desc: 'Building a new home or developing a multi-unit project? We structure progressive draw schedules, manage holdback requirements, and optimize cash flow so your construction stays on track. Our team has decades of experience working with builders across BC, Alberta, and Ontario.', href: '/construction' },
                 { icon: Home, title: 'MLI Select Program', desc: 'CMHC\'s MLI Select program offers significant insurance premium savings for qualifying multi-unit rental properties. Our team understands the eligibility criteria, energy-efficiency requirements, and application process inside out — saving developers thousands per unit.', href: '/mli-select' },
-                { icon: Users, title: 'Self-Employed Solutions', desc: 'Traditional banks often struggle to qualify entrepreneurs, freelancers, and small business owners. We offer stated-income and alternative-verification programs that recognize the full picture of your earnings — not just your T4.', href: '/self-employed-mortgages' },
-                { icon: Shield, title: 'Purchase Financing', desc: 'Whether it\'s your first home, an investment property, or a vacation retreat, we match you with the right lender and the right product. We handle single-family, condo, duplex, and multi-unit purchases across all three provinces.', href: '/purchase-financing' },
-                { icon: DollarSign, title: 'Refinancing & Equity', desc: 'Your home equity is a powerful financial tool. We help clients consolidate high-interest debt, fund renovations, access cash for investments, or simply secure a better rate at renewal. Strategic refinancing can save you tens of thousands over your mortgage term.', href: '/refinancing' },
+                { icon: Users, title: 'Self-Employed Solutions', desc: 'Traditional banks often struggle to qualify entrepreneurs, freelancers, and small business owners. We offer stated-income and alternative-verification programs that recognize the full picture of your earnings — not just your T4.', href: '/calculators/self-employed' },
+                { icon: Shield, title: 'Purchase Financing', desc: 'Whether it\'s your first home, an investment property, or a vacation retreat, we match you with the right lender and the right product. We handle single-family, condo, duplex, and multi-unit purchases across all three provinces.', href: '/calculators/affordability' },
+                { icon: DollarSign, title: 'Refinancing & Equity', desc: 'Your home equity is a powerful financial tool. We help clients consolidate high-interest debt, fund renovations, access cash for investments, or simply secure a better rate at renewal. Strategic refinancing can save you tens of thousands over your mortgage term.', href: '/equity-lending' },
                 { icon: TrendingUp, title: 'Private Lending', desc: 'When timeline, credit, or property type falls outside conventional guidelines, private lending bridges the gap. We work with a vetted network of private lenders to deliver fast approvals — often within 24 to 48 hours — for short-term and alternative financing needs.', href: '/private-lending' },
                 { icon: Briefcase, title: 'Business Funding', desc: 'Secure working capital, lines of credit, or equipment financing to grow operations. Submit a quick inquiry or schedule a call with our business funding specialists.', href: '/business-funding' }
               ].map((service, i) => (
@@ -533,10 +533,10 @@ export default function ModernHomepage() {
 
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
               {[
-                { icon: Calculator, title: 'Payment Calculator', desc: 'Explore scenarios & amortization', type: 'payment', href: '/calculators/affordability' },
+                { icon: Calculator, title: 'Payment Calculator', desc: 'Explore scenarios & amortization', type: 'payment', href: '/calculators/payment' },
                 { icon: Home, title: 'Affordability Analysis', desc: 'True purchasing power & stress test', type: 'affordability', href: '/calculators/affordability' },
                 { icon: Building, title: 'MLI Select Suite', desc: 'Complete CMHC calculator suite', type: 'mli', href: '/mli-select/calculators' },
-                { icon: TrendingUp, title: 'Investment ROI', desc: 'Cap rates & leverage strategies', type: 'investment', href: '/calculators/affordability' }
+                { icon: TrendingUp, title: 'Investment ROI', desc: 'Cap rates & leverage strategies', type: 'investment', href: '/calculators/investment' }
               ].map((calc, i) => (
                 <motion.div
                   key={i}
