@@ -1,194 +1,121 @@
-"use client";
-import { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import type { Metadata } from "next";
 import Link from "next/link";
 import Navigation from "@/components/Navigation";
-import { BorderRotate } from "@/components/ui/animated-gradient-border";
 import { HeroGeometric } from "@/components/ui/shape-landing-hero";
+import { AnimatedSection } from "@/components/home/AnimatedSection";
+import { StatsCounters } from "@/components/home/StatsCounters";
+import { HeroCTAs } from "@/components/home/HeroCTAs";
+import { BUSINESS } from "@/lib/seo/business-config";
 import { DollarSign, Home, Building, Users, Shield, TrendingUp, Calculator, Phone, Mail, MapPin, CheckCircle, ArrowRight, Briefcase } from "lucide-react";
 
+export const metadata: Metadata = {
+  title: "Kraft Mortgages Canada Inc. | Mortgage Broker Surrey, BC, AB & ON",
+  description:
+    "Licensed Canadian mortgage brokerage. 18+ years, $2B+ funded, access to 30+ lenders. Specialists in MLI Select, construction financing, self-employed, and private mortgages across BC, Alberta, and Ontario.",
+  alternates: { canonical: "https://www.kraftmortgages.ca" },
+  openGraph: {
+    title: "Kraft Mortgages Canada Inc. | Mortgage Broker Surrey",
+    description:
+      "Licensed Canadian mortgage brokerage across BC, Alberta, and Ontario. MLI Select, construction, self-employed, and private mortgage specialists.",
+    url: "https://www.kraftmortgages.ca",
+    siteName: "Kraft Mortgages",
+    locale: "en_CA",
+    type: "website",
+    images: [{ url: BUSINESS.ogImageUrl, width: 1200, height: 630, alt: BUSINESS.name }],
+  },
+};
+
+const services = [
+  { icon: Building, title: "Construction Financing", desc: "Building a new home or developing a multi-unit project? We structure progressive draw schedules, manage holdback requirements, and optimize cash flow so your construction stays on track. Our team has decades of experience working with builders across BC, Alberta, and Ontario.", href: "/construction" },
+  { icon: Home, title: "MLI Select Program", desc: "CMHC's MLI Select program offers significant insurance premium savings for qualifying multi-unit rental properties. Our team understands the eligibility criteria, energy-efficiency requirements, and application process inside out — saving developers thousands per unit.", href: "/mli-select" },
+  { icon: Users, title: "Self-Employed Solutions", desc: "Traditional banks often struggle to qualify entrepreneurs, freelancers, and small business owners. We offer stated-income and alternative-verification programs that recognize the full picture of your earnings — not just your T4.", href: "/calculators/self-employed" },
+  { icon: Shield, title: "Purchase Financing", desc: "Whether it's your first home, an investment property, or a vacation retreat, we match you with the right lender and the right product. We handle single-family, condo, duplex, and multi-unit purchases across all three provinces.", href: "/calculators/affordability" },
+  { icon: DollarSign, title: "Refinancing & Equity", desc: "Your home equity is a powerful financial tool. We help clients consolidate high-interest debt, fund renovations, access cash for investments, or simply secure a better rate at renewal. Strategic refinancing can save you tens of thousands over your mortgage term.", href: "/equity-lending" },
+  { icon: TrendingUp, title: "Private Lending", desc: "When timeline, credit, or property type falls outside conventional guidelines, private lending bridges the gap. We work with a vetted network of private lenders to deliver fast approvals — often within 24 to 48 hours — for short-term and alternative financing needs.", href: "/private-lending" },
+  { icon: Briefcase, title: "Business Funding", desc: "Secure working capital, lines of credit, or equipment financing to grow operations. Submit a quick inquiry or schedule a call with our business funding specialists.", href: "/business-funding" },
+];
+
+const cities = [
+  { city: "Surrey", province: "BC", desc: "Our headquarters and home base — serving Surrey and the broader Lower Mainland since 2002.", href: "/mortgage-broker-surrey" },
+  { city: "Vancouver", province: "BC", desc: "Canada's most competitive market. We help buyers navigate bidding wars and complex financing.", href: "/mortgage-broker-vancouver" },
+  { city: "Burnaby", province: "BC", desc: "A growing hub for families and investors — from Metrotown condos to Brentwood developments.", href: "/mortgage-broker-burnaby" },
+  { city: "Richmond", province: "BC", desc: "Strong rental and investment market. We secure financing for condos, townhomes, and multi-unit builds.", href: "/mortgage-broker-richmond" },
+  { city: "Kelowna", province: "BC", desc: "The Okanagan's booming real estate market demands experienced brokers who understand local dynamics.", href: "/mortgage-broker-kelowna" },
+  { city: "Kamloops", province: "BC", desc: "Affordable entry points and growing demand — ideal for first-time buyers and investors alike.", href: "/mortgage-broker-kamloops" },
+  { city: "Abbotsford", province: "BC", desc: "The Fraser Valley's largest city offers a mix of suburban living and agricultural investment opportunities.", href: "/mortgage-broker-abbotsford" },
+  { city: "Victoria", province: "BC", desc: "Vancouver Island's capital city with unique heritage properties and a tight rental market.", href: "/mortgage-broker-victoria" },
+  { city: "Calgary", province: "AB", desc: "Alberta's economic engine — from downtown condos to sprawling suburban developments.", href: "/mortgage-broker-calgary" },
+  { city: "Edmonton", province: "AB", desc: "Affordable housing, strong rental yields, and one of Canada's most investor-friendly markets.", href: "/mortgage-broker-edmonton" },
+  { city: "Toronto", province: "ON", desc: "Canada's largest real estate market. We help clients compete with the right financing strategy.", href: "/mortgage-broker-toronto" },
+  { city: "Ottawa", province: "ON", desc: "Stable government-driven market with excellent opportunities for first-time buyers and investors.", href: "/mortgage-broker-ottawa" },
+];
+
+const steps = [
+  { step: "01", title: "Free Consultation", desc: "Tell us about your goals, income situation, and timeline. We assess your options and outline a strategy — no fees, no obligations." },
+  { step: "02", title: "Pre-Approval", desc: "We pull your credit, verify your documents, and shop across 30+ lenders to secure a written pre-approval — often the same day." },
+  { step: "03", title: "Lender Matching", desc: "Once you find your property, we negotiate rate, terms, and conditions with the best-fit lender. We handle the paperwork so you don't have to." },
+  { step: "04", title: "Closing", desc: "We coordinate with your lawyer, lender, and realtor to ensure a smooth closing. You get the keys — we make sure every detail is handled." },
+];
+
+const calculators = [
+  { icon: Calculator, title: "Payment Calculator", desc: "Explore scenarios & amortization", href: "/calculators/payment" },
+  { icon: Home, title: "Affordability Analysis", desc: "True purchasing power & stress test", href: "/calculators/affordability" },
+  { icon: Building, title: "MLI Select Suite", desc: "Complete CMHC calculator suite", href: "/mli-select/calculators" },
+  { icon: TrendingUp, title: "Investment ROI", desc: "Cap rates & leverage strategies", href: "/calculators/investment" },
+];
+
+const testimonials = [
+  {
+    quote: "Varun helped us navigate the MLI Select program for our 16-unit development. His expertise saved us over $200,000 in insurance premiums. The level of knowledge and attention to detail was exceptional.",
+    initials: "JD", name: "John Davidson", location: "Developer, Surrey BC",
+  },
+  {
+    quote: "As a self-employed contractor, three banks turned me down before I found Kraft Mortgages. They got me approved in four days with a stated-income program I didn't even know existed. Genuine experts.",
+    initials: "MP", name: "Michael Patel", location: "Business Owner, Calgary AB",
+  },
+  {
+    quote: "We were relocating from Vancouver to Toronto and needed to coordinate a sale and purchase simultaneously across two provinces. Kraft handled everything seamlessly — the communication was incredible from start to finish.",
+    initials: "SR", name: "Sarah & Raj Mehta", location: "Homebuyers, Toronto ON",
+  },
+];
+
 export default function ModernHomepage() {
-  const [showLeadForm, setShowLeadForm] = useState(false);
-  const [selectedCalculator, setSelectedCalculator] = useState<string | null>(null);
-  const [leadData, setLeadData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    calculatorType: "",
-    loanAmount: "",
-    message: ""
-  });
-
-  // Counter animation states
-  const [yearsCount, setYearsCount] = useState(18);
-  const [clientsCount, setClientsCount] = useState(5000);
-  const [fundedCount, setFundedCount] = useState(2);
-  const statsRef = useRef<HTMLDivElement>(null);
-
-  // Animated counter
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            animateCounters();
-            observer.disconnect();
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-
-    if (statsRef.current) {
-      observer.observe(statsRef.current);
-    }
-
-    return () => observer.disconnect();
-  }, []);
-
-  const animateCounters = () => {
-    const duration = 2000;
-    const steps = 60;
-    const yearTarget = 18;
-    const clientTarget = 5000;
-    const fundedTarget = 2;
-
-    let currentStep = 0;
-    const interval = setInterval(() => {
-      currentStep++;
-      const progress = currentStep / steps;
-
-      setYearsCount(Math.floor(yearTarget * progress));
-      setClientsCount(Math.floor(clientTarget * progress));
-      setFundedCount(Number((fundedTarget * progress).toFixed(1)));
-
-      if (currentStep >= steps) {
-        clearInterval(interval);
-      }
-    }, duration / steps);
-  };
-
-  const handleLeadSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    try {
-      // Send to API
-      await fetch("/api/lead", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(leadData)
-      });
-
-      // If calculator selected, generate and email report
-      if (selectedCalculator) {
-        await fetch("/api/calculator-report", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            ...leadData,
-            calculatorType: selectedCalculator
-          })
-        });
-      }
-
-      alert("Thank you! We'll be in touch shortly. Check your email for your personalized report.");
-    } catch (error) {
-      console.error('Error submitting lead:', error);
-      alert("Thank you! We've received your information and will be in touch shortly.");
-    }
-
-    setShowLeadForm(false);
-    setSelectedCalculator(null);
-    setLeadData({ name: "", email: "", phone: "", calculatorType: "", loanAmount: "", message: "" });
-  };
-
-  const openCalculatorWithLead = (calcType: string) => {
-    setSelectedCalculator(calcType);
-    setShowLeadForm(true);
-    setLeadData({ ...leadData, calculatorType: calcType });
-  };
-
   return (
     <>
       <Navigation />
       <div className="min-h-screen relative overflow-hidden bg-transparent">
-
-
-        {/* Hero Section with Kokonut UI floating geometry background */}
+        {/* Hero Section with floating geometry background */}
         <HeroGeometric className="py-20 px-4 mt-16 z-10">
           <div className="max-w-6xl mx-auto">
             <div className="grid gap-12 lg:grid-cols-2 items-center">
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8 }}
-              >
+              <AnimatedSection variant="fade-up">
                 <div className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-semibold bg-gradient-to-r from-gold-500/20 via-amber-500/10 to-transparent text-gold-400 border border-gold-500/30 mb-6">
                   <span className="w-1.5 h-1.5 rounded-full bg-gold-400 animate-ping"></span>
                   Mortgage Experts • 18+ Years Combined Experience
                 </div>
                 <h1 className="text-4xl sm:text-6xl font-bold tracking-tight text-gray-100 mb-6 leading-[1.1]">
                   Expert Mortgage Solutions Across
-                  <span className="bg-gradient-to-r from-gold-400 via-amber-400 to-amber-600 bg-clip-text text-transparent block sm:inline"> BC, Alberta & Ontario</span>
+                  <span className="bg-gradient-to-r from-gold-400 via-amber-400 to-amber-600 bg-clip-text text-transparent block sm:inline"> BC, Alberta &amp; Ontario</span>
                 </h1>
                 <p className="text-xl text-gray-400 mb-8 leading-relaxed">
                   From first-time homebuyers to seasoned developers — navigate construction financing, MLI Select, self-employed mortgages, and private lending with a brokerage that has funded over $2 billion.
                 </p>
- 
-                <div ref={statsRef} className="grid grid-cols-3 gap-6 mb-8">
-                  <div className="text-center p-3 rounded-lg bg-gray-900/30 border border-gray-800/40 backdrop-blur-sm">
-                    <div className="text-3xl font-bold bg-gradient-to-br from-gold-300 to-amber-500 bg-clip-text text-transparent">{yearsCount}+</div>
-                    <div className="text-[10px] text-gray-500 uppercase tracking-widest mt-1">Years Experience</div>
-                  </div>
-                  <div className="text-center p-3 rounded-lg bg-gray-900/30 border border-gray-800/40 backdrop-blur-sm">
-                    <div className="text-3xl font-bold bg-gradient-to-br from-gold-300 to-amber-500 bg-clip-text text-transparent">{clientsCount.toLocaleString()}+</div>
-                    <div className="text-[10px] text-gray-500 uppercase tracking-widest mt-1">Happy Clients</div>
-                  </div>
-                  <div className="text-center p-3 rounded-lg bg-gray-900/30 border border-gray-800/40 backdrop-blur-sm">
-                    <div className="text-3xl font-bold bg-gradient-to-br from-gold-300 to-amber-500 bg-clip-text text-transparent">${fundedCount}B+</div>
-                    <div className="text-[10px] text-gray-500 uppercase tracking-widest mt-1">Funded</div>
-                  </div>
-                </div>
- 
-                <div className="flex flex-wrap gap-4">
-                  <a
-                    href="https://r.mtg-app.com/varun-chaudhry"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center px-6 py-3.5 bg-gradient-to-r from-gold-500 to-gold-600 text-gray-900 font-bold rounded-lg hover:from-gold-400 hover:to-gold-500 transition-all transform hover:scale-105 shadow-lg hover:shadow-[0_0_25px_rgba(212,175,55,0.4)]"
-                  >
-                    Start Application
-                  </a>
-                  <a
-                    href="tel:604-593-1550"
-                    className="inline-flex items-center justify-center px-6 py-3.5 border border-gold-500/40 text-gold-400 rounded-lg hover:bg-gold-500/10 transition-all hover:border-gold-400 hover:shadow-[0_0_15px_rgba(212,175,55,0.15)]"
-                  >
-                    Call 604-593-1550
-                  </a>
-                </div>
-              </motion.div>
- 
-              <motion.div
-                initial={{ opacity: 0, x: 30 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-                className="bg-gradient-to-br from-gray-800/40 via-gray-900/50 to-gray-800/40 backdrop-blur-md rounded-2xl shadow-2xl border border-gray-700/40 p-8 hover:border-gold-500/30 hover:shadow-[0_0_30px_rgba(212,175,55,0.12)] transition-all duration-500"
-              >
+
+                <StatsCounters />
+                <HeroCTAs />
+              </AnimatedSection>
+
+              <AnimatedSection variant="fade-up" delay={0.2}
+                className="bg-gradient-to-br from-gray-800/40 via-gray-900/50 to-gray-800/40 backdrop-blur-md rounded-2xl shadow-2xl border border-gray-700/40 p-8 hover:border-gold-500/30 hover:shadow-[0_0_30px_rgba(212,175,55,0.12)] transition-all duration-500">
                 <h2 className="text-xl font-bold text-gray-100 mb-6 bg-gradient-to-r from-gold-200 to-amber-400 bg-clip-text text-transparent">Why Industry Leaders Choose Us</h2>
                 <div className="space-y-6">
                   {[
-                    { icon: Building, title: 'Construction Specialists', desc: 'Progressive draws & builder expertise' },
-                    { icon: Home, title: 'MLI Select Masters', desc: 'CMHC multi-unit program experts' },
-                    { icon: Users, title: 'Self-Employed Solutions', desc: 'Alternative income verification' },
-                    { icon: Shield, title: 'Multi-Provincial', desc: 'Licensed in BC, AB & ON' }
+                    { icon: Building, title: "Construction Specialists", desc: "Progressive draws & builder expertise" },
+                    { icon: Home, title: "MLI Select Masters", desc: "CMHC multi-unit program experts" },
+                    { icon: Users, title: "Self-Employed Solutions", desc: "Alternative income verification" },
+                    { icon: Shield, title: "Multi-Provincial", desc: "Licensed in BC, AB & ON" },
                   ].map((item, i) => (
-                    <motion.div
-                      key={i}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.4 + i * 0.1 }}
-                      className="flex items-center gap-4 p-3 rounded-lg hover:bg-gray-700/30 transition-colors"
-                    >
+                    <div key={i} className="flex items-center gap-4 p-3 rounded-lg hover:bg-gray-700/30 transition-colors">
                       <div className="w-10 h-10 bg-gradient-to-br from-gold-500/20 to-amber-500/20 rounded-lg flex items-center justify-center border border-gold-500/30">
                         <item.icon className="w-5 h-5 text-gold-400" />
                       </div>
@@ -196,34 +123,29 @@ export default function ModernHomepage() {
                         <div className="font-semibold text-gray-100">{item.title}</div>
                         <div className="text-sm text-gray-400">{item.desc}</div>
                       </div>
-                    </motion.div>
+                    </div>
                   ))}
                 </div>
-              </motion.div>
+              </AnimatedSection>
             </div>
 
             {/* SEO Content Block */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="mt-16 max-w-4xl mx-auto"
-            >
+            <AnimatedSection variant="fade-up" className="mt-16 max-w-4xl mx-auto">
               <div className="bg-gray-800/30 backdrop-blur-sm rounded-xl border border-gray-700/30 p-8">
-                <h2 className="text-2xl font-bold text-gray-100 mb-4">Canada's Mortgage Landscape — Why an Experienced Broker Matters</h2>
+                <h2 className="text-2xl font-bold text-gray-100 mb-4">Canada&apos;s Mortgage Landscape — Why an Experienced Broker Matters</h2>
                 <div className="space-y-4 text-gray-400 leading-relaxed">
                   <p>
-                    Canada's mortgage market has shifted dramatically in recent years. Rising interest rates, tightened lending guidelines, and new stress-test requirements have made it harder than ever for Canadians to secure financing — especially if your situation doesn't fit a traditional bank's checklist. Whether you're self-employed, purchasing an investment property, building a custom home, or looking to refinance during a renewal, the right guidance can be the difference between approval and frustration.
+                    Canada&apos;s mortgage market has shifted dramatically in recent years. Rising interest rates, tightened lending guidelines, and new stress-test requirements have made it harder than ever for Canadians to secure financing — especially if your situation doesn&apos;t fit a traditional bank&apos;s checklist. Whether you&apos;re self-employed, purchasing an investment property, building a custom home, or looking to refinance during a renewal, the right guidance can be the difference between approval and frustration.
                   </p>
                   <p>
-                    That\'s where Kraft Mortgages comes in. Headquartered in Surrey, BC, and licensed across <strong className="text-gray-200">British Columbia, Alberta, and Ontario</strong>, we bring over 18 years of combined frontline experience to every file. Our team specializes in the mortgage scenarios that other brokers turn away — including MLI Select multi-unit financing, construction draw management, stated-income programs for entrepreneurs, equity lending, and private mortgage solutions. With access to more than 30 lenders, we shop the market on your behalf so you don\'t have to.
+                    That&apos;s where Kraft Mortgages comes in. Headquartered in Surrey, BC, and licensed across <strong className="text-gray-200">British Columbia, Alberta, and Ontario</strong>, we bring over 18 years of combined frontline experience to every file. Our team specializes in the mortgage scenarios that other brokers turn away — including MLI Select multi-unit financing, construction draw management, stated-income programs for entrepreneurs, equity lending, and private mortgage solutions. With access to more than 30 lenders, we shop the market on your behalf so you don&apos;t have to.
                   </p>
                   <p>
-                    From the Lower Mainland and the Okanagan to Calgary, Edmonton, Toronto, and Ottawa — Kraft Mortgages has helped over 5,000 clients and funded more than $2 billion in mortgages. Whether you're buying your first home, expanding your portfolio, or restructuring your debt, we deliver personalized strategies backed by decades of lender relationships and deep product knowledge.
+                    From the Lower Mainland and the Okanagan to Calgary, Edmonton, Toronto, and Ottawa — Kraft Mortgages has helped over 5,000 clients and funded more than $2 billion in mortgages. Whether you&apos;re buying your first home, expanding your portfolio, or restructuring your debt, we deliver personalized strategies backed by decades of lender relationships and deep product knowledge.
                   </p>
                 </div>
               </div>
-            </motion.div>
+            </AnimatedSection>
           </div>
         </HeroGeometric>
 
@@ -232,38 +154,27 @@ export default function ModernHomepage() {
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-16">
               <h2 className="text-4xl sm:text-5xl font-bold tracking-tight mb-4">
-                <span className="bg-gradient-to-r from-gold-400 to-amber-500 bg-clip-text text-transparent">
-                  Why Choose Kraft Mortgages
-                </span>
+                <span className="bg-gradient-to-r from-gold-400 to-amber-500 bg-clip-text text-transparent">Why Choose Kraft Mortgages</span>
               </h2>
-              <p className="text-xl text-gray-400 max-w-3xl mx-auto">
-                What sets us apart from every other mortgage brokerage in Canada
-              </p>
+              <p className="text-xl text-gray-400 max-w-3xl mx-auto">What sets us apart from every other mortgage brokerage in Canada</p>
             </div>
-
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {[
-                { icon: TrendingUp, title: '18+ Years Combined Experience', desc: 'Over 18 years of combined experience in the mortgage industry with more than $2 billion in funded deals. Deep lender relationships and institutional knowledge that translates into better terms for every client.' },
-                { icon: Shield, title: 'Licensed in 3 Provinces', desc: 'Fully licensed to operate in British Columbia, Alberta, and Ontario. Whether you are buying in Vancouver, investing in Calgary, or relocating to Toronto — we have you covered coast to coast.' },
-                { icon: Users, title: 'Access to 30+ Lenders', desc: 'We work with major banks, credit unions, trust companies, and private lenders. That means more options, better rates, and solutions tailored to your unique financial situation.' },
-                { icon: Building, title: 'Complex Mortgage Specialists', desc: 'MLI Select multi-unit financing, construction draws, self-employed stated income, equity lending, and private mortgages — these are not side services for us. They are our core expertise.' },
-                { icon: Calculator, title: 'Interactive Calculators & Tools', desc: 'Plan your next move with our suite of professional-grade mortgage calculators. Get personalized payment estimates, affordability analysis, and MLI Select projections delivered to your inbox.' },
-                { icon: CheckCircle, title: 'Free Consultations, Same-Day Pre-Approvals', desc: 'No fees, no obligations. Speak with a licensed broker who can run numbers, answer questions, and deliver a pre-approval letter — often within the same day.' }
+                { icon: TrendingUp, title: "18+ Years Combined Experience", desc: "Over 18 years of combined experience in the mortgage industry with more than $2 billion in funded deals. Deep lender relationships and institutional knowledge that translates into better terms for every client." },
+                { icon: Shield, title: "Licensed in 3 Provinces", desc: "Fully licensed to operate in British Columbia, Alberta, and Ontario. Whether you are buying in Vancouver, investing in Calgary, or relocating to Toronto — we have you covered coast to coast." },
+                { icon: Users, title: "Access to 30+ Lenders", desc: "We work with major banks, credit unions, trust companies, and private lenders. That means more options, better rates, and solutions tailored to your unique financial situation." },
+                { icon: Building, title: "Complex Mortgage Specialists", desc: "MLI Select multi-unit financing, construction draws, self-employed stated income, equity lending, and private mortgages — these are not side services for us. They are our core expertise." },
+                { icon: Calculator, title: "Interactive Calculators & Tools", desc: "Plan your next move with our suite of professional-grade mortgage calculators. Get personalized payment estimates, affordability analysis, and MLI Select projections delivered to your inbox." },
+                { icon: CheckCircle, title: "Free Consultations, Same-Day Pre-Approvals", desc: "No fees, no obligations. Speak with a licensed broker who can run numbers, answer questions, and deliver a pre-approval letter — often within the same day." },
               ].map((item, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.1 }}
-                  viewport={{ once: true }}
-                  className="bg-gray-800/50 backdrop-blur-sm rounded-xl shadow-2xl border border-gray-700/50 p-6 transition-all hover:shadow-gold-500/20 hover:shadow-2xl hover:-translate-y-1 group"
-                >
+                <AnimatedSection key={i} variant="fade-up" delay={i * 0.1}
+                  className="bg-gray-800/50 backdrop-blur-sm rounded-xl shadow-2xl border border-gray-700/50 p-6 transition-all hover:shadow-gold-500/20 hover:shadow-2xl hover:-translate-y-1 group">
                   <div className="w-12 h-12 bg-gradient-to-br from-gold-500/20 to-amber-500/20 rounded-xl flex items-center justify-center border border-gold-500/30 mb-4">
                     <item.icon className="w-6 h-6 text-gold-400" />
                   </div>
                   <h3 className="text-xl font-semibold text-gray-100 mb-3">{item.title}</h3>
                   <p className="text-gray-400 leading-relaxed">{item.desc}</p>
-                </motion.div>
+                </AnimatedSection>
               ))}
             </div>
           </div>
@@ -274,42 +185,23 @@ export default function ModernHomepage() {
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-16">
               <h2 className="text-4xl sm:text-5xl font-bold tracking-tight mb-4">
-                <span className="bg-gradient-to-r from-gold-400 to-amber-500 bg-clip-text text-transparent">
-                  Specialized Mortgage Solutions
-                </span>
+                <span className="bg-gradient-to-r from-gold-400 to-amber-500 bg-clip-text text-transparent">Specialized Mortgage Solutions</span>
               </h2>
-              <p className="text-xl text-gray-400 max-w-3xl mx-auto">
-                Comprehensive mortgage services designed for every stage of your property journey
-              </p>
+              <p className="text-xl text-gray-400 max-w-3xl mx-auto">Comprehensive mortgage services designed for every stage of your property journey</p>
             </div>
-
             <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-              {[
-                { icon: Building, title: 'Construction Financing', desc: 'Building a new home or developing a multi-unit project? We structure progressive draw schedules, manage holdback requirements, and optimize cash flow so your construction stays on track. Our team has decades of experience working with builders across BC, Alberta, and Ontario.', href: '/construction' },
-                { icon: Home, title: 'MLI Select Program', desc: 'CMHC\'s MLI Select program offers significant insurance premium savings for qualifying multi-unit rental properties. Our team understands the eligibility criteria, energy-efficiency requirements, and application process inside out — saving developers thousands per unit.', href: '/mli-select' },
-                { icon: Users, title: 'Self-Employed Solutions', desc: 'Traditional banks often struggle to qualify entrepreneurs, freelancers, and small business owners. We offer stated-income and alternative-verification programs that recognize the full picture of your earnings — not just your T4.', href: '/calculators/self-employed' },
-                { icon: Shield, title: 'Purchase Financing', desc: 'Whether it\'s your first home, an investment property, or a vacation retreat, we match you with the right lender and the right product. We handle single-family, condo, duplex, and multi-unit purchases across all three provinces.', href: '/calculators/affordability' },
-                { icon: DollarSign, title: 'Refinancing & Equity', desc: 'Your home equity is a powerful financial tool. We help clients consolidate high-interest debt, fund renovations, access cash for investments, or simply secure a better rate at renewal. Strategic refinancing can save you tens of thousands over your mortgage term.', href: '/equity-lending' },
-                { icon: TrendingUp, title: 'Private Lending', desc: 'When timeline, credit, or property type falls outside conventional guidelines, private lending bridges the gap. We work with a vetted network of private lenders to deliver fast approvals — often within 24 to 48 hours — for short-term and alternative financing needs.', href: '/private-lending' },
-                { icon: Briefcase, title: 'Business Funding', desc: 'Secure working capital, lines of credit, or equipment financing to grow operations. Submit a quick inquiry or schedule a call with our business funding specialists.', href: '/business-funding' }
-              ].map((service, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.1 }}
-                  viewport={{ once: true }}
-                  className="bg-gray-800/50 backdrop-blur-sm rounded-xl shadow-2xl border border-gray-700/50 p-6 transition-all hover:shadow-gold-500/20 hover:shadow-2xl hover:-translate-y-1 group"
-                >
+              {services.map((service, i) => (
+                <AnimatedSection key={i} variant="fade-up" delay={i * 0.1}
+                  className="bg-gray-800/50 backdrop-blur-sm rounded-xl shadow-2xl border border-gray-700/50 p-6 transition-all hover:shadow-gold-500/20 hover:shadow-2xl hover:-translate-y-1 group">
                   <div className="w-12 h-12 bg-gradient-to-br from-gold-500/20 to-amber-500/20 rounded-xl flex items-center justify-center border border-gold-500/30 mb-4">
                     <service.icon className="w-6 h-6 text-gold-400" />
                   </div>
                   <h3 className="text-xl font-semibold text-gray-100 mb-3">{service.title}</h3>
                   <p className="text-gray-400 leading-relaxed mb-4">{service.desc}</p>
-                  <Link href={service.href as any} className="inline-flex items-center text-gold-400 hover:text-gold-300 transition-colors text-sm font-medium">
+                  <Link href={service.href} className="inline-flex items-center text-gold-400 hover:text-gold-300 transition-colors text-sm font-medium">
                     Learn More <ArrowRight className="w-4 h-4 ml-1" />
                   </Link>
-                </motion.div>
+                </AnimatedSection>
               ))}
             </div>
           </div>
@@ -320,38 +212,14 @@ export default function ModernHomepage() {
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-16">
               <h2 className="text-4xl sm:text-5xl font-bold tracking-tight mb-4">
-                <span className="bg-gradient-to-r from-gold-400 to-amber-500 bg-clip-text text-transparent">
-                  Cities We Serve
-                </span>
+                <span className="bg-gradient-to-r from-gold-400 to-amber-500 bg-clip-text text-transparent">Cities We Serve</span>
               </h2>
-              <p className="text-xl text-gray-400 max-w-3xl mx-auto">
-                Local expertise across British Columbia, Alberta, and Ontario
-              </p>
+              <p className="text-xl text-gray-400 max-w-3xl mx-auto">Local expertise across British Columbia, Alberta, and Ontario</p>
             </div>
-
             <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-              {[
-                { city: 'Surrey', province: 'BC', desc: 'Our headquarters and home base — serving Surrey and the broader Lower Mainland since 2002.', href: '/mortgage-broker-surrey' },
-                { city: 'Vancouver', province: 'BC', desc: 'Canada\'s most competitive market. We help buyers navigate bidding wars and complex financing.', href: '/mortgage-broker-vancouver' },
-                { city: 'Burnaby', province: 'BC', desc: 'A growing hub for families and investors — from Metrotown condos to Brentwood developments.', href: '/mortgage-broker-burnaby' },
-                { city: 'Richmond', province: 'BC', desc: 'Strong rental and investment market. We secure financing for condos, townhomes, and multi-unit builds.', href: '/mortgage-broker-richmond' },
-                { city: 'Kelowna', province: 'BC', desc: 'The Okanagan\'s booming real estate market demands experienced brokers who understand local dynamics.', href: '/mortgage-broker-kelowna' },
-                { city: 'Kamloops', province: 'BC', desc: 'Affordable entry points and growing demand — ideal for first-time buyers and investors alike.', href: '/mortgage-broker-kamloops' },
-                { city: 'Abbotsford', province: 'BC', desc: 'The Fraser Valley\'s largest city offers a mix of suburban living and agricultural investment opportunities.', href: '/mortgage-broker-abbotsford' },
-                { city: 'Victoria', province: 'BC', desc: 'Vancouver Island\'s capital city with unique heritage properties and a tight rental market.', href: '/mortgage-broker-victoria' },
-                { city: 'Calgary', province: 'AB', desc: 'Alberta\'s economic engine — from downtown condos to sprawling suburban developments.', href: '/mortgage-broker-calgary' },
-                { city: 'Edmonton', province: 'AB', desc: 'Affordable housing, strong rental yields, and one of Canada\'s most investor-friendly markets.', href: '/mortgage-broker-edmonton' },
-                { city: 'Toronto', province: 'ON', desc: 'Canada\'s largest real estate market. We help clients compete with the right financing strategy.', href: '/mortgage-broker-toronto' },
-                { city: 'Ottawa', province: 'ON', desc: 'Stable government-driven market with excellent opportunities for first-time buyers and investors.', href: '/mortgage-broker-ottawa' }
-              ].map((item, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.05 }}
-                  viewport={{ once: true }}
-                >
-                  <Link href={item.href as any} className="group block h-full">
+              {cities.map((item, i) => (
+                <AnimatedSection key={i} variant="fade-up" delay={i * 0.05}>
+                  <Link href={item.href} className="group block h-full">
                     <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl shadow-2xl border border-gray-700/50 p-5 transition-all hover:shadow-gold-500/20 hover:shadow-2xl hover:-translate-y-1 h-full">
                       <div className="flex items-center gap-2 mb-2">
                         <MapPin className="w-4 h-4 text-gold-400" />
@@ -361,7 +229,7 @@ export default function ModernHomepage() {
                       <p className="text-gray-400 text-sm leading-relaxed">{item.desc}</p>
                     </div>
                   </Link>
-                </motion.div>
+                </AnimatedSection>
               ))}
             </div>
           </div>
@@ -372,36 +240,20 @@ export default function ModernHomepage() {
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-16">
               <h2 className="text-4xl sm:text-5xl font-bold tracking-tight mb-4">
-                <span className="bg-gradient-to-r from-gold-400 to-amber-500 bg-clip-text text-transparent">
-                  How It Works
-                </span>
+                <span className="bg-gradient-to-r from-gold-400 to-amber-500 bg-clip-text text-transparent">How It Works</span>
               </h2>
-              <p className="text-xl text-gray-400 max-w-3xl mx-auto">
-                From first conversation to closing — a straightforward process
-              </p>
+              <p className="text-xl text-gray-400 max-w-3xl mx-auto">From first conversation to closing — a straightforward process</p>
             </div>
-
             <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-              {[
-                { step: '01', title: 'Free Consultation', desc: 'Tell us about your goals, income situation, and timeline. We assess your options and outline a strategy — no fees, no obligations.' },
-                { step: '02', title: 'Pre-Approval', desc: 'We pull your credit, verify your documents, and shop across 30+ lenders to secure a written pre-approval — often the same day.' },
-                { step: '03', title: 'Lender Matching', desc: 'Once you find your property, we negotiate rate, terms, and conditions with the best-fit lender. We handle the paperwork so you don\'t have to.' },
-                { step: '04', title: 'Closing', desc: 'We coordinate with your lawyer, lender, and realtor to ensure a smooth closing. You get the keys — we make sure every detail is handled.' }
-              ].map((item, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.1 }}
-                  viewport={{ once: true }}
-                  className="bg-gray-800/50 backdrop-blur-sm rounded-xl shadow-2xl border border-gray-700/50 p-6 transition-all hover:shadow-gold-500/20 hover:shadow-2xl hover:-translate-y-1 text-center"
-                >
+              {steps.map((item, i) => (
+                <AnimatedSection key={i} variant="fade-up" delay={i * 0.1}
+                  className="bg-gray-800/50 backdrop-blur-sm rounded-xl shadow-2xl border border-gray-700/50 p-6 transition-all hover:shadow-gold-500/20 hover:shadow-2xl hover:-translate-y-1 text-center">
                   <div className="w-14 h-14 bg-gradient-to-br from-gold-500/20 to-amber-500/20 rounded-full flex items-center justify-center border border-gold-500/30 mx-auto mb-4">
                     <span className="text-gold-400 font-bold text-lg">{item.step}</span>
                   </div>
                   <h3 className="text-xl font-semibold text-gray-100 mb-3">{item.title}</h3>
                   <p className="text-gray-400 text-sm leading-relaxed">{item.desc}</p>
-                </motion.div>
+                </AnimatedSection>
               ))}
             </div>
           </div>
@@ -412,37 +264,19 @@ export default function ModernHomepage() {
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-16">
               <h2 className="text-4xl sm:text-5xl font-bold tracking-tight mb-4">
-                <span className="bg-gradient-to-r from-gold-400 to-amber-500 bg-clip-text text-transparent">
-                  Advanced Mortgage Calculators
-                </span>
+                <span className="bg-gradient-to-r from-gold-400 to-amber-500 bg-clip-text text-transparent">Advanced Mortgage Calculators</span>
               </h2>
-              <p className="text-xl text-gray-400 max-w-3xl mx-auto mb-8">
-                Professional-grade calculators with personalized reports delivered to your inbox
-              </p>
-              <Link
-                href="/mli-select/calculators"
-                className="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-gold-500 to-gold-600 text-gray-900 font-semibold rounded-lg hover:from-gold-400 hover:to-gold-500 transition-all transform hover:scale-105"
-              >
+              <p className="text-xl text-gray-400 max-w-3xl mx-auto mb-8">Professional-grade calculators with personalized reports delivered to your inbox</p>
+              <Link href="/mli-select/calculators"
+                className="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-gold-500 to-gold-600 text-gray-900 font-semibold rounded-lg hover:from-gold-400 hover:to-gold-500 transition-all transform hover:scale-105">
                 <Calculator className="w-5 h-5 mr-2" />
                 View All MLI Select Calculators
               </Link>
             </div>
-
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-              {[
-                { icon: Calculator, title: 'Payment Calculator', desc: 'Explore scenarios & amortization', type: 'payment', href: '/calculators/payment' },
-                { icon: Home, title: 'Affordability Analysis', desc: 'True purchasing power & stress test', type: 'affordability', href: '/calculators/affordability' },
-                { icon: Building, title: 'MLI Select Suite', desc: 'Complete CMHC calculator suite', type: 'mli', href: '/mli-select/calculators' },
-                { icon: TrendingUp, title: 'Investment ROI', desc: 'Cap rates & leverage strategies', type: 'investment', href: '/calculators/investment' }
-              ].map((calc, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: i * 0.1 }}
-                  viewport={{ once: true }}
-                >
-                  <Link href={calc.href as any} className="group">
+              {calculators.map((calc, i) => (
+                <AnimatedSection key={i} variant="scale" delay={i * 0.1}>
+                  <Link href={calc.href} className="group">
                     <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl shadow-2xl border border-gray-700/50 p-6 transition-all hover:shadow-gold-500/20 hover:shadow-2xl hover:-translate-y-1 text-center h-full">
                       <div className="w-12 h-12 bg-gradient-to-br from-gold-500/20 to-amber-500/20 rounded-xl flex items-center justify-center border border-gold-500/30 mx-auto mb-4">
                         <calc.icon className="w-6 h-6 text-gold-400" />
@@ -451,7 +285,7 @@ export default function ModernHomepage() {
                       <p className="text-gray-400 text-sm">{calc.desc}</p>
                     </div>
                   </Link>
-                </motion.div>
+                </AnimatedSection>
               ))}
             </div>
           </div>
@@ -462,48 +296,16 @@ export default function ModernHomepage() {
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-16">
               <h2 className="text-4xl sm:text-5xl font-bold tracking-tight mb-4">
-                <span className="bg-gradient-to-r from-gold-400 to-amber-500 bg-clip-text text-transparent">
-                  Client Success Stories
-                </span>
+                <span className="bg-gradient-to-r from-gold-400 to-amber-500 bg-clip-text text-transparent">Client Success Stories</span>
               </h2>
-              <p className="text-xl text-gray-400 max-w-3xl mx-auto">
-                Real results for complex mortgage challenges across Canada
-              </p>
+              <p className="text-xl text-gray-400 max-w-3xl mx-auto">Real results for complex mortgage challenges across Canada</p>
             </div>
-
             <div className="grid gap-8 md:grid-cols-3">
-              {[
-                {
-                  quote: "Varun helped us navigate the MLI Select program for our 16-unit development. His expertise saved us over $200,000 in insurance premiums. The level of knowledge and attention to detail was exceptional.",
-                  initials: "JD",
-                  name: "John Davidson",
-                  location: "Developer, Surrey BC"
-                },
-                {
-                  quote: "As a self-employed contractor, three banks turned me down before I found Kraft Mortgages. They got me approved in four days with a stated-income program I didn't even know existed. Genuine experts.",
-                  initials: "MP",
-                  name: "Michael Patel",
-                  location: "Business Owner, Calgary AB"
-                },
-                {
-                  quote: "We were relocating from Vancouver to Toronto and needed to coordinate a sale and purchase simultaneously across two provinces. Kraft handled everything seamlessly — the communication was incredible from start to finish.",
-                  initials: "SR",
-                  name: "Sarah & Raj Mehta",
-                  location: "Homebuyers, Toronto ON"
-                }
-              ].map((testimonial, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.15 }}
-                  viewport={{ once: true }}
-                  className="bg-gray-800/50 backdrop-blur-sm rounded-xl shadow-2xl border border-gray-700/50 p-8 relative"
-                >
+              {testimonials.map((testimonial, i) => (
+                <AnimatedSection key={i} variant="fade-up" delay={i * 0.15}
+                  className="bg-gray-800/50 backdrop-blur-sm rounded-xl shadow-2xl border border-gray-700/50 p-8 relative">
                   <div className="absolute top-4 left-6 text-6xl text-gold-400/20 font-serif">&ldquo;</div>
-                  <blockquote className="text-gray-200 italic mb-6 relative z-10 pl-8 leading-relaxed">
-                    {testimonial.quote}
-                  </blockquote>
+                  <blockquote className="text-gray-200 italic mb-6 relative z-10 pl-8 leading-relaxed">{testimonial.quote}</blockquote>
                   <div className="flex items-center gap-4 relative z-10">
                     <div className="w-12 h-12 bg-gradient-to-br from-gold-500/20 to-amber-500/20 rounded-full flex items-center justify-center border border-gold-500/30">
                       <span className="text-gold-400 font-bold">{testimonial.initials}</span>
@@ -513,7 +315,7 @@ export default function ModernHomepage() {
                       <div className="text-sm text-gray-400">{testimonial.location}</div>
                     </div>
                   </div>
-                </motion.div>
+                </AnimatedSection>
               ))}
             </div>
           </div>
@@ -522,27 +324,19 @@ export default function ModernHomepage() {
         {/* CTA Section */}
         <section className="py-20 px-4 bg-gradient-to-br from-gold-900/20 to-amber-900/20 border-t border-gold-500/20">
           <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-4xl sm:text-5xl font-bold tracking-tight mb-6 text-gray-100">
-              Ready to Get Started?
-            </h2>
+            <h2 className="text-4xl sm:text-5xl font-bold tracking-tight mb-6 text-gray-100">Ready to Get Started?</h2>
             <p className="text-xl text-gray-400 mb-8 max-w-2xl mx-auto">
               Whether you are buying your first home in Vancouver, investing in Calgary, or building in Toronto — our team is ready to help. Free consultations, same-day pre-approvals, and access to 30+ lenders across BC, Alberta, and Ontario.
             </p>
             <div className="flex flex-wrap gap-4 justify-center">
-              <a
-                href="https://r.mtg-app.com/varun-chaudhry"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-gold-500 to-gold-600 text-gray-900 font-semibold rounded-lg hover:from-gold-400 hover:to-gold-500 transition-all transform hover:scale-105 text-lg"
-              >
+              <a href="https://r.mtg-app.com/varun-chaudhry" target="_blank" rel="noopener noreferrer"
+                className="inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-gold-500 to-gold-600 text-gray-900 font-semibold rounded-lg hover:from-gold-400 hover:to-gold-500 transition-all transform hover:scale-105 text-lg">
                 Start Application
               </a>
-              <a
-                href="tel:604-593-1550"
-                className="inline-flex items-center justify-center px-8 py-4 border-2 border-gold-500/50 text-gold-400 rounded-lg hover:bg-gold-500/10 transition-colors text-lg font-semibold"
-              >
+              <a href={`tel:${BUSINESS.telephoneDisplay}`}
+                className="inline-flex items-center justify-center px-8 py-4 border-2 border-gold-500/50 text-gold-400 rounded-lg hover:bg-gold-500/10 transition-colors text-lg font-semibold">
                 <Phone className="w-5 h-5 mr-2" />
-                Call 604-593-1550
+                Call {BUSINESS.telephoneDisplay}
               </a>
             </div>
           </div>
@@ -553,11 +347,8 @@ export default function ModernHomepage() {
           <div className="max-w-6xl mx-auto grid gap-8 md:grid-cols-2 lg:grid-cols-4">
             <div>
               <h3 className="text-xl font-semibold text-gold-400 mb-4">Kraft Mortgages</h3>
-              <p className="text-gray-400 text-sm leading-relaxed">
-                18+ Years Combined Experience in complex mortgage solutions across British Columbia, Alberta, and Ontario.
-              </p>
+              <p className="text-gray-400 text-sm leading-relaxed">18+ Years Combined Experience in complex mortgage solutions across British Columbia, Alberta, and Ontario.</p>
             </div>
-
             <div>
               <h3 className="text-lg font-semibold text-gold-400 mb-4">Quick Links</h3>
               <div className="space-y-2">
@@ -567,29 +358,15 @@ export default function ModernHomepage() {
                 <Link href="/mli-select" className="block text-gray-400 hover:text-gold-400 transition-colors text-sm">MLI Select</Link>
               </div>
             </div>
-
             <div>
               <h3 className="text-lg font-semibold text-gold-400 mb-4">Contact</h3>
               <div className="space-y-2 text-gray-400 text-sm">
-                <div className="flex items-center gap-2">
-                  <Phone className="w-4 h-4" />
-                  <span>604-593-1550</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Phone className="w-4 h-4" />
-                  <span>604-727-1579</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Mail className="w-4 h-4" />
-                  <span>varun@kraftmortgages.ca</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <MapPin className="w-4 h-4" />
-                  <span>#301 1688 152nd Street<br />Surrey, BC V4A 4N2</span>
-                </div>
+                <div className="flex items-center gap-2"><Phone className="w-4 h-4" /><span>{BUSINESS.telephoneDisplay}</span></div>
+                <div className="flex items-center gap-2"><Phone className="w-4 h-4" /><span>{BUSINESS.secondaryPhoneDisplay}</span></div>
+                <div className="flex items-center gap-2"><Mail className="w-4 h-4" /><span>{BUSINESS.email}</span></div>
+                <div className="flex items-center gap-2"><MapPin className="w-4 h-4" /><span>{BUSINESS.address.streetAddress}<br />{BUSINESS.address.addressLocality}, {BUSINESS.address.addressRegion} {BUSINESS.address.postalCode}</span></div>
               </div>
             </div>
-
             <div>
               <h3 className="text-lg font-semibold text-gold-400 mb-4">Licensed In</h3>
               <div className="space-y-2 text-gray-400 text-sm">
@@ -603,93 +380,6 @@ export default function ModernHomepage() {
             </div>
           </div>
         </footer>
-
-        {/* Lead Capture Modal */}
-        <AnimatePresence>
-          {showLeadForm && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-              onClick={() => setShowLeadForm(false)}
-            >
-              <motion.div
-                initial={{ scale: 0.9, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.9, opacity: 0 }}
-                onClick={(e) => e.stopPropagation()}
-                className="max-w-md w-full"
-              >
-                <BorderRotate
-                  animationSpeed={4}
-                  borderRadius={16}
-                  borderWidth={2}
-                  backgroundColor="#1f2937"
-                  className="w-full p-8 shadow-2xl backdrop-blur-xl"
-                  gradientColors={{
-                    primary: '#584827',
-                    secondary: '#c7a03c',
-                    accent: '#f9de90'
-                  }}
-                >
-                  <h3 className="text-xl font-bold text-gray-100 mb-6">
-                    {selectedCalculator ? 'Get Your Personalized Report' : 'Get Free Mortgage Analysis'}
-                  </h3>
-                  <form onSubmit={handleLeadSubmit} className="space-y-4">
-                    <input
-                      type="text"
-                      placeholder="Full Name"
-                      required
-                      className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg text-gray-100 placeholder-gray-400 focus:ring-2 focus:ring-gold-500/50 focus:border-gold-500 transition-all"
-                      value={leadData.name}
-                      onChange={(e) => setLeadData({ ...leadData, name: e.target.value })}
-                    />
-                    <input
-                      type="email"
-                      placeholder="Email Address"
-                      required
-                      className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg text-gray-100 placeholder-gray-400 focus:ring-2 focus:ring-gold-500/50 focus:border-gold-500 transition-all"
-                      value={leadData.email}
-                      onChange={(e) => setLeadData({ ...leadData, email: e.target.value })}
-                    />
-                    <input
-                      type="tel"
-                      placeholder="Phone Number"
-                      required
-                      className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg text-gray-100 placeholder-gray-400 focus:ring-2 focus:ring-gold-500/50 focus:border-gold-500 transition-all"
-                      value={leadData.phone}
-                      onChange={(e) => setLeadData({ ...leadData, phone: e.target.value })}
-                    />
-                    <input
-                      type="text"
-                      placeholder="Loan Amount Needed (e.g. $500,000)"
-                      className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg text-gray-100 placeholder-gray-400 focus:ring-2 focus:ring-gold-500/50 focus:border-gold-500 transition-all"
-                      value={leadData.loanAmount}
-                      onChange={(e) => setLeadData({ ...leadData, loanAmount: e.target.value })}
-                    />
-                    <textarea
-                      placeholder="Tell us about your mortgage needs..."
-                      rows={3}
-                      className="w-full px-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg text-gray-100 placeholder-gray-400 focus:ring-2 focus:ring-gold-500/50 focus:border-gold-500 transition-all resize-none"
-                      value={leadData.message}
-                      onChange={(e) => setLeadData({ ...leadData, message: e.target.value })}
-                    />
-                    <button
-                      type="submit"
-                      className="w-full py-3 px-6 bg-gradient-to-r from-gold-500 to-gold-600 text-gray-900 font-semibold rounded-lg hover:from-gold-400 hover:to-gold-500 transition-all transform hover:scale-105 shadow-lg"
-                    >
-                      {selectedCalculator ? 'Get Calculator Report' : 'Get Free Analysis'}
-                    </button>
-                  </form>
-                  <p className="text-xs text-gray-400 mt-4 text-center">
-                    Your information is secure and will never be shared
-                  </p>
-                </BorderRotate>
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
       </div>
     </>
   );
