@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import { CityServiceJsonLd } from '@/components/SEO/CityServiceJsonLd';
 
 export const metadata: Metadata = {
   title: 'Edmonton Mortgage Broker | Lowest Rates | Kraft Mortgages',
@@ -16,30 +17,9 @@ export const metadata: Metadata = {
 };
 
 export default function EdmontonLayout({ children }: { children: React.ReactNode }) {
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "FinancialService",
-    name: "Kraft Mortgages",
-    description: "Trusted Edmonton mortgage broker with low interest rates",
-    url: "https://www.kraftmortgages.ca/mortgage-broker-edmonton",
-    areaServed: {
-      "@type": "City",
-      name: "Edmonton",
-      containedInPlace: {
-        "@type": "Province",
-        name: "Alberta"
-      }
-    },
-    serviceType: "Mortgage Brokerage",
-    knowsAbout: ["Residential Mortgages", "Rental Cashflow Analysis", "First-Time Home Buyer Programs", "Pre-Approvals", "Refinancing"]
-  };
-
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <CityServiceJsonLd cityName="Edmonton" provinceName="AB" description="Licensed mortgage broker serving Edmonton, AB. Residential, construction, self-employed, MLI Select, and private lending solutions." />
       {children}
     </>
   );
