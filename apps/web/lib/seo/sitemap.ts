@@ -41,6 +41,11 @@ const SERVICE_HUBS = [
     priority: 0.9,
     changeFrequency: 'weekly' as const,
   },
+  {
+    url: '/business-funding',
+    priority: 0.85,
+    changeFrequency: 'weekly' as const,
+  },
 ];
 
 // Main calculators index
@@ -107,6 +112,76 @@ const CORE_CALCULATORS = [
   {
     url: '/calculators/land-transfer-tax',
     priority: 0.85,
+    changeFrequency: 'weekly' as const,
+  },
+  {
+    url: '/calculators/a-vs-equity',
+    priority: 0.85,
+    changeFrequency: 'weekly' as const,
+  },
+  {
+    url: '/calculators/b-vs-equity',
+    priority: 0.85,
+    changeFrequency: 'weekly' as const,
+  },
+  {
+    url: '/calculators/self-employed-a-vs-b',
+    priority: 0.85,
+    changeFrequency: 'weekly' as const,
+  },
+  {
+    url: '/calculators/refinance-vs-heloc-vs-second',
+    priority: 0.85,
+    changeFrequency: 'weekly' as const,
+  },
+  {
+    url: '/calculators/rent-vs-buy',
+    priority: 0.8,
+    changeFrequency: 'weekly' as const,
+  },
+  {
+    url: '/calculators/rate-comparison',
+    priority: 0.8,
+    changeFrequency: 'weekly' as const,
+  },
+  {
+    url: '/calculators/extra-payments',
+    priority: 0.8,
+    changeFrequency: 'weekly' as const,
+  },
+  {
+    url: '/calculators/debt-service-ratio',
+    priority: 0.8,
+    changeFrequency: 'weekly' as const,
+  },
+  {
+    url: '/calculators/down-payment',
+    priority: 0.8,
+    changeFrequency: 'weekly' as const,
+  },
+  {
+    url: '/calculators/cmhc-insurance',
+    priority: 0.8,
+    changeFrequency: 'weekly' as const,
+  },
+  {
+    url: '/calculators/required-income',
+    priority: 0.8,
+    changeFrequency: 'weekly' as const,
+  },
+  {
+    url: '/calculators/amortization',
+    priority: 0.8,
+    changeFrequency: 'weekly' as const,
+  },
+  {
+    url: '/calculators/bc-speculation-tax',
+    priority: 0.7,
+    changeFrequency: 'monthly' as const,
+  },
+  {
+    url: '/calculators/stress-test',
+    priority: 0.8,
     changeFrequency: 'weekly' as const,
   },
 ];
@@ -206,6 +281,11 @@ const CONSTRUCTION_CALCULATORS = [
     priority: 0.8,
     changeFrequency: 'weekly' as const,
   },
+  {
+    url: '/construction/calculators/builder-program',
+    priority: 0.8,
+    changeFrequency: 'weekly' as const,
+  },
 ];
 
 // Commercial calculators
@@ -250,83 +330,14 @@ const PRIVATE_LENDING_CALCULATORS = [
   },
 ];
 
-// Location pages
+// Location pages — all 19 served cities. Must stay in sync with the static
+// mortgage-broker-{city} routes under app/(site).
 const LOCATION_PAGES = [
-  {
-    url: '/mortgage-broker-surrey',
-    priority: 0.7,
-    changeFrequency: 'monthly' as const,
-  },
-  {
-    url: '/mortgage-broker-kelowna',
-    priority: 0.7,
-    changeFrequency: 'monthly' as const,
-  },
-  {
-    url: '/mortgage-broker-kamloops',
-    priority: 0.7,
-    changeFrequency: 'monthly' as const,
-  },
-  {
-    url: '/mortgage-broker-abbotsford',
-    priority: 0.7,
-    changeFrequency: 'monthly' as const,
-  },
-  {
-    url: '/mortgage-broker-nanaimo',
-    priority: 0.7,
-    changeFrequency: 'monthly' as const,
-  },
-  {
-    url: '/mortgage-broker-coquitlam',
-    priority: 0.7,
-    changeFrequency: 'monthly' as const,
-  },
-  {
-    url: '/mortgage-broker-victoria',
-    priority: 0.7,
-    changeFrequency: 'monthly' as const,
-  },
-  {
-    url: '/mortgage-broker-red-deer',
-    priority: 0.7,
-    changeFrequency: 'monthly' as const,
-  },
-  {
-    url: '/mortgage-broker-lethbridge',
-    priority: 0.7,
-    changeFrequency: 'monthly' as const,
-  },
-  {
-    url: '/mortgage-broker-airdrie',
-    priority: 0.7,
-    changeFrequency: 'monthly' as const,
-  },
-  {
-    url: '/mortgage-broker-windsor',
-    priority: 0.7,
-    changeFrequency: 'monthly' as const,
-  },
-];
-
-// Province pages
-const PROVINCE_PAGES = [
-  {
-    url: '/provinces/bc',
-    priority: 0.7,
-    changeFrequency: 'monthly' as const,
-  },
-  {
-    url: '/provinces/ab',
-    priority: 0.7,
-    changeFrequency: 'monthly' as const,
-  },
-  {
-    url: '/provinces/on',
-    priority: 0.7,
-    changeFrequency: 'monthly' as const,
-  },
-];
+  'surrey', 'vancouver', 'burnaby', 'richmond', 'coquitlam', 'langley',
+  'kelowna', 'kamloops', 'abbotsford', 'nanaimo', 'victoria',
+  'calgary', 'edmonton', 'red-deer', 'lethbridge', 'airdrie',
+  'toronto', 'ottawa', 'windsor',
+].map((c) => ({ url: `/mortgage-broker-${c}`, priority: 0.7, changeFrequency: 'monthly' as const }));
 
 // Info pages
 const INFO_PAGES = [
@@ -379,7 +390,6 @@ export function generateSitemap(blogPosts: BlogPost[] = []): MetadataRoute.Sitem
     ...RESIDENTIAL_CALCULATORS,
     ...PRIVATE_LENDING_CALCULATORS,
     ...LOCATION_PAGES,
-    ...PROVINCE_PAGES,
     ...INFO_PAGES,
   ];
 
