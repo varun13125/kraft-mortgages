@@ -558,8 +558,7 @@ export default function RefinanceVsHelocVsSecondPage() {
         "applicationCategory": "FinanceApplication",
         "operatingSystem": "Web",
         "offers": { "@type": "Offer", "price": "0", "priceCurrency": "CAD" },
-        "provider": { "@type": "Organization", "name": "Kraft Mortgages", "telephone": "604-593-1550", "address": { "@type": "PostalAddress", "streetAddress": "#301 - 1688 152nd Street", "addressLocality": "Surrey", "addressRegion": "BC", "postalCode": "V4A 4N2", "addressCountry": "CA" } },
-        "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.8", "reviewCount": "187" }
+        "provider": { "@type": "Organization", "name": "Kraft Mortgages", "telephone": "604-593-1550", "address": { "@type": "PostalAddress", "streetAddress": "#301 - 1688 152nd Street", "addressLocality": "Surrey", "addressRegion": "BC", "postalCode": "V4A 4N2", "addressCountry": "CA" } }
       })}} />
     </>
   );
