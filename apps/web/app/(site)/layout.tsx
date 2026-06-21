@@ -1,17 +1,8 @@
-import { headers } from 'next/headers';
-import { Metadata } from 'next';
-
-export async function generateMetadata(): Promise<Metadata> {
-  const headersList = await headers();
-  const pathname = headersList.get('x-next-url') || headersList.get('x-invoke-path') || '';
-
-  return {
-    alternates: {
-      canonical: `https://www.kraftmortgages.ca${pathname}`,
-    },
-  };
-}
-
+// Site layout — passthrough only.
+// The previous generateMetadata here built the canonical from request headers
+// (x-next-url / x-invoke-path), which is unreliable in current Next.js and could
+// produce a homepage canonical for unrelated pages. Each page now owns its own
+// canonical via its own metadata/generateMetadata export, so no fallback is needed.
 export default function SiteLayout({ children }: { children: React.ReactNode }) {
   return children;
 }
