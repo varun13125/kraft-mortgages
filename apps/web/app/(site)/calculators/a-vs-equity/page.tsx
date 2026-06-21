@@ -581,8 +581,7 @@ export default function AVsEquityPage() {
             "name": "Kraft Mortgages",
             "telephone": "604-593-1550",
             "address": { "@type": "PostalAddress", "streetAddress": "#301 - 1688 152nd Street", "addressLocality": "Surrey", "addressRegion": "BC", "postalCode": "V4A 4N2", "addressCountry": "CA" }
-          },
-          "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.9", "reviewCount": "23" }
+          }
         })}} />
 
         <ComplianceBanner feature="LEAD_FORM" />

@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import { CityServiceJsonLd } from '@/components/SEO/CityServiceJsonLd';
 
 export const metadata: Metadata = {
   title: 'Airdrie Mortgage Broker | Best Rates & Fast Approval | Kraft Mortgages',
@@ -16,5 +17,10 @@ export const metadata: Metadata = {
 };
 
 export default function AirdrieLayout({ children }: { children: React.ReactNode }) {
-  return children;
+    return (
+    <>
+      <CityServiceJsonLd cityName="Airdrie" provinceName="AB" description="Licensed mortgage broker serving Airdrie, AB. Residential, construction, self-employed, MLI Select, and private lending solutions." />
+      {children}
+    </>
+  );
 }

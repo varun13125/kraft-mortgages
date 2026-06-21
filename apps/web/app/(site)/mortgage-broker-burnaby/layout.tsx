@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import { CityServiceJsonLd } from '@/components/SEO/CityServiceJsonLd';
 
 export const metadata: Metadata = {
   title: 'Burnaby Mortgage Broker | Best Rates | Kraft Mortgages',
@@ -16,30 +17,9 @@ export const metadata: Metadata = {
 };
 
 export default function BurnabyLayout({ children }: { children: React.ReactNode }) {
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "FinancialService",
-    name: "Kraft Mortgages",
-    description: "Top-rated Burnaby mortgage broker with 18+ Years Combined Experience",
-    url: "https://www.kraftmortgages.ca/mortgage-broker-burnaby",
-    areaServed: {
-      "@type": "City",
-      name: "Burnaby",
-      containedInPlace: {
-        "@type": "Province",
-        name: "British Columbia"
-      }
-    },
-    serviceType: "Mortgage Brokerage",
-    knowsAbout: ["Residential Mortgages", "First-Time Home Buyer Programs", "Pre-Approvals", "Refinancing"]
-  };
-
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <CityServiceJsonLd cityName="Burnaby" provinceName="BC" description="Licensed mortgage broker serving Burnaby, BC. Residential, construction, self-employed, MLI Select, and private lending solutions." />
       {children}
     </>
   );

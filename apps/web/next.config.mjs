@@ -143,11 +143,6 @@ const nextConfig = {
         permanent: true,
       },
       {
-        source: '/mli-select/calculators',
-        destination: '/mli-select',
-        permanent: true,
-      },
-      {
         source: '/calculators/construction-draw',
         destination: '/construction/calculators/construction-draw',
         permanent: true,

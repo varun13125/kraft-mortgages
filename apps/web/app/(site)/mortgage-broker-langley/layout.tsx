@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import { CityServiceJsonLd } from '@/components/SEO/CityServiceJsonLd';
 
 export const metadata: Metadata = {
   title: 'Langley Mortgage Broker | Best Rates | Kraft Mortgages',
@@ -16,30 +17,9 @@ export const metadata: Metadata = {
 };
 
 export default function LangleyLayout({ children }: { children: React.ReactNode }) {
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "FinancialService",
-    name: "Kraft Mortgages",
-    description: "Trusted Langley mortgage broker with 18+ Years Combined Experience",
-    url: "https://www.kraftmortgages.ca/mortgage-broker-langley",
-    areaServed: {
-      "@type": "City",
-      name: "Langley",
-      containedInPlace: {
-        "@type": "Province",
-        name: "British Columbia"
-      }
-    },
-    serviceType: "Mortgage Brokerage",
-    knowsAbout: ["Residential Mortgages", "Acreage Financing", "Farm Mortgages", "Pre-Approvals"]
-  };
-
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <CityServiceJsonLd cityName="Langley" provinceName="BC" description="Licensed mortgage broker serving Langley, BC. Residential, construction, self-employed, MLI Select, and private lending solutions." />
       {children}
     </>
   );

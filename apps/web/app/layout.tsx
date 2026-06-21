@@ -4,6 +4,9 @@ import { Analytics } from "@/components/Analytics";
 import { Analytics as VercelAnalytics } from "@vercel/analytics/react";
 import { PrefSync } from "@/components/PrefSync";
 import { PWA } from "@/components/PWA";
+import { JsonLd } from "@/components/SEO/JsonLd";
+import { orgJsonLd } from "@/lib/seo/jsonld";
+import { BUSINESS } from "@/lib/seo/business-config";
 import dynamic from "next/dynamic";
 
 // Dynamically import ChatWidget to avoid hydration issues
@@ -37,73 +40,19 @@ export const metadata: Metadata = {
     siteName: 'Kraft Mortgages',
     locale: 'en_CA',
     type: 'website',
+    images: [{ url: BUSINESS.ogImageUrl, width: 1200, height: 630, alt: BUSINESS.name }],
   },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  // Corrected JSON-LD Graph Matrix removing duplicate semantic definitions (Item 4)
-  const corporateSchemaGraph = {
-    "@context": "https://schema.org",
-    "@type": "MortgageBroker",
-    "name": "Kraft Mortgages Canada Inc.",
-    "url": "https://www.kraftmortgages.ca",
-    "logo": "https://www.kraftmortgages.ca/assets/logo.png",
-    "image": ["https://www.kraftmortgages.ca/assets/hero.jpg"],
-    "telephone": "+1-604-593-1550",
-    "priceRange": "Contact for rates",
-    "foundingDate": "2014-01-01",
-    "contactPoint": {
-      "@type": "ContactPoint",
-      "telephone": "+1-604-593-1550",
-      "contactType": "Customer Service",
-      "areaServed": ["BC", "AB", "ON"],
-      "availableLanguage": ["English"]
-    },
-    "address": {
-      "@type": "PostalAddress",
-      "streetAddress": "301 1688 152nd Street",
-      "addressLocality": "Surrey",
-      "addressRegion": "BC",
-      "postalCode": "V4A 4N2",
-      "addressCountry": "CA"
-    },
-    "geo": {
-      "@type": "GeoCoordinates",
-      "latitude": 49.0326,
-      "longitude": -122.8012
-    },
-    "openingHoursSpecification": {
-      "@type": "OpeningHoursSpecification",
-      "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-      "opens": "09:00",
-      "closes": "18:00"
-    },
-    "sameAs": [
-      "https://www.facebook.com/kraftmortgages",
-      "https://www.linkedin.com/company/kraft-mortgages"
-    ],
-    "foundingMember": [
-      {
-        "@type": "Person",
-        "name": "Varun Chaudhry",
-        "jobTitle": "President & Broker",
-        "knowsAbout": "BCFSA License #SR220230"
-      }
-    ]
-  };
-
   return (
-    <html lang="en" className="dark">
+    <html lang="en-CA" className="dark">
       <head>
         {/* Preconnect to external domains for faster resource loading */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://vercel.live" />
-        <link rel="preconnect" href="https://www.kraftmortgages.ca" />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(corporateSchemaGraph) }}
-        />
+        <JsonLd data={orgJsonLd()} />
       </head>
       <body className="min-h-screen">
         <div className="relative min-h-screen overflow-x-hidden bg-slate-950 text-gray-100 antialiased selection:bg-gold-500/30 selection:text-gold-200">

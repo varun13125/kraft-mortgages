@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import { CityServiceJsonLd } from '@/components/SEO/CityServiceJsonLd';
 
 export const metadata: Metadata = {
   title: 'Nanaimo Mortgage Broker | Best Rates & Fast Approval | Kraft Mortgages',
@@ -16,5 +17,10 @@ export const metadata: Metadata = {
 };
 
 export default function NanaimoLayout({ children }: { children: React.ReactNode }) {
-  return children;
+    return (
+    <>
+      <CityServiceJsonLd cityName="Nanaimo" provinceName="BC" description="Licensed mortgage broker serving Nanaimo, BC. Residential, construction, self-employed, MLI Select, and private lending solutions." />
+      {children}
+    </>
+  );
 }

@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import { CityServiceJsonLd } from '@/components/SEO/CityServiceJsonLd';
 
 export const metadata: Metadata = {
   title: 'Red Deer Mortgage Broker | Best Rates & Fast Approval | Kraft Mortgages',
@@ -16,5 +17,10 @@ export const metadata: Metadata = {
 };
 
 export default function RedDeerLayout({ children }: { children: React.ReactNode }) {
-  return children;
+    return (
+    <>
+      <CityServiceJsonLd cityName="Red Deer" provinceName="AB" description="Licensed mortgage broker serving Red Deer, AB. Residential, construction, self-employed, MLI Select, and private lending solutions." />
+      {children}
+    </>
+  );
 }
