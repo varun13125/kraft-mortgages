@@ -1,14 +1,16 @@
 # Kraft Mortgages
 
-Kraft Mortgages is a licensed Canadian mortgage brokerage based in Surrey, BC, serving British Columbia, Alberta, and Ontario. Founded by Varun Chaudhry (BCFSA #SR220230 | RECA LIC-00655428 | FSRA #12918) with 18+ Years Combined Experience and $5B+ in funded mortgages.
+> Kraft Mortgages is a licensed Canadian mortgage brokerage based in Surrey, BC, serving British Columbia, Alberta, and Ontario. Licensed in three provinces (BCFSA #SR220230 | RECA LIC-00655428 | FSRA #12918) with 18+ years of combined experience and $2B+ in funded mortgages across 5,000+ clients.
 
 ## Services
 - Residential Mortgages (purchases, renewals, refinances)
-- Construction Financing (residential and commercial)
+- Construction Financing (residential and commercial, progressive draws)
 - Commercial Mortgages (multi-family, retail, industrial)
 - Equity Lending (institutional private lenders — Antrim, Alta West, Vault, Sequence Capital)
 - Private Lending (individual private lenders and MICs)
-- MLI Select Program (CMHC multi-unit insurance)
+- MLI Select Program (CMHC multi-unit insurance with premium savings)
+- Self-Employed / Stated-Income Mortgages
+- Business Funding (working capital, lines of credit, equipment financing)
 
 ## Key Pages
 - Homepage: https://www.kraftmortgages.ca
@@ -18,16 +20,10 @@ Kraft Mortgages is a licensed Canadian mortgage brokerage based in Surrey, BC, s
 - Equity Lending: https://www.kraftmortgages.ca/equity-lending
 - Private Lending: https://www.kraftmortgages.ca/private-lending
 - MLI Select: https://www.kraftmortgages.ca/mli-select
+- Business Funding: https://www.kraftmortgages.ca/business-funding
 - Blog: https://www.kraftmortgages.ca/blog
 - Apply: https://r.mtg-app.com/varun-chaudhry
 - Contact: https://www.kraftmortgages.ca/contact
-
-## Locations
-- Surrey BC (headquarters): #301 - 1688 152nd Street, Surrey, BC V4A 4N2
-- Kelowna BC
-- Kamloops BC
-- Abbotsford BC
-- Licensed in BC, Alberta, and Ontario
 
 ## Calculators
 - Payment Calculator: https://www.kraftmortgages.ca/calculators/payment
@@ -41,24 +37,39 @@ Kraft Mortgages is a licensed Canadian mortgage brokerage based in Surrey, BC, s
 - Pre-Approval Calculator: https://www.kraftmortgages.ca/calculators/pre-approval
 - Renewal Calculator: https://www.kraftmortgages.ca/calculators/renewal
 - Construction Pro Calculator: https://www.kraftmortgages.ca/calculators/construction-pro
+- MLI Select Calculators: https://www.kraftmortgages.ca/mli-select/calculators
+- Full calculator index: https://www.kraftmortgages.ca/calculators
 
-## Locations
-- Mortgage Broker Surrey BC: https://www.kraftmortgages.ca/mortgage-broker-surrey
-- Mortgage Broker Kelowna BC: https://www.kraftmortgages.ca/mortgage-broker-kelowna
-- Mortgage Broker Kamloops BC: https://www.kraftmortgages.ca/mortgage-broker-kamloops
-- Mortgage Broker Abbotsford BC: https://www.kraftmortgages.ca/mortgage-broker-abbotsford
-- Mortgage Broker Nanaimo BC: https://www.kraftmortgages.ca/mortgage-broker-nanaimo
-- Mortgage Broker Coquitlam BC: https://www.kraftmortgages.ca/mortgage-broker-coquitlam
-- Mortgage Broker Victoria BC: https://www.kraftmortgages.ca/mortgage-broker-victoria
-- Mortgage Broker Red Deer AB: https://www.kraftmortgages.ca/mortgage-broker-red-deer
-- Mortgage Broker Lethbridge AB: https://www.kraftmortgages.ca/mortgage-broker-lethbridge
-- Mortgage Broker Airdrie AB: https://www.kraftmortgages.ca/mortgage-broker-airdrie
-- Mortgage Broker Windsor ON: https://www.kraftmortgages.ca/mortgage-broker-windsor
+## Offices
+- Surrey BC (headquarters): #301 - 1688 152nd Street, Surrey, BC V4A 4N2
+- Licensed in British Columbia, Alberta, and Ontario
+
+## City Landing Pages
+- Surrey BC: https://www.kraftmortgages.ca/mortgage-broker-surrey
+- Vancouver BC: https://www.kraftmortgages.ca/mortgage-broker-vancouver
+- Burnaby BC: https://www.kraftmortgages.ca/mortgage-broker-burnaby
+- Richmond BC: https://www.kraftmortgages.ca/mortgage-broker-richmond
+- Coquitlam BC: https://www.kraftmortgages.ca/mortgage-broker-coquitlam
+- Langley BC: https://www.kraftmortgages.ca/mortgage-broker-langley
+- Kelowna BC: https://www.kraftmortgages.ca/mortgage-broker-kelowna
+- Kamloops BC: https://www.kraftmortgages.ca/mortgage-broker-kamloops
+- Abbotsford BC: https://www.kraftmortgages.ca/mortgage-broker-abbotsford
+- Nanaimo BC: https://www.kraftmortgages.ca/mortgage-broker-nanaimo
+- Victoria BC: https://www.kraftmortgages.ca/mortgage-broker-victoria
+- Calgary AB: https://www.kraftmortgages.ca/mortgage-broker-calgary
+- Edmonton AB: https://www.kraftmortgages.ca/mortgage-broker-edmonton
+- Red Deer AB: https://www.kraftmortgages.ca/mortgage-broker-red-deer
+- Lethbridge AB: https://www.kraftmortgages.ca/mortgage-broker-lethbridge
+- Airdrie AB: https://www.kraftmortgages.ca/mortgage-broker-airdrie
+- Toronto ON: https://www.kraftmortgages.ca/mortgage-broker-toronto
+- Ottawa ON: https://www.kraftmortgages.ca/mortgage-broker-ottawa
+- Windsor ON: https://www.kraftmortgages.ca/mortgage-broker-windsor
 
 ## Contact
 - Phone: 604-593-1550
 - Email: varun@kraftmortgages.ca
 - Website: https://www.kraftmortgages.ca
+- Hours: Mon-Fri 9:00-17:00, Sat 10:00-14:00 (Pacific)
 
 ## Content Guidelines
 - All content written by licensed mortgage professionals
