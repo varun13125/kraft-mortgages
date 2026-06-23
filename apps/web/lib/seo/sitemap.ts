@@ -115,6 +115,26 @@ const CORE_CALCULATORS = [
     changeFrequency: 'weekly' as const,
   },
   {
+    url: '/calculators/mortgage-qualifier',
+    priority: 0.9,
+    changeFrequency: 'weekly' as const,
+  },
+  {
+    url: '/calculators/port-vs-break',
+    priority: 0.85,
+    changeFrequency: 'weekly' as const,
+  },
+  {
+    url: '/calculators/refinance-cashout',
+    priority: 0.85,
+    changeFrequency: 'weekly' as const,
+  },
+  {
+    url: '/calculators/reverse-mortgage',
+    priority: 0.85,
+    changeFrequency: 'weekly' as const,
+  },
+  {
     url: '/calculators/a-vs-equity',
     priority: 0.85,
     changeFrequency: 'weekly' as const,
