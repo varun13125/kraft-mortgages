@@ -94,8 +94,10 @@ export default function RentVsBuyPage() {
     let breakEvenYear: number | null = null;
 
     for (let y = 1; y <= 25; y++) {
-      // Buying costs
-      const buyCostY = buyMonthly * 12 * y;
+      // Buying costs — NET cost = cash outflow minus equity accumulated (principal paydown + appreciation)
+      // A buyer's real "cost" is what they've spent that they can't recover: interest + taxes + fees
+      // not the full P+I payment (principal becomes equity)
+      const buyCostY = buyMonthly * 12 * y;  // total cash outflow (kept for reference)
       buyCosts.push(buyCostY);
 
       // Renting costs
@@ -110,9 +112,10 @@ export default function RentVsBuyPage() {
         const principalPaid = mortgage - interest;
         remainingMortgage = Math.max(0, remainingMortgage - principalPaid);
       }
-      buyNetWorth.push(appreciatedValue - remainingMortgage);
+      const homeEquity = appreciatedValue - remainingMortgage;
+      buyNetWorth.push(homeEquity);
 
-      // Rent net worth: invested down payment + monthly savings
+      // Rent net worth: invested down payment + monthly savings (when rent is cheaper)
       let rentPortfolio = investableCash;
       for (let m = 0; m < y * 12; m++) {
         rentPortfolio += Math.max(0, monthlyRent - buyMonthly);
@@ -121,7 +124,9 @@ export default function RentVsBuyPage() {
       rentNetWorth.push(rentPortfolio);
 
       // Break-even: cumulative buy cost <= cumulative rent cost
-      if (breakEvenYear === null && buyCostY <= rentCostY) {
+      // Break-even: buyer's NET cost (cash outflow minus equity at sale) vs renter's total rent
+      const buyNetCostY = buyCostY - homeEquity; // what you've spent that you can't recover
+      if (breakEvenYear === null && buyNetCostY <= rentCostY) {
         breakEvenYear = y;
       }
     }

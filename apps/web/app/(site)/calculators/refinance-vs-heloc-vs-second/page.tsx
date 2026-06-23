@@ -77,7 +77,9 @@ export default function RefinanceVsHelocVsSecondPage() {
     else refiRate = 6.95;
 
     const refiFee = firstType === "b-lender" ? refiTotal * 0.01 : 0;
-    const penalty = currentMonthly * 3; // 3 months interest estimate
+    // Penalty = 3 months' INTEREST (not full P+I payment). Interest = balance * rate / 12.
+    const monthlyInterest = firstBalance * (firstRate / 100) / 12;
+    const penalty = monthlyInterest * 3;
     const legalAppraisal = 2000;
     const refiMonthly = calcMonthly(refiTotal, refiRate, firstAmort);
     const refiTotalInterest = refiMonthly * remainingMonths - refiTotal;

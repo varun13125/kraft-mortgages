@@ -81,17 +81,17 @@ export default function SelfEmployedAVsBPage() {
     const aTotalCost = aInterest + additionalTax;
     const bTotalCost = bInterest + bFeeAmount;
 
-    let investmentTaxSavings = 0;
-    if (isInvestment) {
-      investmentTaxSavings = bInterest * (effectiveTaxRate / 100);
-    }
+    // For investment properties, BOTH A-lender and B-lender interest is tax-deductible.
+    // Apply the deduction to both sides equally (not just B) for an apples-to-apples comparison.
+    const aTaxSavings = isInvestment ? aInterest * (effectiveTaxRate / 100) : 0;
+    const bTaxSavings = isInvestment ? bInterest * (effectiveTaxRate / 100) : 0;
 
-    const netSavings = aTotalCost - (bTotalCost - investmentTaxSavings);
+    const netSavings = (aTotalCost - aTaxSavings) - (bTotalCost - bTaxSavings);
     const bWins = netSavings > 0;
 
     return {
       aMonthly, bMonthly, aInterest, bInterest, aTotalCost, bTotalCost,
-      bFeeAmount, additionalTax, netSavings, bWins, investmentTaxSavings,
+      bFeeAmount, additionalTax, netSavings, bWins, investmentTaxSavings: bTaxSavings,
       monthlyDiff: Math.abs(aMonthly - bMonthly),
     };
   }, [mortgageAmount, aRate, bRate, term, amortization, additionalIncome, effectiveTaxRate, isInvestment, bFee]);

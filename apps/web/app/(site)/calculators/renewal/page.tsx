@@ -12,12 +12,17 @@ export default function Renewal() {
   const [showPdfModal, setShowPdfModal] = useState(false);
   const [balance, setBalance] = useState(450000);
   const [monthsLeft, setMonthsLeft] = useState(36);
+  const [remainingAmortYears, setRemainingAmortYears] = useState(22); // remaining AMORTIZATION (not term)
   const [currentRate, setCurrentRate] = useState(5.89);
   const [marketRate, setMarketRate] = useState(5.19);
   const [penalty, setPenalty] = useState(2500);
 
-  const currPay = payment({ principal: balance, annualRatePct: currentRate, amortYears: Math.ceil(monthsLeft/12), paymentsPerYear: 12 });
-  const newPay = payment({ principal: balance, annualRatePct: marketRate, amortYears: Math.ceil(monthsLeft/12), paymentsPerYear: 12 });
+  // Guards
+  const safeBalance = Math.max(1, balance || 0);
+  const safeAmort = Math.max(1, remainingAmortYears || 1);
+
+  const currPay = payment({ principal: safeBalance, annualRatePct: currentRate, amortYears: safeAmort, paymentsPerYear: 12 });
+  const newPay = payment({ principal: safeBalance, annualRatePct: marketRate, amortYears: safeAmort, paymentsPerYear: 12 });
   const monthlySavings = currPay - newPay;
   const breakEvenMonths = monthlySavings > 0 ? Math.ceil(penalty / monthlySavings) : 0;
   const worthSwitching = monthlySavings > 0 && breakEvenMonths <= monthsLeft && breakEvenMonths <= 12;
@@ -86,7 +91,7 @@ export default function Renewal() {
                 subtitle="Get a personalized PDF with your renewal comparison"
                 leadMessage="PDF Report Download — Renewal Calculator"
                 mortgageType="Renewal"
-                amount={balance.toString()}
+                amount={safeBalance.toString()}
                 onGeneratePdf={async (userName) => {
                   const { generateGenericReport } = await import("@/components/calculator-report/generateGenericReport");
                   generateGenericReport({
@@ -97,9 +102,10 @@ export default function Renewal() {
                       {
                         title: "Your Inputs",
                         rows: [
-                          { label: "Current Balance", value: "$" + Math.round(balance).toLocaleString("en-CA") },
+                          { label: "Current Balance", value: "$" + Math.round(safeBalance).toLocaleString("en-CA") },
                           { label: "Current Rate", value: currentRate + "%" },
-                          { label: "Months Remaining", value: String(monthsLeft) },
+                          { label: "Months Remaining in Term", value: String(monthsLeft) },
+                          { label: "Remaining Amortization", value: remainingAmortYears + " years" },
                           { label: "Market Rate", value: marketRate + "%" },
                           { label: "Prepayment Penalty", value: "$" + Math.round(penalty).toLocaleString("en-CA") },
                         ]
@@ -146,6 +152,19 @@ export default function Renewal() {
                     onChange={(e) => setMonthsLeft(Number(e.target.value))}
                     className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent text-white placeholder-gray-400"
                   />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-200 mb-2">
+                    Remaining Amortization (Years)
+                  </label>
+                  <input
+                    type="number"
+                    value={remainingAmortYears}
+                    onChange={(e) => setRemainingAmortYears(Number(e.target.value))}
+                    className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent text-white placeholder-gray-400"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">How many years left to fully pay off the mortgage</p>
                 </div>
 
                 <div>

@@ -402,7 +402,7 @@ export default function AVsEquityPage() {
                   </h4>
                   <p className="text-sm text-gray-300">
                     {netDifference > 0
-                      ? `Equity lending saves you ${formatCurrency(Math.abs(additionalTax), 0)} in personal income tax over ${term} years, which more than offsets the ${formatCurrency(eqInterest - aInterest, 0)} additional interest and ${formatCurrency(eqFeeAmount, 0)} lender fee. Net savings: ${formatCurrency(netDifference, 0)}.`
+                      ? `Equity lending saves you ${formatCurrency(Math.abs(netDifference), 0)} net over ${term} years. The ${formatCurrency(additionalTax, 0)} tax saving on declared income more than offsets the ${formatCurrency(eqInterest - aInterest, 0)} additional interest and ${formatCurrency(eqFeeAmount, 0)} lender fee.`
                       : `The A-lender path costs ${formatCurrency(aInterest, 0)} in interest but you avoid the ${formatCurrency(eqInterest - aInterest, 0)} additional interest cost. However, you'll owe ${formatCurrency(additionalTax, 0)} in income tax on declared income. Net difference: ${formatCurrency(netDifference, 0)}.`
                     }
                   </p>

@@ -50,7 +50,7 @@ function buildComparison(mortgage: number, rate: number, amortYears: number, ext
         yearIntA += ip;
         intA += ip;
         const extra = (yr >= startYear) ? extraMonthly : 0;
-        const lump = (yr === startYear) ? lumpSum : 0;
+        const lump = (yr === startYear && m === 0) ? lumpSum : 0;
         const totalPay = basePayment + extra + lump;
         const pp = Math.min(totalPay - ip, balA);
         balA -= pp;

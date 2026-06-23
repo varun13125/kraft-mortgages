@@ -121,7 +121,7 @@ export default function BCSpeculationTaxPage() {
                       {
                         title: "Results",
                         rows: [
-                          { label: "Tax Rate", value: (taxRate * 100) + "%" },
+                          { label: "Tax Rate", value: taxRate + "%" },
                           { label: "Annual Tax", value: "$" + Math.round(taxAmount).toLocaleString("en-CA"), highlight: true },
                           { label: "Exempt?", value: exempt ? "Yes" : "No" },
                           ...(reason ? [{ label: "Reason", value: reason }] : []),

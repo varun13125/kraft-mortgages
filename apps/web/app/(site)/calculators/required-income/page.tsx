@@ -12,19 +12,10 @@ import PdfLeadModal from "@/components/PdfLeadModal";
 
 /* ── Helpers ───────────────────────────────────────── */
 
+// CMHC premium via the shared helper (correct 2025 schedule)
+import { cmhcPremium as calcCMHC } from "@/lib/calc/cmhc";
 function cmhcPremium(downPayment: number, price: number): number {
-  if (downPayment >= price * 0.2) return 0;
-  const loan = price - downPayment;
-  const ltv = loan / price;
-  let rate: number;
-  if (ltv <= 0.65) rate = 0.006;
-  else if (ltv <= 0.75) rate = 0.015;
-  else if (ltv <= 0.8) rate = 0.024;
-  else if (ltv <= 0.85) rate = 0.028;
-  else if (ltv <= 0.9) rate = 0.031;
-  else if (ltv <= 0.95) rate = 0.04;
-  else rate = 0.042;
-  return loan * rate;
+  return calcCMHC(price, downPayment);
 }
 
 function monthlyPayment(principal: number, annualRate: number, amortYears: number): number {
