@@ -9,6 +9,7 @@ import Link from "next/link";
 import { ValidatedInput, ValidatedSlider } from "@/components/ui/ValidatedInput";
 import { formatCurrency } from "@/lib/utils/validation";
 import PdfLeadModal from "@/components/PdfLeadModal";
+import { RelatedCalculators } from "@/components/calculators/RelatedCalculators";
 
 type LoanPosition = "1st" | "2nd";
 type CreditRange = "excellent" | "good" | "fair" | "poor";
@@ -527,6 +528,7 @@ export default function BvsEquityPage() {
         </section>
 
         <ComplianceBanner feature="LEAD_FORM" />
+        <RelatedCalculators current="b-vs-equity" related={["self-employed-a-vs-b","a-vs-equity","refinance-vs-heloc-vs-second"]} />
       </main>
 
       {/* JSON-LD */}

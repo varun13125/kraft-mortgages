@@ -10,6 +10,7 @@ import { ValidatedInput, ValidatedSlider } from "@/components/ui/ValidatedInput"
 import { formatCurrency } from "@/lib/utils/validation";
 import PdfLeadModal from "@/components/PdfLeadModal";
 import { CalculatorSchema } from "@/components/SEO/CalculatorSchema";
+import { RelatedCalculators } from "@/components/calculators/RelatedCalculators";
 
 interface ScheduleRow {
   month: number;
@@ -292,6 +293,7 @@ export default function AmortizationPage() {
         </section>
 
         <ComplianceBanner feature="LEAD_FORM" />
+        <RelatedCalculators current="amortization" related={["payment","extra-payments","renewal"]} />
       </main>
     </>
   );

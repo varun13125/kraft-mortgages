@@ -11,6 +11,7 @@ import { ValidatedInput, ValidatedSlider } from "@/components/ui/ValidatedInput"
 import { validationRules, formatCurrency, formatPercentage } from "@/lib/utils/validation";
 import PdfLeadModal from "@/components/PdfLeadModal";
 import { CalculatorSchema } from "@/components/SEO/CalculatorSchema";
+import { RelatedCalculators } from "@/components/calculators/RelatedCalculators";
 
 export default function Affordability() {
   const [showPdfModal, setShowPdfModal] = useState(false);
@@ -366,6 +367,7 @@ export default function Affordability() {
         </section>
 
         <ComplianceBanner feature="LEAD_FORM" />
+        <RelatedCalculators current="affordability" related={["payment","stress-test","required-income","first-time-home-buyer","closing-costs"]} />
       </main>
     </>
   );

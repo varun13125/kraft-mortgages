@@ -10,6 +10,7 @@ import { ValidatedInput, ValidatedSlider } from "@/components/ui/ValidatedInput"
 import { formatCurrency, formatPercentage } from "@/lib/utils/validation";
 import PdfLeadModal from "@/components/PdfLeadModal";
 import { CalculatorSchema } from "@/components/SEO/CalculatorSchema";
+import { RelatedCalculators } from "@/components/calculators/RelatedCalculators";
 
 function ThreeMonthsInterest(balance: number, annualRate: number): number {
   return (balance * annualRate) / 12 * 3;
@@ -461,6 +462,7 @@ export default function MortgagePenaltyPage() {
         </section>
 
         <ComplianceBanner feature="LEAD_FORM" />
+        <RelatedCalculators current="mortgage-penalty" related={["renewal","refinance-break-even","rate-comparison"]} />
       </main>
     </>
   );

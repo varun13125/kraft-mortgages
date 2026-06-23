@@ -8,6 +8,7 @@ import { Clock, Calculator, TrendingUp, ArrowRight, DollarSign, AlertTriangle, C
 import Link from "next/link";
 import PdfLeadModal from "@/components/PdfLeadModal";
 import { CalculatorSchema } from "@/components/SEO/CalculatorSchema";
+import { RelatedCalculators } from "@/components/calculators/RelatedCalculators";
 
 export default function Renewal() {
   const [showPdfModal, setShowPdfModal] = useState(false);
@@ -315,6 +316,7 @@ export default function Renewal() {
             </div>
           </div>
         </section>
+        <RelatedCalculators current="renewal" related={["payment","rate-comparison","mortgage-penalty","refinance-break-even"]} />
       </main>
     </>
   );

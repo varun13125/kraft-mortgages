@@ -9,6 +9,7 @@ import Link from "next/link";
 
 import PdfLeadModal from "@/components/PdfLeadModal";
 import { CalculatorSchema } from "@/components/SEO/CalculatorSchema";
+import { RelatedCalculators } from "@/components/calculators/RelatedCalculators";
 
 export default function ConstructionPro() {
   const [showPdfModal, setShowPdfModal] = useState(false);
@@ -297,6 +298,7 @@ export default function ConstructionPro() {
             </div>
           </div>
         </section>
+        <RelatedCalculators current="construction-pro" related={["payment","affordability","closing-costs"]} />
       </main>
     </>
   );

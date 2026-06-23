@@ -62,6 +62,7 @@ function landTransferTax(price: number, province: Province, firstTime: boolean):
 // CMHC premium via the shared helper (correct 2025 schedule)
 import { cmhcPremium as calcCMHC } from "@/lib/calc/cmhc";
 import { CalculatorSchema } from "@/components/SEO/CalculatorSchema";
+import { RelatedCalculators } from "@/components/calculators/RelatedCalculators";
 function cmhcPremium(downPayment: number, price: number): number {
   return calcCMHC(price, downPayment);
 }
@@ -478,6 +479,7 @@ export default function ClosingCostsPage() {
         </section>
 
         <ComplianceBanner feature="LEAD_FORM" />
+        <RelatedCalculators current="closing-costs" related={["land-transfer-tax","cmhc-insurance","down-payment","first-time-home-buyer"]} />
       </main>
     </>
   );

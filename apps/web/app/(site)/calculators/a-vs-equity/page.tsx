@@ -10,6 +10,7 @@ import Link from "next/link";
 import { ValidatedInput, ValidatedSlider } from "@/components/ui/ValidatedInput";
 import { formatCurrency } from "@/lib/utils/validation";
 import PdfLeadModal from "@/components/PdfLeadModal";
+import { RelatedCalculators } from "@/components/calculators/RelatedCalculators";
 
 type Province = "BC" | "AB" | "ON";
 type LoanPosition = "1st" | "2nd";
@@ -585,6 +586,7 @@ export default function AVsEquityPage() {
         })}} />
 
         <ComplianceBanner feature="LEAD_FORM" />
+        <RelatedCalculators current="a-vs-equity" related={["self-employed-a-vs-b","b-vs-equity","refinance-vs-heloc-vs-second"]} />
       </main>
     </>
   );

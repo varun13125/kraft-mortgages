@@ -14,6 +14,7 @@ import PdfLeadModal from "@/components/PdfLeadModal";
 
 // CMHC premium via the shared helper (correct 2025 schedule)
 import { cmhcPremium as calcCMHC } from "@/lib/calc/cmhc";
+import { RelatedCalculators } from "@/components/calculators/RelatedCalculators";
 function cmhcPremium(downPayment: number, price: number): number {
   return calcCMHC(price, downPayment);
 }
@@ -619,6 +620,7 @@ export default function RequiredIncomePage() {
             })
           }}
         />
+        <RelatedCalculators current="required-income" related={["affordability","stress-test","debt-service-ratio","pre-approval"]} />
       </main>
     </>
   );

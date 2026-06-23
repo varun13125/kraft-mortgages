@@ -10,6 +10,7 @@ import { ValidatedInput, ValidatedSlider } from "@/components/ui/ValidatedInput"
 import { formatCurrency } from "@/lib/utils/validation";
 import PdfLeadModal from "@/components/PdfLeadModal";
 import { CalculatorSchema } from "@/components/SEO/CalculatorSchema";
+import { RelatedCalculators } from "@/components/calculators/RelatedCalculators";
 
 /* ── Amortization helpers ───────────────────────────── */
 interface YearRow {
@@ -355,6 +356,7 @@ export default function ExtraPaymentsPage() {
         </section>
 
         <ComplianceBanner feature="LEAD_FORM" />
+        <RelatedCalculators current="extra-payments" related={["payment","amortization","renewal"]} />
       </main>
     </>
   );

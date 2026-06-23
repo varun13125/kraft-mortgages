@@ -8,6 +8,7 @@ import { Calculator, DollarSign, TrendingUp, ArrowRight, Clock, Download } from 
 import Link from "next/link";
 import PdfLeadModal from "@/components/PdfLeadModal";
 import { CalculatorSchema } from "@/components/SEO/CalculatorSchema";
+import { RelatedCalculators } from "@/components/calculators/RelatedCalculators";
 
 export default function PaymentCalculatorPage() {
   const [showPdfModal, setShowPdfModal] = useState(false);
@@ -269,6 +270,7 @@ export default function PaymentCalculatorPage() {
             </div>
           </div>
         </section>
+        <RelatedCalculators current="payment" related={["affordability","amortization","extra-payments","renewal","rate-comparison"]} />
       </main>
     </>
   );

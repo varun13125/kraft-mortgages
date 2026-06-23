@@ -9,6 +9,7 @@ import Link from "next/link";
 import { ValidatedInput } from "@/components/ui/ValidatedInput";
 import { formatCurrency } from "@/lib/utils/validation";
 import PdfLeadModal from "@/components/PdfLeadModal";
+import { RelatedCalculators } from "@/components/calculators/RelatedCalculators";
 
 /* ── Down Payment Calculation ──────────────────────── */
 
@@ -472,6 +473,7 @@ export default function DownPaymentPage() {
             })
           }}
         />
+        <RelatedCalculators current="down-payment" related={["affordability","cmhc-insurance","first-time-home-buyer","closing-costs"]} />
       </main>
     </>
   );

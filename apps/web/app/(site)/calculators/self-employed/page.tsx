@@ -8,6 +8,7 @@ import { Briefcase, Calculator, DollarSign, ArrowRight, TrendingUp, FileText, Do
 import Link from "next/link";
 import PdfLeadModal from "@/components/PdfLeadModal";
 import { CalculatorSchema } from "@/components/SEO/CalculatorSchema";
+import { RelatedCalculators } from "@/components/calculators/RelatedCalculators";
 
 export default function SelfEmployed() {
   const [showPdfModal, setShowPdfModal] = useState(false);
@@ -273,6 +274,7 @@ export default function SelfEmployed() {
             </div>
           </div>
         </section>
+        <RelatedCalculators current="self-employed" related={["self-employed-a-vs-b","affordability","pre-approval","payment"]} />
       </main>
     </>
   );

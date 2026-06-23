@@ -10,6 +10,7 @@ import { formatCurrency, formatPercentage } from "@/lib/utils/validation";
 import { payment } from "@/lib/calc/payment";
 import PdfLeadModal from "@/components/PdfLeadModal";
 import { CalculatorSchema } from "@/components/SEO/CalculatorSchema";
+import { RelatedCalculators } from "@/components/calculators/RelatedCalculators";
 
 const PROVINCES = ["BC", "Alberta", "Ontario"] as const;
 type Province = (typeof PROVINCES)[number];
@@ -423,6 +424,7 @@ export default function FirstTimeHomeBuyer() {
               />
             </div>
                 <ComplianceBanner feature="LEAD_FORM" />
+        <RelatedCalculators current="first-time-home-buyer" related={["affordability","down-payment","land-transfer-tax","closing-costs","stress-test"]} />
       </main>
     </>
   );

@@ -8,6 +8,7 @@ import { TrendingUp, Calculator, DollarSign, ArrowRight, Building, Percent, Aler
 import Link from "next/link";
 import PdfLeadModal from "@/components/PdfLeadModal";
 import { CalculatorSchema } from "@/components/SEO/CalculatorSchema";
+import { RelatedCalculators } from "@/components/calculators/RelatedCalculators";
 
 export default function Investment() {
   const [showPdfModal, setShowPdfModal] = useState(false);
@@ -338,6 +339,7 @@ export default function Investment() {
             </div>
           </div>
         </section>
+        <RelatedCalculators current="investment" related={["payment","rate-comparison","rent-vs-buy","debt-service-ratio"]} />
       </main>
     </>
   );

@@ -12,6 +12,7 @@ import { ValidatedInput, ValidatedSlider } from "@/components/ui/ValidatedInput"
 import { formatCurrency } from "@/lib/utils/validation";
 import PdfLeadModal from "@/components/PdfLeadModal";
 import { CalculatorSchema } from "@/components/SEO/CalculatorSchema";
+import { RelatedCalculators } from "@/components/calculators/RelatedCalculators";
 
 type Province = "BC" | "AB" | "ON";
 
@@ -519,6 +520,7 @@ export default function SelfEmployedAVsBPage() {
         </section>
 
         <ComplianceBanner feature="LEAD_FORM" />
+        <RelatedCalculators current="self-employed-a-vs-b" related={["self-employed","a-vs-equity","b-vs-equity","affordability"]} />
       </main>
     </>
   );

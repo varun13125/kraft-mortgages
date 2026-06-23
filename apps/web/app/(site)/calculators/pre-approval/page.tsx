@@ -7,6 +7,7 @@ import { CheckCircle, Calculator, DollarSign, Percent, Clock, Home, CreditCard, 
 import Link from "next/link";
 import PdfLeadModal from "@/components/PdfLeadModal";
 import { CalculatorSchema } from "@/components/SEO/CalculatorSchema";
+import { RelatedCalculators } from "@/components/calculators/RelatedCalculators";
 
 // Pre-approval calculation logic
 function calculatePreApproval({
@@ -539,6 +540,7 @@ export default function PreApprovalCalculator() {
               />
             </div>
         <ComplianceBanner feature="LEAD_FORM" />
+        <RelatedCalculators current="pre-approval" related={["affordability","stress-test","required-income","down-payment","cmhc-insurance"]} />
       </main>
     </>
   );

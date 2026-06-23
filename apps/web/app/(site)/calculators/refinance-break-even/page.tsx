@@ -10,6 +10,7 @@ import { ValidatedInput } from "@/components/ui/ValidatedInput";
 import { formatCurrency } from "@/lib/utils/validation";
 import PdfLeadModal from "@/components/PdfLeadModal";
 import { CalculatorSchema } from "@/components/SEO/CalculatorSchema";
+import { RelatedCalculators } from "@/components/calculators/RelatedCalculators";
 
 /* ── Mortgage Math ──────────────────────────────────── */
 function monthlyPayment(principal: number, annualRate: number, months: number): number {
@@ -334,6 +335,7 @@ export default function RefinanceBreakEvenPage() {
         </section>
 
         <ComplianceBanner feature="LEAD_FORM" />
+        <RelatedCalculators current="refinance-break-even" related={["mortgage-penalty","renewal","refinance-vs-heloc-vs-second"]} />
       </main>
     </>
   );

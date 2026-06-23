@@ -10,6 +10,7 @@ import { ValidatedInput, ValidatedSlider } from "@/components/ui/ValidatedInput"
 import { formatCurrency } from "@/lib/utils/validation";
 import PdfLeadModal from "@/components/PdfLeadModal";
 import { CalculatorSchema } from "@/components/SEO/CalculatorSchema";
+import { RelatedCalculators } from "@/components/calculators/RelatedCalculators";
 
 /* ── Math ───────────────────────────────────────────── */
 function monthlyPayment(principal: number, annualRate: number, months: number): number {
@@ -305,6 +306,7 @@ export default function StressTestPage() {
         </section>
 
         <ComplianceBanner feature="LEAD_FORM" />
+        <RelatedCalculators current="stress-test" related={["affordability","pre-approval","required-income","debt-service-ratio"]} />
       </main>
     </>
   );

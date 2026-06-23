@@ -10,6 +10,7 @@ import { ValidatedInput } from "@/components/ui/ValidatedInput";
 import { formatCurrency } from "@/lib/utils/validation";
 import PdfLeadModal from "@/components/PdfLeadModal";
 import { CalculatorSchema } from "@/components/SEO/CalculatorSchema";
+import { RelatedCalculators } from "@/components/calculators/RelatedCalculators";
 
 type Ownership = "citizen" | "pr" | "other";
 type Occupancy = "principal" | "rental" | "vacant" | "shortterm";
@@ -308,6 +309,7 @@ export default function BCSpeculationTaxPage() {
         </section>
 
         <ComplianceBanner feature="LEAD_FORM" />
+        <RelatedCalculators current="bc-speculation-tax" related={["affordability","land-transfer-tax","closing-costs"]} />
       </main>
     </>
   );
