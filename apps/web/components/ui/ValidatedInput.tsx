@@ -29,17 +29,15 @@ export function ValidatedInput({
   const [localValue, setLocalValue] = useState(value.toString());
   const [error, setError] = useState<string | null>(null);
   const [touched, setTouched] = useState(false);
+  const [focused, setFocused] = useState(false);
 
-  // Update local value when prop changes
   useEffect(() => {
-    setLocalValue(value.toString());
-  }, [value]);
+    if (!focused) setLocalValue(value.toString());
+  }, [value, focused]);
 
   const handleChange = (inputValue: string) => {
     setLocalValue(inputValue);
-    
     const result = validateNumericInput(inputValue, validation);
-    
     if (result.isValid) {
       setError(null);
       onChange(result.value);
@@ -50,12 +48,14 @@ export function ValidatedInput({
 
   const handleBlur = () => {
     setTouched(true);
+    setFocused(false);
     const result = validateNumericInput(localValue, validation);
-    
     if (!result.isValid) {
       setError(result.message || null);
     } else {
       setError(null);
+      // Format the value nicely on blur (e.g., "700000" → "700000")
+      setLocalValue(result.value.toString());
     }
   };
 
@@ -73,46 +73,57 @@ export function ValidatedInput({
 
   return (
     <div className={className}>
-      <label className="block text-sm font-medium mb-2 flex items-center gap-2">
+      <label className="flex items-center gap-2 text-sm font-medium mb-2 text-gray-300">
         {getIcon()}
-        {label}
+        <span>{label}</span>
       </label>
       <div className="relative">
         {type === 'currency' && (
-          <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">$</span>
+          <span className={`absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-gray-400 transition-colors pointer-events-none ${focused ? 'text-gold-400' : ''}`}>$</span>
         )}
         <input
           type="number"
+          inputMode="decimal"
           value={localValue}
           onChange={(e) => handleChange(e.target.value)}
+          onFocus={() => setFocused(true)}
           onBlur={handleBlur}
           placeholder={placeholder}
           className={`
-            w-full py-3 px-4 bg-white/5 border rounded-xl transition-colors text-white placeholder-gray-400
-            focus:ring-2 focus:ring-gold-400/20 focus:outline-none
-            ${type === 'currency' ? 'pl-8' : ''}
-            ${getSuffix() ? 'pr-8' : ''}
-            ${error ? 'border-red-400 focus:border-red-400' : 'border-white/20 focus:border-gold-400'}
+            w-full py-3.5 sm:py-3 px-4 rounded-xl transition-all text-white placeholder-gray-500
+            bg-gray-800/60 border
+            ${type === 'currency' ? 'pl-8 sm:pl-9' : ''}
+            ${getSuffix() ? 'pr-10' : ''}
+            ${error
+              ? 'border-red-400/60 focus:border-red-400'
+              : focused
+                ? 'border-gold-400/80 bg-gray-800/80 shadow-[0_0_0_3px_rgba(212,175,55,0.12)]'
+                : 'border-gray-600/80 hover:border-gray-500'
+            }
             text-base sm:text-sm
+            outline-none
+            appearance-none
+            -moz-appearance:textfield
+            [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none
           `}
           min={validation.min}
           max={validation.max}
           step={validation.step}
         />
         {getSuffix() && (
-          <span className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400">
+          <span className={`absolute right-3 sm:right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none transition-colors ${focused ? 'text-gold-400' : ''}`}>
             {getSuffix()}
           </span>
         )}
       </div>
       {error && (
         <div className="flex items-center gap-2 mt-2 text-red-400 text-sm">
-          <AlertTriangle className="w-4 h-4 flex-shrink-0" />
+          <AlertTriangle className="w-3.5 h-3.5 flex-shrink-0" />
           <span>{error}</span>
         </div>
       )}
       {help && !error && (
-        <p className="text-xs text-gray-400 mt-1">{help}</p>
+        <p className="text-xs text-gray-500 mt-1.5 leading-relaxed">{help}</p>
       )}
     </div>
   );
@@ -140,13 +151,22 @@ export function ValidatedSlider({
   className = ""
 }: ValidatedSliderProps) {
   const displayValue = formatValue ? formatValue(value) : value.toString();
+  const pct = Math.max(0, Math.min(100, ((value - min) / (max - min)) * 100));
 
   return (
     <div className={className}>
-      <label className="block text-sm font-medium mb-2">
-        {label}
-      </label>
-      <div className="space-y-3">
+      <div className="flex items-baseline justify-between mb-2.5">
+        <label className="text-sm font-medium text-gray-300">{label}</label>
+        <span className="text-base sm:text-lg font-semibold text-gold-400 tabular-nums">{displayValue}</span>
+      </div>
+      <div className="relative pt-1 pb-1">
+        {/* Track background */}
+        <div className="absolute top-1/2 -translate-y-1/2 left-0 right-0 h-2 rounded-full bg-gray-700/80 pointer-events-none" />
+        {/* Filled portion */}
+        <div
+          className="absolute top-1/2 -translate-y-1/2 left-0 h-2 rounded-full bg-gradient-to-r from-gold-600 to-gold-400 pointer-events-none"
+          style={{ width: `${pct}%` }}
+        />
         <input
           type="range"
           min={min}
@@ -154,13 +174,12 @@ export function ValidatedSlider({
           step={step}
           value={value}
           onChange={(e) => onChange(Number(e.target.value))}
-          className="w-full h-2 bg-white/20 rounded-lg appearance-none cursor-pointer slider"
+          className="kraft-slider relative w-full appearance-none bg-transparent cursor-pointer"
         />
-        <div className="flex justify-between text-sm text-gray-400">
-          <span>{formatValue ? formatValue(min) : min}</span>
-          <span className="font-semibold text-gold-400">{displayValue}</span>
-          <span>{formatValue ? formatValue(max) : max}</span>
-        </div>
+      </div>
+      <div className="flex justify-between text-xs text-gray-500 mt-1 tabular-nums">
+        <span>{formatValue ? formatValue(min) : min}</span>
+        <span>{formatValue ? formatValue(max) : max}</span>
       </div>
     </div>
   );

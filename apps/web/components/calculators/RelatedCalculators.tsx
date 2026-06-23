@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
 
 const CALCULATOR_MAP: Record<string, string> = {
   "payment": "Payment Calculator",
@@ -37,8 +36,8 @@ const CALCULATOR_MAP: Record<string, string> = {
 export function RelatedCalculators({ current, related }: { current: string; related: string[] }) {
   return (
     <div className="mt-12 pt-8 border-t border-gray-700/50">
-      <div className="text-sm text-gray-400 mb-4 uppercase tracking-wider">Related Calculators</div>
-      <div className="flex flex-wrap gap-2">
+      <div className="text-sm text-gray-400 mb-3 uppercase tracking-wider">Related Calculators</div>
+      <div className="flex flex-wrap gap-2 sm:gap-3">
         {related.map((slug) => {
           if (slug === current) return null;
           const name = CALCULATOR_MAP[slug] || slug;
@@ -46,16 +45,15 @@ export function RelatedCalculators({ current, related }: { current: string; rela
             <Link
               key={slug}
               href={`/calculators/${slug}`}
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg border border-gray-700 bg-gray-800/40 text-sm text-gray-300 hover:border-gold-500/50 hover:text-gold-400 transition-all"
+              className="inline-flex items-center gap-1 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-lg border border-gray-700 bg-gray-800/40 text-xs sm:text-sm text-gray-300 hover:border-gold-500/50 hover:text-gold-400 transition-all whitespace-nowrap"
             >
               {name}
-              <ArrowRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
             </Link>
           );
         })}
         <Link
           href="/calculators"
-          className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg border border-gray-700 bg-gray-800/40 text-sm text-gray-300 hover:border-gold-500/50 hover:text-gold-400 transition-all"
+          className="inline-flex items-center gap-1 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-lg border border-gray-700 bg-gray-800/40 text-xs sm:text-sm text-gray-300 hover:border-gold-500/50 hover:text-gold-400 transition-all whitespace-nowrap"
         >
           All Calculators
         </Link>
