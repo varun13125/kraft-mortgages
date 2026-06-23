@@ -9,6 +9,7 @@ import Link from "next/link";
 import { ValidatedInput } from "@/components/ui/ValidatedInput";
 import { formatCurrency } from "@/lib/utils/validation";
 import PdfLeadModal from "@/components/PdfLeadModal";
+import { CalculatorSchema } from "@/components/SEO/CalculatorSchema";
 
 type Ownership = "citizen" | "pr" | "other";
 type Occupancy = "principal" | "rental" | "vacant" | "shortterm";
@@ -50,6 +51,8 @@ export default function BCSpeculationTaxPage() {
   return (
     <>
       <Navigation />
+      <CalculatorSchema name="BC Speculation & Vacancy Tax Calculator" description="Calculate BC speculation and vacancy tax liability based on ownership status." url="/calculators/bc-speculation-tax" />
+
       <main className="min-h-screen mt-16">
         <section className="py-6 px-4 bg-gray-800/30">
           <div className="max-w-6xl mx-auto">

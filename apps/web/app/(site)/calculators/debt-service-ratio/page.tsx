@@ -9,6 +9,7 @@ import Link from "next/link";
 import { ValidatedInput, ValidatedSlider } from "@/components/ui/ValidatedInput";
 import { formatCurrency } from "@/lib/utils/validation";
 import PdfLeadModal from "@/components/PdfLeadModal";
+import { CalculatorSchema } from "@/components/SEO/CalculatorSchema";
 
 const faqs = [
   {
@@ -129,6 +130,7 @@ export default function DebtServiceRatioPage() {
 
   return (
     <>
+      <CalculatorSchema name="Debt Service Ratio Calculator" description="Calculate your GDS and TDS ratios to check CMHC qualification thresholds." url="/calculators/debt-service-ratio" />
       <Navigation />
       <main className="min-h-screen mt-16">
         {/* Breadcrumb */}

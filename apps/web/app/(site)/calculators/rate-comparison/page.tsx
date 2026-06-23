@@ -9,6 +9,7 @@ import Link from "next/link";
 import { ValidatedInput, ValidatedSlider } from "@/components/ui/ValidatedInput";
 import { formatCurrency } from "@/lib/utils/validation";
 import PdfLeadModal from "@/components/PdfLeadModal";
+import { CalculatorSchema } from "@/components/SEO/CalculatorSchema";
 
 const faqs = [
   {
@@ -52,7 +53,7 @@ export default function RateComparisonPage() {
   const [rate4, setRate4] = useState(5.49);
   const [showRate3, setShowRate3] = useState(false);
   const [showRate4, setShowRate4] = useState(false);
-  const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [openFaq, setOpenFaq] = useState<number | null>(null)
 
   const rates = useMemo(() => {
     const all = [
@@ -79,6 +80,7 @@ export default function RateComparisonPage() {
 
   return (
     <>
+      <CalculatorSchema name="Mortgage Rate Comparison Calculator" description="Compare up to 4 mortgage rates side-by-side and calculate total savings." url="/calculators/rate-comparison" />
       <Navigation />
       <main className="min-h-screen mt-16">
         {/* Breadcrumb */}

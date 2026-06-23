@@ -10,6 +10,7 @@ import Link from "next/link";
 import { ValidatedInput, ValidatedSlider } from "@/components/ui/ValidatedInput";
 import { validationRules, formatCurrency, formatPercentage } from "@/lib/utils/validation";
 import PdfLeadModal from "@/components/PdfLeadModal";
+import { CalculatorSchema } from "@/components/SEO/CalculatorSchema";
 
 export default function Affordability() {
   const [showPdfModal, setShowPdfModal] = useState(false);
@@ -30,6 +31,8 @@ export default function Affordability() {
   return (
     <>
       <Navigation />
+      <CalculatorSchema name="Mortgage Affordability Calculator" description="Calculate how much house you can afford with GDS/TDS ratios and the Canadian stress test." url="/calculators/affordability" />
+
       <main className="min-h-screen mt-16">
         {/* Breadcrumb */}
         <section className="py-6 px-4 bg-gray-800/30">

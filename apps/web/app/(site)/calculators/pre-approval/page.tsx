@@ -6,6 +6,7 @@ import { ComplianceBanner } from "@/components/ComplianceBanner";
 import { CheckCircle, Calculator, DollarSign, Percent, Clock, Home, CreditCard, AlertTriangle, Download } from "lucide-react";
 import Link from "next/link";
 import PdfLeadModal from "@/components/PdfLeadModal";
+import { CalculatorSchema } from "@/components/SEO/CalculatorSchema";
 
 // Pre-approval calculation logic
 function calculatePreApproval({
@@ -151,6 +152,8 @@ export default function PreApprovalCalculator() {
   return (
     <>
       <Navigation />
+      <CalculatorSchema name="Mortgage Pre-Approval Calculator" description="Estimate your maximum mortgage amount and purchase price based on income, debts, and credit." url="/calculators/pre-approval" />
+
       <main className="min-h-screen mt-16">
         {/* Breadcrumb */}
         <section className="py-6 px-4 bg-gray-800/30">

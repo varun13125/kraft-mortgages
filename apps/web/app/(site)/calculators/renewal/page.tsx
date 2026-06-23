@@ -7,6 +7,7 @@ import { ComplianceBanner } from "@/components/ComplianceBanner";
 import { Clock, Calculator, TrendingUp, ArrowRight, DollarSign, AlertTriangle, CheckCircle, Download } from "lucide-react";
 import Link from "next/link";
 import PdfLeadModal from "@/components/PdfLeadModal";
+import { CalculatorSchema } from "@/components/SEO/CalculatorSchema";
 
 export default function Renewal() {
   const [showPdfModal, setShowPdfModal] = useState(false);
@@ -30,6 +31,8 @@ export default function Renewal() {
   return (
     <>
       <Navigation />
+      <CalculatorSchema name="Mortgage Renewal Calculator" description="Compare your current vs new mortgage rate at renewal and calculate break-even on penalties." url="/calculators/renewal" />
+
       <main className="min-h-screen mt-16">
         {/* Breadcrumb */}
         <section className="py-6 px-4 bg-gray-800/30">

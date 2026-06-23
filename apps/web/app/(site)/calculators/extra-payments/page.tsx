@@ -9,6 +9,7 @@ import Link from "next/link";
 import { ValidatedInput, ValidatedSlider } from "@/components/ui/ValidatedInput";
 import { formatCurrency } from "@/lib/utils/validation";
 import PdfLeadModal from "@/components/PdfLeadModal";
+import { CalculatorSchema } from "@/components/SEO/CalculatorSchema";
 
 /* ── Amortization helpers ───────────────────────────── */
 interface YearRow {
@@ -125,6 +126,8 @@ export default function ExtraPaymentsPage() {
   return (
     <>
       <Navigation />
+      <CalculatorSchema name="Extra Payment Savings Calculator" description="See how much interest you can save and years you can cut with extra mortgage payments." url="/calculators/extra-payments" />
+
       <main className="min-h-screen mt-16">
         <section className="py-6 px-4 bg-gray-800/30">
           <div className="max-w-6xl mx-auto">

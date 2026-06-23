@@ -9,6 +9,7 @@ import Link from "next/link";
 import { ValidatedInput, ValidatedSlider } from "@/components/ui/ValidatedInput";
 import { formatCurrency, formatPercentage } from "@/lib/utils/validation";
 import PdfLeadModal from "@/components/PdfLeadModal";
+import { CalculatorSchema } from "@/components/SEO/CalculatorSchema";
 
 function ThreeMonthsInterest(balance: number, annualRate: number): number {
   return (balance * annualRate) / 12 * 3;
@@ -32,6 +33,8 @@ function MortgageTypeToggle({
 }) {
   return (
     <div className="flex gap-2">
+      <CalculatorSchema name="Mortgage Penalty Calculator" description="Estimate your mortgage prepayment penalty including IRD and 3-months interest." url="/calculators/mortgage-penalty" />
+
       {(["fixed", "variable"] as const).map((t) => (
         <button
           key={t}

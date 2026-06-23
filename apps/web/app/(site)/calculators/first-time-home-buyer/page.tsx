@@ -9,6 +9,7 @@ import { ValidatedInput, ValidatedSlider } from "@/components/ui/ValidatedInput"
 import { formatCurrency, formatPercentage } from "@/lib/utils/validation";
 import { payment } from "@/lib/calc/payment";
 import PdfLeadModal from "@/components/PdfLeadModal";
+import { CalculatorSchema } from "@/components/SEO/CalculatorSchema";
 
 const PROVINCES = ["BC", "Alberta", "Ontario"] as const;
 type Province = (typeof PROVINCES)[number];
@@ -127,6 +128,8 @@ export default function FirstTimeHomeBuyer() {
   return (
     <>
       <Navigation />
+      <CalculatorSchema name="First-Time Home Buyer Calculator" description="Calculate down payment requirements, FHSA tax savings, and first-time buyer incentives." url="/calculators/first-time-home-buyer" />
+
       <main className="min-h-screen mt-16">
         {/* Breadcrumb */}
         <section className="py-6 px-4 bg-gray-800/30">

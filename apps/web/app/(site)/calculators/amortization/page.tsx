@@ -9,6 +9,7 @@ import Link from "next/link";
 import { ValidatedInput, ValidatedSlider } from "@/components/ui/ValidatedInput";
 import { formatCurrency } from "@/lib/utils/validation";
 import PdfLeadModal from "@/components/PdfLeadModal";
+import { CalculatorSchema } from "@/components/SEO/CalculatorSchema";
 
 interface ScheduleRow {
   month: number;
@@ -78,6 +79,8 @@ export default function AmortizationPage() {
   return (
     <>
       <Navigation />
+      <CalculatorSchema name="Amortization Schedule Calculator" description="Generate a full mortgage amortization schedule with optional extra payments." url="/calculators/amortization" />
+
       <main className="min-h-screen mt-16">
         <section className="py-6 px-4 bg-gray-800/30">
           <div className="max-w-6xl mx-auto">

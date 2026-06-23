@@ -8,6 +8,7 @@ import { Hammer, Calculator, Plus, Trash2, ArrowRight, Clock, DollarSign, AlertT
 import Link from "next/link";
 
 import PdfLeadModal from "@/components/PdfLeadModal";
+import { CalculatorSchema } from "@/components/SEO/CalculatorSchema";
 
 export default function ConstructionPro() {
   const [showPdfModal, setShowPdfModal] = useState(false);
@@ -42,6 +43,8 @@ export default function ConstructionPro() {
   return (
     <>
       <Navigation />
+      <CalculatorSchema name="Construction Loan Calculator" description="Calculate interest-only costs on progressive draw schedules for construction financing." url="/calculators/construction-pro" />
+
       <main className="min-h-screen mt-16">
         {/* Breadcrumb */}
         <section className="py-6 px-4 bg-gray-800/30">

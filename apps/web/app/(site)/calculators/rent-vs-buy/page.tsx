@@ -9,6 +9,7 @@ import Link from "next/link";
 import { ValidatedInput, ValidatedSlider } from "@/components/ui/ValidatedInput";
 import { formatCurrency } from "@/lib/utils/validation";
 import PdfLeadModal from "@/components/PdfLeadModal";
+import { CalculatorSchema } from "@/components/SEO/CalculatorSchema";
 
 const faqs = [
   {
@@ -68,7 +69,7 @@ export default function RentVsBuyPage() {
   const [propertyTaxYear, setPropertyTaxYear] = useState(4200);
   const [maintenanceYear, setMaintenanceYear] = useState(4200);
   const [insuranceYear, setInsuranceYear] = useState(1800);
-  const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [openFaq, setOpenFaq] = useState<number | null>(null)
 
   const results = useMemo(() => {
     const down = homePrice * downPaymentPct / 100;
@@ -148,6 +149,7 @@ export default function RentVsBuyPage() {
 
   return (
     <>
+      <CalculatorSchema name="Rent vs Buy Calculator" description="Compare the financial outcomes of renting vs buying over 25 years with equity and appreciation." url="/calculators/rent-vs-buy" />
       <Navigation />
       <main className="min-h-screen mt-16">
         {/* Breadcrumb */}

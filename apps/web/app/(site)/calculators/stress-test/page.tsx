@@ -9,6 +9,7 @@ import Link from "next/link";
 import { ValidatedInput, ValidatedSlider } from "@/components/ui/ValidatedInput";
 import { formatCurrency } from "@/lib/utils/validation";
 import PdfLeadModal from "@/components/PdfLeadModal";
+import { CalculatorSchema } from "@/components/SEO/CalculatorSchema";
 
 /* ── Math ───────────────────────────────────────────── */
 function monthlyPayment(principal: number, annualRate: number, months: number): number {
@@ -53,7 +54,7 @@ export default function StressTestPage() {
   const [heat, setHeat] = useState(1200);
   const [condoFees, setCondoFees] = useState(0);
   const [otherDebts, setOtherDebts] = useState(500);
-  const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [openFaq, setOpenFaq] = useState<number | null>(null)
 
   const downPayment = (purchasePrice * downPaymentPct) / 100;
   const mortgage = purchasePrice - downPayment;
@@ -70,6 +71,7 @@ export default function StressTestPage() {
 
   return (
     <>
+      <CalculatorSchema name="Mortgage Stress Test Calculator" description="Calculate your qualifying rate and income needed under the OSFI B-20 stress test." url="/calculators/stress-test" />
       <Navigation />
       <main className="min-h-screen mt-16">
         <section className="py-6 px-4 bg-gray-800/30">

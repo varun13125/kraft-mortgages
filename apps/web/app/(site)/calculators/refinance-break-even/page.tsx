@@ -9,6 +9,7 @@ import Link from "next/link";
 import { ValidatedInput } from "@/components/ui/ValidatedInput";
 import { formatCurrency } from "@/lib/utils/validation";
 import PdfLeadModal from "@/components/PdfLeadModal";
+import { CalculatorSchema } from "@/components/SEO/CalculatorSchema";
 
 /* ── Mortgage Math ──────────────────────────────────── */
 function monthlyPayment(principal: number, annualRate: number, months: number): number {
@@ -51,7 +52,7 @@ export default function RefinanceBreakEvenPage() {
   const [legalFees, setLegalFees] = useState(1500);
   const [appraisalFees, setAppraisalFees] = useState(500);
   const [penaltyEstimate, setPenaltyEstimate] = useState(8000);
-  const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [openFaq, setOpenFaq] = useState<number | null>(null)
 
   const results = useMemo(() => {
     const newTermMonths = newTermYears * 12;
@@ -75,6 +76,7 @@ export default function RefinanceBreakEvenPage() {
 
   return (
     <>
+      <CalculatorSchema name="Refinance Break-Even Calculator" description="Calculate how long it takes to recoup refinance costs from monthly savings." url="/calculators/refinance-break-even" />
       <Navigation />
       <main className="min-h-screen mt-16">
         {/* Breadcrumb */}

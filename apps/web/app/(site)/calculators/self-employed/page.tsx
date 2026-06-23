@@ -7,6 +7,7 @@ import { ComplianceBanner } from "@/components/ComplianceBanner";
 import { Briefcase, Calculator, DollarSign, ArrowRight, TrendingUp, FileText, Download } from "lucide-react";
 import Link from "next/link";
 import PdfLeadModal from "@/components/PdfLeadModal";
+import { CalculatorSchema } from "@/components/SEO/CalculatorSchema";
 
 export default function SelfEmployed() {
   const [showPdfModal, setShowPdfModal] = useState(false);
@@ -19,6 +20,8 @@ export default function SelfEmployed() {
   return (
     <>
       <Navigation />
+      <CalculatorSchema name="Self-Employed Mortgage Calculator" description="Calculate qualifying income for self-employed borrowers using stated-income programs." url="/calculators/self-employed" />
+
       <main className="min-h-screen mt-16">
         {/* Breadcrumb */}
         <section className="py-6 px-4 bg-gray-800/30">

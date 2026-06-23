@@ -11,6 +11,7 @@ import Link from "next/link";
 import { ValidatedInput, ValidatedSlider } from "@/components/ui/ValidatedInput";
 import { formatCurrency } from "@/lib/utils/validation";
 import PdfLeadModal from "@/components/PdfLeadModal";
+import { CalculatorSchema } from "@/components/SEO/CalculatorSchema";
 
 type Province = "BC" | "AB" | "ON";
 
@@ -101,6 +102,8 @@ export default function SelfEmployedAVsBPage() {
   return (
     <>
       <Navigation />
+      <CalculatorSchema name="Self-Employed: A-Lender vs B-Lender Calculator" description="Compare A-lender vs B-lender costs including the tax implications of declared income." url="/calculators/self-employed-a-vs-b" />
+
       <main className="min-h-screen mt-16">
         {/* Breadcrumb */}
         <section className="py-6 px-4 bg-gray-800/30">
