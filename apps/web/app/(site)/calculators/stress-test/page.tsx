@@ -63,7 +63,7 @@ export default function StressTestPage() {
   const regularPayment = useMemo(() => monthlyPayment(mortgage, contractRate, n), [mortgage, contractRate, n]);
   const stressPayment = useMemo(() => monthlyPayment(mortgage, stressRate, n), [mortgage, stressRate, n]);
 
-  const housingCosts = stressPayment + propertyTax / 12 + heat / 12 + condoFees / 12;
+  const housingCosts = stressPayment + propertyTax / 12 + heat / 12 + (condoFees * 0.5) / 12;
   const incomeNeededGDS = housingCosts * 12 / 0.39;
   const incomeNeededTDS = (housingCosts * 12 + otherDebts) / 0.44;
   const incomeNeeded = Math.max(incomeNeededGDS, incomeNeededTDS);

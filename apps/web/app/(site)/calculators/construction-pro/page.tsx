@@ -183,9 +183,9 @@ export default function ConstructionPro() {
                   <div className="bg-gray-800/50 rounded-lg p-4">
                     <div className="text-sm text-gray-400 mb-1">Construction Period</div>
                     <div className="text-2xl font-bold text-gold-400">
-                      {Math.max(...draws.map(d => d.month))} months
+                      {result.constructionPeriodMonths || Math.max(...draws.map(d => d.month), 12)} months
                     </div>
-                    <div className="text-xs text-gray-500">Based on final draw</div>
+                    <div className="text-xs text-gray-500">Interest calculated over full period</div>
                   </div>
                 </div>
 

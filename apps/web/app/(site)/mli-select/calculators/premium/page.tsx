@@ -128,9 +128,9 @@ export default function PremiumPage() {
               className="flex flex-wrap justify-center gap-6 mt-10"
             >
               {[
-                { tier: 1, discount: 0, color: "from-gray-600 to-gray-700", text: "text-gray-400" },
-                { tier: 2, discount: 10, color: "from-green-600 to-emerald-600", text: "text-green-400" },
-                { tier: 3, discount: 25, color: "from-emerald-600 to-teal-600", text: "text-emerald-400" },
+                { tier: 1, discount: 10, color: "from-gray-600 to-gray-700", text: "text-gray-400" },
+                { tier: 2, discount: 20, color: "from-green-600 to-emerald-600", text: "text-green-400" },
+                { tier: 3, discount: 30, color: "from-emerald-600 to-teal-600", text: "text-emerald-400" },
               ].map((item, index) => (
                 <motion.div 
                   key={item.tier}

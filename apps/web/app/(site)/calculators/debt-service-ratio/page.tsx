@@ -97,9 +97,9 @@ export default function DebtServiceRatioPage() {
     const gds = monthlyIncome > 0 ? (housingCosts / monthlyIncome) * 100 : 0;
     const tds = monthlyIncome > 0 ? (totalDebts / monthlyIncome) * 100 : 0;
 
-    // CMHC max qualifying: GDS 32%, TDS 40% for insured; 35%/42% conventional
-    const maxGdsHousing = monthlyIncome * 0.32;
-    const maxTdsHousing = monthlyIncome * 0.40 - (carPayment + creditCards + studentLoans + otherDebts + otherMortgages);
+    // CMHC qualifying thresholds: GDS 39%, TDS 44% (standard qualifying maxima)
+    const maxGdsHousing = monthlyIncome * 0.39;
+    const maxTdsHousing = monthlyIncome * 0.44 - (carPayment + creditCards + studentLoans + otherDebts + otherMortgages);
     const maxHousing = Math.min(maxGdsHousing, maxTdsHousing);
 
     // Estimate max mortgage from max housing budget

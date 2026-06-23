@@ -4,12 +4,14 @@ export function interestOnlyCost({ draws, annualRatePct }: { draws: Draw[]; annu
   const r = annualRatePct / 100 / 12;
   let bal = 0;
   const timeline: { month: number; draw: number; balance: number; interest: number }[] = [];
-  for (let m = 1; m <= Math.max(12, ...draws.map((d: any)=>d.month)); m++) {
-    const added = draws.filter((d: any)=>d.month === m).reduce((a: number,b: any)=>a+b.amount,0);
+  // Clamp to max 60 months (5 years) to prevent runaway loops on bad input
+  const maxMonth = Math.min(60, Math.max(12, ...draws.map((d: any) => Math.max(1, d.month || 1))));
+  for (let m = 1; m <= maxMonth; m++) {
+    const added = draws.filter((d: any) => d.month === m).reduce((a: number, b: any) => a + b.amount, 0);
     bal += added;
     const interest = bal * r;
     timeline.push({ month: m, draw: added, balance: bal, interest });
   }
-  const totalInterest = timeline.reduce((a: number,b: any)=>a+b.interest,0);
-  return { timeline, totalInterest };
+  const totalInterest = timeline.reduce((a: number, b: any) => a + b.interest, 0);
+  return { timeline, totalInterest, constructionPeriodMonths: maxMonth };
 }
