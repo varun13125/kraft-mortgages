@@ -6,6 +6,8 @@ import { ComplianceBanner } from "@/components/ComplianceBanner";
 import { CheckCircle, Calculator, DollarSign, Percent, Clock, Home, CreditCard, AlertTriangle, Download } from "lucide-react";
 import Link from "next/link";
 import PdfLeadModal from "@/components/PdfLeadModal";
+import { CalculatorSchema } from "@/components/SEO/CalculatorSchema";
+import { RelatedCalculators } from "@/components/calculators/RelatedCalculators";
 
 // Pre-approval calculation logic
 function calculatePreApproval({
@@ -26,7 +28,6 @@ function calculatePreApproval({
   condoFees?: number;
 }) {
   // Get stress test rate and mortgage rate based on credit score
-  const stressTestRate = 5.25; // Bank of Canada qualifying rate
   let mortgageRate: number;
   
   if (creditScore >= 780) mortgageRate = 5.49;
@@ -34,6 +35,9 @@ function calculatePreApproval({
   else if (creditScore >= 680) mortgageRate = 5.89;
   else if (creditScore >= 640) mortgageRate = 6.19;
   else mortgageRate = 6.89;
+
+  // Correct Canadian stress test: max(contract rate + 2%, 5.25% floor) per OSFI B-20
+  const stressTestRate = Math.max(mortgageRate + 2, 5.25);
   
   // CMHC insurance requirements
   const isHighRatio = downPayment < 0.20;
@@ -70,7 +74,9 @@ function calculatePreApproval({
   }
   
   // Calculate maximum mortgage amount using stress test rate
-  const monthlyStressRate = stressTestRate / 100 / 12;
+  // Use Canadian semi-annual compounding (matches the shared payment() function)
+  const rDecimal = stressTestRate / 100;
+  const monthlyStressRate = Math.pow(1 + rDecimal / 2, 2 / 12) - 1;
   const numPayments = 25 * 12; // 25 year amortization
   
   const maxMortgageAmount = maxMortgagePayment * ((1 - Math.pow(1 + monthlyStressRate, -numPayments)) / monthlyStressRate);
@@ -89,9 +95,9 @@ function calculatePreApproval({
   const cmhcPremium = isHighRatio ? maxMortgageAmount * cmhcPremiumRate : 0;
   
   // Calculate actual monthly payment at contract rate
-  const monthlyRate = mortgageRate / 100 / 12;
+  const rMonthly = Math.pow(1 + mortgageRate / 200, 1/6) - 1; // semi-annual → monthly
   const actualMortgageAmount = maxMortgageAmount + cmhcPremium;
-  const monthlyPayment = actualMortgageAmount * (monthlyRate * Math.pow(1 + monthlyRate, numPayments)) / (Math.pow(1 + monthlyRate, numPayments) - 1);
+  const monthlyPayment = actualMortgageAmount * (rMonthly * Math.pow(1 + rMonthly, numPayments)) / (Math.pow(1 + rMonthly, numPayments) - 1);
   
   // Calculate actual ratios
   const totalHousingCosts = monthlyPayment + heatingCosts + propertyTax + condoFees;
@@ -147,6 +153,8 @@ export default function PreApprovalCalculator() {
   return (
     <>
       <Navigation />
+      <CalculatorSchema name="Mortgage Pre-Approval Calculator" description="Estimate your maximum mortgage amount and purchase price based on income, debts, and credit." url="/calculators/pre-approval" />
+
       <main className="min-h-screen mt-16">
         {/* Breadcrumb */}
         <section className="py-6 px-4 bg-gray-800/30">
@@ -532,6 +540,7 @@ export default function PreApprovalCalculator() {
               />
             </div>
         <ComplianceBanner feature="LEAD_FORM" />
+        <RelatedCalculators current="pre-approval" related={["affordability","stress-test","required-income","down-payment","cmhc-insurance"]} />
       </main>
     </>
   );

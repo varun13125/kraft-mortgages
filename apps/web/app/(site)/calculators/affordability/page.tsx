@@ -10,11 +10,13 @@ import Link from "next/link";
 import { ValidatedInput, ValidatedSlider } from "@/components/ui/ValidatedInput";
 import { validationRules, formatCurrency, formatPercentage } from "@/lib/utils/validation";
 import PdfLeadModal from "@/components/PdfLeadModal";
+import { CalculatorSchema } from "@/components/SEO/CalculatorSchema";
+import { RelatedCalculators } from "@/components/calculators/RelatedCalculators";
 
 export default function Affordability() {
   const [showPdfModal, setShowPdfModal] = useState(false);
   const [income, setIncome] = useState(120000);
-  const [debts, setDebts] = useState(6000); // annual non‑housing
+  const [debts, setDebts] = useState(500); // monthly non-housing debt payments
   const [propTax, setPropTax] = useState(3000);
   const [heat, setHeat] = useState(1200);
   const [condoFees, setCondoFees] = useState(0);
@@ -24,12 +26,14 @@ export default function Affordability() {
   const qualRate = useMemo(() => stressTestRate(rate), [rate]);
   const monthlyPI = payment({ principal, annualRatePct: qualRate, amortYears: 25, paymentsPerYear: 12 });
   const housingAnnual = monthlyPI * 12 + propTax + heat + condoFees * 12;
-  const { gds, tds } = gdsTds({ incomeAnnual: income, housingCostsAnnual: housingAnnual, totalDebtAnnual: debts });
+  const { gds, tds } = gdsTds({ incomeAnnual: income, housingCostsAnnual: housingAnnual, totalDebtAnnual: debts * 12 });
   const pass = gds <= 39 && tds <= 44; // typical guideline
 
   return (
     <>
       <Navigation />
+      <CalculatorSchema name="Mortgage Affordability Calculator" description="Calculate how much house you can afford with GDS/TDS ratios and the Canadian stress test." url="/calculators/affordability" />
+
       <main className="min-h-screen mt-16">
         {/* Breadcrumb */}
         <section className="py-6 px-4 bg-gray-800/30">
@@ -114,7 +118,7 @@ export default function Affordability() {
                         title: "Your Inputs",
                         rows: [
                           { label: "Annual Income", value: "$" + Math.round(income).toLocaleString("en-CA") },
-                          { label: "Annual Debts", value: "$" + Math.round(debts).toLocaleString("en-CA") },
+                          { label: "Annual Debts", value: "$" + Math.round(debts * 12).toLocaleString("en-CA") },
                           { label: "Property Tax (annual)", value: "$" + Math.round(propTax).toLocaleString("en-CA") },
                           { label: "Heating (annual)", value: "$" + Math.round(heat).toLocaleString("en-CA") },
                           { label: "Condo Fees (monthly)", value: "$" + Math.round(condoFees).toLocaleString("en-CA") },
@@ -153,12 +157,12 @@ export default function Affordability() {
                     />
 
                     <ValidatedInput
-                      label="Annual Debt Payments"
+                      label="Monthly Debt Payments"
                       value={debts}
                       onChange={setDebts}
                       validation={validationRules.monthlyDebts}
                       type="currency"
-                      help="Credit cards, loans, car payments (annual total)"
+                      help="Credit cards, loans, car payments (monthly total)"
                     />
                   </div>
                 </div>
@@ -363,6 +367,7 @@ export default function Affordability() {
         </section>
 
         <ComplianceBanner feature="LEAD_FORM" />
+        <RelatedCalculators current="affordability" related={["payment","stress-test","required-income","first-time-home-buyer","closing-costs"]} />
       </main>
     </>
   );

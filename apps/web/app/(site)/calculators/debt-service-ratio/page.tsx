@@ -9,6 +9,8 @@ import Link from "next/link";
 import { ValidatedInput, ValidatedSlider } from "@/components/ui/ValidatedInput";
 import { formatCurrency } from "@/lib/utils/validation";
 import PdfLeadModal from "@/components/PdfLeadModal";
+import { CalculatorSchema } from "@/components/SEO/CalculatorSchema";
+import { RelatedCalculators } from "@/components/calculators/RelatedCalculators";
 
 const faqs = [
   {
@@ -97,18 +99,19 @@ export default function DebtServiceRatioPage() {
     const gds = monthlyIncome > 0 ? (housingCosts / monthlyIncome) * 100 : 0;
     const tds = monthlyIncome > 0 ? (totalDebts / monthlyIncome) * 100 : 0;
 
-    // CMHC max qualifying: GDS 32%, TDS 40% for insured; 35%/42% conventional
-    const maxGdsHousing = monthlyIncome * 0.32;
-    const maxTdsHousing = monthlyIncome * 0.40 - (carPayment + creditCards + studentLoans + otherDebts + otherMortgages);
+    // CMHC qualifying thresholds: GDS 39%, TDS 44% (standard qualifying maxima)
+    const maxGdsHousing = monthlyIncome * 0.39;
+    const maxTdsHousing = monthlyIncome * 0.44 - (carPayment + creditCards + studentLoans + otherDebts + otherMortgages);
     const maxHousing = Math.min(maxGdsHousing, maxTdsHousing);
 
     // Estimate max mortgage from max housing budget
     const nonMortgageHousing = monthlyPropertyTax + monthlyHeating + halfCondo;
     const maxMonthlyMortgage = Math.max(0, maxHousing - nonMortgageHousing);
-    // Rough reverse calc: M = P * r(1+r)^n / ((1+r)^n - 1), solve for P
-    const r = 5.34 / 100 / 12; // stress test rate approx
+    // Use the correct stress test rate: max(contract rate + 2%, 5.25%) per OSFI B-20
+    const stressTestRate = Math.max(mortgageRate + 2, 5.25);
+    const rDecimal = stressTestRate / 100;
+    const r = Math.pow(1 + rDecimal / 2, 2 / 12) - 1; // Canadian semi-annual → monthly
     const n = amortization * 12;
-    const stressTestRate = 5.34;
     const cmhcMaxMortgage = maxMonthlyMortgage > 0
       ? maxMonthlyMortgage * (Math.pow(1 + r, n) - 1) / (r * Math.pow(1 + r, n))
       : 0;
@@ -128,6 +131,7 @@ export default function DebtServiceRatioPage() {
 
   return (
     <>
+      <CalculatorSchema name="Debt Service Ratio Calculator" description="Calculate your GDS and TDS ratios to check CMHC qualification thresholds." url="/calculators/debt-service-ratio" />
       <Navigation />
       <main className="min-h-screen mt-16">
         {/* Breadcrumb */}
@@ -209,9 +213,11 @@ export default function DebtServiceRatioPage() {
                         title: "Your Results",
                         rows: [
                           { label: "GDS Ratio", value: results.gds.toFixed(1) + "%", highlight: true },
-                          { label: "GDS Limit", value: (results.gdsPass ? 39 : 44 * 100) + "%" },
+                          { label: "GDS Limit (Insured)", value: "39%" },
+                          { label: "GDS Limit (Conventional)", value: "35%" },
                           { label: "TDS Ratio", value: results.tds.toFixed(1) + "%", highlight: true },
-                          { label: "TDS Limit", value: (results.tdsPass ? 44 : 50 * 100) + "%" },
+                          { label: "TDS Limit (Insured)", value: "44%" },
+                          { label: "TDS Limit (Conventional)", value: "42%" },
                           { label: "Max Mortgage", value: "$" + Math.round(results.cmhcMaxMortgage).toLocaleString("en-CA"), highlight: true },
                         ]
                       }
@@ -458,6 +464,7 @@ export default function DebtServiceRatioPage() {
         </section>
 
         <ComplianceBanner feature="LEAD_FORM" />
+        <RelatedCalculators current="debt-service-ratio" related={["stress-test","required-income","affordability"]} />
       </main>
     </>
   );

@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import { CityServiceJsonLd } from '@/components/SEO/CityServiceJsonLd';
 
 export const metadata: Metadata = {
   title: 'Coquitlam Mortgage Broker | Best Rates & Fast Approval | Kraft Mortgages',
@@ -16,5 +17,10 @@ export const metadata: Metadata = {
 };
 
 export default function CoquitlamLayout({ children }: { children: React.ReactNode }) {
-  return children;
+    return (
+    <>
+      <CityServiceJsonLd cityName="Coquitlam" provinceName="BC" description="Licensed mortgage broker serving Coquitlam, BC. Residential, construction, self-employed, MLI Select, and private lending solutions." />
+      {children}
+    </>
+  );
 }

@@ -263,9 +263,9 @@ export default async function CityBrokerageLandingPage({ params }: CityPageProps
   return (
     <>
       <Navigation />
-      <main className="min-h-screen mt-16 text-gray-100 bg-slate-950">
+      <main className="min-h-screen mt-16 text-gray-100 bg-transparent">
         {/* Hero Section */}
-        <section className="py-20 px-4 bg-gradient-to-b from-gray-900 via-slate-900 to-slate-950">
+        <section className="py-20 px-4 bg-transparent">
           <div className="max-w-5xl mx-auto text-center">
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-gold-500/20 rounded-full text-gold-400 text-sm font-semibold mb-6 border border-gold-500/30">
               <MapPin className="w-4 h-4 text-gold-400" />
@@ -369,7 +369,7 @@ export default async function CityBrokerageLandingPage({ params }: CityPageProps
         </section>
 
         {/* Regional Compliance Footer Details */}
-        <section className="py-16 px-4 border-t border-slate-900 bg-slate-950">
+        <section className="py-16 px-4 border-t border-slate-900 bg-transparent">
           <div className="max-w-4xl mx-auto text-center">
             <span className="px-3 py-1 bg-emerald-950 border border-emerald-800 rounded-full text-xs text-emerald-400 font-bold tracking-wider uppercase inline-block mb-6">
               Regional Compliance Pipeline Active
@@ -398,7 +398,7 @@ export default async function CityBrokerageLandingPage({ params }: CityPageProps
         </section>
 
         {/* Call To Action */}
-        <section className="py-20 px-4 border-t border-slate-900 bg-gradient-to-t from-slate-950 via-slate-900 to-slate-950">
+        <section className="py-20 px-4 border-t border-slate-900 bg-transparent">
           <div className="max-w-4xl mx-auto text-center">
             <h2 className="text-3xl md:text-4xl font-bold mb-6 text-white tracking-tight">
               Ready to Secure Your Mortgage in {meta.name}?

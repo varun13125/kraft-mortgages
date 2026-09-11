@@ -7,6 +7,8 @@ import { ComplianceBanner } from "@/components/ComplianceBanner";
 import { TrendingUp, Calculator, DollarSign, ArrowRight, Building, Percent, AlertTriangle, CheckCircle, Download } from "lucide-react";
 import Link from "next/link";
 import PdfLeadModal from "@/components/PdfLeadModal";
+import { CalculatorSchema } from "@/components/SEO/CalculatorSchema";
+import { RelatedCalculators } from "@/components/calculators/RelatedCalculators";
 
 export default function Investment() {
   const [showPdfModal, setShowPdfModal] = useState(false);
@@ -33,6 +35,8 @@ export default function Investment() {
   return (
     <>
       <Navigation />
+      <CalculatorSchema name="Investment Property Calculator" description="Analyze cap rates, DSCR, and cash flow for real estate investment properties." url="/calculators/investment" />
+
       <main className="min-h-screen mt-16">
         {/* Breadcrumb */}
         <section className="py-6 px-4 bg-gray-800/30">
@@ -335,6 +339,7 @@ export default function Investment() {
             </div>
           </div>
         </section>
+        <RelatedCalculators current="investment" related={["payment","rate-comparison","rent-vs-buy","debt-service-ratio"]} />
       </main>
     </>
   );

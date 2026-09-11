@@ -45,3 +45,4 @@ __pycache__/
 # Environment variables
 .env
 .vercel
+apps/web/tsconfig.tsbuildinfo

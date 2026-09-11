@@ -117,7 +117,7 @@ export default function RedDeerPage() {
                                 Book a Consultation
                             </Link>
                             <a
-                                href="tel:+16045551234"
+                                href="tel:+16045931550"
                                 className="bg-white/10 border border-white/20 font-semibold py-4 px-8 rounded-xl hover:bg-white/20 transition-colors flex items-center gap-2"
                             >
                                 <Phone className="w-5 h-5" />

@@ -484,17 +484,6 @@ export default function Home() {
           </button>
         </motion.div>
       </section>
-
-      <script type="application/ld+json" suppressHydrationWarning dangerouslySetInnerHTML={{
-        __html: JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "Organization",
-          "name": "Kraft Mortgages Canada Inc.",
-          "url": process.env.NEXTAUTH_URL || "http://localhost:3000",
-          "logo": "/icons/icon-192.png",
-          "areaServed": ["CA-BC", "CA-AB", "CA-ON"]
-        })
-      }} />
     </main>
   );
 }

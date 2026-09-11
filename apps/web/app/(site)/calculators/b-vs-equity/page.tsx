@@ -9,6 +9,7 @@ import Link from "next/link";
 import { ValidatedInput, ValidatedSlider } from "@/components/ui/ValidatedInput";
 import { formatCurrency } from "@/lib/utils/validation";
 import PdfLeadModal from "@/components/PdfLeadModal";
+import { RelatedCalculators } from "@/components/calculators/RelatedCalculators";
 
 type LoanPosition = "1st" | "2nd";
 type CreditRange = "excellent" | "good" | "fair" | "poor";
@@ -527,6 +528,7 @@ export default function BvsEquityPage() {
         </section>
 
         <ComplianceBanner feature="LEAD_FORM" />
+        <RelatedCalculators current="b-vs-equity" related={["self-employed-a-vs-b","a-vs-equity","refinance-vs-heloc-vs-second"]} />
       </main>
 
       {/* JSON-LD */}
@@ -539,8 +541,7 @@ export default function BvsEquityPage() {
         "applicationCategory": "FinanceApplication",
         "operatingSystem": "Web",
         "offers": { "@type": "Offer", "price": "0", "priceCurrency": "CAD" },
-        "provider": { "@type": "Organization", "name": "Kraft Mortgages", "telephone": "604-593-1550", "address": { "@type": "PostalAddress", "streetAddress": "#301 - 1688 152nd Street", "addressLocality": "Surrey", "addressRegion": "BC", "postalCode": "V4A 4N2", "addressCountry": "CA" } },
-        "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.8", "reviewCount": "142" }
+        "provider": { "@type": "Organization", "name": "Kraft Mortgages", "telephone": "604-593-1550", "address": { "@type": "PostalAddress", "streetAddress": "#301 - 1688 152nd Street", "addressLocality": "Surrey", "addressRegion": "BC", "postalCode": "V4A 4N2", "addressCountry": "CA" } }
       })}} />
     </>
   );

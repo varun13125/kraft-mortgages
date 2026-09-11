@@ -9,6 +9,8 @@ import Link from "next/link";
 import { ValidatedInput, ValidatedSlider } from "@/components/ui/ValidatedInput";
 import { formatCurrency } from "@/lib/utils/validation";
 import PdfLeadModal from "@/components/PdfLeadModal";
+import { CalculatorSchema } from "@/components/SEO/CalculatorSchema";
+import { RelatedCalculators } from "@/components/calculators/RelatedCalculators";
 
 /* ── Math ───────────────────────────────────────────── */
 function monthlyPayment(principal: number, annualRate: number, months: number): number {
@@ -53,7 +55,7 @@ export default function StressTestPage() {
   const [heat, setHeat] = useState(1200);
   const [condoFees, setCondoFees] = useState(0);
   const [otherDebts, setOtherDebts] = useState(500);
-  const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [openFaq, setOpenFaq] = useState<number | null>(null)
 
   const downPayment = (purchasePrice * downPaymentPct) / 100;
   const mortgage = purchasePrice - downPayment;
@@ -63,13 +65,14 @@ export default function StressTestPage() {
   const regularPayment = useMemo(() => monthlyPayment(mortgage, contractRate, n), [mortgage, contractRate, n]);
   const stressPayment = useMemo(() => monthlyPayment(mortgage, stressRate, n), [mortgage, stressRate, n]);
 
-  const housingCosts = stressPayment + propertyTax / 12 + heat / 12 + condoFees / 12;
+  const housingCosts = stressPayment + propertyTax / 12 + heat / 12 + (condoFees * 0.5) / 12;
   const incomeNeededGDS = housingCosts * 12 / 0.39;
   const incomeNeededTDS = (housingCosts * 12 + otherDebts) / 0.44;
   const incomeNeeded = Math.max(incomeNeededGDS, incomeNeededTDS);
 
   return (
     <>
+      <CalculatorSchema name="Mortgage Stress Test Calculator" description="Calculate your qualifying rate and income needed under the OSFI B-20 stress test." url="/calculators/stress-test" />
       <Navigation />
       <main className="min-h-screen mt-16">
         <section className="py-6 px-4 bg-gray-800/30">
@@ -303,6 +306,7 @@ export default function StressTestPage() {
         </section>
 
         <ComplianceBanner feature="LEAD_FORM" />
+        <RelatedCalculators current="stress-test" related={["affordability","pre-approval","required-income","debt-service-ratio"]} />
       </main>
     </>
   );

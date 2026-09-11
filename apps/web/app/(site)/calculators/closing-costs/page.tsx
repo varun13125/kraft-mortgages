@@ -59,19 +59,12 @@ function landTransferTax(price: number, province: Province, firstTime: boolean):
 
 /* ── CMHC Premium ───────────────────────────────────── */
 
+// CMHC premium via the shared helper (correct 2025 schedule)
+import { cmhcPremium as calcCMHC } from "@/lib/calc/cmhc";
+import { CalculatorSchema } from "@/components/SEO/CalculatorSchema";
+import { RelatedCalculators } from "@/components/calculators/RelatedCalculators";
 function cmhcPremium(downPayment: number, price: number): number {
-  const loan = price - downPayment;
-  if (downPayment >= price * 0.2) return 0; // 20%+ down, no CMHC
-  const ltv = loan / price;
-  let rate: number;
-  if (ltv <= 0.65) rate = 0.006;
-  else if (ltv <= 0.75) rate = 0.015;
-  else if (ltv <= 0.8) rate = 0.024;
-  else if (ltv <= 0.85) rate = 0.028;
-  else if (ltv <= 0.9) rate = 0.031;
-  else if (ltv <= 0.95) rate = 0.04;
-  else rate = 0.042;
-  return loan * rate;
+  return calcCMHC(price, downPayment);
 }
 
 /* ── Property Tax Estimate ──────────────────────────── */
@@ -155,6 +148,8 @@ export default function ClosingCostsPage() {
   return (
     <>
       <Navigation />
+      <CalculatorSchema name="Closing Costs Calculator" description="Estimate all closing costs including land transfer tax, legal fees, and CMHC insurance." url="/calculators/closing-costs" />
+
       <main className="min-h-screen mt-16">
         {/* Breadcrumb */}
         <section className="py-6 px-4 bg-gray-800/30">
@@ -484,6 +479,7 @@ export default function ClosingCostsPage() {
         </section>
 
         <ComplianceBanner feature="LEAD_FORM" />
+        <RelatedCalculators current="closing-costs" related={["land-transfer-tax","cmhc-insurance","down-payment","first-time-home-buyer"]} />
       </main>
     </>
   );

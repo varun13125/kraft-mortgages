@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import { CityServiceJsonLd } from '@/components/SEO/CityServiceJsonLd';
 
 export const metadata: Metadata = {
   title: 'Abbotsford Mortgage Broker | Best Rates & Fast Approval | Kraft Mortgages',
@@ -10,5 +11,10 @@ export const metadata: Metadata = {
 };
 
 export default function AbbotsfordLayout({ children }: { children: React.ReactNode }) {
-  return children;
+    return (
+    <>
+      <CityServiceJsonLd cityName="Abbotsford" provinceName="BC" description="Licensed mortgage broker serving Abbotsford, BC. Residential, construction, self-employed, MLI Select, and private lending solutions." />
+      {children}
+    </>
+  );
 }

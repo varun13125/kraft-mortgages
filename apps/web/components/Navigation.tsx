@@ -18,7 +18,9 @@ import {
   Shield,
   Users,
   DollarSign,
-  FileText
+  FileText,
+  Briefcase,
+  Lock
 } from "lucide-react";
 import { usePathname } from "next/navigation";
 
@@ -28,6 +30,7 @@ export default function Navigation() {
   const [servicesDropdown, setServicesDropdown] = useState(false);
   const [calculatorsDropdown, setCalculatorsDropdown] = useState(false);
   const [mliDropdown, setMliDropdown] = useState(false);
+  const [aboutDropdown, setAboutDropdown] = useState(false);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -51,7 +54,7 @@ export default function Navigation() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Logo and Back Button */}
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4 shrink-0">
               {/* Back Button for Calculator Pages */}
               {isCalculator && (
                 <motion.button
@@ -65,13 +68,13 @@ export default function Navigation() {
               )}
 
               {/* Logo */}
-              <Link href="/" className="flex items-center group">
+              <Link href="/" className="flex items-center group shrink-0">
                 <Image
                   src="/kraft-logo-dark.png"
                   alt="Kraft Mortgages"
                   width={200}
                   height={50}
-                  className="h-10 w-auto group-hover:scale-105 transition-transform duration-200"
+                  className="h-10 w-auto group-hover:scale-105 transition-transform duration-200 shrink-0"
                   priority
                 />
               </Link>
@@ -84,11 +87,11 @@ export default function Navigation() {
               )}
             </div>
 
-            {/* Desktop Navigation */}
-            <div className="hidden lg:flex items-center gap-6">
+            {/* Desktop Navigation Links */}
+            <div className="hidden lg:flex items-center justify-center flex-1 lg:gap-2 xl:gap-6 mx-6">
               <Link
                 href="/"
-                className="flex items-center gap-2 px-4 py-2 text-gray-300 hover:text-gold-400 transition-colors"
+                className="flex items-center gap-2 lg:px-2 xl:px-4 py-2 text-gray-300 hover:text-gold-400 transition-colors lg:text-xs xl:text-base whitespace-nowrap"
               >
                 <Home className="w-4 h-4" />
                 Home
@@ -99,7 +102,7 @@ export default function Navigation() {
                 <button
                   onMouseEnter={() => setServicesDropdown(true)}
                   onMouseLeave={() => setServicesDropdown(false)}
-                  className="flex items-center gap-2 px-4 py-2 text-gray-300 hover:text-gold-400 transition-colors"
+                  className="flex items-center gap-2 lg:px-2 xl:px-4 py-2 text-gray-300 hover:text-gold-400 transition-colors lg:text-xs xl:text-base whitespace-nowrap"
                 >
                   <Building className="w-4 h-4" />
                   Services
@@ -155,6 +158,16 @@ export default function Navigation() {
                           <div>
                             <div className="font-semibold">Commercial Lending</div>
                             <div className="text-xs text-gray-500">Multi-unit, office, retail, industrial</div>
+                          </div>
+                        </Link>
+                        <Link
+                          href="/business-funding"
+                          className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-gold-400 transition-all rounded-lg"
+                        >
+                          <Briefcase className="w-5 h-5 text-gold-400" />
+                          <div>
+                            <div className="font-semibold">Business Funding</div>
+                            <div className="text-xs text-gray-500">Working capital, lines of credit, business loans</div>
                           </div>
                         </Link>
                         <Link
@@ -218,7 +231,7 @@ export default function Navigation() {
                 <button
                   onMouseEnter={() => setCalculatorsDropdown(true)}
                   onMouseLeave={() => setCalculatorsDropdown(false)}
-                  className="flex items-center gap-2 px-4 py-2 text-gray-300 hover:text-gold-400 transition-colors"
+                  className="flex items-center gap-2 lg:px-2 xl:px-4 py-2 text-gray-300 hover:text-gold-400 transition-colors lg:text-xs xl:text-base whitespace-nowrap"
                 >
                   <Calculator className="w-4 h-4" />
                   Calculators
@@ -302,7 +315,7 @@ export default function Navigation() {
                 <button
                   onMouseEnter={() => setMliDropdown(true)}
                   onMouseLeave={() => setMliDropdown(false)}
-                  className="flex items-center gap-2 px-4 py-2 text-gray-300 hover:text-gold-400 transition-colors"
+                  className="flex items-center gap-2 lg:px-2 xl:px-4 py-2 text-gray-300 hover:text-gold-400 transition-colors lg:text-xs xl:text-base whitespace-nowrap"
                 >
                   <DollarSign className="w-4 h-4" />
                   MLI Select
@@ -359,15 +372,64 @@ export default function Navigation() {
               </div>
 
               <Link
-                href="/about"
-                className="px-4 py-2 text-gray-300 hover:text-gold-400 transition-colors"
+                href="/business-funding"
+                className="flex items-center gap-2 lg:px-2 xl:px-4 py-2 text-gray-300 hover:text-gold-400 transition-colors font-medium lg:text-xs xl:text-base whitespace-nowrap"
               >
-                About
+                <Briefcase className="w-4 h-4" />
+                Business Funding
               </Link>
+
+              {/* About Dropdown */}
+              <div className="relative">
+                <button
+                  onMouseEnter={() => setAboutDropdown(true)}
+                  onMouseLeave={() => setAboutDropdown(false)}
+                  className="flex items-center gap-2 lg:px-2 xl:px-4 py-2 text-gray-300 hover:text-gold-400 transition-colors lg:text-xs xl:text-base whitespace-nowrap"
+                >
+                  About
+                  <ChevronDown className={`w-4 h-4 transition-transform ${aboutDropdown ? 'rotate-180' : ''}`} />
+                </button>
+
+                <AnimatePresence>
+                  {aboutDropdown && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      onMouseEnter={() => setAboutDropdown(true)}
+                      onMouseLeave={() => setAboutDropdown(false)}
+                      className="absolute top-full left-0 mt-2 w-72 bg-gray-900/95 backdrop-blur-xl rounded-xl shadow-xl border border-gray-800 overflow-hidden z-50"
+                    >
+                      <div className="grid grid-cols-1 gap-1 p-2">
+                        <Link
+                          href="/about"
+                          className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-gold-400 transition-all rounded-lg"
+                        >
+                          <Users className="w-5 h-5 text-gold-400" />
+                          <div>
+                            <div className="font-semibold">About Us</div>
+                            <div className="text-xs text-gray-500">Our team, mission, and story</div>
+                          </div>
+                        </Link>
+                        <Link
+                          href="/compliance-security"
+                          className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-blue-400 transition-all rounded-lg"
+                        >
+                          <Lock className="w-5 h-5 text-blue-400" />
+                          <div>
+                            <div className="font-semibold">Compliance &amp; Security</div>
+                            <div className="text-xs text-gray-500">FINTRAC, licensing &amp; consumer protection</div>
+                          </div>
+                        </Link>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
 
               <Link
                 href="/blog"
-                className="flex items-center gap-2 px-4 py-2 text-gray-300 hover:text-gold-400 transition-colors"
+                className="flex items-center gap-2 lg:px-2 xl:px-4 py-2 text-gray-300 hover:text-gold-400 transition-colors lg:text-xs xl:text-base whitespace-nowrap"
               >
                 <FileText className="w-4 h-4" />
                 Blog
@@ -375,12 +437,15 @@ export default function Navigation() {
 
               <Link
                 href="/contact"
-                className="flex items-center gap-2 px-4 py-2 text-gray-300 hover:text-gold-400 transition-colors"
+                className="flex items-center gap-2 lg:px-2 xl:px-4 py-2 text-gray-300 hover:text-gold-400 transition-colors lg:text-xs xl:text-base whitespace-nowrap"
               >
                 <Phone className="w-4 h-4" />
                 Contact
               </Link>
+            </div>
 
+            {/* Desktop CTA */}
+            <div className="hidden lg:flex items-center shrink-0 pl-4">
               {/* CTA Button */}
               <motion.a
                 href="https://r.mtg-app.com/varun-chaudhry"
@@ -388,7 +453,7 @@ export default function Navigation() {
                 rel="noopener noreferrer"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="px-6 py-2 bg-gradient-to-r from-gold-500 to-amber-600 text-gray-900 font-semibold rounded-lg shadow-lg shadow-gold-500/30 hover:shadow-gold-500/50 transition-all"
+                className="lg:px-3 xl:px-6 py-2 bg-gradient-to-r from-gold-500 to-amber-600 text-gray-900 font-semibold rounded-lg shadow-lg shadow-gold-500/30 hover:shadow-gold-500/50 transition-all lg:text-xs xl:text-base whitespace-nowrap"
                 onClick={() => track('Book_Call_Click', { location: 'navbar_desktop' })}
               >
                 Apply Now
@@ -468,6 +533,14 @@ export default function Navigation() {
                   >
                     <Building className="w-4 h-4 text-purple-400" />
                     Commercial Lending
+                  </Link>
+                  <Link
+                    href="/business-funding"
+                    className="flex items-center gap-3 px-4 py-2 text-gray-300 hover:text-gold-400 transition-colors"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <Briefcase className="w-4 h-4 text-gold-400" />
+                    Business Funding
                   </Link>
                   <Link
                     href="/private-lending"
@@ -579,11 +652,27 @@ export default function Navigation() {
 
               <div className="border-t border-gray-700 pt-4">
                 <Link
+                  href="/business-funding"
+                  className="flex items-center gap-3 px-4 py-3 text-lg text-gray-300 hover:text-gold-400 transition-colors"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  <Briefcase className="w-5 h-5 text-gold-400" />
+                  Business Funding
+                </Link>
+                <Link
                   href="/about"
                   className="block px-4 py-3 text-lg text-gray-300 hover:text-gold-400 transition-colors"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   About
+                </Link>
+                <Link
+                  href="/compliance-security"
+                  className="flex items-center gap-3 px-4 py-3 text-lg text-gray-300 hover:text-blue-400 transition-colors"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  <Lock className="w-5 h-5 text-blue-400" />
+                  Compliance &amp; Security
                 </Link>
                 <Link
                   href="/blog"

@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import { CityServiceJsonLd } from '@/components/SEO/CityServiceJsonLd';
 
 export const metadata: Metadata = {
   title: 'Windsor Mortgage Broker | Best Rates & Fast Approval | Kraft Mortgages',
@@ -16,5 +17,10 @@ export const metadata: Metadata = {
 };
 
 export default function WindsorLayout({ children }: { children: React.ReactNode }) {
-  return children;
+    return (
+    <>
+      <CityServiceJsonLd cityName="Windsor" provinceName="ON" description="Licensed mortgage broker serving Windsor, ON. Residential, construction, self-employed, MLI Select, and private lending solutions." />
+      {children}
+    </>
+  );
 }

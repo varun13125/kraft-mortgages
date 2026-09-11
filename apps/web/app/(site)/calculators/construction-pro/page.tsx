@@ -8,6 +8,8 @@ import { Hammer, Calculator, Plus, Trash2, ArrowRight, Clock, DollarSign, AlertT
 import Link from "next/link";
 
 import PdfLeadModal from "@/components/PdfLeadModal";
+import { CalculatorSchema } from "@/components/SEO/CalculatorSchema";
+import { RelatedCalculators } from "@/components/calculators/RelatedCalculators";
 
 export default function ConstructionPro() {
   const [showPdfModal, setShowPdfModal] = useState(false);
@@ -42,6 +44,8 @@ export default function ConstructionPro() {
   return (
     <>
       <Navigation />
+      <CalculatorSchema name="Construction Loan Calculator" description="Calculate interest-only costs on progressive draw schedules for construction financing." url="/calculators/construction-pro" />
+
       <main className="min-h-screen mt-16">
         {/* Breadcrumb */}
         <section className="py-6 px-4 bg-gray-800/30">
@@ -183,9 +187,9 @@ export default function ConstructionPro() {
                   <div className="bg-gray-800/50 rounded-lg p-4">
                     <div className="text-sm text-gray-400 mb-1">Construction Period</div>
                     <div className="text-2xl font-bold text-gold-400">
-                      {Math.max(...draws.map(d => d.month))} months
+                      {result.constructionPeriodMonths || Math.max(...draws.map(d => d.month), 12)} months
                     </div>
-                    <div className="text-xs text-gray-500">Based on final draw</div>
+                    <div className="text-xs text-gray-500">Interest calculated over full period</div>
                   </div>
                 </div>
 
@@ -294,6 +298,7 @@ export default function ConstructionPro() {
             </div>
           </div>
         </section>
+        <RelatedCalculators current="construction-pro" related={["payment","affordability","closing-costs"]} />
       </main>
     </>
   );

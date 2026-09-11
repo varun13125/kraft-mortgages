@@ -9,6 +9,7 @@ import Link from "next/link";
 import { ValidatedInput, ValidatedSlider } from "@/components/ui/ValidatedInput";
 import { formatCurrency } from "@/lib/utils/validation";
 import PdfLeadModal from "@/components/PdfLeadModal";
+import { RelatedCalculators } from "@/components/calculators/RelatedCalculators";
 
 /* ── CMHC Premium Rates (2025) ─────────────────────── */
 
@@ -438,6 +439,7 @@ export default function CMHCInsurancePage() {
             })
           }}
         />
+        <RelatedCalculators current="cmhc-insurance" related={["affordability","pre-approval","down-payment","closing-costs"]} />
       </main>
     </>
   );

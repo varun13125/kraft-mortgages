@@ -10,6 +10,7 @@ import Link from "next/link";
 import { ValidatedInput } from "@/components/ui/ValidatedInput";
 import { formatCurrency } from "@/lib/utils/validation";
 import PdfLeadModal from "@/components/PdfLeadModal";
+import { RelatedCalculators } from "@/components/calculators/RelatedCalculators";
 
 type FirstMortgageType = "a-lender" | "b-lender" | "equity";
 type Purpose = "debt-consolidation" | "investment" | "renovation" | "purchase-property";
@@ -77,7 +78,9 @@ export default function RefinanceVsHelocVsSecondPage() {
     else refiRate = 6.95;
 
     const refiFee = firstType === "b-lender" ? refiTotal * 0.01 : 0;
-    const penalty = currentMonthly * 3; // 3 months interest estimate
+    // Penalty = 3 months' INTEREST (not full P+I payment). Interest = balance * rate / 12.
+    const monthlyInterest = firstBalance * (firstRate / 100) / 12;
+    const penalty = monthlyInterest * 3;
     const legalAppraisal = 2000;
     const refiMonthly = calcMonthly(refiTotal, refiRate, firstAmort);
     const refiTotalInterest = refiMonthly * remainingMonths - refiTotal;
@@ -546,6 +549,7 @@ export default function RefinanceVsHelocVsSecondPage() {
         </section>
 
         <ComplianceBanner feature="LEAD_FORM" />
+        <RelatedCalculators current="refinance-vs-heloc-vs-second" related={["refinance-break-even","mortgage-penalty","a-vs-equity"]} />
       </main>
 
       {/* JSON-LD */}
@@ -558,8 +562,7 @@ export default function RefinanceVsHelocVsSecondPage() {
         "applicationCategory": "FinanceApplication",
         "operatingSystem": "Web",
         "offers": { "@type": "Offer", "price": "0", "priceCurrency": "CAD" },
-        "provider": { "@type": "Organization", "name": "Kraft Mortgages", "telephone": "604-593-1550", "address": { "@type": "PostalAddress", "streetAddress": "#301 - 1688 152nd Street", "addressLocality": "Surrey", "addressRegion": "BC", "postalCode": "V4A 4N2", "addressCountry": "CA" } },
-        "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.8", "reviewCount": "187" }
+        "provider": { "@type": "Organization", "name": "Kraft Mortgages", "telephone": "604-593-1550", "address": { "@type": "PostalAddress", "streetAddress": "#301 - 1688 152nd Street", "addressLocality": "Surrey", "addressRegion": "BC", "postalCode": "V4A 4N2", "addressCountry": "CA" } }
       })}} />
     </>
   );

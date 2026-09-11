@@ -73,7 +73,7 @@ export function accessibilityPoints({
 }
 
 export function totalPointsCalc(a: number, e: number, acc: number) {
-  return a + e + acc;
+  return Math.min(a + e + acc, 100); // CMHC caps total MLI Select points at 100
 }
 
 export function amortByTier(tier: number) {
@@ -84,8 +84,15 @@ export function amortByTier(tier: number) {
 }
 
 export function leverageFor(isNew: boolean, tier: number) {
-  if (tier >= 50) return 0.95;
-  return 0.80; // conventional baseline LTV is 80%
+  // CMHC MLI Select graduates LTV by tier. New construction gets slightly higher LTV.
+  // Tier 3 (≥100 pts): 95% (new) / 95% (existing)
+  // Tier 2 (≥70 pts):  92.5% (new) / 90% (existing)
+  // Tier 1 (≥50 pts):  90% (new) / 85% (existing)
+  // Below threshold: 80% (conventional baseline)
+  if (tier >= 100) return 0.95;
+  if (tier >= 70) return isNew ? 0.925 : 0.90;
+  if (tier >= 50) return isNew ? 0.90 : 0.85;
+  return 0.80;
 }
 
 export function premiumDiscountFor(tier: number) {

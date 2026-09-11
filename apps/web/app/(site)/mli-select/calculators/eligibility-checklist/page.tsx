@@ -50,7 +50,7 @@ export default function EligibilityChecklistPage() {
   const optionalItems = checklist.filter(item => !item.required);
   const completedRequired = requiredItems.filter(item => item.checked).length;
   const completedOptional = optionalItems.filter(item => item.checked).length;
-  const totalPoints = Math.min(completedOptional * 10, 100); // Simplified scoring
+  const readinessScore = Math.min(completedOptional * 10, 100); // Readiness score (not official MLI points)
 
   return (
     <div className="min-h-screen">
@@ -142,8 +142,8 @@ export default function EligibilityChecklistPage() {
 
                   <div className="border-t border-gray-600 pt-4">
                     <div className="text-center">
-                      <div className="text-2xl font-bold text-gold-400">{totalPoints}</div>
-                      <div className="text-sm text-gray-400">Estimated Points</div>
+                      <div className="text-2xl font-bold text-gold-400">{readinessScore}</div>
+                      <div className="text-sm text-gray-400">Readiness Score</div>
                     </div>
                   </div>
 

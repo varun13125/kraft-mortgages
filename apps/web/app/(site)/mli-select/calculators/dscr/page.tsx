@@ -14,12 +14,21 @@ export default function DSCRPage() {
 
   const tier = tierFromPoints(points);
   const defaultYears = amortByTier(tier);
-  const years = customYears === "" ? defaultYears : Number(customYears);
+  const years = customYears === "" ? defaultYears : Math.max(1, Number(customYears) || defaultYears);
+  const safeNoi = Math.max(0, noi || 0);
 
-  const loan = dscrMaxLoan({ noi, rateAnnual: rate, years, minDcr: 1.10 });
-  const annualDebtService = noi / 1.10;
+  const loan = safeNoi > 0 ? dscrMaxLoan({ noi: safeNoi, rateAnnual: rate, years, minDcr: 1.10 }) : 0;
+  const annualDebtService = loan > 0
+    ? (() => {
+        const r = rate / 100;
+        const monthlyRate = Math.pow(1 + r / 2, 2 / 12) - 1;
+        const n = years * 12;
+        return loan * (monthlyRate * Math.pow(1 + monthlyRate, n)) / (Math.pow(1 + monthlyRate, n) - 1) * 12;
+      })()
+    : 0;
   const monthlyPayment = annualDebtService / 12;
-  const coverage = (noi / annualDebtService).toFixed(2);
+  // Real coverage ratio (not hardcoded 1.10×)
+  const coverage = annualDebtService > 0 ? (safeNoi / annualDebtService).toFixed(2) : "—";
 
   return (
     <div className="min-h-screen">

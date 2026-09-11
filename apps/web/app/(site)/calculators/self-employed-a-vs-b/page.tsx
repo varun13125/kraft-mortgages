@@ -11,6 +11,8 @@ import Link from "next/link";
 import { ValidatedInput, ValidatedSlider } from "@/components/ui/ValidatedInput";
 import { formatCurrency } from "@/lib/utils/validation";
 import PdfLeadModal from "@/components/PdfLeadModal";
+import { CalculatorSchema } from "@/components/SEO/CalculatorSchema";
+import { RelatedCalculators } from "@/components/calculators/RelatedCalculators";
 
 type Province = "BC" | "AB" | "ON";
 
@@ -81,17 +83,17 @@ export default function SelfEmployedAVsBPage() {
     const aTotalCost = aInterest + additionalTax;
     const bTotalCost = bInterest + bFeeAmount;
 
-    let investmentTaxSavings = 0;
-    if (isInvestment) {
-      investmentTaxSavings = bInterest * (effectiveTaxRate / 100);
-    }
+    // For investment properties, BOTH A-lender and B-lender interest is tax-deductible.
+    // Apply the deduction to both sides equally (not just B) for an apples-to-apples comparison.
+    const aTaxSavings = isInvestment ? aInterest * (effectiveTaxRate / 100) : 0;
+    const bTaxSavings = isInvestment ? bInterest * (effectiveTaxRate / 100) : 0;
 
-    const netSavings = aTotalCost - (bTotalCost - investmentTaxSavings);
+    const netSavings = (aTotalCost - aTaxSavings) - (bTotalCost - bTaxSavings);
     const bWins = netSavings > 0;
 
     return {
       aMonthly, bMonthly, aInterest, bInterest, aTotalCost, bTotalCost,
-      bFeeAmount, additionalTax, netSavings, bWins, investmentTaxSavings,
+      bFeeAmount, additionalTax, netSavings, bWins, investmentTaxSavings: bTaxSavings,
       monthlyDiff: Math.abs(aMonthly - bMonthly),
     };
   }, [mortgageAmount, aRate, bRate, term, amortization, additionalIncome, effectiveTaxRate, isInvestment, bFee]);
@@ -101,6 +103,8 @@ export default function SelfEmployedAVsBPage() {
   return (
     <>
       <Navigation />
+      <CalculatorSchema name="Self-Employed: A-Lender vs B-Lender Calculator" description="Compare A-lender vs B-lender costs including the tax implications of declared income." url="/calculators/self-employed-a-vs-b" />
+
       <main className="min-h-screen mt-16">
         {/* Breadcrumb */}
         <section className="py-6 px-4 bg-gray-800/30">
@@ -516,6 +520,7 @@ export default function SelfEmployedAVsBPage() {
         </section>
 
         <ComplianceBanner feature="LEAD_FORM" />
+        <RelatedCalculators current="self-employed-a-vs-b" related={["self-employed","a-vs-equity","b-vs-equity","affordability"]} />
       </main>
     </>
   );

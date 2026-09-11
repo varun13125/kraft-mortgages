@@ -9,6 +9,8 @@ import Link from "next/link";
 import { ValidatedInput } from "@/components/ui/ValidatedInput";
 import { formatCurrency } from "@/lib/utils/validation";
 import PdfLeadModal from "@/components/PdfLeadModal";
+import { CalculatorSchema } from "@/components/SEO/CalculatorSchema";
+import { RelatedCalculators } from "@/components/calculators/RelatedCalculators";
 
 type Ownership = "citizen" | "pr" | "other";
 type Occupancy = "principal" | "rental" | "vacant" | "shortterm";
@@ -50,6 +52,8 @@ export default function BCSpeculationTaxPage() {
   return (
     <>
       <Navigation />
+      <CalculatorSchema name="BC Speculation & Vacancy Tax Calculator" description="Calculate BC speculation and vacancy tax liability based on ownership status." url="/calculators/bc-speculation-tax" />
+
       <main className="min-h-screen mt-16">
         <section className="py-6 px-4 bg-gray-800/30">
           <div className="max-w-6xl mx-auto">
@@ -121,7 +125,7 @@ export default function BCSpeculationTaxPage() {
                       {
                         title: "Results",
                         rows: [
-                          { label: "Tax Rate", value: (taxRate * 100) + "%" },
+                          { label: "Tax Rate", value: taxRate + "%" },
                           { label: "Annual Tax", value: "$" + Math.round(taxAmount).toLocaleString("en-CA"), highlight: true },
                           { label: "Exempt?", value: exempt ? "Yes" : "No" },
                           ...(reason ? [{ label: "Reason", value: reason }] : []),
@@ -305,6 +309,7 @@ export default function BCSpeculationTaxPage() {
         </section>
 
         <ComplianceBanner feature="LEAD_FORM" />
+        <RelatedCalculators current="bc-speculation-tax" related={["affordability","land-transfer-tax","closing-costs"]} />
       </main>
     </>
   );

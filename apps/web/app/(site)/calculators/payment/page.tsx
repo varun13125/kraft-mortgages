@@ -7,6 +7,8 @@ import { ComplianceBanner } from "@/components/ComplianceBanner";
 import { Calculator, DollarSign, TrendingUp, ArrowRight, Clock, Download } from "lucide-react";
 import Link from "next/link";
 import PdfLeadModal from "@/components/PdfLeadModal";
+import { CalculatorSchema } from "@/components/SEO/CalculatorSchema";
+import { RelatedCalculators } from "@/components/calculators/RelatedCalculators";
 
 export default function PaymentCalculatorPage() {
   const [showPdfModal, setShowPdfModal] = useState(false);
@@ -33,6 +35,8 @@ export default function PaymentCalculatorPage() {
   return (
     <>
 <main className="min-h-screen mt-16">
+      <CalculatorSchema name="Mortgage Payment Calculator" description="Calculate monthly mortgage payments and accelerated biweekly savings with live scenarios." url="/calculators/payment" />
+
         {/* Breadcrumb */}
         <section className="py-6 px-4 bg-gray-800/30">
           <div className="max-w-6xl mx-auto">
@@ -266,6 +270,7 @@ export default function PaymentCalculatorPage() {
             </div>
           </div>
         </section>
+        <RelatedCalculators current="payment" related={["affordability","amortization","extra-payments","renewal","rate-comparison"]} />
       </main>
     </>
   );

@@ -13,9 +13,10 @@ export default function MaxLoanPage() {
 
   const tier = tierFromPoints(points);
   const leverage = leverageFor(projectType === "new", tier);
-  const maxLoan = maxLoanFromValueOrCost(projectType === "new", tier, valueOrCost);
-  const equityRequired = valueOrCost - maxLoan;
-  const equityPercent = (equityRequired / valueOrCost) * 100;
+  const safeValue = Math.max(1, valueOrCost || 0);
+  const maxLoan = maxLoanFromValueOrCost(projectType === "new", tier, safeValue);
+  const equityRequired = safeValue - maxLoan;
+  const equityPercent = (equityRequired / safeValue) * 100;
 
   return (
     <div className="min-h-screen">

@@ -2,6 +2,7 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import Navigation from "@/components/Navigation";
+import { BorderRotate } from "@/components/ui/animated-gradient-border";
 import {
   Calculator, 
   Home, 
@@ -311,11 +312,24 @@ export default function CalculatorsHub() {
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.1 }}
                   viewport={{ once: true }}
+                  className="h-full"
                 >
-                  <Link href={calc.href as any} className="group">
-                    <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl shadow-2xl border border-gray-700/50 p-4 transition-all hover:shadow-gold-500/20 hover:shadow-2xl hover:-translate-y-1">
-                      <div className="flex items-center gap-3 mb-3">
-                        <div className="w-10 h-10 bg-gradient-to-br from-gold-500/20 to-amber-500/20 rounded-lg flex items-center justify-center border border-gold-500/30">
+                  <Link href={calc.href as any} className="group h-full block">
+                    <BorderRotate
+                      animationMode="rotate-on-hover"
+                      animationSpeed={6}
+                      borderRadius={12}
+                      borderWidth={2}
+                      backgroundColor="#1f293780"
+                      className="h-full p-4 shadow-2xl backdrop-blur-sm"
+                      gradientColors={{
+                        primary: '#584827',
+                        secondary: '#c7a03c',
+                        accent: '#f9de90'
+                      }}
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-gradient-to-br from-gold-500/20 to-amber-500/20 rounded-lg flex items-center justify-center border border-gold-500/30 shrink-0">
                           <calc.icon className="w-5 h-5 text-gold-400" />
                         </div>
                         <div>
@@ -323,7 +337,7 @@ export default function CalculatorsHub() {
                           <p className="text-xs text-gray-400">{calc.description}</p>
                         </div>
                       </div>
-                    </div>
+                    </BorderRotate>
                   </Link>
                 </motion.div>
               ))}
@@ -356,12 +370,26 @@ export default function CalculatorsHub() {
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.1 }}
                   viewport={{ once: true }}
-                  className={`relative overflow-hidden ${section.featured ? 'lg:col-span-2' : ''}`}
+                  className={`relative overflow-hidden h-full ${section.featured ? 'lg:col-span-2' : ''}`}
                 >
-                  <Link href={section.href as any} className="group">
-                    <div className={`bg-gray-800/50 backdrop-blur-sm rounded-xl shadow-2xl border border-gray-700/50 p-6 transition-all hover:shadow-2xl hover:-translate-y-1 relative overflow-hidden ${
-                      section.featured ? 'border-gold-500/30 ring-1 ring-gold-500/20' : ''
-                    }`}>
+                  <Link href={section.href as any} className="group h-full block">
+                    <BorderRotate
+                      animationMode="rotate-on-hover"
+                      animationSpeed={6}
+                      borderRadius={12}
+                      borderWidth={section.featured ? 3 : 2}
+                      backgroundColor="#1f293780"
+                      className="h-full p-6 shadow-2xl backdrop-blur-sm relative overflow-hidden"
+                      gradientColors={section.featured ? {
+                        primary: '#d4af37',
+                        secondary: '#f59e0b',
+                        accent: '#ffffff'
+                      } : {
+                        primary: '#584827',
+                        secondary: '#c7a03c',
+                        accent: '#f9de90'
+                      }}
+                    >
                       {/* Background Gradient */}
                       <div className={`absolute inset-0 bg-gradient-to-br ${section.bgGradient} opacity-20`}></div>
 
@@ -408,7 +436,7 @@ export default function CalculatorsHub() {
                           <ArrowRight className={`w-4 h-4 bg-gradient-to-r ${section.color} bg-clip-text text-transparent group-hover:translate-x-1 transition-transform`} />
                         </div>
                       </div>
-                    </div>
+                    </BorderRotate>
                   </Link>
                 </motion.div>
               ))}

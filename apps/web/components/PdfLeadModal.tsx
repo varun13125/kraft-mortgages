@@ -172,7 +172,7 @@ export default function PdfLeadModal({
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
                       className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 text-gray-100 placeholder-gray-500 focus:outline-none focus:border-gold-500/50 focus:ring-1 focus:ring-gold-500/50 transition-colors"
-                      placeholder="(604) 555-1234"
+                      placeholder="(604) 555-0199"
                     />
                   </div>
 

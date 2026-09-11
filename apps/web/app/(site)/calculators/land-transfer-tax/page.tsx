@@ -8,6 +8,8 @@ import Link from "next/link";
 import { ValidatedInput } from "@/components/ui/ValidatedInput";
 import { formatCurrency } from "@/lib/utils/validation";
 import PdfLeadModal from "@/components/PdfLeadModal";
+import { CalculatorSchema } from "@/components/SEO/CalculatorSchema";
+import { RelatedCalculators } from "@/components/calculators/RelatedCalculators";
 
 const PROVINCES = ["BC", "Alberta", "Ontario"] as const;
 type Province = (typeof PROVINCES)[number];
@@ -153,6 +155,7 @@ export default function LandTransferTax() {
 
   return (
     <>
+      <CalculatorSchema name="Land Transfer Tax Calculator" description="Calculate provincial land transfer tax for BC, Alberta, and Ontario including first-time rebates." url="/calculators/land-transfer-tax" />
       <Navigation />
       <main className="min-h-screen mt-16">
         <section className="py-6 px-4 bg-gray-800/30">
@@ -449,6 +452,7 @@ export default function LandTransferTax() {
               />
             </div>
         <ComplianceBanner feature="LEAD_FORM" />
+        <RelatedCalculators current="land-transfer-tax" related={["closing-costs","first-time-home-buyer","affordability"]} />
       </main>
     </>
   );

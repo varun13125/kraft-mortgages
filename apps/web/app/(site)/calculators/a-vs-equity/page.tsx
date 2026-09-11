@@ -10,6 +10,7 @@ import Link from "next/link";
 import { ValidatedInput, ValidatedSlider } from "@/components/ui/ValidatedInput";
 import { formatCurrency } from "@/lib/utils/validation";
 import PdfLeadModal from "@/components/PdfLeadModal";
+import { RelatedCalculators } from "@/components/calculators/RelatedCalculators";
 
 type Province = "BC" | "AB" | "ON";
 type LoanPosition = "1st" | "2nd";
@@ -402,7 +403,7 @@ export default function AVsEquityPage() {
                   </h4>
                   <p className="text-sm text-gray-300">
                     {netDifference > 0
-                      ? `Equity lending saves you ${formatCurrency(Math.abs(additionalTax), 0)} in personal income tax over ${term} years, which more than offsets the ${formatCurrency(eqInterest - aInterest, 0)} additional interest and ${formatCurrency(eqFeeAmount, 0)} lender fee. Net savings: ${formatCurrency(netDifference, 0)}.`
+                      ? `Equity lending saves you ${formatCurrency(Math.abs(netDifference), 0)} net over ${term} years. The ${formatCurrency(additionalTax, 0)} tax saving on declared income more than offsets the ${formatCurrency(eqInterest - aInterest, 0)} additional interest and ${formatCurrency(eqFeeAmount, 0)} lender fee.`
                       : `The A-lender path costs ${formatCurrency(aInterest, 0)} in interest but you avoid the ${formatCurrency(eqInterest - aInterest, 0)} additional interest cost. However, you'll owe ${formatCurrency(additionalTax, 0)} in income tax on declared income. Net difference: ${formatCurrency(netDifference, 0)}.`
                     }
                   </p>
@@ -581,11 +582,11 @@ export default function AVsEquityPage() {
             "name": "Kraft Mortgages",
             "telephone": "604-593-1550",
             "address": { "@type": "PostalAddress", "streetAddress": "#301 - 1688 152nd Street", "addressLocality": "Surrey", "addressRegion": "BC", "postalCode": "V4A 4N2", "addressCountry": "CA" }
-          },
-          "aggregateRating": { "@type": "AggregateRating", "ratingValue": "4.9", "reviewCount": "23" }
+          }
         })}} />
 
         <ComplianceBanner feature="LEAD_FORM" />
+        <RelatedCalculators current="a-vs-equity" related={["self-employed-a-vs-b","b-vs-equity","refinance-vs-heloc-vs-second"]} />
       </main>
     </>
   );

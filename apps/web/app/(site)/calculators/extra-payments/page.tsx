@@ -9,6 +9,8 @@ import Link from "next/link";
 import { ValidatedInput, ValidatedSlider } from "@/components/ui/ValidatedInput";
 import { formatCurrency } from "@/lib/utils/validation";
 import PdfLeadModal from "@/components/PdfLeadModal";
+import { CalculatorSchema } from "@/components/SEO/CalculatorSchema";
+import { RelatedCalculators } from "@/components/calculators/RelatedCalculators";
 
 /* ── Amortization helpers ───────────────────────────── */
 interface YearRow {
@@ -50,7 +52,7 @@ function buildComparison(mortgage: number, rate: number, amortYears: number, ext
         yearIntA += ip;
         intA += ip;
         const extra = (yr >= startYear) ? extraMonthly : 0;
-        const lump = (yr === startYear) ? lumpSum : 0;
+        const lump = (yr === startYear && m === 0) ? lumpSum : 0;
         const totalPay = basePayment + extra + lump;
         const pp = Math.min(totalPay - ip, balA);
         balA -= pp;
@@ -125,6 +127,8 @@ export default function ExtraPaymentsPage() {
   return (
     <>
       <Navigation />
+      <CalculatorSchema name="Extra Payment Savings Calculator" description="See how much interest you can save and years you can cut with extra mortgage payments." url="/calculators/extra-payments" />
+
       <main className="min-h-screen mt-16">
         <section className="py-6 px-4 bg-gray-800/30">
           <div className="max-w-6xl mx-auto">
@@ -352,6 +356,7 @@ export default function ExtraPaymentsPage() {
         </section>
 
         <ComplianceBanner feature="LEAD_FORM" />
+        <RelatedCalculators current="extra-payments" related={["payment","amortization","renewal"]} />
       </main>
     </>
   );

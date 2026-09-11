@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import { CityServiceJsonLd } from '@/components/SEO/CityServiceJsonLd';
 
 export const metadata: Metadata = {
   title: 'Ottawa Mortgage Broker | Best Mortgage Rates | Kraft Mortgages',
@@ -16,30 +17,9 @@ export const metadata: Metadata = {
 };
 
 export default function OttawaLayout({ children }: { children: React.ReactNode }) {
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "FinancialService",
-    name: "Kraft Mortgages",
-    description: "Trusted Ottawa mortgage broker with low interest rates",
-    url: "https://www.kraftmortgages.ca/mortgage-broker-ottawa",
-    areaServed: {
-      "@type": "City",
-      name: "Ottawa",
-      containedInPlace: {
-        "@type": "Province",
-        name: "Ontario"
-      }
-    },
-    serviceType: "Mortgage Brokerage",
-    knowsAbout: ["Residential Mortgages", "Public Servant Mortgages", "Tech Contractor Financing", "Cash-Back Options", "First-Time Home Buyer Programs", "Pre-Approvals", "Refinancing"]
-  };
-
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      <CityServiceJsonLd cityName="Ottawa" provinceName="ON" description="Licensed mortgage broker serving Ottawa, ON. Residential, construction, self-employed, MLI Select, and private lending solutions." />
       {children}
     </>
   );

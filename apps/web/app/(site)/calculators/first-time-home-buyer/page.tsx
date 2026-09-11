@@ -9,6 +9,8 @@ import { ValidatedInput, ValidatedSlider } from "@/components/ui/ValidatedInput"
 import { formatCurrency, formatPercentage } from "@/lib/utils/validation";
 import { payment } from "@/lib/calc/payment";
 import PdfLeadModal from "@/components/PdfLeadModal";
+import { CalculatorSchema } from "@/components/SEO/CalculatorSchema";
+import { RelatedCalculators } from "@/components/calculators/RelatedCalculators";
 
 const PROVINCES = ["BC", "Alberta", "Ontario"] as const;
 type Province = (typeof PROVINCES)[number];
@@ -57,10 +59,15 @@ function calcLandTransferTax(price: number, province: Province, isFirstTime: boo
 function calcGSTRebate(price: number, isNewBuild: boolean): number {
   if (!isNewBuild) return 0;
   if (price >= 800000) return 0;
-  if (price <= 450000) return price * 0.05 * 0.36;
-  const phaseOut = 350000;
-  const eligible = Math.max(0, phaseOut - (price - 450000));
-  return (450000 * 0.05 * 0.36) * (eligible / phaseOut);
+  // Federal GST new-housing rebate: 36% of GST on the first $350K, phasing out $350K–$450K
+  // Max rebate = $350,000 × 5% × 36% = $6,300
+  if (price <= 350000) return price * 0.05 * 0.36;
+  if (price <= 450000) {
+    const maxRebate = 350000 * 0.05 * 0.36; // $6,300
+    const phaseOutFactor = Math.max(0, (450000 - price) / 100000);
+    return maxRebate * phaseOutFactor;
+  }
+  return 0;
 }
 
 export default function FirstTimeHomeBuyer() {
@@ -74,12 +81,13 @@ export default function FirstTimeHomeBuyer() {
   const [marginalRate, setMarginalRate] = useState(28);
 
   const results = useMemo(() => {
-    // FHSA
+    // FHSA: tax savings based on ANNUAL contribution cap ($8K/yr), not lifetime limit
     const fhsaAnnualContrib = Math.min(8000, savings);
     const fhsaMaxLifetime = 40000;
-    const fhsaYearsNeeded = Math.ceil(Math.min(savings, fhsaMaxLifetime) / Math.min(8000, savings));
+    const fhsaYearsNeeded = fhsaAnnualContrib > 0 ? Math.ceil(Math.min(savings, fhsaMaxLifetime) / fhsaAnnualContrib) : 0;
     const fhsaContributed = Math.min(savings, fhsaMaxLifetime);
-    const fhsaTaxSavings = fhsaContributed * (marginalRate / 100);
+    // Tax savings = first-year contribution × marginal rate (the $8K annual cap applies)
+    const fhsaTaxSavings = fhsaAnnualContrib * (marginalRate / 100);
 
     // HBP
     const hbpLimit = isCouple ? 120000 : 60000;
@@ -121,6 +129,8 @@ export default function FirstTimeHomeBuyer() {
   return (
     <>
       <Navigation />
+      <CalculatorSchema name="First-Time Home Buyer Calculator" description="Calculate down payment requirements, FHSA tax savings, and first-time buyer incentives." url="/calculators/first-time-home-buyer" />
+
       <main className="min-h-screen mt-16">
         {/* Breadcrumb */}
         <section className="py-6 px-4 bg-gray-800/30">
@@ -414,6 +424,7 @@ export default function FirstTimeHomeBuyer() {
               />
             </div>
                 <ComplianceBanner feature="LEAD_FORM" />
+        <RelatedCalculators current="first-time-home-buyer" related={["affordability","down-payment","land-transfer-tax","closing-costs","stress-test"]} />
       </main>
     </>
   );
