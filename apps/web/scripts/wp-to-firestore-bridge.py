@@ -105,11 +105,14 @@ def push_to_firestore(doc):
     db = firestore.client(app=firebase_admin.get_app(name="wp-bridge"))
     slug = doc["slug"]
 
-    # Convert publishedAt back to a Timestamp
+    # Convert publishedAt string to a proper datetime object
     if isinstance(doc["publishedAt"], str):
         try:
             dt = datetime.datetime.fromisoformat(doc["publishedAt"])
-            doc["publishedAt"] = firestore.SERVER_TIMESTAMP
+            # Make it timezone-aware if not already
+            if dt.tzinfo is None:
+                dt = dt.replace(tzinfo=datetime.timezone.utc)
+            doc["publishedAt"] = dt
         except:
             doc["publishedAt"] = firestore.SERVER_TIMESTAMP
 
