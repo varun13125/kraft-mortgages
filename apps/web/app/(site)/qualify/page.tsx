@@ -177,58 +177,58 @@ export default function QualifyPage() {
   };
 
   const inputClass =
-    "w-full bg-term-deep border border-term-line-dim px-5 py-4 text-term-text placeholder-term-text-mute focus:outline-none focus:border-term-gold transition-colors font-sans text-[15px] rounded-sm";
-  const labelClass = "block font-mono text-[10px] text-term-gold tracking-[0.15em] mb-2 uppercase";
+    "w-full bg-[#0d1829] border-2 border-slate-700/80 px-5 py-4 text-white placeholder-slate-400 focus:outline-none focus:border-[#d4af37] focus:ring-2 focus:ring-[#d4af37]/25 transition-all font-sans text-base font-medium rounded-md shadow-inner";
+  const labelClass = "block font-mono text-xs font-semibold text-[#f3d275] tracking-[0.12em] mb-2 uppercase";
 
   return (
-    <main className="min-h-screen bg-term-bg text-term-text font-sans text-sm leading-relaxed relative overflow-hidden">
+    <main className="min-h-screen bg-[#070e1a] text-slate-100 font-sans text-sm leading-relaxed relative overflow-hidden">
       <div className="absolute inset-0 term-grid-bg opacity-10 pointer-events-none" />
 
       {/* Decorative Golden Ambient Aura */}
-      <div className="absolute top-[-300px] left-1/2 -translate-x-1/2 w-[800px] h-[500px] rounded-full bg-term-gold/5 blur-[120px] pointer-events-none" />
+      <div className="absolute top-[-300px] left-1/2 -translate-x-1/2 w-[800px] h-[500px] rounded-full bg-[#d4af37]/10 blur-[140px] pointer-events-none" />
 
       <div className="max-w-[1000px] mx-auto px-4 py-20 relative z-10">
         
         {/* HEADER */}
         <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2.5 mb-5 font-mono text-[11px] text-term-gold tracking-[0.2em] border border-term-gold/20 px-3 py-1.5 rounded-full bg-term-deep/40">
-            <span className="w-1.5 h-1.5 rounded-full bg-term-gold animate-pulse" />
+          <div className="inline-flex items-center gap-2.5 mb-5 font-mono text-xs font-semibold text-[#f3d275] tracking-[0.2em] border border-[#d4af37]/30 px-4 py-1.5 rounded-full bg-[#0c1626]/90 shadow-sm">
+            <span className="w-2 h-2 rounded-full bg-[#d4af37] animate-pulse" />
             SECURE PORTAL · INSTANT PRE-QUALIFICATION
           </div>
-          <h1 className="font-serif font-normal text-4xl sm:text-6xl leading-[1.0] tracking-[-0.03em] mb-4">
-            Qualify for Your <em className="text-term-gold italic font-normal">Priority Rate.</em>
+          <h1 className="font-serif font-normal text-4xl sm:text-6xl leading-[1.0] tracking-[-0.03em] mb-4 text-white">
+            Qualify for Your <em className="text-[#f3d275] italic font-normal">Priority Rate.</em>
           </h1>
           {requestedTerm && (
-            <div className="inline-flex items-center gap-2 mb-4 px-3.5 py-1.5 rounded-full bg-term-gold/10 border border-term-gold/30 text-term-gold text-xs font-mono">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>Locking Rate For:</span>
-              <strong className="text-white">{requestedTerm}</strong>
+            <div className="inline-flex items-center gap-2 mb-4 px-4 py-2 rounded-full bg-[#0c1626] border border-[#d4af37]/40 text-[#f3d275] text-xs font-mono shadow-md">
+              <Sparkles className="w-3.5 h-3.5 text-[#f3d275]" />
+              <span className="text-slate-300">Locking Rate For:</span>
+              <strong className="text-white font-bold">{requestedTerm}</strong>
               <span className="text-emerald-400 font-semibold">• Live Verified Feed</span>
             </div>
           )}
-          <p className="text-[15px] text-term-text-dim max-w-[620px] mx-auto leading-relaxed">
+          <p className="text-base text-slate-200 max-w-[620px] mx-auto leading-relaxed">
             Get instant credit mapping, lock in BC's lowest rate options, and speak with Julia (our automated voice specialist) to finalize your priority file.
           </p>
         </div>
 
         {/* MAIN PANEL */}
-        <div className="bg-term-deep/30 border border-term-line-dim backdrop-blur-xl p-8 sm:p-12 shadow-[0_20px_50px_rgba(0,0,0,0.4)] relative">
+        <div className="bg-[#0a1424]/90 border border-slate-700/80 backdrop-blur-xl p-8 sm:p-12 shadow-[0_20px_50px_rgba(0,0,0,0.6)] rounded-xl relative">
           
           {/* Top Border gold line */}
-          <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-term-gold/40 to-transparent" />
+          <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-[#d4af37] to-transparent rounded-t-xl" />
 
           {/* STATUS: ERROR */}
           {status === "error" && (
             <div className="text-center py-16">
-              <div className="font-mono text-xs text-term-red tracking-widest mb-4">✕ DISPATCH FAILURE</div>
-              <h2 className="font-serif text-3xl mb-4">System Routing Interrupted</h2>
-              <p className="text-term-text-dim max-w-[480px] mx-auto mb-8">
+              <div className="font-mono text-xs text-red-400 tracking-widest mb-4 font-bold">✕ DISPATCH FAILURE</div>
+              <h2 className="font-serif text-3xl mb-4 text-white">System Routing Interrupted</h2>
+              <p className="text-slate-300 max-w-[480px] mx-auto mb-8">
                 An issue occurred while queueing your outbound qualification call. Please call our office directly to secure your file.
               </p>
-              <a href="tel:604-593-1550" className="bg-term-gold text-term-deep font-mono text-xs font-semibold px-8 py-4 tracking-widest hover:bg-term-gold-bright transition-colors rounded-sm inline-block">
+              <a href="tel:604-593-1550" className="bg-[#d4af37] text-[#070e1a] font-mono text-xs font-bold px-8 py-4 tracking-widest hover:bg-[#f3d275] transition-colors rounded-md inline-block shadow-md">
                 CALL 604-593-1550 NOW →
               </a>
-              <button onClick={() => setStatus("idle")} className="block mx-auto mt-6 text-xs text-term-gold underline font-mono">
+              <button onClick={() => setStatus("idle")} className="block mx-auto mt-6 text-xs text-[#f3d275] underline font-mono font-semibold">
                 RETRY PRE-QUALIFICATION
               </button>
             </div>
@@ -240,57 +240,57 @@ export default function QualifyPage() {
               
               {/* Pulse Ring Indicator */}
               <div className="relative w-40 h-40 mx-auto mb-10 flex items-center justify-center">
-                <div className="absolute inset-0 rounded-full bg-term-gold/10 animate-ping opacity-60" />
-                <div className="absolute inset-4 rounded-full bg-term-gold/20 animate-pulse" />
-                <div className="w-24 h-24 rounded-full bg-term-deep border border-term-gold/50 flex items-center justify-center shadow-[0_0_30px_rgba(200,169,98,0.2)] z-10">
+                <div className="absolute inset-0 rounded-full bg-[#d4af37]/10 animate-ping opacity-60" />
+                <div className="absolute inset-4 rounded-full bg-[#d4af37]/20 animate-pulse" />
+                <div className="w-24 h-24 rounded-full bg-[#0b1528] border border-[#d4af37]/60 flex items-center justify-center shadow-[0_0_30px_rgba(212,175,55,0.3)] z-10">
                   <span className="text-4xl animate-bounce">📞</span>
                 </div>
               </div>
 
-              <div className="font-mono text-[11px] text-term-gold tracking-[0.2em] mb-4 uppercase">
+              <div className="font-mono text-xs text-[#f3d275] tracking-[0.2em] mb-4 uppercase font-semibold">
                 Incoming Outbound Call Dispatched ({seconds}s)
               </div>
-              <h2 className="font-serif text-3xl sm:text-4xl mb-4">
-                Julia is calling your phone <em className="text-term-gold italic font-normal">{form.phone}</em>
+              <h2 className="font-serif text-3xl sm:text-4xl mb-4 text-white">
+                Julia is calling your phone <em className="text-[#f3d275] italic font-normal">{form.phone}</em>
               </h2>
-              <p className="text-[15px] text-term-text-dim max-w-[560px] mx-auto mb-10">
+              <p className="text-base text-slate-200 max-w-[560px] mx-auto mb-10">
                 Please answer when your phone rings. Julia is assigned to your profile to verify your mortgage details and secure your priority rates.
               </p>
 
               {/* Console steps tracker */}
-              <div className="max-w-[480px] mx-auto bg-term-deep/70 border border-term-line-dim p-6 rounded-sm text-left space-y-3 font-mono text-xs text-term-text-dim">
+              <div className="max-w-[480px] mx-auto bg-[#070e1a]/90 border border-slate-700/80 p-6 rounded-lg text-left space-y-3 font-mono text-xs text-slate-300">
                 <div className="flex items-center gap-3">
-                  <span className="text-term-green">✓</span>
+                  <span className="text-emerald-400 font-bold">✓</span>
                   <span>Facebook Ad Campaign parameters mapped</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <span className={callCheckpoint >= 1 ? "text-term-green" : "text-term-text-mute animate-pulse"}>
+                  <span className={callCheckpoint >= 1 ? "text-emerald-400 font-bold" : "text-slate-400 animate-pulse"}>
                     {callCheckpoint >= 1 ? "✓" : "▶"}
                   </span>
-                  <span className={callCheckpoint >= 1 ? "text-term-text" : "text-term-text-mute"}>
+                  <span className={callCheckpoint >= 1 ? "text-white font-medium" : "text-slate-400"}>
                     Lead registered in Twenty CRM database
                   </span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <span className={callCheckpoint >= 2 ? "text-term-green" : "text-term-text-mute animate-pulse"}>
+                  <span className={callCheckpoint >= 2 ? "text-emerald-400 font-bold" : "text-slate-400 animate-pulse"}>
                     {callCheckpoint >= 2 ? "✓" : callCheckpoint >= 1 ? "▶" : "·"}
                   </span>
-                  <span className={callCheckpoint >= 2 ? "text-term-text" : "text-term-text-mute"}>
+                  <span className={callCheckpoint >= 2 ? "text-white font-medium" : "text-slate-400"}>
                     Securing scenario outbound payload...
                   </span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <span className={callCheckpoint >= 3 ? "text-term-green" : "text-term-text-mute animate-pulse"}>
+                  <span className={callCheckpoint >= 3 ? "text-emerald-400 font-bold" : "text-slate-400 animate-pulse"}>
                     {callCheckpoint >= 3 ? "✓" : callCheckpoint >= 2 ? "▶" : "·"}
                   </span>
-                  <span className={callCheckpoint >= 3 ? "text-term-text" : "text-term-text-mute animate-pulse"}>
+                  <span className={callCheckpoint >= 3 ? "text-emerald-300 font-bold" : "text-slate-400 animate-pulse"}>
                     {callCheckpoint >= 3 ? "Julia online: Calling phone line now!" : "Julia connecting..."}
                   </span>
                 </div>
               </div>
 
-              <div className="mt-8 text-[13px] text-term-text-mute font-mono">
-                Caller ID will display as Julia: <a href="tel:+16042003732" className="text-term-gold font-sans">+1 604-200-3732</a>
+              <div className="mt-8 text-sm text-slate-300 font-mono">
+                Caller ID will display as Julia: <a href="tel:+16042003732" className="text-[#f3d275] font-sans font-bold hover:underline">+1 604-200-3732</a>
               </div>
             </div>
           )}
@@ -299,14 +299,14 @@ export default function QualifyPage() {
           {status === "idle" || status === "submitting" ? (
             <div>
               {/* PROGRESS BAR */}
-              <div className="flex justify-between items-center mb-8 font-mono text-[10px] text-term-text-mute tracking-wider border-b border-term-line-dim pb-4">
-                <span>STEP {step} OF 5</span>
-                <div className="flex gap-1.5">
+              <div className="flex justify-between items-center mb-8 font-mono text-xs font-semibold text-slate-300 tracking-wider border-b border-slate-800 pb-4">
+                <span className="text-[#f3d275]">STEP {step} OF 5</span>
+                <div className="flex gap-2">
                   {[1, 2, 3, 4, 5].map((i) => (
                     <div
                       key={i}
-                      className={`h-1 w-8 transition-colors ${
-                        i <= step ? "bg-term-gold" : "bg-term-line-dim"
+                      className={`h-1.5 w-8 rounded-full transition-colors ${
+                        i <= step ? "bg-[#d4af37]" : "bg-slate-700"
                       }`}
                     />
                   ))}
@@ -316,19 +316,19 @@ export default function QualifyPage() {
               {/* STEP 1: GOAL */}
               {step === 1 && (
                 <div>
-                  <h2 className="font-serif text-2xl sm:text-3xl mb-8">
-                    What is your primary mortgage <em className="text-term-gold italic font-normal">goal?</em>
+                  <h2 className="font-serif text-2xl sm:text-3xl mb-8 text-white">
+                    What is your primary mortgage <em className="text-[#f3d275] italic font-normal">goal?</em>
                   </h2>
                   <div className="grid gap-4 sm:grid-cols-2">
                     {GOALS.map((g) => (
                       <button
                         key={g.id}
                         onClick={() => handleGoalSelect(g.id)}
-                        className="group text-left bg-term-deep/40 border border-term-line-dim p-6 hover:border-term-gold/60 transition-all hover:translate-y-[-2px] rounded-sm"
+                        className="group text-left bg-[#0c1626]/80 border border-slate-700/80 hover:border-[#d4af37] p-6 transition-all hover:translate-y-[-2px] rounded-lg shadow-sm"
                       >
                         <div className="text-3xl mb-4 group-hover:scale-110 transition-transform origin-left">{g.icon}</div>
-                        <h3 className="font-serif text-lg text-term-text group-hover:text-term-gold transition-colors mb-2">{g.title}</h3>
-                        <p className="text-[13px] text-term-text-dim">{g.desc}</p>
+                        <h3 className="font-serif text-lg text-white group-hover:text-[#f3d275] transition-colors mb-1.5">{g.title}</h3>
+                        <p className="text-sm text-slate-300 leading-relaxed">{g.desc}</p>
                       </button>
                     ))}
                   </div>
@@ -338,8 +338,8 @@ export default function QualifyPage() {
               {/* STEP 2: VALUES */}
               {step === 2 && (
                 <div>
-                  <h2 className="font-serif text-2xl sm:text-3xl mb-8">
-                    Tell us about the property <em className="text-term-gold italic font-normal">value.</em>
+                  <h2 className="font-serif text-2xl sm:text-3xl mb-8 text-white">
+                    Tell us about the property <em className="text-[#f3d275] italic font-normal">value.</em>
                   </h2>
                   <div className="space-y-6 max-w-[540px] mx-auto py-4">
                     <div>
@@ -367,14 +367,14 @@ export default function QualifyPage() {
                     <div className="flex gap-4 pt-4">
                       <button
                         onClick={() => setStep(1)}
-                        className="w-1/3 bg-transparent border border-term-line-dim text-term-text font-mono text-[12px] py-4 tracking-widest hover:border-term-text transition-colors rounded-sm"
+                        className="w-1/3 bg-slate-800/80 hover:bg-slate-700 border border-slate-600 text-slate-200 hover:text-white font-mono text-xs font-semibold py-4 px-6 tracking-widest rounded-md transition-colors"
                       >
                         ← BACK
                       </button>
                       <button
                         disabled={!form.propertyValue || !form.loanAmount}
                         onClick={() => setStep(3)}
-                        className="w-2/3 bg-term-gold text-term-deep font-mono text-[12px] font-semibold py-4 tracking-widest hover:bg-term-gold-bright transition-colors disabled:opacity-50 disabled:cursor-not-allowed rounded-sm"
+                        className="w-2/3 bg-[#d4af37] hover:bg-[#f3d275] text-[#070e1a] font-mono text-xs font-bold py-4 px-6 tracking-widest transition-colors disabled:bg-slate-800 disabled:text-slate-500 disabled:cursor-not-allowed rounded-md shadow-lg shadow-[#d4af37]/20"
                       >
                         NEXT STEP →
                       </button>
@@ -386,22 +386,22 @@ export default function QualifyPage() {
               {/* STEP 3: CREDIT PROFILE */}
               {step === 3 && (
                 <div>
-                  <h2 className="font-serif text-2xl sm:text-3xl mb-8">
-                    How would you estimate your <em className="text-term-gold italic font-normal">credit score?</em>
+                  <h2 className="font-serif text-2xl sm:text-3xl mb-8 text-white">
+                    How would you estimate your <em className="text-[#f3d275] italic font-normal">credit score?</em>
                   </h2>
                   <div className="grid gap-4 sm:grid-cols-2">
                     {CREDIT_SCORES.map((c) => (
                       <button
                         key={c.id}
                         onClick={() => handleCreditSelect(c.id)}
-                        className="group text-left bg-term-deep/40 border border-term-line-dim p-6 hover:border-term-gold/60 transition-all rounded-sm"
+                        className="group text-left bg-[#0c1626]/80 border border-slate-700/80 hover:border-[#d4af37] p-6 transition-all hover:translate-y-[-2px] rounded-lg shadow-sm"
                       >
-                        <h3 className="font-serif text-lg text-term-text group-hover:text-term-gold transition-colors mb-2">{c.label}</h3>
-                        <p className="text-[13px] text-term-text-dim mb-1">{c.desc}</p>
+                        <h3 className="font-serif text-lg text-white group-hover:text-[#f3d275] transition-colors mb-1.5">{c.label}</h3>
+                        <p className="text-sm text-slate-300 leading-relaxed mb-1">{c.desc}</p>
                       </button>
                     ))}
                   </div>
-                  <button onClick={() => setStep(2)} className="mt-8 text-xs text-term-text-mute font-mono tracking-wider hover:text-term-text">
+                  <button onClick={() => setStep(2)} className="mt-8 text-xs text-slate-400 hover:text-white font-mono tracking-wider transition-colors inline-flex items-center gap-1 font-semibold">
                     ← BACK TO PREVIOUS STEP
                   </button>
                 </div>
@@ -410,22 +410,22 @@ export default function QualifyPage() {
               {/* STEP 4: EMPLOYMENT PROFILE */}
               {step === 4 && (
                 <div>
-                  <h2 className="font-serif text-2xl sm:text-3xl mb-8">
-                    What is your primary <em className="text-term-gold italic font-normal">income source?</em>
+                  <h2 className="font-serif text-2xl sm:text-3xl mb-8 text-white">
+                    What is your primary <em className="text-[#f3d275] italic font-normal">income source?</em>
                   </h2>
                   <div className="grid gap-4 sm:grid-cols-2">
                     {EMPLOYMENT_TYPES.map((e) => (
                       <button
                         key={e.id}
                         onClick={() => handleEmploymentSelect(e.id)}
-                        className="group text-left bg-term-deep/40 border border-term-line-dim p-6 hover:border-term-gold/60 transition-all rounded-sm"
+                        className="group text-left bg-[#0c1626]/80 border border-slate-700/80 hover:border-[#d4af37] p-6 transition-all hover:translate-y-[-2px] rounded-lg shadow-sm"
                       >
-                        <h3 className="font-serif text-lg text-term-text group-hover:text-term-gold transition-colors mb-2">{e.label}</h3>
-                        <p className="text-[13px] text-term-text-dim mb-1">{e.desc}</p>
+                        <h3 className="font-serif text-lg text-white group-hover:text-[#f3d275] transition-colors mb-1.5">{e.label}</h3>
+                        <p className="text-sm text-slate-300 leading-relaxed mb-1">{e.desc}</p>
                       </button>
                     ))}
                   </div>
-                  <button onClick={() => setStep(3)} className="mt-8 text-xs text-term-text-mute font-mono tracking-wider hover:text-term-text">
+                  <button onClick={() => setStep(3)} className="mt-8 text-xs text-slate-400 hover:text-white font-mono tracking-wider transition-colors inline-flex items-center gap-1 font-semibold">
                     ← BACK TO PREVIOUS STEP
                   </button>
                 </div>
@@ -434,10 +434,10 @@ export default function QualifyPage() {
               {/* STEP 5: CONTACT INFORMATION */}
               {step === 5 && (
                 <div>
-                  <h2 className="font-serif text-2xl sm:text-3xl mb-2">
-                    Verify Your Contact <em className="text-term-gold italic font-normal">Details.</em>
+                  <h2 className="font-serif text-2xl sm:text-3xl mb-2 text-white">
+                    Verify Your Contact <em className="text-[#f3d275] italic font-normal">Details.</em>
                   </h2>
-                  <p className="text-[13px] text-term-text-dim mb-8">
+                  <p className="text-sm text-slate-300 mb-8">
                     Julia is standing by to place your priority qualification call.
                   </p>
                   <form onSubmit={handleSubmit} className="space-y-5 max-w-[540px] mx-auto text-left">
@@ -482,7 +482,7 @@ export default function QualifyPage() {
                         onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))}
                         className={inputClass} placeholder="e.g. +1 604-123-4567"
                       />
-                      <span className="text-[11px] text-term-text-mute font-mono block mt-1">
+                      <span className="text-xs text-slate-400 font-mono block mt-1.5 font-medium">
                         Must be a valid, ringable number (E.164 or 10-digit).
                       </span>
                     </div>
@@ -491,14 +491,14 @@ export default function QualifyPage() {
                       <button
                         type="button"
                         onClick={() => setStep(4)}
-                        className="w-1/3 bg-transparent border border-term-line-dim text-term-text font-mono text-[12px] py-4 tracking-widest hover:border-term-text transition-colors rounded-sm"
+                        className="w-1/3 bg-slate-800/80 hover:bg-slate-700 border border-slate-600 text-slate-200 hover:text-white font-mono text-xs font-semibold py-4 px-6 tracking-widest rounded-md transition-colors"
                       >
                         ← BACK
                       </button>
                       <button
                         type="submit"
                         disabled={status === "submitting" || !form.firstName || !form.email || !form.phone}
-                        className="w-2/3 bg-term-gold text-term-deep font-mono text-[12px] font-semibold py-4 tracking-widest hover:bg-term-gold-bright transition-colors disabled:opacity-50 disabled:cursor-not-allowed rounded-sm shadow-[0_0_20px_rgba(200,169,98,0.2)]"
+                        className="w-2/3 bg-[#d4af37] hover:bg-[#f3d275] text-[#070e1a] font-mono text-xs font-bold py-4 px-6 tracking-widest transition-colors disabled:bg-slate-800 disabled:text-slate-500 disabled:cursor-not-allowed rounded-md shadow-lg shadow-[#d4af37]/25"
                       >
                         {status === "submitting" ? "DISPATCHING..." : "DISPATCH QUALIFICATION CALL →"}
                       </button>
@@ -513,52 +513,52 @@ export default function QualifyPage() {
 
         {/* RATE ACCORDION / TRUST SIGNALS */}
         <div className="mt-16 text-center">
-          <div className="inline-flex items-center gap-2 font-mono text-[10px] text-emerald-400 tracking-[0.15em] mb-6 uppercase bg-emerald-500/10 px-3.5 py-1.5 rounded-full border border-emerald-500/30">
+          <div className="inline-flex items-center gap-2 font-mono text-xs font-bold text-emerald-300 tracking-[0.12em] mb-6 uppercase bg-emerald-950/80 px-4 py-2 rounded-full border border-emerald-500/40 shadow-sm">
             <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400"></span>
             </span>
-            <ShieldCheck className="w-3.5 h-3.5" />
+            <ShieldCheck className="w-4 h-4 text-emerald-400" />
             <span>CURRENT VERIFIED MORTGAGE RATES • UPDATED TODAY</span>
           </div>
 
           <div className="grid sm:grid-cols-4 gap-4 max-w-[1000px] mx-auto mb-10">
-            <div className="bg-term-deep/40 border border-term-line-dim hover:border-term-gold/40 transition-colors p-5 text-center rounded-sm">
-              <div className="text-[11px] font-mono text-term-text-mute tracking-wider mb-2">5-YEAR FIXED</div>
-              <div className="text-3xl font-serif text-term-gold font-bold">
+            <div className="bg-[#0c1626]/90 border border-slate-700/80 hover:border-[#d4af37]/60 transition-colors p-5 text-center rounded-lg shadow-md">
+              <div className="text-xs font-mono font-semibold text-slate-300 tracking-wider mb-2">5-YEAR FIXED</div>
+              <div className="text-3xl font-serif text-[#f3d275] font-bold">
                 {best5YrFixed ? `${best5YrFixed.toFixed(2)}%` : "4.44%"}
               </div>
-              <div className="text-[11px] text-term-text-mute mt-1">O.A.C. Insured</div>
+              <div className="text-xs font-medium text-slate-300 mt-1.5">O.A.C. Insured</div>
             </div>
 
-            <div className="bg-term-deep/40 border border-term-line-dim hover:border-term-gold/40 transition-colors p-5 text-center rounded-sm">
-              <div className="text-[11px] font-mono text-term-text-mute tracking-wider mb-2">3-YEAR FIXED</div>
-              <div className="text-3xl font-serif text-term-gold font-bold">
+            <div className="bg-[#0c1626]/90 border border-slate-700/80 hover:border-[#d4af37]/60 transition-colors p-5 text-center rounded-lg shadow-md">
+              <div className="text-xs font-mono font-semibold text-slate-300 tracking-wider mb-2">3-YEAR FIXED</div>
+              <div className="text-3xl font-serif text-[#f3d275] font-bold">
                 {best3YrFixed ? `${best3YrFixed.toFixed(2)}%` : "4.34%"}
               </div>
-              <div className="text-[11px] text-term-text-mute mt-1">Most Popular Term</div>
+              <div className="text-xs font-medium text-slate-300 mt-1.5">Most Popular Term</div>
             </div>
 
-            <div className="bg-term-deep/40 border border-term-line-dim hover:border-term-gold/40 transition-colors p-5 text-center rounded-sm">
-              <div className="text-[11px] font-mono text-term-text-mute tracking-wider mb-2">5-YEAR VARIABLE</div>
-              <div className="text-3xl font-serif text-term-gold font-bold">
+            <div className="bg-[#0c1626]/90 border border-slate-700/80 hover:border-[#d4af37]/60 transition-colors p-5 text-center rounded-lg shadow-md">
+              <div className="text-xs font-mono font-semibold text-slate-300 tracking-wider mb-2">5-YEAR VARIABLE</div>
+              <div className="text-3xl font-serif text-[#f3d275] font-bold">
                 {best5YrVariable ? `${best5YrVariable.toFixed(2)}%` : "3.44%"}
               </div>
-              <div className="text-[11px] text-emerald-400 font-mono mt-1">
+              <div className="text-xs text-emerald-400 font-mono font-semibold mt-1.5">
                 {data?.benchmarks?.variable_5yr?.insured?.lowest_spread || "Prime - 1.01%"}
               </div>
             </div>
 
-            <div className="bg-term-deep/40 border border-term-line-dim hover:border-term-gold/40 transition-colors p-5 text-center rounded-sm">
-              <div className="text-[11px] font-mono text-term-text-mute tracking-wider mb-2">HELOC / EQUITY</div>
-              <div className="text-3xl font-serif text-term-gold font-bold">
+            <div className="bg-[#0c1626]/90 border border-slate-700/80 hover:border-[#d4af37]/60 transition-colors p-5 text-center rounded-lg shadow-md">
+              <div className="text-xs font-mono font-semibold text-slate-300 tracking-wider mb-2">HELOC / EQUITY</div>
+              <div className="text-3xl font-serif text-[#f3d275] font-bold">
                 {bestHeloc ? `${bestHeloc.toFixed(2)}%` : "4.95%"}
               </div>
-              <div className="text-[11px] text-term-text-mute mt-1">1st Position Line of Credit</div>
+              <div className="text-xs font-medium text-slate-300 mt-1.5">1st Position Line of Credit</div>
             </div>
           </div>
 
-          <p className="text-xs text-term-text-mute leading-relaxed font-mono">
+          <p className="text-xs text-slate-300 leading-relaxed font-mono font-medium">
             FSRA Licence #12918 | BCFSA Licensed | Kraft Mortgages Canada Inc. | Surrey, BC
           </p>
         </div>
