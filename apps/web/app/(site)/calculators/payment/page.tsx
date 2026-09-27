@@ -1,6 +1,8 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { useLiveRates } from "@/lib/useLiveRates";
+import { Sparkles, ShieldCheck } from "lucide-react";
 
 import { payment, biweeklySavings } from "@/lib/calc/payment";
 import { ComplianceBanner } from "@/components/ComplianceBanner";
@@ -11,10 +13,27 @@ import { CalculatorSchema } from "@/components/SEO/CalculatorSchema";
 import { RelatedCalculators } from "@/components/calculators/RelatedCalculators";
 
 export default function PaymentCalculatorPage() {
+  const { best5YrFixed, best3YrFixed, best5YrVariable, bestHeloc, bestPrivateSecond } = useLiveRates();
   const [showPdfModal, setShowPdfModal] = useState(false);
   const [principal, setPrincipal] = useState(700000);
-  const [rate, setRate] = useState(5.34);
+  const [rate, setRate] = useState(4.44);
+  const [hasUserEdited, setHasUserEdited] = useState(false);
   const [years, setYears] = useState(25);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const qRate = params.get("rate");
+      if (qRate && !isNaN(parseFloat(qRate))) {
+        setRate(parseFloat(qRate));
+        setHasUserEdited(true);
+        return;
+      }
+    }
+    if (!hasUserEdited && best5YrFixed) {
+      setRate(best5YrFixed);
+    }
+  }, [best5YrFixed, hasUserEdited]);
 
   let validationError: string | null = null;
   if (principal <= 0) {
@@ -152,16 +171,49 @@ export default function PaymentCalculatorPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-200 mb-2">
-                    Interest Rate (% APR)
-                  </label>
+                  <div className="flex items-center justify-between mb-2">
+                    <label className="block text-sm font-medium text-gray-200">
+                      Interest Rate (% APR)
+                    </label>
+                    <span className="text-[11px] text-emerald-400 font-medium flex items-center gap-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                      Live Synced
+                    </span>
+                  </div>
                   <input
                     type="number"
                     step="0.01"
                     value={rate}
-                    onChange={(e) => setRate(Number(e.target.value))}
+                    onChange={(e) => {
+                      setRate(Number(e.target.value));
+                      setHasUserEdited(true);
+                    }}
                     className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent text-white placeholder-gray-400"
                   />
+                  <div className="flex flex-wrap gap-1 mt-2">
+                    {[
+                      { label: "5-Yr Fixed", val: best5YrFixed },
+                      { label: "3-Yr Fixed", val: best3YrFixed },
+                      { label: "5-Yr Var", val: best5YrVariable },
+                      { label: "HELOC", val: bestHeloc },
+                    ].map((p) => (
+                      <button
+                        key={p.label}
+                        type="button"
+                        onClick={() => {
+                          setRate(p.val);
+                          setHasUserEdited(true);
+                        }}
+                        className={`text-[10px] px-2 py-0.5 rounded border transition-colors ${
+                          rate === p.val
+                            ? "bg-gold-500/20 text-gold-300 border-gold-500/40"
+                            : "bg-gray-800/80 text-gray-400 border-gray-700 hover:text-white"
+                        }`}
+                      >
+                        {p.label}: {p.val.toFixed(2)}%
+                      </button>
+                    ))}
+                  </div>
                 </div>
 
                 <div>

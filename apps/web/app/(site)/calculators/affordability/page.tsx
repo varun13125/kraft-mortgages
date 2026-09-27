@@ -1,7 +1,8 @@
 "use client";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
+import { useLiveRates } from "@/lib/useLiveRates";
 import { stressTestRate, gdsTds } from "@/lib/calc/affordability";
 import { payment } from "@/lib/calc/payment";
 import { ComplianceBanner } from "@/components/ComplianceBanner";
@@ -20,8 +21,16 @@ export default function Affordability() {
   const [propTax, setPropTax] = useState(3000);
   const [heat, setHeat] = useState(1200);
   const [condoFees, setCondoFees] = useState(0);
-  const [rate, setRate] = useState(5.35);
+  const { best5YrFixed } = useLiveRates();
+  const [rate, setRate] = useState(4.44);
+  const [hasUserEdited, setHasUserEdited] = useState(false);
   const [principal, setPrincipal] = useState(650000);
+
+  useEffect(() => {
+    if (!hasUserEdited && best5YrFixed) {
+      setRate(best5YrFixed);
+    }
+  }, [best5YrFixed, hasUserEdited]);
   
   const qualRate = useMemo(() => stressTestRate(rate), [rate]);
   const monthlyPI = payment({ principal, annualRatePct: qualRate, amortYears: 25, paymentsPerYear: 12 });
@@ -212,9 +221,12 @@ export default function Affordability() {
                   
                   <div className="space-y-6">
                     <ValidatedSlider
-                      label={`Interest Rate (${formatPercentage(rate)})`}
+                      label={`Interest Rate (${formatPercentage(rate)}) — Live Synced`}
                       value={rate}
-                      onChange={setRate}
+                      onChange={(val) => {
+                        setRate(val);
+                        setHasUserEdited(true);
+                      }}
                       min={2.0}
                       max={10.0}
                       step={0.05}

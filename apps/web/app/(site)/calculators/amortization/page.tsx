@@ -1,7 +1,8 @@
 "use client";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
+import { useLiveRates } from "@/lib/useLiveRates";
 import { ComplianceBanner } from "@/components/ComplianceBanner";
 import { Calculator, HelpCircle, ChevronDown, ChevronUp, Info,
   Table, BarChart3, Download } from "lucide-react";
@@ -65,8 +66,16 @@ const faqs = [
 export default function AmortizationPage() {
   const [showPdfModal, setShowPdfModal] = useState(false);
   const [mortgage, setMortgage] = useState(500000);
-  const [rate, setRate] = useState(5.0);
+  const { best5YrFixed } = useLiveRates();
+  const [rate, setRate] = useState(4.44);
+  const [hasUserEdited, setHasUserEdited] = useState(false);
   const [amortYears, setAmortYears] = useState(25);
+
+  useEffect(() => {
+    if (!hasUserEdited && best5YrFixed) {
+      setRate(best5YrFixed);
+    }
+  }, [best5YrFixed, hasUserEdited]);
   const [extraMonthly, setExtraMonthly] = useState(0);
   const [showAll, setShowAll] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(null);

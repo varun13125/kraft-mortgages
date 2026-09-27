@@ -2,6 +2,7 @@
 import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
+import { useLiveRates } from "@/lib/useLiveRates";
 import { ComplianceBanner } from "@/components/ComplianceBanner";
 import { Calculator, ArrowRight, Info, ChevronDown, ChevronUp, FileText,
   AlertTriangle, Home, CreditCard, Layers, CheckCircle2, TrendingDown,
@@ -53,6 +54,7 @@ function calcMonthly(principal: number, annualRate: number, amortYears: number):
 }
 
 export default function RefinanceVsHelocVsSecondPage() {
+  const { best5YrFixed, bestHeloc, bestPrivateSecond } = useLiveRates();
   const [showPdfModal, setShowPdfModal] = useState(false);
   const [homeValue, setHomeValue] = useState(900000);
   const [firstBalance, setFirstBalance] = useState(500000);
@@ -73,7 +75,7 @@ export default function RefinanceVsHelocVsSecondPage() {
     // Option 1: Refinance
     const refiTotal = firstBalance + cashNeeded;
     let refiRate: number;
-    if (firstType === "a-lender") refiRate = 4.49; // blended estimate
+    if (firstType === "a-lender") refiRate = best5YrFixed || 4.44; // live market benchmark
     else if (firstType === "b-lender") refiRate = 6.04;
     else refiRate = 6.95;
 
@@ -88,7 +90,7 @@ export default function RefinanceVsHelocVsSecondPage() {
     const refiPaymentChange = refiMonthly - currentMonthly;
 
     // Option 2: HELOC
-    const helocRate = firstType === "a-lender" ? 7.49 : 8.49;
+    const helocRate = firstType === "a-lender" ? (bestHeloc || 4.95) : 8.49;
     const helocMonthly = cashNeeded * (helocRate / 100) / 12; // interest-only
     const helocFee = cashNeeded * 0.015;
     const helocSetupFee = 500;
@@ -96,7 +98,7 @@ export default function RefinanceVsHelocVsSecondPage() {
     const combinedMonthly = currentMonthly + helocMonthly;
 
     // Option 3: Second Mortgage
-    const secondRate = 8.95;
+    const secondRate = bestPrivateSecond || 7.99; // live verified private 2nd benchmark
     const secondAmort = 15;
     const secondMonthly = calcMonthly(cashNeeded, secondRate, secondAmort);
     const secondFee = cashNeeded * 0.02;
@@ -124,7 +126,7 @@ export default function RefinanceVsHelocVsSecondPage() {
       secondRate, secondMonthly, secondFee, secondLegal, secondTotalCost5yr, combinedSecondMonthly,
       cheapest,
     };
-  }, [homeValue, firstBalance, firstRate, firstAmort, cashNeeded, firstType]);
+  }, [homeValue, firstBalance, firstRate, firstAmort, cashNeeded, firstType, best5YrFixed, bestHeloc, bestPrivateSecond]);
 
   const recommendation = useMemo(() => {
     if (purpose === "debt-consolidation") {

@@ -6,6 +6,7 @@ import { AnimatedSection } from "@/components/home/AnimatedSection";
 import { StatsCounters } from "@/components/home/StatsCounters";
 import { HeroCTAs } from "@/components/home/HeroCTAs";
 import { BUSINESS } from "@/lib/seo/business-config";
+import { TodaysRates, RatesTicker } from "@/components/rates";
 import { DollarSign, Home, Building, Users, Shield, TrendingUp, Calculator, Phone, Mail, MapPin, CheckCircle, ArrowRight, Briefcase } from "lucide-react";
 
 export const metadata: Metadata = {
@@ -83,9 +84,12 @@ export default function ModernHomepage() {
   return (
     <>
       <Navigation />
+      <div className="mt-16">
+        <RatesTicker />
+      </div>
       <div className="min-h-screen relative overflow-hidden bg-transparent">
         {/* Hero Section with floating geometry background */}
-        <HeroGeometric className="py-20 px-4 mt-16 z-10">
+        <HeroGeometric className="py-20 px-4 mt-4 z-10">
           <div className="max-w-6xl mx-auto">
             <div className="grid gap-12 lg:grid-cols-2 items-center">
               <AnimatedSection variant="fade-up">
@@ -148,6 +152,9 @@ export default function ModernHomepage() {
             </AnimatedSection>
           </div>
         </HeroGeometric>
+
+        {/* Today's Verified Rates Intelligence */}
+        <TodaysRates />
 
         {/* Why Choose Kraft Mortgages */}
         <section className="py-20 px-4 bg-gradient-to-br from-gray-900/50 to-gray-800/30">

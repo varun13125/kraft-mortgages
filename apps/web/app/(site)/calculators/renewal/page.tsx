@@ -1,7 +1,8 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
+import { useLiveRates } from "@/lib/useLiveRates";
 import { payment } from "@/lib/calc/payment";
 import { ComplianceBanner } from "@/components/ComplianceBanner";
 import { Clock, Calculator, TrendingUp, ArrowRight, DollarSign, AlertTriangle, CheckCircle, Download } from "lucide-react";
@@ -15,9 +16,17 @@ export default function Renewal() {
   const [balance, setBalance] = useState(450000);
   const [monthsLeft, setMonthsLeft] = useState(36);
   const [remainingAmortYears, setRemainingAmortYears] = useState(22); // remaining AMORTIZATION (not term)
+  const { best5YrFixed } = useLiveRates();
   const [currentRate, setCurrentRate] = useState(5.89);
-  const [marketRate, setMarketRate] = useState(5.19);
+  const [marketRate, setMarketRate] = useState(4.44);
+  const [hasUserEdited, setHasUserEdited] = useState(false);
   const [penalty, setPenalty] = useState(2500);
+
+  useEffect(() => {
+    if (!hasUserEdited && best5YrFixed) {
+      setMarketRate(best5YrFixed);
+    }
+  }, [best5YrFixed, hasUserEdited]);
 
   // Guards
   const safeBalance = Math.max(1, balance || 0);
@@ -185,14 +194,22 @@ export default function Renewal() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-200 mb-2">
-                    New Market Rate (%)
-                  </label>
+                  <div className="flex items-center justify-between mb-2">
+                    <label className="block text-sm font-medium text-gray-200">
+                      New Market Rate (%)
+                    </label>
+                    <span className="text-[11px] text-emerald-400 font-medium">
+                      Live Benchmark
+                    </span>
+                  </div>
                   <input
                     type="number"
                     step="0.01"
                     value={marketRate}
-                    onChange={(e) => setMarketRate(Number(e.target.value))}
+                    onChange={(e) => {
+                      setMarketRate(Number(e.target.value));
+                      setHasUserEdited(true);
+                    }}
                     className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent text-white placeholder-gray-400"
                   />
                 </div>

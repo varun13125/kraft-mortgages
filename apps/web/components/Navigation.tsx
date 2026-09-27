@@ -97,6 +97,14 @@ export default function Navigation() {
                 Home
               </Link>
 
+              <Link
+                href="/rates"
+                className="flex items-center gap-2 lg:px-2 xl:px-4 py-2 text-gray-300 hover:text-gold-400 transition-colors lg:text-xs xl:text-base whitespace-nowrap font-medium"
+              >
+                <TrendingUp className="w-4 h-4 text-emerald-400" />
+                Rates
+              </Link>
+
               {/* Services Dropdown */}
               <div className="relative">
                 <button
@@ -493,6 +501,15 @@ export default function Navigation() {
               >
                 <Home className="w-5 h-5" />
                 Home
+              </Link>
+
+              <Link
+                href="/rates"
+                className="flex items-center gap-3 px-4 py-3 text-lg text-gray-300 hover:text-gold-400 transition-colors font-medium"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <TrendingUp className="w-5 h-5 text-emerald-400" />
+                Verified Rates
               </Link>
 
               {/* Services Section */}

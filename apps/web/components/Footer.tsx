@@ -3,6 +3,7 @@ import Image from "next/image";
 
 const FOOTER_LINKS = {
   "QUICK LINKS": [
+    { label: "Live Mortgage Rates", href: "/rates" },
     { label: "About Us", href: "/about" },
     { label: "Services", href: "/#services" },
     { label: "Calculators", href: "/#calculators" },
