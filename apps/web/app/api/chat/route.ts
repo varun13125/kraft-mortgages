@@ -2,7 +2,12 @@ import { NextRequest, NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
 
-const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
+const OPENROUTER_API_KEY = (
+  process.env.OPENROUTER_API_KEY ||
+  process.env.OPEN_ROUTER_API_KEY ||
+  ""
+).trim();
+const GOOGLE_API_KEY = (process.env.GOOGLE_API_KEY || "").trim();
 const MODEL = "deepseek/deepseek-v4.1-flash";
 const FALLBACK_MODEL = "deepseek/deepseek-chat";
 const TWENTY_WEBHOOK_URL =
@@ -123,6 +128,57 @@ async function requestOpenRouter(messages: any[], model: string, apiKey: string)
   });
 }
 
+async function requestGemini(
+  history: Array<{ role: string; content: string }>,
+  currentPrompt: string,
+  apiKey: string
+): Promise<string | null> {
+  try {
+    const contents = [
+      ...history
+        .filter((m) => m.content && (m.role === "user" || m.role === "assistant"))
+        .map((m) => ({
+          role: m.role === "assistant" ? "model" : "user",
+          parts: [{ text: m.content }],
+        })),
+      {
+        role: "user",
+        parts: [{ text: currentPrompt }],
+      },
+    ];
+
+    const res = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          system_instruction: {
+            parts: [{ text: SYSTEM_PROMPT }],
+          },
+          contents,
+          generationConfig: {
+            temperature: 0.3,
+            maxOutputTokens: 800,
+          },
+        }),
+      }
+    );
+
+    if (!res.ok) {
+      const errText = await res.text();
+      console.error("[Chat API] Gemini error:", res.status, errText);
+      return null;
+    }
+
+    const data = await res.json();
+    return data.candidates?.[0]?.content?.parts?.[0]?.text || null;
+  } catch (err) {
+    console.error("[Chat API] Gemini fetch exception:", err);
+    return null;
+  }
+}
+
 export async function POST(req: NextRequest) {
   try {
     const { input, messages = [], province, contactInfo } = await req.json();
@@ -146,18 +202,6 @@ export async function POST(req: NextRequest) {
       }).catch(console.error);
     }
 
-    if (!OPENROUTER_API_KEY) {
-      console.warn("[Chat API] OPENROUTER_API_KEY is not configured.");
-      return NextResponse.json(
-        {
-          reply:
-            "Thank you for contacting Kraft Mortgages! We are licensed across BC, Alberta, and Ontario. For immediate rate quotes and underwriting assistance, chat directly with our team on WhatsApp at +1 (604) 359-5993 or call 604-593-1550.",
-          fallback: true,
-        },
-        { status: 200 }
-      );
-    }
-
     // Format conversation history
     const formattedHistory = messages
       .slice(-6)
@@ -166,41 +210,51 @@ export async function POST(req: NextRequest) {
         content: m.content || "",
       }));
 
+    const userPrompt = province ? `[User Province: ${province}] ${currentInput}` : currentInput;
+
     const conversation = [
       { role: "system", content: SYSTEM_PROMPT },
       ...formattedHistory,
       {
         role: "user",
-        content: province ? `[User Province: ${province}] ${currentInput}` : currentInput,
+        content: userPrompt,
       },
     ];
 
-    // Attempt primary model: deepseek/deepseek-v4.1-flash
-    let response = await requestOpenRouter(conversation, MODEL, OPENROUTER_API_KEY);
+    let reply: string | null = null;
 
-    // Fallback if model unavailable or returns error
-    if (!response.ok) {
-      console.warn(`[Chat API] Primary model ${MODEL} failed with ${response.status}. Attempting fallback...`);
-      response = await requestOpenRouter(conversation, FALLBACK_MODEL, OPENROUTER_API_KEY);
+    // 1. Attempt primary model: deepseek/deepseek-v4.1-flash via OpenRouter if key is present
+    if (OPENROUTER_API_KEY) {
+      try {
+        let response = await requestOpenRouter(conversation, MODEL, OPENROUTER_API_KEY);
+        if (!response.ok) {
+          console.warn(`[Chat API] Primary OpenRouter model ${MODEL} failed with ${response.status}. Attempting fallback...`);
+          response = await requestOpenRouter(conversation, FALLBACK_MODEL, OPENROUTER_API_KEY);
+        }
+        if (response.ok) {
+          const data = await response.json();
+          reply = data.choices?.[0]?.message?.content || null;
+        } else {
+          const errText = await response.text();
+          console.warn("[Chat API] OpenRouter error:", response.status, errText);
+        }
+      } catch (err) {
+        console.warn("[Chat API] OpenRouter call exception:", err);
+      }
     }
 
-    if (!response.ok) {
-      const errText = await response.text();
-      console.error("[Chat API] OpenRouter error:", response.status, errText);
-      return NextResponse.json(
-        {
-          reply:
-            "Thank you for reaching out! Our mortgage associates are currently assisting clients. For instant pre-qualification or live rate sheets, continue with our team on WhatsApp at +1 (604) 359-5993 or call 604-593-1550.",
-          fallback: true,
-        },
-        { status: 200 }
-      );
+    // 2. High-speed, robust fallback: Google Gemini 2.5 Flash
+    if (!reply && GOOGLE_API_KEY) {
+      console.log("[Chat API] Engaging Google Gemini 2.5 Flash provider");
+      reply = await requestGemini(formattedHistory, userPrompt, GOOGLE_API_KEY);
     }
 
-    const data = await response.json();
-    const reply =
-      data.choices?.[0]?.message?.content ||
-      "I am here to help with your mortgage inquiry across BC, Alberta, and Ontario. Feel free to connect directly on WhatsApp at +1 (604) 359-5993 or call 604-593-1550.";
+    // 3. Courteous brokerage contact fallback if AI providers are unavailable
+    if (!reply) {
+      reply =
+        "Thank you for contacting Kraft Mortgages! We are licensed across BC, Alberta, and Ontario. For immediate rate quotes, pre-approvals, and underwriting assistance, chat directly with our team on WhatsApp at +1 (604) 359-5993 or call 604-593-1550.";
+      return NextResponse.json({ reply, message: reply, fallback: true });
+    }
 
     return NextResponse.json({ reply, message: reply });
   } catch (error: any) {
