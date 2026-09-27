@@ -2,7 +2,8 @@
 import { useState, type FormEvent, useEffect } from "react";
 import Link from "next/link";
 import { useLiveRates } from "@/lib/useLiveRates";
-import { ShieldCheck, Sparkles } from "lucide-react";
+import { ShieldCheck, Sparkles, CheckCircle2, Moon, Clock, PhoneCall } from "lucide-react";
+import { getCallingHoursStatus, type CallingHoursStatus } from "@/lib/businessHours";
 
 export const dynamic = "force-dynamic";
 
@@ -32,8 +33,10 @@ const EMPLOYMENT_TYPES = [
 export default function QualifyPage() {
   const { data, best5YrFixed, best3YrFixed, best5YrVariable, bestHeloc, bestPrivateSecond } = useLiveRates();
   const [requestedTerm, setRequestedTerm] = useState("");
+  const [callingStatus, setCallingStatus] = useState<CallingHoursStatus | null>(null);
+  const [preferredCallback, setPreferredCallback] = useState("");
 
-  // Capture UTM parameters from URL on load
+  // Capture UTM parameters and calling hours status on load
   const [utmParams, setUtmParams] = useState({
     utm_source: "",
     utm_medium: "",
@@ -43,6 +46,11 @@ export default function QualifyPage() {
   });
 
   useEffect(() => {
+    // Check calling hours in Pacific Time
+    const status = getCallingHoursStatus();
+    setCallingStatus(status);
+    setPreferredCallback(status.nextAvailableTime);
+
     if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search);
       const term = params.get("term") || params.get("product") || "";
@@ -125,6 +133,9 @@ export default function QualifyPage() {
     
     setStatus("submitting");
 
+    const isAfterHours = callingStatus ? !callingStatus.isOpen : false;
+    const scheduledTime = preferredCallback || callingStatus?.nextAvailableTime || "Tomorrow at 9:15 AM PT";
+
     // Composite rich message structure for Twenty CRM notes
     const parsedMessage = `
 --- LEAD PRE-QUALIFICATION SYSTEM ---
@@ -133,6 +144,7 @@ export default function QualifyPage() {
 • Desired Loan Amount: $${form.loanAmount}
 • Self-Reported Credit: ${form.creditScore}
 • Employment Profile: ${form.employmentType}
+• Calling Timing: ${isAfterHours ? `🌙 After-Hours Queue (Scheduled: ${scheduledTime})` : `⚡ Live Dial Allowed (${callingStatus?.currentPtTime || "PT"})`}
 • Source Attribution: ${utmParams.utm_source} / Campaign: ${utmParams.utm_campaign}
     `.trim();
 
@@ -145,6 +157,8 @@ export default function QualifyPage() {
       amount: `$${form.loanAmount}`,
       message: parsedMessage,
       source: utmParams.utm_source,
+      afterHours: isAfterHours,
+      preferredCallTime: scheduledTime,
       ...utmParams
     };
 
@@ -168,8 +182,12 @@ export default function QualifyPage() {
         });
       }
 
-      // Transition to active call ringing panel
-      setStatus("calling");
+      // Transition based on calling hours guardrail
+      if (isAfterHours) {
+        setStatus("completed");
+      } else {
+        setStatus("calling");
+      }
     } catch (err) {
       console.error("Lead submission error:", err);
       setStatus("error");
@@ -292,6 +310,83 @@ export default function QualifyPage() {
               <div className="mt-8 text-sm text-slate-300 font-mono">
                 Caller ID will display as Julia: <a href="tel:+16042003732" className="text-[#f3d275] font-sans font-bold hover:underline">+1 604-200-3732</a>
               </div>
+            </div>
+          )}
+
+          {/* STATUS: COMPLETED (AFTER-HOURS PRIORITY RATE LOCK CONFIRMATION) */}
+          {status === "completed" && (
+            <div className="text-center py-10 max-w-[640px] mx-auto">
+              <div className="w-20 h-20 rounded-full bg-emerald-500/20 border-2 border-emerald-400 flex items-center justify-center mx-auto mb-6 shadow-[0_0_30px_rgba(52,211,153,0.3)]">
+                <CheckCircle2 className="w-10 h-10 text-emerald-400" />
+              </div>
+
+              <div className="inline-flex items-center gap-2 mb-3 px-3.5 py-1.5 rounded-full bg-[#d4af37]/15 border border-[#d4af37]/40 text-[#f3d275] text-xs font-mono font-semibold">
+                <Moon className="w-3.5 h-3.5 text-[#f3d275]" />
+                <span>AFTER-HOURS PRIORITY FILE LOCKED</span>
+              </div>
+
+              <h2 className="font-serif text-3xl sm:text-4xl mb-3 text-white">
+                Your Rate & File Are <em className="text-[#f3d275] italic font-normal">Reserved.</em>
+              </h2>
+
+              <p className="text-base text-slate-200 mb-8 leading-relaxed">
+                Thank you, <strong className="text-white font-semibold">{form.firstName}</strong>. Because your request was submitted outside our live dialing window ({callingStatus?.currentPtTime || "Pacific Time"}), your priority qualification call is queued for our next available business window.
+              </p>
+
+              {/* Scheduled Appointment Card */}
+              <div className="bg-[#070e1a]/95 border-2 border-slate-700 p-6 rounded-xl text-left space-y-4 mb-8 shadow-xl">
+                <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 border-b border-slate-800 pb-4">
+                  <div>
+                    <div className="text-xs font-mono text-slate-400 uppercase tracking-wider mb-1 flex items-center gap-1.5">
+                      <Clock className="w-3.5 h-3.5 text-emerald-400" />
+                      <span>Scheduled Priority Call</span>
+                    </div>
+                    <div className="text-xl font-mono font-bold text-emerald-300">
+                      {preferredCallback || callingStatus?.nextAvailableTime || "Tomorrow at 9:15 AM PT"}
+                    </div>
+                  </div>
+                  <div className="sm:text-right">
+                    <div className="text-xs font-mono text-slate-400 uppercase tracking-wider mb-1 flex items-center sm:justify-end gap-1.5">
+                      <PhoneCall className="w-3.5 h-3.5 text-[#f3d275]" />
+                      <span>Incoming Caller ID</span>
+                    </div>
+                    <div className="text-base font-mono font-bold text-[#f3d275]">+1 604-200-3732</div>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3 text-xs pt-1 font-mono">
+                  <div>
+                    <span className="text-slate-400">Target Product: </span>
+                    <span className="text-white font-medium">{form.mortgageType || requestedTerm || "Mortgage"}</span>
+                  </div>
+                  <div>
+                    <span className="text-slate-400">Loan Amount: </span>
+                    <span className="text-white font-medium">${form.loanAmount || "—"}</span>
+                  </div>
+                  <div>
+                    <span className="text-slate-400">Est. Property Value: </span>
+                    <span className="text-white font-medium">${form.propertyValue || "—"}</span>
+                  </div>
+                  <div>
+                    <span className="text-slate-400">Registered Phone: </span>
+                    <span className="text-white font-medium">{form.phone}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="p-4 rounded-lg bg-slate-800/80 border border-slate-700 mb-6 text-xs text-slate-300 leading-relaxed font-sans text-left">
+                💡 <strong>Need urgent assistance right now?</strong> If you have an urgent financing deadline or contract of purchase expiring today, call or text senior broker <strong className="text-white">Varun Chaudhry</strong> directly at <a href="tel:604-593-1550" className="text-[#f3d275] font-bold underline">604-593-1550</a>.
+              </div>
+
+              <button
+                onClick={() => {
+                  setStatus("idle");
+                  setStep(1);
+                }}
+                className="text-xs font-mono text-slate-400 hover:text-white underline transition-colors"
+              >
+                ← Start Another Qualification Scenario
+              </button>
             </div>
           )}
 
@@ -437,9 +532,35 @@ export default function QualifyPage() {
                   <h2 className="font-serif text-2xl sm:text-3xl mb-2 text-white">
                     Verify Your Contact <em className="text-[#f3d275] italic font-normal">Details.</em>
                   </h2>
-                  <p className="text-sm text-slate-300 mb-8">
-                    Julia is standing by to place your priority qualification call.
+                  <p className="text-sm text-slate-300 mb-6">
+                    {callingStatus && !callingStatus.isOpen
+                      ? `Lock in your priority rate file. Julia will place your qualification call on ${callingStatus.nextAvailableTime}.`
+                      : "Julia is standing by to place your priority qualification call right now."}
                   </p>
+
+                  {/* Calling Hours Guardrail Status Banner */}
+                  {callingStatus && !callingStatus.isOpen ? (
+                    <div className="mb-6 p-4 rounded-lg bg-amber-500/10 border border-amber-500/30 text-left max-w-[540px] mx-auto">
+                      <div className="flex items-center gap-2 font-mono text-xs font-bold text-amber-300 uppercase tracking-wider mb-1">
+                        <Moon className="w-3.5 h-3.5 text-amber-300" />
+                        <span>AFTER-HOURS GUARDRAIL ACTIVE • {callingStatus.currentPtTime}</span>
+                      </div>
+                      <p className="text-xs text-slate-300 leading-relaxed">
+                        To respect Canadian telecommunications quiet hours, automated phone calls are paused overnight. Your priority rate is locked immediately upon submitting, and Julia will place your call on <strong>{callingStatus.nextAvailableTime}</strong>.
+                      </p>
+                    </div>
+                  ) : callingStatus?.isOpen ? (
+                    <div className="mb-6 p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-left max-w-[540px] mx-auto flex items-center gap-2.5">
+                      <span className="relative flex h-2 w-2">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                      </span>
+                      <span className="text-xs text-emerald-300 font-mono font-medium">
+                        <strong>LIVE DIAL ACTIVE ({callingStatus.currentPtTime}):</strong> Julia will call your phone immediately upon submission.
+                      </span>
+                    </div>
+                  ) : null}
+
                   <form onSubmit={handleSubmit} className="space-y-5 max-w-[540px] mx-auto text-left">
                     <input
                       type="text" name="_hp" value={form._hp}
@@ -487,6 +608,37 @@ export default function QualifyPage() {
                       </span>
                     </div>
 
+                    {/* Preferred Callback Time (Active when after-hours) */}
+                    {callingStatus && !callingStatus.isOpen && (
+                      <div>
+                        <label className={labelClass}>Preferred Callback Time</label>
+                        <select
+                          value={preferredCallback}
+                          onChange={(e) => setPreferredCallback(e.target.value)}
+                          className="w-full bg-[#0d1829] border-2 border-slate-700/80 px-4 py-3.5 text-white focus:outline-none focus:border-[#d4af37] focus:ring-2 focus:ring-[#d4af37]/25 transition-all font-sans text-sm font-medium rounded-md shadow-inner"
+                        >
+                          <option value={callingStatus.nextAvailableTime} className="bg-[#0d1829] text-white">
+                            ⚡ {callingStatus.nextAvailableTime} (Fastest Priority)
+                          </option>
+                          <option value="Morning (9:30 AM – 11:30 AM PT)" className="bg-[#0d1829] text-white">
+                            Morning (9:30 AM – 11:30 AM PT)
+                          </option>
+                          <option value="Early Afternoon (12:00 PM – 2:30 PM PT)" className="bg-[#0d1829] text-white">
+                            Early Afternoon (12:00 PM – 2:30 PM PT)
+                          </option>
+                          <option value="Late Afternoon (3:00 PM – 5:30 PM PT)" className="bg-[#0d1829] text-white">
+                            Late Afternoon (3:00 PM – 5:30 PM PT)
+                          </option>
+                          <option value="Evening (6:00 PM – 7:30 PM PT)" className="bg-[#0d1829] text-white">
+                            Evening (6:00 PM – 7:30 PM PT)
+                          </option>
+                        </select>
+                        <span className="text-xs text-slate-400 font-mono block mt-1.5 font-medium">
+                          Julia will dial you during this window from +1 604-200-3732.
+                        </span>
+                      </div>
+                    )}
+
                     <div className="flex gap-4 pt-4">
                       <button
                         type="button"
@@ -500,7 +652,11 @@ export default function QualifyPage() {
                         disabled={status === "submitting" || !form.firstName || !form.email || !form.phone}
                         className="w-2/3 bg-[#d4af37] hover:bg-[#f3d275] text-[#070e1a] font-mono text-xs font-bold py-4 px-6 tracking-widest transition-colors disabled:bg-slate-800 disabled:text-slate-500 disabled:cursor-not-allowed rounded-md shadow-lg shadow-[#d4af37]/25"
                       >
-                        {status === "submitting" ? "DISPATCHING..." : "DISPATCH QUALIFICATION CALL →"}
+                        {status === "submitting"
+                          ? "DISPATCHING..."
+                          : callingStatus && !callingStatus.isOpen
+                          ? "LOCK PRIORITY RATE & QUEUE CALLBACK →"
+                          : "DISPATCH QUALIFICATION CALL →"}
                       </button>
                     </div>
                   </form>

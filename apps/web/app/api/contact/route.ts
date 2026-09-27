@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { getCallingHoursStatus } from "@/lib/businessHours";
 
 interface ContactFormData {
   firstName?: string;
@@ -12,6 +13,8 @@ interface ContactFormData {
   message: string;
   source?: string;
   _hp?: string;
+  afterHours?: boolean;
+  preferredCallTime?: string;
 }
 
 // Forward to Twenty CRM webhook — single source of truth for leads
@@ -41,13 +44,17 @@ async function sendToTwenty(data: Record<string, string>) {
 }
 
 // Discord notification for real-time alerts
-async function sendDiscordNotification(data: ContactFormData) {
+async function sendDiscordNotification(data: ContactFormData, isAfterHours: boolean, scheduledTime: string) {
   const webhookUrl = process.env.DISCORD_LEAD_WEBHOOK_URL;
   if (!webhookUrl) return;
 
   const fullName = data.firstName
     ? `${data.firstName} ${data.lastName || ""}`.trim()
     : data.name || "Unknown";
+
+  const dispatchStatus = isAfterHours
+    ? `🌙 After-Hours Queue (${scheduledTime})`
+    : "⚡ Live Dial (Julia +1 604-200-3732)";
 
   try {
     await fetch(webhookUrl, {
@@ -56,14 +63,15 @@ async function sendDiscordNotification(data: ContactFormData) {
       body: JSON.stringify({
         embeds: [
           {
-            title: "🆕 New Lead — Website Contact Form",
-            color: 0xc8a962,
+            title: isAfterHours ? "🌙 New Lead (After-Hours Queued)" : "🆕 New Lead — Website Contact Form",
+            color: isAfterHours ? 0x38bdf8 : 0xc8a962,
             fields: [
               { name: "Name", value: fullName, inline: true },
               { name: "Email", value: data.email, inline: true },
               { name: "Phone", value: data.phone || "—", inline: true },
               { name: "Mortgage Type", value: data.mortgageType || "General", inline: true },
               { name: "Loan Amount", value: data.amount || "—", inline: true },
+              { name: "Calling Dispatch", value: dispatchStatus, inline: true },
               { name: "Message", value: data.message?.slice(0, 500) || "—" },
             ],
             timestamp: new Date().toISOString(),
@@ -93,6 +101,10 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    const callingStatus = getCallingHoursStatus();
+    const isAfterHours = body.afterHours !== undefined ? body.afterHours : !callingStatus.isOpen;
+    const scheduledTime = body.preferredCallTime || callingStatus.nextAvailableTime;
+
     const twentyData: Record<string, string> = {
       firstName: body.firstName || body.name?.split(" ")[0] || "",
       lastName: body.lastName || body.name?.split(" ").slice(1).join(" ") || "",
@@ -102,6 +114,9 @@ export async function POST(req: NextRequest) {
       amount: body.amount || "",
       message: body.message || "",
       source: body.source || "website-contact",
+      isAfterHours: isAfterHours ? "true" : "false",
+      scheduledCallback: scheduledTime,
+      dispatchMode: isAfterHours ? "queue" : "live_dial",
       _hp: "",
     };
 
@@ -109,19 +124,23 @@ export async function POST(req: NextRequest) {
     const crmSuccess = await sendToTwenty(twentyData);
 
     // Discord notification (real-time alert)
-    await sendDiscordNotification(body);
+    await sendDiscordNotification(body, isAfterHours, scheduledTime);
 
     console.log("Lead submitted:", {
       name: twentyData.firstName + " " + twentyData.lastName,
       email: body.email,
+      afterHours: isAfterHours,
+      scheduledTime,
       crm: crmSuccess ? "✅" : "❌",
     });
 
     return NextResponse.json({
       success: crmSuccess,
-      message: crmSuccess
-        ? "Thank you! We'll be in touch within 24 hours."
-        : "Something went wrong. Please call us at 604-593-1550.",
+      isAfterHours,
+      scheduledTime,
+      message: isAfterHours
+        ? `Priority rate locked! Julia is scheduled to place your priority call ${scheduledTime}.`
+        : "Thank you! Julia is dialing your number right now.",
     });
   } catch (error) {
     console.error("Contact form error:", error);
@@ -131,3 +150,4 @@ export async function POST(req: NextRequest) {
     );
   }
 }
+
