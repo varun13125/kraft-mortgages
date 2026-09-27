@@ -43,6 +43,7 @@ export default function Navigation() {
 
   const isMLISection = pathname?.includes('/mli-select');
   const isCalculator = pathname?.includes('/calculators');
+  const isQualify = pathname?.includes('/qualify');
 
   return (
     <>
@@ -55,15 +56,22 @@ export default function Navigation() {
           <div className="flex items-center justify-between h-16">
             {/* Logo and Back Button */}
             <div className="flex items-center gap-4 shrink-0">
-              {/* Back Button for Calculator Pages */}
-              {isCalculator && (
+              {/* Back Button for Calculator & Qualify Pages */}
+              {(isCalculator || isQualify) && (
                 <motion.button
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
-                  onClick={() => window.history.back()}
-                  className="p-2 rounded-lg bg-gray-800/50 border border-gray-700 hover:bg-gray-700 transition-all group"
+                  onClick={() => {
+                    if (window.history.length > 1) {
+                      window.history.back();
+                    } else {
+                      window.location.href = "/";
+                    }
+                  }}
+                  className="p-2 rounded-lg bg-gray-800/70 border border-gray-700 hover:bg-gray-700 transition-all group"
+                  title="Go Back"
                 >
-                  <ArrowLeft className="w-5 h-5 text-gray-400 group-hover:text-gold-400 transition-colors" />
+                  <ArrowLeft className="w-5 h-5 text-gray-300 group-hover:text-gold-400 transition-colors" />
                 </motion.button>
               )}
 

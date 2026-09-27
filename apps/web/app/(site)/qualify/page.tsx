@@ -1,8 +1,9 @@
 "use client";
 import { useState, type FormEvent, useEffect } from "react";
 import Link from "next/link";
+import Navigation from "@/components/Navigation";
 import { useLiveRates } from "@/lib/useLiveRates";
-import { ShieldCheck, Sparkles, CheckCircle2, Moon, Clock, PhoneCall } from "lucide-react";
+import { ShieldCheck, Sparkles, CheckCircle2, Moon, Clock, PhoneCall, ArrowLeft } from "lucide-react";
 import { getCallingHoursStatus, type CallingHoursStatus } from "@/lib/businessHours";
 
 export const dynamic = "force-dynamic";
@@ -199,20 +200,47 @@ export default function QualifyPage() {
   const labelClass = "block font-mono text-xs font-semibold text-[#f3d275] tracking-[0.12em] mb-2 uppercase";
 
   return (
-    <main className="min-h-screen bg-[#070e1a] text-slate-100 font-sans text-sm leading-relaxed relative overflow-hidden">
-      <div className="absolute inset-0 term-grid-bg opacity-10 pointer-events-none" />
+    <>
+      <Navigation />
+      <main className="min-h-screen bg-[#070e1a] text-slate-100 font-sans text-sm leading-relaxed relative overflow-hidden pt-20 sm:pt-24">
+        <div className="absolute inset-0 term-grid-bg opacity-10 pointer-events-none" />
 
-      {/* Decorative Golden Ambient Aura */}
-      <div className="absolute top-[-300px] left-1/2 -translate-x-1/2 w-[800px] h-[500px] rounded-full bg-[#d4af37]/10 blur-[140px] pointer-events-none" />
+        {/* Decorative Golden Ambient Aura */}
+        <div className="absolute top-[-300px] left-1/2 -translate-x-1/2 w-[800px] h-[500px] rounded-full bg-[#d4af37]/10 blur-[140px] pointer-events-none" />
 
-      <div className="max-w-[1000px] mx-auto px-4 py-20 relative z-10">
-        
-        {/* HEADER */}
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2.5 mb-5 font-mono text-xs font-semibold text-[#f3d275] tracking-[0.2em] border border-[#d4af37]/30 px-4 py-1.5 rounded-full bg-[#0c1626]/90 shadow-sm">
-            <span className="w-2 h-2 rounded-full bg-[#d4af37] animate-pulse" />
-            SECURE PORTAL · INSTANT PRE-QUALIFICATION
+        <div className="max-w-[1000px] mx-auto px-4 py-8 sm:py-12 relative z-10">
+          
+          {/* Top Breadcrumb Navigation */}
+          <div className="flex items-center justify-between mb-8 text-xs font-mono">
+            <Link
+              href="/"
+              className="inline-flex items-center gap-1.5 text-slate-400 hover:text-[#f3d275] transition-colors bg-[#0c1626]/80 px-3.5 py-1.5 rounded-lg border border-slate-800 shadow-sm group"
+            >
+              <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" />
+              <span>Return to Homepage</span>
+            </Link>
+            <div className="flex items-center gap-3">
+              <Link
+                href="/rates"
+                className="text-slate-400 hover:text-[#f3d275] transition-colors bg-[#0c1626]/80 px-3.5 py-1.5 rounded-lg border border-slate-800 shadow-sm hidden sm:inline-block"
+              >
+                Compare All Rates →
+              </Link>
+              <Link
+                href="/calculators"
+                className="text-slate-400 hover:text-[#f3d275] transition-colors bg-[#0c1626]/80 px-3.5 py-1.5 rounded-lg border border-slate-800 shadow-sm"
+              >
+                Calculators →
+              </Link>
+            </div>
           </div>
+
+          {/* HEADER */}
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center gap-2.5 mb-5 font-mono text-xs font-semibold text-[#f3d275] tracking-[0.2em] border border-[#d4af37]/30 px-4 py-1.5 rounded-full bg-[#0c1626]/90 shadow-sm">
+              <span className="w-2 h-2 rounded-full bg-[#d4af37] animate-pulse" />
+              SECURE PORTAL · INSTANT PRE-QUALIFICATION
+            </div>
           <h1 className="font-serif font-normal text-4xl sm:text-6xl leading-[1.0] tracking-[-0.03em] mb-4 text-white">
             Qualify for Your <em className="text-[#f3d275] italic font-normal">Priority Rate.</em>
           </h1>
@@ -721,5 +749,6 @@ export default function QualifyPage() {
 
       </div>
     </main>
+    </>
   );
 }
