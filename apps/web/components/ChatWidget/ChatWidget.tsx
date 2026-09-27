@@ -52,6 +52,7 @@ export function ChatWidget() {
   const [isPlayingVoice, setIsPlayingVoice] = useState<string | null>(null);
   const [showVoiceControls, setShowVoiceControls] = useState(false);
   const { province, language } = useAppStore();
+  const [selectedProvince, setSelectedProvince] = useState(province || "BC");
   const pathname = usePathname();
   const pageContext = getPageContext(pathname);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -75,7 +76,7 @@ export function ChatWidget() {
         // Initialize with welcome message if no saved messages
         const welcomeMessage = {
           id: "welcome",
-          content: "Hi! I'm Alexa, your mortgage advisor. I can help you with calculations, current rates, and answer any mortgage questions you have in BC, AB, and ON. What would you like to know?",
+          content: "Hi! I'm your Senior Mortgage Associate at Kraft Mortgages. I can provide live rate benchmarks (Prime 4.45%, 5-Yr Fixed from 4.44%), 30-year amortization advice, and qualification insights across BC, Alberta, and Ontario. Which city or province are you exploring?",
           sender: "assistant" as const,
           timestamp: new Date(),
         };
@@ -86,7 +87,7 @@ export function ChatWidget() {
       // Fallback to welcome message
       const welcomeMessage = {
         id: "welcome",
-        content: "Hi! I'm Alexa, your mortgage advisor. I can help you with calculations, current rates, and answer any mortgage questions you have in BC, AB, and ON. What would you like to know?",
+        content: "Hi! I'm your Senior Mortgage Associate at Kraft Mortgages. I can provide live rate benchmarks (Prime 4.45%, 5-Yr Fixed from 4.44%), 30-year amortization advice, and qualification insights across BC, Alberta, and Ontario. Which city or province are you exploring?",
         sender: "assistant" as const,
         timestamp: new Date(),
       };
@@ -132,7 +133,7 @@ export function ChatWidget() {
   const clearChat = () => {
     const welcomeMessage = {
       id: "welcome",
-      content: "Hi! I'm Alex, your mortgage advisor. I can help you with calculations, current rates, and answer any mortgage questions you have in BC, AB, and ON. What would you like to know?",
+      content: "Hi! I'm your Senior Mortgage Associate at Kraft Mortgages. I can provide live rate benchmarks (Prime 4.45%, 5-Yr Fixed from 4.44%), 30-year amortization advice, and qualification insights across BC, Alberta, and Ontario. Which city or province are you exploring?",
       sender: "assistant" as const,
       timestamp: new Date(),
     };
@@ -198,7 +199,7 @@ export function ChatWidget() {
       console.log("[ChatWidget] Sending message:", content);
       setIsTyping(true);
 
-      // Call the AI API endpoint with streaming support  
+      // Call the AI API endpoint with selected province and conversation history  
       const response = await fetch("/api/chat", {
         method: "POST",
         headers: {
@@ -206,7 +207,11 @@ export function ChatWidget() {
         },
         body: JSON.stringify({
           input: content,
-          province,
+          province: selectedProvince,
+          messages: messages.slice(-6).map((m) => ({
+            role: m.sender === "user" ? "user" : "assistant",
+            content: m.content,
+          })),
           language,
           currentPage: pathname,
           pageContext: pageContext,
@@ -218,31 +223,24 @@ export function ChatWidget() {
         throw new Error("Failed to get response");
       }
 
-      // Get model info from headers
-      const modelUsed = response.headers.get("X-Model-Used");
-      const provider = response.headers.get("X-Provider");
-      const isFree = response.headers.get("X-Is-Free");
+      let fullContent = "";
+      let metadata: any = {};
 
-      console.log("[ChatWidget] Got response, starting to stream...");
-      console.log("[ChatWidget] Model:", modelUsed, "| Provider:", provider, "| Free:", isFree);
-
-      // Handle streaming response
-      if (response.body) {
+      const contentType = response.headers.get("content-type");
+      if (contentType && contentType.includes("application/json")) {
+        const data = await response.json();
+        fullContent = data.reply || data.message || "I am here to help with your mortgage inquiry. Please feel free to reach our team at +1 (604) 359-5993.";
+      } else if (response.body) {
         const reader = response.body.getReader();
         const decoder = new TextDecoder();
-        let fullContent = "";
-        let metadata: any = {};
-
         while (true) {
           const { done, value } = await reader.read();
           if (done) break;
-
-          const chunk = decoder.decode(value, { stream: true });
-          fullContent += chunk;
+          fullContent += decoder.decode(value, { stream: true });
         }
+      }
 
-        setIsTyping(false);
-        console.log("[ChatWidget] Received response:", fullContent.substring(0, 100) + "...");
+      setIsTyping(false);
 
         // Generate voice for assistant response if voice is enabled
         if (voiceEnabled && fullContent) {
@@ -273,16 +271,7 @@ export function ChatWidget() {
           content: fullContent || "I received your message but couldn't generate a proper response.",
           metadata
         };
-      }
-
-      // Fallback to non-streaming
-      const data = await response.json();
-      setIsTyping(false);
-      return {
-        content: data.content,
-        metadata: data.metadata
-      };
-    } catch (error) {
+      } catch (error) {
       console.error("Chat API error:", error);
       setIsTyping(false);
       // Fallback to a helpful error message
@@ -393,31 +382,70 @@ export function ChatWidget() {
           >
             {/* Header */}
             <div className="bg-gradient-to-r from-gold-500 to-gold-600 p-4 text-white">
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between mb-2">
                 <div>
-                  <h3 className="font-semibold text-lg">Kraft Mortgages Assistant</h3>
-                  <p className="text-sm opacity-90">Powered by AI • Available 24/7</p>
+                  <h3 className="font-semibold text-base leading-tight">Kraft Mortgages Assistant</h3>
+                  <p className="text-xs opacity-90">Underwriting & Rates • 24/7</p>
                 </div>
                 <div className="flex items-center gap-2">
+                  {/* Direct WhatsApp Handoff */}
+                  <a
+                    href="https://wa.me/16043595993?text=Hi%20Kraft%20Mortgages%2C%20I%20am%20chatting%20on%20your%20website%20and%20would%20like%20to%20continue%20here."
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-1 text-[11px] bg-emerald-600 hover:bg-emerald-500 text-white font-semibold px-2.5 py-1 rounded-full transition-colors shadow-sm"
+                    title="Switch to WhatsApp (+1 604 359-5993)"
+                  >
+                    <span>📱 WhatsApp</span>
+                  </a>
+
                   {/* Voice Toggle */}
                   <button
                     onClick={() => setShowVoiceControls(!showVoiceControls)}
-                    className={`p-2 rounded-lg transition-colors ${showVoiceControls
+                    className={`p-1.5 rounded-lg transition-colors ${showVoiceControls
                       ? 'bg-white/20 text-white'
                       : 'bg-white/10 text-white/70 hover:bg-white/15'
                       }`}
                     title={showVoiceControls ? 'Hide voice controls' : 'Show voice controls'}
                   >
-                    <Volume2 className="w-4 h-4" />
+                    <Volume2 className="w-3.5 h-3.5" />
                   </button>
 
                   {/* Language Indicator */}
                   {voiceEnabled && (
-                    <div className="flex items-center gap-1 bg-white/10 px-2 py-1 rounded text-xs">
+                    <div className="flex items-center gap-1 bg-white/10 px-2 py-0.5 rounded text-xs">
                       <Languages className="w-3 h-3" />
                       <span>{voiceService.current.getCurrentLanguage().split('-')[0].toUpperCase()}</span>
                     </div>
                   )}
+                </div>
+              </div>
+
+              {/* Dynamic Province Selector & Live Prime Benchmark */}
+              <div className="flex items-center justify-between pt-2 border-t border-white/20 text-xs">
+                <div className="flex items-center gap-1.5">
+                  <Globe className="w-3 h-3 opacity-80" />
+                  <span className="text-[11px] opacity-90 font-medium">Province:</span>
+                  <div className="inline-flex items-center gap-0.5 bg-black/25 p-0.5 rounded-md text-[11px] font-mono">
+                    {(["BC", "AB", "ON"] as const).map((prov) => (
+                      <button
+                        key={prov}
+                        type="button"
+                        onClick={() => setSelectedProvince(prov)}
+                        className={`px-2 py-0.5 rounded font-bold transition-all ${
+                          selectedProvince === prov
+                            ? "bg-white text-gray-900 shadow-sm"
+                            : "text-white/80 hover:text-white"
+                        }`}
+                      >
+                        {prov}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="text-[11px] font-mono opacity-90 font-medium">
+                  Prime: <span className="font-bold text-white">4.45%</span>
                 </div>
               </div>
             </div>
@@ -544,6 +572,22 @@ export function ChatWidget() {
                 </div>
               </div>
             )}
+
+            {/* WhatsApp Mobile Continuation Strip */}
+            <div className="px-4 py-2 bg-emerald-950/40 border-t border-emerald-500/20 flex items-center justify-between">
+              <span className="text-xs text-emerald-300 font-medium flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                Prefer WhatsApp?
+              </span>
+              <a
+                href="https://wa.me/16043595993?text=Hi%20Kraft%20Mortgages%2C%20I%20am%20chatting%20on%20your%20website%20and%20would%20like%20to%20continue%20here."
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 text-[11px] bg-emerald-600 hover:bg-emerald-500 text-white font-semibold px-2.5 py-0.5 rounded-full transition-colors shadow-sm"
+              >
+                <span>📱 Chat on Mobile ↗</span>
+              </a>
+            </div>
 
             {/* Input Form */}
             <form onSubmit={handleSubmit} className="p-4 border-t border-gray-700">

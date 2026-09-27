@@ -1,222 +1,217 @@
-import { NextRequest } from "next/server";
-import { rateToolsInstance } from "@/lib/ai/tools/rate-tools";
-import { PageContext, generatePageContextPrompt } from "@/lib/ai/page-context";
+import { NextRequest, NextResponse } from "next/server";
 
-// Free models to try first (via OpenRouter) — updated April 2026
-const FREE_MODELS = [
-  "meta-llama/llama-3.3-70b-instruct:free", // Primary: Llama 3.3 70B (reliable, fast)
-  "google/gemma-4-31b-it:free",              // Fallback 1: Gemma 4 31B
-  "minimax/minimax-m2.5:free",                // Fallback 2: MiniMax M2.5
-  "nousresearch/hermes-3-llama-3.1-405b:free", // Fallback 3: Hermes 3 405B (strong)
-];
+export const dynamic = "force-dynamic";
 
-// No paid fallbacks — Kraft uses free OpenRouter models only
+const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
+const MODEL = "deepseek/deepseek-v4.1-flash";
+const FALLBACK_MODEL = "deepseek/deepseek-chat";
+const TWENTY_WEBHOOK_URL =
+  process.env.TWENTY_WEBHOOK_URL ||
+  "https://webhook.srv848694.hstgr.cloud/webhook/contact-form";
+const DISCORD_WEBHOOK_URL = process.env.DISCORD_LEAD_WEBHOOK_URL || "";
 
-async function callOpenRouter(model: string, systemPrompt: string, userPrompt: string, apiKey: string) {
-  const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+const SYSTEM_PROMPT = `You are the Senior Mortgage Associate at Kraft Mortgages Canada Inc., a licensed Canadian mortgage brokerage serving British Columbia (BCFSA #SR220230 / Brokerage #12918), Alberta (RECA #LIC-00655428), and Ontario (FSRA #12918). Principal Broker: Varun Chaudhry.
+Your role is to consult with website visitors with deep mortgage underwriting knowledge, consultative warmth, and precision across BC, Alberta, and Ontario.
+
+## VERIFIED LIVE BENCHMARK RATES:
+- Bank of Canada Prime Rate: 4.45%
+- 5-Year Fixed: From 4.44% - 4.49% (High-Ratio Insured <20% down); 4.64% - 4.79% (Conventional insurable)
+- 3-Year Fixed: Promo from 4.14% - 4.34%
+- 5-Year Variable: Prime - 1.00% (currently ~3.45%)
+- HELOC / 1st Position Line of Credit: Prime + 0.50% (4.95%)
+- Alternative B-Lenders (Self-Employed BFS): 5.99% - 6.74%
+- Private 2nd Mortgages: 7.99% - 10.99% (interest-only, equity-based)
+
+## UNDERWRITING & QUALIFICATION GROUND TRUTH:
+1. Down Payment Requirements (Federal):
+   - 5% on first $500k, 10% on remainder up to $1.5M. 20% minimum for purchases over $1.5M.
+2. 30-Year Amortization Rules:
+   - High-Ratio Insured (<20% down): 30-year amortization allowed for all First-Time Home Buyers (FTHB) on ANY home, or ANY buyer purchasing newly built construction. Non-FTHB resale max 25 years.
+   - Conventional (≥20% down): Standard 30 years across Canada.
+3. Provincial Land Transfer Taxes:
+   - British Columbia (BC): BC Property Transfer Tax applies (1% on first $200k, 2% up to $2M). Full First-Time Home Buyer exemption up to $835,000.
+   - Alberta (AB): ZERO provincial land transfer tax (0%). Only modest Land Titles registration fees apply.
+   - Ontario (ON): Ontario Land Transfer Tax applies (plus Toronto Municipal MLTT inside Toronto).
+   - NEVER assume the client is in Surrey or BC unless they say so! Always ask which city and province they are looking to buy or refinance in.
+4. Client Financial Protection Rule:
+   - Proactively advise: "Please HOLD any irreversible financial actions (paying off loans, closing accounts, moving large funds) until our brokerage team has reviewed your full file."
+5. Next Steps / Formal Application:
+   - Secure Finmo intake portal: https://r.mtg-app.com/varun-chaudhry
+   - Direct WhatsApp line: +1 (604) 359-5993
+   - Primary Phone: 604-593-1550
+
+## LEAD CAPTURE DIRECTIVE:
+When answering questions, naturally ask for their Name, Email, Target City & Province, and Price point so we can send a custom rate sheet or formal pre-approval. Keep responses concise, well-structured with bullet points, and under 800 characters for easy reading on mobile.`;
+
+// Extract email and phone from user text
+function extractContact(text: string) {
+  const emailMatch = text.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
+  const phoneMatch = text.match(/(?:\+?1[-.\s]?)?\(?([0-9]{3})\)?[-.\s]?([0-9]{3})[-.\s]?([0-9]{4})/);
+  return {
+    email: emailMatch ? emailMatch[0] : null,
+    phone: phoneMatch ? phoneMatch[0] : null,
+  };
+}
+
+// Background sync to Twenty CRM
+async function syncChatLead(data: {
+  email?: string | null;
+  phone?: string | null;
+  name?: string;
+  province?: string;
+  message: string;
+}) {
+  if (!data.email && !data.phone) return;
+
+  try {
+    // 1. Post to Twenty CRM webhook
+    await fetch(TWENTY_WEBHOOK_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: data.email || "",
+        phone: data.phone || "",
+        firstName: data.name || "Chatbot Lead",
+        lastName: "",
+        mortgageType: "Website Chatbot Inquiry",
+        message: `Province: ${data.province || "Unspecified"} | Initial Chat: ${data.message}`,
+        source: "website-ai-chat",
+      }),
+    });
+
+    // 2. Post to Discord lead alerts
+    if (DISCORD_WEBHOOK_URL) {
+      await fetch(DISCORD_WEBHOOK_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          embeds: [
+            {
+              title: "💬 New Lead Captured from Website Chatbot",
+              color: 0x10b981,
+              fields: [
+                { name: "Email", value: data.email || "—", inline: true },
+                { name: "Phone", value: data.phone || "—", inline: true },
+                { name: "Province", value: data.province || "—", inline: true },
+                { name: "Latest Message", value: data.message.slice(0, 300) },
+              ],
+              timestamp: new Date().toISOString(),
+            },
+          ],
+        }),
+      });
+    }
+  } catch (err) {
+    console.error("[Chat API] Failed to sync lead to CRM:", err);
+  }
+}
+
+async function requestOpenRouter(messages: any[], model: string, apiKey: string) {
+  return await fetch("https://openrouter.ai/api/v1/chat/completions", {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
       "Authorization": `Bearer ${apiKey}`,
-      "HTTP-Referer": process.env.NEXT_PUBLIC_SITE_URL || "https://kraftmortgages.ca",
-      "X-Title": "Kraft Mortgages AI Assistant",
+      "Content-Type": "application/json",
+      "HTTP-Referer": "https://www.kraftmortgages.ca",
+      "X-Title": "Kraft Mortgages Web Chatbot",
     },
     body: JSON.stringify({
       model,
-      messages: [
-        { role: "system", content: systemPrompt },
-        { role: "user", content: userPrompt }
-      ],
-      max_tokens: 4096,
+      messages,
       temperature: 0.3,
-      stream: true,
     }),
   });
-
-  if (!response.ok) {
-    const error = await response.text();
-    throw new Error(`OpenRouter ${model} error: ${response.status} - ${error}`);
-  }
-
-  return response;
 }
-
-
-
-// Transform OpenRouter/OpenAI SSE stream to plain text
-function createSSETransformStream() {
-  return new TransformStream({
-    transform(chunk, controller) {
-      const text = new TextDecoder().decode(chunk);
-      const lines = text.split('\n');
-
-      for (const line of lines) {
-        const trimmed = line.trim();
-        if (!trimmed.startsWith('data:')) continue;
-
-        const data = trimmed.slice(5).trim();
-        if (data === '[DONE]') continue;
-
-        try {
-          const json = JSON.parse(data);
-          const content = json.choices?.[0]?.delta?.content;
-          if (content) {
-            controller.enqueue(new TextEncoder().encode(content));
-          }
-        } catch (e) {
-          // Skip invalid JSON
-        }
-      }
-    }
-  });
-}
-
-
 
 export async function POST(req: NextRequest) {
-  const openRouterKey = process.env.OPEN_ROUTER_API_KEY;
-
   try {
-    const { input, province, language, currentPage, pageContext } = await req.json();
+    const { input, messages = [], province, contactInfo } = await req.json();
 
-    if (!input) {
-      return new Response('Input is required', { status: 400 });
+    if (!input && (!messages || messages.length === 0)) {
+      return NextResponse.json({ error: "Input is required" }, { status: 400 });
     }
 
-    // Generate page-specific context
-    const pageContextPrompt = pageContext ? generatePageContextPrompt(pageContext as PageContext) : '';
+    const currentInput = input || messages[messages.length - 1]?.content || "";
 
-    const systemPrompt = `You are Alexa, a professional, friendly Canadian female mortgage advisor working for Kraft Mortgages. Serve BC/AB/ON and follow provincial compliance. Do not provide legal or tax advice.
-
-=== CANADIAN MORTGAGE RULES (Updated December 2024) ===
-
-AMORTIZATION PERIODS:
-- Standard insured mortgages: Maximum 25 years
-- First-time homebuyers (any property): 30 years allowed (as of Dec 15, 2024)
-- New build purchases (any buyer): 30 years allowed (as of Dec 15, 2024)
-- Uninsured mortgages (20%+ down): Up to 30 years (lender dependent)
-- MLI Select/Market (rental properties): Up to 50 years
-
-INSURED VS UNINSURED MORTGAGES:
-- Insured: Required when down payment is less than 20%
-- Insured mortgage cap: $1.5 MILLION (increased from $1M on Dec 15, 2024)
-- Uninsured: Down payment 20% or more, no CMHC insurance needed
-- Insurance providers: CMHC, Sagen, Canada Guaranty
-
-DOWN PAYMENT REQUIREMENTS:
-- $500,000 or less: Minimum 5% down
-- $500,001 to $1,500,000: 5% on first $500K + 10% on remainder
-- Over $1,500,000: Minimum 20% down (cannot be insured)
-
-STRESS TEST (OSFI B-20):
-- Qualify at the GREATER of: Contract rate + 2% OR the current benchmark rate
-- The benchmark rate is set by Bank of Canada (do NOT quote specific numbers as they change)
-- Note: Stress test removed for uninsured mortgage switches at renewal (as of Nov 2024)
-
-CMHC QUALIFYING CRITERIA:
-- Minimum credit score: 600
-- Maximum GDS ratio: 39%
-- Maximum TDS ratio: 44%
-- Down payment cannot come from borrowed funds
-
-IMPORTANT TERMS:
-- Term: Length of mortgage contract (typically 1-5 years)
-- Amortization: Total time to pay off mortgage (25-30 years typical)
-- These are NOT the same thing - terms are short, amortization is long
-
-FIRST-TIME BUYER BENEFITS:
-- 30-year amortization on insured mortgages (Dec 2024)
-- Home Buyers' Plan: Withdraw up to $60,000 from RRSP
-- Tax-Free First Home Savings Account (FHSA): Up to $40,000 lifetime
-
-=== KRAFT MORTGAGES COMPANY INFO ===
-- Phone: 604-593-1550 (Primary) or 604-727-1579
-- Email: info@kraftmortgages.ca
-- Website: kraftmortgages.ca
-- Service Areas: British Columbia, Alberta, Ontario
-- Office Hours: Monday-Friday 9am-6pm, Saturday 10am-4pm PT
-NEVER make up phone numbers or email addresses - use ONLY the numbers above!
-
-=== RESPONSE FORMATTING RULES ===
-1. Keep responses CONCISE - aim for 150-250 words maximum
-2. Use short paragraphs (2-3 sentences max)
-3. Use bullet points for lists, not numbered lists with sub-bullets
-4. Avoid excessive headers - use 1-2 headers maximum per response
-5. Don't use tables unless specifically asked for comparisons
-6. End with ONE clear call-to-action question, not multiple options
-7. Be conversational and warm, not like a textbook
-8. Use bold sparingly - only for key terms, not entire sentences
-
-User preferred province: ${province || "BC"}; language: ${language || "en"}.
-${pageContextPrompt}`;
-
-    // Build user prompt with rate data if applicable
-    let userPrompt = input;
-    const inputLower = input.toLowerCase();
-    if (inputLower.includes("rate") || inputLower.includes("interest")) {
-      try {
-        const ratesResult = await rateToolsInstance.getCurrentRates({
-          province: province || "BC",
-          termMonths: 60,
-          limit: 5
-        });
-
-        if (ratesResult.success && ratesResult.data?.rates?.length > 0) {
-          const ratesInfo = ratesResult.formattedResult || JSON.stringify(ratesResult.data);
-          userPrompt = `User asked: ${input}\n\nHere are the ACTUAL current mortgage rates from our database:\n${ratesInfo}\n\nPlease use these EXACT rates in your response.`;
-        }
-      } catch (e) {
-        console.error("Rate tool error:", e);
-      }
+    // Check for contact details shared in conversation
+    const extracted = extractContact(currentInput);
+    if (extracted.email || extracted.phone || contactInfo) {
+      // Fire-and-forget sync to Twenty CRM
+      syncChatLead({
+        email: contactInfo?.email || extracted.email,
+        phone: contactInfo?.phone || extracted.phone,
+        name: contactInfo?.name || undefined,
+        province,
+        message: currentInput,
+      }).catch(console.error);
     }
 
-    userPrompt += "\n\nREMINDER: Never say '5.25%' for stress test - use 'current benchmark rate'. Max insured mortgage is $1.5M not $1M.";
-
-    // === FALLBACK CHAIN ===
-    const errors: string[] = [];
-
-    // TIER 1: Try all free models via OpenRouter
-    if (openRouterKey) {
-      for (const model of FREE_MODELS) {
-        try {
-          console.log(`[Chat API] Trying free model: ${model}`);
-          const response = await callOpenRouter(model, systemPrompt, userPrompt, openRouterKey);
-
-          return new Response(response.body?.pipeThrough(createSSETransformStream()), {
-            headers: {
-              "content-type": "text/plain; charset=utf-8",
-              "X-Model-Used": model,
-              "X-Provider": "openrouter",
-              "X-Is-Free": "true",
-            }
-          });
-        } catch (e) {
-          const errorMsg = e instanceof Error ? e.message : String(e);
-          console.error(`[Chat API] Free model ${model} failed:`, errorMsg);
-          errors.push(`${model}: ${errorMsg}`);
-          // Continue to next free model
-        }
-      }
+    if (!OPENROUTER_API_KEY) {
+      console.warn("[Chat API] OPENROUTER_API_KEY is not configured.");
+      return NextResponse.json(
+        {
+          reply:
+            "Thank you for contacting Kraft Mortgages! We are licensed across BC, Alberta, and Ontario. For immediate rate quotes and underwriting assistance, chat directly with our team on WhatsApp at +1 (604) 359-5993 or call 604-593-1550.",
+          fallback: true,
+        },
+        { status: 200 }
+      );
     }
 
-    // All models failed
-    console.error("[Chat API] All models failed:", errors);
-    return new Response(
-      JSON.stringify({
-        error: "All AI models failed",
-        details: errors,
-      }),
-      { status: 500, headers: { "Content-Type": "application/json" } }
-    );
+    // Format conversation history
+    const formattedHistory = messages
+      .slice(-6)
+      .map((m: any) => ({
+        role: m.sender === "user" || m.role === "user" ? "user" : "assistant",
+        content: m.content || "",
+      }));
 
-  } catch (error) {
-    console.error('Chat API Error:', error);
-    return new Response(
-      JSON.stringify({
-        error: 'Failed to process chat request',
-        details: error instanceof Error ? error.message : 'Unknown error'
-      }),
-      { status: 500, headers: { 'Content-Type': 'application/json' } }
+    const conversation = [
+      { role: "system", content: SYSTEM_PROMPT },
+      ...formattedHistory,
+      {
+        role: "user",
+        content: province ? `[User Province: ${province}] ${currentInput}` : currentInput,
+      },
+    ];
+
+    // Attempt primary model: deepseek/deepseek-v4.1-flash
+    let response = await requestOpenRouter(conversation, MODEL, OPENROUTER_API_KEY);
+
+    // Fallback if model unavailable or returns error
+    if (!response.ok) {
+      console.warn(`[Chat API] Primary model ${MODEL} failed with ${response.status}. Attempting fallback...`);
+      response = await requestOpenRouter(conversation, FALLBACK_MODEL, OPENROUTER_API_KEY);
+    }
+
+    if (!response.ok) {
+      const errText = await response.text();
+      console.error("[Chat API] OpenRouter error:", response.status, errText);
+      return NextResponse.json(
+        {
+          reply:
+            "Thank you for reaching out! Our mortgage associates are currently assisting clients. For instant pre-qualification or live rate sheets, continue with our team on WhatsApp at +1 (604) 359-5993 or call 604-593-1550.",
+          fallback: true,
+        },
+        { status: 200 }
+      );
+    }
+
+    const data = await response.json();
+    const reply =
+      data.choices?.[0]?.message?.content ||
+      "I am here to help with your mortgage inquiry across BC, Alberta, and Ontario. Feel free to connect directly on WhatsApp at +1 (604) 359-5993 or call 604-593-1550.";
+
+    return NextResponse.json({ reply, message: reply });
+  } catch (error: any) {
+    console.error("[Chat API] Server error:", error);
+    return NextResponse.json(
+      {
+        reply:
+          "Thank you for reaching out to Kraft Mortgages! Please connect with us directly on WhatsApp at +1 (604) 359-5993 or call our office at 604-593-1550.",
+        error: error.message,
+      },
+      { status: 200 }
     );
   }
 }
