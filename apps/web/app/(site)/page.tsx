@@ -8,6 +8,7 @@ import { HeroCTAs } from "@/components/home/HeroCTAs";
 import { BUSINESS } from "@/lib/seo/business-config";
 import { TodaysRates, RatesTicker } from "@/components/rates";
 import { DollarSign, Home, Building, Users, Shield, TrendingUp, Calculator, Phone, Mail, MapPin, CheckCircle, ArrowRight, Briefcase } from "lucide-react";
+import { WhatsAppIcon, WHATSAPP_LINK } from "@/components/icons/WhatsAppIcon";
 
 export const metadata: Metadata = {
   title: "Kraft Mortgages Canada Inc. | Mortgage Broker Surrey, BC, AB & ON",
@@ -340,6 +341,11 @@ export default function ModernHomepage() {
                 className="inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-gold-500 to-gold-600 text-gray-900 font-semibold rounded-lg hover:from-gold-400 hover:to-gold-500 transition-all transform hover:scale-105 text-lg">
                 Start Application
               </a>
+              <a href={WHATSAPP_LINK} target="_blank" rel="noopener noreferrer"
+                className="inline-flex items-center justify-center px-8 py-4 bg-[#25D366] hover:bg-[#20ba59] text-gray-950 font-bold rounded-lg transition-all transform hover:scale-105 text-lg shadow-lg">
+                <WhatsAppIcon className="w-5 h-5 mr-2 fill-current" />
+                WhatsApp Us
+              </a>
               <a href={`tel:${BUSINESS.telephoneDisplay}`}
                 className="inline-flex items-center justify-center px-8 py-4 border-2 border-gold-500/50 text-gold-400 rounded-lg hover:bg-gold-500/10 transition-colors text-lg font-semibold">
                 <Phone className="w-5 h-5 mr-2" />
@@ -368,10 +374,16 @@ export default function ModernHomepage() {
             <div>
               <h3 className="text-lg font-semibold text-gold-400 mb-4">Contact</h3>
               <div className="space-y-2 text-gray-400 text-sm">
-                <div className="flex items-center gap-2"><Phone className="w-4 h-4" /><span>{BUSINESS.telephoneDisplay}</span></div>
-                <div className="flex items-center gap-2"><Phone className="w-4 h-4" /><span>{BUSINESS.secondaryPhoneDisplay}</span></div>
-                <div className="flex items-center gap-2"><Mail className="w-4 h-4" /><span>{BUSINESS.email}</span></div>
-                <div className="flex items-center gap-2"><MapPin className="w-4 h-4" /><span>{BUSINESS.address.streetAddress}<br />{BUSINESS.address.addressLocality}, {BUSINESS.address.addressRegion} {BUSINESS.address.postalCode}</span></div>
+                <div className="flex items-center gap-2">
+                  <WhatsAppIcon className="w-4 h-4 text-[#25D366] fill-current shrink-0" />
+                  <a href={WHATSAPP_LINK} target="_blank" rel="noopener noreferrer" className="hover:text-emerald-400 text-emerald-400 font-semibold transition-colors">
+                    WhatsApp: +1 (604) 359-5993
+                  </a>
+                </div>
+                <div className="flex items-center gap-2"><Phone className="w-4 h-4 shrink-0" /><a href={`tel:${BUSINESS.telephoneDisplay}`} className="hover:text-gold-400 transition-colors">{BUSINESS.telephoneDisplay}</a></div>
+                <div className="flex items-center gap-2"><Phone className="w-4 h-4 shrink-0" /><a href={`tel:${BUSINESS.secondaryPhoneDisplay}`} className="hover:text-gold-400 transition-colors">{BUSINESS.secondaryPhoneDisplay}</a></div>
+                <div className="flex items-center gap-2"><Mail className="w-4 h-4 shrink-0" /><a href={`mailto:${BUSINESS.email}`} className="hover:text-gold-400 transition-colors">{BUSINESS.email}</a></div>
+                <div className="flex items-center gap-2"><MapPin className="w-4 h-4 shrink-0" /><span>{BUSINESS.address.streetAddress}<br />{BUSINESS.address.addressLocality}, {BUSINESS.address.addressRegion} {BUSINESS.address.postalCode}</span></div>
               </div>
             </div>
             <div>
