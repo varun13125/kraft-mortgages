@@ -11,6 +11,7 @@ const FOOTER_LINKS = {
     { label: "Blog", href: "/blog" },
   ],
   "CONTACT": [
+    { label: "WhatsApp: +1 (604) 359-5993", href: "https://wa.me/16043595993?text=Hi%20Kraft%20Mortgages%2C%20I%27d%20like%20to%20inquire%20about%20mortgage%20rates." },
     { label: "604-593-1550", href: "tel:604-593-1550" },
     { label: "604-727-1579", href: "tel:604-727-1579" },
     { label: "varun@kraftmortgages.ca", href: "mailto:varun@kraftmortgages.ca" },

@@ -5,6 +5,7 @@ import Navigation from "@/components/Navigation";
 import { BorderRotate } from "@/components/ui/animated-gradient-border";
 import { Phone, Mail, Clock, MapPin, Award, DollarSign, Zap, Loader2, CheckCircle, AlertCircle } from "lucide-react";
 import { useState, type FormEvent } from "react";
+import { WhatsAppIcon, WHATSAPP_LINK, WHATSAPP_PHONE_DISPLAY } from "@/components/icons/WhatsAppIcon";
 
 export const dynamic = "force-dynamic";
 
@@ -196,6 +197,33 @@ export default function ContactPage() {
               >
                 <h2 className="text-2xl font-semibold text-gray-100 mb-6">Get In Touch</h2>
                 <div className="space-y-6">
+                  {/* WhatsApp Direct Messaging */}
+                  <div className="flex items-start gap-4 p-4 rounded-xl bg-emerald-950/40 border border-emerald-500/30 hover:border-emerald-500/60 transition-all group">
+                    <div className="w-12 h-12 bg-emerald-500/20 rounded-xl flex items-center justify-center border border-emerald-500/40 shrink-0 text-[#25D366] group-hover:scale-105 transition-transform">
+                      <WhatsAppIcon className="w-6 h-6 fill-current" />
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2 mb-1">
+                        <h3 className="text-lg font-medium text-gray-100">WhatsApp</h3>
+                        <span className="text-[10px] font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-2 py-0.5 rounded-full">
+                          Fastest Response
+                        </span>
+                      </div>
+                      <p className="text-gray-400 text-sm mb-2">Message our advisory team directly on WhatsApp</p>
+                      <a
+                        href={WHATSAPP_LINK}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 text-emerald-400 hover:text-emerald-300 transition-colors font-semibold"
+                      >
+                        <span className="text-base">{WHATSAPP_PHONE_DISPLAY}</span>
+                        <span className="text-xs bg-[#25D366] text-gray-950 px-2.5 py-0.5 rounded-full font-bold shadow-sm">
+                          Chat Now ↗
+                        </span>
+                      </a>
+                    </div>
+                  </div>
+
                   <div className="flex items-start gap-4">
                     <div className="w-12 h-12 bg-gradient-to-br from-gold-500/20 to-amber-500/20 rounded-xl flex items-center justify-center border border-gold-500/30">
                       <Phone className="w-6 h-6 text-gold-400" />

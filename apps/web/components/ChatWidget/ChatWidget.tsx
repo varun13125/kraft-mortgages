@@ -9,6 +9,7 @@ import { CleanVoiceControls } from "./CleanVoiceControls";
 import { ToolResults } from "./ToolResults";
 import { MultilingualVoiceService } from "@/lib/voice/multilingual-voice";
 import { getPageContext } from "@/lib/ai/page-context";
+import { WhatsAppIcon, WHATSAPP_LINK, WHATSAPP_PHONE_DISPLAY } from "@/components/icons/WhatsAppIcon";
 
 interface Message {
   id: string;
@@ -338,37 +339,69 @@ export function ChatWidget() {
 
   return (
     <>
-      {/* Floating Button */}
-      <motion.button
-        className="fixed bottom-6 right-6 w-14 h-14 bg-gradient-to-r from-gold-500 to-gold-600 rounded-full shadow-lg flex items-center justify-center text-white hover:from-gold-400 hover:to-gold-500 transition-all z-50"
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.95 }}
-        onClick={() => setIsOpen(!isOpen)}
-      >
-        <AnimatePresence mode="wait">
-          {isOpen ? (
-            <motion.div
-              key="close"
-              initial={{ rotate: -90, opacity: 0 }}
-              animate={{ rotate: 0, opacity: 1 }}
-              exit={{ rotate: 90, opacity: 0 }}
-              transition={{ duration: 0.2 }}
-            >
-              <X className="w-6 h-6" />
-            </motion.div>
-          ) : (
-            <motion.div
-              key="chat"
-              initial={{ rotate: 90, opacity: 0 }}
-              animate={{ rotate: 0, opacity: 1 }}
-              exit={{ rotate: -90, opacity: 0 }}
-              transition={{ duration: 0.2 }}
-            >
-              <MessageCircle className="w-6 h-6" />
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </motion.button>
+      {/* Floating Action Dock: WhatsApp & AI Chat */}
+      <div className="fixed bottom-6 right-6 flex items-center gap-3 z-50">
+        {/* Dedicated WhatsApp Option */}
+        <motion.a
+          href={WHATSAPP_LINK}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="relative group w-14 h-14 bg-[#25D366] hover:bg-[#20ba59] rounded-full shadow-[0_4px_20px_rgba(37,211,102,0.45)] flex items-center justify-center text-white transition-all duration-200 border-2 border-white/20"
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.95 }}
+          title={`Chat on WhatsApp (${WHATSAPP_PHONE_DISPLAY})`}
+          aria-label={`Chat on WhatsApp ${WHATSAPP_PHONE_DISPLAY}`}
+        >
+          <WhatsAppIcon className="w-7 h-7 fill-current" />
+          
+          {/* Active online pulse dot */}
+          <span className="absolute -top-1 -right-1 flex h-4 w-4">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-4 w-4 bg-emerald-500 border-2 border-gray-900"></span>
+          </span>
+
+          {/* Hover Tooltip */}
+          <div className="absolute bottom-16 right-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-all duration-200 translate-y-1 group-hover:translate-y-0 whitespace-nowrap z-50">
+            <div className="bg-gray-900/95 text-white text-xs font-semibold px-3 py-1.5 rounded-lg shadow-2xl border border-gray-700/80 flex items-center gap-2 backdrop-blur-md">
+              <span className="w-2 h-2 rounded-full bg-[#25D366] animate-pulse" />
+              <span>WhatsApp: <strong>{WHATSAPP_PHONE_DISPLAY}</strong></span>
+            </div>
+          </div>
+        </motion.a>
+
+        {/* Floating AI Chat Button */}
+        <motion.button
+          className="w-14 h-14 bg-gradient-to-r from-gold-500 to-gold-600 rounded-full shadow-lg flex items-center justify-center text-white hover:from-gold-400 hover:to-gold-500 transition-all border-2 border-white/10"
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => setIsOpen(!isOpen)}
+          aria-label={isOpen ? "Close AI chat" : "Open AI chat"}
+        >
+          <AnimatePresence mode="wait">
+            {isOpen ? (
+              <motion.div
+                key="close"
+                initial={{ rotate: -90, opacity: 0 }}
+                animate={{ rotate: 0, opacity: 1 }}
+                exit={{ rotate: 90, opacity: 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                <X className="w-6 h-6" />
+              </motion.div>
+            ) : (
+              <motion.div
+                key="chat"
+                initial={{ rotate: 90, opacity: 0 }}
+                animate={{ rotate: 0, opacity: 1 }}
+                exit={{ rotate: -90, opacity: 0 }}
+                transition={{ duration: 0.2 }}
+              >
+                <MessageCircle className="w-6 h-6" />
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </motion.button>
+      </div>
 
       {/* Chat Window */}
       <AnimatePresence>
@@ -390,13 +423,14 @@ export function ChatWidget() {
                 <div className="flex items-center gap-2">
                   {/* Direct WhatsApp Handoff */}
                   <a
-                    href="https://wa.me/16043595993?text=Hi%20Kraft%20Mortgages%2C%20I%20am%20chatting%20on%20your%20website%20and%20would%20like%20to%20continue%20here."
+                    href={WHATSAPP_LINK}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-1 text-[11px] bg-emerald-600 hover:bg-emerald-500 text-white font-semibold px-2.5 py-1 rounded-full transition-colors shadow-sm"
-                    title="Switch to WhatsApp (+1 604 359-5993)"
+                    className="flex items-center gap-1.5 text-[11px] bg-[#25D366] hover:bg-[#20ba59] text-gray-950 font-bold px-2.5 py-1 rounded-full transition-colors shadow-sm"
+                    title={`Switch to WhatsApp (${WHATSAPP_PHONE_DISPLAY})`}
                   >
-                    <span>📱 WhatsApp</span>
+                    <WhatsAppIcon className="w-3.5 h-3.5 fill-current" />
+                    <span>WhatsApp</span>
                   </a>
 
                   {/* Voice Toggle */}
@@ -574,18 +608,20 @@ export function ChatWidget() {
             )}
 
             {/* WhatsApp Mobile Continuation Strip */}
-            <div className="px-4 py-2 bg-emerald-950/40 border-t border-emerald-500/20 flex items-center justify-between">
-              <span className="text-xs text-emerald-300 font-medium flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                Prefer WhatsApp?
-              </span>
+            <div className="px-4 py-2.5 bg-emerald-950/60 border-t border-emerald-500/30 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <WhatsAppIcon className="w-4 h-4 text-[#25D366] fill-current shrink-0" />
+                <span className="text-xs text-emerald-200 font-medium">
+                  Prefer WhatsApp? <strong>{WHATSAPP_PHONE_DISPLAY}</strong>
+                </span>
+              </div>
               <a
-                href="https://wa.me/16043595993?text=Hi%20Kraft%20Mortgages%2C%20I%20am%20chatting%20on%20your%20website%20and%20would%20like%20to%20continue%20here."
+                href={WHATSAPP_LINK}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 text-[11px] bg-emerald-600 hover:bg-emerald-500 text-white font-semibold px-2.5 py-0.5 rounded-full transition-colors shadow-sm"
+                className="inline-flex items-center gap-1.5 text-[11px] bg-[#25D366] hover:bg-[#20ba59] text-gray-950 font-bold px-3 py-1 rounded-full transition-colors shadow-md"
               >
-                <span>📱 Chat on Mobile ↗</span>
+                <span>Message Us ↗</span>
               </a>
             </div>
 
