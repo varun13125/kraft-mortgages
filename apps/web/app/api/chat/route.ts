@@ -8,8 +8,10 @@ const OPENROUTER_API_KEY = (
   ""
 ).trim();
 const GOOGLE_API_KEY = (process.env.GOOGLE_API_KEY || "").trim();
+const NVIDIA_API_KEY = (process.env.NVIDIA_API_KEY || "").trim();
 const MODEL = "deepseek/deepseek-v4.1-flash";
 const FALLBACK_MODEL = "deepseek/deepseek-chat";
+const NVIDIA_MODEL = "meta/llama-3.2-11b-vision-instruct";
 const TWENTY_WEBHOOK_URL =
   process.env.TWENTY_WEBHOOK_URL ||
   "https://webhook.srv848694.hstgr.cloud/webhook/contact-form";
@@ -179,6 +181,45 @@ async function requestGemini(
   }
 }
 
+async function requestNvidia(
+  messages: any[],
+  apiKey: string
+): Promise<string | null> {
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 8000);
+
+    const res = await fetch("https://integrate.api.nvidia.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: NVIDIA_MODEL,
+        messages,
+        temperature: 0.3,
+        max_tokens: 800,
+      }),
+      signal: controller.signal,
+    });
+
+    clearTimeout(timeoutId);
+
+    if (!res.ok) {
+      const errText = await res.text();
+      console.warn("[Chat API] NVIDIA error:", res.status, errText);
+      return null;
+    }
+
+    const data = await res.json();
+    return data.choices?.[0]?.message?.content || null;
+  } catch (err) {
+    console.warn("[Chat API] NVIDIA fetch exception:", err);
+    return null;
+  }
+}
+
 export async function POST(req: NextRequest) {
   try {
     const { input, messages = [], province, contactInfo } = await req.json();
@@ -243,13 +284,19 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // 2. High-speed, robust fallback: Google Gemini 2.5 Flash
+    // 2. High-speed, robust fallback A: Google Gemini 2.5 Flash
     if (!reply && GOOGLE_API_KEY) {
       console.log("[Chat API] Engaging Google Gemini 2.5 Flash provider");
       reply = await requestGemini(formattedHistory, userPrompt, GOOGLE_API_KEY);
     }
 
-    // 3. Courteous brokerage contact fallback if AI providers are unavailable
+    // 3. Fallback B: NVIDIA NIM (Meta Llama 3.2 11B Vision)
+    if (!reply && NVIDIA_API_KEY) {
+      console.log("[Chat API] Engaging NVIDIA NIM provider");
+      reply = await requestNvidia(conversation, NVIDIA_API_KEY);
+    }
+
+    // 4. Courteous brokerage contact fallback if all AI providers are unavailable
     if (!reply) {
       reply =
         "Thank you for contacting Kraft Mortgages! We are licensed across BC, Alberta, and Ontario. For immediate rate quotes, pre-approvals, and underwriting assistance, chat directly with our team on WhatsApp at +1 (604) 359-5993 or call 604-593-1550.";
