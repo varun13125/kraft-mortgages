@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { Analytics } from "@/components/Analytics";
 import { Analytics as VercelAnalytics } from "@vercel/analytics/react";
@@ -13,6 +13,13 @@ import dynamic from "next/dynamic";
 const ChatWidget = dynamic(() => import("@/components/ChatWidget/ChatWidget").then(mod => ({ default: mod.ChatWidget })), {
   ssr: false
 });
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: "#020617",
+};
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.kraftmortgages.ca'),
@@ -46,7 +53,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en-CA" className="dark">
+    <html lang="en-CA" className="dark overflow-x-hidden max-w-full">
       <head>
         {/* Preconnect to external domains for faster resource loading */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -54,8 +61,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="preconnect" href="https://vercel.live" />
         <JsonLd data={orgJsonLd()} />
       </head>
-      <body className="min-h-screen">
-        <div className="relative min-h-screen overflow-x-hidden bg-slate-950 text-gray-100 antialiased selection:bg-gold-500/30 selection:text-gold-200">
+      <body className="min-h-screen overflow-x-hidden w-full max-w-full">
+        <div className="relative min-h-screen overflow-x-hidden w-full max-w-full bg-slate-950 text-gray-100 antialiased selection:bg-gold-500/30 selection:text-gold-200">
           {/* Unified Site-wide Animated Background */}
           <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
             {/* Subtle Grid Overlay */}

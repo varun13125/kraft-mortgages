@@ -80,36 +80,36 @@ export default function Navigation() {
                 <Image
                   src="/kraft-logo-dark.png"
                   alt="Kraft Mortgages"
-                  width={200}
-                  height={50}
-                  className="h-10 w-auto group-hover:scale-105 transition-transform duration-200 shrink-0"
+                  width={180}
+                  height={45}
+                  className="h-8 xl:h-9 w-auto group-hover:scale-105 transition-transform duration-200 shrink-0"
                   priority
                 />
               </Link>
 
               {/* MLI Select Portal Badge - separate from logo */}
               {isMLISection && (
-                <div className="ml-3 pl-3 border-l border-gray-700 mr-6">
+                <div className="ml-2 pl-2 border-l border-gray-700 mr-2 xl:mr-4 hidden sm:block">
                   <div className="text-xs text-gold-400 font-semibold whitespace-nowrap">MLI Select Portal</div>
                 </div>
               )}
             </div>
 
             {/* Desktop Navigation Links */}
-            <div className="hidden lg:flex items-center justify-center flex-1 lg:gap-2 xl:gap-6 mx-6">
+            <div className="hidden lg:flex items-center justify-center flex-1 gap-1 xl:gap-2 2xl:gap-4 mx-1 xl:mx-3">
               <Link
                 href="/"
-                className="flex items-center gap-2 lg:px-2 xl:px-4 py-2 text-gray-300 hover:text-gold-400 transition-colors lg:text-xs xl:text-base whitespace-nowrap"
+                className="flex items-center gap-1.5 px-2 xl:px-3 py-1.5 text-gray-300 hover:text-gold-400 transition-colors text-xs xl:text-sm font-medium whitespace-nowrap"
               >
-                <Home className="w-4 h-4" />
+                <Home className="w-3.5 h-3.5 hidden xl:inline" />
                 Home
               </Link>
 
               <Link
                 href="/rates"
-                className="flex items-center gap-2 lg:px-2 xl:px-4 py-2 text-gray-300 hover:text-gold-400 transition-colors lg:text-xs xl:text-base whitespace-nowrap font-medium"
+                className="flex items-center gap-1.5 px-2 xl:px-3 py-1.5 text-gray-300 hover:text-gold-400 transition-colors text-xs xl:text-sm font-semibold whitespace-nowrap"
               >
-                <TrendingUp className="w-4 h-4 text-emerald-400" />
+                <TrendingUp className="w-3.5 h-3.5 text-emerald-400" />
                 Rates
               </Link>
 
@@ -118,11 +118,11 @@ export default function Navigation() {
                 <button
                   onMouseEnter={() => setServicesDropdown(true)}
                   onMouseLeave={() => setServicesDropdown(false)}
-                  className="flex items-center gap-2 lg:px-2 xl:px-4 py-2 text-gray-300 hover:text-gold-400 transition-colors lg:text-xs xl:text-base whitespace-nowrap"
+                  className="flex items-center gap-1.5 px-2 xl:px-3 py-1.5 text-gray-300 hover:text-gold-400 transition-colors text-xs xl:text-sm font-medium whitespace-nowrap"
                 >
-                  <Building className="w-4 h-4" />
+                  <Building className="w-3.5 h-3.5 hidden xl:inline" />
                   Services
-                  <ChevronDown className={`w-4 h-4 transition-transform ${servicesDropdown ? 'rotate-180' : ''}`} />
+                  <ChevronDown className={`w-3.5 h-3.5 transition-transform ${servicesDropdown ? 'rotate-180' : ''}`} />
                 </button>
 
                 <AnimatePresence>
@@ -247,11 +247,11 @@ export default function Navigation() {
                 <button
                   onMouseEnter={() => setCalculatorsDropdown(true)}
                   onMouseLeave={() => setCalculatorsDropdown(false)}
-                  className="flex items-center gap-2 lg:px-2 xl:px-4 py-2 text-gray-300 hover:text-gold-400 transition-colors lg:text-xs xl:text-base whitespace-nowrap"
+                  className="flex items-center gap-1.5 px-2 xl:px-3 py-1.5 text-gray-300 hover:text-gold-400 transition-colors text-xs xl:text-sm font-medium whitespace-nowrap"
                 >
-                  <Calculator className="w-4 h-4" />
+                  <Calculator className="w-3.5 h-3.5 hidden xl:inline" />
                   Calculators
-                  <ChevronDown className={`w-4 h-4 transition-transform ${calculatorsDropdown ? 'rotate-180' : ''}`} />
+                  <ChevronDown className={`w-3.5 h-3.5 transition-transform ${calculatorsDropdown ? 'rotate-180' : ''}`} />
                 </button>
 
                 <AnimatePresence>
@@ -268,7 +268,7 @@ export default function Navigation() {
                         href="/calculators"
                         className="block px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-gold-400 transition-all border-b border-gray-800"
                       >
-                        <div className="font-semibold">All Calculators</div>
+                        <div className="font-semibold text-sm">All Calculators</div>
                         <div className="text-xs text-gray-500">Complete calculator suite</div>
                       </Link>
                       <div className="p-2 space-y-1">
@@ -331,11 +331,11 @@ export default function Navigation() {
                 <button
                   onMouseEnter={() => setMliDropdown(true)}
                   onMouseLeave={() => setMliDropdown(false)}
-                  className="flex items-center gap-2 lg:px-2 xl:px-4 py-2 text-gray-300 hover:text-gold-400 transition-colors lg:text-xs xl:text-base whitespace-nowrap"
+                  className="flex items-center gap-1.5 px-2 xl:px-3 py-1.5 text-gray-300 hover:text-gold-400 transition-colors text-xs xl:text-sm font-medium whitespace-nowrap"
                 >
-                  <DollarSign className="w-4 h-4" />
+                  <DollarSign className="w-3.5 h-3.5 hidden xl:inline text-gold-400" />
                   MLI Select
-                  <ChevronDown className={`w-4 h-4 transition-transform ${mliDropdown ? 'rotate-180' : ''}`} />
+                  <ChevronDown className={`w-3.5 h-3.5 transition-transform ${mliDropdown ? 'rotate-180' : ''}`} />
                 </button>
 
                 <AnimatePresence>
@@ -352,14 +352,14 @@ export default function Navigation() {
                         href="/mli-select"
                         className="block px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-gold-400 transition-all border-b border-gray-800"
                       >
-                        <div className="font-semibold">MLI Portal Home</div>
+                        <div className="font-semibold text-sm">MLI Portal Home</div>
                         <div className="text-xs text-gray-500">Overview and resources</div>
                       </Link>
                       <Link
                         href="/mli-select/calculators"
                         className="block px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-gold-400 transition-all border-b border-gray-800"
                       >
-                        <div className="font-semibold">All MLI Calculators</div>
+                        <div className="font-semibold text-sm">All MLI Calculators</div>
                         <div className="text-xs text-gray-500">9 specialized tools</div>
                       </Link>
                       <div className="p-2 space-y-1">
@@ -387,23 +387,25 @@ export default function Navigation() {
                 </AnimatePresence>
               </div>
 
+              {/* Business Funding - prominent link on large screens */}
               <Link
                 href="/business-funding"
-                className="flex items-center gap-2 lg:px-2 xl:px-4 py-2 text-gray-300 hover:text-gold-400 transition-colors font-medium lg:text-xs xl:text-base whitespace-nowrap"
+                className="hidden 2xl:flex items-center gap-1.5 px-2 xl:px-3 py-1.5 text-gray-300 hover:text-gold-400 transition-colors text-xs xl:text-sm font-medium whitespace-nowrap"
               >
-                <Briefcase className="w-4 h-4" />
+                <Briefcase className="w-3.5 h-3.5" />
                 Business Funding
               </Link>
 
-              {/* About Dropdown */}
+              {/* About Dropdown (Includes Company, Compliance & Blog) */}
               <div className="relative">
                 <button
                   onMouseEnter={() => setAboutDropdown(true)}
                   onMouseLeave={() => setAboutDropdown(false)}
-                  className="flex items-center gap-2 lg:px-2 xl:px-4 py-2 text-gray-300 hover:text-gold-400 transition-colors lg:text-xs xl:text-base whitespace-nowrap"
+                  className="flex items-center gap-1.5 px-2 xl:px-3 py-1.5 text-gray-300 hover:text-gold-400 transition-colors text-xs xl:text-sm font-medium whitespace-nowrap"
                 >
+                  <Users className="w-3.5 h-3.5 hidden xl:inline" />
                   About
-                  <ChevronDown className={`w-4 h-4 transition-transform ${aboutDropdown ? 'rotate-180' : ''}`} />
+                  <ChevronDown className={`w-3.5 h-3.5 transition-transform ${aboutDropdown ? 'rotate-180' : ''}`} />
                 </button>
 
                 <AnimatePresence>
@@ -423,7 +425,7 @@ export default function Navigation() {
                         >
                           <Users className="w-5 h-5 text-gold-400" />
                           <div>
-                            <div className="font-semibold">About Us</div>
+                            <div className="font-semibold text-sm">About Us</div>
                             <div className="text-xs text-gray-500">Our team, mission, and story</div>
                           </div>
                         </Link>
@@ -433,8 +435,18 @@ export default function Navigation() {
                         >
                           <Lock className="w-5 h-5 text-blue-400" />
                           <div>
-                            <div className="font-semibold">Compliance &amp; Security</div>
+                            <div className="font-semibold text-sm">Compliance &amp; Security</div>
                             <div className="text-xs text-gray-500">FINTRAC, licensing &amp; consumer protection</div>
+                          </div>
+                        </Link>
+                        <Link
+                          href="/blog"
+                          className="flex items-center gap-3 px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-gold-400 transition-all rounded-lg"
+                        >
+                          <FileText className="w-5 h-5 text-gold-400" />
+                          <div>
+                            <div className="font-semibold text-sm">Market Insights &amp; Blog</div>
+                            <div className="text-xs text-gray-500">Mortgage rates, guides, and trends</div>
                           </div>
                         </Link>
                       </div>
@@ -443,43 +455,43 @@ export default function Navigation() {
                 </AnimatePresence>
               </div>
 
+              {/* Direct Blog Link on extra wide screens */}
               <Link
                 href="/blog"
-                className="flex items-center gap-2 lg:px-2 xl:px-4 py-2 text-gray-300 hover:text-gold-400 transition-colors lg:text-xs xl:text-base whitespace-nowrap"
+                className="hidden 2xl:flex items-center gap-1.5 px-2 xl:px-3 py-1.5 text-gray-300 hover:text-gold-400 transition-colors text-xs xl:text-sm font-medium whitespace-nowrap"
               >
-                <FileText className="w-4 h-4" />
+                <FileText className="w-3.5 h-3.5" />
                 Blog
               </Link>
 
               <Link
                 href="/contact"
-                className="flex items-center gap-2 lg:px-2 xl:px-4 py-2 text-gray-300 hover:text-gold-400 transition-colors lg:text-xs xl:text-base whitespace-nowrap"
+                className="flex items-center gap-1.5 px-2 xl:px-3 py-1.5 text-gray-300 hover:text-gold-400 transition-colors text-xs xl:text-sm font-medium whitespace-nowrap"
               >
-                <Phone className="w-4 h-4" />
+                <Phone className="w-3.5 h-3.5 hidden xl:inline" />
                 Contact
               </Link>
             </div>
 
             {/* Desktop CTA */}
-            <div className="hidden lg:flex items-center shrink-0 pl-4">
-              {/* CTA Button */}
+            <div className="hidden lg:flex items-center shrink-0 pl-2 xl:pl-4">
               <motion.a
                 href="https://r.mtg-app.com/varun-chaudhry"
                 target="_blank"
                 rel="noopener noreferrer"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="lg:px-3 xl:px-6 py-2 bg-gradient-to-r from-gold-500 to-amber-600 text-gray-900 font-semibold rounded-lg shadow-lg shadow-gold-500/30 hover:shadow-gold-500/50 transition-all lg:text-xs xl:text-base whitespace-nowrap"
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
+                className="px-3.5 xl:px-5 py-1.5 xl:py-2 bg-gradient-to-r from-gold-500 to-amber-600 text-gray-900 font-bold rounded-lg shadow-md shadow-gold-500/20 hover:shadow-gold-500/40 transition-all text-xs xl:text-sm whitespace-nowrap shrink-0"
                 onClick={() => track('Book_Call_Click', { location: 'navbar_desktop' })}
               >
                 Apply Now
               </motion.a>
             </div>
 
-            {/* Mobile Menu Button */}
+            {/* Mobile / Tablet Menu Button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 rounded-lg bg-gray-800/50 border border-gray-700 hover:bg-gray-700 transition-all"
+              className="lg:hidden p-2 rounded-lg bg-gray-800/50 border border-gray-700 hover:bg-gray-700 transition-all"
             >
               {mobileMenuOpen ? (
                 <X className="w-6 h-6 text-gray-300" />

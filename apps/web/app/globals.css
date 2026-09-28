@@ -53,6 +53,12 @@
   * {
     @apply border-border;
   }
+  html,
+  body {
+    max-width: 100vw;
+    overflow-x: clip;
+    position: relative;
+  }
   body {
     @apply text-gray-100;
     background: radial-gradient(ellipse at center, #1f2937 0%, #111827 50%, #0f172a 100%);
@@ -67,6 +73,20 @@
     position: relative;
     z-index: 2;
   }
+}
+
+/* Scrollbar suppression utilities */
+.no-scrollbar::-webkit-scrollbar,
+.scrollbar-none::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+.no-scrollbar,
+.scrollbar-none {
+  -ms-overflow-style: none !important; /* IE and Edge */
+  scrollbar-width: none !important; /* Firefox */
 }
 
 
