@@ -55,7 +55,7 @@ async function sendDiscordNotification(data: ContactFormData, isAfterHours: bool
 
   const dispatchStatus = isAfterHours
     ? `🌙 After-Hours Queue (${scheduledTime})`
-    : "⚡ Live Dial (Julia +1 604-200-3732)";
+    : "⚡ Live Dial (Julia +1 604-359-5993)";
 
   try {
     await fetch(webhookUrl, {

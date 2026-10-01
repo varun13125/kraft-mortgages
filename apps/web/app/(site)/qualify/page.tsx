@@ -237,10 +237,16 @@ export default function QualifyPage() {
 
           {/* HEADER */}
           <div className="text-center mb-12">
-            <div className="inline-flex items-center gap-2.5 mb-5 font-mono text-xs font-semibold text-[#f3d275] tracking-[0.2em] border border-[#d4af37]/30 px-4 py-1.5 rounded-full bg-[#0c1626]/90 shadow-sm">
+            <div className="inline-flex items-center gap-2.5 mb-4 font-mono text-xs font-semibold text-[#f3d275] tracking-[0.2em] border border-[#d4af37]/30 px-4 py-1.5 rounded-full bg-[#0c1626]/90 shadow-sm">
               <span className="w-2 h-2 rounded-full bg-[#d4af37] animate-pulse" />
               SECURE PORTAL · INSTANT PRE-QUALIFICATION
             </div>
+
+            <div className="inline-flex items-center gap-2 mb-5 px-3.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-mono">
+              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+              <span>AI Voice Qualification Specialist (Beta Version)</span>
+            </div>
+
           <h1 className="font-serif font-normal text-4xl sm:text-6xl leading-[1.0] tracking-[-0.03em] mb-4 text-white">
             Qualify for Your <em className="text-[#f3d275] italic font-normal">Priority Rate.</em>
           </h1>
@@ -253,7 +259,10 @@ export default function QualifyPage() {
             </div>
           )}
           <p className="text-base text-slate-200 max-w-[620px] mx-auto leading-relaxed">
-            Get instant credit mapping, lock in BC's lowest rate options, and speak with Julia (our automated voice specialist) to finalize your priority file.
+            Get instant credit mapping, lock in BC&apos;s lowest rate options, and speak with Julia (our automated voice specialist) to finalize your priority file.
+          </p>
+          <p className="text-xs text-slate-400 max-w-[580px] mx-auto mt-2 leading-relaxed">
+            ⚡ <em>Beta Notice: Voice calling is currently experimental AI beta. Speech recognition may occasionally mishear phrases; every file is independently validated by our licensed human mortgage team.</em>
           </p>
         </div>
 
@@ -337,6 +346,10 @@ export default function QualifyPage() {
 
               <div className="mt-8 text-sm text-slate-300 font-mono">
                 Caller ID will display as Julia: <a href="tel:+16043595993" className="text-[#f3d275] font-sans font-bold hover:underline">+1 (604) 359-5993</a>
+              </div>
+
+              <div className="mt-5 p-3.5 rounded-lg bg-[#070e1a]/90 border border-slate-700/80 max-w-[480px] mx-auto text-xs text-slate-400 text-left leading-relaxed">
+                🤖 <strong className="text-slate-200">AI Voice Assistant (Beta):</strong> Julia is an automated conversational voice specialist. If speech is delayed or audio is interrupted, don&apos;t worry — our human advisory team receives your full scenario transcript and will follow up directly.
               </div>
             </div>
           )}
@@ -588,6 +601,17 @@ export default function QualifyPage() {
                       </span>
                     </div>
                   ) : null}
+
+                  {/* Beta Voice Assistant Disclaimer */}
+                  <div className="mb-6 p-4 rounded-lg bg-[#0c1626] border border-amber-500/30 text-left max-w-[540px] mx-auto flex items-start gap-3 shadow-inner">
+                    <span className="text-amber-400 text-lg leading-none mt-0.5">⚡</span>
+                    <div className="text-xs text-slate-300 leading-relaxed">
+                      <strong className="text-amber-300 block mb-0.5 font-mono uppercase tracking-wider text-[11px]">
+                        AI Voice Qualification (Beta Version)
+                      </strong>
+                      You will receive a brief 90-second automated verification call from Julia (<span className="text-[#f3d275] font-mono">+1 604-359-5993</span>). Voice calling is currently in beta and AI speech recognition may occasionally make mistakes. Rest assured, your file is always reviewed by our human senior mortgage brokers before underwriting.
+                    </div>
+                  </div>
 
                   <form onSubmit={handleSubmit} className="space-y-5 max-w-[540px] mx-auto text-left">
                     <input
