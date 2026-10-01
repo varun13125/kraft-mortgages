@@ -336,7 +336,7 @@ export default function QualifyPage() {
               </div>
 
               <div className="mt-8 text-sm text-slate-300 font-mono">
-                Caller ID will display as Julia: <a href="tel:+16042003732" className="text-[#f3d275] font-sans font-bold hover:underline">+1 604-200-3732</a>
+                Caller ID will display as Julia: <a href="tel:+16043595993" className="text-[#f3d275] font-sans font-bold hover:underline">+1 (604) 359-5993</a>
               </div>
             </div>
           )}
@@ -378,7 +378,7 @@ export default function QualifyPage() {
                       <PhoneCall className="w-3.5 h-3.5 text-[#f3d275]" />
                       <span>Incoming Caller ID</span>
                     </div>
-                    <div className="text-base font-mono font-bold text-[#f3d275]">+1 604-200-3732</div>
+                    <div className="text-base font-mono font-bold text-[#f3d275]">+1 (604) 359-5993</div>
                   </div>
                 </div>
 
@@ -662,7 +662,7 @@ export default function QualifyPage() {
                           </option>
                         </select>
                         <span className="text-xs text-slate-400 font-mono block mt-1.5 font-medium">
-                          Julia will dial you during this window from +1 604-200-3732.
+                          Julia will dial you during this window from +1 (604) 359-5993.
                         </span>
                       </div>
                     )}

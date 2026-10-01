@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCallingHoursStatus } from "@/lib/businessHours";
+import { triggerVapiOutboundCall } from "@/lib/voice/vapi";
 
 interface ContactFormData {
   firstName?: string;
@@ -126,18 +127,32 @@ export async function POST(req: NextRequest) {
     // Discord notification (real-time alert)
     await sendDiscordNotification(body, isAfterHours, scheduledTime);
 
+    // Speed-to-lead outbound qualification call via Julia (Vapi Voice AI)
+    let callDispatched = false;
+    if (!isAfterHours && body.phone) {
+      callDispatched = await triggerVapiOutboundCall({
+        name: `${twentyData.firstName} ${twentyData.lastName}`.trim() || "Valued Client",
+        phone: body.phone,
+        email: body.email,
+        mortgageType: body.mortgageType,
+        amount: body.amount,
+      });
+    }
+
     console.log("Lead submitted:", {
       name: twentyData.firstName + " " + twentyData.lastName,
       email: body.email,
       afterHours: isAfterHours,
       scheduledTime,
       crm: crmSuccess ? "✅" : "❌",
+      voiceCall: callDispatched ? "📞 Dispatched" : isAfterHours ? "🌙 Queued" : "⚠️ Skipped",
     });
 
     return NextResponse.json({
       success: crmSuccess,
       isAfterHours,
       scheduledTime,
+      callDispatched,
       message: isAfterHours
         ? `Priority rate locked! Julia is scheduled to place your priority call ${scheduledTime}.`
         : "Thank you! Julia is dialing your number right now.",
