@@ -1,4 +1,33 @@
 ---
+**Timestamp:** 2026-10-04 10:30:00 PDT
+**Agent:** Antigravity AI
+**Commit / Status:** Thinkrr Voice AI + 125 Canadian Lender Intelligence Deployment
+---
+
+**Summary of Changes:**
+1. **Thinkrr Voice AI Dual-Agent Integration:**
+   - Deployed luxury WebRTC voice interface (`apps/web/components/ThinkrrVoiceWidget.tsx`) replacing Vapi to leverage user's pre-paid $2,500 USD Thinkrr minute balance.
+   - Dual-Agent selection: **Julia** (Senior Mortgage Copilot - English) and **Aarav** (वरिष्ठ मॉर्गेज सलाहकार - Hindi) matching Thinkrr's architecture where languages require distinct agent widget keys.
+   - Mounted dynamically into `apps/web/app/layout.tsx` (SSR false).
+   - Twilio telephony inbound/outbound and CRM webhook integration (`https://crm.srv848694.hstgr.cloud/thinkrr-hook`) verified.
+
+2. **125 Institutional Canadian Lenders & Underwriting Intelligence:**
+   - Ported and indexed full verified database (`apps/web/data/canadianLendersData.ts`) and intelligent resolution engine (`apps/web/lib/ai/lenderIntelligence.ts`).
+   - Ground truth rental policies:
+     - Subject Owner-Occupied (Suite / 2–4 Units): 50% rental add-back to gross qualifying income; full subject PITH carried in liabilities.
+     - Non-Subject Rental Portfolio: 50% worksheet `((Gross Rent × 50%) - PITH)` for Prime/Monoline; 80% worksheet `((Gross Rent × 80%) - PITH)` or DSCR (1.00x–1.10x) for Alternative B (Home Trust, Equitable Bank, Haventree, Community Trust).
+   - Institutional Debt Service Ratios:
+     - Prime / Monoline / Schedule II (CTBC, Shinhan): Standard 39% GDS / 44% TDS.
+     - Alternative B: Up to 50% GDS / 50% TDS under BFS Stated Income programs.
+     - Private / MIC: OSFI B-20 exempt (equity & interest-only servicing).
+   - Provincial boundaries strictly mapped (e.g. CTBC active in BC & ON; Vancity/Coast Capital in BC only; Meridian in ON only).
+
+3. **Chat API Upgrade & Reasoning Sanitization:**
+   - Upgraded `apps/web/app/api/chat/route.ts` with real-time lender detection (`resolveLenderFromQuery`, `resolveGeographicUnderwritingQuery`) and dynamic dossier injection.
+   - Implemented `stripThinkingAndReasoning()` regex sanitizer and `include_reasoning: false` to ensure client responses never leak `<think>` tokens.
+   - Added Admin Training Log Inspector (`GET /api/chat?admin=true`) with rotating memory buffer for staff auditing.
+
+---
 **Timestamp:** 2025-10-13 23:00:00 PDT
 **Agent:** Gemini Pro
 **Commit Hash:** a4f29a3

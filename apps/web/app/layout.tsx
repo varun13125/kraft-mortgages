@@ -14,6 +14,11 @@ const ChatWidget = dynamic(() => import("@/components/ChatWidget/ChatWidget").th
   ssr: false
 });
 
+// Dynamically import Thinkrr Voice AI Dual-Agent Widget
+const ThinkrrVoiceWidget = dynamic(() => import("@/components/ThinkrrVoiceWidget").then(mod => ({ default: mod.ThinkrrVoiceWidget })), {
+  ssr: false
+});
+
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
@@ -93,7 +98,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* Global AI Chat Widget - Available on every page */}
         <ChatWidget />
 
-        {/* Voice Agent Widget removed - will be replaced with new implementation */}
+        {/* Global Thinkrr Voice AI Dual-Agent (English & Hindi) WebRTC Widget */}
+        <ThinkrrVoiceWidget />
 
         <Analytics />
         <VercelAnalytics />
