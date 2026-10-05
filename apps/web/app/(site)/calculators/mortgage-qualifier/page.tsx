@@ -1,7 +1,8 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Navigation from "@/components/Navigation";
+import { useLiveRates } from "@/lib/useLiveRates";
 import { CalculatorSchema } from "@/components/SEO/CalculatorSchema";
 import { RelatedCalculators } from "@/components/calculators/RelatedCalculators";
 import { ValidatedInput, ValidatedSlider } from "@/components/ui/ValidatedInput";
@@ -45,18 +46,26 @@ function minDownPayment(price: number): number {
 }
 
 export default function MortgageQualifierPage() {
+  const { best5YrFixed } = useLiveRates();
   const [annualIncome, setAnnualIncome] = useState(120000);
   const [partnerIncome, setPartnerIncome] = useState(0);
   const [monthlyDebts, setMonthlyDebts] = useState(400);
   const [homePrice, setHomePrice] = useState(750000);
   const [downPayment, setDownPayment] = useState(150000);
-  const [interestRate, setInterestRate] = useState(5.49);
+  const [interestRate, setInterestRate] = useState(4.39);
+  const [hasUserEditedRate, setHasUserEditedRate] = useState(false);
   const [amortization, setAmortization] = useState(25);
   const [propertyTaxAnnual, setPropertyTaxAnnual] = useState(3600);
   const [heatingMonthly, setHeatingMonthly] = useState(150);
   const [condoFeesMonthly, setCondoFeesMonthly] = useState(0);
   const [province, setProvince] = useState("BC");
   const [isFirstTime, setIsFirstTime] = useState(true);
+
+  useEffect(() => {
+    if (!hasUserEditedRate && best5YrFixed) {
+      setInterestRate(best5YrFixed);
+    }
+  }, [best5YrFixed, hasUserEditedRate]);
 
   const totalIncome = annualIncome + partnerIncome;
   const safeIncome = Math.max(1, totalIncome);
@@ -143,7 +152,7 @@ export default function MortgageQualifierPage() {
                   </div>
                 )}
 
-                <ValidatedSlider label="Interest Rate" value={interestRate} onChange={setInterestRate} min={0.5} max={10} step={0.01} formatValue={(v) => v.toFixed(2) + "%"} />
+                <ValidatedSlider label="Interest Rate" value={interestRate} onChange={(v) => { setInterestRate(v); setHasUserEditedRate(true); }} min={0.5} max={10} step={0.01} formatValue={(v) => v.toFixed(2) + "%"} />
                 <ValidatedSlider label="Amortization Period" value={amortization} onChange={(v) => setAmortization(Math.round(v))} min={5} max={30} step={1} formatValue={(v) => Math.round(v) + " years"} />
               </div>
 

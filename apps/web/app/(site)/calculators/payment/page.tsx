@@ -16,7 +16,7 @@ export default function PaymentCalculatorPage() {
   const { best5YrFixed, best3YrFixed, best5YrVariable, bestHeloc, bestPrivateSecond } = useLiveRates();
   const [showPdfModal, setShowPdfModal] = useState(false);
   const [principal, setPrincipal] = useState(700000);
-  const [rate, setRate] = useState(4.44);
+  const [rate, setRate] = useState(4.39);
   const [hasUserEdited, setHasUserEdited] = useState(false);
   const [years, setYears] = useState(25);
 

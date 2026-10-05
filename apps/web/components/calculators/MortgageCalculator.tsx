@@ -23,7 +23,7 @@ export const MortgageCalculator: React.FC = () => {
 
   const [propertyValue, setPropertyValue] = useState<string>('1000000');
   const [downPayment, setDownPayment] = useState<string>('200000');
-  const [interestRate, setInterestRate] = useState<string>('4.44');
+  const [interestRate, setInterestRate] = useState<string>('4.39');
   const [amortization, setAmortization] = useState<number>(25);
   const [selectedProduct, setSelectedProduct] = useState<string>('5-Yr Fixed');
   const [hasUserEdited, setHasUserEdited] = useState<boolean>(false);

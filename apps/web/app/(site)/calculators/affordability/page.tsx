@@ -22,7 +22,7 @@ export default function Affordability() {
   const [heat, setHeat] = useState(1200);
   const [condoFees, setCondoFees] = useState(0);
   const { best5YrFixed } = useLiveRates();
-  const [rate, setRate] = useState(4.44);
+  const [rate, setRate] = useState(4.39);
   const [hasUserEdited, setHasUserEdited] = useState(false);
   const [principal, setPrincipal] = useState(650000);
 

@@ -734,7 +734,7 @@ export default function QualifyPage() {
             <div className="bg-[#0c1626]/90 border border-slate-700/80 hover:border-[#d4af37]/60 transition-colors p-5 text-center rounded-lg shadow-md">
               <div className="text-xs font-mono font-semibold text-slate-300 tracking-wider mb-2">5-YEAR FIXED</div>
               <div className="text-3xl font-serif text-[#f3d275] font-bold">
-                {best5YrFixed ? `${best5YrFixed.toFixed(2)}%` : "4.44%"}
+                {best5YrFixed ? `${best5YrFixed.toFixed(2)}%` : "4.39%"}
               </div>
               <div className="text-xs font-medium text-slate-300 mt-1.5">O.A.C. Insured</div>
             </div>

@@ -3,6 +3,7 @@ import {
   resolveLenderFromQuery,
   resolveGeographicUnderwritingQuery,
   generateLenderUnderwritingDossier,
+  generateAuthoritativeUnderwritingAnswer,
   getChannelRentalPolicy,
   getChannelGdsTdsLimits,
 } from "@/lib/ai/lenderIntelligence";
@@ -61,14 +62,14 @@ function stripThinkingAndReasoning(text: string): string {
   return cleaned.trim();
 }
 
-const SYSTEM_PROMPT = `You are the Senior Mortgage Associate at Kraft Mortgages Canada Inc., a licensed Canadian mortgage brokerage serving British Columbia (BCFSA #SR220230 / Brokerage #12918), Alberta (RECA #LIC-00655428), and Ontario (FSRA #12918). Principal Broker: Varun Chaudhry.
+const SYSTEM_PROMPT = `You are the Senior Mortgage Associate at Kraft Mortgages Canada Inc., a licensed Canadian mortgage brokerage serving British Columbia (BCFSA #SR220230 / Brokerage #12918), Alberta (RECA #LIC-00655428), and Ontario (FSRA #12918). Identity: BCFSA Brokerage License #12918 • The Team at Kraft Mortgages Canada Inc.
 Your role is to consult with website visitors with deep mortgage underwriting knowledge, consultative warmth, and precision across BC, Alberta, and Ontario.
 
 ## VERIFIED LIVE BENCHMARK RATES:
 - Bank of Canada Prime Rate: 4.45%
-- 5-Year Fixed: From 4.44% - 4.49% (High-Ratio Insured <20% down); 4.64% - 4.79% (Conventional insurable)
+- 5-Year Fixed: From 4.39% - 4.44% (High-Ratio Insured <20% down); 4.44% - 4.69% (Conventional insurable)
 - 3-Year Fixed: Promo from 4.14% - 4.34%
-- 5-Year Variable: Prime - 1.00% (currently ~3.45%)
+- 5-Year Variable: Prime - 1.01% (currently ~3.44%)
 - HELOC / 1st Position Line of Credit: Prime + 0.50% (4.95%)
 - Alternative B-Lenders (Self-Employed BFS): 5.99% - 6.74%
 - Private 2nd Mortgages: 7.99% - 10.99% (interest-only, equity-based)
@@ -97,7 +98,7 @@ In Canadian mortgage underwriting, there is a strict institutional distinction b
 - Private / MIC: OSFI B-20 exempt (underwritten on equity, LTV, and exit strategy, no standard personal ratio constraints).
 
 ## PROVINCIAL LENDING & JURISDICTION RULES:
-- Credit Unions are provincially regulated: Vancity, Coast Capital, Envision lend only in BC; Meridian, DUCA lend only in ON; Servus lends in AB.
+- Credit Unions are provincially regulated: Coast Capital, Envision, Community Savings lend only in BC; Meridian, DUCA lend only in ON; Servus lends in AB.
 - Schedule II Banks (e.g. CTBC Bank Canada) operate urban branch footprints primarily in British Columbia (Vancouver, Richmond, Burnaby) and Ontario (Toronto, Markham).
 - High-Ratio Insured (<20% down): 30-year amortization allowed for all First-Time Home Buyers (FTHB) on ANY home, or ANY buyer purchasing newly built construction. Non-FTHB resale max 25 years.
 - Conventional (≥20% down): Standard 30 years across Canada.
@@ -105,7 +106,7 @@ In Canadian mortgage underwriting, there is a strict institutional distinction b
 ## BROKERAGE DIRECTIVES:
 - Maintain documentation integrity. Do not output internal thinking or reasoning tags.
 - Client Financial Protection: Proactively advise: "Please HOLD any irreversible financial actions (paying off loans, closing accounts, moving large funds) until our brokerage team has reviewed your full file."
-- Application intake: https://r.mtg-app.com/varun-chaudhry
+- Application intake: https://www.kraftmortgages.ca/apply
 - Direct WhatsApp line: +1 (604) 359-5993 | Primary Phone: 604-593-1550`;
 
 // Extract email and phone from user text
@@ -301,7 +302,7 @@ export async function GET(req: NextRequest) {
     totalInstitutionalLenders: CANADIAN_LENDERS.length,
     activeBenchmarking: {
       primeRate: "4.45%",
-      fiveYearFixedInsured: "4.44% - 4.49%",
+      fiveYearFixedInsured: "4.39% - 4.44%",
       stressTestFloor: "5.25%",
     },
     logs: [...trainingLogsBuffer].reverse(),
@@ -341,7 +342,7 @@ export async function POST(req: NextRequest) {
     let fallbackUnderwritingDossier: string | null = null;
 
     if (matchedLender) {
-      fallbackUnderwritingDossier = generateLenderUnderwritingDossier(matchedLender, currentInput);
+      fallbackUnderwritingDossier = generateAuthoritativeUnderwritingAnswer(matchedLender, currentInput);
       enrichedSystemPrompt += `\n\n## VERIFIED UNDERWRITING DOSSIER FOR ${matchedLender.name.toUpperCase()}:
 ${fallbackUnderwritingDossier}
 

@@ -21,7 +21,7 @@ interface UseLiveRatesReturn {
 
 // Initial default benchmarks to prevent hydration mismatch and provide instant UI
 const DEFAULT_RATES = {
-  best5YrFixed: 4.44,
+  best5YrFixed: 4.39,
   best3YrFixed: 4.34,
   best5YrVariable: 3.44,
   bestHeloc: 4.95,

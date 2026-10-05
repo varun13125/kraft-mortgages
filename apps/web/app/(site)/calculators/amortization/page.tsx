@@ -67,7 +67,7 @@ export default function AmortizationPage() {
   const [showPdfModal, setShowPdfModal] = useState(false);
   const [mortgage, setMortgage] = useState(500000);
   const { best5YrFixed } = useLiveRates();
-  const [rate, setRate] = useState(4.44);
+  const [rate, setRate] = useState(4.39);
   const [hasUserEdited, setHasUserEdited] = useState(false);
   const [amortYears, setAmortYears] = useState(25);
 

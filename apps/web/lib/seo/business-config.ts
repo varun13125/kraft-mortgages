@@ -19,9 +19,9 @@ export const BUSINESS = {
   // NAP — one canonical format. Used everywhere.
   telephone: '+1-604-593-1550',           // primary, tel: links
   telephoneDisplay: '604-593-1550',
-  secondaryPhone: '+1-604-727-1579',
-  secondaryPhoneDisplay: '604-727-1579',
-  email: 'varun@kraftmortgages.ca',
+  secondaryPhone: '+1-604-359-5993',      // Julia 24/7 AI Receptionist (Twilio virtual line)
+  secondaryPhoneDisplay: '(604) 359-5993',
+  email: 'info@kraftmortgages.ca',
   address: {
     streetAddress: '#301 - 1688 152nd Street',
     addressLocality: 'Surrey',

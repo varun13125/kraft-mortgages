@@ -75,7 +75,7 @@ export default function RefinanceVsHelocVsSecondPage() {
     // Option 1: Refinance
     const refiTotal = firstBalance + cashNeeded;
     let refiRate: number;
-    if (firstType === "a-lender") refiRate = best5YrFixed || 4.44; // live market benchmark
+    if (firstType === "a-lender") refiRate = best5YrFixed || 4.39; // live market benchmark
     else if (firstType === "b-lender") refiRate = 6.04;
     else refiRate = 6.95;
 

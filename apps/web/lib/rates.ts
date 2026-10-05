@@ -9,29 +9,29 @@ import {
 
 // Canonical Verified Fallback Snapshot (Bank of Canada Prime = 4.45%)
 const VERIFIED_SNAPSHOT: RawRatesFeed = {
-  last_synced_utc: '2026-09-27T11:07:18.274183+00:00',
+  last_synced_utc: '2026-10-05T13:31:10.407257+00:00',
   prime_rate_benchmark: 4.45,
   rate_benchmarks: {
     '5_year_fixed_insured': {
-      lowest_rate: 4.44,
+      lowest_rate: 4.39,
       lowest_spread: 'Fixed',
-      leading_lender: 'Community Savings Credit Union',
+      leading_lender: 'First National',
       product_family: 'Insured (<20% Down)',
-      effective_date: '2026-09-16',
+      effective_date: '2026-10-05',
     },
     '5_year_fixed_insurable': {
-      lowest_rate: 4.49,
+      lowest_rate: 4.44,
       lowest_spread: 'Fixed',
-      leading_lender: 'Peoples Bank',
+      leading_lender: 'First National',
       product_family: 'Insurable (20%+ Down)',
-      effective_date: '2026-09-25',
+      effective_date: '2026-10-05',
     },
     '5_year_fixed_conventional': {
-      lowest_rate: 4.49,
+      lowest_rate: 4.39,
       lowest_spread: 'Fixed',
-      leading_lender: 'Coast Capital Savings',
+      leading_lender: 'Shinhan Bank Canada',
       product_family: 'Conventional (30-Yr Amort)',
-      effective_date: '2026-09-21',
+      effective_date: '2026-10-05',
     },
     '3_year_fixed_insured': {
       lowest_rate: 4.34,
@@ -62,11 +62,11 @@ const VERIFIED_SNAPSHOT: RawRatesFeed = {
       effective_date: '2026-09-17',
     },
     '5_year_variable_insurable': {
-      lowest_rate: 3.60,
-      lowest_spread: 'Prime - 0.85%',
-      leading_lender: 'UnionLink Mortgage',
+      lowest_rate: 3.55,
+      lowest_spread: 'Prime - 0.90%',
+      leading_lender: 'UnionLink / Home Trust',
       product_family: 'Insurable (20%+ Down)',
-      effective_date: '2026-09-12',
+      effective_date: '2026-09-29',
     },
     '5_year_variable_conventional': {
       lowest_rate: 3.65,
@@ -460,8 +460,8 @@ export function getLiveRatesData(): RatesApiResponse {
 export function getDefaultBestRate(): number {
   try {
     const data = getLiveRatesData();
-    return data.benchmarks.fixed_5yr.insured.lowest_rate || 4.44;
+    return data.benchmarks.fixed_5yr.insured.lowest_rate || 4.39;
   } catch {
-    return 4.44;
+    return 4.39;
   }
 }

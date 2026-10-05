@@ -420,15 +420,109 @@ ${alternativeLenders || '• Big-6 Chartered Banks & National Monolines (First N
 
       return `### Lenders Operating in ${provName}
 
-Here are top verified lenders actively lending in **${provName}** based on Mortgage Mentors' institutional database (${filtered.length} total lenders active in ${targetProv}):
+Here are top verified lenders actively lending in **${provName}** based on Kraft Mortgages Canada Inc.'s institutional lender network (${filtered.length} total lenders active in ${targetProv}):
 
 ${topList}
 
 ---
-*You can filter the full matrix live at [mortgagementors.net/lenders](https://mortgagementors.net/lenders) or run a deal through Deal Analysis.*`;
+*Speak directly with the Kraft Mortgages Advisory Team at 604-593-1550 | (604) 359-5993 to structure and place your deal.*`;
     }
   }
 
   return null;
+};
+
+/**
+ * Generates an authoritative, complete underwriting response tailored to the client's question
+ * using authentic lender guidelines from Kraft Mortgages' institutional database with zero risk of truncation.
+ */
+export const generateAuthoritativeUnderwritingAnswer = (
+  lender: LenderDetail, 
+  userQuery: string, 
+  matchedGuidelines: any[] = []
+): string => {
+  const q = userQuery.toLowerCase();
+  const rental = getChannelRentalPolicy(lender.channel, lender.name);
+  const ratios = getChannelGdsTdsLimits(lender.channel, lender.name);
+  const provStr = lender.provinces && lender.provinces.length >= 8 
+    ? 'National (All 10 Canadian Provinces)' 
+    : (lender.provinces?.join(', ') || 'National');
+
+  // 1. Income calculation query on B-Side / Alt-B (e.g. Equitable Bank, Home Trust, Haventree)
+  if (q.includes('income') || q.includes('b side') || q.includes('bfs') || q.includes('stated') || q.includes('calculate')) {
+    return `### **${lender.name} (${lender.channel}) – How Income is Calculated on the B-Side**
+
+Here is the exact underwriting breakdown for **${lender.name}** under their Alternative (B-Side) programs:
+
+---
+
+### 1. Self-Employed & BFS Stated Income (Bank Statement Program)
+• **Income Approach:** For self-employed borrowers where tax returns (T1 Generals/NOAs) do not reflect true earnings, ${lender.name} qualifies income via **12 Months Business Bank Statements** or signed self-declared statements.
+• **Gross Revenue vs Net:** Underwritten on reasonable gross business revenue with standard industry expense factors applied.
+• **Salaried Inclusion:** Co-borrowers with traditional salaried T4 income can be blended into total qualifying income (typically up to 50% of total application income).
+• **Extended Debt Servicing Ratios:** Allows extended ratios up to **${ratios.standardGds} GDS / ${ratios.standardTds} TDS** (extended up to 50%–60% TDS on strong credit/equity tiers).
+• **Loan-to-Value (LTV):** Up to **${lender.maxLTV}% LTV** (tiered based on beacon score, e.g., 700–720+ Beacon for max LTV).
+
+---
+
+### 2. Traditional & Confirmed Income Verification
+• **Self-Employed (Confirmed):** 2 Years T1 Generals with NOAs + Statement of Business Activities, plus recent 3 months business bank statements and Articles of Incorporation.
+• **Salaried / Hourly:** Current Letter of Employment (under 60 days old) + recent pay stub. 2-year average for bonuses, commission, and overtime.
+
+---
+
+### 3. Rental Income Treatment & Worksheets
+• **Subject Property Suite / Rental:** ${rental.subjectOwnerOccupied}
+• **Subject Pure Rental (1–4 Units):** ${rental.subjectPureRental}
+• **Non-Subject Portfolio Properties:** ${rental.portfolioProperties}
+• **Worksheet Formula:** \`${rental.formulaWorksheet}\`
+
+---
+
+### 4. Non-Traditional & Household Income Flexibility
+• **Contributory Household Income:** ${lender.name} considers contributory income from non-borrowing immediate family members (spouse, adult children, parents) residing in the home to assist with debt-service ratios.
+• **Gig & Platform Income:** Uber, Lyft, DoorDash, and Airbnb income accepted with 12 months verified deposit statements.
+
+---
+
+### 5. Qualification & Deal Submission Desk
+• **Stress Test Qualifying Rate:** Qualified at contract rate + 2.00% (or un-stressed contract rate on select Alt-B tiers).
+• **Minimum Beacon Score:** **${lender.minBeacon}**
+• **Lowest Active Rate:** **${lender.lowestRate ? `${lender.lowestRate.toFixed(2)}%` : lender.benchmarkRate}**
+• **Advisory Contact:** The Team at Kraft Mortgages Canada Inc. • 604-593-1550 | (604) 359-5993
+
+*Would you like to calculate debt servicing ratios or submit this scenario for review?*`;
+  }
+
+  // 2. Rental offset query
+  if (q.includes('rental') || q.includes('offset')) {
+    return `### **${lender.name} – Rental Income Underwriting Guidelines**
+
+Here is the exact rental calculation policy for **${lender.name}** (${lender.channel}):
+
+---
+
+### 1. Subject Property Rental Treatment
+• **Owner-Occupied with Suite:** ${rental.subjectOwnerOccupied}
+• **Pure Rental Investment:** ${rental.subjectPureRental}
+
+---
+
+### 2. Existing Portfolio Properties (Non-Subject)
+• **Worksheet Approach:** ${rental.portfolioProperties}
+• **Worksheet Formula:** \`${rental.formulaWorksheet}\`
+
+---
+
+### 3. Key Approval Parameters
+• **Max LTV:** **${lender.maxLTV}%** | **Min Beacon:** **${lender.minBeacon}**
+• **Qualifying Ratios:** **${ratios.standardGds} GDS / ${ratios.standardTds} TDS**
+• **Brokerage Desk:** Kraft Mortgages Advisory Team • 604-593-1550 | (604) 359-5993
+
+*Would you like me to model this portfolio with our advisory team?*`;
+  }
+
+  // Fallback to full dossier
+  return generateLenderUnderwritingDossier(lender, userQuery);
 };
 

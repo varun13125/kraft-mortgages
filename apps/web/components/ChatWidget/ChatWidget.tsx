@@ -77,7 +77,7 @@ export function ChatWidget() {
         // Initialize with welcome message if no saved messages
         const welcomeMessage = {
           id: "welcome",
-          content: "Hi! I'm your Senior Mortgage Associate at Kraft Mortgages. I can provide live rate benchmarks (Prime 4.45%, 5-Yr Fixed from 4.44%), 30-year amortization advice, and qualification insights across BC, Alberta, and Ontario. Which city or province are you exploring?",
+          content: "Hi! I'm your Senior Mortgage Associate at Kraft Mortgages. I can provide live rate benchmarks (Prime 4.45%, 5-Yr Fixed from 4.39%), 30-year amortization advice, and qualification insights across BC, Alberta, and Ontario. Which city or province are you exploring?",
           sender: "assistant" as const,
           timestamp: new Date(),
         };
@@ -88,7 +88,7 @@ export function ChatWidget() {
       // Fallback to welcome message
       const welcomeMessage = {
         id: "welcome",
-        content: "Hi! I'm your Senior Mortgage Associate at Kraft Mortgages. I can provide live rate benchmarks (Prime 4.45%, 5-Yr Fixed from 4.44%), 30-year amortization advice, and qualification insights across BC, Alberta, and Ontario. Which city or province are you exploring?",
+        content: "Hi! I'm your Senior Mortgage Associate at Kraft Mortgages. I can provide live rate benchmarks (Prime 4.45%, 5-Yr Fixed from 4.39%), 30-year amortization advice, and qualification insights across BC, Alberta, and Ontario. Which city or province are you exploring?",
         sender: "assistant" as const,
         timestamp: new Date(),
       };
@@ -134,7 +134,7 @@ export function ChatWidget() {
   const clearChat = () => {
     const welcomeMessage = {
       id: "welcome",
-      content: "Hi! I'm your Senior Mortgage Associate at Kraft Mortgages. I can provide live rate benchmarks (Prime 4.45%, 5-Yr Fixed from 4.44%), 30-year amortization advice, and qualification insights across BC, Alberta, and Ontario. Which city or province are you exploring?",
+      content: "Hi! I'm your Senior Mortgage Associate at Kraft Mortgages. I can provide live rate benchmarks (Prime 4.45%, 5-Yr Fixed from 4.39%), 30-year amortization advice, and qualification insights across BC, Alberta, and Ontario. Which city or province are you exploring?",
       sender: "assistant" as const,
       timestamp: new Date(),
     };

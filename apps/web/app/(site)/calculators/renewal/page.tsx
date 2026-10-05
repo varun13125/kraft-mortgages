@@ -18,7 +18,7 @@ export default function Renewal() {
   const [remainingAmortYears, setRemainingAmortYears] = useState(22); // remaining AMORTIZATION (not term)
   const { best5YrFixed } = useLiveRates();
   const [currentRate, setCurrentRate] = useState(5.89);
-  const [marketRate, setMarketRate] = useState(4.44);
+  const [marketRate, setMarketRate] = useState(4.39);
   const [hasUserEdited, setHasUserEdited] = useState(false);
   const [penalty, setPenalty] = useState(2500);
 
