@@ -45,10 +45,10 @@ export interface LenderDetail {
   provinces: CanadianProvince[];
   lendingAreaNotes?: string;
   rateHoldDefault?: number;
-  transactionTypes: ('Purchase' | 'Refinance' | 'Transfer')[];
-  purposes: ('Owner-Occupied' | 'Rental / Investment' | 'Second Home')[];
-  rateTypes: ('Standard' | 'Limited' | 'Promo')[];
-  programs: ('Insured' | 'Insurable' | 'Uninsured' | 'Alternative B' | 'Private Equity')[];
+  transactionTypes: ('Purchase' | 'Refinance' | 'Transfer' | string)[];
+  purposes: ('Owner-Occupied' | 'Rental / Investment' | 'Second Home' | string)[];
+  rateTypes: ('Standard' | 'Limited' | 'Promo' | string)[];
+  programs: ('Insured' | 'Insurable' | 'Uninsured' | 'Alternative B' | 'Private Equity' | 'Commercial' | string)[];
   turnaround?: string;
   propertyTypes: PropertyTypeScope[];
   bestFor?: string;
