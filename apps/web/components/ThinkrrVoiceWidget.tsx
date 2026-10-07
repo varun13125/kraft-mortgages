@@ -38,9 +38,9 @@ export function ThinkrrVoiceWidget() {
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const widgetContainerRef = useRef<HTMLDivElement>(null);
 
-  // Retrieve environment-configured keys with fallback indicators
-  const englishKey = process.env.NEXT_PUBLIC_THINKRR_ENGLISH_WIDGET_KEY || "";
-  const hindiKey = process.env.NEXT_PUBLIC_THINKRR_HINDI_WIDGET_KEY || "";
+  // Retrieve environment-configured keys with fallback to registered Thinkrr key
+  const englishKey = process.env.NEXT_PUBLIC_THINKRR_ENGLISH_WIDGET_KEY || "56a39d47-f865-4cfc-805a-c746dbdb2672";
+  const hindiKey = process.env.NEXT_PUBLIC_THINKRR_HINDI_WIDGET_KEY || "56a39d47-f865-4cfc-805a-c746dbdb2672";
 
   const agents: AgentConfig[] = [
     {
@@ -84,7 +84,16 @@ export function ThinkrrVoiceWidget() {
       const script = document.createElement("script");
       script.src = THINKRR_SCRIPT_URL;
       script.async = true;
-      script.onload = () => setScriptLoaded(true);
+      script.onload = () => {
+        setScriptLoaded(true);
+        if (typeof (window as any).widgetLib?.scanWidgets === "function") {
+          try {
+            (window as any).widgetLib.scanWidgets();
+          } catch (e) {
+            console.log("[ThinkrrVoiceWidget] Script scan on load:", e);
+          }
+        }
+      };
       document.body.appendChild(script);
     } else {
       setScriptLoaded(true);
@@ -116,18 +125,23 @@ export function ThinkrrVoiceWidget() {
     setActiveAgent(agent);
     setIsCalling(true);
 
-    // If widget container is present, re-trigger Thinkrr client initialization
-    if (widgetContainerRef.current && agent.widgetKey) {
-      widgetContainerRef.current.setAttribute("data-widget-key", agent.widgetKey);
-      // Dispatch DOM mutation or custom event for Thinkrr LiveKit script
-      if ((window as any).ThinkrrWebWidget) {
-        try {
-          (window as any).ThinkrrWebWidget.init?.();
-        } catch (e) {
-          console.log("[ThinkrrVoiceWidget] Script re-init:", e);
+    // If widget container is present, inject the data-widget-key child element
+    // and re-trigger Thinkrr widgetLib.scanWidgets()
+    setTimeout(() => {
+      if (widgetContainerRef.current) {
+        const key = agent.widgetKey || "56a39d47-f865-4cfc-805a-c746dbdb2672";
+        widgetContainerRef.current.innerHTML = `<div data-widget-key="${key}" class="w-full flex justify-center"></div>`;
+        
+        const win = window as any;
+        if (typeof win.widgetLib?.scanWidgets === "function") {
+          try {
+            win.widgetLib.scanWidgets();
+          } catch (e) {
+            console.log("[ThinkrrVoiceWidget] scanWidgets error:", e);
+          }
         }
       }
-    }
+    }, 100);
   };
 
   const handleEndCall = () => {
@@ -244,21 +258,43 @@ export function ThinkrrVoiceWidget() {
                       Speak naturally into your microphone. {activeAgent.name} will analyze deal guidelines and provide live qualification answers in real-time.
                     </p>
 
-                    {/* Thinkrr Embed Container */}
+                    {/* Thinkrr WebRTC Audio Widget Mount Container */}
                     <div
                       ref={widgetContainerRef}
                       id="thinkrr-voice-container"
-                      data-widget-key={activeAgent.widgetKey || "demo-key"}
-                      className="my-3 flex justify-center min-h-[48px]"
-                    >
-                      {!activeAgent.widgetKey && (
-                        <div className="p-3 bg-amber-950/40 border border-amber-500/30 rounded-xl text-xs text-amber-300 flex items-start gap-2 text-left max-w-md">
-                          <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-amber-400" />
-                          <span>
-                            <strong>Widget Key Missing:</strong> Please paste your Thinkrr Web Widget Key for <strong>{activeAgent.name} ({activeAgent.id.toUpperCase()})</strong> in <code className="bg-black/50 px-1 py-0.5 rounded text-[11px]">.env.local</code> as <code className="bg-black/50 px-1 py-0.5 rounded text-[11px] font-mono">NEXT_PUBLIC_THINKRR_{activeAgent.id === 'en' ? 'ENGLISH' : 'HINDI'}_WIDGET_KEY</code>.
-                          </span>
-                        </div>
-                      )}
+                      className="my-3 flex justify-center min-h-[48px] w-full"
+                    />
+
+                    {/* Direct Underwriting Desk Backup */}
+                    <div className="mt-3 p-3 bg-slate-900/90 border border-gold-500/20 rounded-xl text-xs text-gray-300 flex flex-col gap-2 text-left max-w-md mx-auto">
+                      <div className="flex items-center justify-between">
+                        <span className="font-semibold text-gold-400 flex items-center gap-1.5">
+                          <Volume2 className="w-3.5 h-3.5" />
+                          Direct Underwriting Desk
+                        </span>
+                        <span className="text-[10px] text-emerald-400 font-mono">Live • Licensed BC AB ON</span>
+                      </div>
+                      <p className="text-[11px] text-gray-400 leading-snug">
+                        If microphone access is restricted or audio is delayed, reach our deal team directly on the phone or WhatsApp:
+                      </p>
+                      <div className="flex items-center gap-2 pt-1">
+                        <a
+                          href="tel:+16043595993"
+                          className="flex-1 py-1.5 px-3 rounded-lg bg-emerald-600/20 hover:bg-emerald-600/30 border border-emerald-500/40 text-emerald-300 text-center text-[11px] font-bold flex items-center justify-center gap-1.5 transition-colors"
+                        >
+                          <PhoneCall className="w-3 h-3" />
+                          Call +1 (604) 359-5993
+                        </a>
+                        <a
+                          href="https://wa.me/16043595993?text=Hi%20Julia,%20I%20would%20like%20to%20speak%20about%20my%20mortgage%20qualification."
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex-1 py-1.5 px-3 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-slate-950 text-center text-[11px] font-bold flex items-center justify-center gap-1.5 transition-colors shadow-sm"
+                        >
+                          <Radio className="w-3 h-3" />
+                          WhatsApp Julia
+                        </a>
+                      </div>
                     </div>
 
                     {/* Call Actions */}
