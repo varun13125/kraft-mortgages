@@ -369,6 +369,10 @@ export default function ModernHomepage() {
                 <a href="#services" className="block text-gray-400 hover:text-gold-400 transition-colors text-sm">Services</a>
                 <a href="#calculators" className="block text-gray-400 hover:text-gold-400 transition-colors text-sm">Calculators</a>
                 <Link href="/mli-select" className="block text-gray-400 hover:text-gold-400 transition-colors text-sm">MLI Select</Link>
+                <Link href="/rates" className="block text-gray-400 hover:text-gold-400 transition-colors text-sm">Live Rates</Link>
+                <Link href="/compliance-security" className="block text-gray-400 hover:text-gold-400 transition-colors text-sm">Compliance & FINTRAC</Link>
+                <Link href="/privacy" className="block text-gray-400 hover:text-gold-400 transition-colors text-sm">Privacy Policy</Link>
+                <Link href="/terms" className="block text-gray-400 hover:text-gold-400 transition-colors text-sm">Terms of Service</Link>
               </div>
             </div>
             <div>
@@ -396,6 +400,18 @@ export default function ModernHomepage() {
                   <span className="text-xs">BCFSA #SR220230 | RECA LIC-00655428 | FSRA #12918</span>
                 </div>
               </div>
+            </div>
+          </div>
+
+          {/* Bottom Legal Bar */}
+          <div className="max-w-6xl mx-auto mt-12 pt-6 border-t border-gray-800 flex flex-col sm:flex-row justify-between items-center gap-3 text-xs text-gray-400 font-mono">
+            <span>© {new Date().getFullYear()} KRAFT MORTGAGES CANADA INC. · FSRA #12918</span>
+            <div className="flex flex-wrap items-center gap-4">
+              <Link href="/privacy" className="hover:text-gold-400 transition-colors">Privacy Policy</Link>
+              <span>·</span>
+              <Link href="/terms" className="hover:text-gold-400 transition-colors">Terms of Service</Link>
+              <span>·</span>
+              <Link href="/compliance-security" className="hover:text-gold-400 transition-colors">Compliance & Disclosures</Link>
             </div>
           </div>
         </footer>

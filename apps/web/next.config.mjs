@@ -158,6 +158,17 @@ const nextConfig = {
         destination: '/blog/b-lending-bc-alternative-mortgage-guide-2026',
         permanent: true,
       },
+      // Legal policy alias redirects
+      {
+        source: '/terms-of-service',
+        destination: '/terms',
+        permanent: true,
+      },
+      {
+        source: '/privacy-policy',
+        destination: '/privacy',
+        permanent: true,
+      },
     ];
   },
   webpack: (config) => {

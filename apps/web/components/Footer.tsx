@@ -20,8 +20,8 @@ const FOOTER_LINKS = {
   ],
   "LEGAL & TRUST": [
     { label: "Compliance & FINTRAC Disclosures", href: "/compliance-security" },
-    { label: "Privacy Policy", href: "/privacy-policy" },
-    { label: "Terms of Service", href: "/terms-of-service" },
+    { label: "Privacy Policy", href: "/privacy" },
+    { label: "Terms of Service", href: "/terms" },
   ],
   "LICENSED IN": [
     { label: "✓ British Columbia", href: undefined },
