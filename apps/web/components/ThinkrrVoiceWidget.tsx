@@ -244,19 +244,12 @@ export function ThinkrrVoiceWidget() {
 
                     <div>
                       <h4 className="text-lg font-extrabold text-white">
-                        Connected to {activeAgent.name}
+                        Voice Session with {activeAgent.name}
                       </h4>
                       <p className="text-xs text-gold-400 font-mono mt-0.5">
                         {activeAgent.nativeTitle}
                       </p>
-                      <span className="inline-block mt-2 px-3 py-1 rounded-full text-xs font-mono font-bold bg-gray-900 border border-gray-800 text-emerald-400">
-                        Live Duration: {formatDuration(callDuration)}
-                      </span>
                     </div>
-
-                    <p className="text-xs text-gray-400 max-w-sm mx-auto leading-relaxed">
-                      Speak naturally into your microphone. {activeAgent.name} will analyze deal guidelines and provide live qualification answers in real-time.
-                    </p>
 
                     {/* Thinkrr WebRTC Audio Widget Mount Container */}
                     <div
@@ -264,6 +257,17 @@ export function ThinkrrVoiceWidget() {
                       id="thinkrr-voice-container"
                       className="my-3 flex justify-center min-h-[48px] w-full"
                     />
+
+                    {/* Thinkrr WebRTC Connection Status Notice */}
+                    <div className="p-3 bg-amber-950/30 border border-amber-500/30 rounded-xl text-xs text-amber-200 text-left max-w-md mx-auto space-y-1">
+                      <div className="flex items-center gap-2 font-bold text-amber-400">
+                        <Radio className="w-3.5 h-3.5 animate-pulse text-amber-400 shrink-0" />
+                        <span>Thinkrr WebRTC Stream Initializing</span>
+                      </div>
+                      <p className="text-[11px] text-amber-200/80 leading-relaxed">
+                        If browser microphone permission does not appear or voice is not streaming, your Thinkrr Dashboard requires whitelisting <code className="bg-black/50 px-1 py-0.5 rounded font-mono text-[10px] text-amber-300">kraftmortgages.ca</code> under <strong>Julia &rarr; Web Agent tab</strong>.
+                      </p>
+                    </div>
 
                     {/* Direct Underwriting Desk Backup */}
                     <div className="mt-3 p-3 bg-slate-900/90 border border-gold-500/20 rounded-xl text-xs text-gray-300 flex flex-col gap-2 text-left max-w-md mx-auto">
