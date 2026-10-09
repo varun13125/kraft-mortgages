@@ -1,5 +1,5 @@
 # Kraft Mortgages — Live Verified Rate Intelligence Summary
-**Last Synchronized:** 2026-10-09T13:30:24.733002+00:00
+**Last Synchronized:** 2026-10-09T16:39:55.644274+00:00
 **Bank of Canada Prime Rate:** 4.45%
 **Spotlight Snapshot:** 20261009_094512 | **Source Mode:** auto
 **Audit Integrity:** Verified active feeds (Spotlight Pro + Intraday BDM Blasts)
@@ -28,19 +28,29 @@
 _Uninsured products from alternative lenders (e.g. Home Trust Classic, Equitable, Excalibur, B2B Alternative, RFA Alternative). Premium is measured against the matching prime conventional benchmark; most B-lenders also charge a lender fee._
 | Term & Structure | Lowest Rate | Spread / Formula | Leading Program | Median | Lenders | Premium vs Prime | Typical Fee |
 |---|---|---|---|---|---|---|---|
-| B-Lender 1-Year Fixed | **4.19%** | Fixed | Alternative (DUCA (Near Prime)) | 5.69% | 22 | — | 1.00% |
-| B-Lender 2-Year Fixed | **4.89%** | Fixed | Alternative (First National Excalibur) | 5.79% | 22 | — | 1.00% |
-| B-Lender 3-Year Fixed | **5.04%** | Fixed | Alternative (First National Excalibur) | 5.89% | 21 | +65 bps | 1.00% |
-| B-Lender 5-Year Fixed | **5.19%** | Fixed | Alternative (DUCA (Near Prime)) | 6.19% | 10 | +80 bps | 1.00% |
-| B-Lender Variable (any term) | **4.84%** | Prime +0.39% | Alternative (AVEO by CMLS Financial) | 5.35% | 7 | +114 bps | — |
-| B-Lender BFS / Stated Income (any term) | **4.64%** | Fixed | Alternative (BFS) (Peoples Bank) | 5.74% | 23 | — | 1.00% |
-| B-Lender HELOC | **5.74%** | Fixed | HELOC (EQ Bank) | 9.74% | 3 | — | — |
+| B-Lender 1-Year Fixed | **4.19%** | Fixed | Alternative (DUCA (Near Prime)) | 5.64% | 28 | - | 1.00% |
+| B-Lender 2-Year Fixed | **4.89%** | Fixed | Alternative (First National Excalibur) | 5.79% | 28 | - | 1.00% |
+| B-Lender 3-Year Fixed | **5.04%** | Fixed | Alternative (BFS) (First National Excalibur) | 5.84% | 25 | +65 bps | 1.00% |
+| B-Lender 5-Year Fixed | **5.04%** | Fixed | Alternative (BFS) (Aspire by Strive Capital) | 6.09% | 15 | +65 bps | 1.00% |
+| B-Lender Variable (any term) | **4.65%** | Prime +0.20% | Alternative (BFS) (CTBC Bank) | 5.35% | 10 | +95 bps | 1.00% |
+| B-Lender BFS / Stated Income (any term) | **4.64%** | Fixed | Alternative (BFS) (Peoples Bank) | 5.74% | 23 | - | 1.00% |
+| B-Lender HELOC | **5.74%** | Fixed | HELOC (EQ Bank) | 9.74% | 3 | - | 1.00% |
+
+### Key Alternative B-Lender Rate Comparison
+| Lender | 1-Year Fixed | 2-Year Fixed | 3-Year Fixed | Variable / ARM | HELOC | Typical Fee |
+|---|---|---|---|---|---|---|
+| **Home Trust Classic** | **5.29%** | **5.39%** | **5.49%** | - | **5.99%** | 1.00% |
+| **First National Excalibur** | **4.59%** | **4.89%** | **5.04%** | - | - | 1.00% |
+| **AVEO by CMLS Financial** | - | **5.19%** | **5.24%** | **4.84%** (P+0.39%) | - | 1.00% |
+| **Haventree Bank** | **5.54%** | **5.59%** | **5.69%** | - | - | 1.00% |
+| **EQ Bank** | **4.69%** (BFS) | **5.19%** | **5.34%** | - | **5.74%** | 1.00% |
+| **Bridgewater Bank** | **5.39%** | **5.49%** | **5.59%** | - | - | 1.00% |
 
 ## A-Lender Extended Ratio / Equity Programs (Prime-Flex)
 | Term & Structure | Lowest Rate | Spread / Formula | Leading Program | Median | Lenders | Premium vs Prime | Typical Fee |
 |---|---|---|---|---|---|---|---|
-| A-Lender Extended Ratio / Equity (Fixed) | **4.29%** | Fixed | Prime-Flex (Shinhan Bank of Canada) | 5.34% | 13 | — | — |
-| A-Lender Extended Ratio / Equity (Variable) | **3.80%** | Prime -0.65% | Prime-Flex (Shinhan Bank of Canada) | 4.30% | 12 | — | — |
+| A-Lender Extended Ratio / Equity (Fixed) | **4.29%** | Fixed | Prime-Flex (Shinhan Bank of Canada) | 5.34% | 13 | - | - |
+| A-Lender Extended Ratio / Equity (Variable) | **3.80%** | Prime -0.65% | Prime-Flex (Shinhan Bank of Canada) | 4.30% | 12 | - | - |
 
 ## Recent Verified Rate Sheet Updates
 | Date | Lender | Update Note |

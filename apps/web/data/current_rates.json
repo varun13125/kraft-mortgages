@@ -1,5 +1,5 @@
 {
-  "last_synced_utc": "2026-10-09T13:30:24.733002+00:00",
+  "last_synced_utc": "2026-10-09T16:39:55.644274+00:00",
   "prime_rate_benchmark": 4.45,
   "spotlight_snapshot": "20261009_094512",
   "source_mode": "auto",
@@ -106,6 +106,20 @@
           "product": "Prime-Flex",
           "spread": "Prime -0.50%",
           "effective_date": "2026-09-17"
+        },
+        {
+          "lender": "UnionLink Mortgage (For Exclusive Partners Only)",
+          "rate": 4.05,
+          "product": "Prime-Flex",
+          "spread": "Prime -0.40%",
+          "effective_date": "2026-09-29"
+        },
+        {
+          "lender": "TD Canada Trust",
+          "rate": 4.09,
+          "product": "Prime-Flex",
+          "spread": "Prime -0.51%",
+          "effective_date": "2026-09-29"
         }
       ],
       "median_rate": 4.3,
@@ -446,6 +460,20 @@
           "product": "Prime-Flex",
           "spread": "",
           "effective_date": "2026-10-07"
+        },
+        {
+          "lender": "Envision Financial",
+          "rate": 4.94,
+          "product": "Prime-Flex",
+          "spread": "",
+          "effective_date": "2026-09-23"
+        },
+        {
+          "lender": "Island Savings",
+          "rate": 4.94,
+          "product": "Prime-Flex",
+          "spread": "",
+          "effective_date": "2026-09-23"
         }
       ],
       "median_rate": 5.34,
@@ -454,39 +482,53 @@
       "typical_lender_fee_pct": null
     },
     "alt_variable": {
-      "lowest_rate": 4.84,
-      "lowest_spread": "Prime +0.39%",
-      "leading_lender": "AVEO by CMLS Financial",
-      "product_family": "Alternative",
-      "effective_date": "2026-10-08",
+      "lowest_rate": 4.65,
+      "lowest_spread": "Prime +0.20%",
+      "leading_lender": "CTBC Bank",
+      "product_family": "Alternative (BFS)",
+      "effective_date": "2025-11-03",
       "top_offers": [
         {
-          "lender": "AVEO by CMLS Financial",
-          "rate": 4.84,
-          "product": "Alternative",
-          "spread": "Prime +0.39%",
-          "effective_date": "2026-10-08"
-        },
-        {
           "lender": "CTBC Bank",
-          "rate": 4.9,
-          "product": "Alternative",
+          "rate": 4.65,
+          "product": "Alternative (BFS)",
           "spread": "Prime +0.20%",
           "effective_date": "2025-11-03"
         },
         {
-          "lender": "B2B Bank Alternative",
-          "rate": 4.95,
-          "product": "Alternative",
-          "spread": "Prime -0.40%",
-          "effective_date": "2026-09-30"
+          "lender": "EQ Bank",
+          "rate": 4.69,
+          "product": "Alternative (BFS)",
+          "spread": "Prime +0.24%",
+          "effective_date": "2026-10-01"
+        },
+        {
+          "lender": "Envision Financial",
+          "rate": 4.75,
+          "product": "Alternative (BFS)",
+          "spread": "Prime +0.30%",
+          "effective_date": "2026-09-23"
+        },
+        {
+          "lender": "Island Savings",
+          "rate": 4.75,
+          "product": "Alternative (BFS)",
+          "spread": "Prime +0.30%",
+          "effective_date": "2026-09-23"
+        },
+        {
+          "lender": "Valley First",
+          "rate": 4.75,
+          "product": "Alternative (BFS)",
+          "spread": "Prime +0.30%",
+          "effective_date": "2026-09-23"
         }
       ],
       "median_rate": 5.35,
-      "lender_count": 7,
-      "product_count": 74,
-      "typical_lender_fee_pct": null,
-      "premium_over_prime_bps": 114
+      "lender_count": 10,
+      "product_count": 165,
+      "typical_lender_fee_pct": 1.0,
+      "premium_over_prime_bps": 95
     },
     "alt_2_year_fixed": {
       "lowest_rate": 4.89,
@@ -503,6 +545,13 @@
           "effective_date": "2026-09-10"
         },
         {
+          "lender": "Peoples Bank",
+          "rate": 4.89,
+          "product": "Alternative (BFS)",
+          "spread": "",
+          "effective_date": "2026-10-07"
+        },
+        {
           "lender": "DUCA (Near Prime)",
           "rate": 4.99,
           "product": "Alternative",
@@ -515,26 +564,54 @@
           "product": "Alternative",
           "spread": "",
           "effective_date": "2026-06-30"
+        },
+        {
+          "lender": "UnionLink Mortgage (For Exclusive Partners Only)",
+          "rate": 4.99,
+          "product": "Alternative",
+          "spread": "",
+          "effective_date": "2026-09-29"
         }
       ],
       "median_rate": 5.79,
-      "lender_count": 22,
-      "product_count": 368,
+      "lender_count": 28,
+      "product_count": 644,
       "typical_lender_fee_pct": 1.0
     },
     "alt_3_year_fixed": {
       "lowest_rate": 5.04,
       "lowest_spread": "",
       "leading_lender": "First National Excalibur",
-      "product_family": "Alternative",
+      "product_family": "Alternative (BFS)",
       "effective_date": "2026-09-10",
       "top_offers": [
         {
           "lender": "First National Excalibur",
           "rate": 5.04,
-          "product": "Alternative",
+          "product": "Alternative (BFS)",
           "spread": "",
           "effective_date": "2026-09-10"
+        },
+        {
+          "lender": "Envision Financial",
+          "rate": 5.09,
+          "product": "Alternative (BFS)",
+          "spread": "",
+          "effective_date": "2026-09-23"
+        },
+        {
+          "lender": "Island Savings",
+          "rate": 5.09,
+          "product": "Alternative (BFS)",
+          "spread": "",
+          "effective_date": "2026-09-23"
+        },
+        {
+          "lender": "Valley First",
+          "rate": 5.09,
+          "product": "Alternative (BFS)",
+          "spread": "",
+          "effective_date": "2026-09-23"
         },
         {
           "lender": "DUCA (Near Prime)",
@@ -542,18 +619,11 @@
           "product": "Alternative",
           "spread": "",
           "effective_date": "2026-09-18"
-        },
-        {
-          "lender": "FirstOntario Credit Union (Alt A)",
-          "rate": 5.09,
-          "product": "Alternative",
-          "spread": "",
-          "effective_date": "2026-10-06"
         }
       ],
-      "median_rate": 5.89,
-      "lender_count": 21,
-      "product_count": 353,
+      "median_rate": 5.84,
+      "lender_count": 25,
+      "product_count": 599,
       "typical_lender_fee_pct": 1.0,
       "premium_over_prime_bps": 65
     },
@@ -584,20 +654,41 @@
           "product": "Alternative",
           "spread": "",
           "effective_date": "2026-09-10"
+        },
+        {
+          "lender": "Peoples Bank",
+          "rate": 4.64,
+          "product": "Alternative (BFS)",
+          "spread": "",
+          "effective_date": "2026-10-07"
+        },
+        {
+          "lender": "Questbank",
+          "rate": 4.79,
+          "product": "Alternative (BFS)",
+          "spread": "",
+          "effective_date": "2026-09-17"
         }
       ],
-      "median_rate": 5.69,
-      "lender_count": 22,
-      "product_count": 412,
+      "median_rate": 5.64,
+      "lender_count": 28,
+      "product_count": 692,
       "typical_lender_fee_pct": 1.0
     },
     "alt_5_year_fixed": {
-      "lowest_rate": 5.19,
+      "lowest_rate": 5.04,
       "lowest_spread": "",
-      "leading_lender": "DUCA (Near Prime)",
-      "product_family": "Alternative",
-      "effective_date": "2026-09-18",
+      "leading_lender": "Aspire by Strive Capital",
+      "product_family": "Alternative (BFS)",
+      "effective_date": "2026-06-30",
       "top_offers": [
+        {
+          "lender": "Aspire by Strive Capital",
+          "rate": 5.04,
+          "product": "Alternative (BFS)",
+          "spread": "",
+          "effective_date": "2026-06-30"
+        },
         {
           "lender": "DUCA (Near Prime)",
           "rate": 5.19,
@@ -613,18 +704,25 @@
           "effective_date": "2026-10-08"
         },
         {
-          "lender": "NPX",
-          "rate": 5.29,
-          "product": "Alternative",
+          "lender": "Envision Financial",
+          "rate": 5.24,
+          "product": "Alternative (BFS)",
           "spread": "",
-          "effective_date": "2026-10-06"
+          "effective_date": "2026-09-23"
+        },
+        {
+          "lender": "Island Savings",
+          "rate": 5.24,
+          "product": "Alternative (BFS)",
+          "spread": "",
+          "effective_date": "2026-09-23"
         }
       ],
-      "median_rate": 6.19,
-      "lender_count": 10,
-      "product_count": 157,
+      "median_rate": 6.09,
+      "lender_count": 15,
+      "product_count": 265,
       "typical_lender_fee_pct": 1.0,
-      "premium_over_prime_bps": 80
+      "premium_over_prime_bps": 65
     },
     "5_year_variable_insurable": {
       "lowest_rate": 3.55,
@@ -789,6 +887,20 @@
           "product": "Alternative (BFS)",
           "spread": "Prime +0.24%",
           "effective_date": "2026-10-01"
+        },
+        {
+          "lender": "Envision Financial",
+          "rate": 4.75,
+          "product": "Alternative (BFS)",
+          "spread": "Prime +0.30%",
+          "effective_date": "2026-09-23"
+        },
+        {
+          "lender": "Island Savings",
+          "rate": 4.75,
+          "product": "Alternative (BFS)",
+          "spread": "Prime +0.30%",
+          "effective_date": "2026-09-23"
         }
       ],
       "median_rate": 5.74,
@@ -811,7 +923,7 @@
           "effective_date": "2026-10-01"
         },
         {
-          "lender": "Home Trust",
+          "lender": "Home Trust Classic",
           "rate": 5.99,
           "product": "HELOC",
           "spread": "",
@@ -828,7 +940,7 @@
       "median_rate": 9.74,
       "lender_count": 3,
       "product_count": 81,
-      "typical_lender_fee_pct": null
+      "typical_lender_fee_pct": 1.0
     },
     "private_second": {
       "lowest_rate": 7.99,

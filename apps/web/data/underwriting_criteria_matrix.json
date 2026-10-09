@@ -1,5 +1,5 @@
 {
-  "generated_utc": "2026-10-09T10:18:15.286981+00:00",
+  "generated_utc": "2026-10-09T16:34:27.598849+00:00",
   "lenders": {
     "ATB Financial": {
       "lender_type": "Bank",
@@ -8727,6 +8727,138 @@
         "Secondary Financing",
         "Student Housing"
       ]
+    },
+    "Home Trust Classic": {
+      "lender_type": "Alternate (B-Lender)",
+      "criteria": {
+        "bfs_documents": [
+          {
+            "value": [
+              "stated_income",
+              "bank_statements",
+              "financial_statements"
+            ],
+            "policy": "Income - BFS (Other BFS Programs, Bank Statement etc)"
+          },
+          {
+            "value": [
+              "bank_statements"
+            ],
+            "policy": "Income - BFS Confirmed"
+          },
+          {
+            "value": [
+              "stated_income",
+              "noa_t1",
+              "financial_statements",
+              "t4_paystub"
+            ],
+            "policy": "Income - BFS Stated (Sagen & CG Program)"
+          }
+        ],
+        "min_beacon": [
+          {
+            "value": 640,
+            "policy": "New to Canada"
+          },
+          {
+            "value": 640,
+            "policy": "Second Homes / Family Plan"
+          },
+          {
+            "value": 640,
+            "policy": "Beacon/FICO Scores"
+          }
+        ],
+        "max_ltv": [
+          {
+            "value": 55.0,
+            "policy": "Reverse Mortgage"
+          },
+          {
+            "value": 95.0,
+            "policy": "Second Homes / Family Plan"
+          },
+          {
+            "value": 80.0,
+            "policy": "Secondary Financing"
+          },
+          {
+            "value": 80.0,
+            "policy": "HELOC Products - General"
+          },
+          {
+            "value": 80.0,
+            "policy": "Refinance & Renewal"
+          },
+          {
+            "value": 80.0,
+            "policy": "Rentals - Amortization, LTV, Debt Servicing & Gifted Down Payment"
+          }
+        ],
+        "max_acres": [
+          {
+            "value": 5.0,
+            "policy": "Acreages & Rural - Maximum Lending Value"
+          },
+          {
+            "value": 5.0,
+            "policy": "Acreages & Rural - Maximum Property Size"
+          }
+        ],
+        "max_amortization_years": [
+          {
+            "value": 30,
+            "policy": "Amortization"
+          }
+        ],
+        "gds_max": [
+          {
+            "value": 39.0,
+            "policy": "Debt Servicing"
+          }
+        ],
+        "tds_max": [
+          {
+            "value": 44.0,
+            "policy": "Debt Servicing"
+          }
+        ],
+        "rental_method": [
+          {
+            "value": "offset",
+            "policy": "Rentals - Income"
+          }
+        ],
+        "rental_pct": [
+          {
+            "value": 95.0,
+            "policy": "Rentals - Income"
+          }
+        ]
+      },
+      "not_accepted": [
+        "Acreage and Rural - Agricultural Zoning",
+        "Bare Land Condo",
+        "Blanket (Inter Alia) Mortgages",
+        "Cashback & Speciality Products",
+        "Construction Financing",
+        "Flex Down",
+        "Income - BFS Enhanced",
+        "Interest Only",
+        "Leased land",
+        "Military DND",
+        "Mobiles & Modulars",
+        "Non - Full Service / Limited Feature Mortgages",
+        "POA's and Estates",
+        "Purchase Plus Improvement & Refinance Plus Improvement",
+        "Rate Buydowns",
+        "Raw Land",
+        "Rent-to-Own",
+        "Solicitor/Lawyer - Dual Representation"
+      ],
+      "notes": "Home Trust Classic is the specialized alternative B-lending division of Home Trust for business-for-self (BFS), stated income, and non-traditional credit.",
+      "fees": "1% lender fee standard"
     }
   }
 }
