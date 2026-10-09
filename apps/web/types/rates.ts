@@ -91,7 +91,13 @@ export interface RatesApiResponse {
     fixed_2yr?: RateBenchmark;
     fixed_1yr?: RateBenchmark;
     variable_3yr?: RateBenchmark;
+    alt_1yr_fixed?: RateBenchmark;
+    alt_2yr_fixed?: RateBenchmark;
+    alt_3yr_fixed?: RateBenchmark;
+    alt_heloc?: RateBenchmark;
+    alt_bfs?: RateBenchmark;
   };
   featured_rates: RateCardItem[];
   all_rates: RateCardItem[];
+  raw_benchmarks?: Record<string, any>;
 }

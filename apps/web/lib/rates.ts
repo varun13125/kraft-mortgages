@@ -447,9 +447,15 @@ export function formatLiveRatesData(feed: RawRatesFeed, source: string): RatesAp
       fixed_2yr: f2,
       fixed_1yr: f1,
       variable_3yr: v3,
+      alt_1yr_fixed: rb['alt_1_year_fixed'],
+      alt_2yr_fixed: rb['alt_2_year_fixed'],
+      alt_3yr_fixed: rb['alt_3_year_fixed'],
+      alt_heloc: rb['alt_heloc'],
+      alt_bfs: rb['alt_bfs_stated_income'],
     },
     featured_rates: featuredRates,
     all_rates: allRates,
+    raw_benchmarks: rb,
   };
 }
 
