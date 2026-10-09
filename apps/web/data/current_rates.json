@@ -1,5 +1,5 @@
 {
-  "last_synced_utc": "2026-10-09T16:39:55.644274+00:00",
+  "last_synced_utc": "2026-10-09T17:14:50.623626+00:00",
   "prime_rate_benchmark": 4.45,
   "spotlight_snapshot": "20261009_094512",
   "source_mode": "auto",
@@ -545,9 +545,9 @@
           "effective_date": "2026-09-10"
         },
         {
-          "lender": "Peoples Bank",
+          "lender": "Peoples Bank Alternative",
           "rate": 4.89,
-          "product": "Alternative (BFS)",
+          "product": "Alternative (Near Prime BFS)",
           "spread": "",
           "effective_date": "2026-10-07"
         },
@@ -566,15 +566,15 @@
           "effective_date": "2026-06-30"
         },
         {
-          "lender": "UnionLink Mortgage (For Exclusive Partners Only)",
+          "lender": "UnionLink (Near Prime)",
           "rate": 4.99,
-          "product": "Alternative",
+          "product": "Alternative (Near Prime)",
           "spread": "",
           "effective_date": "2026-09-29"
         }
       ],
       "median_rate": 5.79,
-      "lender_count": 28,
+      "lender_count": 24,
       "product_count": 644,
       "typical_lender_fee_pct": 1.0
     },
@@ -622,7 +622,7 @@
         }
       ],
       "median_rate": 5.84,
-      "lender_count": 25,
+      "lender_count": 22,
       "product_count": 599,
       "typical_lender_fee_pct": 1.0,
       "premium_over_prime_bps": 65
@@ -642,9 +642,9 @@
           "effective_date": "2026-09-18"
         },
         {
-          "lender": "UnionLink Mortgage (For Exclusive Partners Only)",
+          "lender": "UnionLink (Near Prime)",
           "rate": 4.19,
-          "product": "Alternative",
+          "product": "Alternative (Near Prime)",
           "spread": "",
           "effective_date": "2026-09-29"
         },
@@ -656,9 +656,9 @@
           "effective_date": "2026-09-10"
         },
         {
-          "lender": "Peoples Bank",
+          "lender": "Peoples Bank Alternative",
           "rate": 4.64,
-          "product": "Alternative (BFS)",
+          "product": "Alternative (Near Prime BFS)",
           "spread": "",
           "effective_date": "2026-10-07"
         },
@@ -671,7 +671,7 @@
         }
       ],
       "median_rate": 5.64,
-      "lender_count": 28,
+      "lender_count": 24,
       "product_count": 692,
       "typical_lender_fee_pct": 1.0
     },
@@ -719,7 +719,7 @@
         }
       ],
       "median_rate": 6.09,
-      "lender_count": 15,
+      "lender_count": 14,
       "product_count": 265,
       "typical_lender_fee_pct": 1.0,
       "premium_over_prime_bps": 65
@@ -863,14 +863,14 @@
     "alt_bfs_stated_income": {
       "lowest_rate": 4.64,
       "lowest_spread": "",
-      "leading_lender": "Peoples Bank",
-      "product_family": "Alternative (BFS)",
+      "leading_lender": "Peoples Bank Alternative",
+      "product_family": "Alternative (Near Prime BFS)",
       "effective_date": "2026-10-07",
       "top_offers": [
         {
-          "lender": "Peoples Bank",
+          "lender": "Peoples Bank Alternative",
           "rate": 4.64,
-          "product": "Alternative (BFS)",
+          "product": "Alternative (Near Prime BFS)",
           "spread": "",
           "effective_date": "2026-10-07"
         },
@@ -904,7 +904,7 @@
         }
       ],
       "median_rate": 5.74,
-      "lender_count": 23,
+      "lender_count": 20,
       "product_count": 1053,
       "typical_lender_fee_pct": 1.0
     },

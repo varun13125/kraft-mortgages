@@ -1,5 +1,5 @@
 # Kraft Mortgages — Live Verified Rate Intelligence Summary
-**Last Synchronized:** 2026-10-09T16:39:55.644274+00:00
+**Last Synchronized:** 2026-10-09T17:14:50.623626+00:00
 **Bank of Canada Prime Rate:** 4.45%
 **Spotlight Snapshot:** 20261009_094512 | **Source Mode:** auto
 **Audit Integrity:** Verified active feeds (Spotlight Pro + Intraday BDM Blasts)
@@ -28,23 +28,46 @@
 _Uninsured products from alternative lenders (e.g. Home Trust Classic, Equitable, Excalibur, B2B Alternative, RFA Alternative). Premium is measured against the matching prime conventional benchmark; most B-lenders also charge a lender fee._
 | Term & Structure | Lowest Rate | Spread / Formula | Leading Program | Median | Lenders | Premium vs Prime | Typical Fee |
 |---|---|---|---|---|---|---|---|
-| B-Lender 1-Year Fixed | **4.19%** | Fixed | Alternative (DUCA (Near Prime)) | 5.64% | 28 | - | 1.00% |
-| B-Lender 2-Year Fixed | **4.89%** | Fixed | Alternative (First National Excalibur) | 5.79% | 28 | - | 1.00% |
-| B-Lender 3-Year Fixed | **5.04%** | Fixed | Alternative (BFS) (First National Excalibur) | 5.84% | 25 | +65 bps | 1.00% |
-| B-Lender 5-Year Fixed | **5.04%** | Fixed | Alternative (BFS) (Aspire by Strive Capital) | 6.09% | 15 | +65 bps | 1.00% |
+| B-Lender 1-Year Fixed | **4.19%** | Fixed | Alternative (DUCA (Near Prime)) | 5.64% | 24 | - | 1.00% |
+| B-Lender 2-Year Fixed | **4.89%** | Fixed | Alternative (First National Excalibur) | 5.79% | 24 | - | 1.00% |
+| B-Lender 3-Year Fixed | **5.04%** | Fixed | Alternative (BFS) (First National Excalibur) | 5.84% | 22 | +65 bps | 1.00% |
+| B-Lender 5-Year Fixed | **5.04%** | Fixed | Alternative (BFS) (Aspire by Strive Capital) | 6.09% | 14 | +65 bps | 1.00% |
 | B-Lender Variable (any term) | **4.65%** | Prime +0.20% | Alternative (BFS) (CTBC Bank) | 5.35% | 10 | +95 bps | 1.00% |
-| B-Lender BFS / Stated Income (any term) | **4.64%** | Fixed | Alternative (BFS) (Peoples Bank) | 5.74% | 23 | - | 1.00% |
+| B-Lender BFS / Stated Income (any term) | **4.64%** | Fixed | Alternative (Near Prime BFS) (Peoples Bank Alternative) | 5.74% | 20 | - | 1.00% |
 | B-Lender HELOC | **5.74%** | Fixed | HELOC (EQ Bank) | 9.74% | 3 | - | 1.00% |
 
-### Key Alternative B-Lender Rate Comparison
+### Key Alternative B-Lender Rate Comparison (Live Verified)
 | Lender | 1-Year Fixed | 2-Year Fixed | 3-Year Fixed | Variable / ARM | HELOC | Typical Fee |
 |---|---|---|---|---|---|---|
+| **First National Excalibur** | **4.59%** | **4.89%** | **5.04%** | - | **7.70%** | 1.00% |
+| **Peoples Bank Alternative** | **4.64%** (BFS) | **4.89%** | - | - | - | 1.00% |
+| **DUCA (Near Prime)** | **4.19%** | **4.99%** | **5.09%** | - | - | 1.00% |
+| **Aspire by Strive Capital** | **4.89%** | **4.99%** | **5.09%** | - | - | 1.00% |
+| **Eclipse (MCAP & RMG)** | **4.89%** | **5.04%** | **5.19%** | - | - | 1.00% |
+| **Bridgewater Bank** | **5.04%** | **5.24%** | **5.49%** | - | - | 1.00% |
+| **Haventree Bank** | **5.19%** | **5.39%** | **5.44%** | - | - | 1.00% |
 | **Home Trust Classic** | **5.29%** | **5.39%** | **5.49%** | - | **5.99%** | 1.00% |
-| **First National Excalibur** | **4.59%** | **4.89%** | **5.04%** | - | - | 1.00% |
-| **AVEO by CMLS Financial** | - | **5.19%** | **5.24%** | **4.84%** (P+0.39%) | - | 1.00% |
-| **Haventree Bank** | **5.54%** | **5.59%** | **5.69%** | - | - | 1.00% |
-| **EQ Bank** | **4.69%** (BFS) | **5.19%** | **5.34%** | - | **5.74%** | 1.00% |
-| **Bridgewater Bank** | **5.39%** | **5.49%** | **5.59%** | - | - | 1.00% |
+| **EQ Bank (Equitable Alternative)** | **5.29%** | **5.39%** | **5.49%** | **4.69%** (P+0.24%) | **5.74%** | 1.00% |
+| **AVEO by CMLS Financial** | **5.29%** | **5.49%** | **5.59%** | **4.84%** (P+0.39%) | - | 1.00% |
+| **National Bank – Optimum Mortgage** | **5.19%** | **5.29%** | **5.39%** | **5.45%** (P+1.00%) | - | 1.00% |
+| **Alterna Alternative** | **4.99%** | **5.14%** | **5.19%** | **4.95%** (P+0.50%) | - | 1.00% |
+| **WealthONE Bank** | **5.00%** | **5.39%** | **5.54%** | **5.10%** (P+0.65%) | - | 1.00% |
+
+### Canadian Institutional A/B Division Directory
+| Prime Institution (A-Side) | Dedicated B-Division (Alternative) | Division Scope & Key Products |
+|---|---|---|
+| **Home Trust Company** | **Home Trust Classic** | Self-employed BFS, stated income, up to 80% LTV, Equityline VISA HELOC |
+| **First National Financial** | **First National Excalibur** | Near-prime, bruised credit, extended ratios, up to 80% LTV, 1.00% fee |
+| **Equitable Bank** | **EQ Bank (Equitable Alternative)** | Edge, Sapphire, Ruby, Diamond, Total Worth equity, up to 80% LTV, HELOC |
+| **CMLS Financial** | **AVEO by CMLS Financial** | Alternative BFS, extended ratios, uninsurable residential, ARM floating rate |
+| **Strive Capital** | **Aspire by Strive Capital** | Near-prime uninsurable, extended GDS/TDS, stated income up to 80% LTV |
+| **Peoples Bank** | **Peoples Bank Alternative** | Near Prime, 6-12 month bank statements, bruised credit rebuild |
+| **MCAP / RMG Mortgages** | **Eclipse (MCAP & RMG)** | Alternative uninsurable lending, debt consolidation, up to 80% LTV |
+| **B2B Bank** | **B2B Bank Alternative** | Non-conforming stated income, BFS equity, extended amortizations |
+| **RFA Bank** | **RFA Alternative** | BFS Assist, credit restore, up to 80% LTV, 35-yr amortization |
+| **MCAN Home** | **MCAN Discover Alternative** | Uninsured alternative equity lending, BFS Smart purchase/refinance |
+| **DUCA Credit Union** | **DUCA (Near Prime)** | Near-prime 1-3 yr fixed programs, competitive alternative pricing |
+| **FirstOntario Credit Union** | **FirstOntario (Alt A)** | Alt-A residential solutions across southern Ontario |
 
 ## A-Lender Extended Ratio / Equity Programs (Prime-Flex)
 | Term & Structure | Lowest Rate | Spread / Formula | Leading Program | Median | Lenders | Premium vs Prime | Typical Fee |

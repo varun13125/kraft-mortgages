@@ -1,5 +1,5 @@
 {
-  "generated_utc": "2026-10-09T16:34:27.598849+00:00",
+  "generated_utc": "2026-10-09T17:16:00.808145+00:00",
   "lenders": {
     "ATB Financial": {
       "lender_type": "Bank",
@@ -8857,8 +8857,680 @@
         "Rent-to-Own",
         "Solicitor/Lawyer - Dual Representation"
       ],
-      "notes": "Home Trust Classic is the specialized alternative B-lending division of Home Trust for business-for-self (BFS), stated income, and non-traditional credit.",
-      "fees": "1% lender fee standard"
+      "notes": "Home Trust Classic is the specialized alternative B-lending division of Home Trust for BFS, stated income, and non-traditional credit.",
+      "fees": "1.00% lender fee standard"
+    },
+    "Peoples Bank Alternative": {
+      "lender_type": "Alternate (B-Lender)",
+      "criteria": {
+        "max_ltv": [
+          {
+            "value": 95.0,
+            "policy": "Purchase Plus Improvement & Refinance Plus Improvement"
+          },
+          {
+            "value": 95.0,
+            "policy": "Marital (Relationship) Breakdown & Spousal Buyouts"
+          },
+          {
+            "value": 95.0,
+            "policy": "New to Canada"
+          },
+          {
+            "value": 80.0,
+            "policy": "Rentals - Amortization, LTV, Debt Servicing & Gifted Down Payment"
+          }
+        ],
+        "max_acres": [
+          {
+            "value": 25.0,
+            "policy": "Acreages & Rural - Maximum Lending Value"
+          },
+          {
+            "value": 25.0,
+            "policy": "Acreages & Rural - Maximum Property Size"
+          }
+        ],
+        "max_amortization_years": [
+          {
+            "value": 35,
+            "policy": "Amortization"
+          }
+        ],
+        "min_beacon": [
+          {
+            "value": 500,
+            "policy": "Beacon/FICO Scores"
+          },
+          {
+            "value": 680,
+            "policy": "Debt Servicing"
+          },
+          {
+            "value": 680,
+            "policy": "Rentals - Income"
+          }
+        ],
+        "gds_max": [
+          {
+            "value": 35.0,
+            "policy": "Debt Servicing"
+          },
+          {
+            "value": 39.0,
+            "policy": "Rentals - Amortization, LTV, Debt Servicing & Gifted Down Payment"
+          }
+        ],
+        "tds_max": [
+          {
+            "value": 42.0,
+            "policy": "Debt Servicing"
+          },
+          {
+            "value": 44.0,
+            "policy": "Rentals - Amortization, LTV, Debt Servicing & Gifted Down Payment"
+          }
+        ],
+        "bfs_documents": [
+          {
+            "value": [
+              "stated_income"
+            ],
+            "policy": "Income - BFS Stated (Sagen & CG Program)"
+          }
+        ]
+      },
+      "not_accepted": [
+        "Acreage and Rural - Agricultural Zoning",
+        "Bare Land Condo",
+        "Blanket (Inter Alia) Mortgages",
+        "Bridge Financing",
+        "Construction Financing",
+        "Flex Down",
+        "Income - BFS (Other BFS Programs, Bank Statement etc)",
+        "Income - BFS Enhanced",
+        "Interest Only",
+        "Raw Land",
+        "Rent-to-Own"
+      ],
+      "notes": "Peoples Bank Alternative / Near Prime division for BFS, extended ratios, and non-conforming borrowers.",
+      "fees": "1.00% lender fee standard"
+    },
+    "Alterna Alternative": {
+      "lender_type": "Alternate (B-Lender)",
+      "criteria": {
+        "bfs_documents": [
+          {
+            "value": [
+              "stated_income"
+            ],
+            "policy": "Income - BFS (Other BFS Programs, Bank Statement etc)"
+          },
+          {
+            "value": [
+              "noa_t1"
+            ],
+            "policy": "Income - BFS Confirmed"
+          },
+          {
+            "value": [
+              "stated_income"
+            ],
+            "policy": "Income - BFS Stated (Sagen & CG Program)"
+          }
+        ],
+        "max_acres": [
+          {
+            "value": 5.0,
+            "policy": "Acreages & Rural - Maximum Lending Value"
+          },
+          {
+            "value": 5.0,
+            "policy": "Acreages & Rural - Maximum Property Size"
+          }
+        ],
+        "max_ltv": [
+          {
+            "value": 80.0,
+            "policy": "Amortization"
+          },
+          {
+            "value": 70.0,
+            "policy": "Rentals - Amortization, LTV, Debt Servicing & Gifted Down Payment"
+          },
+          {
+            "value": 70.0,
+            "policy": "Rentals - General Information"
+          }
+        ],
+        "max_amortization_years": [
+          {
+            "value": 30,
+            "policy": "Amortization"
+          }
+        ],
+        "min_beacon": [
+          {
+            "value": 600,
+            "policy": "Beacon/FICO Scores"
+          },
+          {
+            "value": 680,
+            "policy": "Rentals - General Information"
+          }
+        ],
+        "rental_method": [
+          {
+            "value": "dcr",
+            "policy": "Rentals - Amortization, LTV, Debt Servicing & Gifted Down Payment"
+          },
+          {
+            "value": "dcr",
+            "policy": "Rentals - General Information"
+          }
+        ],
+        "dcr_mentioned": [
+          {
+            "value": true,
+            "policy": "Rentals - Amortization, LTV, Debt Servicing & Gifted Down Payment"
+          },
+          {
+            "value": true,
+            "policy": "Rentals - General Information"
+          }
+        ]
+      },
+      "not_accepted": [
+        "Acreage and Rural - Agricultural Zoning",
+        "Bare Land Condo",
+        "Blanket (Inter Alia) Mortgages",
+        "Cashback & Speciality Products",
+        "Commercial Lending",
+        "Equity & Net Worth Lending",
+        "Flex Down",
+        "Income - Assured Income for the Severely Handicapped (AISH)",
+        "Income - BFS Enhanced",
+        "Income - BFS Stated (Sagen & CG Program)",
+        "Income - Foster & Adoption Income",
+        "Income - Out of Country",
+        "Interest Only",
+        "Leased land",
+        "Lending in a Holding/Operating Company",
+        "Military DND",
+        "Mobiles & Modulars",
+        "New to Canada",
+        "Non Permanent Residents",
+        "Non Residents",
+        "POA's and Estates",
+        "Pre Approvals & Rate Holds",
+        "Pre Payment privileges at payout?",
+        "Purchase Plus Improvement & Refinance Plus Improvement",
+        "Raw Land",
+        "Rent-to-Own",
+        "Reverse Mortgage",
+        "Second Homes / Family Plan",
+        "Second Mortgages",
+        "Secondary Financing",
+        "Solicitor/Lawyer - Dual Representation",
+        "Student Housing"
+      ],
+      "notes": "Alterna Alternative / Near Prime division including Pathway, Bruised Credit, and Cornerstone Stated Income programs.",
+      "fees": "1.00% lender fee standard"
+    },
+    "UnionLink (Near Prime)": {
+      "lender_type": "Alternate (B-Lender)",
+      "criteria": {
+        "max_amortization_years": [
+          {
+            "value": 30,
+            "policy": "Amortization"
+          }
+        ],
+        "min_beacon": [
+          {
+            "value": 720,
+            "policy": "Equity & Net Worth Lending"
+          },
+          {
+            "value": 680,
+            "policy": "Beacon/FICO Scores"
+          }
+        ],
+        "gds_max": [
+          {
+            "value": 39.0,
+            "policy": "Equity & Net Worth Lending"
+          }
+        ],
+        "tds_max": [
+          {
+            "value": 44.0,
+            "policy": "Equity & Net Worth Lending"
+          }
+        ],
+        "max_ltv": [
+          {
+            "value": 80.0,
+            "policy": "HELOC Products - General"
+          },
+          {
+            "value": 65.0,
+            "policy": "HELOC Products - Rentals & Draws"
+          },
+          {
+            "value": 90.0,
+            "policy": "Income - BFS Stated (Sagen & CG Program)"
+          },
+          {
+            "value": 80.0,
+            "policy": "Marital (Relationship) Breakdown & Spousal Buyouts"
+          },
+          {
+            "value": 95.0,
+            "policy": "New to Canada"
+          },
+          {
+            "value": 95.0,
+            "policy": "Purchase Plus Improvement & Refinance Plus Improvement"
+          },
+          {
+            "value": 80.0,
+            "policy": "Refinance & Renewal"
+          },
+          {
+            "value": 80.0,
+            "policy": "Rentals - Amortization, LTV, Debt Servicing & Gifted Down Payment"
+          },
+          {
+            "value": 80.0,
+            "policy": "Rentals - General Information"
+          },
+          {
+            "value": 95.0,
+            "policy": "Switch Transfer - General Information Collateral Charge"
+          },
+          {
+            "value": 95.0,
+            "policy": "Switch Transfer - General Information Standard Charge"
+          },
+          {
+            "value": 80.0,
+            "policy": "HELOC Products - 2nd Position & Fixed or Variable Portions"
+          }
+        ],
+        "bfs_documents": [
+          {
+            "value": [
+              "bank_statements",
+              "noa_t1",
+              "financial_statements"
+            ],
+            "policy": "Income - BFS Confirmed"
+          },
+          {
+            "value": [
+              "noa_t1"
+            ],
+            "policy": "Income - BFS Stated (Sagen & CG Program)"
+          }
+        ],
+        "max_acres": [
+          {
+            "value": 15.0,
+            "policy": "Acreages & Rural - Maximum Lending Value"
+          },
+          {
+            "value": 30.0,
+            "policy": "Acreages & Rural - Maximum Property Size"
+          },
+          {
+            "value": 15.0,
+            "policy": "Acreages and Rural - General Information"
+          }
+        ]
+      },
+      "not_accepted": [
+        "Assumptions",
+        "Blanket (Inter Alia) Mortgages",
+        "Cashback & Speciality Products",
+        "Commercial Lending",
+        "Construction Financing",
+        "Cottage & Recreational Properties",
+        "Military DND",
+        "Mobiles & Modulars",
+        "Open Mortgages",
+        "Raw Land",
+        "Rent-to-Own",
+        "Reverse Mortgage",
+        "Secondary Financing",
+        "Student Housing"
+      ],
+      "notes": "UnionLink Near Prime and Near Prime Flex programs for non-conforming borrowers.",
+      "fees": "1.00% lender fee standard"
+    },
+    "EQ Bank (Equitable Alternative)": {
+      "lender_type": "Alternate (B-Lender)",
+      "criteria": {
+        "min_beacon": [
+          {
+            "value": 640,
+            "policy": "Assignment Purchase Financing"
+          },
+          {
+            "value": 600,
+            "policy": "Equity & Net Worth Lending"
+          },
+          {
+            "value": 720,
+            "policy": "Income - BFS (Other BFS Programs, Bank Statement etc)"
+          },
+          {
+            "value": 640,
+            "policy": "Appraisals"
+          },
+          {
+            "value": 550,
+            "policy": "Beacon/FICO Scores"
+          },
+          {
+            "value": 640,
+            "policy": "Construction Financing"
+          },
+          {
+            "value": 550,
+            "policy": "Debt Servicing"
+          },
+          {
+            "value": 600,
+            "policy": "Income - Other Non Taxable"
+          },
+          {
+            "value": 720,
+            "policy": "Maximum or Minimum Amounts"
+          }
+        ],
+        "max_ltv": [
+          {
+            "value": 65.0,
+            "policy": "Equity & Net Worth Lending"
+          },
+          {
+            "value": 50.0,
+            "policy": "Income - BFS (Other BFS Programs, Bank Statement etc)"
+          },
+          {
+            "value": 80.0,
+            "policy": "Lending in a Holding/Operating Company"
+          },
+          {
+            "value": 80.0,
+            "policy": "New to Canada"
+          },
+          {
+            "value": 80.0,
+            "policy": "Secondary Financing"
+          },
+          {
+            "value": 50.0,
+            "policy": "Debt Servicing"
+          },
+          {
+            "value": 65.0,
+            "policy": "HELOC Products - General"
+          },
+          {
+            "value": 60.0,
+            "policy": "Maximum or Minimum Amounts"
+          },
+          {
+            "value": 80.0,
+            "policy": "Refinance & Renewal"
+          },
+          {
+            "value": 80.0,
+            "policy": "Rentals - Amortization, LTV, Debt Servicing & Gifted Down Payment"
+          },
+          {
+            "value": 65.0,
+            "policy": "Rentals - Area, Maximum Doors & Net Worth Requirements"
+          },
+          {
+            "value": 80.0,
+            "policy": "Sliding Scale"
+          }
+        ],
+        "bfs_documents": [
+          {
+            "value": [
+              "bank_statements"
+            ],
+            "policy": "Income - BFS Confirmed"
+          },
+          {
+            "value": [
+              "stated_income"
+            ],
+            "policy": "Income - BFS Stated (Sagen & CG Program)"
+          }
+        ],
+        "max_acres": [
+          {
+            "value": 5.0,
+            "policy": "Acreages & Rural - Maximum Lending Value"
+          },
+          {
+            "value": 5.0,
+            "policy": "Acreages & Rural - Maximum Property Size"
+          }
+        ],
+        "max_amortization_years": [
+          {
+            "value": 30,
+            "policy": "Amortization"
+          }
+        ],
+        "rental_method": [
+          {
+            "value": "add_back",
+            "policy": "Rentals - Income"
+          }
+        ],
+        "rental_pct": [
+          {
+            "value": 95.0,
+            "policy": "Rentals - Income"
+          }
+        ]
+      },
+      "not_accepted": [
+        "Assumptions",
+        "Bare Land Condo",
+        "Blanket (Inter Alia) Mortgages",
+        "Cashback & Speciality Products",
+        "Flex Down",
+        "Income - Assured Income for the Severely Handicapped (AISH)",
+        "Income - BFS Enhanced",
+        "Income - BFS Stated (Sagen & CG Program)",
+        "Interest Only",
+        "Leased land",
+        "Military DND",
+        "Non - Full Service / Limited Feature Mortgages",
+        "Non Residents",
+        "POA's and Estates",
+        "Purchase Plus Improvement & Refinance Plus Improvement",
+        "Rate Buydowns",
+        "Raw Land",
+        "Rent-to-Own",
+        "Reverse Mortgage",
+        "Second Mortgages",
+        "Student Housing",
+        "Switch Transfer - General Information Collateral Charge",
+        "Switch Transfer - General Information Standard Charge"
+      ],
+      "notes": "EQ Bank / Equitable Bank Alternative division (Edge, Sapphire, Ruby, Diamond, Total Worth, and HELOC).",
+      "fees": "1.00% lender fee standard"
+    },
+    "Equitable Bank Alternative": {
+      "lender_type": "Alternate (B-Lender)",
+      "criteria": {
+        "min_beacon": [
+          {
+            "value": 640,
+            "policy": "Assignment Purchase Financing"
+          },
+          {
+            "value": 600,
+            "policy": "Equity & Net Worth Lending"
+          },
+          {
+            "value": 720,
+            "policy": "Income - BFS (Other BFS Programs, Bank Statement etc)"
+          },
+          {
+            "value": 640,
+            "policy": "Appraisals"
+          },
+          {
+            "value": 550,
+            "policy": "Beacon/FICO Scores"
+          },
+          {
+            "value": 640,
+            "policy": "Construction Financing"
+          },
+          {
+            "value": 550,
+            "policy": "Debt Servicing"
+          },
+          {
+            "value": 600,
+            "policy": "Income - Other Non Taxable"
+          },
+          {
+            "value": 720,
+            "policy": "Maximum or Minimum Amounts"
+          }
+        ],
+        "max_ltv": [
+          {
+            "value": 65.0,
+            "policy": "Equity & Net Worth Lending"
+          },
+          {
+            "value": 50.0,
+            "policy": "Income - BFS (Other BFS Programs, Bank Statement etc)"
+          },
+          {
+            "value": 80.0,
+            "policy": "Lending in a Holding/Operating Company"
+          },
+          {
+            "value": 80.0,
+            "policy": "New to Canada"
+          },
+          {
+            "value": 80.0,
+            "policy": "Secondary Financing"
+          },
+          {
+            "value": 50.0,
+            "policy": "Debt Servicing"
+          },
+          {
+            "value": 65.0,
+            "policy": "HELOC Products - General"
+          },
+          {
+            "value": 60.0,
+            "policy": "Maximum or Minimum Amounts"
+          },
+          {
+            "value": 80.0,
+            "policy": "Refinance & Renewal"
+          },
+          {
+            "value": 80.0,
+            "policy": "Rentals - Amortization, LTV, Debt Servicing & Gifted Down Payment"
+          },
+          {
+            "value": 65.0,
+            "policy": "Rentals - Area, Maximum Doors & Net Worth Requirements"
+          },
+          {
+            "value": 80.0,
+            "policy": "Sliding Scale"
+          }
+        ],
+        "bfs_documents": [
+          {
+            "value": [
+              "bank_statements"
+            ],
+            "policy": "Income - BFS Confirmed"
+          },
+          {
+            "value": [
+              "stated_income"
+            ],
+            "policy": "Income - BFS Stated (Sagen & CG Program)"
+          }
+        ],
+        "max_acres": [
+          {
+            "value": 5.0,
+            "policy": "Acreages & Rural - Maximum Lending Value"
+          },
+          {
+            "value": 5.0,
+            "policy": "Acreages & Rural - Maximum Property Size"
+          }
+        ],
+        "max_amortization_years": [
+          {
+            "value": 30,
+            "policy": "Amortization"
+          }
+        ],
+        "rental_method": [
+          {
+            "value": "add_back",
+            "policy": "Rentals - Income"
+          }
+        ],
+        "rental_pct": [
+          {
+            "value": 95.0,
+            "policy": "Rentals - Income"
+          }
+        ]
+      },
+      "not_accepted": [
+        "Assumptions",
+        "Bare Land Condo",
+        "Blanket (Inter Alia) Mortgages",
+        "Cashback & Speciality Products",
+        "Flex Down",
+        "Income - Assured Income for the Severely Handicapped (AISH)",
+        "Income - BFS Enhanced",
+        "Income - BFS Stated (Sagen & CG Program)",
+        "Interest Only",
+        "Leased land",
+        "Military DND",
+        "Non - Full Service / Limited Feature Mortgages",
+        "Non Residents",
+        "POA's and Estates",
+        "Purchase Plus Improvement & Refinance Plus Improvement",
+        "Rate Buydowns",
+        "Raw Land",
+        "Rent-to-Own",
+        "Reverse Mortgage",
+        "Second Mortgages",
+        "Student Housing",
+        "Switch Transfer - General Information Collateral Charge",
+        "Switch Transfer - General Information Standard Charge"
+      ],
+      "notes": "Equitable Bank Alternative division (Edge, Sapphire, Ruby, Diamond, Total Worth, and HELOC).",
+      "fees": "1.00% lender fee standard"
     }
   }
 }
