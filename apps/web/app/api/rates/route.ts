@@ -1,17 +1,43 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getLiveRatesData } from "@/lib/rates";
+import { getLiveRatesData, formatLiveRatesData } from "@/lib/rates";
+import { RawRatesFeed } from "@/types/rates";
 
 export const runtime = "nodejs";
-// Next.js ISR revalidation every 1 hour (3600 seconds)
-export const revalidate = 3600;
+// Next.js ISR revalidation every 5 minutes (300 seconds)
+export const revalidate = 300;
+
+const REMOTE_FEED_URL = process.env.RATES_FEED_URL || "https://blog.kraftmortgages.ca/current_rates.json";
+
+async function fetchRatesWithRemoteFallback() {
+  if (REMOTE_FEED_URL) {
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 3500);
+      const res = await fetch(REMOTE_FEED_URL, {
+        signal: controller.signal,
+        next: { revalidate: 300 },
+      });
+      clearTimeout(timeoutId);
+      if (res.ok) {
+        const raw = (await res.json()) as RawRatesFeed;
+        if (raw && raw.rate_benchmarks) {
+          return formatLiveRatesData(raw, REMOTE_FEED_URL);
+        }
+      }
+    } catch {
+      // Fall through to local file or embedded snapshot
+    }
+  }
+  return getLiveRatesData();
+}
 
 export async function GET() {
   try {
-    const data = getLiveRatesData();
+    const data = await fetchRatesWithRemoteFallback();
     return NextResponse.json(data, {
       status: 200,
       headers: {
-        "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=86400",
+        "Cache-Control": "public, s-maxage=300, stale-while-revalidate=86400",
         "Content-Type": "application/json",
       },
     });
@@ -30,9 +56,8 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   try {
-    // Retain compatibility with legacy POST calls or client queries
     const body = await req.json().catch(() => ({}));
-    const data = getLiveRatesData();
+    const data = await fetchRatesWithRemoteFallback();
 
     return NextResponse.json(
       {
@@ -42,7 +67,7 @@ export async function POST(req: NextRequest) {
       {
         status: 200,
         headers: {
-          "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=86400",
+          "Cache-Control": "public, s-maxage=300, stale-while-revalidate=86400",
           "Content-Type": "application/json",
         },
       }

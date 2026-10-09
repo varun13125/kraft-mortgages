@@ -1,187 +1,16 @@
 {
-  "last_synced_utc": "2026-10-05T13:31:10.407257+00:00",
+  "last_synced_utc": "2026-10-09T13:30:24.733002+00:00",
   "prime_rate_benchmark": 4.45,
+  "spotlight_snapshot": "20261009_094512",
+  "source_mode": "auto",
+  "tier_counts": {
+    "Prime": 3852,
+    "Prime-Flex": 710,
+    "Alternative": 2580,
+    "Private": 14,
+    "Specialty": 232
+  },
   "rate_benchmarks": {
-    "5_year_fixed_insured": {
-      "lowest_rate": 4.39,
-      "lowest_spread": "",
-      "leading_lender": "First National",
-      "product_family": "Insured",
-      "effective_date": "",
-      "top_offers": [
-        {
-          "lender": "First National",
-          "rate": 4.39,
-          "product": "Insured",
-          "spread": "",
-          "effective_date": ""
-        },
-        {
-          "lender": "Community Savings Credit Union",
-          "rate": 4.44,
-          "product": "Insured",
-          "spread": "",
-          "effective_date": "2026-09-16"
-        },
-        {
-          "lender": "Peoples Bank",
-          "rate": 4.49,
-          "product": "Insured",
-          "spread": "",
-          "effective_date": "2026-09-25"
-        }
-      ]
-    },
-    "5_year_fixed_insurable": {
-      "lowest_rate": 4.44,
-      "lowest_spread": "",
-      "leading_lender": "First National",
-      "product_family": "Insurable",
-      "effective_date": "",
-      "top_offers": [
-        {
-          "lender": "First National",
-          "rate": 4.44,
-          "product": "Insurable",
-          "spread": "",
-          "effective_date": ""
-        },
-        {
-          "lender": "Peoples Bank",
-          "rate": 4.49,
-          "product": "Insurable",
-          "spread": "",
-          "effective_date": "2026-09-25"
-        },
-        {
-          "lender": "FirstOntario Credit Union",
-          "rate": 4.69,
-          "product": "Insurable",
-          "spread": "",
-          "effective_date": "2026-09-22"
-        }
-      ]
-    },
-    "5_year_fixed_conventional": {
-      "lowest_rate": 4.39,
-      "lowest_spread": "",
-      "leading_lender": "Shinhan Bank Canada",
-      "product_family": "Uninsured/Conventional",
-      "effective_date": "",
-      "top_offers": [
-        {
-          "lender": "Shinhan Bank Canada",
-          "rate": 4.39,
-          "product": "Uninsured/Conventional",
-          "spread": "",
-          "effective_date": ""
-        },
-        {
-          "lender": "Coast Capital Savings",
-          "rate": 4.49,
-          "product": "Conventional",
-          "spread": "",
-          "effective_date": "2026-09-21"
-        },
-        {
-          "lender": "Home Trust",
-          "rate": 4.49,
-          "product": "Conventional",
-          "spread": "",
-          "effective_date": "2026-09-25"
-        }
-      ]
-    },
-    "3_year_fixed_insured": {
-      "lowest_rate": 4.34,
-      "lowest_spread": "",
-      "leading_lender": "Community Savings Credit Union",
-      "product_family": "Insured",
-      "effective_date": "2026-09-16",
-      "top_offers": [
-        {
-          "lender": "Community Savings Credit Union",
-          "rate": 4.34,
-          "product": "Insured",
-          "spread": "",
-          "effective_date": "2026-09-16"
-        },
-        {
-          "lender": "Peoples Bank",
-          "rate": 4.44,
-          "product": "Insured",
-          "spread": "",
-          "effective_date": "2026-09-25"
-        },
-        {
-          "lender": "Meridian",
-          "rate": 4.44,
-          "product": "Insured",
-          "spread": "",
-          "effective_date": "2026-10-02"
-        }
-      ]
-    },
-    "3_year_fixed_insurable": {
-      "lowest_rate": 4.44,
-      "lowest_spread": "",
-      "leading_lender": "Peoples Bank",
-      "product_family": "Insurable",
-      "effective_date": "2026-09-25",
-      "top_offers": [
-        {
-          "lender": "Peoples Bank",
-          "rate": 4.44,
-          "product": "Insurable",
-          "spread": "",
-          "effective_date": "2026-09-25"
-        },
-        {
-          "lender": "SERVUS Credit Union",
-          "rate": 4.54,
-          "product": "Insurable",
-          "spread": "",
-          "effective_date": "2026-09-17"
-        },
-        {
-          "lender": "UnionLink Mortgage (For Exclusive Partners Only)",
-          "rate": 4.59,
-          "product": "Insurable",
-          "spread": "",
-          "effective_date": "2026-09-12"
-        }
-      ]
-    },
-    "3_year_fixed_conventional": {
-      "lowest_rate": 4.49,
-      "lowest_spread": "",
-      "leading_lender": "Community Savings Credit Union",
-      "product_family": "Conventional",
-      "effective_date": "2026-09-16",
-      "top_offers": [
-        {
-          "lender": "Community Savings Credit Union",
-          "rate": 4.49,
-          "product": "Conventional",
-          "spread": "",
-          "effective_date": "2026-09-16"
-        },
-        {
-          "lender": "Meridian",
-          "rate": 4.49,
-          "product": "Conventional",
-          "spread": "",
-          "effective_date": "2026-10-02"
-        },
-        {
-          "lender": "Manulife Bank",
-          "rate": 4.64,
-          "product": "Conventional",
-          "spread": "",
-          "effective_date": "2026-09-18"
-        }
-      ]
-    },
     "5_year_variable_insured": {
       "lowest_rate": 3.44,
       "lowest_spread": "Prime -1.01%",
@@ -197,80 +26,92 @@
           "effective_date": "2026-10-02"
         },
         {
-          "lender": "Home Trust",
-          "rate": 3.5,
-          "product": "Insured",
-          "spread": "Prime -0.95%",
-          "effective_date": "2026-09-28"
-        },
-        {
           "lender": "FirstOntario Credit Union",
           "rate": 3.55,
           "product": "Insured",
           "spread": "Prime -0.90%",
-          "effective_date": "2026-09-29"
-        }
-      ]
-    },
-    "5_year_variable_insurable": {
-      "lowest_rate": 3.55,
-      "lowest_spread": "Prime -0.90%",
-      "leading_lender": "UnionLink Mortgage (For Exclusive Partners Only)",
-      "product_family": "Insurable",
-      "effective_date": "2026-09-29",
-      "top_offers": [
+          "effective_date": "2026-10-06"
+        },
         {
           "lender": "UnionLink Mortgage (For Exclusive Partners Only)",
           "rate": 3.55,
-          "product": "Insurable",
+          "product": "Insured",
           "spread": "Prime -0.90%",
           "effective_date": "2026-09-29"
-        },
-        {
-          "lender": "Home Trust",
-          "rate": 3.55,
-          "product": "Insurable",
-          "spread": "Prime -0.90%",
-          "effective_date": ""
-        },
-        {
-          "lender": "Marathon Mortgage",
-          "rate": 3.6,
-          "product": "Insurable",
-          "spread": "Prime -0.85%",
-          "effective_date": "2026-10-01"
         }
-      ]
+      ],
+      "median_rate": 3.75,
+      "lender_count": 36,
+      "product_count": 189,
+      "typical_lender_fee_pct": null
     },
     "5_year_variable_conventional": {
-      "lowest_rate": 3.65,
-      "lowest_spread": "Prime -0.80%",
-      "leading_lender": "Scotiabank",
+      "lowest_rate": 3.7,
+      "lowest_spread": "Prime -0.75%",
+      "leading_lender": "Desjardins",
       "product_family": "Conventional",
-      "effective_date": "2026-09-23",
+      "effective_date": "2026-10-06",
       "top_offers": [
-        {
-          "lender": "Scotiabank",
-          "rate": 3.65,
-          "product": "Conventional",
-          "spread": "Prime -0.80%",
-          "effective_date": "2026-09-23"
-        },
         {
           "lender": "Desjardins",
           "rate": 3.7,
           "product": "Conventional",
           "spread": "Prime -0.75%",
-          "effective_date": "2026-09-17"
+          "effective_date": "2026-10-06"
         },
         {
-          "lender": "Home Trust",
-          "rate": 3.7,
+          "lender": "Scotiabank",
+          "rate": 3.9,
           "product": "Conventional",
-          "spread": "Prime -0.75%",
-          "effective_date": "2026-09-25"
+          "spread": "Prime -0.55%",
+          "effective_date": "2026-10-07"
+        },
+        {
+          "lender": "CMLS Financial",
+          "rate": 3.95,
+          "product": "Conventional",
+          "spread": "Prime -0.50%",
+          "effective_date": "2026-10-09"
         }
-      ]
+      ],
+      "median_rate": 4.15,
+      "lender_count": 30,
+      "product_count": 297,
+      "typical_lender_fee_pct": null
+    },
+    "prime_flex_variable": {
+      "lowest_rate": 3.8,
+      "lowest_spread": "Prime -0.65%",
+      "leading_lender": "Shinhan Bank of Canada",
+      "product_family": "Prime-Flex",
+      "effective_date": "2026-06-10",
+      "top_offers": [
+        {
+          "lender": "Shinhan Bank of Canada",
+          "rate": 3.8,
+          "product": "Prime-Flex",
+          "spread": "Prime -0.65%",
+          "effective_date": "2026-06-10"
+        },
+        {
+          "lender": "Scotiabank",
+          "rate": 3.9,
+          "product": "Prime-Flex",
+          "spread": "Prime -0.55%",
+          "effective_date": "2026-10-07"
+        },
+        {
+          "lender": "SERVUS Credit Union",
+          "rate": 3.95,
+          "product": "Prime-Flex",
+          "spread": "Prime -0.50%",
+          "effective_date": "2026-09-17"
+        }
+      ],
+      "median_rate": 4.3,
+      "lender_count": 12,
+      "product_count": 136,
+      "typical_lender_fee_pct": null
     },
     "3_year_variable": {
       "lowest_rate": 3.55,
@@ -300,7 +141,45 @@
           "spread": "Prime -0.55%",
           "effective_date": "2026-09-25"
         }
-      ]
+      ],
+      "median_rate": 4.45,
+      "lender_count": 7,
+      "product_count": 48,
+      "typical_lender_fee_pct": null
+    },
+    "3_year_fixed_insured": {
+      "lowest_rate": 4.29,
+      "lowest_spread": "",
+      "leading_lender": "Ganaraska Financial Credit Union",
+      "product_family": "Insured",
+      "effective_date": "2026-04-02",
+      "top_offers": [
+        {
+          "lender": "Ganaraska Financial Credit Union",
+          "rate": 4.29,
+          "product": "Insured",
+          "spread": "",
+          "effective_date": "2026-04-02"
+        },
+        {
+          "lender": "Desjardins",
+          "rate": 4.39,
+          "product": "Insured",
+          "spread": "",
+          "effective_date": "2026-10-06"
+        },
+        {
+          "lender": "Meridian",
+          "rate": 4.44,
+          "product": "Insured",
+          "spread": "",
+          "effective_date": "2026-10-02"
+        }
+      ],
+      "median_rate": 4.84,
+      "lender_count": 35,
+      "product_count": 133,
+      "typical_lender_fee_pct": null
     },
     "2_year_fixed": {
       "lowest_rate": 4.34,
@@ -317,71 +196,45 @@
           "effective_date": "2026-09-17"
         },
         {
-          "lender": "Community Savings Credit Union",
-          "rate": 4.54,
-          "product": "Conventional",
+          "lender": "Scotiabank",
+          "rate": 4.44,
+          "product": "Insured",
           "spread": "",
-          "effective_date": "2026-09-16"
+          "effective_date": "2026-10-07"
         },
         {
-          "lender": "Coast Capital Savings",
-          "rate": 4.69,
+          "lender": "Ganaraska Financial Credit Union",
+          "rate": 4.49,
           "product": "Conventional",
           "spread": "",
-          "effective_date": "2026-09-21"
+          "effective_date": "2026-04-02"
         }
-      ]
-    },
-    "1_year_fixed": {
-      "lowest_rate": 4.19,
-      "lowest_spread": "",
-      "leading_lender": "UnionLink Mortgage (For Exclusive Partners Only)",
-      "product_family": "Conventional",
-      "effective_date": "2026-09-29",
-      "top_offers": [
-        {
-          "lender": "UnionLink Mortgage (For Exclusive Partners Only)",
-          "rate": 4.19,
-          "product": "Conventional",
-          "spread": "",
-          "effective_date": "2026-09-29"
-        },
-        {
-          "lender": "DUCA (Near Prime)",
-          "rate": 4.19,
-          "product": "Conventional",
-          "spread": "",
-          "effective_date": "2026-09-18"
-        },
-        {
-          "lender": "First National Excalibur",
-          "rate": 4.59,
-          "product": "Conventional",
-          "spread": "",
-          "effective_date": "2026-09-10"
-        }
-      ]
+      ],
+      "median_rate": 5.14,
+      "lender_count": 32,
+      "product_count": 349,
+      "typical_lender_fee_pct": null
     },
     "4_year_fixed": {
       "lowest_rate": 4.39,
       "lowest_spread": "",
-      "leading_lender": "Community Savings Credit Union",
+      "leading_lender": "Desjardins",
       "product_family": "Insured",
-      "effective_date": "2026-09-16",
+      "effective_date": "2026-10-06",
       "top_offers": [
         {
-          "lender": "Community Savings Credit Union",
+          "lender": "Desjardins",
           "rate": 4.39,
           "product": "Insured",
           "spread": "",
-          "effective_date": "2026-09-16"
+          "effective_date": "2026-10-06"
         },
         {
           "lender": "Home Trust",
           "rate": 4.39,
           "product": "Insured",
           "spread": "",
-          "effective_date": "2026-09-28"
+          "effective_date": "2026-10-08"
         },
         {
           "lender": "SERVUS Credit Union",
@@ -390,7 +243,490 @@
           "spread": "",
           "effective_date": "2026-09-17"
         }
-      ]
+      ],
+      "median_rate": 5.14,
+      "lender_count": 31,
+      "product_count": 381,
+      "typical_lender_fee_pct": null
+    },
+    "5_year_fixed_insured": {
+      "lowest_rate": 4.29,
+      "lowest_spread": "",
+      "leading_lender": "Coastal Community",
+      "product_family": "Insured",
+      "effective_date": "2025-09-18",
+      "top_offers": [
+        {
+          "lender": "Coastal Community",
+          "rate": 4.29,
+          "product": "Insured",
+          "spread": "",
+          "effective_date": "2025-09-18"
+        },
+        {
+          "lender": "Desjardins",
+          "rate": 4.39,
+          "product": "Insured",
+          "spread": "",
+          "effective_date": "2026-10-06"
+        },
+        {
+          "lender": "First National",
+          "rate": 4.39,
+          "product": "Insured",
+          "spread": "",
+          "effective_date": ""
+        }
+      ],
+      "median_rate": 4.89,
+      "lender_count": 38,
+      "product_count": 226,
+      "typical_lender_fee_pct": null
+    },
+    "heloc": {
+      "lowest_rate": 4.85,
+      "lowest_spread": "",
+      "leading_lender": "Envision Financial",
+      "product_family": "HELOC",
+      "effective_date": "2026-09-23",
+      "top_offers": [
+        {
+          "lender": "Envision Financial",
+          "rate": 4.85,
+          "product": "HELOC",
+          "spread": "",
+          "effective_date": "2026-09-23"
+        },
+        {
+          "lender": "Island Savings",
+          "rate": 4.85,
+          "product": "HELOC",
+          "spread": "",
+          "effective_date": "2026-09-23"
+        },
+        {
+          "lender": "Valley First",
+          "rate": 4.85,
+          "product": "HELOC",
+          "spread": "",
+          "effective_date": "2026-09-23"
+        }
+      ],
+      "median_rate": 5.3,
+      "lender_count": 17,
+      "product_count": 56,
+      "typical_lender_fee_pct": null
+    },
+    "3_year_fixed_conventional": {
+      "lowest_rate": 4.39,
+      "lowest_spread": "",
+      "leading_lender": "Ganaraska Financial Credit Union",
+      "product_family": "Conventional",
+      "effective_date": "2026-04-02",
+      "top_offers": [
+        {
+          "lender": "Ganaraska Financial Credit Union",
+          "rate": 4.39,
+          "product": "Conventional",
+          "spread": "",
+          "effective_date": "2026-04-02"
+        },
+        {
+          "lender": "Meridian",
+          "rate": 4.49,
+          "product": "Conventional",
+          "spread": "",
+          "effective_date": "2026-10-02"
+        },
+        {
+          "lender": "Desjardins",
+          "rate": 4.49,
+          "product": "Conventional",
+          "spread": "",
+          "effective_date": "2026-10-06"
+        }
+      ],
+      "median_rate": 5.14,
+      "lender_count": 28,
+      "product_count": 262,
+      "typical_lender_fee_pct": null
+    },
+    "1_year_fixed": {
+      "lowest_rate": 4.64,
+      "lowest_spread": "",
+      "leading_lender": "Scotiabank",
+      "product_family": "Insured",
+      "effective_date": "2026-10-07",
+      "top_offers": [
+        {
+          "lender": "Scotiabank",
+          "rate": 4.64,
+          "product": "Insured",
+          "spread": "",
+          "effective_date": "2026-10-07"
+        },
+        {
+          "lender": "Envision Financial",
+          "rate": 4.74,
+          "product": "Insured",
+          "spread": "",
+          "effective_date": "2026-09-23"
+        },
+        {
+          "lender": "Island Savings",
+          "rate": 4.74,
+          "product": "Insured",
+          "spread": "",
+          "effective_date": "2026-09-23"
+        }
+      ],
+      "median_rate": 5.59,
+      "lender_count": 30,
+      "product_count": 359,
+      "typical_lender_fee_pct": null
+    },
+    "5_year_fixed_conventional": {
+      "lowest_rate": 4.39,
+      "lowest_spread": "",
+      "leading_lender": "Shinhan Bank Canada",
+      "product_family": "Uninsured/Conventional",
+      "effective_date": "",
+      "top_offers": [
+        {
+          "lender": "Shinhan Bank Canada",
+          "rate": 4.39,
+          "product": "Uninsured/Conventional",
+          "spread": "",
+          "effective_date": ""
+        },
+        {
+          "lender": "Desjardins",
+          "rate": 4.54,
+          "product": "Conventional",
+          "spread": "",
+          "effective_date": "2026-10-06"
+        },
+        {
+          "lender": "Coastal Community",
+          "rate": 4.64,
+          "product": "Conventional",
+          "spread": "",
+          "effective_date": "2025-09-18"
+        }
+      ],
+      "median_rate": 5.19,
+      "lender_count": 33,
+      "product_count": 341,
+      "typical_lender_fee_pct": null
+    },
+    "prime_flex_fixed": {
+      "lowest_rate": 4.29,
+      "lowest_spread": "",
+      "leading_lender": "Shinhan Bank of Canada",
+      "product_family": "Prime-Flex",
+      "effective_date": "2026-06-10",
+      "top_offers": [
+        {
+          "lender": "Shinhan Bank of Canada",
+          "rate": 4.29,
+          "product": "Prime-Flex",
+          "spread": "",
+          "effective_date": "2026-06-10"
+        },
+        {
+          "lender": "SERVUS Credit Union",
+          "rate": 4.49,
+          "product": "Prime-Flex",
+          "spread": "",
+          "effective_date": "2026-09-17"
+        },
+        {
+          "lender": "Scotiabank",
+          "rate": 4.64,
+          "product": "Prime-Flex",
+          "spread": "",
+          "effective_date": "2026-10-07"
+        }
+      ],
+      "median_rate": 5.34,
+      "lender_count": 13,
+      "product_count": 574,
+      "typical_lender_fee_pct": null
+    },
+    "alt_variable": {
+      "lowest_rate": 4.84,
+      "lowest_spread": "Prime +0.39%",
+      "leading_lender": "AVEO by CMLS Financial",
+      "product_family": "Alternative",
+      "effective_date": "2026-10-08",
+      "top_offers": [
+        {
+          "lender": "AVEO by CMLS Financial",
+          "rate": 4.84,
+          "product": "Alternative",
+          "spread": "Prime +0.39%",
+          "effective_date": "2026-10-08"
+        },
+        {
+          "lender": "CTBC Bank",
+          "rate": 4.9,
+          "product": "Alternative",
+          "spread": "Prime +0.20%",
+          "effective_date": "2025-11-03"
+        },
+        {
+          "lender": "B2B Bank Alternative",
+          "rate": 4.95,
+          "product": "Alternative",
+          "spread": "Prime -0.40%",
+          "effective_date": "2026-09-30"
+        }
+      ],
+      "median_rate": 5.35,
+      "lender_count": 7,
+      "product_count": 74,
+      "typical_lender_fee_pct": null,
+      "premium_over_prime_bps": 114
+    },
+    "alt_2_year_fixed": {
+      "lowest_rate": 4.89,
+      "lowest_spread": "",
+      "leading_lender": "First National Excalibur",
+      "product_family": "Alternative",
+      "effective_date": "2026-09-10",
+      "top_offers": [
+        {
+          "lender": "First National Excalibur",
+          "rate": 4.89,
+          "product": "Alternative",
+          "spread": "",
+          "effective_date": "2026-09-10"
+        },
+        {
+          "lender": "DUCA (Near Prime)",
+          "rate": 4.99,
+          "product": "Alternative",
+          "spread": "",
+          "effective_date": "2026-09-18"
+        },
+        {
+          "lender": "Aspire by Strive Capital",
+          "rate": 4.99,
+          "product": "Alternative",
+          "spread": "",
+          "effective_date": "2026-06-30"
+        }
+      ],
+      "median_rate": 5.79,
+      "lender_count": 22,
+      "product_count": 368,
+      "typical_lender_fee_pct": 1.0
+    },
+    "alt_3_year_fixed": {
+      "lowest_rate": 5.04,
+      "lowest_spread": "",
+      "leading_lender": "First National Excalibur",
+      "product_family": "Alternative",
+      "effective_date": "2026-09-10",
+      "top_offers": [
+        {
+          "lender": "First National Excalibur",
+          "rate": 5.04,
+          "product": "Alternative",
+          "spread": "",
+          "effective_date": "2026-09-10"
+        },
+        {
+          "lender": "DUCA (Near Prime)",
+          "rate": 5.09,
+          "product": "Alternative",
+          "spread": "",
+          "effective_date": "2026-09-18"
+        },
+        {
+          "lender": "FirstOntario Credit Union (Alt A)",
+          "rate": 5.09,
+          "product": "Alternative",
+          "spread": "",
+          "effective_date": "2026-10-06"
+        }
+      ],
+      "median_rate": 5.89,
+      "lender_count": 21,
+      "product_count": 353,
+      "typical_lender_fee_pct": 1.0,
+      "premium_over_prime_bps": 65
+    },
+    "alt_1_year_fixed": {
+      "lowest_rate": 4.19,
+      "lowest_spread": "",
+      "leading_lender": "DUCA (Near Prime)",
+      "product_family": "Alternative",
+      "effective_date": "2026-09-18",
+      "top_offers": [
+        {
+          "lender": "DUCA (Near Prime)",
+          "rate": 4.19,
+          "product": "Alternative",
+          "spread": "",
+          "effective_date": "2026-09-18"
+        },
+        {
+          "lender": "UnionLink Mortgage (For Exclusive Partners Only)",
+          "rate": 4.19,
+          "product": "Alternative",
+          "spread": "",
+          "effective_date": "2026-09-29"
+        },
+        {
+          "lender": "First National Excalibur",
+          "rate": 4.59,
+          "product": "Alternative",
+          "spread": "",
+          "effective_date": "2026-09-10"
+        }
+      ],
+      "median_rate": 5.69,
+      "lender_count": 22,
+      "product_count": 412,
+      "typical_lender_fee_pct": 1.0
+    },
+    "alt_5_year_fixed": {
+      "lowest_rate": 5.19,
+      "lowest_spread": "",
+      "leading_lender": "DUCA (Near Prime)",
+      "product_family": "Alternative",
+      "effective_date": "2026-09-18",
+      "top_offers": [
+        {
+          "lender": "DUCA (Near Prime)",
+          "rate": 5.19,
+          "product": "Alternative",
+          "spread": "",
+          "effective_date": "2026-09-18"
+        },
+        {
+          "lender": "Effort Trust",
+          "rate": 5.2,
+          "product": "Alternative",
+          "spread": "",
+          "effective_date": "2026-10-08"
+        },
+        {
+          "lender": "NPX",
+          "rate": 5.29,
+          "product": "Alternative",
+          "spread": "",
+          "effective_date": "2026-10-06"
+        }
+      ],
+      "median_rate": 6.19,
+      "lender_count": 10,
+      "product_count": 157,
+      "typical_lender_fee_pct": 1.0,
+      "premium_over_prime_bps": 80
+    },
+    "5_year_variable_insurable": {
+      "lowest_rate": 3.55,
+      "lowest_spread": "Prime -0.90%",
+      "leading_lender": "UnionLink Mortgage (For Exclusive Partners Only)",
+      "product_family": "Insurable",
+      "effective_date": "2026-09-29",
+      "top_offers": [
+        {
+          "lender": "UnionLink Mortgage (For Exclusive Partners Only)",
+          "rate": 3.55,
+          "product": "Insurable",
+          "spread": "Prime -0.90%",
+          "effective_date": "2026-09-29"
+        },
+        {
+          "lender": "Home Trust",
+          "rate": 3.55,
+          "product": "Insurable",
+          "spread": "Prime -0.90%",
+          "effective_date": ""
+        },
+        {
+          "lender": "Marathon Mortgage",
+          "rate": 3.6,
+          "product": "Insurable",
+          "spread": "Prime -0.85%",
+          "effective_date": "2026-10-01"
+        }
+      ],
+      "median_rate": 3.95,
+      "lender_count": 28,
+      "product_count": 258,
+      "typical_lender_fee_pct": null
+    },
+    "3_year_fixed_insurable": {
+      "lowest_rate": 4.54,
+      "lowest_spread": "",
+      "leading_lender": "SERVUS Credit Union",
+      "product_family": "Insurable",
+      "effective_date": "2026-09-17",
+      "top_offers": [
+        {
+          "lender": "SERVUS Credit Union",
+          "rate": 4.54,
+          "product": "Insurable",
+          "spread": "",
+          "effective_date": "2026-09-17"
+        },
+        {
+          "lender": "Meridian",
+          "rate": 4.59,
+          "product": "Insurable",
+          "spread": "",
+          "effective_date": "2026-10-02"
+        },
+        {
+          "lender": "Peoples Bank",
+          "rate": 4.59,
+          "product": "Insurable",
+          "spread": "",
+          "effective_date": "2026-10-07"
+        }
+      ],
+      "median_rate": 5.04,
+      "lender_count": 25,
+      "product_count": 137,
+      "typical_lender_fee_pct": null
+    },
+    "5_year_fixed_insurable": {
+      "lowest_rate": 4.44,
+      "lowest_spread": "",
+      "leading_lender": "First National",
+      "product_family": "Insurable",
+      "effective_date": "",
+      "top_offers": [
+        {
+          "lender": "First National",
+          "rate": 4.44,
+          "product": "Insurable",
+          "spread": "",
+          "effective_date": ""
+        },
+        {
+          "lender": "Peoples Bank",
+          "rate": 4.49,
+          "product": "Insurable",
+          "spread": "",
+          "effective_date": "2026-10-07"
+        },
+        {
+          "lender": "Coastal Community",
+          "rate": 4.54,
+          "product": "Insurable",
+          "spread": "",
+          "effective_date": "2025-09-18"
+        }
+      ],
+      "median_rate": 5.09,
+      "lender_count": 29,
+      "product_count": 367,
+      "typical_lender_fee_pct": null
     },
     "6_month_fixed": {
       "lowest_rate": 3.99,
@@ -411,83 +747,163 @@
           "rate": 4.14,
           "product": "Insured",
           "spread": "",
-          "effective_date": "2026-09-26"
+          "effective_date": "2026-10-06"
         },
         {
-          "lender": "HomeEquity Bank",
-          "rate": 7.99,
+          "lender": "TD Canada Trust",
+          "rate": 5.49,
           "product": "Conventional",
           "spread": "",
-          "effective_date": "2026-08-31"
+          "effective_date": "2026-09-29"
         }
-      ]
+      ],
+      "median_rate": 5.54,
+      "lender_count": 3,
+      "product_count": 54,
+      "typical_lender_fee_pct": null
     },
-    "heloc": {
-      "lowest_rate": 4.95,
+    "alt_bfs_stated_income": {
+      "lowest_rate": 4.64,
       "lowest_spread": "",
-      "leading_lender": "Coast Capital Savings",
-      "product_family": "HELOC",
-      "effective_date": "2026-09-21",
+      "leading_lender": "Peoples Bank",
+      "product_family": "Alternative (BFS)",
+      "effective_date": "2026-10-07",
       "top_offers": [
         {
-          "lender": "Coast Capital Savings",
-          "rate": 4.95,
+          "lender": "Peoples Bank",
+          "rate": 4.64,
+          "product": "Alternative (BFS)",
+          "spread": "",
+          "effective_date": "2026-10-07"
+        },
+        {
+          "lender": "CTBC Bank",
+          "rate": 4.65,
+          "product": "Alternative (BFS)",
+          "spread": "Prime +0.20%",
+          "effective_date": "2025-11-03"
+        },
+        {
+          "lender": "EQ Bank",
+          "rate": 4.69,
+          "product": "Alternative (BFS)",
+          "spread": "Prime +0.24%",
+          "effective_date": "2026-10-01"
+        }
+      ],
+      "median_rate": 5.74,
+      "lender_count": 23,
+      "product_count": 1053,
+      "typical_lender_fee_pct": 1.0
+    },
+    "alt_heloc": {
+      "lowest_rate": 5.74,
+      "lowest_spread": "",
+      "leading_lender": "EQ Bank",
+      "product_family": "HELOC",
+      "effective_date": "2026-10-01",
+      "top_offers": [
+        {
+          "lender": "EQ Bank",
+          "rate": 5.74,
           "product": "HELOC",
           "spread": "",
-          "effective_date": "2026-09-21"
+          "effective_date": "2026-10-01"
+        },
+        {
+          "lender": "Home Trust",
+          "rate": 5.99,
+          "product": "HELOC",
+          "spread": "",
+          "effective_date": "2026-10-08"
+        },
+        {
+          "lender": "First National Excalibur",
+          "rate": 7.7,
+          "product": "HELOC",
+          "spread": "",
+          "effective_date": "2026-09-10"
         }
-      ]
+      ],
+      "median_rate": 9.74,
+      "lender_count": 3,
+      "product_count": 81,
+      "typical_lender_fee_pct": null
     },
-    "5_year_fixed": {
-      "lowest_rate": 4.39,
+    "private_second": {
+      "lowest_rate": 7.99,
       "lowest_spread": "",
-      "leading_lender": "First National",
-      "product_family": "Insured",
+      "leading_lender": "Sequence Capital",
+      "product_family": "Private 2nd",
       "effective_date": "",
       "top_offers": [
+        {
+          "lender": "Sequence Capital",
+          "rate": 7.99,
+          "product": "Private 2nd",
+          "spread": "",
+          "effective_date": ""
+        }
+      ],
+      "median_rate": 9.24,
+      "lender_count": 1,
+      "product_count": 6,
+      "typical_lender_fee_pct": null
+    },
+    "5_year_fixed": {
+      "lowest_rate": 4.29,
+      "lowest_spread": "",
+      "leading_lender": "Coastal Community",
+      "product_family": "Insured",
+      "effective_date": "2025-09-18",
+      "top_offers": [
+        {
+          "lender": "Coastal Community",
+          "rate": 4.29,
+          "product": "Insured",
+          "spread": "",
+          "effective_date": "2025-09-18"
+        },
+        {
+          "lender": "Desjardins",
+          "rate": 4.39,
+          "product": "Insured",
+          "spread": "",
+          "effective_date": "2026-10-06"
+        },
         {
           "lender": "First National",
           "rate": 4.39,
           "product": "Insured",
           "spread": "",
           "effective_date": ""
-        },
-        {
-          "lender": "Community Savings Credit Union",
-          "rate": 4.44,
-          "product": "Insured",
-          "spread": "",
-          "effective_date": "2026-09-16"
-        },
-        {
-          "lender": "Peoples Bank",
-          "rate": 4.49,
-          "product": "Insured",
-          "spread": "",
-          "effective_date": "2026-09-25"
         }
-      ]
+      ],
+      "median_rate": 4.89,
+      "lender_count": 38,
+      "product_count": 226,
+      "typical_lender_fee_pct": null
     },
     "3_year_fixed": {
-      "lowest_rate": 4.34,
+      "lowest_rate": 4.29,
       "lowest_spread": "",
-      "leading_lender": "Community Savings Credit Union",
+      "leading_lender": "Ganaraska Financial Credit Union",
       "product_family": "Insured",
-      "effective_date": "2026-09-16",
+      "effective_date": "2026-04-02",
       "top_offers": [
         {
-          "lender": "Community Savings Credit Union",
-          "rate": 4.34,
+          "lender": "Ganaraska Financial Credit Union",
+          "rate": 4.29,
           "product": "Insured",
           "spread": "",
-          "effective_date": "2026-09-16"
+          "effective_date": "2026-04-02"
         },
         {
-          "lender": "Peoples Bank",
-          "rate": 4.44,
+          "lender": "Desjardins",
+          "rate": 4.39,
           "product": "Insured",
           "spread": "",
-          "effective_date": "2026-09-25"
+          "effective_date": "2026-10-06"
         },
         {
           "lender": "Meridian",
@@ -496,7 +912,11 @@
           "spread": "",
           "effective_date": "2026-10-02"
         }
-      ]
+      ],
+      "median_rate": 4.84,
+      "lender_count": 35,
+      "product_count": 133,
+      "typical_lender_fee_pct": null
     },
     "5_year_variable": {
       "lowest_rate": 3.44,
@@ -513,82 +933,119 @@
           "effective_date": "2026-10-02"
         },
         {
-          "lender": "Home Trust",
-          "rate": 3.5,
+          "lender": "FirstOntario Credit Union",
+          "rate": 3.55,
           "product": "Insured",
-          "spread": "Prime -0.95%",
-          "effective_date": "2026-09-28"
+          "spread": "Prime -0.90%",
+          "effective_date": "2026-10-06"
         },
         {
-          "lender": "FirstOntario Credit Union",
+          "lender": "UnionLink Mortgage (For Exclusive Partners Only)",
           "rate": 3.55,
           "product": "Insured",
           "spread": "Prime -0.90%",
           "effective_date": "2026-09-29"
         }
-      ]
+      ],
+      "median_rate": 3.75,
+      "lender_count": 36,
+      "product_count": 189,
+      "typical_lender_fee_pct": null
     }
+  },
+  "benchmark_groups": {
+    "prime": [
+      "5_year_fixed_insured",
+      "5_year_fixed_insurable",
+      "5_year_fixed_conventional",
+      "3_year_fixed_insured",
+      "3_year_fixed_insurable",
+      "3_year_fixed_conventional",
+      "2_year_fixed",
+      "1_year_fixed",
+      "4_year_fixed",
+      "6_month_fixed",
+      "5_year_variable_insured",
+      "5_year_variable_insurable",
+      "5_year_variable_conventional",
+      "3_year_variable",
+      "heloc",
+      "private_second"
+    ],
+    "alternative": [
+      "alt_1_year_fixed",
+      "alt_2_year_fixed",
+      "alt_3_year_fixed",
+      "alt_5_year_fixed",
+      "alt_variable",
+      "alt_bfs_stated_income",
+      "alt_heloc"
+    ],
+    "prime_flex": [
+      "prime_flex_fixed",
+      "prime_flex_variable"
+    ]
   },
   "recent_changelog": [
     {
-      "timestamp": "2026-10-05T13:30:59.474194+00:00",
-      "action": "Intraday Rate Alert",
-      "lender": "Yiannisandreou",
-      "details": "Promotional email offering fee split arrangement for declined residential and commercial private mortgage files, positioning sender as last "
+      "timestamp": "2026-10-09T09:54:16.533684+00:00",
+      "action": "Full Harvest Sync",
+      "lender": "National Lenders",
+      "details": "Automated harvest: 7365 rates and 0 guidelines updated."
     },
     {
-      "timestamp": "2026-10-05T13:30:58.013294+00:00",
+      "timestamp": "2026-10-09T04:54:59.995970+00:00",
       "action": "Intraday Rate Alert",
-      "lender": "Strive Capital",
-      "details": "Strive Capital announces a 5-year ARM bonus comp promo at Prime -0.75% (135 BPS total comp) or Prime -0.85% (95 BPS total comp) for insured "
+      "lender": "First National",
+      "details": "First National is offering a limited-time 5-year variable ARM at Prime -0.50% for uninsurable conventional mortgages up to 80% LTV, ending m"
     },
     {
-      "timestamp": "2026-10-03T13:33:46.606235+00:00",
+      "timestamp": "2026-10-08T13:30:29.732904+00:00",
       "action": "Intraday Rate Alert",
-      "lender": "Kraftmortgages",
-      "details": "Commercial refinance inquiry for Chilko Lake Resort Ltd. (Brian Regehr) on a 50-acre BC resort property; borrower net worth ~6.3M, valuation"
+      "lender": "Glasslake",
+      "details": "Glasslake promotes flexible deal structuring: choose either a higher rate with a 0.5% lender fee or a lower rate with the lender fee re"
     },
     {
-      "timestamp": "2026-10-03T13:33:45.235231+00:00",
+      "timestamp": "2026-10-08T09:00:23.412137+00:00",
       "action": "Intraday Rate Alert",
-      "lender": "Kraftmortgages",
-      "details": "Commercial refinance inquiry on a 50-acre Chilko Lake, BC resort (Chilko Lake Resort Ltd. / Brian Regehr, ~6.3M net worth) seeking up to ~.0"
+      "lender": "Home Trust",
+      "details": "This is a non-rate marketing/invitation email from Home Trust regarding an invite-only broker appreciation party at Major Tom in Calgary dur"
     },
     {
-      "timestamp": "2026-10-03T13:33:44.006488+00:00",
-      "action": "Intraday Rate Alert",
-      "lender": "Kraftmortgages",
-      "details": "Commercial refinance inquiry for Chilko Lake Resort, BC: 50-acre resort property, borrower net worth ~6.3M, valuation ~.78M, current payout "
-    },
-    {
-      "timestamp": "2026-10-03T09:03:32.570399+00:00",
-      "action": "Intraday Rate Alert",
-      "lender": "Kraftmortgages",
-      "details": "Commercial refinance inquiry for Chilko Lake Resort, a 50-acre BC resort property with borrower net worth ~6.3M, property valuation ~.78M, c"
-    },
-    {
-      "timestamp": "2026-10-03T09:03:30.442575+00:00",
-      "action": "Intraday Rate Alert",
-      "lender": "Spirepacific",
-      "details": "Out-of-office auto-reply from Chris Enns (Managing Partner, Spire Pacific Capital) indicating limited email access until October 4th, with W"
-    },
-    {
-      "timestamp": "2026-10-03T04:39:06.231856+00:00",
-      "action": "Intraday Rate Alert",
-      "lender": "Kraftmortgages",
-      "details": "Commercial refinance opportunity for Chilko Lake Resort Ltd. (Brian Regehr) on a 50-acre resort property in BC. Seeking up to ~.0M refinance"
-    },
-    {
-      "timestamp": "2026-10-02T13:31:10.545368+00:00",
-      "action": "Intraday Rate Alert",
-      "lender": "AAREA Capital",
-      "details": "AAREA Capital shares its Summer 2026 broker brochure and lending guide, highlighting private lending appetite for equity take-outs, maturing"
-    },
-    {
-      "timestamp": "2026-10-02T13:31:08.641192+00:00",
+      "timestamp": "2026-10-08T04:53:37.552323+00:00",
       "action": "Intraday Rate Alert",
       "lender": "BMO Bank of Montreal",
-      "details": "No rate changes today for Western Canada; BMO BrokerEdge highlights new pricing applications effective Sept 25, 2026, Fall Cash Back up to ,"
+      "details": "BMO BrokerEdge advises fixed rates increased, but no rate table was included in the email. Key submission reminders were updated, including "
+    },
+    {
+      "timestamp": "2026-10-07T13:30:50.456996+00:00",
+      "action": "Intraday Rate Alert",
+      "lender": "First National",
+      "details": "Event invitation only \u2014 First National is hosting a Broker Advisory Panel on Wednesday, October 14, 2026, 1:00\u20135:00 p.m. at its Toronto head"
+    },
+    {
+      "timestamp": "2026-10-07T13:30:48.828403+00:00",
+      "action": "Intraday Rate Alert",
+      "lender": "Strive Capital",
+      "details": "Strive Capital's Aspire alt lending program promotes an upcoming webinar and lists current best fixed rates starting at 4.89% for 1-year, 4."
+    },
+    {
+      "timestamp": "2026-10-07T09:00:53.799991+00:00",
+      "action": "Intraday Rate Alert",
+      "lender": "Scotiabank",
+      "details": "Scotiabank (Scotia Mortgage Authority) announced a rate increase effective October 7, 2026. No change to 5-year VRM. 25-30 year amortization"
+    },
+    {
+      "timestamp": "2026-10-07T09:00:51.941069+00:00",
+      "action": "Intraday Rate Alert",
+      "lender": "Sequence Capital",
+      "details": "Sequence Capital announces a 2nd mortgage rate sale with urban LTV-based pricing from 7.99% to 9.99% and rural LTV-based pricing from 8.99% "
+    },
+    {
+      "timestamp": "2026-10-07T04:56:56.801127+00:00",
+      "action": "Intraday Rate Alert",
+      "lender": "Hanafn",
+      "details": "RML promotion fixed rates increased by 5 bps effective October 5, 2026, while variable rates remained unchanged; a further fixed-rate increa"
     }
   ]
 }

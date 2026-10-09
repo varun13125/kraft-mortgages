@@ -206,10 +206,9 @@ function isDateToday(isoString: string): boolean {
 }
 
 /**
- * Main public getter returning structured, verified mortgage rates intelligence.
+ * Main public formatter returning structured, verified mortgage rates intelligence.
  */
-export function getLiveRatesData(): RatesApiResponse {
-  const { feed, source } = readRawRatesFeed();
+export function formatLiveRatesData(feed: RawRatesFeed, source: string): RatesApiResponse {
   const rb = feed.rate_benchmarks || {};
   const fb = VERIFIED_SNAPSHOT.rate_benchmarks;
   const prime = feed.prime_rate_benchmark || 4.45;
@@ -452,6 +451,14 @@ export function getLiveRatesData(): RatesApiResponse {
     featured_rates: featuredRates,
     all_rates: allRates,
   };
+}
+
+/**
+ * Main public getter returning structured, verified mortgage rates intelligence.
+ */
+export function getLiveRatesData(): RatesApiResponse {
+  const { feed, source } = readRawRatesFeed();
+  return formatLiveRatesData(feed, source);
 }
 
 /**
