@@ -52,7 +52,7 @@ export interface LenderAppraisalPolicy {
   avmNotes?: string;
   appraiserListPdfUrl?: string;
   hasApprovedAppraiserList?: boolean;
-  approvedAppraisersCount?: number;
+  approvedAppraisersCount?: number | null;
   appraiserAttachments?: LenderAttachmentItem[];
 }
 
@@ -68,7 +68,7 @@ export interface LenderLegalPolicy {
   titleInsuranceNotes?: string;
   ilaRequiredNotes?: string;
   closingNotes?: string;
-  approvedLawyersCount?: number;
+  approvedLawyersCount?: number | null;
   lawyerAttachments?: LenderAttachmentItem[];
 }
 
