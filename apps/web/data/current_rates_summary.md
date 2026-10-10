@@ -1,7 +1,7 @@
 # Kraft Mortgages — Live Verified Rate Intelligence Summary
-**Last Synchronized:** 2026-10-09T17:14:50.623626+00:00
+**Last Synchronized:** 2026-10-10T04:46:01.835558+00:00
 **Bank of Canada Prime Rate:** 4.45%
-**Spotlight Snapshot:** 20261009_094512 | **Source Mode:** auto
+**Spotlight Snapshot:** 20261010_043004 | **Source Mode:** auto
 **Audit Integrity:** Verified active feeds (Spotlight Pro + Intraday BDM Blasts)
 
 ## Prime Benchmarks (A-Lenders: Insured / Insurable / Conventional)
@@ -28,9 +28,9 @@
 _Uninsured products from alternative lenders (e.g. Home Trust Classic, Equitable, Excalibur, B2B Alternative, RFA Alternative). Premium is measured against the matching prime conventional benchmark; most B-lenders also charge a lender fee._
 | Term & Structure | Lowest Rate | Spread / Formula | Leading Program | Median | Lenders | Premium vs Prime | Typical Fee |
 |---|---|---|---|---|---|---|---|
-| B-Lender 1-Year Fixed | **4.19%** | Fixed | Alternative (DUCA (Near Prime)) | 5.64% | 24 | - | 1.00% |
-| B-Lender 2-Year Fixed | **4.89%** | Fixed | Alternative (First National Excalibur) | 5.79% | 24 | - | 1.00% |
-| B-Lender 3-Year Fixed | **5.04%** | Fixed | Alternative (BFS) (First National Excalibur) | 5.84% | 22 | +65 bps | 1.00% |
+| B-Lender 1-Year Fixed | **4.19%** | Fixed | Alternative (DUCA (Near Prime)) | 5.64% | 25 | - | 1.00% |
+| B-Lender 2-Year Fixed | **4.89%** | Fixed | Alternative (First National Excalibur) | 5.84% | 25 | - | 1.00% |
+| B-Lender 3-Year Fixed | **5.09%** | Fixed | Alternative (BFS) (Envision Financial) | 5.89% | 23 | +70 bps | 1.00% |
 | B-Lender 5-Year Fixed | **5.04%** | Fixed | Alternative (BFS) (Aspire by Strive Capital) | 6.09% | 14 | +65 bps | 1.00% |
 | B-Lender Variable (any term) | **4.65%** | Prime +0.20% | Alternative (BFS) (CTBC Bank) | 5.35% | 10 | +95 bps | 1.00% |
 | B-Lender BFS / Stated Income (any term) | **4.64%** | Fixed | Alternative (Near Prime BFS) (Peoples Bank Alternative) | 5.74% | 20 | - | 1.00% |
@@ -78,8 +78,8 @@ _Uninsured products from alternative lenders (e.g. Home Trust Classic, Equitable
 ## Recent Verified Rate Sheet Updates
 | Date | Lender | Update Note |
 |---|---|---|
+| 2026-10-10 | Home Trust | Home Trust Classic 1-year rate now starts at 5.29% effective October 6, 2026. Rates for 1, 2, and 3-year terms are 5.29%, 5.39%, and 5.49% r |
+| 2026-10-10 | Shinhan Bank | Shinhan Bank Canada is offering a 0.05% mortgage rate discount to clients who open a Shinhan Bank account and set it up as their pre-authori |
+| 2026-10-10 | Coast Capital | Coast Capital is changing its 5-year fixed conventional mortgage rate to 5.34%, with +10 bps adjustments for 30-year amortization and rental |
 | 2026-10-09 | National Lenders | Automated harvest: 7365 rates and 0 guidelines updated. |
 | 2026-10-09 | First National | First National is offering a limited-time 5-year variable ARM at Prime -0.50% for uninsurable conventional mortgages up to 80% LTV, ending m |
-| 2026-10-08 | Glasslake | Glasslake promotes flexible deal structuring: choose either a higher rate with a 0.5% lender fee or a lower rate with the lender fee re |
-| 2026-10-08 | Home Trust | This is a non-rate marketing/invitation email from Home Trust regarding an invite-only broker appreciation party at Major Tom in Calgary dur |
-| 2026-10-08 | BMO Bank of Montreal | BMO BrokerEdge advises fixed rates increased, but no rate table was included in the email. Key submission reminders were updated, including  |
