@@ -1,5 +1,5 @@
 {
-  "last_synced_utc": "2026-10-10T04:46:01.835558+00:00",
+  "last_synced_utc": "2026-10-10T13:30:19.659115+00:00",
   "prime_rate_benchmark": 4.45,
   "spotlight_snapshot": "20261010_043004",
   "source_mode": "auto",
@@ -1100,6 +1100,12 @@
   },
   "recent_changelog": [
     {
+      "timestamp": "2026-10-10T09:00:56.547088+00:00",
+      "action": "Intraday Rate Alert",
+      "lender": "BMO Bank of Montreal",
+      "details": "BMO Pricing Desk rates effective Oct 9, 2026, with underwriting turnaround 1-2 days and documentation review 3 days. Cashback offers up to $"
+    },
+    {
       "timestamp": "2026-10-10T04:45:53.693503+00:00",
       "action": "Intraday Rate Alert",
       "lender": "Home Trust",
@@ -1152,12 +1158,6 @@
       "action": "Intraday Rate Alert",
       "lender": "First National",
       "details": "Event invitation only \u2014 First National is hosting a Broker Advisory Panel on Wednesday, October 14, 2026, 1:00\u20135:00 p.m. at its Toronto head"
-    },
-    {
-      "timestamp": "2026-10-07T13:30:48.828403+00:00",
-      "action": "Intraday Rate Alert",
-      "lender": "Strive Capital",
-      "details": "Strive Capital's Aspire alt lending program promotes an upcoming webinar and lists current best fixed rates starting at 4.89% for 1-year, 4."
     }
   ]
 }
