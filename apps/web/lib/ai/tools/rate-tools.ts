@@ -452,6 +452,50 @@ export class RateTools {
     
     return result;
   }
+
+  async getLenderIntelligence(params: { lenderName?: string; channel?: string; limit?: number } = {}): Promise<ToolResult> {
+    try {
+      const { CANADIAN_LENDERS } = await import("@/data/canadianLendersData");
+      const name = (params.lenderName || "").toLowerCase().trim();
+      const channel = (params.channel || "").toLowerCase().trim();
+      const limit = params.limit || 5;
+
+      let matched = CANADIAN_LENDERS;
+      if (name) {
+        matched = matched.filter((l) => l.name.toLowerCase().includes(name));
+      }
+      if (channel) {
+        matched = matched.filter((l) => l.channel.toLowerCase().includes(channel));
+      }
+
+      const summary = matched.slice(0, limit).map((l) => ({
+        id: l.id,
+        name: l.name,
+        channel: l.channel,
+        lowestRate: l.lowestRate,
+        productsCount: l.productsCount,
+        minBeacon: l.minBeacon,
+        maxLTV: l.maxLTV,
+        rateHoldDefault: l.rateHoldDefault,
+        appraisalPolicy: l.appraisalPolicy,
+        legalPolicy: l.legalPolicy,
+        topRates: (l.rates || []).slice(0, 5),
+      }));
+
+      return {
+        success: true,
+        data: {
+          totalMatches: matched.length,
+          lenders: summary,
+        },
+      };
+    } catch (e: any) {
+      return {
+        success: false,
+        error: e?.message || "Failed to query lender intelligence",
+      };
+    }
+  }
 }
 
 // Export individual tool functions as MortgageTool objects

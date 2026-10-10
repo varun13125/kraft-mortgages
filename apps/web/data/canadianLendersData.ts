@@ -31,7 +31,34 @@ export interface LenderGuidelineItem {
   isAccepted?: number | null;
 }
 
+export interface LenderAppraisalPolicy {
+  orderingPlatforms: string[];
+  appraisalRequired: string;
+  paymentResponsibility: string;
+  acceptedAmcsNotes?: string;
+  driveByAllowed?: boolean;
+  desktopAvmAllowed?: boolean;
+  avmNotes?: string;
+  appraiserListPdfUrl?: string;
+}
+
+export interface LenderLegalPolicy {
+  closingPlatforms: string[];
+  hasApprovedLawyerList?: boolean;
+  lawyerSelectionPolicy?: string;
+  solicitorOnly: boolean;
+  bcNotaryAllowed: boolean;
+  dualRepresentationAllowed: boolean;
+  dualRepresentationNotes?: string;
+  titleInsuranceMandatory: boolean;
+  titleInsuranceNotes?: string;
+  ilaRequiredNotes?: string;
+  closingNotes?: string;
+}
+
 export interface LenderDetail {
+  appraisalPolicy?: LenderAppraisalPolicy;
+  legalPolicy?: LenderLegalPolicy;
   id: string;
   name: string;
   channel: LenderChannel;
@@ -61,6 +88,7 @@ export interface LenderDetail {
   rates: LenderRateProduct[];
   guidelines?: LenderGuidelineItem[];
 }
+
 
 export const CANADIAN_LENDERS: LenderDetail[] = [
   {
@@ -164,7 +192,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "Maximum 65% - 75% LTV on 1st mortgages; up to 80% combined LTV (CLTV) on 2nd mortgages in major urban centers.",
         "isAccepted": 1
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_2",
@@ -267,7 +324,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "Maximum 65% - 75% LTV on 1st mortgages; up to 80% combined LTV (CLTV) on 2nd mortgages in major urban centers.",
         "isAccepted": 1
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_3",
@@ -370,7 +456,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "Maximum 65% - 75% LTV on 1st mortgages; up to 80% combined LTV (CLTV) on 2nd mortgages in major urban centers.",
         "isAccepted": 1
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_4",
@@ -472,7 +587,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "Maximum 65% - 75% LTV on 1st mortgages; up to 80% combined LTV (CLTV) on 2nd mortgages in major urban centers.",
         "isAccepted": 1
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_5",
@@ -574,7 +718,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "Maximum 65% - 75% LTV on 1st mortgages; up to 80% combined LTV (CLTV) on 2nd mortgages in major urban centers.",
         "isAccepted": 1
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_6",
@@ -683,7 +856,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "Maximum 65% - 75% LTV on 1st mortgages; up to 80% combined LTV (CLTV) on 2nd mortgages in major urban centers.",
         "isAccepted": 1
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_7",
@@ -786,7 +988,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "Maximum 65% - 75% LTV on 1st mortgages; up to 80% combined LTV (CLTV) on 2nd mortgages in major urban centers.",
         "isAccepted": 1
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_8",
@@ -888,7 +1119,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "Maximum 65% - 75% LTV on 1st mortgages; up to 80% combined LTV (CLTV) on 2nd mortgages in major urban centers.",
         "isAccepted": 1
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_9",
@@ -2388,7 +2648,35 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "[NOT ACCEPTED] * No Switch Program at Aspire (Applies: Alberta, British Columbia, Manitoba, Ontario, Saskatchewan)",
         "isAccepted": null
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "NAS (Nationwide Appraisal Services)",
+        "Solidifi",
+        "Value Connect"
+      ],
+      "appraisalRequired": "**Aspire (Ontario)** and **Aspire (West - BC, AB, SK, MB)** and **Aspire Advantage - Rental** - Full appraisal required for all transactions*** _Strive reserves the right to request a second appraisal in certain instances_ - Must be selected from Aspire\u2019s...",
+      "paymentResponsibility": "Borrower paid upfront through approved AMC portal (covered by lender on eligible switches)",
+      "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: NAS (Nationwide Appraisal Services), Solidifi, Value Connect. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": true,
+      "avmNotes": "* APV not available at Aspire (Applies: Alberta, British Columbia, Manitoba, Ontario, Saskatchewan)."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Independent Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": false,
+      "lawyerSelectionPolicy": "Borrower is free to select any practicing solicitor or lawyer in good standing with the provincial law society.",
+      "solicitorOnly": false,
+      "bcNotaryAllowed": true,
+      "dualRepresentationAllowed": true,
+      "dualRepresentationNotes": "Dual representation restricted; exceptions may be considered upon underwriter review.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "* Title Insurance is required. (Applies: Alberta, British Columbia, Manitoba, Ontario, Saskatchewan).",
+      "ilaRequiredNotes": "Independent Legal Advice (ILA) mandatory for all non-borrowing guarantors, title transferors, and non-signing spouses.",
+      "closingNotes": "Standard closing requirements apply. * Not needed to be confirmed. If the deal is borderline we may ask they are not borrowing the money. (Applies: Alberta, British Columbia, Manitoba, Ontario, Saskatchewan)"
+    }
   },
   {
     "id": "lender_10",
@@ -2497,7 +2785,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "Maximum 65% - 75% LTV on 1st mortgages; up to 80% combined LTV (CLTV) on 2nd mortgages in major urban centers.",
         "isAccepted": 1
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_11",
@@ -2599,7 +2916,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "Maximum 65% - 75% LTV on 1st mortgages; up to 80% combined LTV (CLTV) on 2nd mortgages in major urban centers.",
         "isAccepted": 1
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_12",
@@ -7481,7 +7827,35 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "[NOT ACCEPTED] * No collateral charge switch/transfer program on the B or A side (Applies: National)",
         "isAccepted": null
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Brookfield RPS"
+      ],
+      "appraisalRequired": "* If Appraisal required, under the status(PMP)program they are paid for up to $300 -urban property no cap, rural property $300 cap. * in QC - for prime mortgages we will cover up to $300 for any broker * Please use (NAS) or RPS (Brookfield) (Applies:...",
+      "paymentResponsibility": "Borrower paid upfront through approved AMC portal (covered by lender on eligible switches)",
+      "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: Solidifi, NAS (Nationwide Appraisal Services), Brookfield RPS. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": true,
+      "avmNotes": "Get instant valuation of your clients\u2019 property with RPS Request an automated valuation of your clients\u2019 property through Real Property Solutions (RPS). What is an Automated Valuation Model (AVM)? An instant valuation..."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Independent Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": false,
+      "lawyerSelectionPolicy": "Borrower is free to select any practicing solicitor or lawyer in good standing with the provincial law society.",
+      "solicitorOnly": false,
+      "bcNotaryAllowed": true,
+      "dualRepresentationAllowed": true,
+      "dualRepresentationNotes": "Dual representation permitted subject to provincial legal professional conduct rules.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "* Title Insurance is required. (Applies: National).",
+      "ilaRequiredNotes": "Independent Legal Advice (ILA) mandatory for all non-borrowing guarantors, title transferors, and non-signing spouses.",
+      "closingNotes": "Standard closing requirements apply. * can be included in TDS and amortized over 12 months. * We like to see the 1.5% but can make due with the letter from the solicitor outlining the costs (Applies: National)"
+    }
   },
   {
     "id": "lender_13",
@@ -7587,7 +7961,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "BDC can finance up to 100% of the purchase price, professional fees (appraisal, environmental, legal), and renovation costs for commercial properties operated by the business.",
         "isAccepted": 1
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_15",
@@ -7690,7 +8093,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "Maximum 65% - 75% LTV on 1st mortgages; up to 80% combined LTV (CLTV) on 2nd mortgages in major urban centers.",
         "isAccepted": 1
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_16",
@@ -7791,7 +8223,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "Commercial underwriting requires minimum 1.15x - 1.25x DSCR based on normalized net operating income (NOI).",
         "isAccepted": 1
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_17",
@@ -8628,7 +9089,34 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "[NOT ACCEPTED] * No transfer program at Bloom (Applies: Alberta, British Columbia, Ontario)",
         "isAccepted": null
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "NAS (Nationwide Appraisal Services)",
+        "Solidifi"
+      ],
+      "appraisalRequired": "* Appraisal paid for by Bloom in many cases they can use desktop or drive by. (Applies: Alberta, British Columbia, Ontario).",
+      "paymentResponsibility": "Borrower paid upfront through approved AMC portal (covered by lender on eligible switches)",
+      "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: NAS (Nationwide Appraisal Services), Solidifi. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
+      "driveByAllowed": true,
+      "desktopAvmAllowed": false,
+      "avmNotes": "* May be able to use a desktop appraisal. All is handled by Bloom."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Independent Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": false,
+      "lawyerSelectionPolicy": "No restricted lawyer list. Borrower can select any solicitor in good standing with the law society.",
+      "solicitorOnly": false,
+      "bcNotaryAllowed": true,
+      "dualRepresentationAllowed": true,
+      "dualRepresentationNotes": "Dual representation permitted subject to provincial legal professional conduct rules.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "* Title Insurance is required. (Applies: Alberta, British Columbia, Ontario).",
+      "ilaRequiredNotes": "Independent Legal Advice (ILA) mandatory for all non-borrowing guarantors, title transferors, and non-signing spouses.",
+      "closingNotes": "Standard closing requirements apply. * Independent legal fees are up to borrower to arrange. (Applies: Alberta, British Columbia, Ontario)"
+    }
   },
   {
     "id": "lender_18",
@@ -11046,7 +11534,35 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "[NOT ACCEPTED] **Gateway Alternative Mortgage Program**\r\n* No switch or transfer program available (Applies: Alberta, British Columbia, Manitoba, New Brunswick, Nova Scotia, Ontario, Prince Edward Island, Saskatchewan)",
         "isAccepted": null
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Brookfield RPS"
+      ],
+      "appraisalRequired": "**Gateway Alternative Mortgage Program** * A full appraisal is required for all mortgages. Bridgewater Bank is pleased to partner with Canada's most trusted appraisal companies with three options for you to choose from; * Nationwide Appraisal Services Inc...",
+      "paymentResponsibility": "Borrower paid upfront through approved AMC portal (covered by lender on eligible switches)",
+      "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: Solidifi, NAS (Nationwide Appraisal Services), Brookfield RPS. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "**Gateway Alternative Mortgage Program** * A full appraisal is required for all mortgages. Bridgewater Bank is pleased to partner with Canada's most trusted appraisal companies with three options for you to choose from;..."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Independent Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": false,
+      "lawyerSelectionPolicy": "Borrower is free to select any practicing solicitor or lawyer in good standing with the provincial law society.",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "* A solicitor/notary is NOT permitted to act on behalf of both the vendor and purchaser in residential mortgage transactions (Applies: Alberta, British Columbia, Manitoba, New Brunswick, Nova Scotia, Ontario, Prince...",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "**Gateway Alternative Mortgage Program** * Title insurance is required for this product (Applies: Alberta, British Columbia, Manitoba, New Brunswick, Nova Scotia, Ontario, Prince Edward Island, Saskatchewan).",
+      "ilaRequiredNotes": "Independent Legal Advice (ILA) mandatory for all non-borrowing guarantors, title transferors, and non-signing spouses.",
+      "closingNotes": "Standard closing requirements apply. **Gateway Alternative Mortgage Program** * We ask for confirmation of closing costs. Typically, 1.5% of the purchase price. * We verify the availability of funds, or debt service..."
+    }
   },
   {
     "id": "lender_19",
@@ -11156,7 +11672,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "Maximum 65% - 75% LTV on 1st mortgages; up to 80% combined LTV (CLTV) on 2nd mortgages in major urban centers.",
         "isAccepted": 1
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_20",
@@ -11264,7 +11809,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "Maximum 65% - 75% LTV on 1st mortgages; up to 80% combined LTV (CLTV) on 2nd mortgages in major urban centers.",
         "isAccepted": 1
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_21",
@@ -13458,7 +14032,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "[NOT ACCEPTED] * No switch transfer program at AVEO (Applies: Alberta, British Columbia, Manitoba, Ontario, Saskatchewan)",
         "isAccepted": null
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "NAS (Nationwide Appraisal Services)",
+        "Solidifi",
+        "Brookfield RPS",
+        "Value Connect"
+      ],
+      "appraisalRequired": "* All appraisals required through AVEO approved list, Value Connect, Solidifi or RPS (for all programs) * Property must have a remaining economic life greater than requested amortization + 5 years. (Applies: Alberta, British Columbia, Manitoba, Ontario...",
+      "paymentResponsibility": "Borrower paid upfront through approved AMC portal (covered by lender on eligible switches)",
+      "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: NAS (Nationwide Appraisal Services), Solidifi, Brookfield RPS, Value Connect. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "* Not available on subject properties. AVMs used only in Flex40 Networth Real Estate Qualifier Program (Applies: Alberta, British Columbia, Manitoba, Ontario, Saskatchewan)."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Independent Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": false,
+      "lawyerSelectionPolicy": "Borrower is free to select any practicing solicitor or lawyer in good standing with the provincial law society.",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "* A solicitor/notary is NOT permitted to act on behalf of both the vendor and purchaser in residential mortgage transactions (Applies: Alberta, British Columbia, Manitoba, Ontario, Saskatchewan)",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "* Title Insurance is required. (Applies: Alberta, British Columbia, Manitoba, Ontario, Saskatchewan).",
+      "ilaRequiredNotes": "Independent Legal Advice (ILA) mandatory for all non-borrowing guarantors, title transferors, and non-signing spouses.",
+      "closingNotes": "Standard closing requirements apply. * Standard 1.5% of purchase price. (Applies: Alberta, British Columbia, Manitoba, Ontario, Saskatchewan)"
+    }
   },
   {
     "id": "lender_23",
@@ -14106,7 +14709,35 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "* Not on the alt side. The only time we require confirmation of closing costs is for A insured loans and we use 1%.",
         "isAccepted": null
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "NAS (Nationwide Appraisal Services)",
+        "Solidifi"
+      ],
+      "appraisalRequired": "* Required by fully qualified independent appraiser from our approved list of appraisers * [Right click here](https://www. optimummortgage. ca/client-services/mortgage-resources/appraisers) and choose open link in new tab.",
+      "paymentResponsibility": "Borrower paid upfront through approved AMC portal (covered by lender on eligible switches)",
+      "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: NAS (Nationwide Appraisal Services), Solidifi. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "* APV is not available at National Bank - Optimum Mortgage. (Applies: Alberta, British Columbia, Manitoba, New Brunswick, Newfoundland & Labrador, Nova Scotia, Ontario, Prince Edward Island, Saskatchewan)."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "FCT (First Canadian Title)",
+        "Independent Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": false,
+      "lawyerSelectionPolicy": "Borrower is free to select any practicing solicitor or lawyer in good standing with the provincial law society.",
+      "solicitorOnly": false,
+      "bcNotaryAllowed": true,
+      "dualRepresentationAllowed": true,
+      "dualRepresentationNotes": "Dual representation permitted subject to provincial legal professional conduct rules.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "* National Bank - Optimum Mortgage will now be instructing and funding Alt-A purchases & refinances through the MMS program with FCT (Applies: Alberta, British Columbia, Manitoba, New Brunswick, Newfoundland & Labrador...",
+      "ilaRequiredNotes": "Independent Legal Advice (ILA) mandatory for all non-borrowing guarantors, title transferors, and non-signing spouses.",
+      "closingNotes": "Standard closing requirements apply. * Not on the alt side. The only time we require confirmation of closing costs is for A insured loans and we use 1%. (Applies: Alberta, British Columbia, Manitoba, New Brunswick..."
+    }
   },
   {
     "id": "lender_24",
@@ -14214,7 +14845,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "Maximum 65% - 75% LTV on 1st mortgages; up to 80% combined LTV (CLTV) on 2nd mortgages in major urban centers.",
         "isAccepted": 1
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_25",
@@ -14322,7 +14982,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "Maximum 65% - 75% LTV on 1st mortgages; up to 80% combined LTV (CLTV) on 2nd mortgages in major urban centers.",
         "isAccepted": 1
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_26",
@@ -14424,7 +15113,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "Commercial underwriting requires minimum 1.15x - 1.25x DSCR based on normalized net operating income (NOI).",
         "isAccepted": 1
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_27",
@@ -15870,7 +16588,35 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "[NOT ACCEPTED] * No switch transfer program available at National Bank - Optimum Mortgage. (Applies: Alberta, British Columbia, Manitoba, New Brunswick, Newfoundland & Labrador, Nova Scotia, Ontario, Prince Edward Island, Saskatchewan)",
         "isAccepted": null
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "NAS (Nationwide Appraisal Services)",
+        "Solidifi"
+      ],
+      "appraisalRequired": "* Required by fully qualified independent appraiser from our approved list of appraisers * [Right click here](https://www. optimummortgage. ca/client-services/mortgage-resources/appraisers) and choose open link in new tab.",
+      "paymentResponsibility": "Borrower paid upfront through approved AMC portal (covered by lender on eligible switches)",
+      "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: NAS (Nationwide Appraisal Services), Solidifi. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "* APV is not available at National Bank - Optimum Mortgage. (Applies: Alberta, British Columbia, Manitoba, New Brunswick, Newfoundland & Labrador, Nova Scotia, Ontario, Prince Edward Island, Saskatchewan)."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "FCT (First Canadian Title)",
+        "Independent Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": false,
+      "lawyerSelectionPolicy": "Borrower is free to select any practicing solicitor or lawyer in good standing with the provincial law society.",
+      "solicitorOnly": false,
+      "bcNotaryAllowed": true,
+      "dualRepresentationAllowed": true,
+      "dualRepresentationNotes": "Dual representation permitted subject to provincial legal professional conduct rules.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "* National Bank - Optimum Mortgage will now be instructing and funding Alt-A purchases & refinances through the MMS program with FCT (Applies: Alberta, British Columbia, Manitoba, New Brunswick, Newfoundland & Labrador...",
+      "ilaRequiredNotes": "Independent Legal Advice (ILA) mandatory for all non-borrowing guarantors, title transferors, and non-signing spouses.",
+      "closingNotes": "Standard closing requirements apply. * Not on the alt side. The only time we require confirmation of closing costs is for A insured loans and we use 1%. (Applies: Alberta, British Columbia, Manitoba, New Brunswick..."
+    }
   },
   {
     "id": "lender_28",
@@ -15972,7 +16718,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "Maximum 65% - 75% LTV on 1st mortgages; up to 80% combined LTV (CLTV) on 2nd mortgages in major urban centers.",
         "isAccepted": 1
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_29",
@@ -16080,7 +16855,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "Maximum 65% - 75% LTV on 1st mortgages; up to 80% combined LTV (CLTV) on 2nd mortgages in major urban centers.",
         "isAccepted": 1
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_30",
@@ -16188,7 +16992,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "Maximum 65% - 75% LTV on 1st mortgages; up to 80% combined LTV (CLTV) on 2nd mortgages in major urban centers.",
         "isAccepted": 1
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_31",
@@ -16291,7 +17124,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "Maximum 65% - 75% LTV on 1st mortgages; up to 80% combined LTV (CLTV) on 2nd mortgages in major urban centers.",
         "isAccepted": 1
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_32",
@@ -16394,7 +17256,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "Maximum 65% - 75% LTV on 1st mortgages; up to 80% combined LTV (CLTV) on 2nd mortgages in major urban centers.",
         "isAccepted": 1
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_33",
@@ -18392,7 +19283,35 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "[NOT ACCEPTED] * Student Housing is not allowed at Coast Capital Savings (Applies: British Columbia)",
         "isAccepted": null
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "NAS (Nationwide Appraisal Services)",
+        "Solidifi"
+      ],
+      "appraisalRequired": "* Approved Appraisers List [Link](https://www. coastcapitalsavings. com/Brokers/) **Coast Capital requires a satisfactory appraisal in the following circumstances** * Mortgage amounts over $800,000 * Improvements are less than $50,000 * Leased Land Properties...",
+      "paymentResponsibility": "Borrower paid upfront through approved AMC portal (covered by lender on eligible switches)",
+      "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: NAS (Nationwide Appraisal Services), Solidifi. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": true,
+      "avmNotes": "* A Property Tax Assessment Notice is no longer acceptable as a valuation method. * The Landcor Valuator can now be accepted for conventional mortgages."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "FCT (First Canadian Title)",
+        "Independent Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": false,
+      "lawyerSelectionPolicy": "Borrower is free to select any practicing solicitor or lawyer in good standing with the provincial law society.",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "* A solicitor/notary is NOT permitted to act on behalf of both the vendor and purchaser in residential mortgage transactions. * If the transaction is the purchase of a new build then will consider (Applies: British...",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "**What is FCT?** - FTC stands for First Canadian Title. **Purpose & Background** - This program is designed for: - New Process to Transfer in mortgages to Coast Capital Savings from other Financial Institutions...",
+      "ilaRequiredNotes": "Independent Legal Advice (ILA) mandatory for all non-borrowing guarantors, title transferors, and non-signing spouses.",
+      "closingNotes": "Standard closing requirements apply. * No specific policy provided consult your BDM. (Applies: British Columbia)"
+    }
   },
   {
     "id": "lender_34",
@@ -18515,7 +19434,34 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "notes": "Adjustable variable rate for Alt-B."
       }
     ],
-    "guidelines": []
+    "guidelines": [],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "NAS (Nationwide Appraisal Services)",
+        "Solidifi"
+      ],
+      "appraisalRequired": "Full appraisal required through approved AMC portal for alternative and uninsurable transactions. Automated valuation (AVM) accepted where supported on insured/insurable files.",
+      "paymentResponsibility": "Borrower paid upfront through approved AMC portal (covered by lender on eligible switches)",
+      "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: NAS (Nationwide Appraisal Services), Solidifi. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "Full appraisal mandatory; automated property valuations (AVM) are not accepted."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Independent Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": false,
+      "lawyerSelectionPolicy": "Borrower is free to select any practicing solicitor or lawyer in good standing with the provincial law society.",
+      "solicitorOnly": false,
+      "bcNotaryAllowed": true,
+      "dualRepresentationAllowed": true,
+      "dualRepresentationNotes": "Dual representation permitted subject to provincial legal professional conduct rules.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance required on all transactions through approved title insurers (FCT, Chicago Title, Stewart Title, or FNF).",
+      "ilaRequiredNotes": "Independent Legal Advice (ILA) mandatory for all non-borrowing guarantors, title transferors, and non-signing spouses.",
+      "closingNotes": "Legal closing instructions issued directly to borrower's solicitor or processed via FCT/FNF title transfer platform."
+    }
   },
   {
     "id": "lender_35",
@@ -18617,7 +19563,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "Maximum 65% - 75% LTV on 1st mortgages; up to 80% combined LTV (CLTV) on 2nd mortgages in major urban centers.",
         "isAccepted": 1
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_36",
@@ -18716,7 +19691,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "Commercial underwriting requires minimum 1.15x - 1.25x DSCR based on normalized net operating income (NOI).",
         "isAccepted": 1
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_37",
@@ -18818,7 +19822,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "Maximum 65% - 75% LTV on 1st mortgages; up to 80% combined LTV (CLTV) on 2nd mortgages in major urban centers.",
         "isAccepted": 1
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_38",
@@ -18920,7 +19953,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "Commercial underwriting requires minimum 1.15x - 1.25x DSCR based on normalized net operating income (NOI).",
         "isAccepted": 1
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_39",
@@ -19022,7 +20084,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "Maximum 65% - 75% LTV on 1st mortgages; up to 80% combined LTV (CLTV) on 2nd mortgages in major urban centers.",
         "isAccepted": 1
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_40",
@@ -19463,7 +20554,34 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "notes": "Verified Institutional Pricing."
       }
     ],
-    "guidelines": []
+    "guidelines": [],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "NAS (Nationwide Appraisal Services)",
+        "Solidifi"
+      ],
+      "appraisalRequired": "Full appraisal required through approved AMC portal for alternative and uninsurable transactions. Automated valuation (AVM) accepted where supported on insured/insurable files.",
+      "paymentResponsibility": "Borrower paid upfront through approved AMC portal (covered by lender on eligible switches)",
+      "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: NAS (Nationwide Appraisal Services), Solidifi. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "Full appraisal mandatory; automated property valuations (AVM) are not accepted."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Independent Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": false,
+      "lawyerSelectionPolicy": "Borrower is free to select any practicing solicitor or lawyer in good standing with the provincial law society.",
+      "solicitorOnly": false,
+      "bcNotaryAllowed": true,
+      "dualRepresentationAllowed": true,
+      "dualRepresentationNotes": "Dual representation permitted subject to provincial legal professional conduct rules.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance required on all transactions through approved title insurers (FCT, Chicago Title, Stewart Title, or FNF).",
+      "ilaRequiredNotes": "Independent Legal Advice (ILA) mandatory for all non-borrowing guarantors, title transferors, and non-signing spouses.",
+      "closingNotes": "Legal closing instructions issued directly to borrower's solicitor or processed via FCT/FNF title transfer platform."
+    }
   },
   {
     "id": "lender_41",
@@ -25178,7 +26296,34 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "[NOT ACCEPTED] * No switch transfer program on the ALT side (Applies: National)",
         "isAccepted": null
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "NAS (Nationwide Appraisal Services)",
+        "Solidifi"
+      ],
+      "appraisalRequired": "* Desktop AVM or Full appraisal * All reverse mortgage deals must use an appraiser from our Approved Appraiser List. * If you're ordering through an appraisal service, please ensure that the underlying appraiser assigned to the file is on our approved list. *...",
+      "paymentResponsibility": "Borrower paid upfront through approved AMC portal (covered by lender on eligible switches)",
+      "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: NAS (Nationwide Appraisal Services), Solidifi. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": true,
+      "avmNotes": "* We are ok with an AVM being used if eligible, otherwise it is full appraisal. (Applies: Alberta, British Columbia, Ontario, Quebec)."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Independent Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": false,
+      "lawyerSelectionPolicy": "No restricted lawyer list. Borrower can select any solicitor in good standing with the law society.",
+      "solicitorOnly": false,
+      "bcNotaryAllowed": true,
+      "dualRepresentationAllowed": true,
+      "dualRepresentationNotes": "Dual representation permitted subject to provincial legal professional conduct rules.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "* Title insurance required, facilitated from EQB (Applies: Alberta, British Columbia, Ontario, Quebec).",
+      "ilaRequiredNotes": "Independent Legal Advice (ILA) mandatory for all non-borrowing guarantors, title transferors, and non-signing spouses.",
+      "closingNotes": "Standard closing requirements apply. * $995 setup costs - same fee for all Reverse products (Applies: Alberta, British Columbia, Ontario, Quebec)"
+    }
   },
   {
     "id": "lender_42",
@@ -25285,7 +26430,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "Working crop farms, dairy, poultry, cattle ranches, greenhouses, orchards, vineyards, agri-processing plants, and rural agricultural land. Must possess bona fide commercial agricultural production.",
         "isAccepted": 1
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_43",
@@ -28018,7 +29192,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "[NOT ACCEPTED] * No switch transfer program (Applies: Alberta, British Columbia, Manitoba, New Brunswick, Newfoundland & Labrador, Nova Scotia, Ontario, Prince Edward Island, Saskatchewan)",
         "isAccepted": null
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_44",
@@ -28120,7 +29323,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "Maximum 65% - 75% LTV on 1st mortgages; up to 80% combined LTV (CLTV) on 2nd mortgages in major urban centers.",
         "isAccepted": 1
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_45",
@@ -28222,7 +29454,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "Maximum 65% - 75% LTV on 1st mortgages; up to 80% combined LTV (CLTV) on 2nd mortgages in major urban centers.",
         "isAccepted": 1
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_46",
@@ -31430,7 +32691,35 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "[NOT ACCEPTED] * Student Housing is not allowed at First National (Applies: National)",
         "isAccepted": null
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)"
+      ],
+      "appraisalRequired": "* Appraisals Required on every application. Must be ordered from an appraiser on the Approved appraisers list found in Merlin. May order through 3rd party appraisal services - NAS, Solidify, etc.",
+      "paymentResponsibility": "Borrower paid upfront through approved AMC portal (covered by lender on eligible switches)",
+      "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: Solidifi, NAS (Nationwide Appraisal Services). Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": true,
+      "avmNotes": "**Excalibur AVM Overview** * AVM cost: $399 * Offers faster turnaround times and greater flexibility while maintaining Excalibur\u2019s tailored lending solutions. * When a Full Appraisal Is Still Required * New construction..."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "FCT (First Canadian Title)",
+        "Independent Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": false,
+      "lawyerSelectionPolicy": "No restricted lawyer list. Borrower can select any solicitor in good standing with the law society.",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "* A solicitor/notary is NOT permitted to act on behalf of both the vendor and purchaser in residential mortgage transactions. * Different Lawyers at the same firm can be used (Applies: Alberta, British Columbia...",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "* Title Insurance is required. (Applies: Alberta, British Columbia, Manitoba, New Brunswick, Newfoundland & Labrador, Nova Scotia, Ontario, Prince Edward Island, Saskatchewan).",
+      "ilaRequiredNotes": "Independent Legal Advice (ILA) mandatory for all non-borrowing guarantors, title transferors, and non-signing spouses.",
+      "closingNotes": "Standard closing requirements apply. * Yes, we require 1.5% Closing costs on all purchase transactions (Applies: Alberta, British Columbia, Manitoba, New Brunswick, Newfoundland & Labrador, Nova Scotia, Ontario, Prince..."
+    }
   },
   {
     "id": "lender_fn_excalibur",
@@ -39831,7 +41120,34 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "[NOT ACCEPTED] * Not offered with Excalibur (Applies: Alberta, British Columbia, Manitoba, New Brunswick, Newfoundland & Labrador, Nova Scotia, Ontario, Prince Edward Island, Saskatchewan)",
         "isAccepted": null
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)"
+      ],
+      "appraisalRequired": "* Appraisals Required on every application. Must be ordered from an appraiser on the Approved appraisers list found in Merlin. May order through 3rd party appraisal services - NAS, Solidify, etc.",
+      "paymentResponsibility": "Borrower paid upfront through approved AMC portal (covered by lender on eligible switches)",
+      "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: Solidifi, NAS (Nationwide Appraisal Services). Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": true,
+      "avmNotes": "**Excalibur AVM Overview** * AVM cost: $399 * Offers faster turnaround times and greater flexibility while maintaining Excalibur\u2019s tailored lending solutions. * When a Full Appraisal Is Still Required * New construction..."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Independent Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": false,
+      "lawyerSelectionPolicy": "No restricted lawyer list. Borrower can select any solicitor in good standing with the law society.",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "* A solicitor/notary is NOT permitted to act on behalf of both the vendor and purchaser in residential mortgage transactions. * Different Lawyers at the same firm can be used (Applies: Alberta, British Columbia...",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "* Title Insurance is required. (Applies: Alberta, British Columbia, Manitoba, New Brunswick, Newfoundland & Labrador, Nova Scotia, Ontario, Prince Edward Island, Saskatchewan).",
+      "ilaRequiredNotes": "Independent Legal Advice (ILA) mandatory for all non-borrowing guarantors, title transferors, and non-signing spouses.",
+      "closingNotes": "Standard closing requirements apply. * Yes, we require 1.5% Closing costs on all purchase transactions (Applies: Alberta, British Columbia, Manitoba, New Brunswick, Newfoundland & Labrador, Nova Scotia, Ontario, Prince..."
+    }
   },
   {
     "id": "lender_47",
@@ -39932,7 +41248,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "Commercial underwriting requires minimum 1.15x - 1.25x DSCR based on normalized net operating income (NOI).",
         "isAccepted": 1
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_48",
@@ -40577,7 +41922,34 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "* Closing Costs of 1.5% required",
         "isAccepted": null
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "NAS (Nationwide Appraisal Services)",
+        "Solidifi"
+      ],
+      "appraisalRequired": "* Appraisals to be ordered via Solidifi Valuation Service. (Applies: British Columbia).",
+      "paymentResponsibility": "Borrower paid upfront through approved AMC portal (covered by lender on eligible switches)",
+      "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: NAS (Nationwide Appraisal Services), Solidifi. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "* APV is not accepted at Envision, but Lancor can be used in some situations (Applies: British Columbia)."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Independent Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": false,
+      "lawyerSelectionPolicy": "Borrower is free to select any practicing solicitor or lawyer in good standing with the provincial law society.",
+      "solicitorOnly": false,
+      "bcNotaryAllowed": true,
+      "dualRepresentationAllowed": true,
+      "dualRepresentationNotes": "Dual representation permitted subject to provincial legal professional conduct rules.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "* Title Insurance is mandatory (Applies: British Columbia).",
+      "ilaRequiredNotes": "Independent Legal Advice (ILA) mandatory for all non-borrowing guarantors, title transferors, and non-signing spouses.",
+      "closingNotes": "Standard closing requirements apply. * Closing Costs of 1.5% required (Applies: British Columbia)"
+    }
   },
   {
     "id": "lender_49",
@@ -40680,7 +42052,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "Maximum 65% - 75% LTV on 1st mortgages; up to 80% combined LTV (CLTV) on 2nd mortgages in major urban centers.",
         "isAccepted": 1
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_50",
@@ -42274,7 +43675,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "[NOT ACCEPTED] * No switch transfer program (Applies: British Columbia, Ontario)",
         "isAccepted": null
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_51",
@@ -42376,7 +43806,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "Commercial underwriting requires minimum 1.15x - 1.25x DSCR based on normalized net operating income (NOI).",
         "isAccepted": 1
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_52",
@@ -43384,7 +44843,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "[NOT ACCEPTED] * Glasslake Funding does not have loan products with VRM/ARM rates. (Applies: Alberta, British Columbia, Ontario)",
         "isAccepted": null
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_53",
@@ -43484,7 +44972,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "Commercial underwriting requires minimum 1.15x - 1.25x DSCR based on normalized net operating income (NOI).",
         "isAccepted": 1
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_54",
@@ -43587,7 +45104,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "Maximum 65% - 75% LTV on 1st mortgages; up to 80% combined LTV (CLTV) on 2nd mortgages in major urban centers.",
         "isAccepted": 1
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_55",
@@ -43689,7 +45235,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "Maximum 65% - 75% LTV on 1st mortgages; up to 80% combined LTV (CLTV) on 2nd mortgages in major urban centers.",
         "isAccepted": 1
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_56",
@@ -50907,7 +52482,37 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "[NOT ACCEPTED] * No switch transfer at Haventree (Applies: Alberta, British Columbia, Manitoba, Nova Scotia, Ontario, Quebec, Saskatchewan)",
         "isAccepted": null
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Brookfield RPS",
+        "Value Connect"
+      ],
+      "appraisalRequired": "- Request via our preferred independent providers Solidifi, Value Connect, RPS or NAS - Alternatively, appraisals can be requested from our Approved Appraisers List - AVM options available when applicable. (Applies: Alberta, British Columbia, Manitoba, Nova...",
+      "paymentResponsibility": "Borrower paid upfront through approved AMC portal (covered by lender on eligible switches)",
+      "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: Solidifi, NAS (Nationwide Appraisal Services), Brookfield RPS, Value Connect. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": true,
+      "avmNotes": "Our Property Auto-Valuation Program replaces the need for a full appraisal and reduces the time it takes for a deal to fund. Below is the criteria for this property **Loan Type Eligibility** * Refinance * Purchases..."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "FCT (First Canadian Title)",
+        "Independent Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": false,
+      "lawyerSelectionPolicy": "No restricted lawyer list. Borrower can select any solicitor in good standing with the law society.",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "* A solicitor/notary is NOT permitted to act on behalf of both the vendor and purchaser in residential mortgage transactions unless the transaction is the purchase of a new build. (Applies: Alberta, British Columbia...",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "* Yes, via FCT * Title Insurance is required. (Applies: Alberta, British Columbia, Manitoba, Nova Scotia, Ontario, Quebec, Saskatchewan).",
+      "ilaRequiredNotes": "Independent Legal Advice (ILA) mandatory for all non-borrowing guarantors, title transferors, and non-signing spouses.",
+      "closingNotes": "Standard closing requirements apply. * 1.5% for Closing Costs (Applies: Alberta, British Columbia, Manitoba, Nova Scotia, Ontario, Quebec, Saskatchewan)"
+    }
   },
   {
     "id": "lender_57",
@@ -52597,7 +54202,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "[NOT ACCEPTED] * Student Rentals are not accepted at Highclere Capital (Applies: Alberta, British Columbia, Ontario)",
         "isAccepted": null
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_58",
@@ -52699,7 +54333,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "Maximum 65% - 75% LTV on 1st mortgages; up to 80% combined LTV (CLTV) on 2nd mortgages in major urban centers.",
         "isAccepted": 1
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_59",
@@ -54434,7 +56097,37 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "[NOT ACCEPTED] * A solicitor/notary is NOT permitted to act on behalf of both the vendor and purchaser in residential mortgage transactions (Applies: Alberta, British Columbia, Manitoba, New Brunswick, Newfoundland & Labrador, Nova Scotia, Ontario, Prince Edward Island, Quebec)",
         "isAccepted": null
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "NAS (Nationwide Appraisal Services)",
+        "Solidifi",
+        "FCT Flex Appraisal"
+      ],
+      "appraisalRequired": "**Alternative** * Appraisals required on all deals. **FCT\u2019s Flex Appraisal** - Home Trust will only be using FCT\u2019s Flex Appraisal product for this service. We will not be using any other appraisal products that FCT provides.",
+      "paymentResponsibility": "Borrower paid upfront through approved AMC portal (covered by lender on eligible switches)",
+      "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: NAS (Nationwide Appraisal Services), Solidifi, FCT Flex Appraisal. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": true,
+      "avmNotes": "* We use FCT Flex if it meets the criteria in certain locations. (Applies: Alberta, British Columbia, Manitoba, New Brunswick, Newfoundland & Labrador, Nova Scotia, Ontario, Prince Edward Island, Quebec)."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "FNF Canada",
+        "Stewart Title",
+        "Independent Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Solicitor must be selected from the lender's pre-approved lawyer panel.",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "* A solicitor/notary is NOT permitted to act on behalf of both the vendor and purchaser in residential mortgage transactions (Applies: Alberta, British Columbia, Manitoba, New Brunswick, Newfoundland & Labrador, Nova...",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "* Borrowers pays title insurance; HTC requires that borrowers obtain a Title Insurance Policy from one of the following title insurers pre-approved by HTC: Chicago Title Insurance, Fisrt Canadian Title, Stewart Title...",
+      "ilaRequiredNotes": "Independent Legal Advice (ILA) mandatory for all non-borrowing guarantors, title transferors, and non-signing spouses.",
+      "closingNotes": "Standard closing requirements apply. * No closing cost required. (Applies: Alberta, British Columbia, Manitoba, New Brunswick, Newfoundland & Labrador, Nova Scotia, Ontario, Prince Edward Island, Quebec)"
+    }
   },
   {
     "id": "lender_hometrust_classic",
@@ -55815,7 +57508,37 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "[NOT ACCEPTED] * A solicitor/notary is NOT permitted to act on behalf of both the vendor and purchaser in residential mortgage transactions (Applies: Alberta, British Columbia, Manitoba, New Brunswick, Newfoundland & Labrador, Nova Scotia, Ontario, Prince Edward Island, Quebec)",
         "isAccepted": null
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "NAS (Nationwide Appraisal Services)",
+        "Solidifi",
+        "FCT Flex Appraisal"
+      ],
+      "appraisalRequired": "**Alternative** * Appraisals required on all deals. **FCT\u2019s Flex Appraisal** - Home Trust will only be using FCT\u2019s Flex Appraisal product for this service. We will not be using any other appraisal products that FCT provides.",
+      "paymentResponsibility": "Borrower paid upfront through approved AMC portal (covered by lender on eligible switches)",
+      "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: NAS (Nationwide Appraisal Services), Solidifi, FCT Flex Appraisal. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": true,
+      "avmNotes": "* We use FCT Flex if it meets the criteria in certain locations. (Applies: Alberta, British Columbia, Manitoba, New Brunswick, Newfoundland & Labrador, Nova Scotia, Ontario, Prince Edward Island, Quebec)."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "FNF Canada",
+        "Stewart Title",
+        "Independent Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Solicitor must be selected from the lender's pre-approved lawyer panel.",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "* A solicitor/notary is NOT permitted to act on behalf of both the vendor and purchaser in residential mortgage transactions (Applies: Alberta, British Columbia, Manitoba, New Brunswick, Newfoundland & Labrador, Nova...",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "* Borrowers pays title insurance; HTC requires that borrowers obtain a Title Insurance Policy from one of the following title insurers pre-approved by HTC: Chicago Title Insurance, Fisrt Canadian Title, Stewart Title...",
+      "ilaRequiredNotes": "Independent Legal Advice (ILA) mandatory for all non-borrowing guarantors, title transferors, and non-signing spouses.",
+      "closingNotes": "Standard closing requirements apply. * No closing cost required. (Applies: Alberta, British Columbia, Manitoba, New Brunswick, Newfoundland & Labrador, Nova Scotia, Ontario, Prince Edward Island, Quebec)"
+    }
   },
   {
     "id": "lender_60",
@@ -56780,7 +58503,34 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "[NOT ACCEPTED] * Student Housing is not financed at HomeEquity Bank (Applies: National)",
         "isAccepted": null
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "NAS (Nationwide Appraisal Services)",
+        "Solidifi"
+      ],
+      "appraisalRequired": "* Appraisal is required and the cost is borne by the client. (Applies: National).",
+      "paymentResponsibility": "Borrower paid upfront through approved AMC portal (covered by lender on eligible switches)",
+      "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: NAS (Nationwide Appraisal Services), Solidifi. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "* Full Appraisal required on every file. APV not available (Applies: National)."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Independent Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": false,
+      "lawyerSelectionPolicy": "Borrower is free to select any practicing solicitor or lawyer in good standing with the provincial law society.",
+      "solicitorOnly": false,
+      "bcNotaryAllowed": true,
+      "dualRepresentationAllowed": true,
+      "dualRepresentationNotes": "Dual representation permitted subject to provincial legal professional conduct rules.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "* Title Insurance is required (Applies: National).",
+      "ilaRequiredNotes": "Independent Legal Advice (ILA) mandatory for all non-borrowing guarantors, title transferors, and non-signing spouses.",
+      "closingNotes": "Standard closing requirements apply. * Check with your BDM closing costs are different per each product. (Applies: National)"
+    }
   },
   {
     "id": "lender_61",
@@ -57424,7 +59174,34 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "* 1.5% not required to be set aside for closing costs",
         "isAccepted": null
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "NAS (Nationwide Appraisal Services)",
+        "Solidifi"
+      ],
+      "appraisalRequired": "* Broker orders from our approved list. (Applies: Ontario).",
+      "paymentResponsibility": "Borrower paid upfront through approved AMC portal (covered by lender on eligible switches)",
+      "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: NAS (Nationwide Appraisal Services), Solidifi. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "* APV not available at IC Savings (Applies: Ontario)."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Independent Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": false,
+      "lawyerSelectionPolicy": "Borrower is free to select any practicing solicitor or lawyer in good standing with the provincial law society.",
+      "solicitorOnly": false,
+      "bcNotaryAllowed": true,
+      "dualRepresentationAllowed": true,
+      "dualRepresentationNotes": "Dual representation permitted subject to provincial legal professional conduct rules.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "* Title Insurance is required * The client is responsible for obtaining. (Applies: Ontario).",
+      "ilaRequiredNotes": "Independent Legal Advice (ILA) mandatory for all non-borrowing guarantors, title transferors, and non-signing spouses.",
+      "closingNotes": "Standard closing requirements apply. * 1.5% not required to be set aside for closing costs (Applies: Ontario)"
+    }
   },
   {
     "id": "lender_62",
@@ -57527,7 +59304,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "Maximum 65% - 75% LTV on 1st mortgages; up to 80% combined LTV (CLTV) on 2nd mortgages in major urban centers.",
         "isAccepted": 1
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_64",
@@ -57629,7 +59435,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "Maximum 65% - 75% LTV on 1st mortgages; up to 80% combined LTV (CLTV) on 2nd mortgages in major urban centers.",
         "isAccepted": 1
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_65",
@@ -57731,7 +59566,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "Maximum 65% - 75% LTV on 1st mortgages; up to 80% combined LTV (CLTV) on 2nd mortgages in major urban centers.",
         "isAccepted": 1
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_66",
@@ -57833,7 +59697,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "Commercial underwriting requires minimum 1.15x - 1.25x DSCR based on normalized net operating income (NOI).",
         "isAccepted": 1
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_67",
@@ -57935,7 +59828,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "Maximum 65% - 75% LTV on 1st mortgages; up to 80% combined LTV (CLTV) on 2nd mortgages in major urban centers.",
         "isAccepted": 1
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_68",
@@ -58037,7 +59959,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "Maximum 65% - 75% LTV on 1st mortgages; up to 80% combined LTV (CLTV) on 2nd mortgages in major urban centers.",
         "isAccepted": 1
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_69",
@@ -58140,7 +60091,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "Maximum 65% - 75% LTV on 1st mortgages; up to 80% combined LTV (CLTV) on 2nd mortgages in major urban centers.",
         "isAccepted": 1
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_70",
@@ -59612,7 +61592,34 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "[NOT ACCEPTED] * No funding for rooming houses / student rental at Marathon Mortgage (Applies: Alberta, British Columbia, Manitoba, New Brunswick, Newfoundland & Labrador, Nova Scotia, Ontario, Prince Edward Island, Saskatchewan)",
         "isAccepted": null
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "NAS (Nationwide Appraisal Services)",
+        "Solidifi"
+      ],
+      "appraisalRequired": "**Insured and Insurable** * Not required. However, Mortgage Insurer may require an appraisal in some instances. **Conventional Uninsured** * Full Appraisals are Required (Applies: Alberta, British Columbia, Manitoba, New Brunswick, Newfoundland & Labrador...",
+      "paymentResponsibility": "Borrower paid upfront through approved AMC portal (covered by lender on eligible switches)",
+      "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: NAS (Nationwide Appraisal Services), Solidifi. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "* APV available at Marthon's discretion (Applies: Alberta, British Columbia, Manitoba, New Brunswick, Newfoundland & Labrador, Nova Scotia, Ontario, Prince Edward Island, Saskatchewan)."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Independent Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": false,
+      "lawyerSelectionPolicy": "No restricted lawyer list. Borrower can select any solicitor in good standing with the law society.",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "* A solicitor/notary is NOT permitted to act on behalf of both the vendor and purchaser in residential mortgage transactions unless the transaction is the purchase of a new build. Exceptions may be considered (Applies:...",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "* Title Insurance required for all transactions (Applies: Alberta, British Columbia, Manitoba, New Brunswick, Newfoundland & Labrador, Nova Scotia, Ontario, Prince Edward Island, Saskatchewan).",
+      "ilaRequiredNotes": "Independent Legal Advice (ILA) mandatory for all non-borrowing guarantors, title transferors, and non-signing spouses.",
+      "closingNotes": "Standard closing requirements apply. * Borrower must, in addition to the down payment, confirm additional savings equivalent to 1.5% of the purchase price. * If the closing costs cannot be supported, we may add the..."
+    }
   },
   {
     "id": "lender_71",
@@ -59714,7 +61721,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "Maximum 65% - 75% LTV on 1st mortgages; up to 80% combined LTV (CLTV) on 2nd mortgages in major urban centers.",
         "isAccepted": 1
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_72",
@@ -59818,7 +61854,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "Maximum 65% - 75% LTV on 1st mortgages; up to 80% combined LTV (CLTV) on 2nd mortgages in major urban centers.",
         "isAccepted": 1
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_73",
@@ -59926,7 +61991,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "Maximum 65% - 75% LTV on 1st mortgages; up to 80% combined LTV (CLTV) on 2nd mortgages in major urban centers.",
         "isAccepted": 1
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_74",
@@ -60028,7 +62122,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "Maximum 65% - 75% LTV on 1st mortgages; up to 80% combined LTV (CLTV) on 2nd mortgages in major urban centers.",
         "isAccepted": 1
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_75",
@@ -62478,7 +64601,35 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "[NOT ACCEPTED] * No switch transfer program at NPX (Applies: Alberta, British Columbia, Ontario)",
         "isAccepted": null
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Brookfield RPS"
+      ],
+      "appraisalRequired": "* A valid residential mortgage appraisal must be provided and dated within 90 days of funding. * Residential mortgage appraisal reports must be ordered through NAS, Solidifi or RPS. Direct appraisals won't be accepted.",
+      "paymentResponsibility": "Borrower paid upfront through approved AMC portal (covered by lender on eligible switches)",
+      "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: Solidifi, NAS (Nationwide Appraisal Services), Brookfield RPS. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "* APV is not available at NPX (Applies: Alberta, British Columbia, Ontario)."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Independent Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": false,
+      "lawyerSelectionPolicy": "Borrower is free to select any practicing solicitor or lawyer in good standing with the provincial law society.",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "* A solicitor/notary is NOT permitted to act on behalf of both the vendor and purchaser in residential mortgage transactions. (Applies: Alberta, British Columbia, Ontario)",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "* Title Insurance is required (Applies: Alberta, British Columbia, Ontario).",
+      "ilaRequiredNotes": "Independent Legal Advice (ILA) mandatory for all non-borrowing guarantors, title transferors, and non-signing spouses.",
+      "closingNotes": "Standard closing requirements apply. * No requirement for closings costs (Applies: Alberta, British Columbia, Ontario)"
+    }
   },
   {
     "id": "lender_76",
@@ -63922,7 +66073,34 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "[NOT ACCEPTED] * No switch transfer program available at National Bank - Optimum Mortgage. (Applies: Alberta, British Columbia, Manitoba, New Brunswick, Newfoundland & Labrador, Nova Scotia, Ontario, Prince Edward Island, Saskatchewan)",
         "isAccepted": null
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "NAS (Nationwide Appraisal Services)",
+        "Solidifi"
+      ],
+      "appraisalRequired": "Full appraisal required through approved AMC portal for alternative and uninsurable transactions. Automated valuation (AVM) accepted where supported on insured/insurable files.",
+      "paymentResponsibility": "Borrower paid upfront through approved AMC portal (covered by lender on eligible switches)",
+      "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: NAS (Nationwide Appraisal Services), Solidifi. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "Full appraisal mandatory; automated property valuations (AVM) are not accepted."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Independent Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": false,
+      "lawyerSelectionPolicy": "Borrower is free to select any practicing solicitor or lawyer in good standing with the provincial law society.",
+      "solicitorOnly": false,
+      "bcNotaryAllowed": true,
+      "dualRepresentationAllowed": true,
+      "dualRepresentationNotes": "Dual representation permitted subject to provincial legal professional conduct rules.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance required on all transactions through approved title insurers (FCT, Chicago Title, Stewart Title, or FNF).",
+      "ilaRequiredNotes": "Independent Legal Advice (ILA) mandatory for all non-borrowing guarantors, title transferors, and non-signing spouses.",
+      "closingNotes": "Legal closing instructions issued directly to borrower's solicitor or processed via FCT/FNF title transfer platform."
+    }
   },
   {
     "id": "lender_77",
@@ -65169,7 +67347,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "[NOT ACCEPTED] * No switch transfer program (Applies: Alberta, British Columbia, Nova Scotia, Ontario, Quebec)",
         "isAccepted": null
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_78",
@@ -67121,7 +69328,37 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "[NOT ACCEPTED] * Rooming / Boarding Houses / B&B's not accepted at Neo (Applies: Alberta, British Columbia, Manitoba, New Brunswick, Newfoundland & Labrador, Nova Scotia, Ontario, Prince Edward Island, Saskatchewan)",
         "isAccepted": null
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Brookfield RPS"
+      ],
+      "appraisalRequired": "* Must be ordered by RPS (Brookfield), Solidifi, or NAS. (Applies: Alberta, British Columbia, Manitoba, New Brunswick, Newfoundland & Labrador, Nova Scotia, Ontario, Prince Edward Island, Saskatchewan).",
+      "paymentResponsibility": "Borrower paid upfront through approved AMC portal (covered by lender on eligible switches)",
+      "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: Solidifi, NAS (Nationwide Appraisal Services), Brookfield RPS. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "* APV not available at Neo Financial (Applies: Alberta, British Columbia, Manitoba, New Brunswick, Newfoundland & Labrador, Nova Scotia, Ontario, Prince Edward Island, Saskatchewan)."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "FCT (First Canadian Title)",
+        "Stewart Title",
+        "Independent Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": false,
+      "lawyerSelectionPolicy": "No restricted lawyer list. Borrower can select any solicitor in good standing with the law society.",
+      "solicitorOnly": false,
+      "bcNotaryAllowed": true,
+      "dualRepresentationAllowed": true,
+      "dualRepresentationNotes": "Dual representation permitted subject to provincial legal professional conduct rules.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "* Currently, title insurance is accepted by Neo from the following providers: * First Canadian Title Insurance Company \ufffdFCT\ufffd * Title Plus - LPIC \ufffdLawyers Professional Indemnity) * Stewart Title Guaranty Company *...",
+      "ilaRequiredNotes": "Independent Legal Advice (ILA) mandatory for all non-borrowing guarantors, title transferors, and non-signing spouses.",
+      "closingNotes": "Standard closing requirements apply. **All Provinces** * Confirm 1.5% of the purchase price, over and above the down payment. **Alberta & Saskatchewan** * Confirm 0.5% of the purchase price, over and above the down..."
+    }
   },
   {
     "id": "lender_79",
@@ -67224,7 +69461,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "Maximum 65% - 75% LTV on 1st mortgages; up to 80% combined LTV (CLTV) on 2nd mortgages in major urban centers.",
         "isAccepted": 1
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_80",
@@ -67326,7 +69592,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "Maximum 65% - 75% LTV on 1st mortgages; up to 80% combined LTV (CLTV) on 2nd mortgages in major urban centers.",
         "isAccepted": 1
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_81",
@@ -67428,7 +69723,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "Maximum 65% - 75% LTV on 1st mortgages; up to 80% combined LTV (CLTV) on 2nd mortgages in major urban centers.",
         "isAccepted": 1
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_82",
@@ -67531,7 +69855,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "Maximum 65% - 75% LTV on 1st mortgages; up to 80% combined LTV (CLTV) on 2nd mortgages in major urban centers.",
         "isAccepted": 1
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_83",
@@ -67636,7 +69989,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "Maximum 65% - 75% LTV on 1st mortgages; up to 80% combined LTV (CLTV) on 2nd mortgages in major urban centers.",
         "isAccepted": 1
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_84",
@@ -67738,7 +70120,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "Maximum 65% - 75% LTV on 1st mortgages; up to 80% combined LTV (CLTV) on 2nd mortgages in major urban centers.",
         "isAccepted": 1
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_85",
@@ -67841,7 +70252,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "Maximum 65% - 75% LTV on 1st mortgages; up to 80% combined LTV (CLTV) on 2nd mortgages in major urban centers.",
         "isAccepted": 1
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_86",
@@ -67943,7 +70383,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "Maximum 65% - 75% LTV on 1st mortgages; up to 80% combined LTV (CLTV) on 2nd mortgages in major urban centers.",
         "isAccepted": 1
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_87",
@@ -70281,7 +72750,37 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "[NOT ACCEPTED] * No student housing financing at RFA (Applies: Alberta, British Columbia, Manitoba, New Brunswick, Newfoundland & Labrador, Nova Scotia, Ontario, Prince Edward Island, Saskatchewan)",
         "isAccepted": null
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Brookfield RPS",
+        "FNF Canada"
+      ],
+      "appraisalRequired": "When required, an appraisal must be ordered by: - FNF, NAS, RPS (Brookfield), or Solidifi. Applications that will require an appraisal: **INSURED:** - Private Sale (if Insurer does not order) - Purchase Plus Improvement - Spousal Buyout **INSURABLE:** All...",
+      "paymentResponsibility": "Borrower paid upfront through approved AMC portal (covered by lender on eligible switches)",
+      "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: Solidifi, NAS (Nationwide Appraisal Services), Brookfield RPS, FNF Canada. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
+      "driveByAllowed": true,
+      "desktopAvmAllowed": true,
+      "avmNotes": "**Available for brokers with Insider Status Only** * Insurable Purchase/Transfer * Purchases we required the MLX & purchase contract upfront in order to apply the AVM * Transfers , Contact your RVP to confirm which..."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "FCT (First Canadian Title)",
+        "Independent Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": false,
+      "lawyerSelectionPolicy": "No restricted lawyer list. Borrower can select any solicitor in good standing with the law society.",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "* A solicitor/notary is NOT permitted to act on behalf of both the vendor and purchaser in residential mortgage transactions (Applies: Alberta, British Columbia, Manitoba, New Brunswick, Newfoundland & Labrador, Nova...",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "- Title insurance to be obtained from FCT (Applies: Alberta, British Columbia, Manitoba, New Brunswick, Newfoundland & Labrador, Nova Scotia, Ontario, Prince Edward Island, Saskatchewan).",
+      "ilaRequiredNotes": "Independent Legal Advice (ILA) mandatory for all non-borrowing guarantors, title transferors, and non-signing spouses.",
+      "closingNotes": "Standard closing requirements apply. * 1.5% of the purchase price or solicitor letter indicating costs * Closing costs can be debt serviced into liabilities. (Applies: Alberta, British Columbia, Manitoba, New Brunswick..."
+    }
   },
   {
     "id": "lender_88",
@@ -70383,7 +72882,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "Maximum 65% - 75% LTV on 1st mortgages; up to 80% combined LTV (CLTV) on 2nd mortgages in major urban centers.",
         "isAccepted": 1
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_89",
@@ -70486,7 +73014,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "Maximum 65% - 75% LTV on 1st mortgages; up to 80% combined LTV (CLTV) on 2nd mortgages in major urban centers.",
         "isAccepted": 1
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_90",
@@ -70589,7 +73146,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "Maximum 65% - 75% LTV on 1st mortgages; up to 80% combined LTV (CLTV) on 2nd mortgages in major urban centers.",
         "isAccepted": 1
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_91",
@@ -70696,7 +73282,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "Commercial underwriting requires minimum 1.15x - 1.25x DSCR based on normalized net operating income (NOI).",
         "isAccepted": 1
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_92",
@@ -70798,7 +73413,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "Maximum 65% - 75% LTV on 1st mortgages; up to 80% combined LTV (CLTV) on 2nd mortgages in major urban centers.",
         "isAccepted": 1
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_93",
@@ -70901,7 +73545,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "Maximum 65% - 75% LTV on 1st mortgages; up to 80% combined LTV (CLTV) on 2nd mortgages in major urban centers.",
         "isAccepted": 1
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_94",
@@ -80029,7 +82702,37 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "[NOT ACCEPTED] * No collateral charge switch/transfer program (Applies: National)",
         "isAccepted": null
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "FNF Canada"
+      ],
+      "appraisalRequired": "All appraisals must now be ordered via NAS,SOLIDIFI and FNF Scotia Mortgage Authority is pleased to announce that Automated Valuation Models (AVMs) will be introduced to our current offering of valuation products. AVMs will be available through the NAS and...",
+      "paymentResponsibility": "Borrower paid upfront through approved AMC portal (covered by lender on eligible switches)",
+      "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: Solidifi, NAS (Nationwide Appraisal Services), FNF Canada. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": true,
+      "avmNotes": "For some applications, an appraisal report may not be required based on Scotiabank Policy. The CMHC Property Assessment Tool (PAT) may be used to confirm value in the following circumstances: * Owner occupied principal..."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "FCT (First Canadian Title)",
+        "FNF Canada",
+        "Independent Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": false,
+      "lawyerSelectionPolicy": "Borrower is free to select any practicing solicitor or lawyer in good standing with the provincial law society.",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "* A solicitor/notary is NOT permitted to act on behalf of both the vendor and purchaser in residential mortgage transactions * Different Lawyers at the same firm can be used (Applies: National)",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "* Client pays title insurance on Purchases * [Link to FCT](https://www. fct.",
+      "ilaRequiredNotes": "Independent Legal Advice (ILA) mandatory for all non-borrowing guarantors, title transferors, and non-signing spouses.",
+      "closingNotes": "Standard closing requirements apply. - For all provinces and territories except Alberta, applications started before Jan. 27 will still require verification of 1.5% of the purchase price as the closing cost. - In..."
+    }
   },
   {
     "id": "lender_95",
@@ -80132,7 +82835,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "Maximum 65% - 75% LTV on 1st mortgages; up to 80% combined LTV (CLTV) on 2nd mortgages in major urban centers.",
         "isAccepted": 1
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_96",
@@ -80234,7 +82966,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "Maximum 65% - 75% LTV on 1st mortgages; up to 80% combined LTV (CLTV) on 2nd mortgages in major urban centers.",
         "isAccepted": 1
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_97",
@@ -80336,7 +83097,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "Maximum 65% - 75% LTV on 1st mortgages; up to 80% combined LTV (CLTV) on 2nd mortgages in major urban centers.",
         "isAccepted": 1
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_99",
@@ -82128,7 +84918,35 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "[NOT ACCEPTED] * Student housing not accepted (Applies: Alberta, British Columbia, New Brunswick, Newfoundland & Labrador, Northwest Territories, Nova Scotia, Ontario, Prince Edward Island, Saskatchewan, Yukon)",
         "isAccepted": null
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "NAS (Nationwide Appraisal Services)",
+        "Solidifi",
+        "Value Connect"
+      ],
+      "appraisalRequired": "**Aspire (Ontario)** and **Aspire (West - BC, AB, SK, MB)** and **Aspire Advantage - Rental** - Full appraisal required for all transactions*** _Strive reserves the right to request a second appraisal in certain instances_ - Must be selected from Aspire\u2019s...",
+      "paymentResponsibility": "Borrower paid upfront through approved AMC portal (covered by lender on eligible switches)",
+      "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: NAS (Nationwide Appraisal Services), Solidifi, Value Connect. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": true,
+      "avmNotes": "* APV not available at Aspire (Applies: Alberta, British Columbia, Manitoba, Ontario, Saskatchewan)."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Independent Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": false,
+      "lawyerSelectionPolicy": "Borrower is free to select any practicing solicitor or lawyer in good standing with the provincial law society.",
+      "solicitorOnly": false,
+      "bcNotaryAllowed": true,
+      "dualRepresentationAllowed": true,
+      "dualRepresentationNotes": "Dual representation restricted; exceptions may be considered upon underwriter review.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "* Title Insurance is required. (Applies: Alberta, British Columbia, Manitoba, Ontario, Saskatchewan).",
+      "ilaRequiredNotes": "Independent Legal Advice (ILA) mandatory for all non-borrowing guarantors, title transferors, and non-signing spouses.",
+      "closingNotes": "Standard closing requirements apply. * Not needed to be confirmed. If the deal is borderline we may ask they are not borrowing the money. (Applies: Alberta, British Columbia, Manitoba, Ontario, Saskatchewan)"
+    }
   },
   {
     "id": "lender_100",
@@ -82230,7 +85048,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "Maximum 65% - 75% LTV on 1st mortgages; up to 80% combined LTV (CLTV) on 2nd mortgages in major urban centers.",
         "isAccepted": 1
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_101",
@@ -96142,7 +98989,38 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "[NOT ACCEPTED] * Collateral Charge Mortgages are not acceptable for transfer to TD (Applies: National)",
         "isAccepted": null
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Brookfield RPS"
+      ],
+      "appraisalRequired": "**Overview** For TD approvals requiring a property valuation (non-APV): - Receipt of a satisfactory appraisal addressed to TD must be completed through a TD-approved Appraisal Management Company (AMC). Currently, the approved AMCs are Nationwide, RPS Real...",
+      "paymentResponsibility": "Borrower paid upfront through approved AMC portal (covered by lender on eligible switches)",
+      "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: Solidifi, NAS (Nationwide Appraisal Services), Brookfield RPS. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": true,
+      "avmNotes": "**Automated Property Valuation (APV) Summary** * TD uses Automated Property Valuation (APV) to assess property value during the mortgage process. If a property is ineligible for APV or if APV does not return a..."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "FCT (First Canadian Title)",
+        "FNF Canada",
+        "Stewart Title",
+        "Independent Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": false,
+      "lawyerSelectionPolicy": "Borrower is free to select any practicing solicitor or lawyer in good standing with the provincial law society.",
+      "solicitorOnly": false,
+      "bcNotaryAllowed": true,
+      "dualRepresentationAllowed": true,
+      "dualRepresentationNotes": "Dual representation permitted subject to provincial legal professional conduct rules.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "* Title Insurance is not mandatory on purchases * However, we may require it for specific deals (using POA/with Well Water), or the Solicitor may obtain it in lieu of certain required docs (Survey). * [Link to...",
+      "ilaRequiredNotes": "Independent Legal Advice (ILA) mandatory for all non-borrowing guarantors, title transferors, and non-signing spouses.",
+      "closingNotes": "Standard closing requirements apply. * For CMHC/Sagen insured mortgages in Alberta only, closing costs are to be confirmed as 0.5% of the purchase price. * For insured mortgages minimum 1.5% of the purchase price must..."
+    }
   },
   {
     "id": "lender_102",
@@ -96245,7 +99123,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "Maximum 65% - 75% LTV on 1st mortgages; up to 80% combined LTV (CLTV) on 2nd mortgages in major urban centers.",
         "isAccepted": 1
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_103",
@@ -96347,7 +99254,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "Maximum 65% - 75% LTV on 1st mortgages; up to 80% combined LTV (CLTV) on 2nd mortgages in major urban centers.",
         "isAccepted": 1
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_104",
@@ -96451,7 +99387,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "Maximum 65% - 75% LTV on 1st mortgages; up to 80% combined LTV (CLTV) on 2nd mortgages in major urban centers.",
         "isAccepted": 1
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_105",
@@ -96554,7 +99519,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "Maximum 65% - 75% LTV on 1st mortgages; up to 80% combined LTV (CLTV) on 2nd mortgages in major urban centers.",
         "isAccepted": 1
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_106",
@@ -96656,7 +99650,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "Maximum 65% - 75% LTV on 1st mortgages; up to 80% combined LTV (CLTV) on 2nd mortgages in major urban centers.",
         "isAccepted": 1
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_107",
@@ -98155,7 +101178,35 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "[NOT ACCEPTED] * No switch transfer program at WealthOne (Applies: Alberta, British Columbia, Manitoba, New Brunswick, Newfoundland & Labrador, Nova Scotia, Ontario, Prince Edward Island, Saskatchewan)",
         "isAccepted": null
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "NAS (Nationwide Appraisal Services)",
+        "Solidifi"
+      ],
+      "appraisalRequired": "* WealthONE Bank of Canada has updated its appraisal ordering process and Approved Appraiser List, effective immediately. * Key changes: * Brokers now have two options when ordering appraisals: * Select an approved appraiser directly from WealthONE\u2019s Approved...",
+      "paymentResponsibility": "Borrower paid upfront through approved AMC portal (covered by lender on eligible switches)",
+      "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: NAS (Nationwide Appraisal Services), Solidifi. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "* APV not accepted full appraisals only (Applies: Alberta, British Columbia, Manitoba, New Brunswick, Newfoundland & Labrador, Nova Scotia, Ontario, Prince Edward Island, Saskatchewan)."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "FCT (First Canadian Title)",
+        "Independent Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": false,
+      "lawyerSelectionPolicy": "Borrower is free to select any practicing solicitor or lawyer in good standing with the provincial law society.",
+      "solicitorOnly": false,
+      "bcNotaryAllowed": true,
+      "dualRepresentationAllowed": true,
+      "dualRepresentationNotes": "Dual representation permitted subject to provincial legal professional conduct rules.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "* FCT only, client paid lender title insurance (Applies: Alberta, British Columbia, Manitoba, New Brunswick, Newfoundland & Labrador, Nova Scotia, Ontario, Prince Edward Island, Saskatchewan).",
+      "ilaRequiredNotes": "Independent Legal Advice (ILA) mandatory for all non-borrowing guarantors, title transferors, and non-signing spouses.",
+      "closingNotes": "Standard closing requirements apply. - 1.5% of property value for qualification. (Applies: Alberta, British Columbia, Manitoba, New Brunswick, Newfoundland & Labrador, Nova Scotia, Ontario, Prince Edward Island..."
+    }
   },
   {
     "id": "lender_108",
@@ -98257,7 +101308,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "Maximum 65% - 75% LTV on 1st mortgages; up to 80% combined LTV (CLTV) on 2nd mortgages in major urban centers.",
         "isAccepted": 1
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_109",
@@ -98359,7 +101439,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "Maximum 65% - 75% LTV on 1st mortgages; up to 80% combined LTV (CLTV) on 2nd mortgages in major urban centers.",
         "isAccepted": 1
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_110",
@@ -98461,7 +101570,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "Maximum 65% - 75% LTV on 1st mortgages; up to 80% combined LTV (CLTV) on 2nd mortgages in major urban centers.",
         "isAccepted": 1
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Approved Local AACI / CRA Appraiser Panel"
+      ],
+      "appraisalRequired": "Full narrative appraisal required from an accredited AACI or CRA designated appraiser in good standing. Appraisal must be dated within 90-120 days of advance.",
+      "paymentResponsibility": "Borrower paid upfront directly to appraisal firm or AMC portal",
+      "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Lender Designated Legal Counsel",
+        "Independent Borrower Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Lender appoints designated corporate legal counsel to draft and register mortgage security at borrower's expense. Borrower must retain independent legal representation (ILR).",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "Dual representation is strictly prohibited. Separate legal representation required for lender and borrower to protect all parties.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance policy mandatory on all private mortgage advances with required endorsements (First Canadian Title, Chicago Title, or Stewart Title).",
+      "ilaRequiredNotes": "Mandatory Independent Legal Advice (ILA) with formal Certificate of Independent Advice required for all third-party guarantors, corporate directors, and non-borrowing spouses on title.",
+      "closingNotes": "Lender legal instructions delivered directly to borrower counsel. Funds disbursed net of lender legal fees, broker fees, and municipal tax holdbacks."
+    }
   },
   {
     "id": "lender_114",
@@ -102084,7 +105222,34 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "[NOT ACCEPTED] * Manulife does not allow Student Housing (Applies: National)",
         "isAccepted": null
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "NAS (Nationwide Appraisal Services)",
+        "Solidifi"
+      ],
+      "appraisalRequired": "## Appraisal Requirements - Manulife Bank ### A Full Appraisal is Required When: * The property has two or more units and the LTV is greater than 65%. * The credit amount requested exceeds $1,000,000. * The property is considered specialty use, including...",
+      "paymentResponsibility": "Borrower paid upfront through approved AMC portal (covered by lender on eligible switches)",
+      "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: NAS (Nationwide Appraisal Services), Solidifi. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": true,
+      "avmNotes": "An automated valuation is acceptable as the appraisal valuation method under the following circumstances: * Residential owner-occupied single-family dwelling, with property \u2264 5 acres. * Residential owner-occupied family..."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Independent Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": false,
+      "lawyerSelectionPolicy": "Borrower is free to select any practicing solicitor or lawyer in good standing with the provincial law society.",
+      "solicitorOnly": false,
+      "bcNotaryAllowed": true,
+      "dualRepresentationAllowed": true,
+      "dualRepresentationNotes": "Dual representation permitted subject to provincial legal professional conduct rules.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "* Yes Title Insurance is required (Applies: National).",
+      "ilaRequiredNotes": "Independent Legal Advice (ILA) mandatory for all non-borrowing guarantors, title transferors, and non-signing spouses.",
+      "closingNotes": "Standard closing requirements apply. * Yes we require evidence of 1.5% of the purchase price for closing costs. If closing costs are taken from borrowed funds, then the estimated cost must be included in the TDS..."
+    }
   },
   {
     "id": "lender_115",
@@ -105227,7 +108392,35 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "[NOT ACCEPTED] * Student Housing not accepted at MCAP (Applies: National)",
         "isAccepted": null
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "NAS (Nationwide Appraisal Services)",
+        "Solidifi"
+      ],
+      "appraisalRequired": "* Appraisal is required at Eclipse (Applies: Alberta, British Columbia, Manitoba, Ontario, Saskatchewan).",
+      "paymentResponsibility": "Borrower paid upfront through approved AMC portal (covered by lender on eligible switches)",
+      "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: NAS (Nationwide Appraisal Services), Solidifi. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
+      "driveByAllowed": true,
+      "desktopAvmAllowed": true,
+      "avmNotes": "* APV is not available at Eclipse (Applies: Alberta, British Columbia, Manitoba, Ontario, Saskatchewan)."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "FCT (First Canadian Title)",
+        "Independent Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": false,
+      "lawyerSelectionPolicy": "No restricted lawyer list. Borrower can select any solicitor in good standing with the law society.",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "* A solicitor/notary* is required to complete the mortgage/purchase transaction, with the exception of refinance and transfer transactions which may be closed by MCAP's approved closing service providers. * In a...",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "- We do require title insurance on Eclipse loans (Applies: Alberta, British Columbia, Manitoba, Ontario, Saskatchewan).",
+      "ilaRequiredNotes": "Independent Legal Advice (ILA) mandatory for all non-borrowing guarantors, title transferors, and non-signing spouses.",
+      "closingNotes": "Standard closing requirements apply. * No policy provided please speak to your BDM if closing costs to be required in underwriting (Applies: Alberta, British Columbia, Manitoba, Ontario, Saskatchewan)"
+    }
   },
   {
     "id": "lender_116",
@@ -108305,7 +111498,38 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "[NOT ACCEPTED] * Student Housing is not allowed at CMLS Financial (Applies: Alberta, British Columbia, Manitoba, New Brunswick, Newfoundland & Labrador, Nova Scotia, Ontario, Prince Edward Island, Saskatchewan)",
         "isAccepted": null
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "NAS (Nationwide Appraisal Services)",
+        "Solidifi",
+        "Brookfield RPS",
+        "Value Connect"
+      ],
+      "appraisalRequired": "* All appraisals required through AVEO approved list, Value Connect, Solidifi or RPS (for all programs) * Property must have a remaining economic life greater than requested amortization + 5 years. (Applies: Alberta, British Columbia, Manitoba, Ontario...",
+      "paymentResponsibility": "Borrower paid upfront through approved AMC portal (covered by lender on eligible switches)",
+      "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: NAS (Nationwide Appraisal Services), Solidifi, Brookfield RPS, Value Connect. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": true,
+      "avmNotes": "* Not available on subject properties. AVMs used only in Flex40 Networth Real Estate Qualifier Program (Applies: Alberta, British Columbia, Manitoba, Ontario, Saskatchewan)."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "FCT (First Canadian Title)",
+        "FNF Canada",
+        "Independent Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": false,
+      "lawyerSelectionPolicy": "Borrower is free to select any practicing solicitor or lawyer in good standing with the provincial law society.",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "* A solicitor/notary is NOT permitted to act on behalf of both the vendor and purchaser in residential mortgage transactions (Applies: Alberta, British Columbia, Manitoba, Ontario, Saskatchewan)",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "* Title Insurance is required. (Applies: Alberta, British Columbia, Manitoba, Ontario, Saskatchewan).",
+      "ilaRequiredNotes": "Independent Legal Advice (ILA) mandatory for all non-borrowing guarantors, title transferors, and non-signing spouses.",
+      "closingNotes": "Standard closing requirements apply. * Standard 1.5% of purchase price. (Applies: Alberta, British Columbia, Manitoba, Ontario, Saskatchewan)"
+    }
   },
   {
     "id": "lender_117",
@@ -110423,7 +113647,35 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "[NOT ACCEPTED] * No student housing options at Merix (Lendwise) (Applies: National)",
         "isAccepted": null
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "NAS (Nationwide Appraisal Services)",
+        "Solidifi"
+      ],
+      "appraisalRequired": "- MERIX uses fee appraisers in transactions where an appraisal is required to mitigate property risk. The appraisal is to state that its intended use is for mortgage lending purposes. - The lower of the appraised value or purchase price is used for lending...",
+      "paymentResponsibility": "Borrower paid upfront through approved AMC portal (covered by lender on eligible switches)",
+      "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: NAS (Nationwide Appraisal Services), Solidifi. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
+      "driveByAllowed": true,
+      "desktopAvmAllowed": true,
+      "avmNotes": "**Drive-by Appraisals** - Drive-by appraisals can be accepted if: - Eligible Property Type: Owner Occupied, Second Home, Rental - Eligible Loan Type: MLS Purchase, Refinance, Transfer - LTV 150,000 or located in the..."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "FCT (First Canadian Title)",
+        "Independent Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": false,
+      "lawyerSelectionPolicy": "Borrower is free to select any practicing solicitor or lawyer in good standing with the provincial law society.",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "* A solicitor/notary is NOT permitted to act on behalf of both the vendor and purchaser in residential mortgage transactions (Applies: National)",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "* Title insurance required on all files at cost to client * No longer using FCT for their QC transfers. * [Link to FCT](https://www.",
+      "ilaRequiredNotes": "Independent Legal Advice (ILA) mandatory for all non-borrowing guarantors, title transferors, and non-signing spouses.",
+      "closingNotes": "Standard closing requirements apply. - Closing costs are to be calculated using a 3% payment based on 1.5% of the purchase price. - Outside of Quebec, exact amount of closing costs can be used if provided by the..."
+    }
   },
   {
     "id": "lender_118",
@@ -113021,7 +116273,35 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "[NOT ACCEPTED] * No Student Housing financing available at RMG (Applies: Alberta, British Columbia, Manitoba, New Brunswick, Newfoundland & Labrador, Nova Scotia, Ontario, Prince Edward Island, Saskatchewan)",
         "isAccepted": null
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)"
+      ],
+      "appraisalRequired": "* Appraisal is required at Eclipse (Applies: Alberta, British Columbia, Manitoba, Ontario, Saskatchewan).",
+      "paymentResponsibility": "Borrower paid upfront through approved AMC portal (covered by lender on eligible switches)",
+      "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: Solidifi, NAS (Nationwide Appraisal Services). Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
+      "driveByAllowed": true,
+      "desktopAvmAllowed": true,
+      "avmNotes": "* APV is not available at Eclipse (Applies: Alberta, British Columbia, Manitoba, Ontario, Saskatchewan)."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "FCT (First Canadian Title)",
+        "Independent Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": false,
+      "lawyerSelectionPolicy": "No restricted lawyer list. Borrower can select any solicitor in good standing with the law society.",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "* A solicitor/notary* is required to complete the mortgage/purchase transaction, with the exception of refinance and transfer transactions which may be closed by MCAP's approved closing service providers. * In a...",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "- We do require title insurance on Eclipse loans (Applies: Alberta, British Columbia, Manitoba, Ontario, Saskatchewan).",
+      "ilaRequiredNotes": "Independent Legal Advice (ILA) mandatory for all non-borrowing guarantors, title transferors, and non-signing spouses.",
+      "closingNotes": "Standard closing requirements apply. * No policy provided please speak to your BDM if closing costs to be required in underwriting (Applies: Alberta, British Columbia, Manitoba, Ontario, Saskatchewan)"
+    }
   },
   {
     "id": "lender_119",
@@ -114482,7 +117762,34 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "[NOT ACCEPTED] * Student Housing is not offered at Radius Financial (Applies: Alberta, British Columbia, Manitoba, New Brunswick, Newfoundland & Labrador, Nova Scotia, Ontario, Prince Edward Island, Saskatchewan)",
         "isAccepted": null
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)"
+      ],
+      "appraisalRequired": "- Appraisal to be ordered through NAS or Solidifi or Radius Approved Appraiser. (Applies: Alberta, British Columbia, Manitoba, New Brunswick, Newfoundland & Labrador, Nova Scotia, Ontario, Prince Edward Island, Saskatchewan).",
+      "paymentResponsibility": "Borrower paid upfront through approved AMC portal (covered by lender on eligible switches)",
+      "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: Solidifi, NAS (Nationwide Appraisal Services). Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": true,
+      "avmNotes": "* APV is allowed on the rare case for insurable loans. Must to be 65% LTV or lower and in larger municipality."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Independent Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": false,
+      "lawyerSelectionPolicy": "Borrower is free to select any practicing solicitor or lawyer in good standing with the provincial law society.",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "* A solicitor/notary is NOT permitted to act on behalf of both the vendor and purchaser in residential mortgage transactions (Applies: Alberta, British Columbia, Manitoba, New Brunswick, Newfoundland & Labrador, Nova...",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "* Title Insurance required on all transactions (Applies: Alberta, British Columbia, Manitoba, New Brunswick, Newfoundland & Labrador, Nova Scotia, Ontario, Prince Edward Island, Saskatchewan).",
+      "ilaRequiredNotes": "Independent Legal Advice (ILA) mandatory for all non-borrowing guarantors, title transferors, and non-signing spouses.",
+      "closingNotes": "Standard closing requirements apply. * 1.5% of the purchase price. * Closing Costs can be debt serviced if not verified: 3% monthly payment based on 1.5% of the purchase price. (Applies: Alberta, British Columbia..."
+    }
   },
   {
     "id": "lender_121",
@@ -115632,7 +118939,37 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "[NOT ACCEPTED] - No Collateral switches \u2013 You must verify that the client holds a standard charge mortgage before submission. Our underwriters will require confirmation from you for the following lenders in particular:\r\n - RBC\r\n - Scotiabank\r\n - TD\r\n - BMO\r\n - CIBC\r\n - National Bank\r\n- Collateral mortgages \u2013 a refinance closing with a solicitor can be offered instead. Refinance rates apply (Applies: Ontario)",
         "isAccepted": null
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Brookfield RPS"
+      ],
+      "appraisalRequired": "- Most conventional mortgage & Line of Credit requests must be supported by an appraisal. Brokers are responsible for the cost of the appraisal report. Full appraisals must be ordered through Nationwide Appraisal Services (NAS), Solidifi, or RPS Real Property...",
+      "paymentResponsibility": "Borrower paid upfront through approved AMC portal (covered by lender on eligible switches)",
+      "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: Solidifi, NAS (Nationwide Appraisal Services), Brookfield RPS. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": true,
+      "avmNotes": "**Automated Valuation Model (AVM)** - Meridian is saving your clients money by offering a more flexible appraisal policy. Most conventional mortgage & Line of Credit requests must be supported by an appraisal."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "FCT (First Canadian Title)",
+        "Stewart Title",
+        "Independent Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": false,
+      "lawyerSelectionPolicy": "No restricted lawyer list. Borrower can select any solicitor in good standing with the law society.",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "* A solicitor/notary is NOT permitted to act on behalf of both the vendor and purchaser in residential mortgage transactions (Applies: Ontario)",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "* First Canadian Title, Stewart Title or Title Plus is mandatory on all commitments. (Applies: Ontario).",
+      "ilaRequiredNotes": "Independent Legal Advice (ILA) mandatory for all non-borrowing guarantors, title transferors, and non-signing spouses.",
+      "closingNotes": "Standard closing requirements apply. * 1.5% closing costs are to be confirmed for all high-ratio and conventional purchases. (Applies: Ontario)"
+    }
   },
   {
     "id": "lender_122",
@@ -119165,7 +122502,37 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "[NOT ACCEPTED] * No switch transfer program at DUCA A side (Applies: Ontario)",
         "isAccepted": null
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Brookfield RPS",
+        "FNF Canada"
+      ],
+      "appraisalRequired": "Property Appraisals - All appraisals must be obtained through one of DUCA\u2019s approved appraisal providers: - FNF Canada - Solidifi - NAS - RPS (Applies: Ontario).",
+      "paymentResponsibility": "Borrower paid upfront through approved AMC portal (covered by lender on eligible switches)",
+      "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: Solidifi, NAS (Nationwide Appraisal Services), Brookfield RPS, FNF Canada. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": true,
+      "avmNotes": "* APV is allowed for some DUCA Files * Appraised Property Value - all files will require an appraisal through one of our Approved appraisal providers (NAS, Solidify, FNF Canada, and RPS). If the LTV is less than 50%..."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "FCT (First Canadian Title)",
+        "Independent Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": false,
+      "lawyerSelectionPolicy": "Borrower is free to select any practicing solicitor or lawyer in good standing with the provincial law society.",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "* A solicitor/notary is NOT permitted to act on behalf of both the vendor and purchaser in residential mortgage transactions * Different Lawyers at the same firm can be used (Applies: Ontario)",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "* [Link to FCT](https://www. fct.",
+      "ilaRequiredNotes": "Independent Legal Advice (ILA) mandatory for all non-borrowing guarantors, title transferors, and non-signing spouses.",
+      "closingNotes": "Standard closing requirements apply. * 1.5% is required for closing costs. (Applies: Ontario)"
+    }
   },
   {
     "id": "lender_123",
@@ -124460,7 +127827,34 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "[NOT ACCEPTED] * No switch transfer program at Desjardins (Applies: Ontario, Quebec)",
         "isAccepted": null
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)"
+      ],
+      "appraisalRequired": "Appraisals General Clients are responsible for the full cost of the appraisal. The mortgage broker is responsible for ordering the appraisal when required. Appraisals must be ordered through Nationwide Appraisal Services (NAS) using the Desjardins Group /...",
+      "paymentResponsibility": "Borrower paid upfront through approved AMC portal (covered by lender on eligible switches)",
+      "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: Solidifi, NAS (Nationwide Appraisal Services). Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
+      "driveByAllowed": true,
+      "desktopAvmAllowed": false,
+      "avmNotes": "* APV is not currently available (Applies: Ontario, Quebec)."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Independent Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": false,
+      "lawyerSelectionPolicy": "No restricted lawyer list. Borrower can select any solicitor in good standing with the law society.",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "* A solicitor/notary is NOT permitted to act on behalf of both the vendor and purchaser in residential mortgage transactions * Different Lawyers at the same firm can be used (Applies: Ontario, Quebec)",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "* Yes title insurance is required (Applies: Ontario, Quebec).",
+      "ilaRequiredNotes": "Independent Legal Advice (ILA) mandatory for all non-borrowing guarantors, title transferors, and non-signing spouses.",
+      "closingNotes": "Standard closing requirements apply. **Closing Costs** * 1.5% for closing costs are required (Applies: Ontario, Quebec)"
+    }
   },
   {
     "id": "lender_124",
@@ -126361,7 +129755,35 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "[NOT ACCEPTED] * No collateral transfer program (Applies: Alberta)",
         "isAccepted": null
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "NAS (Nationwide Appraisal Services)",
+        "Solidifi"
+      ],
+      "appraisalRequired": "Appraisals & Property Valuations Broker Responsibilities Servus no longer orders appraisals on behalf of brokers. Brokers are responsible for: Collecting the appraisal fee from the applicant and paying the appraiser directly. Advising the appraiser of Servus...",
+      "paymentResponsibility": "Borrower paid upfront through approved AMC portal (covered by lender on eligible switches)",
+      "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: NAS (Nationwide Appraisal Services), Solidifi. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "* APV not available at Servus Credit Union (Applies: Alberta)."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "FNF Canada",
+        "Independent Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": false,
+      "lawyerSelectionPolicy": "No restricted lawyer list. Borrower can select any solicitor in good standing with the law society.",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "* A solicitor/notary is NOT permitted to act on behalf of both the vendor and purchaser in residential mortgage transactions. (Applies: Alberta)",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "## Qualifying Mortgage Transactions Servus Credit Union partners with **FNF Canada (a division of Fidelity National Financial)** to facilitate eligible refinance, switch, and certain construction mortgage transactions...",
+      "ilaRequiredNotes": "Independent Legal Advice (ILA) mandatory for all non-borrowing guarantors, title transferors, and non-signing spouses.",
+      "closingNotes": "Standard closing requirements apply. * Confirmation of estimated closing costs is required. Please ensure the borrower has verified funds covering the greater of $2,500 or 0.5% of the purchase price. * Make sure 3%..."
+    }
   },
   {
     "id": "lender_125",
@@ -127933,7 +131355,34 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "[NOT ACCEPTED] * Rent to own not allowed (Applies: National)",
         "isAccepted": null
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "NAS (Nationwide Appraisal Services)",
+        "Solidifi"
+      ],
+      "appraisalRequired": "Full appraisal required through approved AMC portal for alternative and uninsurable transactions. Automated valuation (AVM) accepted where supported on insured/insurable files.",
+      "paymentResponsibility": "Borrower paid upfront through approved AMC portal (covered by lender on eligible switches)",
+      "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: NAS (Nationwide Appraisal Services), Solidifi. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "Full appraisal mandatory; automated property valuations (AVM) are not accepted."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Independent Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": false,
+      "lawyerSelectionPolicy": "Borrower is free to select any practicing solicitor or lawyer in good standing with the provincial law society.",
+      "solicitorOnly": false,
+      "bcNotaryAllowed": true,
+      "dualRepresentationAllowed": true,
+      "dualRepresentationNotes": "Dual representation permitted subject to provincial legal professional conduct rules.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance required on all transactions through approved title insurers (FCT, Chicago Title, Stewart Title, or FNF).",
+      "ilaRequiredNotes": "Independent Legal Advice (ILA) mandatory for all non-borrowing guarantors, title transferors, and non-signing spouses.",
+      "closingNotes": "Legal closing instructions issued directly to borrower's solicitor or processed via FCT/FNF title transfer platform."
+    }
   },
   {
     "id": "lender_126",
@@ -128090,7 +131539,34 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "policy": "Debt Servicing Caps & OSFI B-20 Stress Test",
         "description": "Standard OSFI B-20 qualification rate applies (greater of contract rate + 2.00% or 5.25% floor). Standard maximum ratios: 39% GDS / 44% TDS. Beacon score 680+ for standard terms."
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "NAS (Nationwide Appraisal Services)",
+        "Solidifi"
+      ],
+      "appraisalRequired": "Full appraisal required through approved AMC portal for alternative and uninsurable transactions. Automated valuation (AVM) accepted where supported on insured/insurable files.",
+      "paymentResponsibility": "Borrower paid upfront through approved AMC portal (covered by lender on eligible switches)",
+      "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: NAS (Nationwide Appraisal Services), Solidifi. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "Full appraisal mandatory; automated property valuations (AVM) are not accepted."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Independent Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": false,
+      "lawyerSelectionPolicy": "Borrower is free to select any practicing solicitor or lawyer in good standing with the provincial law society.",
+      "solicitorOnly": false,
+      "bcNotaryAllowed": true,
+      "dualRepresentationAllowed": true,
+      "dualRepresentationNotes": "Dual representation permitted subject to provincial legal professional conduct rules.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Lender Title Insurance required on all transactions through approved title insurers (FCT, Chicago Title, Stewart Title, or FNF).",
+      "ilaRequiredNotes": "Independent Legal Advice (ILA) mandatory for all non-borrowing guarantors, title transferors, and non-signing spouses.",
+      "closingNotes": "Legal closing instructions issued directly to borrower's solicitor or processed via FCT/FNF title transfer platform."
+    }
   },
   {
     "id": "lender_eq_alternative",
@@ -133803,7 +137279,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "[NOT ACCEPTED] * No switch transfer program on the ALT side (Applies: National)",
         "isAccepted": null
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Brookfield RPS"
+      ],
+      "appraisalRequired": "* Appraisal fees are the responsibility of the client * Appraisals (mandatory unless high ratio/low ratio insured) will be based on max of 5 acres and no outbuildings * Non-Owner Occupied requires full appraisal - no exceptions. * Brokers can order their own...",
+      "paymentResponsibility": "Borrower paid upfront through approved AMC portal (covered by lender on eligible switches)",
+      "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: Solidifi, NAS (Nationwide Appraisal Services), Brookfield RPS. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
+      "driveByAllowed": true,
+      "desktopAvmAllowed": true,
+      "avmNotes": "* AVM process - only permitted on uninsured transfers. We use FCT only for our AVMs."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "FCT (First Canadian Title)",
+        "Independent Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": false,
+      "lawyerSelectionPolicy": "Borrower is free to select any practicing solicitor or lawyer in good standing with the provincial law society.",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "* A solicitor/notary is NOT permitted to act on behalf of both the vendor and purchaser in residential mortgage transactions. (Applies: Ontario)",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "* Title Insurance is required. (Applies: Ontario).",
+      "ilaRequiredNotes": "Independent Legal Advice (ILA) mandatory for all non-borrowing guarantors, title transferors, and non-signing spouses.",
+      "closingNotes": "Standard closing requirements apply. * Closing costs at 1.5% must be verified at time of submission. (Applies: Ontario)"
+    }
   },
   {
     "id": "lender_mcap_eclipse",
@@ -135514,7 +139019,35 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "[NOT ACCEPTED] * Student Housing is not allowed at Eclipse (Applies: Alberta, British Columbia, Manitoba, Ontario, Saskatchewan)",
         "isAccepted": null
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "NAS (Nationwide Appraisal Services)",
+        "Solidifi"
+      ],
+      "appraisalRequired": "* Appraisal is required at Eclipse (Applies: Alberta, British Columbia, Manitoba, Ontario, Saskatchewan).",
+      "paymentResponsibility": "Borrower paid upfront through approved AMC portal (covered by lender on eligible switches)",
+      "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: NAS (Nationwide Appraisal Services), Solidifi. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
+      "driveByAllowed": true,
+      "desktopAvmAllowed": true,
+      "avmNotes": "* APV is not available at Eclipse (Applies: Alberta, British Columbia, Manitoba, Ontario, Saskatchewan)."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "FCT (First Canadian Title)",
+        "Independent Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": false,
+      "lawyerSelectionPolicy": "No restricted lawyer list. Borrower can select any solicitor in good standing with the law society.",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "* A solicitor/notary* is required to complete the mortgage/purchase transaction, with the exception of refinance and transfer transactions which may be closed by MCAP's approved closing service providers. * In a...",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "- We do require title insurance on Eclipse loans (Applies: Alberta, British Columbia, Manitoba, Ontario, Saskatchewan).",
+      "ilaRequiredNotes": "Independent Legal Advice (ILA) mandatory for all non-borrowing guarantors, title transferors, and non-signing spouses.",
+      "closingNotes": "Standard closing requirements apply. * No policy provided please speak to your BDM if closing costs to be required in underwriting (Applies: Alberta, British Columbia, Manitoba, Ontario, Saskatchewan)"
+    }
   },
   {
     "id": "lender_sp_duca_near_prime",
@@ -137205,7 +140738,37 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "[NOT ACCEPTED] * No Switch Transfer Program on the B Side (Applies: Ontario)",
         "isAccepted": null
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Brookfield RPS",
+        "FNF Canada"
+      ],
+      "appraisalRequired": "Property Appraisals - All appraisals must be obtained through one of DUCA\u2019s approved appraisal providers: - FNF Canada - Solidifi - NAS - RPS (Applies: Ontario).",
+      "paymentResponsibility": "Borrower paid upfront through approved AMC portal (covered by lender on eligible switches)",
+      "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: Solidifi, NAS (Nationwide Appraisal Services), Brookfield RPS, FNF Canada. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": true,
+      "avmNotes": "* APV is allowed for some DUCA Files * Appraised Property Value - all files will require an appraisal through one of our Approved appraisal providers (NAS, Solidify, FNF Canada, and RPS). If the LTV is less than 50%..."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "FCT (First Canadian Title)",
+        "Independent Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": false,
+      "lawyerSelectionPolicy": "Borrower is free to select any practicing solicitor or lawyer in good standing with the provincial law society.",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "* A solicitor/notary is NOT permitted to act on behalf of both the vendor and purchaser in residential mortgage transactions * Different Lawyers at the same firm can be used (Applies: Ontario)",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "* [Link to FCT](https://www. fct.",
+      "ilaRequiredNotes": "Independent Legal Advice (ILA) mandatory for all non-borrowing guarantors, title transferors, and non-signing spouses.",
+      "closingNotes": "Standard closing requirements apply. * 1.5% is required for closing costs. (Applies: Ontario)"
+    }
   },
   {
     "id": "lender_sp_coastal_community",
@@ -141137,7 +144700,34 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "[NOT ACCEPTED] * No switch transfer program at Coastal Community (Applies: British Columbia)",
         "isAccepted": null
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "NAS (Nationwide Appraisal Services)",
+        "Solidifi"
+      ],
+      "appraisalRequired": "* Speak to your BDM (Applies: British Columbia).",
+      "paymentResponsibility": "Borrower paid upfront through approved AMC portal (covered by lender on eligible switches)",
+      "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: NAS (Nationwide Appraisal Services), Solidifi. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "* No policy provided by Coastal Community Credit Union (Applies: British Columbia)."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Independent Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": false,
+      "lawyerSelectionPolicy": "No restricted lawyer list. Borrower can select any solicitor in good standing with the law society.",
+      "solicitorOnly": false,
+      "bcNotaryAllowed": true,
+      "dualRepresentationAllowed": true,
+      "dualRepresentationNotes": "Dual representation permitted subject to provincial legal professional conduct rules.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "* Title insurance is required. (Applies: British Columbia).",
+      "ilaRequiredNotes": "Independent Legal Advice (ILA) mandatory for all non-borrowing guarantors, title transferors, and non-signing spouses.",
+      "closingNotes": "Standard closing requirements apply. * No closing cost policy provided (Applies: British Columbia)"
+    }
   },
   {
     "id": "lender_sp_atb_financial",
@@ -143421,7 +147011,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "[NOT ACCEPTED] * Student Housing is not allowed at ATB (Applies: Alberta)",
         "isAccepted": null
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "NAS (Nationwide Appraisal Services)",
+        "Solidifi",
+        "Brookfield RPS",
+        "FNF Canada"
+      ],
+      "appraisalRequired": "* All appraisals must be completed by Brookfield RPS or FNF Canada. (Applies: Alberta).",
+      "paymentResponsibility": "Borrower paid upfront through approved AMC portal (covered by lender on eligible switches)",
+      "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: NAS (Nationwide Appraisal Services), Solidifi, Brookfield RPS, FNF Canada. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "* APV not offered at ATB (Applies: Alberta)."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Independent Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Solicitor must be selected from the lender's pre-approved lawyer panel.",
+      "solicitorOnly": false,
+      "bcNotaryAllowed": true,
+      "dualRepresentationAllowed": true,
+      "dualRepresentationNotes": "Dual representation permitted subject to provincial legal professional conduct rules.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "- All properties and mortgage products must be registered in personal names only (Applies: Alberta).",
+      "ilaRequiredNotes": "Independent Legal Advice (ILA) mandatory for all non-borrowing guarantors, title transferors, and non-signing spouses.",
+      "closingNotes": "Standard closing requirements apply. Closing Costs For land-secured purchases, if closing costs are unknown, use 1% of the purchase price. Alternatively, a solicitor quote can be provided to verify the closing costs. If..."
+    }
   },
   {
     "id": "lender_sp_envision_financial",
@@ -145560,7 +149179,34 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "[NOT ACCEPTED] * Student Housing is not allowed at Envision Financial (Applies: British Columbia)",
         "isAccepted": null
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "NAS (Nationwide Appraisal Services)",
+        "Solidifi"
+      ],
+      "appraisalRequired": "* Appraisals to be ordered via Solidifi Valuation Service. (Applies: British Columbia).",
+      "paymentResponsibility": "Borrower paid upfront through approved AMC portal (covered by lender on eligible switches)",
+      "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: NAS (Nationwide Appraisal Services), Solidifi. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "* APV is not accepted at Envision, but Lancor can be used in some situations (Applies: British Columbia)."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Independent Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": false,
+      "lawyerSelectionPolicy": "Borrower is free to select any practicing solicitor or lawyer in good standing with the provincial law society.",
+      "solicitorOnly": false,
+      "bcNotaryAllowed": true,
+      "dualRepresentationAllowed": true,
+      "dualRepresentationNotes": "Dual representation permitted subject to provincial legal professional conduct rules.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "* Title Insurance is mandatory (Applies: British Columbia).",
+      "ilaRequiredNotes": "Independent Legal Advice (ILA) mandatory for all non-borrowing guarantors, title transferors, and non-signing spouses.",
+      "closingNotes": "Standard closing requirements apply. * Closing Costs of 1.5% required (Applies: British Columbia)"
+    }
   },
   {
     "id": "lender_sp_valley_first",
@@ -147699,7 +151345,34 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "[NOT ACCEPTED] * Student rentals are not acceptable (Applies: British Columbia)",
         "isAccepted": null
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "NAS (Nationwide Appraisal Services)",
+        "Solidifi"
+      ],
+      "appraisalRequired": "* Appraisals to be ordered via Solidifi Valuation Service. (Applies: British Columbia).",
+      "paymentResponsibility": "Borrower paid upfront through approved AMC portal (covered by lender on eligible switches)",
+      "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: NAS (Nationwide Appraisal Services), Solidifi. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "* APV not available at Valley First - Landcor can be considered in some situations (Applies: British Columbia)."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Independent Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": false,
+      "lawyerSelectionPolicy": "Borrower is free to select any practicing solicitor or lawyer in good standing with the provincial law society.",
+      "solicitorOnly": false,
+      "bcNotaryAllowed": true,
+      "dualRepresentationAllowed": true,
+      "dualRepresentationNotes": "Dual representation permitted subject to provincial legal professional conduct rules.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "* Title Insurance is required (Applies: British Columbia).",
+      "ilaRequiredNotes": "Independent Legal Advice (ILA) mandatory for all non-borrowing guarantors, title transferors, and non-signing spouses.",
+      "closingNotes": "Standard closing requirements apply. * Closing Costs of 1.5% are required (Applies: British Columbia)"
+    }
   },
   {
     "id": "lender_sp_island_savings",
@@ -149646,7 +153319,34 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "[NOT ACCEPTED] * Student Rentals are not accepted at Island Savings (Applies: British Columbia)",
         "isAccepted": null
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "NAS (Nationwide Appraisal Services)",
+        "Solidifi"
+      ],
+      "appraisalRequired": "* Appraisals to be ordered via Solidifi Valuation Service. (Applies: British Columbia).",
+      "paymentResponsibility": "Borrower paid upfront through approved AMC portal (covered by lender on eligible switches)",
+      "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: NAS (Nationwide Appraisal Services), Solidifi. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "* No APV not available at island Savings. Landcor can be considered in some situations (Applies: British Columbia)."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Independent Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": false,
+      "lawyerSelectionPolicy": "Borrower is free to select any practicing solicitor or lawyer in good standing with the provincial law society.",
+      "solicitorOnly": false,
+      "bcNotaryAllowed": true,
+      "dualRepresentationAllowed": true,
+      "dualRepresentationNotes": "Dual representation permitted subject to provincial legal professional conduct rules.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "* Yes title insurance is required (Applies: British Columbia).",
+      "ilaRequiredNotes": "Independent Legal Advice (ILA) mandatory for all non-borrowing guarantors, title transferors, and non-signing spouses.",
+      "closingNotes": "Standard closing requirements apply. * Closing Costs of 1.5%. (Applies: British Columbia)"
+    }
   },
   {
     "id": "lender_sp_firstontario_credit_union",
@@ -151434,7 +155134,34 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "[NOT ACCEPTED] * not currently offering collateral transfers. (Applies: Ontario)",
         "isAccepted": null
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "NAS (Nationwide Appraisal Services)",
+        "Solidifi"
+      ],
+      "appraisalRequired": "The underwriter will advise the broker when to order a drive-by or full appraisal, based on FirstOntario\u2019s internal guidelines. Alt-A mortgages require a full appraisal completed by an appraiser with a CRA or AACI designation who is listed with the Appraisal...",
+      "paymentResponsibility": "Borrower paid upfront through approved AMC portal (covered by lender on eligible switches)",
+      "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: NAS (Nationwide Appraisal Services), Solidifi. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
+      "driveByAllowed": true,
+      "desktopAvmAllowed": true,
+      "avmNotes": "* We have what we call a LRV that we use for low LTV refi\u2019s, good beacon on o/o urban homes. Cost is $265."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Independent Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": false,
+      "lawyerSelectionPolicy": "No restricted lawyer list. Borrower can select any solicitor in good standing with the law society.",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "* A solicitor/notary is NOT permitted to act on behalf of both the vendor and purchaser in residential mortgage transactions (Applies: Ontario)",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "* Yes, we request Title Insurance, lawyers condition (Applies: Ontario).",
+      "ilaRequiredNotes": "Independent Legal Advice (ILA) mandatory for all non-borrowing guarantors, title transferors, and non-signing spouses.",
+      "closingNotes": "Standard closing requirements apply. Closing Costs: Allow for 1.5% of the purchase price, in addition to the down payment. Closing costs may be included in debt servicing ratios over a 12-month term. (Applies: Ontario)"
+    }
   },
   {
     "id": "lender_sp_firstontario_credit_union_alt_a",
@@ -153029,7 +156756,34 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "[NOT ACCEPTED] * No switch transfer program on the Alt side (Applies: Ontario)",
         "isAccepted": null
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "NAS (Nationwide Appraisal Services)",
+        "Solidifi"
+      ],
+      "appraisalRequired": "The underwriter will advise the broker when to order a drive-by or full appraisal, based on FirstOntario\u2019s internal guidelines. Alt-A mortgages require a full appraisal completed by an appraiser with a CRA or AACI designation who is listed with the Appraisal...",
+      "paymentResponsibility": "Borrower paid upfront through approved AMC portal (covered by lender on eligible switches)",
+      "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: NAS (Nationwide Appraisal Services), Solidifi. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
+      "driveByAllowed": true,
+      "desktopAvmAllowed": true,
+      "avmNotes": "* We have what we call a LRV that we use for low LTV refi\u2019s, good beacon on o/o urban homes. Cost is $265."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Independent Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": false,
+      "lawyerSelectionPolicy": "No restricted lawyer list. Borrower can select any solicitor in good standing with the law society.",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "* A solicitor/notary is NOT permitted to act on behalf of both the vendor and purchaser in residential mortgage transactions (Applies: Ontario)",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "* Yes, we request Title Insurance, lawyers condition (Applies: Ontario).",
+      "ilaRequiredNotes": "Independent Legal Advice (ILA) mandatory for all non-borrowing guarantors, title transferors, and non-signing spouses.",
+      "closingNotes": "Standard closing requirements apply. Closing Costs: Allow for 1.5% of the purchase price, in addition to the down payment. Closing costs may be included in debt servicing ratios over a 12-month term. (Applies: Ontario)"
+    }
   },
   {
     "id": "lender_sp_community_savings_credit_union",
@@ -154801,7 +158555,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "[NOT ACCEPTED] * No Switch Transfer Program at Community Savings (Applies: British Columbia)",
         "isAccepted": null
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "NAS (Nationwide Appraisal Services)",
+        "Solidifi"
+      ],
+      "appraisalRequired": "* Required for all mortgage requests regardless of LTV * Must be ordered through a CSCU approved firm, no exceptions will be granted * Access must be gained to all suites, locked rooms and outbuildings * Appraiser must state economic rental figure when...",
+      "paymentResponsibility": "Borrower paid upfront through approved AMC portal (covered by lender on eligible switches)",
+      "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: NAS (Nationwide Appraisal Services), Solidifi. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "* APV not available at Community Savings (Applies: British Columbia)."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "FCT (First Canadian Title)",
+        "Stewart Title",
+        "Independent Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": false,
+      "lawyerSelectionPolicy": "Borrower is free to select any practicing solicitor or lawyer in good standing with the provincial law society.",
+      "solicitorOnly": false,
+      "bcNotaryAllowed": true,
+      "dualRepresentationAllowed": true,
+      "dualRepresentationNotes": "Dual representation permitted subject to provincial legal professional conduct rules.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "* required for all CSCU mortgages * First Canadian Title or Stewart Title. (Applies: British Columbia).",
+      "ilaRequiredNotes": "Independent Legal Advice (ILA) mandatory for all non-borrowing guarantors, title transferors, and non-signing spouses.",
+      "closingNotes": "Standard closing requirements apply. **Mortgage Closing Process** - All borrower\u2019s must attend a branch for the mortgage closing process - $5 share requirement for each borrower. (Applies: British Columbia)"
+    }
   },
   {
     "id": "lender_sp_peoples_bank",
@@ -156373,7 +160156,35 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "[NOT ACCEPTED] * Rent to own not allowed (Applies: National)",
         "isAccepted": null
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "NAS (Nationwide Appraisal Services)",
+        "Solidifi",
+        "Brookfield RPS"
+      ],
+      "appraisalRequired": "* When a mortgage does not qualify (for value) through the low ratio underwrite service, Peoples Bank will request that an appraisal be ordered at the expense of the broker through the source of business. The appraisal is to be ordered online through Solidifi...",
+      "paymentResponsibility": "Borrower paid upfront through approved AMC portal (covered by lender on eligible switches)",
+      "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: NAS (Nationwide Appraisal Services), Solidifi, Brookfield RPS. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "* Not available at this time (Applies: National)."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Independent Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": false,
+      "lawyerSelectionPolicy": "Borrower is free to select any practicing solicitor or lawyer in good standing with the provincial law society.",
+      "solicitorOnly": false,
+      "bcNotaryAllowed": true,
+      "dualRepresentationAllowed": true,
+      "dualRepresentationNotes": "Dual representation permitted subject to provincial legal professional conduct rules.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "* Title Insurance is required (Applies: National).",
+      "ilaRequiredNotes": "Independent Legal Advice (ILA) mandatory for all non-borrowing guarantors, title transferors, and non-signing spouses.",
+      "closingNotes": "Standard closing requirements apply. * All provinces except Alberta and Saskatchewan: 1.5% of the purchase price. * Alberta and Saskatchewan only: 0.5% of the purchase price.\" (Applies: National)"
+    }
   },
   {
     "id": "lender_sp_peoples_bank_alternative",
@@ -156529,7 +160340,35 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "notes": "No Lender Fee Options available.\nRates are base with a 1% lender fee"
       }
     ],
-    "guidelines": []
+    "guidelines": [],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Brookfield RPS"
+      ],
+      "appraisalRequired": "* Appraisal fees are the responsibility of the client * Appraisals (mandatory unless high ratio/low ratio insured) will be based on max of 5 acres and no outbuildings * Non-Owner Occupied requires full appraisal - no exceptions. * Brokers can order their own...",
+      "paymentResponsibility": "Borrower paid upfront through approved AMC portal (covered by lender on eligible switches)",
+      "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: Solidifi, NAS (Nationwide Appraisal Services), Brookfield RPS. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": true,
+      "avmNotes": "* AVM process - only permitted on uninsured transfers. We use FCT only for our AVMs."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Independent Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": false,
+      "lawyerSelectionPolicy": "Borrower is free to select any practicing solicitor or lawyer in good standing with the provincial law society.",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "* A solicitor/notary is NOT permitted to act on behalf of both the vendor and purchaser in residential mortgage transactions. (Applies: Ontario)",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "* Title Insurance is required. (Applies: Ontario).",
+      "ilaRequiredNotes": "Independent Legal Advice (ILA) mandatory for all non-borrowing guarantors, title transferors, and non-signing spouses.",
+      "closingNotes": "Standard closing requirements apply. * Closing costs at 1.5% must be verified at time of submission. (Applies: Ontario)"
+    }
   },
   {
     "id": "lender_sp_mcan_home_precision_prime_for_insured",
@@ -157829,7 +161668,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "[NOT ACCEPTED] - Accepted from all Federally Regulated Financial Institutions \r\n- Appraisal costs covered, if required \r\n- FCT fees covered \r\n- Cover up to $350 for discharge fee \r\n- 120 day rate hold\r\n**SMART SWITCH**\r\nMCAN Home is pleased to offer your clients access to a smart switch solution available at mid-term and renewal. Lower interest rates, flexible terms and freedom from the fees that add up with many lenders make this the smart choice.\r\n* No appraisal costs - MCAN covers all appraisal fees on closing!\r\n* Discharge Fee Rebate up to $350\r\nIn partnership with First Canadian Title, MCAN will accept transfers from:\r\nApproved FRFIs (contact your BDM)\r\nFirst National Financial (excluding Excalibur)\r\nMCAP (excluding Eclipse)\r\nRMG (excluding Eclipse)\r\nCMLS Financial (excluding AVEO)\r\nMeridian\r\nMerix\r\nCanadiana\r\n**Property types**\r\n- Standard property guidelines\r\n- If the subject is a 1-unit property, it must be owner-occupied\r\n- If the subject is a 2-4-unit property, one unit must be owner-occupied\r\n- Second homes allowed (no dedicated rental properties)\r\n**Income** Per Insurer guidelines\r\n**Beacon Score:** 650+\r\n**GDS/TDS** 39%/44%\r\n**Payment Frequency** Weekly, Bi-Weekly, Semi-Monthly, Monthly\r\n**Prepayment** 20%/20%\r\n**Amortization** Maximum 25 years\r\n*No buydowns allowed for Smart Switch. (Applies: Alberta, British Columbia, Manitoba, New Brunswick, Newfoundland & Labrador, Nova Scotia, Ontario, Prince Edward Island, Saskatchewan)",
         "isAccepted": null
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Brookfield RPS",
+        "Value Connect"
+      ],
+      "appraisalRequired": "* Appraisal ordered through NAS, Solidifi, RPS or Value Connect. (Applies: Alberta, British Columbia, Manitoba, Newfoundland & Labrador, Nova Scotia, Ontario, Saskatchewan).",
+      "paymentResponsibility": "Borrower paid upfront through approved AMC portal (covered by lender on eligible switches)",
+      "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: Solidifi, NAS (Nationwide Appraisal Services), Brookfield RPS, Value Connect. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": true,
+      "avmNotes": "* APV not available on Alternative Mortgages (Applies: Alberta, British Columbia, Manitoba, Newfoundland & Labrador, Nova Scotia, Ontario, Saskatchewan)."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Independent Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": false,
+      "lawyerSelectionPolicy": "No restricted lawyer list. Borrower can select any solicitor in good standing with the law society.",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "* A solicitor/notary is NOT permitted to act on behalf of both the vendor and purchaser in residential mortgage transactions. (Applies: Alberta, British Columbia, Manitoba, Newfoundland & Labrador, Nova Scotia, Ontario...",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "* Yes title insurance is required (Applies: Alberta, British Columbia, Manitoba, Newfoundland & Labrador, Nova Scotia, Ontario, Saskatchewan).",
+      "ilaRequiredNotes": "Independent Legal Advice (ILA) mandatory for all non-borrowing guarantors, title transferors, and non-signing spouses.",
+      "closingNotes": "Standard closing requirements apply. * We don\u2019t have a specific percentage on the B side, but clients have to provision for enough to be able to close (Applies: Alberta, British Columbia, Manitoba, Newfoundland &..."
+    }
   },
   {
     "id": "lender_sp_shinhan_bank_of_canada",
@@ -159049,7 +162917,34 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "[NOT ACCEPTED] * No switch transfer program (Applies: British Columbia, Ontario)",
         "isAccepted": null
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "NAS (Nationwide Appraisal Services)",
+        "Solidifi"
+      ],
+      "appraisalRequired": "Appraisal will be ordered by the Underwriter from the list of SHBC approved Appraisal Companies. Please note the following: - Market rent appraisal is required for all applications using rental income. - Appraisals must be paid by the customer.",
+      "paymentResponsibility": "Borrower paid upfront through approved AMC portal (covered by lender on eligible switches)",
+      "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: NAS (Nationwide Appraisal Services), Solidifi. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "* No APV available at Shinhan Bank (Applies: British Columbia, Ontario)."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Independent Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": false,
+      "lawyerSelectionPolicy": "No restricted lawyer list. Borrower can select any solicitor in good standing with the law society.",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "* A solicitor/notary is NOT permitted to act on behalf of both the vendor and purchaser in residential mortgage transactions. (Applies: British Columbia, Ontario)",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "* Yes title insurance is required (Applies: British Columbia, Ontario).",
+      "ilaRequiredNotes": "Independent Legal Advice (ILA) mandatory for all non-borrowing guarantors, title transferors, and non-signing spouses.",
+      "closingNotes": "Standard closing requirements apply. * No closing amount is specified (Applies: British Columbia, Ontario)"
+    }
   },
   {
     "id": "lender_sp_ctbc_bank",
@@ -160172,7 +164067,34 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "[NOT ACCEPTED] * No switch transfer program at CTBC. (Applies: British Columbia, Ontario)",
         "isAccepted": null
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "NAS (Nationwide Appraisal Services)",
+        "Solidifi"
+      ],
+      "appraisalRequired": "* Appraisals required. (Applies: British Columbia, Ontario).",
+      "paymentResponsibility": "Borrower paid upfront through approved AMC portal (covered by lender on eligible switches)",
+      "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: NAS (Nationwide Appraisal Services), Solidifi. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "* APV is not available at CTBC (Applies: British Columbia, Ontario)."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Independent Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": true,
+      "lawyerSelectionPolicy": "Solicitor must be selected from the lender's pre-approved lawyer panel.",
+      "solicitorOnly": false,
+      "bcNotaryAllowed": true,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "* One lawyer or notary is ok if the mortgage is under $1 Million or use one of our approved lawyers up to $2,500,000. * Only need dual if over $2,500,000 or a complex file (Applies: British Columbia, Ontario)",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "Title Insurance or Survey (< 10 years old) * Only one required. However, title insurance is required in cases lacking strong document support (Applies: British Columbia, Ontario).",
+      "ilaRequiredNotes": "Independent Legal Advice (ILA) mandatory for all non-borrowing guarantors, title transferors, and non-signing spouses.",
+      "closingNotes": "Standard closing requirements apply. * Closing Costs of 1.5% are required (Applies: British Columbia, Ontario)"
+    }
   },
   {
     "id": "lender_sp_equitable_reverse_mortgages",
@@ -161200,7 +165122,34 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "[NOT ACCEPTED] * Student Housing is not allowed at Equitable Reverse (Applies: Alberta, British Columbia, Ontario, Quebec)",
         "isAccepted": null
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "NAS (Nationwide Appraisal Services)",
+        "Solidifi"
+      ],
+      "appraisalRequired": "* Desktop AVM or Full appraisal * All reverse mortgage deals must use an appraiser from our Approved Appraiser List. * If you're ordering through an appraisal service, please ensure that the underlying appraiser assigned to the file is on our approved list. *...",
+      "paymentResponsibility": "Borrower paid upfront through approved AMC portal (covered by lender on eligible switches)",
+      "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: NAS (Nationwide Appraisal Services), Solidifi. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": true,
+      "avmNotes": "* We are ok with an AVM being used if eligible, otherwise it is full appraisal. (Applies: Alberta, British Columbia, Ontario, Quebec)."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Independent Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": false,
+      "lawyerSelectionPolicy": "No restricted lawyer list. Borrower can select any solicitor in good standing with the law society.",
+      "solicitorOnly": false,
+      "bcNotaryAllowed": true,
+      "dualRepresentationAllowed": true,
+      "dualRepresentationNotes": "Dual representation permitted subject to provincial legal professional conduct rules.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "* Title insurance required, facilitated from EQB (Applies: Alberta, British Columbia, Ontario, Quebec).",
+      "ilaRequiredNotes": "Independent Legal Advice (ILA) mandatory for all non-borrowing guarantors, title transferors, and non-signing spouses.",
+      "closingNotes": "Standard closing requirements apply. * $995 setup costs - same fee for all Reverse products (Applies: Alberta, British Columbia, Ontario, Quebec)"
+    }
   },
   {
     "id": "lender_sp_ganaraska_financial_credit_union",
@@ -162204,7 +166153,34 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "[NOT ACCEPTED] * No current value added products (Applies: Ontario)",
         "isAccepted": null
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "NAS (Nationwide Appraisal Services)",
+        "Solidifi"
+      ],
+      "appraisalRequired": "* We only use appraisers that are registered with the Appraisal Institute of Canada. See the current list in the documents section. (Applies: Ontario).",
+      "paymentResponsibility": "Borrower paid upfront through approved AMC portal (covered by lender on eligible switches)",
+      "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: NAS (Nationwide Appraisal Services), Solidifi. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "* Full appraisal is required on all files (Applies: Ontario)."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Independent Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": false,
+      "lawyerSelectionPolicy": "Borrower is free to select any practicing solicitor or lawyer in good standing with the provincial law society.",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "* A solicitor/notary is NOT permitted to act on behalf of both the vendor and purchaser in residential mortgage transactions (Applies: Ontario)",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "* Title insurance is required. (Applies: Ontario).",
+      "ilaRequiredNotes": "Independent Legal Advice (ILA) mandatory for all non-borrowing guarantors, title transferors, and non-signing spouses.",
+      "closingNotes": "Standard closing requirements apply. * 1.5% closings costs required (Applies: Ontario)"
+    }
   },
   {
     "id": "lender_sp_effort_trust",
@@ -163183,7 +167159,34 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "[NOT ACCEPTED] - No switch transfer program at Effort Trust (Applies: Ontario)",
         "isAccepted": null
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "NAS (Nationwide Appraisal Services)",
+        "Solidifi"
+      ],
+      "appraisalRequired": "* Approved Effort Trust Appraiser required (Applies: Ontario).",
+      "paymentResponsibility": "Borrower paid upfront through approved AMC portal (covered by lender on eligible switches)",
+      "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: NAS (Nationwide Appraisal Services), Solidifi. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": false,
+      "avmNotes": "* APV is not available at Effort Trust (Applies: Ontario)."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Independent Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": false,
+      "lawyerSelectionPolicy": "No restricted lawyer list. Borrower can select any solicitor in good standing with the law society.",
+      "solicitorOnly": false,
+      "bcNotaryAllowed": true,
+      "dualRepresentationAllowed": true,
+      "dualRepresentationNotes": "Dual representation permitted subject to provincial legal professional conduct rules.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "* Yes title insurance is mandatory (Applies: Ontario).",
+      "ilaRequiredNotes": "Independent Legal Advice (ILA) mandatory for all non-borrowing guarantors, title transferors, and non-signing spouses.",
+      "closingNotes": "Standard closing requirements apply. * 1.50% of the purchase amount is the calculation for closing costs. Effort Trust does not cap closing costs to the mortgage balance. Closing costs are the responsiblity of the..."
+    }
   },
   {
     "id": "lender_sp_prospera",
@@ -164051,7 +168054,35 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "[NOT ACCEPTED] * No switch / transfer program available. Client pays for all fees. (Applies: British Columbia)",
         "isAccepted": null
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)"
+      ],
+      "appraisalRequired": "* Property Valuation Guidelines Update - Effective May 25, 2026 * Prospera will adopt Coast Capital\u2019s property valuation guidelines, providing greater flexibility for accepting Landcor property valuations. * A full appraisal will now only be required for: *...",
+      "paymentResponsibility": "Borrower paid upfront through approved AMC portal (covered by lender on eligible switches)",
+      "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: Solidifi, NAS (Nationwide Appraisal Services). Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": true,
+      "avmNotes": "* Landcor up to 80% LTV on re-advances only. Not available on new mortgages to Prospera."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "FCT (First Canadian Title)",
+        "Independent Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": false,
+      "lawyerSelectionPolicy": "Borrower is free to select any practicing solicitor or lawyer in good standing with the provincial law society.",
+      "solicitorOnly": false,
+      "bcNotaryAllowed": true,
+      "dualRepresentationAllowed": true,
+      "dualRepresentationNotes": "Dual representation permitted subject to provincial legal professional conduct rules.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "- Required on all mortgages - Due to an operational issue, Prospera Credit Union is pausing the use of First Canadian Title for refinance and transfer transactions on Vancouver Island. In the interim refinance and...",
+      "ilaRequiredNotes": "Independent Legal Advice (ILA) mandatory for all non-borrowing guarantors, title transferors, and non-signing spouses.",
+      "closingNotes": "Standard closing requirements apply. * Closing Costs expected to be debt serviced (Applies: British Columbia)"
+    }
   },
   {
     "id": "lender_sp_questbank",
@@ -166710,7 +170741,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "[NOT ACCEPTED] * No switch transfer program at Questbank (Applies: Alberta, British Columbia, New Brunswick, Newfoundland & Labrador, Nova Scotia, Ontario, Prince Edward Island)",
         "isAccepted": null
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "NAS (Nationwide Appraisal Services)",
+        "Solidifi",
+        "Brookfield RPS"
+      ],
+      "appraisalRequired": "- Yes Approved List or Insta-Value - Option of ordering appraisals through two Appraisal Management Companies (AMCs), Solidifi and RPS. **New Construction Appraisals** * We accept a minimum completion rate of 80% for appraisals, reducing the stress caused by...",
+      "paymentResponsibility": "Borrower paid upfront through approved AMC portal (covered by lender on eligible switches)",
+      "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: NAS (Nationwide Appraisal Services), Solidifi, Brookfield RPS. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": true,
+      "avmNotes": "**InstaValue - Automated Valuation, Simplified** * InstaValue is Questbank's automated valuation service that is quick, easy, and handled entirely in-house - eliminating the need for an appraiser\u2019s visit in many cases..."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "FCT (First Canadian Title)",
+        "Independent Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": false,
+      "lawyerSelectionPolicy": "Borrower is free to select any practicing solicitor or lawyer in good standing with the provincial law society.",
+      "solicitorOnly": false,
+      "bcNotaryAllowed": true,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "* Borrower to have own lawyer. It's only single representation (Applies: Alberta, British Columbia, New Brunswick, Newfoundland & Labrador, Nova Scotia, Ontario, Prince Edward Island)",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "* Title Insurance is required (Applies: Alberta, British Columbia, New Brunswick, Newfoundland & Labrador, Nova Scotia, Ontario, Prince Edward Island).",
+      "ilaRequiredNotes": "Independent Legal Advice (ILA) mandatory for all non-borrowing guarantors, title transferors, and non-signing spouses.",
+      "closingNotes": "Standard closing requirements apply. * Closing costs are not financed. We do not require them to have 1.5% of the closing costs * Shortfalls on closing only require additional docs if over 10k (Applies: Alberta, British..."
+    }
   },
   {
     "id": "lender_sp_unionlink_mortgage",
@@ -168464,7 +172524,36 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "[NOT ACCEPTED] - Student Housing financing not available with UnionLink Mortgage. (Applies: Alberta, Ontario)",
         "isAccepted": null
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "NAS (Nationwide Appraisal Services)",
+        "Solidifi",
+        "Value Connect"
+      ],
+      "appraisalRequired": "* ULM will complete an Automated Property Valuation (APV) whenever eligible. If a full appraisal is required, the broker must order the appraisal from ULM\u2019s Approved Appraiser list (available in Nexus portal), or through Value Connect or Solidifi. * An...",
+      "paymentResponsibility": "Borrower paid upfront through approved AMC portal (covered by lender on eligible switches)",
+      "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: NAS (Nationwide Appraisal Services), Solidifi, Value Connect. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": true,
+      "avmNotes": "* Auto valuations will be used whenever possible. However, if an appraisal is required, the cost will be the client\u2019s responsibility."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "FCT (First Canadian Title)",
+        "Independent Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": false,
+      "lawyerSelectionPolicy": "Borrower is free to select any practicing solicitor or lawyer in good standing with the provincial law society.",
+      "solicitorOnly": false,
+      "bcNotaryAllowed": true,
+      "dualRepresentationAllowed": true,
+      "dualRepresentationNotes": "Dual representation permitted subject to provincial legal professional conduct rules.",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "* At the time of funding all mortgages must have an approved title insurance policy that is from a UnionLink approved title insurer. (Applies: Alberta, Ontario).",
+      "ilaRequiredNotes": "Independent Legal Advice (ILA) mandatory for all non-borrowing guarantors, title transferors, and non-signing spouses.",
+      "closingNotes": "Standard closing requirements apply. * 1.5% of the purchase price is required * Closing costs can be added to liabilities using the debt servicing rate of 3% * Applicable to all provinces - Exceptions considered at the..."
+    }
   },
   {
     "id": "lender_sp_alterna",
@@ -169716,7 +173805,37 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "description": "[NOT ACCEPTED] * Student Housing is not allowed at Alterna (Applies: Ontario)",
         "isAccepted": null
       }
-    ]
+    ],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Brookfield RPS",
+        "Value Connect"
+      ],
+      "appraisalRequired": "* Appraisal fees are the responsibility of the client * Appraisals (mandatory unless high ratio/low ratio insured) will be based on max of 5 acres and no outbuildings * Non-Owner Occupied requires full appraisal - no exceptions. * Brokers can order their own...",
+      "paymentResponsibility": "Borrower paid upfront through approved AMC portal (covered by lender on eligible switches)",
+      "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: Solidifi, NAS (Nationwide Appraisal Services), Brookfield RPS, Value Connect. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": true,
+      "avmNotes": "* AVM process - only permitted on uninsured transfers. We use FCT only for our AVMs."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "FCT (First Canadian Title)",
+        "Independent Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": false,
+      "lawyerSelectionPolicy": "Borrower is free to select any practicing solicitor or lawyer in good standing with the provincial law society.",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "* A solicitor/notary is NOT permitted to act on behalf of both the vendor and purchaser in residential mortgage transactions. (Applies: Ontario)",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "* Title Insurance is required. (Applies: Ontario).",
+      "ilaRequiredNotes": "Independent Legal Advice (ILA) mandatory for all non-borrowing guarantors, title transferors, and non-signing spouses.",
+      "closingNotes": "Standard closing requirements apply. * Closing costs at 1.5% must be verified at time of submission. (Applies: Ontario)"
+    }
   },
   {
     "id": "lender_sp_alterna_alternative",
@@ -175824,6 +179943,34 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "notes": "See documentation section for confirmation of locations, note that this rate is BASE only and rate premiums apply for credit situations, rentals andrefinances. Please consult your BDM"
       }
     ],
-    "guidelines": []
+    "guidelines": [],
+    "appraisalPolicy": {
+      "orderingPlatforms": [
+        "Solidifi",
+        "NAS (Nationwide Appraisal Services)",
+        "Brookfield RPS"
+      ],
+      "appraisalRequired": "* Appraisal fees are the responsibility of the client * Appraisals (mandatory unless high ratio/low ratio insured) will be based on max of 5 acres and no outbuildings * Non-Owner Occupied requires full appraisal - no exceptions. * Brokers can order their own...",
+      "paymentResponsibility": "Borrower paid upfront through approved AMC portal (covered by lender on eligible switches)",
+      "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: Solidifi, NAS (Nationwide Appraisal Services), Brookfield RPS. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
+      "driveByAllowed": false,
+      "desktopAvmAllowed": true,
+      "avmNotes": "* AVM process - only permitted on uninsured transfers. We use FCT only for our AVMs."
+    },
+    "legalPolicy": {
+      "closingPlatforms": [
+        "Independent Solicitor in Good Standing"
+      ],
+      "hasApprovedLawyerList": false,
+      "lawyerSelectionPolicy": "Borrower is free to select any practicing solicitor or lawyer in good standing with the provincial law society.",
+      "solicitorOnly": true,
+      "bcNotaryAllowed": false,
+      "dualRepresentationAllowed": false,
+      "dualRepresentationNotes": "* A solicitor/notary is NOT permitted to act on behalf of both the vendor and purchaser in residential mortgage transactions. (Applies: Ontario)",
+      "titleInsuranceMandatory": true,
+      "titleInsuranceNotes": "* Title Insurance is required. (Applies: Ontario).",
+      "ilaRequiredNotes": "Independent Legal Advice (ILA) mandatory for all non-borrowing guarantors, title transferors, and non-signing spouses.",
+      "closingNotes": "Standard closing requirements apply. * Closing costs at 1.5% must be verified at time of submission. (Applies: Ontario)"
+    }
   }
 ];

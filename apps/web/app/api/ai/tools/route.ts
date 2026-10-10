@@ -48,6 +48,10 @@ export async function POST(req: NextRequest) {
         result = await rateToolsInstance.getRateAlert(parameters);
         break;
       
+      case "getLenderIntelligence":
+        result = await rateToolsInstance.getLenderIntelligence(parameters);
+        break;
+      
       default:
         return new Response(
           JSON.stringify({ error: `Unknown tool: ${tool}` }),
@@ -129,6 +133,11 @@ export async function GET(req: NextRequest) {
           name: "getRateAlert",
           description: "Check if target rate is available",
           parameters: ["targetRate", "province?"]
+        },
+        {
+          name: "getLenderIntelligence",
+          description: "Get institutional underwriting policies, lowest rates, approved AMCs and closing legal protocols across 144 Canadian lenders",
+          parameters: ["lenderName?", "channel?", "limit?"]
         }
       ]
     };
