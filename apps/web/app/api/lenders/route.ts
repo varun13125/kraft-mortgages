@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { CANADIAN_LENDERS, LenderDetail } from "@/data/canadianLendersData";
 
 export const runtime = "nodejs";
-export const revalidate = 300; // 5-minute ISR cache
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export async function GET(req: NextRequest) {
   try {
