@@ -31,6 +31,17 @@ export interface LenderGuidelineItem {
   isAccepted?: number | null;
 }
 
+export interface LenderAttachmentItem {
+  title: string;
+  fileName: string;
+  localPath: string;
+  remoteUrl: string;
+  format: 'PDF' | 'XLSX' | 'XLS' | 'DOC' | 'DOCX';
+  fileSize: string;
+  itemCount?: number;
+  description: string;
+}
+
 export interface LenderAppraisalPolicy {
   orderingPlatforms: string[];
   appraisalRequired: string;
@@ -40,6 +51,9 @@ export interface LenderAppraisalPolicy {
   desktopAvmAllowed?: boolean;
   avmNotes?: string;
   appraiserListPdfUrl?: string;
+  hasApprovedAppraiserList?: boolean;
+  approvedAppraisersCount?: number;
+  appraiserAttachments?: LenderAttachmentItem[];
 }
 
 export interface LenderLegalPolicy {
@@ -54,6 +68,8 @@ export interface LenderLegalPolicy {
   titleInsuranceNotes?: string;
   ilaRequiredNotes?: string;
   closingNotes?: string;
+  approvedLawyersCount?: number;
+  lawyerAttachments?: LenderAttachmentItem[];
 }
 
 export interface LenderDetail {
@@ -2660,7 +2676,38 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
       "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: NAS (Nationwide Appraisal Services), Solidifi, Value Connect. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
       "driveByAllowed": false,
       "desktopAvmAllowed": true,
-      "avmNotes": "* APV not available at Aspire (Applies: Alberta, British Columbia, Manitoba, Ontario, Saskatchewan)."
+      "avmNotes": "* APV not available at Aspire (Applies: Alberta, British Columbia, Manitoba, Ontario, Saskatchewan).",
+      "appraiserAttachments": [
+        {
+          "title": "Aspire Approved Appraisers List (British Columbia)",
+          "fileName": "aspire-approved-appraisers-list-british-columbia.pdf",
+          "localPath": "/forms/aspire-by-strive-capital/aspire-approved-appraisers-list-british-columbia.pdf",
+          "remoteUrl": "https://d14sntax4572qq.cloudfront.net/forms/9UFUH2KRgN9EnL1gnnQkI87um2qMkPEkHontnJu0.pdf",
+          "format": "PDF",
+          "fileSize": "919.7 KB",
+          "description": "Approved residential appraisers for Aspire across British Columbia."
+        },
+        {
+          "title": "Aspire Approved Appraisers List (Alberta)",
+          "fileName": "aspire-approved-appraisers-list-alberta.pdf",
+          "localPath": "/forms/aspire-by-strive-capital/aspire-approved-appraisers-list-alberta.pdf",
+          "remoteUrl": "https://d14sntax4572qq.cloudfront.net/forms/f6gIfsnfGxsWxUvcqKxLvbrvF0rkz5DRej3F8dAu.pdf",
+          "format": "PDF",
+          "fileSize": "130.3 KB",
+          "description": "Approved residential appraisers for Aspire across Alberta."
+        },
+        {
+          "title": "Aspire Approved Appraisers List (Ontario)",
+          "fileName": "asprire-approved-appraisers-list-for-ontario.pdf",
+          "localPath": "/forms/aspire-by-strive-capital/asprire-approved-appraisers-list-for-ontario.pdf",
+          "remoteUrl": "https://d14sntax4572qq.cloudfront.net/forms/l7J8u0yQcA5TtpsZMvp2i5BbfEKEW4b4pRZjGLva.pdf",
+          "format": "PDF",
+          "fileSize": "110.5 KB",
+          "description": "Approved residential appraisers for Aspire across Ontario."
+        }
+      ],
+      "hasApprovedAppraiserList": true,
+      "approvedAppraisersCount": null
     },
     "legalPolicy": {
       "closingPlatforms": [
@@ -14045,7 +14092,21 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
       "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: NAS (Nationwide Appraisal Services), Solidifi, Brookfield RPS, Value Connect. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
       "driveByAllowed": false,
       "desktopAvmAllowed": false,
-      "avmNotes": "* Not available on subject properties. AVMs used only in Flex40 Networth Real Estate Qualifier Program (Applies: Alberta, British Columbia, Manitoba, Ontario, Saskatchewan)."
+      "avmNotes": "* Not available on subject properties. AVMs used only in Flex40 Networth Real Estate Qualifier Program (Applies: Alberta, British Columbia, Manitoba, Ontario, Saskatchewan).",
+      "appraiserAttachments": [
+        {
+          "title": "AVEO Approved Appraisers List",
+          "fileName": "approved-appraisers-list.xlsx",
+          "localPath": "/forms/aveo-by-cmls-financial/approved-appraisers-list.xlsx",
+          "remoteUrl": "https://d14sntax4572qq.cloudfront.net/forms/9rV9eltORVCvChJcr0IOUXsAa45VEu0fqHIWZtMN.xlsx",
+          "format": "XLSX",
+          "fileSize": "89.5 KB",
+          "itemCount": 576,
+          "description": "576 approved appraisal firms and designated appraisers for CMLS AVEO alternative mortgage files."
+        }
+      ],
+      "hasApprovedAppraiserList": true,
+      "approvedAppraisersCount": 576
     },
     "legalPolicy": {
       "closingPlatforms": [
@@ -19294,14 +19355,27 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
       "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: NAS (Nationwide Appraisal Services), Solidifi. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
       "driveByAllowed": false,
       "desktopAvmAllowed": true,
-      "avmNotes": "* A Property Tax Assessment Notice is no longer acceptable as a valuation method. * The Landcor Valuator can now be accepted for conventional mortgages."
+      "avmNotes": "* A Property Tax Assessment Notice is no longer acceptable as a valuation method. * The Landcor Valuator can now be accepted for conventional mortgages.",
+      "appraiserAttachments": [
+        {
+          "title": "Coast Capital Approved Appraisers List",
+          "fileName": "approved-appraisers.pdf",
+          "localPath": "/forms/coast-capital-savings/approved-appraisers.pdf",
+          "remoteUrl": "https://d14sntax4572qq.cloudfront.net/forms/lgn0LuPbVsmvulyA9LG8fte2ljFn41EVCR18UTNc.pdf",
+          "format": "PDF",
+          "fileSize": "243.7 KB",
+          "description": "Designated appraisal firms authorized to complete residential valuations for Coast Capital."
+        }
+      ],
+      "hasApprovedAppraiserList": true,
+      "approvedAppraisersCount": null
     },
     "legalPolicy": {
       "closingPlatforms": [
         "FCT (First Canadian Title)",
         "Independent Solicitor in Good Standing"
       ],
-      "hasApprovedLawyerList": false,
+      "hasApprovedLawyerList": true,
       "lawyerSelectionPolicy": "Borrower is free to select any practicing solicitor or lawyer in good standing with the provincial law society.",
       "solicitorOnly": true,
       "bcNotaryAllowed": false,
@@ -19310,7 +19384,19 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
       "titleInsuranceMandatory": true,
       "titleInsuranceNotes": "**What is FCT?** - FTC stands for First Canadian Title. **Purpose & Background** - This program is designed for: - New Process to Transfer in mortgages to Coast Capital Savings from other Financial Institutions...",
       "ilaRequiredNotes": "Independent Legal Advice (ILA) mandatory for all non-borrowing guarantors, title transferors, and non-signing spouses.",
-      "closingNotes": "Standard closing requirements apply. * No specific policy provided consult your BDM. (Applies: British Columbia)"
+      "closingNotes": "Standard closing requirements apply. * No specific policy provided consult your BDM. (Applies: British Columbia)",
+      "lawyerAttachments": [
+        {
+          "title": "Coast Capital Approved Law Firms Panel",
+          "fileName": "approved-law-firms.pdf",
+          "localPath": "/forms/coast-capital-savings/approved-law-firms.pdf",
+          "remoteUrl": "https://d14sntax4572qq.cloudfront.net/forms/4QQB0GzXaOv8xQGOYxgJZEdv8Cryhmpee5EuyW4t.pdf",
+          "format": "PDF",
+          "fileSize": "1.06 MB",
+          "description": "Comprehensive panel of authorized solicitor and notary law firms for mortgage document execution."
+        }
+      ],
+      "approvedLawyersCount": null
     }
   },
   {
@@ -26307,13 +26393,26 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
       "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: NAS (Nationwide Appraisal Services), Solidifi. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
       "driveByAllowed": false,
       "desktopAvmAllowed": true,
-      "avmNotes": "* We are ok with an AVM being used if eligible, otherwise it is full appraisal. (Applies: Alberta, British Columbia, Ontario, Quebec)."
+      "avmNotes": "* We are ok with an AVM being used if eligible, otherwise it is full appraisal. (Applies: Alberta, British Columbia, Ontario, Quebec).",
+      "appraiserAttachments": [
+        {
+          "title": "Equitable Bank Approved Appraisers (British Columbia)",
+          "fileName": "approved-appraisers-bc.pdf",
+          "localPath": "/forms/eq-bank/approved-appraisers-bc.pdf",
+          "remoteUrl": "https://d14sntax4572qq.cloudfront.net/forms/TmqTCxRCITqkrakZmXkKNximYGX0KuJnZQfk20HL.pdf",
+          "format": "PDF",
+          "fileSize": "453.8 KB",
+          "description": "Official panel of approved appraisers for Equitable Bank in British Columbia."
+        }
+      ],
+      "hasApprovedAppraiserList": true,
+      "approvedAppraisersCount": null
     },
     "legalPolicy": {
       "closingPlatforms": [
         "Independent Solicitor in Good Standing"
       ],
-      "hasApprovedLawyerList": false,
+      "hasApprovedLawyerList": true,
       "lawyerSelectionPolicy": "No restricted lawyer list. Borrower can select any solicitor in good standing with the law society.",
       "solicitorOnly": false,
       "bcNotaryAllowed": true,
@@ -26322,7 +26421,19 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
       "titleInsuranceMandatory": true,
       "titleInsuranceNotes": "* Title insurance required, facilitated from EQB (Applies: Alberta, British Columbia, Ontario, Quebec).",
       "ilaRequiredNotes": "Independent Legal Advice (ILA) mandatory for all non-borrowing guarantors, title transferors, and non-signing spouses.",
-      "closingNotes": "Standard closing requirements apply. * $995 setup costs - same fee for all Reverse products (Applies: Alberta, British Columbia, Ontario, Quebec)"
+      "closingNotes": "Standard closing requirements apply. * $995 setup costs - same fee for all Reverse products (Applies: Alberta, British Columbia, Ontario, Quebec)",
+      "lawyerAttachments": [
+        {
+          "title": "Certificate of Independent Legal Advice (Borrower)",
+          "fileName": "certificate-of-independent-legal-advice-borrower.pdf",
+          "localPath": "/forms/eq-bank/certificate-of-independent-legal-advice-borrower.pdf",
+          "remoteUrl": "https://d14sntax4572qq.cloudfront.net/forms/awEkn8uaqH173k9TVbCZE0vQceoJ8JSAE8krouXW.pdf",
+          "format": "PDF",
+          "fileSize": "138.2 KB",
+          "description": "Mandatory ILA certificate required for borrower legal execution."
+        }
+      ],
+      "approvedLawyersCount": null
     }
   },
   {
@@ -44855,7 +44966,20 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
       "acceptedAmcsNotes": "Appraisals must include full interior and exterior inspection with photographs and minimum 3 recent comparable MLS sales. Subject to lender site inspection and direct re-address letter.",
       "driveByAllowed": false,
       "desktopAvmAllowed": false,
-      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding."
+      "avmNotes": "AVM and desktop automated valuations are not accepted for private mortgage funding.",
+      "appraiserAttachments": [
+        {
+          "title": "Glasslake Preferred Appraiser List",
+          "fileName": "glasslake-preferred-appraiser-list.pdf",
+          "localPath": "/forms/glasslake-funding/glasslake-preferred-appraiser-list.pdf",
+          "remoteUrl": "https://d14sntax4572qq.cloudfront.net/forms/gKUGOWKWbzcEilm9xpOM6a2GLx7r1L45XMAMlYqb.pdf",
+          "format": "PDF",
+          "fileSize": "278.0 KB",
+          "description": "Preferred appraisal panel for Glasslake residential funding."
+        }
+      ],
+      "hasApprovedAppraiserList": true,
+      "approvedAppraisersCount": null
     },
     "legalPolicy": {
       "closingPlatforms": [
@@ -56126,7 +56250,28 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
       "titleInsuranceMandatory": true,
       "titleInsuranceNotes": "* Borrowers pays title insurance; HTC requires that borrowers obtain a Title Insurance Policy from one of the following title insurers pre-approved by HTC: Chicago Title Insurance, Fisrt Canadian Title, Stewart Title...",
       "ilaRequiredNotes": "Independent Legal Advice (ILA) mandatory for all non-borrowing guarantors, title transferors, and non-signing spouses.",
-      "closingNotes": "Standard closing requirements apply. * No closing cost required. (Applies: Alberta, British Columbia, Manitoba, New Brunswick, Newfoundland & Labrador, Nova Scotia, Ontario, Prince Edward Island, Quebec)"
+      "closingNotes": "Standard closing requirements apply. * No closing cost required. (Applies: Alberta, British Columbia, Manitoba, New Brunswick, Newfoundland & Labrador, Nova Scotia, Ontario, Prince Edward Island, Quebec)",
+      "lawyerAttachments": [
+        {
+          "title": "Home Trust Solicitor Declaration",
+          "fileName": "solicitor-declaration.pdf",
+          "localPath": "/forms/home-trust/solicitor-declaration.pdf",
+          "remoteUrl": "https://d14sntax4572qq.cloudfront.net/forms/n6Ui6EWOOw4sQqjWmGnAsLDUO51hzdMrfhT0T1P5.pdf",
+          "format": "PDF",
+          "fileSize": "83.6 KB",
+          "description": "Mandatory closing declaration required from borrower's solicitor prior to mortgage funding."
+        },
+        {
+          "title": "Certificate of Independent Legal Advice",
+          "fileName": "certificate-of-independent-legal-advice.pdf",
+          "localPath": "/forms/home-trust/certificate-of-independent-legal-advice.pdf",
+          "remoteUrl": "https://d14sntax4572qq.cloudfront.net/forms/qlhCVqyixKI7wzmBrXyph77pLkGH0RH2nchJYVC4.pdf",
+          "format": "PDF",
+          "fileSize": "284.3 KB",
+          "description": "Required for all non-borrowing spouses and third-party guarantors."
+        }
+      ],
+      "approvedLawyersCount": null
     }
   },
   {
@@ -57537,7 +57682,28 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
       "titleInsuranceMandatory": true,
       "titleInsuranceNotes": "* Borrowers pays title insurance; HTC requires that borrowers obtain a Title Insurance Policy from one of the following title insurers pre-approved by HTC: Chicago Title Insurance, Fisrt Canadian Title, Stewart Title...",
       "ilaRequiredNotes": "Independent Legal Advice (ILA) mandatory for all non-borrowing guarantors, title transferors, and non-signing spouses.",
-      "closingNotes": "Standard closing requirements apply. * No closing cost required. (Applies: Alberta, British Columbia, Manitoba, New Brunswick, Newfoundland & Labrador, Nova Scotia, Ontario, Prince Edward Island, Quebec)"
+      "closingNotes": "Standard closing requirements apply. * No closing cost required. (Applies: Alberta, British Columbia, Manitoba, New Brunswick, Newfoundland & Labrador, Nova Scotia, Ontario, Prince Edward Island, Quebec)",
+      "lawyerAttachments": [
+        {
+          "title": "Home Trust Solicitor Declaration",
+          "fileName": "solicitor-declaration.pdf",
+          "localPath": "/forms/home-trust/solicitor-declaration.pdf",
+          "remoteUrl": "https://d14sntax4572qq.cloudfront.net/forms/n6Ui6EWOOw4sQqjWmGnAsLDUO51hzdMrfhT0T1P5.pdf",
+          "format": "PDF",
+          "fileSize": "83.6 KB",
+          "description": "Mandatory closing declaration required from borrower's solicitor for Classic B deals."
+        },
+        {
+          "title": "Certificate of Independent Legal Advice",
+          "fileName": "certificate-of-independent-legal-advice.pdf",
+          "localPath": "/forms/home-trust/certificate-of-independent-legal-advice.pdf",
+          "remoteUrl": "https://d14sntax4572qq.cloudfront.net/forms/qlhCVqyixKI7wzmBrXyph77pLkGH0RH2nchJYVC4.pdf",
+          "format": "PDF",
+          "fileSize": "284.3 KB",
+          "description": "Required for third-party guarantors and non-borrowing owners."
+        }
+      ],
+      "approvedLawyersCount": null
     }
   },
   {
@@ -64613,7 +64779,20 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
       "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: Solidifi, NAS (Nationwide Appraisal Services), Brookfield RPS. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
       "driveByAllowed": false,
       "desktopAvmAllowed": false,
-      "avmNotes": "* APV is not available at NPX (Applies: Alberta, British Columbia, Ontario)."
+      "avmNotes": "* APV is not available at NPX (Applies: Alberta, British Columbia, Ontario).",
+      "appraiserAttachments": [
+        {
+          "title": "NPX Approved Appraisers (Western Canada)",
+          "fileName": "npx-approved-appraisers-western-canada.pdf",
+          "localPath": "/forms/npx/npx-approved-appraisers-western-canada.pdf",
+          "remoteUrl": "https://d14sntax4572qq.cloudfront.net/forms/1EeSnmeWK8oRDtEbxcKbUC9RRlsPUcZbMeqDKRMG.pdf",
+          "format": "PDF",
+          "fileSize": "231.3 KB",
+          "description": "Approved appraisers for NPX near-prime mortgages across British Columbia and Alberta."
+        }
+      ],
+      "hasApprovedAppraiserList": true,
+      "approvedAppraisersCount": null
     },
     "legalPolicy": {
       "closingPlatforms": [
@@ -72763,7 +72942,21 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
       "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: Solidifi, NAS (Nationwide Appraisal Services), Brookfield RPS, FNF Canada. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
       "driveByAllowed": true,
       "desktopAvmAllowed": true,
-      "avmNotes": "**Available for brokers with Insider Status Only** * Insurable Purchase/Transfer * Purchases we required the MLX & purchase contract upfront in order to apply the AVM * Transfers , Contact your RVP to confirm which..."
+      "avmNotes": "**Available for brokers with Insider Status Only** * Insurable Purchase/Transfer * Purchases we required the MLX & purchase contract upfront in order to apply the AVM * Transfers , Contact your RVP to confirm which...",
+      "appraiserAttachments": [
+        {
+          "title": "RFA Approved Appraisal List (National)",
+          "fileName": "rfa-approved-appraisal-list.xlsx",
+          "localPath": "/forms/rfa/rfa-approved-appraisal-list.xlsx",
+          "remoteUrl": "https://d14sntax4572qq.cloudfront.net/forms/JkuXx7Zq38jBmkOOLndiABG8SO0tG6vUfE3igzbl.xlsx",
+          "format": "XLSX",
+          "fileSize": "59.5 KB",
+          "itemCount": 852,
+          "description": "852 approved appraisal firms authorized by RFA across British Columbia, Alberta, and Ontario."
+        }
+      ],
+      "hasApprovedAppraiserList": true,
+      "approvedAppraisersCount": 852
     },
     "legalPolicy": {
       "closingPlatforms": [
@@ -82722,7 +82915,7 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "FNF Canada",
         "Independent Solicitor in Good Standing"
       ],
-      "hasApprovedLawyerList": false,
+      "hasApprovedLawyerList": true,
       "lawyerSelectionPolicy": "Borrower is free to select any practicing solicitor or lawyer in good standing with the provincial law society.",
       "solicitorOnly": true,
       "bcNotaryAllowed": false,
@@ -82731,7 +82924,19 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
       "titleInsuranceMandatory": true,
       "titleInsuranceNotes": "* Client pays title insurance on Purchases * [Link to FCT](https://www. fct.",
       "ilaRequiredNotes": "Independent Legal Advice (ILA) mandatory for all non-borrowing guarantors, title transferors, and non-signing spouses.",
-      "closingNotes": "Standard closing requirements apply. - For all provinces and territories except Alberta, applications started before Jan. 27 will still require verification of 1.5% of the purchase price as the closing cost. - In..."
+      "closingNotes": "Standard closing requirements apply. - For all provinces and territories except Alberta, applications started before Jan. 27 will still require verification of 1.5% of the purchase price as the closing cost. - In...",
+      "lawyerAttachments": [
+        {
+          "title": "Certificate of Independent Legal Advice",
+          "fileName": "certificate-of-independent-legal-advice.pdf",
+          "localPath": "/forms/scotiabank/certificate-of-independent-legal-advice.pdf",
+          "remoteUrl": "https://d14sntax4572qq.cloudfront.net/forms/cYUXnipxrjHTQqUDn7EY6N7RkHPFsysdZXAJ1ruQ.pdf",
+          "format": "PDF",
+          "fileSize": "52.8 KB",
+          "description": "Mandatory ILA certificate for matrimonial non-owner consent and guarantors."
+        }
+      ],
+      "approvedLawyersCount": null
     }
   },
   {
@@ -84930,7 +85135,47 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
       "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: NAS (Nationwide Appraisal Services), Solidifi, Value Connect. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
       "driveByAllowed": false,
       "desktopAvmAllowed": true,
-      "avmNotes": "* APV not available at Aspire (Applies: Alberta, British Columbia, Manitoba, Ontario, Saskatchewan)."
+      "avmNotes": "* APV not available at Aspire (Applies: Alberta, British Columbia, Manitoba, Ontario, Saskatchewan).",
+      "appraiserAttachments": [
+        {
+          "title": "Aspire Approved Appraisers List (British Columbia)",
+          "fileName": "aspire-approved-appraisers-list-british-columbia.pdf",
+          "localPath": "/forms/aspire-by-strive-capital/aspire-approved-appraisers-list-british-columbia.pdf",
+          "remoteUrl": "https://d14sntax4572qq.cloudfront.net/forms/9UFUH2KRgN9EnL1gnnQkI87um2qMkPEkHontnJu0.pdf",
+          "format": "PDF",
+          "fileSize": "919.7 KB",
+          "description": "Approved residential appraisers for Aspire / Strive Capital across British Columbia."
+        },
+        {
+          "title": "Aspire Approved Appraisers List (Alberta)",
+          "fileName": "aspire-approved-appraisers-list-alberta.pdf",
+          "localPath": "/forms/aspire-by-strive-capital/aspire-approved-appraisers-list-alberta.pdf",
+          "remoteUrl": "https://d14sntax4572qq.cloudfront.net/forms/f6gIfsnfGxsWxUvcqKxLvbrvF0rkz5DRej3F8dAu.pdf",
+          "format": "PDF",
+          "fileSize": "130.3 KB",
+          "description": "Approved residential appraisers for Aspire / Strive Capital across Alberta."
+        },
+        {
+          "title": "Aspire Approved Appraisers List (Ontario)",
+          "fileName": "asprire-approved-appraisers-list-for-ontario.pdf",
+          "localPath": "/forms/aspire-by-strive-capital/asprire-approved-appraisers-list-for-ontario.pdf",
+          "remoteUrl": "https://d14sntax4572qq.cloudfront.net/forms/l7J8u0yQcA5TtpsZMvp2i5BbfEKEW4b4pRZjGLva.pdf",
+          "format": "PDF",
+          "fileSize": "110.5 KB",
+          "description": "Approved residential appraisers for Aspire / Strive Capital across Ontario."
+        },
+        {
+          "title": "Strive Appraisal Guidelines",
+          "fileName": "appraisal-guidelines.pdf",
+          "localPath": "/forms/strive/appraisal-guidelines.pdf",
+          "remoteUrl": "https://d14sntax4572qq.cloudfront.net/forms/uYHX5yGprd3OdmD7tCiKzqoif9RytzsnCFCxLAyD.pdf",
+          "format": "PDF",
+          "fileSize": "164.4 KB",
+          "description": "Strive Capital appraisal validity requirements, AVM threshold limits, and re-address letters."
+        }
+      ],
+      "hasApprovedAppraiserList": true,
+      "approvedAppraisersCount": null
     },
     "legalPolicy": {
       "closingPlatforms": [
@@ -101189,7 +101434,20 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
       "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: NAS (Nationwide Appraisal Services), Solidifi. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
       "driveByAllowed": false,
       "desktopAvmAllowed": false,
-      "avmNotes": "* APV not accepted full appraisals only (Applies: Alberta, British Columbia, Manitoba, New Brunswick, Newfoundland & Labrador, Nova Scotia, Ontario, Prince Edward Island, Saskatchewan)."
+      "avmNotes": "* APV not accepted full appraisals only (Applies: Alberta, British Columbia, Manitoba, New Brunswick, Newfoundland & Labrador, Nova Scotia, Ontario, Prince Edward Island, Saskatchewan).",
+      "appraiserAttachments": [
+        {
+          "title": "WealthONE Bank Approved Appraisal List",
+          "fileName": "appraisal-list.pdf",
+          "localPath": "/forms/wealthone-bank/appraisal-list.pdf",
+          "remoteUrl": "https://d14sntax4572qq.cloudfront.net/forms/hkfyLughBN5LuxU4h4nG2yEok00uyc4ovWNHgZjz.pdf",
+          "format": "PDF",
+          "fileSize": "1.06 MB",
+          "description": "Accredited appraisal firms authorized by WealthONE Bank."
+        }
+      ],
+      "hasApprovedAppraiserList": true,
+      "approvedAppraisersCount": null
     },
     "legalPolicy": {
       "closingPlatforms": [
@@ -108403,7 +108661,20 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
       "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: NAS (Nationwide Appraisal Services), Solidifi. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
       "driveByAllowed": true,
       "desktopAvmAllowed": true,
-      "avmNotes": "* APV is not available at Eclipse (Applies: Alberta, British Columbia, Manitoba, Ontario, Saskatchewan)."
+      "avmNotes": "* APV is not available at Eclipse (Applies: Alberta, British Columbia, Manitoba, Ontario, Saskatchewan).",
+      "appraiserAttachments": [
+        {
+          "title": "Eclipse Approved Appraiser List",
+          "fileName": "appraiser-list.xlsx",
+          "localPath": "/forms/eclipse-mcap-rmg/appraiser-list.xlsx",
+          "remoteUrl": "https://d14sntax4572qq.cloudfront.net/forms/IRpARI8Hs2C2PRQSxgo2tu22Ix2AsCB464ZPYEhd.xlsx",
+          "format": "XLSX",
+          "fileSize": "156.4 KB",
+          "description": "Approved appraiser directory for Eclipse alternative mortgage submissions."
+        }
+      ],
+      "hasApprovedAppraiserList": true,
+      "approvedAppraisersCount": null
     },
     "legalPolicy": {
       "closingPlatforms": [
@@ -111511,7 +111782,30 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
       "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: NAS (Nationwide Appraisal Services), Solidifi, Brookfield RPS, Value Connect. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
       "driveByAllowed": false,
       "desktopAvmAllowed": true,
-      "avmNotes": "* Not available on subject properties. AVMs used only in Flex40 Networth Real Estate Qualifier Program (Applies: Alberta, British Columbia, Manitoba, Ontario, Saskatchewan)."
+      "avmNotes": "* Not available on subject properties. AVMs used only in Flex40 Networth Real Estate Qualifier Program (Applies: Alberta, British Columbia, Manitoba, Ontario, Saskatchewan).",
+      "appraiserAttachments": [
+        {
+          "title": "CMLS Approved Appraiser Directory (National)",
+          "fileName": "approved-appraisers.xlsx",
+          "localPath": "/forms/cmls-financial/approved-appraisers.xlsx",
+          "remoteUrl": "https://d14sntax4572qq.cloudfront.net/forms/zp3Vo3jDYNjkVUCZJAbu6VLWE9eYjyn07djnxb2z.xlsx",
+          "format": "XLSX",
+          "fileSize": "76.7 KB",
+          "itemCount": 524,
+          "description": "Master list of 524 accredited appraisal firms approved by CMLS Financial across Canada."
+        },
+        {
+          "title": "CMLS Appraisal Requirements & Guidelines",
+          "fileName": "appraisal-requirements.pdf",
+          "localPath": "/forms/cmls-financial/appraisal-requirements.pdf",
+          "remoteUrl": "https://d14sntax4572qq.cloudfront.net/forms/QUe10YgTjG90rW04LX75dhrjSl7NoB8t5C7SNE73.pdf",
+          "format": "PDF",
+          "fileSize": "200.7 KB",
+          "description": "Appraisal underwriting standards, report age limits, and acceptable AMC ordering protocols."
+        }
+      ],
+      "hasApprovedAppraiserList": true,
+      "approvedAppraisersCount": 524
     },
     "legalPolicy": {
       "closingPlatforms": [
@@ -113658,7 +113952,20 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
       "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: NAS (Nationwide Appraisal Services), Solidifi. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
       "driveByAllowed": true,
       "desktopAvmAllowed": true,
-      "avmNotes": "**Drive-by Appraisals** - Drive-by appraisals can be accepted if: - Eligible Property Type: Owner Occupied, Second Home, Rental - Eligible Loan Type: MLS Purchase, Refinance, Transfer - LTV 150,000 or located in the..."
+      "avmNotes": "**Drive-by Appraisals** - Drive-by appraisals can be accepted if: - Eligible Property Type: Owner Occupied, Second Home, Rental - Eligible Loan Type: MLS Purchase, Refinance, Transfer - LTV 150,000 or located in the...",
+      "appraiserAttachments": [
+        {
+          "title": "Merix Financial Approved Appraiser List",
+          "fileName": "appraiser-list.xls",
+          "localPath": "/forms/merix-standard-lendwise/appraiser-list.xls",
+          "remoteUrl": "https://d14sntax4572qq.cloudfront.net/forms/zawILVhymDNV9KdHgWAD9rJwApDETRZjQmuUsrRg.xls",
+          "format": "XLS",
+          "fileSize": "225.5 KB",
+          "description": "Master approved appraiser list for Merix Financial and Lendwise."
+        }
+      ],
+      "hasApprovedAppraiserList": true,
+      "approvedAppraisersCount": null
     },
     "legalPolicy": {
       "closingPlatforms": [
@@ -116284,7 +116591,29 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
       "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: Solidifi, NAS (Nationwide Appraisal Services). Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
       "driveByAllowed": true,
       "desktopAvmAllowed": true,
-      "avmNotes": "* APV is not available at Eclipse (Applies: Alberta, British Columbia, Manitoba, Ontario, Saskatchewan)."
+      "avmNotes": "* APV is not available at Eclipse (Applies: Alberta, British Columbia, Manitoba, Ontario, Saskatchewan).",
+      "appraiserAttachments": [
+        {
+          "title": "RMG Approved Appraiser List",
+          "fileName": "approved-appraiser-list.pdf",
+          "localPath": "/forms/rmg-mortgages/approved-appraiser-list.pdf",
+          "remoteUrl": "https://d14sntax4572qq.cloudfront.net/forms/5P6CkP0T8HQcWXUNL4yq1ARs5R1ofXp3cLlJBvdp.pdf",
+          "format": "PDF",
+          "fileSize": "327.1 KB",
+          "description": "Designated appraisal firms approved by RMG Mortgages."
+        },
+        {
+          "title": "RMG Appraisal Rebate Request",
+          "fileName": "appraisal-rebate.pdf",
+          "localPath": "/forms/rmg-mortgages/appraisal-rebate.pdf",
+          "remoteUrl": "https://d14sntax4572qq.cloudfront.net/forms/Jqpzf8eQaJiRRVBxdkigPVi0TXj4Dhbe6Ny84KTB.pdf",
+          "format": "PDF",
+          "fileSize": "402.3 KB",
+          "description": "Rebate reimbursement form for qualifying promotional broker files."
+        }
+      ],
+      "hasApprovedAppraiserList": true,
+      "approvedAppraisersCount": null
     },
     "legalPolicy": {
       "closingPlatforms": [
@@ -129766,7 +130095,20 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
       "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: NAS (Nationwide Appraisal Services), Solidifi. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
       "driveByAllowed": false,
       "desktopAvmAllowed": false,
-      "avmNotes": "* APV not available at Servus Credit Union (Applies: Alberta)."
+      "avmNotes": "* APV not available at Servus Credit Union (Applies: Alberta).",
+      "appraiserAttachments": [
+        {
+          "title": "Servus Credit Union Appraisal List",
+          "fileName": "appraisal-list.pdf",
+          "localPath": "/forms/servus-credit-union/appraisal-list.pdf",
+          "remoteUrl": "https://d14sntax4572qq.cloudfront.net/forms/UMkagHRXjMZ92l28aOoDZXlaY8Ghz1Bd862AnOC1.pdf",
+          "format": "PDF",
+          "fileSize": "75.9 KB",
+          "description": "Approved residential appraiser list for Servus Credit Union."
+        }
+      ],
+      "hasApprovedAppraiserList": true,
+      "approvedAppraisersCount": null
     },
     "legalPolicy": {
       "closingPlatforms": [
@@ -137291,14 +137633,27 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
       "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: Solidifi, NAS (Nationwide Appraisal Services), Brookfield RPS. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
       "driveByAllowed": true,
       "desktopAvmAllowed": true,
-      "avmNotes": "* AVM process - only permitted on uninsured transfers. We use FCT only for our AVMs."
+      "avmNotes": "* AVM process - only permitted on uninsured transfers. We use FCT only for our AVMs.",
+      "appraiserAttachments": [
+        {
+          "title": "EQ Bank Approved Appraisers (British Columbia)",
+          "fileName": "approved-appraisers-bc.pdf",
+          "localPath": "/forms/eq-bank/approved-appraisers-bc.pdf",
+          "remoteUrl": "https://d14sntax4572qq.cloudfront.net/forms/TmqTCxRCITqkrakZmXkKNximYGX0KuJnZQfk20HL.pdf",
+          "format": "PDF",
+          "fileSize": "453.8 KB",
+          "description": "Official panel of approved appraisers for Equitable Bank / EQ Bank in British Columbia."
+        }
+      ],
+      "hasApprovedAppraiserList": true,
+      "approvedAppraisersCount": null
     },
     "legalPolicy": {
       "closingPlatforms": [
         "FCT (First Canadian Title)",
         "Independent Solicitor in Good Standing"
       ],
-      "hasApprovedLawyerList": false,
+      "hasApprovedLawyerList": true,
       "lawyerSelectionPolicy": "Borrower is free to select any practicing solicitor or lawyer in good standing with the provincial law society.",
       "solicitorOnly": true,
       "bcNotaryAllowed": false,
@@ -137307,7 +137662,28 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
       "titleInsuranceMandatory": true,
       "titleInsuranceNotes": "* Title Insurance is required. (Applies: Ontario).",
       "ilaRequiredNotes": "Independent Legal Advice (ILA) mandatory for all non-borrowing guarantors, title transferors, and non-signing spouses.",
-      "closingNotes": "Standard closing requirements apply. * Closing costs at 1.5% must be verified at time of submission. (Applies: Ontario)"
+      "closingNotes": "Standard closing requirements apply. * Closing costs at 1.5% must be verified at time of submission. (Applies: Ontario)",
+      "lawyerAttachments": [
+        {
+          "title": "Certificate of Independent Legal Advice (Borrower)",
+          "fileName": "certificate-of-independent-legal-advice-borrower.pdf",
+          "localPath": "/forms/eq-bank/certificate-of-independent-legal-advice-borrower.pdf",
+          "remoteUrl": "https://d14sntax4572qq.cloudfront.net/forms/awEkn8uaqH173k9TVbCZE0vQceoJ8JSAE8krouXW.pdf",
+          "format": "PDF",
+          "fileSize": "138.2 KB",
+          "description": "Mandatory ILA certificate required for non-standard borrower structures."
+        },
+        {
+          "title": "Certificate of Independent Legal Advice (Non-Title Holding Spouse)",
+          "fileName": "certificate-of-independent-legal-advice-non-title-holding-spouse.pdf",
+          "localPath": "/forms/eq-bank/certificate-of-independent-legal-advice-non-title-holding-spouse.pdf",
+          "remoteUrl": "https://d14sntax4572qq.cloudfront.net/forms/agU7wW5KOntzBnbaPNmi5moqvXcfv9J6Hu5zEzf4.pdf",
+          "format": "PDF",
+          "fileSize": "140.0 KB",
+          "description": "Mandatory matrimonial ILA form required under BC and Canadian family law."
+        }
+      ],
+      "approvedLawyersCount": null
     }
   },
   {
@@ -139030,7 +139406,20 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
       "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: NAS (Nationwide Appraisal Services), Solidifi. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
       "driveByAllowed": true,
       "desktopAvmAllowed": true,
-      "avmNotes": "* APV is not available at Eclipse (Applies: Alberta, British Columbia, Manitoba, Ontario, Saskatchewan)."
+      "avmNotes": "* APV is not available at Eclipse (Applies: Alberta, British Columbia, Manitoba, Ontario, Saskatchewan).",
+      "appraiserAttachments": [
+        {
+          "title": "Eclipse Approved Appraiser List",
+          "fileName": "appraiser-list.xlsx",
+          "localPath": "/forms/eclipse-mcap-rmg/appraiser-list.xlsx",
+          "remoteUrl": "https://d14sntax4572qq.cloudfront.net/forms/IRpARI8Hs2C2PRQSxgo2tu22Ix2AsCB464ZPYEhd.xlsx",
+          "format": "XLSX",
+          "fileSize": "156.4 KB",
+          "description": "Approved appraiser directory for Eclipse alternative mortgage submissions."
+        }
+      ],
+      "hasApprovedAppraiserList": true,
+      "approvedAppraisersCount": null
     },
     "legalPolicy": {
       "closingPlatforms": [
@@ -144711,13 +145100,26 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
       "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: NAS (Nationwide Appraisal Services), Solidifi. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
       "driveByAllowed": false,
       "desktopAvmAllowed": false,
-      "avmNotes": "* No policy provided by Coastal Community Credit Union (Applies: British Columbia)."
+      "avmNotes": "* No policy provided by Coastal Community Credit Union (Applies: British Columbia).",
+      "appraiserAttachments": [
+        {
+          "title": "Coastal Community Approved Appraiser List",
+          "fileName": "appraiser-list.pdf",
+          "localPath": "/forms/coastal-community/appraiser-list.pdf",
+          "remoteUrl": "https://d14sntax4572qq.cloudfront.net/forms/GgsuVT16MBgOPg2mqKbruEELICpd8SGlWx44fRrP.pdf",
+          "format": "PDF",
+          "fileSize": "627.8 KB",
+          "description": "Approved appraisers for Vancouver Island and Gulf Islands properties."
+        }
+      ],
+      "hasApprovedAppraiserList": true,
+      "approvedAppraisersCount": null
     },
     "legalPolicy": {
       "closingPlatforms": [
         "Independent Solicitor in Good Standing"
       ],
-      "hasApprovedLawyerList": false,
+      "hasApprovedLawyerList": true,
       "lawyerSelectionPolicy": "No restricted lawyer list. Borrower can select any solicitor in good standing with the law society.",
       "solicitorOnly": false,
       "bcNotaryAllowed": true,
@@ -144726,7 +145128,19 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
       "titleInsuranceMandatory": true,
       "titleInsuranceNotes": "* Title insurance is required. (Applies: British Columbia).",
       "ilaRequiredNotes": "Independent Legal Advice (ILA) mandatory for all non-borrowing guarantors, title transferors, and non-signing spouses.",
-      "closingNotes": "Standard closing requirements apply. * No closing cost policy provided (Applies: British Columbia)"
+      "closingNotes": "Standard closing requirements apply. * No closing cost policy provided (Applies: British Columbia)",
+      "lawyerAttachments": [
+        {
+          "title": "Coastal Community Approved Solicitors List",
+          "fileName": "solicitors-list.pdf",
+          "localPath": "/forms/coastal-community/solicitors-list.pdf",
+          "remoteUrl": "https://d14sntax4572qq.cloudfront.net/forms/Zn4unrkCgUVpSjGxuI024rxzddmH4tKFvs1DfXpM.pdf",
+          "format": "PDF",
+          "fileSize": "720.2 KB",
+          "description": "Approved legal counsel list for Coastal Community Credit Union mortgage registration."
+        }
+      ],
+      "approvedLawyersCount": null
     }
   },
   {
@@ -155145,7 +155559,20 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
       "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: NAS (Nationwide Appraisal Services), Solidifi. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
       "driveByAllowed": true,
       "desktopAvmAllowed": true,
-      "avmNotes": "* We have what we call a LRV that we use for low LTV refi\u2019s, good beacon on o/o urban homes. Cost is $265."
+      "avmNotes": "* We have what we call a LRV that we use for low LTV refi\u2019s, good beacon on o/o urban homes. Cost is $265.",
+      "appraiserAttachments": [
+        {
+          "title": "FirstOntario Approved Appraisal List",
+          "fileName": "appraisal-list.pdf",
+          "localPath": "/forms/firstontario-credit-union/appraisal-list.pdf",
+          "remoteUrl": "https://d14sntax4572qq.cloudfront.net/forms/NgfRjJA1T9BI97QEjFNfe57dbEQYKbqEEZQ7Wrvy.pdf",
+          "format": "PDF",
+          "fileSize": "486.5 KB",
+          "description": "Approved appraisal panel for FirstOntario Credit Union residential mortgages."
+        }
+      ],
+      "hasApprovedAppraiserList": true,
+      "approvedAppraisersCount": null
     },
     "legalPolicy": {
       "closingPlatforms": [
@@ -156767,7 +157194,20 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
       "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: NAS (Nationwide Appraisal Services), Solidifi. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
       "driveByAllowed": true,
       "desktopAvmAllowed": true,
-      "avmNotes": "* We have what we call a LRV that we use for low LTV refi\u2019s, good beacon on o/o urban homes. Cost is $265."
+      "avmNotes": "* We have what we call a LRV that we use for low LTV refi\u2019s, good beacon on o/o urban homes. Cost is $265.",
+      "appraiserAttachments": [
+        {
+          "title": "FirstOntario Alt A Appraisal List",
+          "fileName": "appraisal-list.pdf",
+          "localPath": "/forms/firstontario-credit-union-alt-a/appraisal-list.pdf",
+          "remoteUrl": "https://d14sntax4572qq.cloudfront.net/forms/37cFwGHvCCq9Kv31EbeJLt49IbeD097Aao483fQd.pdf",
+          "format": "PDF",
+          "fileSize": "486.5 KB",
+          "description": "Approved appraisal panel for FirstOntario Alt A residential mortgages."
+        }
+      ],
+      "hasApprovedAppraiserList": true,
+      "approvedAppraisersCount": null
     },
     "legalPolicy": {
       "closingPlatforms": [
@@ -164093,7 +164533,19 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
       "titleInsuranceMandatory": true,
       "titleInsuranceNotes": "Title Insurance or Survey (< 10 years old) * Only one required. However, title insurance is required in cases lacking strong document support (Applies: British Columbia, Ontario).",
       "ilaRequiredNotes": "Independent Legal Advice (ILA) mandatory for all non-borrowing guarantors, title transferors, and non-signing spouses.",
-      "closingNotes": "Standard closing requirements apply. * Closing Costs of 1.5% are required (Applies: British Columbia, Ontario)"
+      "closingNotes": "Standard closing requirements apply. * Closing Costs of 1.5% are required (Applies: British Columbia, Ontario)",
+      "lawyerAttachments": [
+        {
+          "title": "CTBC Bank Approved Lawyer List",
+          "fileName": "approved-lawyer-list.doc",
+          "localPath": "/forms/ctbc-bank/approved-lawyer-list.doc",
+          "remoteUrl": "https://d14sntax4572qq.cloudfront.net/forms/iVLyw5BAYxGHlQykfp4LDqgoIZ9AYdHRKS42pkDW.doc",
+          "format": "DOC",
+          "fileSize": "246.0 KB",
+          "description": "Mandatory approved solicitor panel for CTBC Bank Canadian residential and commercial mortgages."
+        }
+      ],
+      "approvedLawyersCount": null
     }
   },
   {
@@ -166164,7 +166616,20 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
       "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: NAS (Nationwide Appraisal Services), Solidifi. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
       "driveByAllowed": false,
       "desktopAvmAllowed": false,
-      "avmNotes": "* Full appraisal is required on all files (Applies: Ontario)."
+      "avmNotes": "* Full appraisal is required on all files (Applies: Ontario).",
+      "appraiserAttachments": [
+        {
+          "title": "Ganaraska Approved Appraisers",
+          "fileName": "approved-appraisers.pdf",
+          "localPath": "/forms/ganaraska-financial-credit-union/approved-appraisers.pdf",
+          "remoteUrl": "https://d14sntax4572qq.cloudfront.net/forms/LnQbSEsCM8HRaUcP6Q0tHQ2fdz36YnUOK4yoUdbf.pdf",
+          "format": "PDF",
+          "fileSize": "611.0 KB",
+          "description": "Authorized appraisal firms for Ganaraska Financial Credit Union."
+        }
+      ],
+      "hasApprovedAppraiserList": true,
+      "approvedAppraisersCount": null
     },
     "legalPolicy": {
       "closingPlatforms": [
@@ -167170,7 +167635,20 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
       "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: NAS (Nationwide Appraisal Services), Solidifi. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
       "driveByAllowed": false,
       "desktopAvmAllowed": false,
-      "avmNotes": "* APV is not available at Effort Trust (Applies: Ontario)."
+      "avmNotes": "* APV is not available at Effort Trust (Applies: Ontario).",
+      "appraiserAttachments": [
+        {
+          "title": "Effort Trust Appraisal List",
+          "fileName": "appraisal-list.pdf",
+          "localPath": "/forms/effort-trust/appraisal-list.pdf",
+          "remoteUrl": "https://d14sntax4572qq.cloudfront.net/forms/gJtrtNCOp1uAMHBdc0Ran7qjA2NCIRjSnujVJoKs.pdf",
+          "format": "PDF",
+          "fileSize": "320.0 KB",
+          "description": "Approved appraisal firms for Effort Trust mortgage transactions."
+        }
+      ],
+      "hasApprovedAppraiserList": true,
+      "approvedAppraisersCount": null
     },
     "legalPolicy": {
       "closingPlatforms": [
@@ -168072,7 +168550,7 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
         "FCT (First Canadian Title)",
         "Independent Solicitor in Good Standing"
       ],
-      "hasApprovedLawyerList": false,
+      "hasApprovedLawyerList": true,
       "lawyerSelectionPolicy": "Borrower is free to select any practicing solicitor or lawyer in good standing with the provincial law society.",
       "solicitorOnly": false,
       "bcNotaryAllowed": true,
@@ -168081,7 +168559,20 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
       "titleInsuranceMandatory": true,
       "titleInsuranceNotes": "- Required on all mortgages - Due to an operational issue, Prospera Credit Union is pausing the use of First Canadian Title for refinance and transfer transactions on Vancouver Island. In the interim refinance and...",
       "ilaRequiredNotes": "Independent Legal Advice (ILA) mandatory for all non-borrowing guarantors, title transferors, and non-signing spouses.",
-      "closingNotes": "Standard closing requirements apply. * Closing Costs expected to be debt serviced (Applies: British Columbia)"
+      "closingNotes": "Standard closing requirements apply. * Closing Costs expected to be debt serviced (Applies: British Columbia)",
+      "lawyerAttachments": [
+        {
+          "title": "Prospera Approved List of Lawyers & Notaries Public (BC)",
+          "fileName": "approved-list-of-lawyers-notary.xlsx",
+          "localPath": "/forms/prospera/approved-list-of-lawyers-notary.xlsx",
+          "remoteUrl": "https://d14sntax4572qq.cloudfront.net/forms/aWaUAbvxw97QdF7W4fONiIujK2KVltwo3W9V718w.xlsx",
+          "format": "XLSX",
+          "fileSize": "52.5 KB",
+          "itemCount": 235,
+          "description": "Complete panel of 235 approved law firms and BC Notaries Public across Lower Mainland and Okanagan."
+        }
+      ],
+      "approvedLawyersCount": 235
     }
   },
   {
@@ -170753,7 +171244,20 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
       "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: NAS (Nationwide Appraisal Services), Solidifi, Brookfield RPS. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
       "driveByAllowed": false,
       "desktopAvmAllowed": true,
-      "avmNotes": "**InstaValue - Automated Valuation, Simplified** * InstaValue is Questbank's automated valuation service that is quick, easy, and handled entirely in-house - eliminating the need for an appraiser\u2019s visit in many cases..."
+      "avmNotes": "**InstaValue - Automated Valuation, Simplified** * InstaValue is Questbank's automated valuation service that is quick, easy, and handled entirely in-house - eliminating the need for an appraiser\u2019s visit in many cases...",
+      "appraiserAttachments": [
+        {
+          "title": "Questbank BC Approved Appraisers List",
+          "fileName": "bc-appraisers-list.pdf",
+          "localPath": "/forms/questbank/bc-appraisers-list.pdf",
+          "remoteUrl": "https://d14sntax4572qq.cloudfront.net/forms/MjeUeCBE8pGDLK04EyqhJaPcdMsz6inDOH05QXKi.pdf",
+          "format": "PDF",
+          "fileSize": "76.3 KB",
+          "description": "Authorized residential appraisers for Questbank mortgage transactions in British Columbia."
+        }
+      ],
+      "hasApprovedAppraiserList": true,
+      "approvedAppraisersCount": null
     },
     "legalPolicy": {
       "closingPlatforms": [
@@ -173818,7 +174322,21 @@ export const CANADIAN_LENDERS: LenderDetail[] = [
       "acceptedAmcsNotes": "Appraisal orders must be placed through approved AMC platforms: Solidifi, NAS (Nationwide Appraisal Services), Brookfield RPS, Value Connect. Transferred appraisals must be dated within 60 days with original AMC paid invoice.",
       "driveByAllowed": false,
       "desktopAvmAllowed": true,
-      "avmNotes": "* AVM process - only permitted on uninsured transfers. We use FCT only for our AVMs."
+      "avmNotes": "* AVM process - only permitted on uninsured transfers. We use FCT only for our AVMs.",
+      "appraiserAttachments": [
+        {
+          "title": "RFA Approved Appraisal List (National)",
+          "fileName": "rfa-approved-appraisal-list.xlsx",
+          "localPath": "/forms/rfa/rfa-approved-appraisal-list.xlsx",
+          "remoteUrl": "https://d14sntax4572qq.cloudfront.net/forms/JkuXx7Zq38jBmkOOLndiABG8SO0tG6vUfE3igzbl.xlsx",
+          "format": "XLSX",
+          "fileSize": "59.5 KB",
+          "itemCount": 852,
+          "description": "852 approved appraisal firms authorized by RFA across British Columbia, Alberta, and Ontario."
+        }
+      ],
+      "hasApprovedAppraiserList": true,
+      "approvedAppraisersCount": 852
     },
     "legalPolicy": {
       "closingPlatforms": [
