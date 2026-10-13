@@ -50,10 +50,11 @@ interface OpenRouterResponse {
 }
 
 export function openRouterProvider(model: string, referer?: string): ChatProvider {
-  const apiKey = process.env.OPEN_ROUTER_API_KEY;
+  // Accept both spellings: .env.example and /api/chat use OPENROUTER_API_KEY.
+  const apiKey = process.env.OPENROUTER_API_KEY || process.env.OPEN_ROUTER_API_KEY;
 
   if (!apiKey) {
-    throw new Error("OPEN_ROUTER_API_KEY not configured - check environment variables");
+    throw new Error("OPENROUTER_API_KEY (or OPEN_ROUTER_API_KEY) not configured - check environment variables");
   }
 
   async function* streamOpenRouterResponse(reader: ReadableStreamDefaultReader<Uint8Array>) {
@@ -157,14 +158,26 @@ export function openRouterProvider(model: string, referer?: string): ChatProvide
 
       const reader = response.body!.getReader();
       const encoder = new TextEncoder();
+      // Create the SSE iterator ONCE. (Re-creating it on every pull() and returning out of
+      // for-await closed the generator, discarding any other SSE lines buffered from the same
+      // network read - i.e. streamed tokens were silently dropped.)
+      const chunks = streamOpenRouterResponse(reader);
 
       return new ReadableStream<Uint8Array>({
         async pull(controller) {
-          for await (const chunk of streamOpenRouterResponse(reader)) {
-            controller.enqueue(encoder.encode(chunk));
-            return;
+          try {
+            const { value, done } = await chunks.next();
+            if (done) {
+              controller.close();
+            } else {
+              controller.enqueue(encoder.encode(value));
+            }
+          } catch (err) {
+            controller.error(err);
           }
-          controller.close();
+        },
+        async cancel() {
+          await reader.cancel().catch(() => {});
         },
       });
     },

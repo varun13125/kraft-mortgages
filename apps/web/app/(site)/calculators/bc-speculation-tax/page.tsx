@@ -15,22 +15,38 @@ import { RelatedCalculators } from "@/components/calculators/RelatedCalculators"
 type Ownership = "citizen" | "pr" | "other";
 type Occupancy = "principal" | "rental" | "vacant" | "shortterm";
 
-function svtRate(ownership: Ownership, region: string): number {
-  if (ownership === "citizen" || ownership === "pr") return 0.5;
-  return 2.0;
+// SVT rates by tax year (gov.bc.ca "Tax rates", verified Oct 2026). "high" applies to foreign
+// owners and untaxed worldwide earners (incl. satellite families); "low" to other Canadian
+// citizens / permanent residents. The tax year is the calendar year of use; it's paid the next July.
+const SVT_RATES: Record<number, { high: number; low: number }> = {
+  2025: { high: 2, low: 0.5 },
+  2026: { high: 3, low: 1 },
+  2027: { high: 4, low: 1 },
+};
+const TAX_YEARS = [2025, 2026, 2027] as const;
+
+function svtRate(ownership: Ownership, untaxedWorldwideEarner: boolean, taxYear: number): number {
+  const rates = SVT_RATES[taxYear] ?? SVT_RATES[2026];
+  if (ownership === "other" || untaxedWorldwideEarner) return rates.high;
+  return rates.low;
 }
 
-function isExempt(ownership: Ownership, occupancy: Occupancy): { exempt: boolean; reason: string } {
-  if (occupancy === "principal") return { exempt: true, reason: "Principal residence exemption applies" };
-  if (occupancy === "rental") return { exempt: true, reason: "Long-term rental (1yr+) is exempt from SVT" };
+function isExempt(ownership: Ownership, occupancy: Occupancy, region: string, untaxedWorldwideEarner: boolean): { exempt: boolean; reason: string } {
+  if (region === "outside") return { exempt: true, reason: "The property is outside the SVT taxable areas, so the tax doesn't apply" };
+  if (occupancy === "principal") {
+    // Principal-residence exemption: Canadian citizen/PR, BC resident for income tax, not an untaxed worldwide earner
+    if (ownership !== "other" && !untaxedWorldwideEarner) return { exempt: true, reason: "Principal residence exemption applies (Canadian citizen/PR, BC tax resident)" };
+    return { exempt: false, reason: "The principal residence exemption isn't available to foreign owners or untaxed worldwide earners (incl. satellite families)" };
+  }
+  if (occupancy === "rental") return { exempt: true, reason: "Tenancy exemption: rented to qualifying tenants for at least 6 months of the year" };
   return { exempt: false, reason: "SVT applies at your ownership rate" };
 }
 
 const faqs = [
-  { q: "What is the BC Speculation and Vacancy Tax (SVT)?", a: "The SVT is an annual tax on residential properties in designated areas of BC, aimed at addressing housing affordability. It targets vacant or underutilized homes, foreign owners, and satellite families. The tax ranges from 0.5% to 2% of assessed property value depending on ownership type and residency status." },
-  { q: "Who has to pay the SVT?", a: "Foreign owners and satellite families pay 2%. Canadian citizens or permanent residents who are members of a satellite family pay 0.5%. Most BC residents who live in their home or rent it long-term are exempt. The tax applies in Metro Vancouver, Capital Regional District, Kelowna, Nanaimo, Abbotsford, and surrounding areas." },
-  { q: "Am I a satellite family?", a: "You are considered part of a satellite family if less than 50% of your combined household income is from BC sources. A citizenship or PR holder in a satellite family pays 0.5% instead of the foreign owner rate of 2%, but still pays." },
-  { q: "How do I declare for SVT?", a: "Every residential property owner in a designated SVT zone must complete an annual declaration. The BC government sends declaration letters in January/February. You can also declare online through the SVT self-service portal. Failure to declare results in the property being taxed at the highest rate (2%)." },
+  { q: "What is the BC Speculation and Vacancy Tax (SVT)?", a: "The SVT is an annual tax on residential properties in designated areas of BC, aimed at addressing housing affordability. It targets vacant or underused homes, foreign owners, and untaxed worldwide earners (including satellite families). Rates are rising: for the 2026 tax year it is 3% of assessed value for foreign owners and untaxed worldwide earners and 1% for other Canadian citizens and permanent residents (2% / 0.5% for 2025; 4% / 1% from 2027)." },
+  { q: "Who has to pay the SVT?", a: "Owners in a taxable area who don't qualify for an exemption. Most BC residents who live in their home as a principal residence, or rent it to qualifying tenants for at least 6 months of the year, are exempt. The tax applies in Metro Vancouver, the Capital Regional District, and designated municipalities including Abbotsford, Chilliwack, Mission, Kelowna, West Kelowna, Kamloops, Nanaimo, Squamish, Vernon, Penticton and several Vancouver Island communities." },
+  { q: "Am I a satellite family?", a: "A satellite family is generally a household that declares less than 50% of its total combined income on Canadian tax returns. Satellite families fall under the 'untaxed worldwide earner' category, which pays the highest rate and cannot claim the principal residence exemption — even if the owner is a Canadian citizen or permanent resident." },
+  { q: "How do I declare for SVT?", a: "Every residential property owner in a designated SVT area must complete an annual declaration. The BC government sends declaration letters in January/February. You can also declare online through the SVT self-service portal. If you don't declare, the property is taxed at the highest rate until you do." },
   { q: "What is the deadline for SVT declarations?", a: "The annual SVT declaration deadline is typically March 31. Late declarations may still be accepted but you risk being assessed at the highest rate. Check the BC government SVT website for current year deadlines." }
 ];
 
@@ -40,14 +56,16 @@ export default function BCSpeculationTaxPage() {
   const [ownership, setOwnership] = useState<Ownership>("citizen");
   const [occupancy, setOccupancy] = useState<Occupancy>("principal");
   const [region, setRegion] = useState("metro-van");
+  const [untaxedWorldwideEarner, setUntaxedWorldwideEarner] = useState(false);
+  const [taxYear, setTaxYear] = useState<number>(2026);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
   const { taxRate, taxAmount, exempt, reason } = useMemo(() => {
-    const exemption = isExempt(ownership, occupancy);
+    const exemption = isExempt(ownership, occupancy, region, untaxedWorldwideEarner);
     if (exemption.exempt) return { taxRate: 0, taxAmount: 0, exempt: true, reason: exemption.reason };
-    const rate = svtRate(ownership, region);
+    const rate = svtRate(ownership, untaxedWorldwideEarner, taxYear);
     return { taxRate: rate, taxAmount: assessedValue * (rate / 100), exempt: false, reason: exemption.reason };
-  }, [assessedValue, ownership, occupancy, region]);
+  }, [assessedValue, ownership, occupancy, region, untaxedWorldwideEarner, taxYear]);
 
   return (
     <>
@@ -125,6 +143,8 @@ export default function BCSpeculationTaxPage() {
                       {
                         title: "Results",
                         rows: [
+                          { label: "Tax Year", value: String(taxYear) },
+                          { label: "Untaxed Worldwide Earner?", value: untaxedWorldwideEarner ? "Yes" : "No" },
                           { label: "Tax Rate", value: taxRate + "%" },
                           { label: "Annual Tax", value: "$" + Math.round(taxAmount).toLocaleString("en-CA"), highlight: true },
                           { label: "Exempt?", value: exempt ? "Yes" : "No" },
@@ -132,7 +152,7 @@ export default function BCSpeculationTaxPage() {
                         ]
                       }
                     ],
-                    educationalContent: "The BC SVT ranges from 0.5% to 2% of assessed value in designated areas. Exemptions exist for principal residences and long-term rentals."
+                    educationalContent: "For the 2026 tax year the BC SVT is 3% of assessed value for foreign owners and untaxed worldwide earners and 1% for other Canadian citizens and permanent residents, in designated areas. Exemptions exist for principal residences (Canadian citizens/PRs who are BC tax residents) and qualifying long-term rentals."
                   });
                 }}
               />
@@ -152,8 +172,25 @@ export default function BCSpeculationTaxPage() {
                           <button key={val} onClick={() => setOwnership(val)} className={`w-full py-3 px-4 rounded-xl font-semibold text-sm transition-all border text-left ${ownership === val ? "bg-gold-500 text-black border-gold-500" : "bg-white/5 text-gray-300 border-white/10 hover:bg-white/10"}`}>
                             {label}
                             <span className="block text-xs opacity-70 mt-0.5">
-                              {val === "citizen" ? "0.5% if satellite family, exempt if BC resident" : val === "pr" ? "0.5% if satellite family, exempt if BC resident" : "2% standard rate"}
+                              {val === "other"
+                                ? `${SVT_RATES[taxYear].high}% for the ${taxYear} tax year`
+                                : `${SVT_RATES[taxYear].low}% for ${taxYear} if not exempt (${SVT_RATES[taxYear].high}% if an untaxed worldwide earner)`}
                             </span>
+                          </button>
+                        ))}
+                      </div>
+                      <label className="flex items-start gap-3 mt-3 cursor-pointer">
+                        <input type="checkbox" checked={untaxedWorldwideEarner} onChange={(e) => setUntaxedWorldwideEarner(e.target.checked)} className="mt-1 w-4 h-4 rounded border-gray-600 bg-gray-700 text-gold-500" />
+                        <span className="text-sm text-gray-300">Untaxed worldwide earner / satellite family <span className="block text-xs text-gray-500">Less than 50% of household income reported on Canadian tax returns</span></span>
+                      </label>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-300 mb-2">Tax Year (calendar year of use)</label>
+                      <div className="grid grid-cols-3 gap-2">
+                        {TAX_YEARS.map((y) => (
+                          <button key={y} onClick={() => setTaxYear(y)} className={`py-3 px-2 rounded-xl font-semibold text-sm transition-all border ${taxYear === y ? "bg-gold-500 text-black border-gold-500" : "bg-white/5 text-gray-300 border-white/10 hover:bg-white/10"}`}>
+                            {y}
                           </button>
                         ))}
                       </div>
@@ -164,7 +201,7 @@ export default function BCSpeculationTaxPage() {
                       <div className="space-y-2">
                         {([
                           { val: "principal" as const, label: "Principal Residence" },
-                          { val: "rental" as const, label: "Long-Term Rental (1yr+)" },
+                          { val: "rental" as const, label: "Long-Term Rental (6+ months of the year)" },
                           { val: "vacant" as const, label: "Vacant / Unoccupied" },
                           { val: "shortterm" as const, label: "Short-Term Rental (Airbnb)" }
                         ]).map(({ val, label }) => (
@@ -177,18 +214,20 @@ export default function BCSpeculationTaxPage() {
 
                     <div>
                       <label className="block text-sm font-medium text-gray-300 mb-2">Region</label>
-                      <div className="flex gap-2">
+                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                         {([
                           { val: "metro-van", label: "Metro Vancouver" },
                           { val: "capital", label: "Victoria / CRD" },
-                          { val: "kelowna", label: "Kelowna" },
-                          { val: "other", label: "Other BC" }
+                          { val: "kelowna", label: "Kelowna / West Kelowna" },
+                          { val: "other", label: "Other designated area" },
+                          { val: "outside", label: "Outside SVT areas" }
                         ]).map(({ val, label }) => (
-                          <button key={val} onClick={() => setRegion(val)} className={`flex-1 py-3 px-3 rounded-xl font-semibold text-sm transition-all border ${region === val ? "bg-gold-500 text-black border-gold-500" : "bg-white/5 text-gray-300 border-white/10 hover:bg-white/10"}`}>
+                          <button key={val} onClick={() => setRegion(val)} className={`py-3 px-3 rounded-xl font-semibold text-sm transition-all border ${region === val ? "bg-gold-500 text-black border-gold-500" : "bg-white/5 text-gray-300 border-white/10 hover:bg-white/10"}`}>
                             {label}
                           </button>
                         ))}
                       </div>
+                      <p className="text-xs text-gray-500 mt-2">Other designated areas include Abbotsford, Chilliwack, Mission, Kamloops, Nanaimo, Squamish, Vernon, Penticton, Courtenay, Comox and more — check the BC government&apos;s taxable-areas map.</p>
                     </div>
                   </div>
                 </div>
@@ -269,13 +308,13 @@ export default function BCSpeculationTaxPage() {
               <p>The BC Speculation and Vacancy Tax (SVT) is an annual tax introduced in 2018 by the provincial government to discourage housing speculation and encourage property owners to make their homes available to BC residents. It applies to residential properties in designated zones across British Columbia, primarily in high-demand urban areas where housing affordability has become a significant concern.</p>
 
               <h3 className="text-2xl font-semibold text-gray-100 mt-8">Who Pays and Who Is Exempt?</h3>
-              <p>The vast majority of BC residents are exempt from the SVT. If you own a home in a designated zone and it is your principal residence where you live most of the year, you owe nothing. The same applies if you rent the property on a long-term basis (12 months or more). The tax targets three categories: foreign owners (2%), satellite families (0.5% for citizens/PRs, 2% for others), and owners of vacant or underutilized properties (2%).</p>
+              <p>The vast majority of BC residents are exempt from the SVT. If you are a Canadian citizen or permanent resident who is a BC tax resident, own a home in a designated area and it is your principal residence, you owe nothing. Owners who rent the property to qualifying tenants for at least 6 months of the year are also exempt. Owners without an exemption pay a rate that depends on who they are: for the 2026 tax year, 3% for foreign owners and untaxed worldwide earners (including satellite families) and 1% for other Canadian citizens and permanent residents. Those rates were 2% and 0.5% through 2025, and the higher rate rises to 4% for 2027.</p>
 
               <h3 className="text-2xl font-semibold text-gray-100 mt-8">Designated Areas</h3>
-              <p>The SVT applies in Metro Vancouver, the Capital Regional District (Greater Victoria), the Regional District of Central Okanagan (Kelowna and area), Nanaimo, Abbotsford, Mission, and surrounding municipalities. If your property is outside these areas, you are not subject to the SVT. However, some municipalities have their own vacancy taxes (like Vancouver&apos;s Empty Homes Tax), which are separate from the provincial SVT.</p>
+              <p>The SVT applies in Metro Vancouver, the Capital Regional District (Greater Victoria), and designated municipalities including Abbotsford, Chilliwack, Mission, Kelowna, West Kelowna, Lake Country, Peachland, Kamloops, Vernon, Penticton, Summerland, Salmon Arm, Squamish, Nanaimo, Lantzville, Parksville, Qualicum Beach, Courtenay, Comox, Cumberland, Duncan, North Cowichan, Ladysmith and Lake Cowichan. If your property is outside these areas, you are not subject to the SVT. However, some municipalities have their own vacancy taxes (like Vancouver&apos;s Empty Homes Tax), which are separate from the provincial SVT.</p>
 
               <h3 className="text-2xl font-semibold text-gray-100 mt-8">Declaration and Deadlines</h3>
-              <p>Every residential property owner in an SVT-designated area must complete an annual declaration. The BC government mails declaration packages in January and February each year, and you can also complete the declaration online. The typical deadline is March 31. Even if you are exempt, you must still file. Failure to declare means your property is automatically assessed at the highest rate of 2%, with no opportunity to retroactively claim an exemption.</p>
+              <p>Every residential property owner in an SVT-designated area must complete an annual declaration. The BC government mails declaration packages in January and February each year, and you can also complete the declaration online. The typical deadline is March 31. Even if you are exempt, you must still file. If you don&apos;t declare, your property is assessed at the highest rate until you complete the declaration.</p>
 
               <div className="mt-8">
                 <Link href="/calculators/closing-costs" className="text-gold-400 hover:text-gold-300 underline">Closing Costs Calculator</Link>

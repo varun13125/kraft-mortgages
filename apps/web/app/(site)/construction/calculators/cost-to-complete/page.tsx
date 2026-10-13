@@ -23,19 +23,26 @@ export default function CostToCompleteCalculator() {
     // Funded/Equity
     const [equityInvested, setEquityInvested] = useState(150000);
     const [loanFunded, setLoanFunded] = useState(200000);
+    const [loanCommitment, setLoanCommitment] = useState(600000); // total construction loan approved
 
     // Calculations
     const hardCosts = landCost + constructionCost + landscaping;
     const softCosts = permits + architecturalFees + engineeringFees + legalFees + inspectionFees;
     const subtotal = hardCosts + softCosts;
-    const contingencyAmount = subtotal * (contingency / 100);
+    // Contingency applies to construction hard + soft costs, not to land (typically 5–10%)
+    const contingencyAmount = (subtotal - landCost) * (contingency / 100);
     const totalProjectCost = subtotal + contingencyAmount;
 
     const totalFunded = equityInvested + loanFunded;
+    // Cost to complete = remaining budget not yet paid for
     const costToComplete = totalProjectCost - totalFunded;
-    const percentComplete = (totalFunded / totalProjectCost) * 100;
+    const percentComplete = totalProjectCost > 0 ? (totalFunded / totalProjectCost) * 100 : 0;
 
-    const isFullyFunded = costToComplete <= 0;
+    // Lender test: remaining costs vs. the undisbursed balance of the approved loan.
+    // A positive gap must be covered by additional equity before further advances.
+    const undisbursedLoan = Math.max(0, loanCommitment - loanFunded);
+    const fundingGap = Math.max(0, costToComplete) - undisbursedLoan;
+    const isFullyFunded = fundingGap <= 0;
 
     return (
         <>
@@ -267,7 +274,20 @@ export default function CostToCompleteCalculator() {
                                             </div>
                                         </div>
                                         <div>
-                                            <label className="block text-sm text-gray-400 mb-1">Contingency (%)</label>
+                                            <label className="block text-sm text-gray-400 mb-1">Total Loan Approved (commitment)</label>
+                                            <div className="relative">
+                                                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">$</span>
+                                                <input
+                                                    type="number"
+                                                    value={loanCommitment}
+                                                    onChange={(e) => setLoanCommitment(Math.max(0, Number(e.target.value)))}
+                                                    className="w-full pl-8 pr-4 py-3 min-h-[48px] bg-white/5 border border-white/20 rounded-lg focus:border-green-400 transition-colors"
+                                                    inputMode="decimal"
+                                                />
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm text-gray-400 mb-1">Contingency (% of construction costs)</label>
                                             <input
                                                 type="number"
                                                 value={contingency}
@@ -289,14 +309,26 @@ export default function CostToCompleteCalculator() {
                                         ) : (
                                             <AlertTriangle className="w-6 h-6 text-orange-400" />
                                         )}
-                                        <h4 className="font-semibold">{isFullyFunded ? 'Fully Funded!' : 'Cost to Complete'}</h4>
+                                        <h4 className="font-semibold">{isFullyFunded ? 'Loan In Balance' : 'Funding Gap (Equity Required)'}</h4>
                                     </div>
                                     <div className={`text-4xl font-bold mb-2 ${isFullyFunded ? 'text-green-400' : 'text-orange-400'}`}>
-                                        ${Math.abs(costToComplete).toLocaleString()}
+                                        ${Math.round(Math.abs(fundingGap)).toLocaleString()}
                                     </div>
                                     <p className="text-sm text-gray-300">
-                                        {isFullyFunded ? 'Project is fully funded with surplus' : 'Additional funding required'}
+                                        {isFullyFunded
+                                            ? 'Undisbursed loan covers the remaining cost to complete (cushion shown)'
+                                            : 'Remaining costs exceed the undisbursed loan — additional equity needed before further advances'}
                                     </p>
+                                    <div className="mt-4 space-y-1 text-sm">
+                                        <div className="flex justify-between">
+                                            <span className="text-gray-400">Cost to complete</span>
+                                            <span className="font-semibold">${Math.round(Math.max(0, costToComplete)).toLocaleString()}</span>
+                                        </div>
+                                        <div className="flex justify-between">
+                                            <span className="text-gray-400">Undisbursed loan</span>
+                                            <span className="font-semibold">${Math.round(undisbursedLoan).toLocaleString()}</span>
+                                        </div>
+                                    </div>
 
                                     {/* Progress Bar */}
                                     <div className="mt-4">
@@ -334,12 +366,12 @@ export default function CostToCompleteCalculator() {
                                         <span className="font-semibold">${softCosts.toLocaleString()}</span>
                                     </div>
                                     <div className="flex justify-between py-2 border-b border-white/10">
-                                        <span className="text-gray-400">Contingency ({contingency}%)</span>
-                                        <span className="font-semibold">${contingencyAmount.toLocaleString()}</span>
+                                        <span className="text-gray-400">Contingency ({contingency}% of construction costs)</span>
+                                        <span className="font-semibold">${Math.round(contingencyAmount).toLocaleString()}</span>
                                     </div>
                                     <div className="flex justify-between py-2 font-bold text-lg">
                                         <span>Total Project Cost</span>
-                                        <span className="text-gold-400">${totalProjectCost.toLocaleString()}</span>
+                                        <span className="text-gold-400">${Math.round(totalProjectCost).toLocaleString()}</span>
                                     </div>
                                 </div>
                                 <div className="space-y-3">
@@ -355,18 +387,30 @@ export default function CostToCompleteCalculator() {
                                         <span className="text-gray-400">Total Funded</span>
                                         <span className="font-semibold">${totalFunded.toLocaleString()}</span>
                                     </div>
+                                    <div className="flex justify-between py-2 border-b border-white/10">
+                                        <span className="text-gray-400">Cost to Complete</span>
+                                        <span className="font-semibold">${Math.round(costToComplete).toLocaleString()}</span>
+                                    </div>
+                                    <div className="flex justify-between py-2 border-b border-white/10">
+                                        <span className="text-gray-400">Undisbursed Loan</span>
+                                        <span className="font-semibold text-green-400">${Math.round(undisbursedLoan).toLocaleString()}</span>
+                                    </div>
                                     <div className="flex justify-between py-2 font-bold text-lg">
-                                        <span>Remaining to Fund</span>
-                                        <span className={costToComplete > 0 ? 'text-orange-400' : 'text-green-400'}>
-                                            ${costToComplete.toLocaleString()}
+                                        <span>{fundingGap > 0 ? 'Equity Still Required' : 'Loan Cushion'}</span>
+                                        <span className={fundingGap > 0 ? 'text-orange-400' : 'text-green-400'}>
+                                            ${Math.round(Math.abs(fundingGap)).toLocaleString()}
                                         </span>
                                     </div>
                                 </div>
                             </div>
                         </motion.div>
 
-                        {/* CTA */}
-                        <div className="mt-12 flex gap-4 justify-center">
+                        <p className="mt-8 text-xs text-gray-500 text-center max-w-3xl mx-auto">
+                            Estimates only. Lenders advance construction funds only while the undisbursed loan covers the remaining
+                            cost to complete (confirmed by a cost consultant / quantity surveyor). Statutory 10% lien holdbacks and
+                            interest reserves can reduce what is available per draw.
+                        </p>
+                        <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
                             <Link
                                 href="/contact"
                                 className="bg-gold-500 text-black font-semibold py-4 px-8 rounded-xl hover:bg-gold-400 transition-colors"

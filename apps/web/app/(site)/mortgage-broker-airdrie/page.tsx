@@ -1,4 +1,5 @@
-"use client";
+// Server Component: this page has no client-side interactivity, so it no longer
+// ships as a client bundle ("use client" removed in the 2026-10 audit).
 import Navigation from "@/components/Navigation";
 import Link from "next/link";
 import { MapPin, Phone, Building, Users, Briefcase, Home } from "lucide-react";
@@ -16,10 +17,10 @@ export default function AirdriePage() {
                             Airdrie, Alberta
                         </div>
                         <h1 className="text-4xl md:text-6xl font-bold mb-6 text-white">
-                            Airdrie's Top-Rated Mortgage Brokerage
+                            Airdrie&apos;s Top-Rated Mortgage Brokerage
                         </h1>
                         <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-8">
-                            Just minutes north of Calgary, Airdrie is one of Alberta's fastest-growing cities. Kraft Mortgages helps families and investors take full advantage of this booming market with expert guidance and competitive rates.
+                            Just minutes north of Calgary, Airdrie is one of Alberta&apos;s fastest-growing cities. Kraft Mortgages helps families and investors take full advantage of this booming market with expert guidance and competitive rates.
                         </p>
                         <Link
                             href="/contact"
@@ -38,11 +39,11 @@ export default function AirdriePage() {
                             <div className="bg-white/5 rounded-2xl p-6 border border-white/10">
                                 <Home className="w-10 h-10 text-gold-400 mb-4" />
                                 <h3 className="text-xl font-bold mb-3">Average Home Price</h3>
-                                <p className="text-gray-400">Airdrie's average home price is approximately $490,000, with single-family homes averaging around $530,000. Townhomes and duplexes in newer communities like Windsong and Reunion offer options in the $380,000 to $420,000 range, providing excellent value relative to nearby Calgary.</p>
+                                <p className="text-gray-400">Airdrie&apos;s average home price is approximately $490,000, with single-family homes averaging around $530,000. Townhomes and duplexes in newer communities like Windsong and Reunion offer options in the $380,000 to $420,000 range, providing excellent value relative to nearby Calgary.</p>
                             </div>
                             <div className="bg-white/5 rounded-2xl p-6 border border-white/10">
                                 <Users className="w-10 h-10 text-gold-400 mb-4" />
-                                <h3 className="text-xl font-bold mb-3">One of Alberta's Fastest-Growing Cities</h3>
+                                <h3 className="text-xl font-bold mb-3">One of Alberta&apos;s Fastest-Growing Cities</h3>
                                 <p className="text-gray-400">With a population over 80,000 and annual growth rates consistently among the highest in Canada, Airdrie attracts young families drawn by affordable housing, excellent schools, and an easy commute to Calgary via the Queen Elizabeth II Highway.</p>
                             </div>
                         </div>
@@ -62,7 +63,7 @@ export default function AirdriePage() {
                             <div className="bg-white/5 rounded-2xl p-6 border border-white/10">
                                 <Building className="w-10 h-10 text-gold-400 mb-4" />
                                 <h3 className="text-xl font-bold mb-3">New Construction Financing</h3>
-                                <p className="text-gray-400">Airdrie is a builder's city, with new communities appearing regularly. We guide buyers through builder deposits, progress draw schedules, and completion financing for new builds, ensuring a smooth process from lot selection to move-in day.</p>
+                                <p className="text-gray-400">Airdrie is a builder&apos;s city, with new communities appearing regularly. We guide buyers through builder deposits, progress draw schedules, and completion financing for new builds, ensuring a smooth process from lot selection to move-in day.</p>
                             </div>
                             <div className="bg-white/5 rounded-2xl p-6 border border-white/10">
                                 <Users className="w-10 h-10 text-gold-400 mb-4" />
@@ -78,7 +79,7 @@ export default function AirdriePage() {
                     <div className="max-w-4xl mx-auto">
                         <h2 className="text-3xl font-bold mb-6 text-center">Why Choose a Local Airdrie Mortgage Broker?</h2>
                         <p className="text-gray-300 text-lg text-center mb-8">
-                            Airdrie's rapid growth means its real estate market is always shifting. New builder incentive programs, evolving community amenity fees, and changing property tax structures all affect your total cost of ownership. A local broker tracks these factors and adjusts your mortgage strategy accordingly. We compare offers from over 50 lenders, including Alberta credit unions that understand the Airdrie market specifically.
+                            Airdrie&apos;s rapid growth means its real estate market is always shifting. New builder incentive programs, evolving community amenity fees, and changing property tax structures all affect your total cost of ownership. A local broker tracks these factors and adjusts your mortgage strategy accordingly. We compare offers from over 50 lenders, including Alberta credit unions that understand the Airdrie market specifically.
                         </p>
                     </div>
                 </section>

@@ -12,19 +12,24 @@ export default function BreakEvenPage() {
   const [units, setUnits] = useState(100);
   const [otherOpex, setOtherOpex] = useState(50000);
   const [margin, setMargin] = useState(0.15);
+  const [vacancy, setVacancy] = useState(0.03);
 
   const monthlyPayment = pmt(rate, amort, loan);
   const breakEvenRent = breakEvenRentPerUnit({
     monthlyDebtService: monthlyPayment,
     otherMonthlyOpex: otherOpex,
     units,
-    targetMargin: margin
+    targetMargin: margin,
+    vacancyRate: vacancy
   });
 
-  const totalRentalIncome = breakEvenRent * units;
+  const grossPotentialRent = breakEvenRent * units;
+  // Collected (effective) income after the vacancy allowance — this is what must cover costs + margin.
+  const totalRentalIncome = grossPotentialRent * (1 - vacancy);
   const totalExpenses = monthlyPayment + otherOpex;
   const netCashFlow = totalRentalIncome - totalExpenses;
-  const cashOnCashReturn = (netCashFlow * 12) / (loan * 0.15); // Assume 15% down
+  const pctOfIncome = (x: number) => (totalRentalIncome > 0 ? (x / totalRentalIncome) * 100 : 0);
+  const money = (x: number) => Math.round(x).toLocaleString();
 
   return (
     <div className="min-h-screen">
@@ -261,14 +266,27 @@ export default function BreakEvenPage() {
                     </div>
                   </div>
 
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">Vacancy &amp; Credit Loss (%)</label>
+                    <input
+                      className="w-full rounded-lg border border-gray-600 bg-gray-700/50 text-gray-100 px-3 py-3 text-sm focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500 placeholder-gray-500 transition-all duration-200"
+                      type="number"
+                      step={0.5}
+                      min={0}
+                      max={50}
+                      value={vacancy * 100}
+                      onChange={e=>setVacancy(Math.min(50, Math.max(0, +e.target.value)) / 100)}
+                    />
+                  </div>
+
                   {/* Monthly Payment Preview */}
                   <div className="p-4 bg-gradient-to-br from-gray-800/50 to-gray-800/30 rounded-xl border border-gray-700/50">
                     <div className="text-sm font-medium text-gray-300 mb-3">Monthly Debt Service</div>
                     <div className="text-2xl font-bold text-red-400">
-                      ${monthlyPayment.toLocaleString()}
+                      ${money(monthlyPayment)}
                     </div>
                     <div className="text-xs text-gray-500 mt-1">
-                      {rate}% over {amort} years
+                      {rate}% over {amort} years (semi-annual compounding)
                     </div>
                   </div>
                 </div>
@@ -317,11 +335,11 @@ export default function BreakEvenPage() {
                   >
                     <div className="flex items-center justify-between">
                       <div>
-                        <div className="text-sm font-medium text-gray-400 mb-1">Total Monthly Income</div>
+                        <div className="text-sm font-medium text-gray-400 mb-1">Effective Monthly Income</div>
                         <div className="text-2xl font-bold text-orange-400">
-                          ${totalRentalIncome.toLocaleString()}
+                          ${money(totalRentalIncome)}
                         </div>
-                        <div className="text-xs text-gray-500 mt-1">{units} units × ${breakEvenRent.toFixed(0)}</div>
+                        <div className="text-xs text-gray-500 mt-1">{units} units × ${breakEvenRent.toFixed(0)} less {(vacancy * 100).toFixed(1)}% vacancy</div>
                       </div>
                       <div className="w-16 h-16 bg-orange-500/10 rounded-full flex items-center justify-center">
                         <DollarSign className="w-8 h-8 text-orange-400" />
@@ -335,7 +353,7 @@ export default function BreakEvenPage() {
                     <div className="space-y-3">
                       <div className="flex justify-between items-center">
                         <span className="text-xs text-gray-400">Debt Service:</span>
-                        <span className="text-sm font-semibold text-red-400">${monthlyPayment.toLocaleString()}</span>
+                        <span className="text-sm font-semibold text-red-400">${money(monthlyPayment)}</span>
                       </div>
                       <div className="flex justify-between items-center">
                         <span className="text-xs text-gray-400">Operating Expenses:</span>
@@ -344,13 +362,13 @@ export default function BreakEvenPage() {
                       <div className="border-t border-gray-700 pt-2">
                         <div className="flex justify-between items-center">
                           <span className="text-xs text-gray-400">Total Expenses:</span>
-                          <span className="text-sm font-semibold text-yellow-400">${totalExpenses.toLocaleString()}</span>
+                          <span className="text-sm font-semibold text-yellow-400">${money(totalExpenses)}</span>
                         </div>
                       </div>
                       <div className="border-t border-gray-700 pt-2">
                         <div className="flex justify-between items-center">
                           <span className="text-xs text-gray-400">Net Cash Flow:</span>
-                          <span className="text-sm font-semibold text-green-400">${netCashFlow.toLocaleString()}</span>
+                          <span className="text-sm font-semibold text-green-400">${money(netCashFlow)}</span>
                         </div>
                       </div>
                     </div>
@@ -361,19 +379,19 @@ export default function BreakEvenPage() {
                     <div className="p-3 bg-gradient-to-br from-red-900/20 to-red-800/10 rounded-lg border border-red-700/30">
                       <div className="text-xs text-gray-500 mb-1">Debt %</div>
                       <div className="text-lg font-bold text-red-400">
-                        {((monthlyPayment / totalRentalIncome) * 100).toFixed(0)}%
+                        {pctOfIncome(monthlyPayment).toFixed(0)}%
                       </div>
                     </div>
                     <div className="p-3 bg-gradient-to-br from-orange-900/20 to-orange-800/10 rounded-lg border border-orange-700/30">
                       <div className="text-xs text-gray-500 mb-1">OpEx %</div>
                       <div className="text-lg font-bold text-orange-400">
-                        {((otherOpex / totalRentalIncome) * 100).toFixed(0)}%
+                        {pctOfIncome(otherOpex).toFixed(0)}%
                       </div>
                     </div>
                     <div className="p-3 bg-gradient-to-br from-green-900/20 to-green-800/10 rounded-lg border border-green-700/30">
                       <div className="text-xs text-gray-500 mb-1">Margin %</div>
                       <div className="text-lg font-bold text-green-400">
-                        {(margin * 100).toFixed(0)}%
+                        {pctOfIncome(netCashFlow).toFixed(0)}%
                       </div>
                     </div>
                   </div>

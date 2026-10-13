@@ -31,7 +31,7 @@ export default function PointsPage() {
 
   const pctAff = units ? (affUnits / units) * 100 : 0;
   const aPts = affordabilityPoints(projectType === "new", pctAff, affYears);
-  const ePts = energyPoints(energyPct);
+  const ePts = energyPoints(energyPct, projectType === "new");
   const accPts = accessibilityPoints({
     visitableAll: visitAll,
     commonsBarrierFree: commons,
@@ -232,7 +232,7 @@ export default function PointsPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">Affordability Commitment (years)</label>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">Affordability Commitment (years, min. 10)</label>
                   <input 
                     className="w-full rounded-lg border border-gray-600 bg-gray-700/50 text-gray-100 px-3 py-2 text-sm focus:ring-2 focus:ring-gold-500/50 focus:border-gold-500"
                     type="number" 
@@ -242,7 +242,7 @@ export default function PointsPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">Energy Improvement (%)</label>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">{projectType === "new" ? "Energy: % better than NECB Tier 1" : "Energy: % reduction vs current baseline"}</label>
                   <input 
                     className="w-full rounded-lg border border-gray-600 bg-gray-700/50 text-gray-100 px-3 py-2 text-sm focus:ring-2 focus:ring-gold-500/50 focus:border-gold-500"
                     type="number" 

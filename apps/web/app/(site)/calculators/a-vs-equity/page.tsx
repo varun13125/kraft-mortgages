@@ -15,11 +15,20 @@ import { RelatedCalculators } from "@/components/calculators/RelatedCalculators"
 type Province = "BC" | "AB" | "ON";
 type LoanPosition = "1st" | "2nd";
 
-const defaultTaxRates: Record<Province, number> = { BC: 20.5, AB: 30, ON: 43.4 };
+// Approximate combined federal + provincial marginal rates for roughly $115K–$137K of income (2025
+// brackets; ON includes surtax). Same defaults as the Self-Employed A vs B calculator. (BC was 20.5% —
+// the federal bracket rate alone.)
+const defaultTaxRates: Record<Province, number> = { BC: 38.29, AB: 36.0, ON: 43.41 };
+
+// Canadian convention: semi-annual compounding, monthly rate = (1 + r/2)^(1/6) - 1 (same as lib/calc/payment.ts)
+function monthlyRate(annualRate: number): number {
+  return Math.pow(1 + annualRate / 100 / 2, 1 / 6) - 1;
+}
 
 function monthlyPayment(principal: number, annualRate: number, amortMonths: number): number {
-  if (annualRate === 0) return principal / amortMonths;
-  const r = annualRate / 100 / 12;
+  if (principal <= 0 || amortMonths <= 0) return 0;
+  const r = monthlyRate(annualRate);
+  if (r === 0) return principal / amortMonths;
   return principal * (r * Math.pow(1 + r, amortMonths)) / (Math.pow(1 + r, amortMonths) - 1);
 }
 
@@ -28,7 +37,7 @@ function totalInterest(principal: number, annualRate: number, amortMonths: numbe
   let balance = principal;
   let paid = 0;
   for (let i = 0; i < termMonths; i++) {
-    const interest = balance * (annualRate / 100 / 12);
+    const interest = balance * monthlyRate(annualRate);
     paid += interest;
     balance -= (mp - interest);
     if (balance < 0) balance = 0;
@@ -85,8 +94,10 @@ export default function AVsEquityPage() {
   const eqInterest = useMemo(() => totalInterest(mortgageAmount, eqRate, amortMonths, termMonths), [mortgageAmount, eqRate, amortMonths, termMonths]);
   const eqFeeAmount = mortgageAmount * (eqFee / 100);
   const additionalTax = additionalIncome * (marginalRate / 100) * term;
+  // Rental-property interest is deductible on BOTH paths — apply it to each (was equity-only, biasing the result)
   const investmentTaxSaving = isInvestment ? eqInterest * (marginalRate / 100) : 0;
-  const aTotalAllIn = aInterest + additionalTax;
+  const aInvestmentTaxSaving = isInvestment ? aInterest * (marginalRate / 100) : 0;
+  const aTotalAllIn = aInterest + additionalTax - aInvestmentTaxSaving;
   const eqTotalAllIn = eqInterest + eqFeeAmount - investmentTaxSaving;
   const netDifference = aTotalAllIn - eqTotalAllIn;
   const savingsLabel = netDifference > 0 ? "Equity lending is cheaper" : "A-lender is cheaper";
@@ -182,7 +193,8 @@ export default function AVsEquityPage() {
                           { label: "Equity Interest", value: "$" + Math.round(eqInterest).toLocaleString("en-CA") },
                           { label: "Equity Fee", value: "$" + Math.round(eqFeeAmount).toLocaleString("en-CA") },
                           { label: "Additional Tax Cost", value: "$" + Math.round(additionalTax).toLocaleString("en-CA") },
-                          ...(isInvestment && investmentTaxSaving > 0 ? [{ label: "Investment Tax Savings", value: "$" + Math.round(investmentTaxSaving).toLocaleString("en-CA") }] : []),
+                          ...(isInvestment && investmentTaxSaving > 0 ? [{ label: "Investment Tax Savings (Equity)", value: "$" + Math.round(investmentTaxSaving).toLocaleString("en-CA") }, { label: "Investment Tax Savings (A-Lender)", value: "$" + Math.round(aInvestmentTaxSaving).toLocaleString("en-CA") }] : []),
+                          { label: "Net Difference (A minus Equity)", value: "$" + Math.round(netDifference).toLocaleString("en-CA") },
                         ]
                       }
                     ],
@@ -195,7 +207,7 @@ export default function AVsEquityPage() {
                   <div className="space-y-6">
                     <ValidatedInput label="Mortgage Amount Needed" value={mortgageAmount} onChange={setMortgageAmount} validation={{ min: 50000, max: 5000000 }} type="currency" />
                     <ValidatedInput label="Property Value" value={propertyValue} onChange={setPropertyValue} validation={{ min: 100000, max: 10000000 }} type="currency" />
-                    <p className="text-xs text-gray-500">LTV: {ltv.toFixed(1)}% — {ltv <= 75 ? "✓ Within equity lending range" : "⚠ May require 2nd mortgage or additional equity"}</p>
+                    <p className="text-xs text-gray-500">LTV: {ltv.toFixed(1)}% — {ltv <= 75 ? "✓ Within typical equity lending range" : "⚠ Above the ~65–75% most equity lenders allow on a 1st mortgage"}</p>
 
                     <div>
                       <label className="block text-sm font-medium text-gray-300 mb-2">Loan Position</label>
@@ -257,7 +269,7 @@ export default function AVsEquityPage() {
                         </div>
                         <ValidatedInput label="Additional Income Needed to Qualify ($/year)" value={additionalIncome} onChange={setAdditionalIncome} validation={{ min: 0, max: 500000 }} type="currency" />
                         <ValidatedInput label="Your Marginal Tax Rate (%)" value={marginalRate} onChange={setMarginalRate} validation={{ min: 0, max: 55 }} type="percentage" />
-                        <p className="text-xs text-gray-500">This is the extra income you&apos;d need to declare on your T1 to qualify with an A-lender.</p>
+                        <p className="text-xs text-gray-500">This is the extra income you&apos;d need to declare on your T1 to qualify with an A-lender. Province defaults are approximate combined marginal rates for about $115K–$137K of income — enter your own. For incorporated owners, the true cost is usually lower (personal vs corporate tax).</p>
                       </div>
                     </div>
 
@@ -308,6 +320,12 @@ export default function AVsEquityPage() {
                         <span className="font-semibold text-red-400">{formatCurrency(additionalTax, 0)}</span>
                         <p className="text-[10px] text-gray-500 mt-0.5">{formatCurrency(additionalIncome, 0)}/yr × {marginalRate}% × {term} yrs</p>
                       </div>
+                      {isInvestment && aInvestmentTaxSaving > 0 && (
+                        <div className="bg-green-500/10 rounded-lg p-2">
+                          <span className="text-gray-400 block text-xs">Interest Deductibility Savings</span>
+                          <span className="font-semibold text-green-400">-{formatCurrency(aInvestmentTaxSaving, 0)}</span>
+                        </div>
+                      )}
                       <div className="border-t border-white/10 pt-3 space-y-1">
                         <div className="flex items-center gap-1 text-xs text-gray-400"><XCircle className="w-3 h-3" /> 2 years T1 Generals & NOAs</div>
                         <div className="flex items-center gap-1 text-xs text-gray-400"><XCircle className="w-3 h-3" /> Credit score 680+</div>
@@ -366,7 +384,7 @@ export default function AVsEquityPage() {
                   <div className="space-y-3 text-sm">
                     <div className="flex justify-between">
                       <span className="text-gray-300">Interest cost difference</span>
-                      <span className="font-medium text-gray-100">+{formatCurrency(eqInterest - aInterest, 0)} (equity costs more)</span>
+                      <span className="font-medium text-gray-100">{eqInterest >= aInterest ? "+" : "-"}{formatCurrency(Math.abs(eqInterest - aInterest), 0)} (equity costs {eqInterest >= aInterest ? "more" : "less"})</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-300">Income tax saved with equity</span>
@@ -378,8 +396,8 @@ export default function AVsEquityPage() {
                     </div>
                     {isInvestment && (
                       <div className="flex justify-between">
-                        <span className="text-gray-300">Investment interest deduction</span>
-                        <span className="font-medium text-green-400">-{formatCurrency(investmentTaxSaving, 0)}</span>
+                        <span className="text-gray-300">Extra interest deduction with equity (net of A-lender&apos;s)</span>
+                        <span className="font-medium text-green-400">-{formatCurrency(investmentTaxSaving - aInvestmentTaxSaving, 0)}</span>
                       </div>
                     )}
                     <div className="border-t border-white/10 pt-3 flex justify-between">
@@ -404,7 +422,7 @@ export default function AVsEquityPage() {
                   <p className="text-sm text-gray-300">
                     {netDifference > 0
                       ? `Equity lending saves you ${formatCurrency(Math.abs(netDifference), 0)} net over ${term} years. The ${formatCurrency(additionalTax, 0)} tax saving on declared income more than offsets the ${formatCurrency(eqInterest - aInterest, 0)} additional interest and ${formatCurrency(eqFeeAmount, 0)} lender fee.`
-                      : `The A-lender path costs ${formatCurrency(aInterest, 0)} in interest but you avoid the ${formatCurrency(eqInterest - aInterest, 0)} additional interest cost. However, you'll owe ${formatCurrency(additionalTax, 0)} in income tax on declared income. Net difference: ${formatCurrency(netDifference, 0)}.`
+                      : `The A-lender path is ${formatCurrency(Math.abs(netDifference), 0)} cheaper over ${term} years: the ${formatCurrency(eqInterest - aInterest, 0)} of extra equity-lender interest plus the ${formatCurrency(eqFeeAmount, 0)} lender fee outweigh the ${formatCurrency(additionalTax, 0)} of income tax on the extra declared income.`
                     }
                   </p>
                 </div>
@@ -473,7 +491,7 @@ export default function AVsEquityPage() {
                 Here&apos;s the insight most self-employed borrowers miss: qualifying with an A-lender may require declaring significantly more personal income on your tax returns. If your business nets $120,000 but you currently declare $60,000 after legitimate deductions, an A-lender might require you to declare $140,000 or more to qualify for the mortgage you need. That extra $80,000 of declared income isn&apos;t free — it comes with a real tax cost.
               </p>
               <p>
-                In British Columbia, an additional $80,000 of declared income at a marginal rate of approximately 20.5% costs you $16,400 per year in personal income tax. Over a 2-year term, that&apos;s $32,800 in additional taxes. Over a 5-year term, it&apos;s $82,000. This tax cost must be factored into any comparison between A-lender and equity lending rates. When you see an A-lender at 4.49% vs an equity lender at 6.95%, the rate difference seems enormous — but the tax math often tells a different story.
+                In British Columbia, raising declared income from $60,000 to $140,000 means the extra $80,000 is taxed at combined federal and provincial rates of roughly 28% to 40% — about 32% on average, or roughly $25,600 per year. Over a 2-year term, that&apos;s about $51,300 in additional taxes. Over a 5-year term, it&apos;s about $128,000. This tax cost must be factored into any comparison between A-lender and equity lending rates. When you see an A-lender at 4.49% vs an equity lender at 6.95%, the rate difference seems enormous — but the tax math often tells a different story.
               </p>
 
               <h3 className="text-2xl font-semibold text-gray-100 mt-8">When Equity Lending Makes Mathematical Sense</h3>
@@ -490,21 +508,21 @@ export default function AVsEquityPage() {
 
               <h3 className="text-2xl font-semibold text-gray-100 mt-8">Real Example: $600,000 Self-Employed Purchase Comparison</h3>
               <p>
-                Consider a self-employed contractor purchasing an $800,000 property in Surrey, BC. They need a $600,000 mortgage and would need to declare an additional $80,000/year in income to qualify with an A-lender at 4.49%. Their BC marginal rate is approximately 20.5%.
+                Consider a self-employed contractor purchasing an $800,000 property in Surrey, BC. They need a $600,000 mortgage and would need to declare an additional $80,000/year in income (from $60,000 to $140,000) to qualify with an A-lender at 4.49%. In BC that extra income is taxed at roughly 32% on average.
               </p>
               <p>
-                <strong>A-Lender Path:</strong> $600,000 at 4.49% over a 2-year term with 25-year amortization costs approximately $52,700 in interest. The additional income tax on $80,000 × 20.5% × 2 years = $32,800. Total all-in cost: approximately $85,500.
+                <strong>A-Lender Path:</strong> $600,000 at 4.49% over a 2-year term with 25-year amortization costs approximately $52,200 in interest. The additional income tax on $80,000 × ~32% × 2 years ≈ $51,300. Total all-in cost: approximately $103,500.
               </p>
               <p>
-                <strong>Equity Lender Path (Capital Direct-style):</strong> $600,000 at 6.95% with a 1% fee ($6,000) over the same 2-year term costs approximately $82,300 in interest. Total all-in cost: approximately $88,300. With Capital Direct's 4.89% rate at 50% LTV, the savings are even greater. In this scenario, the A-lender saves roughly $14,900 — but the self-employed borrower avoids declaring additional income and closes in days instead of weeks.
+                <strong>Equity Lender Path:</strong> $600,000 at 6.95% with a 1% fee ($6,000) over the same 2-year term costs approximately $81,000 in interest. Total all-in cost: approximately $87,000. In this scenario, equity lending comes out roughly $16,500 ahead — and the borrower closes in days instead of weeks. (Lower equity-lender rates are usually only available at lower LTVs, around 50%.)
               </p>
               <p>
-                Now consider the same borrower in Ontario with a 43.4% marginal rate: the tax on $80,000 × 43.4% × 2 years = $69,440. A-lender total: $122,140. Equity lender total: $88,300. In Ontario, equity lending saves approximately $33,840 over the 2-year term despite the higher interest rate. This is the power of factoring in the full picture.
+                Now consider the same borrower in Ontario at a 43.4% marginal rate: the tax on $80,000 × 43.4% × 2 years = $69,440. A-lender total: about $121,700. Equity lender total: about $87,000. In Ontario, equity lending saves approximately $34,700 over the 2-year term despite the higher interest rate. This is the power of factoring in the full picture.
               </p>
 
               <h3 className="text-2xl font-semibold text-gray-100 mt-8">Equity Lending for Investment Properties: Interest Is Tax-Deductible</h3>
               <p>
-                If the property is an investment (rental property or flip), the interest paid on an equity lender mortgage is generally tax-deductible as a business expense. This partially offsets the higher rate. At a 43.4% marginal rate in Ontario, the $94,400 in interest from the equity lender generates approximately $41,000 in tax savings — dramatically changing the comparison. Toggle the &quot;Investment Property&quot; option in the calculator above to see this impact.
+                If the property is an investment (rental property or flip), mortgage interest is generally tax-deductible — with either lender. At a 43.4% marginal rate in Ontario, the roughly $81,000 of equity-lender interest is worth about $35,100 in tax savings, while the A-lender&apos;s $52,200 would be worth about $22,700, so the deduction narrows the gap by roughly $12,500. Toggle the &quot;Investment Property&quot; option in the calculator above to see this impact.
               </p>
 
               <h3 className="text-2xl font-semibold text-gray-100 mt-8">How to Transition from Equity to A-Lender Later</h3>

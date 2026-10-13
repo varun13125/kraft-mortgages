@@ -23,15 +23,86 @@ export function decodeHtmlEntities(text: string): string {
     .replace(/&#8212;/g, '—'); // Em dash
 }
 
-// Replace [IMAGE: Description] placeholders with actual img tags
+// Remove leftover [IMAGE: Description] authoring placeholders.
+// They used to be swapped for a via.placeholder.com image — that service is
+// offline (broken image on production posts) and a grey "placeholder" box is not
+// publishable content anyway, so the marker is now simply dropped.
 export function processImagePlaceholders(content: string): string {
   if (!content) return content;
+  return content.replace(/\[IMAGE:\s*([^\]]+)\]/g, '');
+}
 
-  // Replace [IMAGE: Description] with styled img tags
-  return content.replace(
-    /\[IMAGE:\s*([^\]]+)\]/g,
-    '<img src="https://via.placeholder.com/800x400/6B7280/FFFFFF?text=$1" alt="$1" class="w-full rounded-lg shadow-lg my-6" style="max-width: 100%; height: auto;" />'
+// The blog ingest API (app/api/blog/ingest) appends "Related Resources" links to
+// pillar URLs that were never built. Map them to the live equivalents so already
+// published posts stop linking to 404s (the ingest map itself should be fixed too).
+const DEAD_PILLAR_REDIRECTS: Record<string, string> = {
+  '/private-mortgages': '/private-lending',
+  '/construction-financing': '/construction',
+  '/self-employed-mortgages': '/calculators/self-employed',
+  '/refinancing': '/equity-lending',
+  '/investment-properties': '/calculators/investment',
+  '/first-time-home-buyers': '/calculators/first-time-home-buyer',
+  // Seeded/legacy post bodies (lib/db/firestore.ts) link to these. /services has no
+  // route at all; the rest only work via a next.config.mjs redirect hop.
+  '/services': '/#services',
+  '/calculators/construction-draw': '/construction/calculators/construction-draw',
+  '/calculators/payment-calculator': '/calculators/payment',
+  '/mortgage-calculator': '/calculators/payment',
+  '/refinance-calculator': '/calculators/payment',
+  '/investment-calculator': '/calculators/investment',
+};
+
+function remapInternalUrl(url: string): string {
+  // Make own-domain links relative (avoids the apex -> www redirect hop) and fix dead pillars.
+  const path = url.replace(/^https?:\/\/(?:www\.)?kraftmortgages\.ca(?=\/|$)/i, '') || '/';
+  if (!path.startsWith('/')) return url; // external link — leave untouched
+  const [base, rest = ''] = path.split(/(?=[?#])/);
+  const fixed = DEAD_PILLAR_REDIRECTS[base.replace(/\/$/, '')];
+  return fixed ? fixed + rest : path;
+}
+
+/**
+ * The ingest API appends a markdown tail ("---", "### Related Resources",
+ * "- [Title](url)" or a bold "Looking for expert mortgage advice?" CTA) to
+ * content that is otherwise rendered as raw HTML, so it showed up as literal
+ * markdown text. Convert exactly those generated tails to HTML.
+ */
+function convertIngestMarkdownTail(content: string): string {
+  let out = content.replace(
+    /\n*-{3}\n+#{3} Related Resources\n+((?:- \[[^\]]+\]\([^)\s]+\)\n?)+)\s*$/,
+    (_m, list: string) => {
+      const items = [...list.matchAll(/- \[([^\]]+)\]\(([^)\s]+)\)/g)]
+        .map(([, title, url]) => `<li><a href="${remapInternalUrl(url)}">${title}</a></li>`)
+        .join('');
+      return `<hr /><h3>Related Resources</h3><ul>${items}</ul>`;
+    }
   );
+  out = out.replace(
+    /\n*-{3}\n+\*\*Looking for expert mortgage advice\?\*\* \[Contact Kraft Mortgages\]\(([^)\s]+)\) for a free consultation\.\s*$/,
+    (_m, url: string) =>
+      `<hr /><p><strong>Looking for expert mortgage advice?</strong> <a href="${remapInternalUrl(url)}">Contact Kraft Mortgages</a> for a free consultation.</p>`
+  );
+  return out;
+}
+
+// Fix dead/redirecting own-domain links anywhere in already-rendered HTML.
+function remapInternalHrefs(content: string): string {
+  return content.replace(
+    /href=(["'])((?:https?:\/\/(?:www\.)?kraftmortgages\.ca)?\/[^"']*)\1/gi,
+    (_m, q: string, url: string) => `href=${q}${remapInternalUrl(url)}${q}`
+  );
+}
+
+// Render-time HTML hygiene for post bodies.
+function normalizePostHtml(content: string): string {
+  return content
+    // Protocol-relative "//images/x.png" resolves to https://images/x.png (broken).
+    .replace(/(<img[^>]*\ssrc=["'])\/\/images\//gi, '$1/images/')
+    // The page already renders the post title as the only <h1>; demote in-body h1s.
+    .replace(/<h1(\s|>)/gi, '<h2$1')
+    .replace(/<\/h1>/gi, '</h2>')
+    // Below-the-fold images (blog PNGs are up to 1.6 MB): lazy-load + async decode.
+    .replace(/<img(?![^>]*\sloading=)/gi, '<img loading="lazy" decoding="async"');
 }
 
 // Strip HTML tags and generate plain text excerpt
@@ -62,6 +133,12 @@ export function processPostContent(content: string): string {
 
   // Then process image placeholders
   processedContent = processImagePlaceholders(processedContent);
+
+  // Convert the ingest API's markdown "Related Resources"/CTA tail, fix dead
+  // internal links, and normalise headings/images.
+  processedContent = convertIngestMarkdownTail(processedContent);
+  processedContent = remapInternalHrefs(processedContent);
+  processedContent = normalizePostHtml(processedContent);
 
   return processedContent;
 }

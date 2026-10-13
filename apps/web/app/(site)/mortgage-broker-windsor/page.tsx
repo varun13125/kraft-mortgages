@@ -1,4 +1,5 @@
-"use client";
+// Server Component: this page has no client-side interactivity, so it no longer
+// ships as a client bundle ("use client" removed in the 2026-10 audit).
 import Navigation from "@/components/Navigation";
 import Link from "next/link";
 import { MapPin, Phone, Building, Users, Briefcase, Home } from "lucide-react";
@@ -16,10 +17,10 @@ export default function WindsorPage() {
                             Windsor, Ontario
                         </div>
                         <h1 className="text-4xl md:text-6xl font-bold mb-6 text-white">
-                            Windsor's Trusted Mortgage Brokerage
+                            Windsor&apos;s Trusted Mortgage Brokerage
                         </h1>
                         <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-8">
-                            As one of Canada's most affordable major cities, Windsor offers an exceptional opportunity for homebuyers and investors. Kraft Mortgages brings expert mortgage guidance to help you make the most of this border city market.
+                            As one of Canada&apos;s most affordable major cities, Windsor offers an exceptional opportunity for homebuyers and investors. Kraft Mortgages brings expert mortgage guidance to help you make the most of this border city market.
                         </p>
                         <Link
                             href="/contact"
@@ -38,12 +39,12 @@ export default function WindsorPage() {
                             <div className="bg-white/5 rounded-2xl p-6 border border-white/10">
                                 <Home className="w-10 h-10 text-gold-400 mb-4" />
                                 <h3 className="text-xl font-bold mb-3">Average Home Price</h3>
-                                <p className="text-gray-400">Windsor remains one of Canada's most affordable housing markets, with the average home price around $520,000. Single-family homes in desirable neighbourhoods like South Windsor and Riverside average approximately $580,000, while entry-level properties and condominiums can be found well under $400,000.</p>
+                                <p className="text-gray-400">Windsor remains one of Canada&apos;s most affordable housing markets, with the average home price around $520,000. Single-family homes in desirable neighbourhoods like South Windsor and Riverside average approximately $580,000, while entry-level properties and condominiums can be found well under $400,000.</p>
                             </div>
                             <div className="bg-white/5 rounded-2xl p-6 border border-white/10">
                                 <Users className="w-10 h-10 text-gold-400 mb-4" />
                                 <h3 className="text-xl font-bold mb-3">A Resurgent Economy</h3>
-                                <p className="text-gray-400">With a metropolitan population of over 340,000, Windsor's economy is experiencing a renaissance. The EV battery gigafactory investments, a revitalized downtown, and the University of Windsor are driving renewed demand for housing across all segments.</p>
+                                <p className="text-gray-400">With a metropolitan population of over 340,000, Windsor&apos;s economy is experiencing a renaissance. The EV battery gigafactory investments, a revitalized downtown, and the University of Windsor are driving renewed demand for housing across all segments.</p>
                             </div>
                         </div>
                     </div>
@@ -57,12 +58,12 @@ export default function WindsorPage() {
                             <div className="bg-white/5 rounded-2xl p-6 border border-white/10">
                                 <Briefcase className="w-10 h-10 text-gold-400 mb-4" />
                                 <h3 className="text-xl font-bold mb-3">Self-Employed Mortgages</h3>
-                                <p className="text-gray-400">Windsor's small business community is diverse — from manufacturing contractors to hospitality operators. We specialize in mortgage programs for self-employed borrowers, using alternative documentation to get you approved at competitive rates.</p>
+                                <p className="text-gray-400">Windsor&apos;s small business community is diverse — from manufacturing contractors to hospitality operators. We specialize in mortgage programs for self-employed borrowers, using alternative documentation to get you approved at competitive rates.</p>
                             </div>
                             <div className="bg-white/5 rounded-2xl p-6 border border-white/10">
                                 <Building className="w-10 h-10 text-gold-400 mb-4" />
                                 <h3 className="text-xl font-bold mb-3">Investment Properties</h3>
-                                <p className="text-gray-400">Windsor's affordability makes it one of Canada's strongest rental property markets by cap rate. With U of Windsor students, cross-border workers, and automotive sector employees driving consistent rental demand, investors find excellent cash-flow opportunities here.</p>
+                                <p className="text-gray-400">Windsor&apos;s affordability makes it one of Canada&apos;s strongest rental property markets by cap rate. With U of Windsor students, cross-border workers, and automotive sector employees driving consistent rental demand, investors find excellent cash-flow opportunities here.</p>
                             </div>
                             <div className="bg-white/5 rounded-2xl p-6 border border-white/10">
                                 <Users className="w-10 h-10 text-gold-400 mb-4" />
@@ -78,7 +79,7 @@ export default function WindsorPage() {
                     <div className="max-w-4xl mx-auto">
                         <h2 className="text-3xl font-bold mb-6 text-center">Why Choose a Local Windsor Mortgage Broker?</h2>
                         <p className="text-gray-300 text-lg text-center mb-8">
-                            Windsor's market is shaped by factors unique to a border city — cross-border employment, US-dollar income considerations, and economic cycles tied to the automotive industry. A local broker understands how these elements affect your mortgage qualification and which lenders are most active in southwestern Ontario. We shop across dozens of lenders to secure the best rate and terms for your specific situation.
+                            Windsor&apos;s market is shaped by factors unique to a border city — cross-border employment, US-dollar income considerations, and economic cycles tied to the automotive industry. A local broker understands how these elements affect your mortgage qualification and which lenders are most active in southwestern Ontario. We shop across dozens of lenders to secure the best rate and terms for your specific situation.
                         </p>
                     </div>
                 </section>
@@ -94,10 +95,10 @@ export default function WindsorPage() {
                             </div>
                             <div className="bg-white/5 rounded-xl p-6 border border-white/10">
                                 <h3 className="font-bold text-lg mb-2">Is Windsor a good market for first-time home buyers?</h3>
-                                <p className="text-gray-400">Excellent. Windsor's affordable prices mean first-time buyers can often purchase a detached home — something increasingly difficult in Toronto or Vancouver. With 5% down, many buyers in Windsor can enter the market for a total investment under $30,000 including closing costs.</p>
+                                <p className="text-gray-400">Excellent. Windsor&apos;s affordable prices mean first-time buyers can often purchase a detached home — something increasingly difficult in Toronto or Vancouver. With 5% down, many buyers in Windsor can enter the market for a total investment under $30,000 including closing costs.</p>
                             </div>
                             <div className="bg-white/5 rounded-xl p-6 border border-white/10">
-                                <h3 className="font-bold text-lg mb-2">How are the EV battery plant investments affecting Windsor's housing market?</h3>
+                                <h3 className="font-bold text-lg mb-2">How are the EV battery plant investments affecting Windsor&apos;s housing market?</h3>
                                 <p className="text-gray-400">Major investments from Stellantis and LG are creating thousands of high-paying jobs, driving population growth and housing demand. This economic momentum is expected to support price appreciation, making Windsor an attractive market for both owner-occupiers and investors.</p>
                             </div>
                         </div>

@@ -3,7 +3,7 @@ export const dynamic = 'force-dynamic';
 
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { verifyFirebaseToken } from '@/lib/auth';
+import { getTrustedOrigin, verifyFirebaseToken } from '@/lib/auth';
 import { isAdmin, createRun as dbCreateRun } from '@/lib/db/firestore';
 
 const RunRequestSchema = z.object({
@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
     // Step 1: Verify auth header exists
     const authHeader = request.headers.get('authorization');
     if (!authHeader?.startsWith('Bearer ')) {
-      console.log('Missing or invalid auth header:', authHeader?.substring(0, 20));
+      console.log('Missing or invalid auth header on POST /api/run');
       return NextResponse.json(
         { error: 'Missing or invalid Authorization header' },
         { status: 401 }
@@ -134,12 +134,16 @@ export async function POST(request: NextRequest) {
       console.log('Triggering orchestration for run:', runId);
       
       // Trigger orchestration asynchronously using Edge function
-      const orchestrateUrl = `${request.nextUrl.origin}/api/run/orchestrate`;
+      const orchestrateUrl = `${getTrustedOrigin(request)}/api/run/orchestrate`;
       
+      // /api/run/orchestrate now requires auth: forward the caller's (admin-verified)
+      // Firebase ID token. NOTE: this fire-and-forget fetch is not guaranteed to be
+      // sent once the response below returns on serverless platforms - see report.
       fetch(orchestrateUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify({ runId }),
       })
@@ -158,7 +162,7 @@ export async function POST(request: NextRequest) {
       console.error('Database error creating run:', dbError);
       console.error('Stack:', (dbError as Error).stack);
       return NextResponse.json(
-        { error: 'Failed to create run in database', details: (dbError as Error).message },
+        { error: 'Failed to create run in database' },
         { status: 500 }
       );
     }
@@ -183,9 +187,8 @@ export async function POST(request: NextRequest) {
     console.error('Stack:', (unexpectedError as Error).stack);
     
     return NextResponse.json(
-      { 
-        error: 'Internal server error',
-        details: (unexpectedError as Error).message 
+      {
+        error: 'Internal server error'
       },
       { status: 500 }
     );

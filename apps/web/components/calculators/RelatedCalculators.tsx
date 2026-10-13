@@ -27,6 +27,23 @@ const CALCULATOR_MAP: Record<string, string> = {
   "cmhc-insurance": "CMHC Insurance",
   "down-payment": "Down Payment Calculator",
   "required-income": "Required Income Calculator",
+  "refinance-cashout": "Cash-Out Refinance",
+  "reverse-mortgage": "Reverse Mortgage Calculator",
+  "construction-draw": "Construction Draw Calculator",
+  "equity-lending": "Home Equity Calculator",
+  "heloc": "HELOC Calculator",
+  "mli-select": "MLI Select Calculators",
+};
+
+/**
+ * Slugs whose calculator lives outside /calculators/<slug>. Without this, e.g.
+ * "equity-lending" rendered a link to /calculators/equity-lending (404).
+ */
+const HREF_OVERRIDES: Record<string, string> = {
+  "equity-lending": "/equity-lending/calculators/home-equity",
+  "heloc": "/equity-lending/calculators/heloc",
+  "construction-draw": "/construction/calculators/construction-draw",
+  "mli-select": "/mli-select/calculators",
 };
 
 /**
@@ -44,7 +61,7 @@ export function RelatedCalculators({ current, related }: { current: string; rela
           return (
             <Link
               key={slug}
-              href={`/calculators/${slug}`}
+              href={HREF_OVERRIDES[slug] ?? `/calculators/${slug}`}
               className="inline-flex items-center gap-1 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-lg border border-gray-700 bg-gray-800/40 text-xs sm:text-sm text-gray-300 hover:border-gold-500/50 hover:text-gold-400 transition-all whitespace-nowrap"
             >
               {name}

@@ -20,8 +20,17 @@ import Link from 'next/link';
 
 type TabCategory = 'all' | 'fixed' | 'variable' | 'equity';
 
-export const TodaysRates: React.FC = () => {
+/**
+ * @param headingLevel  Render the section title as an h1 on pages where this
+ *   component is the main content (/rates), h2 elsewhere (homepage).
+ */
+export const TodaysRates: React.FC<{ headingLevel?: 'h1' | 'h2' }> = ({ headingLevel = 'h2' }) => {
   const { data, loading, best5YrFixed, best3YrFixed, best5YrVariable, bestHeloc, bestPrivateSecond, primeRate, allRates } = useLiveRates();
+  const Heading = headingLevel;
+  // Honest freshness label: the API reports whether its feed synced today; when the
+  // API is unreachable the hook falls back to hardcoded defaults, which must not be
+  // advertised as today's verified rates.
+  const freshnessLabel = data?.last_updated_human ?? (loading ? 'Loading rates…' : 'Indicative rates');
   const [activeTab, setActiveTab] = useState<TabCategory>('all');
 
   const filteredRates = allRates.filter((item) => {
@@ -46,24 +55,24 @@ export const TodaysRates: React.FC = () => {
               <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
             </span>
             <ShieldCheck className="w-4 h-4" />
-            <span>Updated Today • Verified Master Rate Feed</span>
+            <span>{freshnessLabel}{data ? ' • Verified Master Rate Feed' : ''}</span>
           </div>
 
-          <h2 className="text-3xl sm:text-5xl font-bold tracking-tight text-white mb-4">
+          <Heading className="text-3xl sm:text-5xl font-bold tracking-tight text-white mb-4">
             Today&apos;s Verified{' '}
             <span className="bg-gradient-to-r from-gold-300 via-amber-400 to-amber-500 bg-clip-text text-transparent">
               Mortgage Rates
             </span>
-          </h2>
+          </Heading>
 
           <p className="text-slate-400 text-base sm:text-lg leading-relaxed">
-            Real-time rate benchmarks harvested directly from over 30 Canadian banks, credit unions, and institutional lenders. Compare starting rates, prime spreads, and product tiers across BC, Alberta &amp; Ontario.
+            Rate benchmarks compiled daily from over 30 Canadian banks, credit unions, and institutional lenders. Compare starting rates, prime spreads, and product tiers across BC, Alberta &amp; Ontario.
           </p>
 
           {/* Prime Benchmark Indicator */}
           <div className="mt-6 inline-flex flex-wrap items-center justify-center gap-4 text-xs">
             <div className="bg-slate-900/90 border border-slate-800 rounded-lg px-4 py-2 flex items-center gap-2">
-              <span className="text-slate-400">Bank of Canada Prime Benchmark:</span>
+              <span className="text-slate-400">Canadian Prime Rate:</span>
               <span className="font-bold text-white text-sm bg-blue-500/20 text-blue-300 px-2 py-0.5 rounded border border-blue-500/30">
                 {primeRate.toFixed(2)}%
               </span>
@@ -88,12 +97,13 @@ export const TodaysRates: React.FC = () => {
           {[
             { id: 'all', label: 'All Benchmarks' },
             { id: 'fixed', label: 'Fixed Rates' },
-            { id: 'variable', label: 'Variable ARMs' },
+            { id: 'variable', label: 'Variable Rates' },
             { id: 'equity', label: 'HELOC & Private 2nd' },
           ].map((tab) => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as TabCategory)}
+              aria-pressed={activeTab === tab.id}
               className={`px-4 py-2 rounded-full text-xs font-semibold tracking-wide transition-all border ${
                 activeTab === tab.id
                   ? 'bg-gradient-to-r from-gold-500 to-amber-500 text-black border-transparent shadow-[0_0_20px_rgba(212,175,55,0.3)]'
@@ -192,7 +202,7 @@ export const TodaysRates: React.FC = () => {
                     href={`/qualify?product=${encodeURIComponent(item.term)}`}
                     className="inline-flex items-center justify-center gap-1 text-xs font-bold py-2 px-3 rounded-lg bg-gradient-to-r from-gold-500 to-amber-500 hover:from-gold-400 hover:to-amber-400 text-black transition-all shadow-[0_0_12px_rgba(212,175,55,0.2)]"
                   >
-                    <span>Lock Rate</span>
+                    <span>Apply</span>
                     <ArrowRight className="w-3 h-3" />
                   </Link>
                 </div>
@@ -276,7 +286,7 @@ export const TodaysRates: React.FC = () => {
             <div className="flex items-center gap-1.5">
               <Info className="w-4 h-4 text-slate-400" />
               <span>
-                Actual rate depends on credit profile, LTV, property location, and debt ratios. Private 2nd mortgages start from 7.99% with appraisal.
+                Actual rate depends on credit profile, LTV, property location, and debt ratios. Private 2nd mortgages start from {bestPrivateSecond.toFixed(2)}% with appraisal. Rates are not a rate hold or commitment to lend.
               </span>
             </div>
             <div className="shrink-0 text-slate-400 font-medium">

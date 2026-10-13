@@ -1,3 +1,5 @@
+import { ORG_ID, SITE_ID } from './jsonld';
+
 interface FAQ {
   question: string;
   answer: string;
@@ -46,44 +48,26 @@ export function buildArticleJsonLd(data: ArticleData): any {
           '@id': `https://www.kraftmortgages.ca/about#varun-chaudhry`,
           name: author,
           jobTitle: 'Licensed Mortgage Broker',
-          worksFor: {
-            '@type': 'FinancialService',
-            '@id': 'https://www.kraftmortgages.ca#organization',
-            name: 'Kraft Mortgages Canada Inc.',
-            url: 'https://www.kraftmortgages.ca',
-            telephone: '+1-604-593-1550',
-            address: {
-              '@type': 'PostalAddress',
-              streetAddress: '301-1688 152nd Street',
-              addressLocality: 'Surrey',
-              addressRegion: 'BC',
-              postalCode: 'V4A 4N2',
-              addressCountry: 'CA'
-            }
-          }
+          // Reference the single canonical org node (app/layout.tsx) by @id instead of
+          // redefining it. The old '...ca#organization' id (no slash) didn't match
+          // ORG_ID ('...ca/#organization'), creating a second, conflicting entity.
+          worksFor: { '@id': ORG_ID }
         },
         publisher: {
           '@type': 'Organization',
-          '@id': 'https://www.kraftmortgages.ca#organization',
+          '@id': ORG_ID,
           name: 'Kraft Mortgages Canada Inc.',
           logo: {
             '@type': 'ImageObject',
-            '@id': 'https://www.kraftmortgages.ca/kraft-logo.png',
             url: 'https://www.kraftmortgages.ca/kraft-logo.png',
-            width: 180,
-            height: 60
           }
         },
         mainEntityOfPage: {
           '@type': 'WebPage',
           '@id': url
         },
-        isPartOf: {
-          '@type': 'Website',
-          '@id': 'https://www.kraftmortgages.ca#website',
-          name: 'Kraft Mortgages Canada',
-          url: 'https://www.kraftmortgages.ca'
-        }
+        // 'WebSite' (capital S) — 'Website' is not a schema.org type.
+        isPartOf: { '@id': SITE_ID }
       }
     ]
   };
@@ -130,7 +114,7 @@ export function buildCalculatorJsonLd(
     },
     provider: {
       '@type': 'Organization',
-      '@id': 'https://www.kraftmortgages.ca#organization',
+      '@id': ORG_ID,
       name: 'Kraft Mortgages Canada Inc.',
       url: 'https://www.kraftmortgages.ca'
     },
@@ -188,7 +172,7 @@ export function buildWebSiteJsonLd(): any {
   return {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
-    '@id': 'https://www.kraftmortgages.ca#website',
+    '@id': SITE_ID,
     name: 'Kraft Mortgages Canada',
     alternateName: 'Kraft Mortgage Calculator & Advisory',
     url: 'https://www.kraftmortgages.ca',
@@ -205,7 +189,7 @@ export function buildWebSiteJsonLd(): any {
     },
     publisher: {
       '@type': 'Organization',
-      '@id': 'https://www.kraftmortgages.ca#organization',
+      '@id': ORG_ID,
       name: 'Kraft Mortgages Canada Inc.',
       logo: {
         '@type': 'ImageObject',
@@ -251,7 +235,7 @@ export function buildLocalBusinessJsonLd(): any {
   return {
     '@context': 'https://schema.org',
     '@type': 'FinancialService',
-    '@id': 'https://www.kraftmortgages.ca#organization',
+    '@id': ORG_ID,
     name: 'Kraft Mortgages Canada Inc.',
     description: 'Expert mortgage solutions across BC, AB & ON. Specializing in MLI Select, Construction Financing, and Self-Employed mortgages.',
     url: 'https://www.kraftmortgages.ca',

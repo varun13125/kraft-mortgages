@@ -59,23 +59,23 @@ export default function PrivateLending() {
       popular: true
     },
     {
-      title: "Asset-Based Calculator",
-      description: "Determine loan amounts based on property value vs income",
-      href: "/private-lending/calculators/asset-based", 
+      title: "Home Equity Calculator",
+      description: "See how much equity you can borrow against based on property value",
+      href: "/equity-lending/calculators/home-equity",
       icon: DollarSign,
       popular: true
     },
     {
-      title: "Bridge Financing Calculator",
-      description: "Calculate short-term bridge loan costs and timeline",
-      href: "/private-lending/calculators/bridge-financing",
+      title: "Self-Employed Income Calculator",
+      description: "Estimate qualifying income from business-for-self earnings",
+      href: "/calculators/self-employed",
       icon: Clock,
       popular: false
     },
     {
-      title: "Quick Approval Calculator",
-      description: "Estimate approval probability and terms for fast decisions",
-      href: "/private-lending/calculators/quick-approval",
+      title: "Pre-Approval Calculator",
+      description: "Estimate how much you could be approved for",
+      href: "/calculators/pre-approval",
       icon: Zap,
       popular: false
     }
@@ -160,7 +160,7 @@ export default function PrivateLending() {
                 <span className="bg-gradient-to-r from-rose-400 to-pink-500 bg-clip-text text-transparent">Private</span> Lending
               </h1>
               <p className="text-xl text-gray-400 max-w-3xl mx-auto mb-8">
-                Alternative lending solutions when traditional financing isn't an option. Fast approvals, flexible terms, and creative solutions for unique scenarios.
+                Alternative lending solutions when traditional financing isn&apos;t an option. Fast approvals, flexible terms, and creative solutions for unique scenarios.
               </p>
               
               <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-rose-500/20 p-4 max-w-2xl mx-auto mb-8">

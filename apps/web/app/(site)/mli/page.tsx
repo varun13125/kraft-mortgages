@@ -1,3 +1,19 @@
+import type { Metadata } from "next";
+import { OG_DEFAULTS } from "@/lib/seo/og";
+export const metadata: Metadata = {
+  title: "MLI Select Financing | Kraft Mortgages",
+  description:
+    "CMHC MLI Select financing for multi-unit rental projects in BC, Alberta and Ontario.",
+  alternates: { canonical: "https://www.kraftmortgages.ca/mli-select" },
+  openGraph: {
+    ...OG_DEFAULTS,
+    title: "MLI Select Financing",
+    description:
+      "CMHC MLI Select financing for multi-unit rental projects in BC, Alberta and Ontario.",
+    url: "https://www.kraftmortgages.ca/mli-select",
+  },
+};
+
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
@@ -44,8 +60,8 @@ export default function MLILanding() {
               <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
                 <span className="text-2xl">💰</span>
               </div>
-              <h3 className="text-xl font-semibold mb-2">Up to 50% Savings</h3>
-              <p className="text-gray-300">Significant premium reductions through our three-pillar system</p>
+              <h3 className="text-xl font-semibold mb-2">Up to 30% Premium Discount</h3>
+              <p className="text-gray-300">CMHC discounts premiums 10% / 20% / 30% at 50 / 70 / 100 points</p>
             </div>
             <div className="text-center">
               <div className="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-4">

@@ -58,7 +58,7 @@ const faqs = [
   },
   {
     q: "How do lender fees affect the total cost?",
-    a: "A 1% fee on a $500,000 mortgage is $5,000 upfront. Over a 5-year term at 6.49% vs 6.95%, the rate difference alone costs roughly $12,000 more in interest — far more than the fee. When comparing options, always look at total cost (interest + fees) over the full term, not just the rate."
+    a: "A 1% fee on a $500,000 mortgage is $5,000 upfront. Over a 5-year term at 6.49% vs 6.95% (25-year amortization), the rate difference alone costs roughly $11,000 more in interest — more than double the fee. When comparing options, always look at total cost (interest + fees) over the full term, not just the rate."
   },
   {
     q: "Can I switch from an equity lender to a B-lender or A-lender later?",
@@ -66,11 +66,30 @@ const faqs = [
   }
 ];
 
+// Canadian convention: semi-annual compounding, monthly rate = (1 + r/2)^(1/6) - 1 (same as lib/calc/payment.ts)
+function monthlyRate(annualRate: number): number {
+  return Math.pow(1 + annualRate / 100 / 2, 1 / 6) - 1;
+}
+
 function calcMonthly(principal: number, annualRate: number, amortYears: number): number {
-  if (annualRate === 0) return principal / (amortYears * 12);
-  const r = annualRate / 100 / 12;
   const n = amortYears * 12;
+  if (principal <= 0 || n <= 0) return 0;
+  const r = monthlyRate(annualRate);
+  if (r === 0) return principal / n;
   return principal * (r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+}
+
+// Interest actually paid during the first `months` payments
+function interestOverMonths(principal: number, annualRate: number, payment: number, months: number): number {
+  const r = monthlyRate(annualRate);
+  let balance = principal;
+  let interest = 0;
+  for (let i = 0; i < months && balance > 0; i++) {
+    const it = balance * r;
+    interest += it;
+    balance = Math.max(0, balance + it - payment);
+  }
+  return interest;
 }
 
 export default function BvsEquityPage() {
@@ -99,8 +118,10 @@ export default function BvsEquityPage() {
 
   const bMonthly = calcMonthly(mortgageAmount, bRate, amortization);
   const eMonthly = calcMonthly(mortgageAmount, eRate, amortization);
-  const bTotalInterest = bMonthly * term * 12 - mortgageAmount;
-  const eTotalInterest = eMonthly * term * 12 - mortgageAmount;
+  // Interest paid during the term (the old "payments − full principal" was negative)
+  const termMonths = Math.min(term, amortization) * 12;
+  const bTotalInterest = interestOverMonths(mortgageAmount, bRate, bMonthly, termMonths);
+  const eTotalInterest = interestOverMonths(mortgageAmount, eRate, eMonthly, termMonths);
   const bFees = mortgageAmount * (bFee / 100);
   const eFees = mortgageAmount * (eFee / 100);
   const bTotalCost = bTotalInterest + bFees;
@@ -345,7 +366,11 @@ export default function BvsEquityPage() {
                         <span className="font-semibold text-gray-200">Cost Comparison</span>
                       </div>
                       <p className="text-lg text-gray-300">
-                        Equity lending costs <span className="text-red-400 font-bold">{formatCurrency(difference, 0)}</span> more over the {term}-year term.
+                        {difference >= 0 ? (
+                          <>Equity lending costs <span className="text-red-400 font-bold">{formatCurrency(difference, 0)}</span> more over the {term}-year term.</>
+                        ) : (
+                          <>Equity lending costs <span className="text-green-400 font-bold">{formatCurrency(Math.abs(difference), 0)}</span> less over the {term}-year term with these rates and fees.</>
+                        )}
                       </p>
                       <p className="text-sm text-gray-400 mt-2">
                         However, equity lending requires less documentation and faster approval — sometimes closing in days vs weeks.
@@ -401,7 +426,7 @@ export default function BvsEquityPage() {
                     <p>• Rates shown are based on current lender data and may change. Always confirm with your broker.</p>
                     <p>• B-lender qualification depends on more than just credit score and LTV — property type, location, and exit strategy all matter.</p>
                     <p>• Lender fees are typically deducted from the advance (you receive less than the face amount).</p>
-                    <p>• This calculator provides estimates only — actual costs depend on the specific lender and deal structure.</p>
+                    <p>• This calculator provides estimates only — actual costs depend on the specific lender and deal structure. Both options are modelled as amortizing loans with semi-annual compounding; many equity lenders are interest-only with 1–2 year terms and renewal fees.</p>
                   </div>
                 </div>
               </div>
@@ -419,7 +444,7 @@ export default function BvsEquityPage() {
                 The Canadian mortgage market operates on a three-tier system. At the top are A-lenders — major banks and credit unions that offer the lowest rates but have the strictest qualification requirements. When you don&apos;t fit the A-lender box (perhaps you&apos;re self-employed, have recent credit issues, or need an unusual property type), you move to the next tier.
               </p>
               <p>
-                <strong>B-lenders</strong> (also called alternative lenders) are licensed financial institutions that bridge the gap between banks and private lenders. Companies like Bridgewater Bank, Home Trust, and Equitable Bank offer rates typically 1–4% above bank rates but with significantly more flexible qualification criteria. Most B-lenders accept bank statements instead of tax returns to verify income, and some accept stated income. They typically require a minimum Beacon score of 500 and loan-to-value ratios at or below 80%.
+                <strong>B-lenders</strong> (also called alternative lenders) are licensed financial institutions that bridge the gap between banks and private lenders. Companies like Bridgewater Bank, Home Trust, and Equitable Bank offer rates typically about 0.5–2% above bank rates (more for weaker credit) but with significantly more flexible qualification criteria. Most B-lenders accept bank statements instead of tax returns to verify income, and some accept stated income. They typically require a minimum Beacon score of 500 and loan-to-value ratios at or below 80%.
               </p>
               <p>
                 <strong>Equity lenders</strong> (private lenders and mortgage investment corporations) operate at the bottom of the hierarchy. They lend primarily based on the property&apos;s value and the equity cushion — not your income or credit score. This makes them the most accessible option but also the most expensive, with rates ranging from 7% to over 14% depending on the lender, position, and risk profile.
@@ -451,7 +476,7 @@ export default function BvsEquityPage() {
 
               <h3 className="text-2xl font-semibold text-gray-100 mt-8">Real Example: $500,000 Mortgage Over 5 Years</h3>
               <p>
-                Let&apos;s say you need $500,000 with a property worth $750,000 (66.7% LTV), 25-year amortization, and you qualify for both B-lender and equity options. At a B-lender rate of 5.49%, your monthly payment is approximately $3,358. Over 5 years, you&apos;d pay about $101,500 in interest plus a 1% fee ($5,000), for a total cost of $106,500. At an equity lender rate of 6.95%, your monthly payment rises to approximately $3,457. Over the same 5 years, interest totals about $107,400 plus fees ($5,000), for a total of $112,400. The difference? Roughly $5,900 more with the equity lender over 5 years — but with minimal documentation and potentially a week faster closing.
+                Let&apos;s say you need $500,000 with a property worth $750,000 (66.7% LTV), 25-year amortization, and you qualify for both B-lender and equity options. At a B-lender rate of 5.49%, your monthly payment is approximately $3,049. Over 5 years, you&apos;d pay about $128,800 in interest plus a 1% fee ($5,000), for a total cost of about $133,800. At an equity lender rate of 6.95%, your monthly payment rises to approximately $3,487. Over the same 5 years, interest totals about $164,100 plus fees ($5,000), for a total of about $169,100. The difference? Roughly $35,300 more with the equity lender over 5 years — the price of minimal documentation and potentially a week faster closing. (Many equity lenders are interest-only and use shorter 1–2 year terms, which changes the math.)
               </p>
 
               <div className="mt-8">

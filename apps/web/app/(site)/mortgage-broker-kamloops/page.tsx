@@ -1,4 +1,5 @@
-"use client";
+// Server Component: this page has no client-side interactivity, so it no longer
+// ships as a client bundle ("use client" removed in the 2026-10 audit).
 import Navigation from "@/components/Navigation";
 import Link from "next/link";
 import { MapPin, Phone, Building, TrendingUp, Home, Mountain } from "lucide-react";
@@ -16,7 +17,7 @@ export default function KamloopsPage() {
                             Kamloops, BC
                         </div>
                         <h1 className="text-4xl md:text-6xl font-bold mb-6 text-white">
-                            Kamloops' Trusted Mortgage Experts
+                            Kamloops&apos; Trusted Mortgage Experts
                         </h1>
                         <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-8">
                             As the Tournament Capital of Canada, Kamloops is a city of action and opportunity. Kraft Mortgages provides clear, strategic mortgage advice to help you achieve your real estate goals.

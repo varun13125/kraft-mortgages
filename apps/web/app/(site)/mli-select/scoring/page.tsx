@@ -1,13 +1,11 @@
 "use client";
 import { motion } from "framer-motion";
 import { Award, TrendingUp, Zap, Users } from "lucide-react";
-import Navigation from "@/components/Navigation";
 import Breadcrumb from "@/components/Breadcrumb";
 
 export default function ScoringPage() {
   return (
     <>
-      <Navigation />
       <main className="min-h-screen mt-16">
         {/* Breadcrumb */}
         <div className="px-4 py-6">
@@ -112,21 +110,21 @@ export default function ScoringPage() {
                 {
                   tier: "Tier 50",
                   points: "50+ Points",
-                  benefits: ["Extended amortization", "Basic premium discount", "Standard lending ratio"],
+                  benefits: ["Up to 40-year amortization", "10% premium discount", "95% LTC (new) / 85% LTV (existing)"],
                   color: "from-amber-500/20 to-yellow-500/20",
                   textColor: "text-amber-400"
                 },
                 {
                   tier: "Tier 70",
                   points: "70+ Points", 
-                  benefits: ["Higher leverage ratios", "Enhanced premium discount", "Priority processing"],
+                  benefits: ["Up to 45-year amortization", "20% premium discount", "Up to 95% LTC / LTV"],
                   color: "from-gold-500/20 to-amber-500/20",
                   textColor: "text-gold-400"
                 },
                 {
                   tier: "Tier 100",
                   points: "100+ Points",
-                  benefits: ["Maximum premium discount", "Highest leverage", "Expedited approval"],
+                  benefits: ["Up to 50-year amortization", "30% premium discount", "Limited recourse available"],
                   color: "from-emerald-500/20 to-green-500/20", 
                   textColor: "text-emerald-400"
                 }

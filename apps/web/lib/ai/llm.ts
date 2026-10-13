@@ -32,9 +32,11 @@ class LLMRouter {
     if (process.env.GOOGLE_API_KEY) {
       this.google = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
     }
-    if (process.env.OPEN_ROUTER_API_KEY) {
+    // Accept both spellings: .env.example and /api/chat use OPENROUTER_API_KEY.
+    const openRouterKey = process.env.OPENROUTER_API_KEY || process.env.OPEN_ROUTER_API_KEY;
+    if (openRouterKey) {
       this.openrouter = new OpenAI({
-        apiKey: process.env.OPEN_ROUTER_API_KEY,
+        apiKey: openRouterKey,
         baseURL: 'https://openrouter.ai/api/v1',
       });
     }

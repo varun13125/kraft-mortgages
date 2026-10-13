@@ -31,9 +31,10 @@ export default function NOIAnalysisCalculator() {
     const netOperatingIncome = effectiveGrossIncome - totalOperatingExpenses;
 
     // Ratios
-    const capRate = (netOperatingIncome / propertyValue) * 100;
-    const expenseRatio = (totalOperatingExpenses / effectiveGrossIncome) * 100;
-    const grossRentMultiplier = propertyValue / grossPotentialRent;
+    const capRate = propertyValue > 0 ? (netOperatingIncome / propertyValue) * 100 : 0;
+    const expenseRatio = effectiveGrossIncome > 0 ? (totalOperatingExpenses / effectiveGrossIncome) * 100 : 0;
+    // GRM is conventionally price ÷ gross potential rent (rent only, before vacancy)
+    const grossRentMultiplier = grossPotentialRent > 0 ? propertyValue / grossPotentialRent : 0;
 
     // Warnings
     const lowCapRate = capRate < 3;
@@ -141,11 +142,11 @@ export default function NOIAnalysisCalculator() {
                                         </div>
                                         <div className="flex justify-between text-sm">
                                             <span className="text-gray-400">Less: Vacancy Loss</span>
-                                            <span className="text-red-400">-${vacancyLoss.toLocaleString()}</span>
+                                            <span className="text-red-400">-${Math.round(vacancyLoss).toLocaleString()}</span>
                                         </div>
                                         <div className="flex justify-between font-bold">
                                             <span>Effective Gross Income</span>
-                                            <span className="text-green-400">${effectiveGrossIncome.toLocaleString()}</span>
+                                            <span className="text-green-400">${Math.round(effectiveGrossIncome).toLocaleString()}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -268,9 +269,9 @@ export default function NOIAnalysisCalculator() {
                                         <h4 className="font-semibold">Net Operating Income</h4>
                                     </div>
                                     <div className={`text-4xl font-bold mb-2 ${negativeNOI ? 'text-red-400' : 'text-green-400'}`}>
-                                        ${netOperatingIncome.toLocaleString()}
+                                        ${Math.round(netOperatingIncome).toLocaleString()}
                                     </div>
-                                    <p className="text-sm text-gray-300">Annual NOI before debt service</p>
+                                    <p className="text-sm text-gray-300">Annual NOI before debt service, depreciation and capital expenditures</p>
                                 </div>
 
                                 {/* Property Value for Ratios */}
@@ -330,7 +331,11 @@ export default function NOIAnalysisCalculator() {
                         </div>
 
                         {/* CTA */}
-                        <div className="mt-12 flex gap-4 justify-center">
+                        <p className="mt-8 text-xs text-gray-500 text-center max-w-3xl mx-auto">
+                            Estimates only. Vacancy is applied to gross rent plus other income. Lenders and appraisers may normalize
+                            vacancy, management fees and reserves differently.
+                        </p>
+                        <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
                             <Link
                                 href="/contact"
                                 className="bg-purple-500 text-white font-semibold py-4 px-8 rounded-xl hover:bg-purple-400 transition-colors"

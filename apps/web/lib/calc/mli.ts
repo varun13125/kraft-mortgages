@@ -1,3 +1,8 @@
+/**
+ * @deprecated Unused legacy module (no importers as of 2026-10 audit). The premium
+ * table and 60-point "pillar" logic below do NOT reflect CMHC MLI Select criteria.
+ * Use lib/mli/calcs.ts (points, tiers, LTV, amortization, premium grid) instead.
+ */
 export type MliTier = "Select" | "Mild" | "None";
 export type Pillar = "affordability" | "accessibility" | "energy";
 

@@ -11,10 +11,10 @@ export default function CapRateCalculator() {
     const [targetCapRate, setTargetCapRate] = useState(6.0);
 
     // Calculate Cap Rate
-    const capRate = (netOperatingIncome / marketValue) * 100;
+    const capRate = marketValue > 0 ? (netOperatingIncome / marketValue) * 100 : 0;
 
     // Calculate implied value based on target cap rate
-    const impliedValue = netOperatingIncome / (targetCapRate / 100);
+    const impliedValue = targetCapRate > 0 ? netOperatingIncome / (targetCapRate / 100) : 0;
 
     // Calculate required NOI for target cap rate at current value
     const requiredNOI = marketValue * (targetCapRate / 100);
@@ -185,16 +185,16 @@ export default function CapRateCalculator() {
                                     <div className="space-y-4">
                                         <div className="flex justify-between py-2 border-b border-white/10">
                                             <span className="text-gray-400">Implied Property Value</span>
-                                            <span className="font-bold text-purple-400">${impliedValue.toLocaleString()}</span>
+                                            <span className="font-bold text-purple-400">${Math.round(impliedValue).toLocaleString()}</span>
                                         </div>
                                         <div className="flex justify-between py-2 border-b border-white/10">
                                             <span className="text-gray-400">Required NOI for Target</span>
-                                            <span className="font-bold text-purple-400">${requiredNOI.toLocaleString()}</span>
+                                            <span className="font-bold text-purple-400">${Math.round(requiredNOI).toLocaleString()}</span>
                                         </div>
                                         <div className="flex justify-between py-2">
                                             <span className="text-gray-400">Value Gap</span>
                                             <span className={`font-bold ${impliedValue > marketValue ? 'text-green-400' : 'text-red-400'}`}>
-                                                ${Math.abs(impliedValue - marketValue).toLocaleString()}
+                                                ${Math.round(Math.abs(impliedValue - marketValue)).toLocaleString()}
                                                 {impliedValue > marketValue ? ' undervalued' : ' overvalued'}
                                             </span>
                                         </div>
@@ -218,7 +218,11 @@ export default function CapRateCalculator() {
                         </div>
 
                         {/* CTA */}
-                        <div className="mt-12 flex gap-4 justify-center">
+                        <p className="mt-8 text-xs text-gray-500 text-center max-w-3xl mx-auto">
+                            Estimates only. Use stabilized NOI (gross rent less vacancy and operating expenses; excludes debt service,
+                            depreciation and capital expenditures). Cap rates vary by asset class, location and lease profile.
+                        </p>
+                        <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
                             <Link
                                 href="/contact"
                                 className="bg-purple-500 text-white font-semibold py-4 px-8 rounded-xl hover:bg-purple-400 transition-colors"

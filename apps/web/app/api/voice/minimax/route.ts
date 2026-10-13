@@ -2,11 +2,32 @@
 // Server-side handler for MiniMax's advanced voice synthesis
 
 import { NextRequest, NextResponse } from 'next/server';
+import { rateLimit, tooManyRequests } from '@/lib/ai/request-guards';
+
+// NOTE: only referenced by lib/voice/voice-conversation.ts, which is itself only used by the
+// unmounted components/ChatWidget/VoiceControls.tsx. Still publicly reachable, so inputs are bounded.
+const MAX_TTS_CHARS = 2500;
+const ALLOWED_LANGUAGES = new Set(['hi-IN', 'pa-IN', 'en-CA', 'zh-CN', 'es-ES', 'fr-CA']);
 
 export async function POST(request: NextRequest) {
+  const limited = rateLimit(request, 'minimax-min', 10, 60_000);
+  if (!limited.ok) return tooManyRequests(limited.retryAfterSec);
+
   try {
-    const { text, language, emotion = 'friendly', speed = 1.0 } = await request.json();
-    
+    let body: any;
+    try {
+      body = await request.json();
+    } catch {
+      return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 });
+    }
+    const text = typeof body?.text === 'string' ? body.text.trim().slice(0, MAX_TTS_CHARS) : '';
+    if (!text) {
+      return NextResponse.json({ error: 'Text is required' }, { status: 400 });
+    }
+    const language = typeof body?.language === 'string' && ALLOWED_LANGUAGES.has(body.language) ? body.language : 'en-CA';
+    const speedNum = Number(body?.speed);
+    const speed = Number.isFinite(speedNum) ? Math.min(2, Math.max(0.5, speedNum)) : 1.0;
+
     const apiKey = process.env.MINIMAX_API_KEY || process.env.MINIMAX_JWT_TOKEN;
     if (!apiKey) {
       // Fallback to ElevenLabs if MiniMax not configured
@@ -80,7 +101,7 @@ export async function POST(request: NextRequest) {
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('MiniMax API Error:', errorText);
+      console.error('MiniMax API Error:', response.status, errorText.slice(0, 300));
       
       // Return error to trigger fallback
       return NextResponse.json(
@@ -110,7 +131,7 @@ export async function POST(request: NextRequest) {
           'X-Voice-Language': language
         }
       });
-    } else if (data.audio_url) {
+    } else if (typeof data.audio_url === 'string' && /^https:\/\//i.test(data.audio_url)) {
       // Fetch audio from URL
       const audioResponse = await fetch(data.audio_url);
       const audioBuffer = await audioResponse.arrayBuffer();
@@ -127,7 +148,7 @@ export async function POST(request: NextRequest) {
     }
 
   } catch (error) {
-    console.error('MiniMax route error:', error);
+    console.error('MiniMax route error:', error instanceof Error ? error.message : error);
     
     // Return error to trigger fallback to ElevenLabs
     return NextResponse.json(

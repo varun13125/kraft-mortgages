@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
+import crypto from "crypto";
+import { maskPhone } from "@/lib/ai/request-guards";
 
 const THINKR_API_KEY = process.env.THINKR_WEBHOOK_SECRET || "";
 const TWENTY_WEBHOOK =
@@ -20,12 +22,22 @@ interface ThinkrCallData {
   appointment_time?: string;
 }
 
+function bearerMatches(header: string | null, secret: string): boolean {
+  const expected = Buffer.from(`Bearer ${secret}`);
+  const actual = Buffer.from(header || "");
+  return actual.length === expected.length && crypto.timingSafeEqual(actual, expected);
+}
+
+const str = (v: unknown, max: number): string | undefined =>
+  typeof v === "string" && v.trim() ? v.trim().slice(0, max) : undefined;
+
 async function sendToTwenty(data: Record<string, string>) {
   try {
     await fetch(TWENTY_WEBHOOK, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
+      signal: AbortSignal.timeout(5000),
     });
   } catch (error) {
     console.error("Twenty CRM forward failed:", error);
@@ -43,6 +55,8 @@ async function sendDiscordNotification(data: ThinkrCallData) {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
+        // Caller-supplied text must never trigger @everyone / @here / role pings.
+        allowed_mentions: { parse: [] },
         embeds: [
           {
             title: "📞 Voice Agent Lead — Thinkr",
@@ -67,27 +81,53 @@ async function sendDiscordNotification(data: ThinkrCallData) {
           },
         ],
       }),
+      signal: AbortSignal.timeout(5000),
     });
   } catch (error) {
-    console.error("Discord notification failed:", error);
+    console.error("Discord notification failed:", error instanceof Error ? error.message : error);
   }
 }
 
 export async function POST(req: NextRequest) {
-  // Verify webhook secret if configured
+  // Verify webhook secret if configured (constant-time comparison).
   if (THINKR_API_KEY) {
-    const authHeader = req.headers.get("authorization");
-    if (authHeader !== `Bearer ${THINKR_API_KEY}`) {
+    if (!bearerMatches(req.headers.get("authorization"), THINKR_API_KEY)) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+  } else if (process.env.NODE_ENV === "production") {
+    // Still accepted (to avoid silently dropping real leads), but anyone can forge these
+    // until THINKR_WEBHOOK_SECRET is set in Vercel and in the Thinkrr webhook config.
+    console.error("[thinkr-webhook] THINKR_WEBHOOK_SECRET is not set - webhook is unauthenticated");
   }
 
-  let body: ThinkrCallData;
+  let raw: any;
   try {
-    body = await req.json();
+    raw = await req.json();
   } catch {
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
   }
+  if (!raw || typeof raw !== "object") {
+    return NextResponse.json({ error: "Invalid payload" }, { status: 400 });
+  }
+
+  // Normalise / bound untrusted fields before forwarding them to the CRM and Discord.
+  const durationNum = Number(raw.duration);
+  const body: ThinkrCallData = {
+    caller_name: str(raw.caller_name, 120),
+    caller_email: str(raw.caller_email, 254),
+    caller_phone: str(raw.caller_phone, 32),
+    call_id: str(raw.call_id, 100),
+    agent_id: str(raw.agent_id, 100),
+    duration: Number.isFinite(durationNum) && durationNum >= 0 ? Math.floor(durationNum) : undefined,
+    qualification:
+      raw.qualification && typeof raw.qualification === "object" && !Array.isArray(raw.qualification)
+        ? raw.qualification
+        : undefined,
+    sentiment: str(raw.sentiment, 50),
+    transcript: str(raw.transcript, 5000),
+    appointment_scheduled: raw.appointment_scheduled === true,
+    appointment_time: str(raw.appointment_time, 100),
+  };
 
   const crmData: Record<string, string> = {
     firstName: body.caller_name?.split(" ")[0] || "",
@@ -97,7 +137,7 @@ export async function POST(req: NextRequest) {
     source: "thinkr-voice-agent",
     message: [
       body.qualification
-        ? `Qualification: ${JSON.stringify(body.qualification)}`
+        ? `Qualification: ${JSON.stringify(body.qualification).slice(0, 1000)}`
         : "",
       body.sentiment ? `Sentiment: ${body.sentiment}` : "",
       body.appointment_scheduled
@@ -112,10 +152,11 @@ export async function POST(req: NextRequest) {
   await sendToTwenty(crmData);
   await sendDiscordNotification(body);
 
+  // No names/emails in logs (PII); a masked phone + call id is enough to correlate.
   console.log("Thinkr lead processed:", {
-    name: body.caller_name,
-    email: body.caller_email,
     call_id: body.call_id,
+    phone: maskPhone(body.caller_phone),
+    hasEmail: Boolean(body.caller_email),
   });
 
   return NextResponse.json({ success: true });

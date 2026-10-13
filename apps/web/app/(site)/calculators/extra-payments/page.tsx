@@ -8,6 +8,7 @@ import { Calculator, ArrowRight, HelpCircle, ChevronDown, ChevronUp,
 import Link from "next/link";
 import { ValidatedInput, ValidatedSlider } from "@/components/ui/ValidatedInput";
 import { formatCurrency } from "@/lib/utils/validation";
+import { payment, periodicRate } from "@/lib/calc/payment";
 import PdfLeadModal from "@/components/PdfLeadModal";
 import { CalculatorSchema } from "@/components/SEO/CalculatorSchema";
 import { RelatedCalculators } from "@/components/calculators/RelatedCalculators";
@@ -22,9 +23,11 @@ interface YearRow {
 }
 
 function buildComparison(mortgage: number, rate: number, amortYears: number, extraMonthly: number, lumpSum: number, startYear: number): { originalTotalInterest: number; acceleratedTotalInterest: number; interestSaved: number; originalPayoffMonths: number; acceleratedPayoffMonths: number; table: YearRow[] } {
-  const r = rate / 100 / 12;
+  // Canadian semi-annual compounding (fixed-rate convention), shared with the payment calculator
+  const r = periodicRate(rate, 12);
   const n = amortYears * 12;
-  const basePayment = r > 0 ? (mortgage * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1) : mortgage / n;
+  const basePayment = payment({ principal: mortgage, annualRatePct: rate, amortYears });
+  const PAID_OFF = 0.005; // treat sub-cent balances as paid off (floating-point residue)
 
   // Original schedule
   let balO = mortgage;
@@ -32,54 +35,36 @@ function buildComparison(mortgage: number, rate: number, amortYears: number, ext
   // Accelerated schedule
   let balA = mortgage;
   let intA = 0;
+  let payoffO = n, payoffA = n;
 
   const table: YearRow[] = [];
 
   for (let yr = 1; yr <= amortYears; yr++) {
     let yearIntO = 0, yearIntA = 0;
     for (let m = 0; m < 12; m++) {
+      const month = (yr - 1) * 12 + m + 1;
       // Original
-      if (balO > 0) {
+      if (balO > PAID_OFF) {
         const ip = balO * r;
         yearIntO += ip;
         intO += ip;
-        const pp = Math.min(basePayment - ip, balO);
-        balO -= pp;
+        balO -= Math.min(basePayment - ip, balO);
+        if (balO <= PAID_OFF) { balO = 0; payoffO = month; }
       }
-      // Accelerated
-      if (balA > 0) {
+      // Accelerated: extra monthly from the start year on, plus the annual lump sum
+      // at the start of every year from the start year on
+      if (balA > PAID_OFF) {
         const ip = balA * r;
         yearIntA += ip;
         intA += ip;
         const extra = (yr >= startYear) ? extraMonthly : 0;
-        const lump = (yr === startYear && m === 0) ? lumpSum : 0;
-        const totalPay = basePayment + extra + lump;
-        const pp = Math.min(totalPay - ip, balA);
-        balA -= pp;
-        if (balA < 0) balA = 0;
+        const lump = (yr >= startYear && m === 0) ? lumpSum : 0;
+        balA -= Math.min(basePayment + extra + lump - ip, balA);
+        if (balA <= PAID_OFF) { balA = 0; payoffA = month; }
       }
     }
-    table.push({ year: yr, originalBalance: Math.max(balO, 0), acceleratedBalance: Math.max(balA, 0), originalInterest: yearIntO, acceleratedInterest: yearIntA });
+    table.push({ year: yr, originalBalance: balO, acceleratedBalance: balA, originalInterest: yearIntO, acceleratedInterest: yearIntA });
     if (balO <= 0 && balA <= 0) break;
-  }
-
-  // Find payoff months (approximate)
-  let payoffO = amortYears * 12, payoffA = amortYears * 12;
-  let bO = mortgage, bA = mortgage;
-  for (let m = 1; m <= amortYears * 12; m++) {
-    if (bO > 0) {
-      const pp = Math.min(basePayment - bO * r, bO);
-      bO -= pp;
-      if (bO <= 0) { payoffO = m; }
-    }
-    if (bA > 0) {
-      const yr = Math.ceil(m / 12);
-      const extra = (yr >= startYear) ? extraMonthly : 0;
-      const lump = (yr === startYear && m === (startYear - 1) * 12 + 1) ? lumpSum : 0;
-      const pp = Math.min(basePayment + extra + lump - bA * r, bA);
-      bA -= pp;
-      if (bA <= 0) { payoffA = m; }
-    }
   }
 
   return { originalTotalInterest: intO, acceleratedTotalInterest: intA, interestSaved: intO - intA, originalPayoffMonths: payoffO, acceleratedPayoffMonths: payoffA, table };
@@ -104,7 +89,7 @@ const faqs = [
   },
   {
     q: "How much interest do extra payments really save?",
-    a: "The savings are significant. On a $500,000 mortgage at 5% over 25 years, an extra $200/month saves roughly $55,000 in interest and 4 years off your amortization. The earlier you start, the more you save — extra payments in year 1 save more than the same amount in year 15 because of how interest compounds."
+    a: "The savings are significant. On a $500,000 mortgage at 5% over 25 years, an extra $200/month saves roughly $50,000 in interest and about 3 years off your amortization. The earlier you start, the more you save — extra payments in year 1 save more than the same amount in year 15 because of how interest compounds."
   }
 ];
 
@@ -197,10 +182,10 @@ export default function ExtraPaymentsPage() {
                         title: "Your Inputs",
                         rows: [
                           { label: "Mortgage Amount", value: "$" + Math.round(mortgage).toLocaleString("en-CA") },
-                          { label: "Interest Rate", value: rate + "%" },
+                          { label: "Interest Rate", value: rate.toFixed(2) + "%" },
                           { label: "Amortization", value: amortYears + " years" },
                           { label: "Extra Monthly", value: "$" + Math.round(extraMonthly).toLocaleString("en-CA") },
-                          { label: "Lump Sum", value: "$" + Math.round(lumpSum).toLocaleString("en-CA") },
+                          { label: "Annual Lump Sum", value: "$" + Math.round(lumpSum).toLocaleString("en-CA") },
                           { label: "Start Year", value: "Year " + startYear },
                         ]
                       },
@@ -236,12 +221,12 @@ export default function ExtraPaymentsPage() {
                   </h2>
                   <div className="space-y-6">
                     <ValidatedInput label="Extra Monthly Payment" value={extraMonthly} onChange={setExtraMonthly} validation={{ min: 0, max: 5000 }} type="currency" />
-                    <ValidatedInput label="Annual Lump Sum" value={lumpSum} onChange={setLumpSum} validation={{ min: 0, max: 200000 }} type="currency" />
+                    <ValidatedInput label="Annual Lump Sum" value={lumpSum} onChange={setLumpSum} validation={{ min: 0, max: 200000 }} type="currency" help="Applied once at the start of each year from the start year onward. Most lenders cap lump sums at 10–20% of the original balance per year." />
                     <div>
                       <label className="block text-sm font-medium text-gray-300 mb-2">Start Extra Payments in Year</label>
-                      <div className="flex gap-2">
+                      <div className="grid grid-cols-5 gap-2">
                         {[1, 2, 3, 5, 10].map((y) => (
-                          <button key={y} onClick={() => setStartYear(y)} className={`flex-1 py-3 px-4 rounded-xl font-semibold text-sm transition-all border ${startYear === y ? "bg-gold-500 text-black border-gold-500" : "bg-white/5 text-gray-300 border-white/10 hover:bg-white/10"}`}>Year {y}</button>
+                          <button key={y} onClick={() => setStartYear(y)} className={`py-3 px-1 sm:px-4 rounded-xl font-semibold text-xs sm:text-sm transition-all border ${startYear === y ? "bg-gold-500 text-black border-gold-500" : "bg-white/5 text-gray-300 border-white/10 hover:bg-white/10"}`}>Year {y}</button>
                         ))}
                       </div>
                     </div>
@@ -269,7 +254,7 @@ export default function ExtraPaymentsPage() {
                     </div>
                     <div className="col-span-2 bg-green-500/10 rounded-lg p-4 border border-green-500/20">
                       <span className="text-green-300 block text-xs">Time Off Mortgage</span>
-                      <span className="font-bold text-green-400 text-2xl">{timeSavedYears > 0 ? `${timeSavedYears} year${timeSavedYears > 1 ? "s" : ""}` : ""}{timeSavedYears > 0 && timeSavedRemMonths > 0 ? " " : ""}{timeSavedRemMonths > 0 ? `${timeSavedRemMonths} month${timeSavedRemMonths > 1 ? "s" : ""}` : ""}</span>
+                      <span className="font-bold text-green-400 text-2xl">{timeSavedMonths <= 0 ? "No change" : <>{timeSavedYears > 0 ? `${timeSavedYears} year${timeSavedYears > 1 ? "s" : ""}` : ""}{timeSavedYears > 0 && timeSavedRemMonths > 0 ? " " : ""}{timeSavedRemMonths > 0 ? `${timeSavedRemMonths} month${timeSavedRemMonths > 1 ? "s" : ""}` : ""}</>}</span>
                     </div>
                   </div>
                 </div>
@@ -313,7 +298,7 @@ export default function ExtraPaymentsPage() {
           <div className="max-w-4xl mx-auto prose prose-invert">
             <h2 className="text-3xl font-bold text-gray-100 mb-8">How Extra Mortgage Payments Save You Money</h2>
             <div className="text-gray-300 space-y-4 leading-relaxed">
-              <p>Every extra dollar you put toward your mortgage principal directly reduces the amount of interest you pay over the life of the loan. Because mortgage interest compounds on the remaining balance, reducing that balance early has an outsized effect. An extra $200 per month on a $500,000 mortgage at 5% doesn&apos;t just save you $200 times 300 months — it can save you over $55,000 in interest and cut four years off your amortization.</p>
+              <p>Every extra dollar you put toward your mortgage principal directly reduces the amount of interest you pay over the life of the loan. Because mortgage interest compounds on the remaining balance, reducing that balance early has an outsized effect. An extra $200 per month on a $500,000 mortgage at 5% doesn&apos;t just save you $200 times 300 months — it can save you about $50,000 in interest and cut roughly three years off your amortization.</p>
 
               <h3 className="text-2xl font-semibold text-gray-100 mt-8">Prepayment Privileges by Lender</h3>
               <p>Most Canadian mortgages allow some form of prepayment without penalty. The standard privilege allows you to increase your regular payment by 15% to 20% per year and make lump sum payments of 10% to 20% of the original mortgage amount annually. Some products, particularly those from monoline lenders, allow up to 100% payment increases. Always check your mortgage contract — exceeding these limits triggers the same penalty as a full refinance.</p>
@@ -322,7 +307,7 @@ export default function ExtraPaymentsPage() {
               <p>A consistent monthly increase beats occasional lump sums for most borrowers because it attacks the principal every month without requiring discipline or windfalls. However, the two strategies can be combined: increase your monthly payment by what you can afford, then apply annual bonuses or tax refunds as lump sums. The compounding effect is remarkable — even small, consistent extra payments made in the early years of a mortgage generate significantly more savings than larger payments made near the end.</p>
 
               <h3 className="text-2xl font-semibold text-gray-100 mt-8">The Compounding Power of Early Extra Payments</h3>
-              <p>Consider this: on a 25-year mortgage, the first 5 years is where approximately 60% of your payments go toward interest. By making extra payments during these high-interest years, you dramatically reduce the balance on which future interest is calculated. An extra $100/month starting in year 1 is worth more than $200/month starting in year 10. The earlier you start, the more powerful the compounding effect.</p>
+              <p>Consider this: on a 25-year mortgage, roughly two-thirds of your payments in the first 5 years go toward interest (about 67% at a 5% rate). By making extra payments during these high-interest years, you dramatically reduce the balance on which future interest is calculated. An extra $100/month starting in year 1 is worth more than $200/month starting in year 10. The earlier you start, the more powerful the compounding effect.</p>
 
               <div className="mt-8">
                 <Link href="/calculators/amortization" className="text-gold-400 hover:text-gold-300 underline">Amortization Calculator</Link>

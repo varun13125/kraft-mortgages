@@ -1,5 +1,7 @@
 import { Metadata } from 'next';
 import { CityServiceJsonLd } from '@/components/SEO/CityServiceJsonLd';
+import Footer from '@/components/Footer';
+import { OG_DEFAULTS } from '@/lib/seo/og';
 
 export const metadata: Metadata = {
   title: 'Langley Mortgage Broker | Best Rates | Kraft Mortgages',
@@ -9,6 +11,7 @@ export const metadata: Metadata = {
     canonical: 'https://www.kraftmortgages.ca/mortgage-broker-langley',
   },
   openGraph: {
+    ...OG_DEFAULTS,
     title: 'Langley Mortgage Broker | Kraft Mortgages Canada',
     description: 'Trusted Langley mortgage broker with 18+ Years Combined Experience. Free pre-approval in 24 hours.',
     url: 'https://www.kraftmortgages.ca/mortgage-broker-langley',
@@ -21,6 +24,7 @@ export default function LangleyLayout({ children }: { children: React.ReactNode 
     <>
       <CityServiceJsonLd cityName="Langley" provinceName="BC" description="Licensed mortgage broker serving Langley, BC. Residential, construction, self-employed, MLI Select, and private lending solutions." />
       {children}
+      <Footer />
     </>
   );
 }

@@ -1,13 +1,11 @@
 "use client";
 import { motion } from "framer-motion";
 import { Building, TrendingUp, Shield, CheckCircle, Award, Zap, Users } from "lucide-react";
-import Navigation from "@/components/Navigation";
 import Breadcrumb from "@/components/Breadcrumb";
 
 export default function OverviewPage() {
   return (
     <>
-      <Navigation />
       <main className="min-h-screen mt-16">
         {/* Breadcrumb */}
         <div className="px-4 py-6">
@@ -57,7 +55,7 @@ export default function OverviewPage() {
                 <h2 className="text-2xl font-bold text-gray-100">CMHC MLI Select Program</h2>
               </div>
               <p className="text-gray-400 text-lg leading-relaxed">
-                MLI Select is CMHC's premium multi-unit residential insurance program that rewards developers and property owners 
+                MLI Select is CMHC&apos;s premium multi-unit residential insurance program that rewards developers and property owners 
                 for creating more affordable, energy-efficient, and accessible housing. Through a point-based scoring system, 
                 projects can qualify for enhanced insurance terms, extended amortizations, and substantial premium discounts.
               </p>
@@ -69,19 +67,19 @@ export default function OverviewPage() {
                 {
                   icon: TrendingUp,
                   title: "Affordability Focus",
-                  description: "Earn up to 50 points by maintaining below-market rents and implementing affordability measures.",
+                  description: "Earn 50, 70 or 100 points by keeping a share of units at or below 30% of median renter income for 10+ years (+30 bonus points for 20+ years).",
                   features: ["Rent-to-income caps", "Affordable unit requirements", "Long-term affordability commitments"]
                 },
                 {
                   icon: Zap,
                   title: "Energy Efficiency",
-                  description: "Gain up to 30 points through green building practices and energy-efficient design.",
+                  description: "Earn 20, 35 or 50 points for energy performance better than NECB/NBC Tier 1 (new) or reductions vs. current use (existing).",
                   features: ["ENERGY STAR certification", "High-performance building envelope", "Renewable energy systems"]
                 },
                 {
                   icon: Users,
                   title: "Accessibility",
-                  description: "Achieve up to 20 points with universal design and barrier-free accessibility features.",
+                  description: "Earn 20 or 30 points with accessible / universal-design units or RHFAC certification (100% visitable units and barrier-free commons required).",
                   features: ["Universal design principles", "Accessible unit requirements", "Enhanced accessibility features"]
                 }
               ].map((feature, i) => (
@@ -130,19 +128,19 @@ export default function OverviewPage() {
                 {
                   tier: "Tier 50",
                   points: "50-69 Points",
-                  benefits: ["40-year amortization", "Basic premium discount", "Standard processing"],
+                  benefits: ["Up to 40-year amortization", "10% premium discount", "Up to 95% LTC (new) / 85% LTV (existing)"],
                   highlight: false
                 },
                 {
                   tier: "Tier 70", 
                   points: "70-99 Points",
-                  benefits: ["Higher loan-to-value ratios", "Enhanced premium discount", "Priority processing"],
+                  benefits: ["Up to 45-year amortization", "20% premium discount", "Up to 95% LTC / LTV"],
                   highlight: true
                 },
                 {
                   tier: "Tier 100",
                   points: "100+ Points", 
-                  benefits: ["Maximum premium savings", "Highest leverage available", "Expedited approval"],
+                  benefits: ["Up to 50-year amortization", "30% premium discount", "Limited recourse available"],
                   highlight: false
                 }
               ].map((tier, i) => (
@@ -210,7 +208,7 @@ export default function OverviewPage() {
                 <ul className="space-y-3 text-gray-400">
                   <li className="flex items-start gap-2">
                     <CheckCircle className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
-                    Significant insurance premium savings (up to 25% discount)
+                    Significant insurance premium savings (up to 30% discount)
                   </li>
                   <li className="flex items-start gap-2">
                     <CheckCircle className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />

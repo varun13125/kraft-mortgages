@@ -1,4 +1,4 @@
-import { getRun, updateRun, updateRunStep, createRun as dbCreateRun } from '@/lib/db/firestore';
+import { getRun, updateRun, updateRunStep, createRun as dbCreateRun, encodeEmbeddings } from '@/lib/db/firestore';
 import type { Run, Step } from '@/lib/db/firestore';
 import { scoutStage } from './stages/scout';
 import { briefStage } from './stages/brief';
@@ -10,6 +10,21 @@ import { log } from '@/lib/runlog';
 
 const STAGES = ['topic-scout', 'brief', 'writer', 'gate', 'editor', 'publish'] as const;
 type StageName = typeof STAGES[number];
+
+// Run field each stage's output is stored under. Downstream stages and the
+// /api/runs/[runId]/stream endpoint read these names (run.scout, run.draft,
+// run.final, ...). Previously the key was derived as stageName.replace('-', '')
+// ('topicscout', 'writer', 'editor', 'publish'), so writer/gate/editor/publish
+// could never find their inputs (brief stage needs run.scout, so every run
+// failed at stage 2).
+const STAGE_OUTPUT_FIELD: Record<StageName, 'scout' | 'brief' | 'draft' | 'gate' | 'final' | 'published'> = {
+  'topic-scout': 'scout',
+  brief: 'brief',
+  writer: 'draft',
+  gate: 'gate',
+  editor: 'final',
+  publish: 'published',
+};
 
 interface StageResult {
   success: boolean;
@@ -98,7 +113,13 @@ export async function stepOrchestrate(runId: string): Promise<{ done: boolean; s
 
       // Save stage data to run
       if (result.data) {
-        await updateRun(runId, { [stageName.replace('-', '')]: result.data });
+        const field = STAGE_OUTPUT_FIELD[stageName];
+        let payload = result.data;
+        // Gate output carries number[][] embeddings - Firestore rejects nested arrays
+        if (payload && Array.isArray(payload.embeddings)) {
+          payload = { ...payload, embeddings: encodeEmbeddings(payload.embeddings) };
+        }
+        await updateRun(runId, { [field]: payload } as Partial<Run>);
       }
 
       // Handle enqueue (for gate revisions)
@@ -115,6 +136,7 @@ export async function stepOrchestrate(runId: string): Promise<{ done: boolean; s
             });
           });
 
+          // updateRun strips undefined values (Firestore rejects them)
           await updateRun(runId, { steps: newSteps });
         }
       }

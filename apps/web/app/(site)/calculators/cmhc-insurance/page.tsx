@@ -8,27 +8,28 @@ import { Calculator, ArrowRight, Info, Home, Shield,
 import Link from "next/link";
 import { ValidatedInput, ValidatedSlider } from "@/components/ui/ValidatedInput";
 import { formatCurrency } from "@/lib/utils/validation";
+import { payment } from "@/lib/calc/payment";
+import { cmhcPremiumRate, isInsurable, minimumDownPayment, INSURED_PRICE_CAP } from "@/lib/calc/cmhc";
 import PdfLeadModal from "@/components/PdfLeadModal";
 import { RelatedCalculators } from "@/components/calculators/RelatedCalculators";
 
 /* ── CMHC Premium Rates (2025) ─────────────────────── */
 
-function cmhcCalc(downPaymentPct: number, mortgageAmount: number): { rate: number; premium: number; tier: string } {
+function cmhcCalc(downPaymentPct: number, mortgageAmount: number, amortYears = 25): { rate: number; premium: number; tier: string } {
   if (downPaymentPct >= 20) return { rate: 0, premium: 0, tier: "No insurance required" };
-  let rate: number;
   let tier: string;
-  if (downPaymentPct >= 15) { rate = 0.028; tier = "15.00% – 19.99%"; }
-  else if (downPaymentPct >= 10) { rate = 0.031; tier = "10.00% – 14.99%"; }
-  else if (downPaymentPct >= 5) { rate = 0.04; tier = "5.00% – 9.99%"; }
-  else { rate = 0.042; tier = "Under 5.00%"; }
+  if (downPaymentPct >= 15) tier = "15.00% – 19.99%";
+  else if (downPaymentPct >= 10) tier = "10.00% – 14.99%";
+  else tier = "5.00% – 9.99%";
+  // Shared schedule; amortizations over 25 years carry a 0.20% surcharge
+  const rate = cmhcPremiumRate(downPaymentPct, amortYears);
   return { rate, premium: mortgageAmount * rate, tier };
 }
 
+// annualRate is a decimal here (callers pass mortgageRate / 100). Uses Canadian
+// semi-annual compounding via the shared helper (was US-style monthly compounding).
 function monthlyPayment(principal: number, annualRate: number, amortYears: number): number {
-  if (principal <= 0 || annualRate <= 0) return 0;
-  const r = annualRate / 12;
-  const n = amortYears * 12;
-  return principal * (r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+  return payment({ principal, annualRatePct: annualRate * 100, amortYears });
 }
 
 /* ── FAQ ───────────────────────────────────────────── */
@@ -40,11 +41,11 @@ const faqs = [
   },
   {
     q: "What are the current CMHC premium rates in 2025?",
-    a: "As of 2025, CMHC premiums are: 4.0% for 5-9.99% down, 3.1% for 10-14.99% down, 2.8% for 15-19.99% down, and $0 (no insurance) for 20% or more down. These rates apply to the mortgage amount, not the home price."
+    a: "CMHC purchase premiums are: 4.00% for 5-9.99% down (4.50% with a non-traditional down payment), 3.10% for 10-14.99% down, 2.80% for 15-19.99% down, and $0 (no insurance) for 20% or more down. Amortizations over 25 years add 0.20%. These rates apply to the mortgage amount, not the home price. Ontario, Quebec and Saskatchewan also charge PST on the premium, payable at closing."
   },
   {
     q: "How is CMHC different from Sagen and Canada Guaranty?",
-    a: "CMHC, Sagen (formerly Genworth), and Canada Guaranty are the three mortgage default insurers in Canada. All three offer similar coverage and are required by law to have comparable premium rates. Your lender typically chooses which insurer to use. The rates are standardized, so the cost is the same regardless of which insurer is selected."
+    a: "CMHC, Sagen (formerly Genworth), and Canada Guaranty are the three mortgage default insurers in Canada. All three follow the same federal insurability rules and, in practice, publish essentially the same premium schedule for standard purchases. Your lender typically chooses which insurer to use, so the cost to you is usually the same."
   },
   {
     q: "Can I avoid paying CMHC insurance?",
@@ -52,7 +53,7 @@ const faqs = [
   },
   {
     q: "What is the $1.5 million CMHC insured cap?",
-    a: "As of 2024, CMHC will only insure mortgages on homes valued at $1.5 million or less. If you're buying a home over $1.5 million with less than 20% down, you cannot get CMHC insurance — most lenders will require you to increase your down payment to 20% for properties above this threshold. Some alternative lenders may have workarounds, but at higher rates."
+    a: "Since December 15, 2024, insured mortgages are available on homes priced below $1.5 million (up from $1 million). At $1.5 million or more you cannot get mortgage default insurance, so you need at least 20% down. Below the cap, the minimum down payment is 5% of the first $500,000 plus 10% of the portion above $500,000."
   },
   {
     q: "Should I pay CMHC upfront or add it to my mortgage?",
@@ -70,9 +71,11 @@ export default function CMHCInsurancePage() {
 
   const downPayment = homePrice * downPaymentPct / 100;
   const baseMortgage = homePrice - downPayment;
-  const { rate, premium, tier } = cmhcCalc(downPaymentPct, baseMortgage);
+  const { rate, premium, tier } = cmhcCalc(downPaymentPct, baseMortgage, amortization);
   const totalMortgage = baseMortgage + premium;
   const needsInsurance = downPaymentPct < 20;
+  const minDown = minimumDownPayment(homePrice);
+  const notInsurable = needsInsurance && !isInsurable(homePrice, downPayment);
 
   const monthlyBase = monthlyPayment(baseMortgage, mortgageRate / 100, amortization);
   const monthlyWithCMHC = monthlyPayment(totalMortgage, mortgageRate / 100, amortization);
@@ -185,7 +188,7 @@ export default function CMHCInsurancePage() {
                         ]
                       }
                     ],
-                    educationalContent: "CMHC mortgage loan insurance is required when your down payment is less than 20%. The premium is added to your mortgage and ranges from 4% to 15% of the loan amount."
+                    educationalContent: "CMHC mortgage loan insurance is required when your down payment is less than 20%. On a purchase the premium is 2.80% to 4.00% of the loan amount (plus 0.20% for amortizations over 25 years) and is added to your mortgage. In Ontario, Quebec and Saskatchewan, provincial sales tax on the premium is payable in cash at closing."
                   });
                 }}
               />
@@ -208,6 +211,13 @@ export default function CMHCInsurancePage() {
                       step={0.5}
                       formatValue={(v) => `${v}% (${formatCurrency(homePrice * v / 100, 0)})`}
                     />
+                    {notInsurable && (
+                      <p className="text-xs text-red-300 -mt-3">
+                        {homePrice >= INSURED_PRICE_CAP
+                          ? "Homes priced at $1.5M or more can't be insured — at least 20% down is required."
+                          : `Below the minimum down payment of ${formatCurrency(minDown, 0)} (${(minDown / homePrice * 100).toFixed(2)}%) for this price.`}
+                      </p>
+                    )}
                     <ValidatedInput
                       label="Mortgage Rate (%)"
                       value={mortgageRate}
@@ -232,6 +242,11 @@ export default function CMHCInsurancePage() {
                           </button>
                         ))}
                       </div>
+                      {amortization > 25 && needsInsurance && (
+                        <p className="text-xs text-amber-300 mt-2">
+                          30-year insured amortizations are available to first-time buyers and buyers of new builds, and add 0.20% to the premium rate.
+                        </p>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -246,8 +261,13 @@ export default function CMHCInsurancePage() {
                     {needsInsurance ? formatCurrency(premium, 0) : "Not Required"}
                   </p>
                   <p className="text-sm text-gray-300">
-                    {needsInsurance ? `Tier: ${tier} down · Rate: ${(rate * 100).toFixed(1)}%` : "Down payment is 20% or more — conventional mortgage"}
+                    {needsInsurance ? `Tier: ${tier} down · Rate: ${(rate * 100).toFixed(2)}%${amortization > 25 ? " (incl. 0.20% 30-yr surcharge)" : ""}` : "Down payment is 20% or more — conventional mortgage"}
                   </p>
+                  {needsInsurance && (
+                    <p className="text-xs text-gray-400 mt-2">
+                      Ontario buyers also pay 8% PST on the premium ({formatCurrency(premium * 0.08, 0)}) in cash at closing; BC and Alberta charge no PST on premiums.
+                    </p>
+                  )}
                 </div>
 
                 {!needsInsurance && (
@@ -352,12 +372,12 @@ export default function CMHCInsurancePage() {
 
               <h3 className="text-2xl font-semibold text-gray-100 mt-8">CMHC vs Sagen vs Canada Guaranty</h3>
               <p>
-                Canada has three mortgage default insurers: CMHC (a federal Crown corporation), Sagen (formerly Genworth Canada, privately owned), and Canada Guaranty (also private). All three are legally required to offer comparable rates and coverage. Your lender chooses which insurer to use, and the cost to you is effectively the same regardless. CMHC is the largest and most well-known, but all three provide equivalent protection.
+                Canada has three mortgage default insurers: CMHC (a federal Crown corporation), Sagen (formerly Genworth Canada, privately owned), and Canada Guaranty (also private). All three follow the same federal insurability rules and, in practice, charge essentially the same premiums for standard purchases. Your lender chooses which insurer to use, and the cost to you is effectively the same regardless. CMHC is the largest and most well-known, but all three provide equivalent protection.
               </p>
 
               <h3 className="text-2xl font-semibold text-gray-100 mt-8">The $1.5 Million Insured Cap</h3>
               <p>
-                Effective 2024, CMHC only insures mortgages on homes valued at $1.5 million or less. This means if you&apos;re buying a home above $1.5 million, you must put at least 20% down regardless — there is no insured mortgage option. For homes between $1M and $1.5M, CMHC insurance is available but the 20% rule on the portion over $1M means you still need substantial cash. This policy change has affected buyers in high-priced markets like Vancouver and Toronto.
+                Since December 15, 2024, insured mortgages are available on homes priced below $1.5 million (the cap was previously $1 million). If you&apos;re buying a home at $1.5 million or more, you must put at least 20% down — there is no insured mortgage option. For homes between $1M and $1.5M, the minimum is 5% of the first $500,000 plus 10% of the rest — for example $95,000 on a $1.2M home. This policy change has affected buyers in high-priced markets like Vancouver and Toronto.
               </p>
 
               <h3 className="text-2xl font-semibold text-gray-100 mt-8">Paying Upfront vs. Adding to Your Mortgage</h3>

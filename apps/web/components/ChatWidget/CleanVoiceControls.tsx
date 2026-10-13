@@ -7,11 +7,13 @@ import { SimpleVoiceSystem } from '@/lib/voice/simple-voice-system';
 interface CleanVoiceControlsProps {
   onVoiceMessage?: (text: string) => void;
   onAIResponse?: (response: string) => void;
+  province?: string;
 }
 
 export const CleanVoiceControls: React.FC<CleanVoiceControlsProps> = ({ 
   onVoiceMessage,
-  onAIResponse 
+  onAIResponse,
+  province = 'BC'
 }) => {
   const [isListening, setIsListening] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
@@ -20,6 +22,15 @@ export const CleanVoiceControls: React.FC<CleanVoiceControlsProps> = ({
   const [currentLanguage, setCurrentLanguage] = useState('en-CA');
   
   const voiceSystem = useRef<SimpleVoiceSystem | null>(null);
+  // Parent passes new inline callbacks on every render. Keep the latest ones in refs so the
+  // speech-recognition instance is created once per mount (previously it was destroyed and
+  // re-created on every parent re-render, cutting off listening mid-sentence).
+  const onVoiceMessageRef = useRef(onVoiceMessage);
+  const onAIResponseRef = useRef(onAIResponse);
+  const provinceRef = useRef(province);
+  onVoiceMessageRef.current = onVoiceMessage;
+  onAIResponseRef.current = onAIResponse;
+  provinceRef.current = province;
 
   useEffect(() => {
     // Initialize voice system
@@ -41,9 +52,7 @@ export const CleanVoiceControls: React.FC<CleanVoiceControlsProps> = ({
           setCurrentLanguage(detectedLang);
           
           // Send to chat
-          if (onVoiceMessage) {
-            onVoiceMessage(text);
-          }
+          onVoiceMessageRef.current?.(text);
           
           // Process with AI
           processWithAI(text, detectedLang);
@@ -63,7 +72,8 @@ export const CleanVoiceControls: React.FC<CleanVoiceControlsProps> = ({
         voiceSystem.current.destroy();
       }
     };
-  }, [onVoiceMessage]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const processWithAI = async (text: string, language: string) => {
     // Validate input
@@ -73,8 +83,6 @@ export const CleanVoiceControls: React.FC<CleanVoiceControlsProps> = ({
     }
 
     try {
-      console.log('Processing with AI:', { text, language });
-      
       // Send to AI
       const response = await fetch('/api/chat', {
         method: 'POST',
@@ -82,21 +90,21 @@ export const CleanVoiceControls: React.FC<CleanVoiceControlsProps> = ({
         body: JSON.stringify({
           input: text.trim(),
           language: language.split('-')[0],
-          province: 'BC'
+          province: provinceRef.current
         })
       });
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('AI API Error Response:', errorText);
-        throw new Error(`AI API error: ${response.status} - ${errorText}`);
+      // /api/chat responds with JSON ({ reply, message, ... }); it previously got spoken and
+      // displayed as raw JSON because the body was read with response.text().
+      const data = await response.json().catch(() => null);
+      const aiResponse: string | undefined =
+        data && typeof data.reply === 'string' ? data.reply : data && typeof data.message === 'string' ? data.message : undefined;
+
+      if (!aiResponse) {
+        throw new Error(`AI API error: ${response.status}`);
       }
 
-      const aiResponse = await response.text();
-      
-      if (onAIResponse) {
-        onAIResponse(aiResponse);
-      }
+      onAIResponseRef.current?.(aiResponse);
 
       // Speak the response
       setIsSpeaking(true);
@@ -112,9 +120,7 @@ export const CleanVoiceControls: React.FC<CleanVoiceControlsProps> = ({
       // Provide fallback response
       const fallbackResponse = "I apologize, but I'm having trouble processing that right now. Could you please try again or contact us directly at 604-593-1550?";
       
-      if (onAIResponse) {
-        onAIResponse(fallbackResponse);
-      }
+      onAIResponseRef.current?.(fallbackResponse);
       
       // Try to speak the fallback
       try {
@@ -156,6 +162,8 @@ export const CleanVoiceControls: React.FC<CleanVoiceControlsProps> = ({
         <button
           onClick={toggleListening}
           disabled={isSpeaking}
+          aria-label={isSpeaking ? 'Assistant is speaking' : isListening ? 'Stop listening' : 'Start voice conversation'}
+          aria-pressed={isListening}
           className={`p-3 rounded-full transition-all ${
             isListening 
               ? 'bg-red-500 text-white animate-pulse' 
@@ -186,7 +194,7 @@ export const CleanVoiceControls: React.FC<CleanVoiceControlsProps> = ({
           {isSpeaking && (
             <div className="flex items-center gap-2">
               <Volume2 size={16} className="text-blue-400 animate-pulse" />
-              <span className="text-sm text-white">Alexa speaking...</span>
+              <span className="text-sm text-white">Assistant speaking...</span>
             </div>
           )}
           
@@ -207,7 +215,7 @@ export const CleanVoiceControls: React.FC<CleanVoiceControlsProps> = ({
       {/* Live Transcript */}
       {transcript && (
         <div className="mt-2 p-2 bg-gray-700/50 rounded text-sm text-gray-300">
-          <span className="italic">"{transcript}"</span>
+          <span className="italic">&quot;{transcript}&quot;</span>
         </div>
       )}
     </div>

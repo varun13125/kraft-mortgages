@@ -195,15 +195,18 @@ const CORE_CALCULATORS = [
     changeFrequency: 'weekly' as const,
   },
   {
+    url: '/calculators/refinance-break-even',
+    priority: 0.8,
+    changeFrequency: 'weekly' as const,
+  },
+  {
     url: '/calculators/bc-speculation-tax',
     priority: 0.7,
     changeFrequency: 'monthly' as const,
   },
-  {
-    url: '/calculators/stress-test',
-    priority: 0.8,
-    changeFrequency: 'weekly' as const,
-  },
+  // NOTE: /calculators/stress-test is deliberately NOT listed — next.config.mjs
+  // 308-redirects it to /residential/calculators/stress-test (listed below), and
+  // sitemaps must only contain final, non-redirecting URLs.
 ];
 
 // MLI Select calculators
@@ -382,10 +385,19 @@ const INFO_PAGES = [
     changeFrequency: 'yearly' as const,
   },
   {
-    url: '/learn',
-    priority: 0.5,
-    changeFrequency: 'weekly' as const,
+    url: '/rates',
+    priority: 0.8,
+    changeFrequency: 'daily' as const,
   },
+  {
+    url: '/compliance-security',
+    priority: 0.5,
+    changeFrequency: 'yearly' as const,
+  },
+  // /learn is an "under construction" stub (noindex) — re-add once it has content.
+  // /mli-select/{overview,benefits,scoring,faq,eligibility,compare-programs,
+  // application-process} exist but have no canonical/metadata yet; add them here
+  // once each page sets its own canonical (otherwise sitemap and canonical conflict).
 ];
 
 export interface BlogPost {
@@ -413,19 +425,27 @@ export function generateSitemap(blogPosts: BlogPost[] = []): MetadataRoute.Sitem
     ...INFO_PAGES,
   ];
 
-  // Generate URLs for static pages
+  // Generate URLs for static pages.
+  // No `lastModified` here: stamping every static page with "now" on each
+  // regeneration is inaccurate and teaches crawlers to ignore <lastmod>.
+  // (Blog posts below carry their real published/updated dates.)
   const staticUrls = staticPages.map((page) => ({
     url: `${SITE_URL}${page.url}`,
-    lastModified: currentDate,
     changeFrequency: page.changeFrequency,
     priority: page.priority,
   }));
+
+  // Blog index lastmod = newest post date (falls back to now when there are no posts).
+  const newestPostTime = blogPosts.reduce((max, p) => {
+    const t = new Date(p.updatedAt || p.publishedAt).getTime();
+    return Number.isFinite(t) && t > max ? t : max;
+  }, 0);
 
   // Blog index and posts
   const blogUrls = [
     {
       url: `${SITE_URL}/blog`,
-      lastModified: currentDate,
+      lastModified: newestPostTime ? new Date(newestPostTime) : currentDate,
       changeFrequency: 'daily' as const,
       priority: 0.9,
     },

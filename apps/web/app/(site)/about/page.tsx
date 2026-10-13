@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Award, Shield, Users, Building, Target, Clock, Briefcase, CheckCircle, MapPin, Phone, Mail } from "lucide-react";
 import Link from "next/link";
 import Navigation from "@/components/Navigation";
+import { BUSINESS } from "@/lib/seo/business-config";
 import { BorderRotate } from "@/components/ui/animated-gradient-border";
 
 export default function AboutUs() {
@@ -51,7 +52,7 @@ export default function AboutUs() {
                   increasingly complex, with borrowers facing unique challenges that required specialized expertise.
                 </p>
                 <p className="text-gray-400 mb-4 leading-relaxed">
-                  Today, we're proud to be recognized as specialists in three critical areas: MLI Select multi-unit financing,
+                  Today, we&apos;re proud to be recognized as specialists in three critical areas: MLI Select multi-unit financing,
                   construction mortgages with progressive draws, and self-employed mortgage solutions. Our expertise in these
                   complex scenarios sets us apart from conventional brokers.
                 </p>
@@ -63,7 +64,7 @@ export default function AboutUs() {
               <div className="grid grid-cols-2 gap-4">
                 {[
                   { number: "$2B+", label: "Total Funded" },
-                  { number: "10,000+", label: "Families Helped" },
+                  { number: BUSINESS.clientsServed, label: "Clients Helped" },
                   { number: "500+", label: "Complex Cases" },
                   { number: "12", label: "Years of Excellence" }
                 ].map((stat, i) => (
@@ -169,7 +170,7 @@ export default function AboutUs() {
                     </p>
 
                     <p className="text-gray-400 mb-4 leading-relaxed">
-                      Varun's expertise spans construction financing with progressive draws, self-employed mortgage solutions,
+                      Varun&apos;s expertise spans construction financing with progressive draws, self-employed mortgage solutions,
                       and multi-provincial transactions. He has successfully navigated challenging files that other brokers
                       deemed impossible.
                     </p>
@@ -398,7 +399,7 @@ export default function AboutUs() {
                 Ready to Experience the <span className="bg-gradient-to-r from-gold-400 to-amber-500 bg-clip-text text-transparent">Kraft Difference</span>?
               </h2>
               <p className="text-xl mb-8 text-gray-400">
-                Let's discuss your unique mortgage needs and find the perfect solution.
+                Let&apos;s discuss your unique mortgage needs and find the perfect solution.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">

@@ -9,8 +9,9 @@ import Link from "next/link";
 // Construction draw calculation logic
 interface DrawSchedule {
   stage: string;
-  percentage: number;
-  amount: number;
+  percentage: number; // cumulative % of construction completed at this stage
+  amount: number; // incremental advance at this stage
+  cumulative: number; // total advanced to date
   description: string;
   completed: boolean;
 }
@@ -30,12 +31,16 @@ function calculateConstructionDraw({
   constructionPeriod: number;
   customSchedule?: boolean;
 }) {
-  const totalCost = totalProjectCost + landValue;
+  const totalCost = Math.max(0, totalProjectCost) + Math.max(0, landValue);
   const downPaymentAmount = totalCost * downPayment;
   const loanAmount = totalCost - downPaymentAmount;
+  // Land is advanced first (at the same loan-to-cost); the construction portion is then
+  // advanced by % completion. Stage percentages below are CUMULATIVE % complete.
+  const landAdvance = Math.min(Math.max(0, landValue) * (1 - downPayment), loanAmount);
+  const constructionPortion = loanAmount - landAdvance;
   
   // Standard construction draw schedule
-  const standardSchedule: Omit<DrawSchedule, 'amount' | 'completed'>[] = [
+  const standardSchedule: Omit<DrawSchedule, 'amount' | 'completed' | 'cumulative'>[] = [
     { stage: "Land Purchase", percentage: 0, description: "Initial land acquisition" },
     { stage: "Foundation", percentage: 15, description: "Foundation and basement complete" },
     { stage: "Framing", percentage: 25, description: "Framing and roof structure complete" },
@@ -47,26 +52,25 @@ function calculateConstructionDraw({
     { stage: "Completion", percentage: 100, description: "Project complete, convert to permanent" }
   ];
   
-  // Calculate draw amounts
-  const drawSchedule: DrawSchedule[] = standardSchedule.map((draw, index) => ({
-    ...draw,
-    amount: (draw.percentage / 100) * loanAmount,
-    completed: false
-  }));
+  // Calculate draw amounts: incremental advance per stage + cumulative advanced
+  let prevPct = 0;
+  const drawSchedule: DrawSchedule[] = standardSchedule.map((draw, index) => {
+    const incremental = index === 0
+      ? landAdvance
+      : ((draw.percentage - prevPct) / 100) * constructionPortion;
+    if (index > 0) prevPct = draw.percentage;
+    return {
+      ...draw,
+      amount: incremental,
+      cumulative: landAdvance + (prevPct / 100) * constructionPortion,
+      completed: false
+    };
+  });
   
-  // Add land purchase amount to first draw if applicable
-  if (landValue > 0) {
-    drawSchedule[0].amount = Math.min(landValue, loanAmount);
-  }
-  
-  // Calculate interest costs
-  const monthlyRate = interestRate / 100 / 12;
-  let cumulativeInterest = 0;
-  let outstandingBalance = 0;
-  
-  // Simple interest calculation for construction loan
-  // Assumes draws happen evenly throughout construction period
-  const avgOutstandingBalance = loanAmount / 2;
+  // Simple interest, interest-only during construction:
+  // land advance outstanding for the full period; construction advances assumed
+  // evenly spread, so their average outstanding balance is ~50%.
+  const avgOutstandingBalance = landAdvance + constructionPortion / 2;
   const totalInterestCost = avgOutstandingBalance * (interestRate / 100) * (constructionPeriod / 12);
   
   // Calculate fees
@@ -77,8 +81,8 @@ function calculateConstructionDraw({
   const totalFees = appraisalFee + legalFees + inspectionFees + lenderFees;
   
   // Calculate LTV ratios
-  const loanToValue = (loanAmount / totalCost) * 100;
-  const loanToCost = (loanAmount / totalProjectCost) * 100;
+  // Loan-to-cost (land + construction). True LTV would use the as-complete appraised value.
+  const loanToValue = totalCost > 0 ? (loanAmount / totalCost) * 100 : 0;
   
   return {
     totalCost,
@@ -87,9 +91,9 @@ function calculateConstructionDraw({
     drawSchedule,
     totalInterestCost,
     totalFees,
-    monthlyInterestEstimate: totalInterestCost / constructionPeriod,
+    monthlyInterestEstimate: constructionPeriod > 0 ? totalInterestCost / constructionPeriod : 0,
     loanToValue,
-    loanToCost,
+    landAdvance,
     qualifies: loanToValue <= 80 && downPayment >= 0.20,
     constructionPeriod
   };
@@ -296,7 +300,7 @@ export default function ConstructionDrawCalculator() {
                     ${results.loanAmount.toLocaleString()}
                   </div>
                   <p className="text-sm text-gray-300">
-                    Total loan amount (LTV: {results.loanToValue.toFixed(1)}%)
+                    Total loan amount (loan-to-cost: {results.loanToValue.toFixed(1)}%)
                   </p>
                 </div>
 
@@ -329,20 +333,20 @@ export default function ConstructionDrawCalculator() {
                   <div className="space-y-3 text-sm">
                     <div className="flex justify-between">
                       <span className="text-gray-300">Total Interest Cost</span>
-                      <span className="font-semibold text-red-300">${results.totalInterestCost.toLocaleString()}</span>
+                      <span className="font-semibold text-red-300">${Math.round(results.totalInterestCost).toLocaleString()}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-300">Monthly Interest (avg)</span>
-                      <span className="font-semibold">${results.monthlyInterestEstimate.toLocaleString()}</span>
+                      <span className="font-semibold">${Math.round(results.monthlyInterestEstimate).toLocaleString()}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-300">Fees & Closing Costs</span>
-                      <span className="font-semibold">${results.totalFees.toLocaleString()}</span>
+                      <span className="font-semibold">${Math.round(results.totalFees).toLocaleString()}</span>
                     </div>
                     <div className="border-t border-white/20 pt-3 flex justify-between">
-                      <span className="text-gray-300">Total Project Cost</span>
+                      <span className="text-gray-300">All-in Cost (incl. interest &amp; fees)</span>
                       <span className="font-semibold text-gold-400">
-                        ${(results.totalCost + results.totalInterestCost + results.totalFees).toLocaleString()}
+                        ${Math.round(results.totalCost + results.totalInterestCost + results.totalFees).toLocaleString()}
                       </span>
                     </div>
                   </div>
@@ -380,6 +384,7 @@ export default function ConstructionDrawCalculator() {
                       <th className="text-left py-3 px-2">Stage</th>
                       <th className="text-right py-3 px-2">Progress</th>
                       <th className="text-right py-3 px-2">Draw Amount</th>
+                      <th className="text-right py-3 px-2">Total Advanced</th>
                       <th className="text-left py-3 px-4">Description</th>
                     </tr>
                   </thead>
@@ -406,7 +411,10 @@ export default function ConstructionDrawCalculator() {
                           {draw.percentage}%
                         </td>
                         <td className="py-4 px-2 text-right font-semibold text-gold-400">
-                          ${draw.amount.toLocaleString()}
+                          ${Math.round(draw.amount).toLocaleString()}
+                        </td>
+                        <td className="py-4 px-2 text-right">
+                          ${Math.round(draw.cumulative).toLocaleString()}
                         </td>
                         <td className="py-4 px-4 text-sm text-gray-300">
                           {draw.description}

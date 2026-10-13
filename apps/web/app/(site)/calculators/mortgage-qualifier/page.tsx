@@ -7,42 +7,26 @@ import { CalculatorSchema } from "@/components/SEO/CalculatorSchema";
 import { RelatedCalculators } from "@/components/calculators/RelatedCalculators";
 import { ValidatedInput, ValidatedSlider } from "@/components/ui/ValidatedInput";
 import { ComplianceBanner } from "@/components/ComplianceBanner";
-import { payment } from "@/lib/calc/payment";
-import { cmhcPremium, cmhcPremiumRate, stressTestRate, QUALIFYING_RATIOS } from "@/lib/calc/cmhc";
+import { payment, principalFromPayment } from "@/lib/calc/payment";
+import { cmhcPremium, cmhcPremiumRate, stressTestRate, QUALIFYING_RATIOS, minimumDownPayment, isInsurable, premiumPst, INSURED_PRICE_CAP } from "@/lib/calc/cmhc";
+import { landTransferTax as calcLandTransferTax } from "@/lib/calc/landTransferTax";
 import { CheckCircle, XCircle, DollarSign, TrendingDown, Info } from "lucide-react";
 import { BUSINESS } from "@/lib/seo/business-config";
 
-// Land transfer tax (simplified — BC/AB/ON)
-function landTransferTax(price: number, province: string, isFirstTime: boolean): number {
-  if (province === "AB") {
-    const fee = 50 + Math.ceil(price / 5000);
-    return isFirstTime ? 0 : Math.min(fee, 500);
-  }
-  if (province === "BC") {
-    let tax: number;
-    if (price <= 200000) tax = price * 0.01;
-    else if (price <= 2000000) tax = 2000 + (price - 200000) * 0.02;
-    else tax = 39800 + (price - 2000000) * 0.03;
-    if (isFirstTime && price <= 835000) return 0;
-    if (isFirstTime && price <= 860000) return tax * (1 - (price - 835000) / 25000);
-    return tax;
-  }
-  // Ontario
-  let tax: number;
-  if (price <= 55000) tax = price * 0.005;
-  else if (price <= 250000) tax = 275 + (price - 55000) * 0.01;
-  else if (price <= 400000) tax = 2225 + (price - 250000) * 0.015;
-  else if (price <= 2000000) tax = 4475 + (price - 400000) * 0.02;
-  else tax = 36475 + (price - 2000000) * 0.025;
-  if (isFirstTime) return Math.max(0, tax - 4475);
-  return tax;
+// Land transfer tax / Alberta land titles fees via the shared helper (BC FTHB exemption
+// capped at the first $500k, Ontario FTHB refund max $4,000, AB has no first-time exemption)
+function landTransferTax(price: number, province: string, isFirstTime: boolean, mortgageAmount: number): number {
+  const p = province === "AB" || province === "ON" ? province : "BC";
+  return calcLandTransferTax({ price, province: p, firstTime: isFirstTime, mortgageAmount }).total;
 }
 
-// Minimum down payment per Canadian rules
-function minDownPayment(price: number): number {
-  if (price <= 500000) return price * 0.05;
-  if (price <= 1000000) return 25000 + (price - 500000) * 0.10;
-  return price * 0.20; // $1M+ requires 20%
+// Minimum down payment per Canadian rules (tiered to $1.5M since Dec 15, 2024)
+const minDownPayment = minimumDownPayment;
+
+/** Insured (or conventional) loan needed to buy `price` with `down` dollars down. */
+function loanForPrice(price: number, down: number, amortYears: number): number {
+  const base = Math.max(0, price - down);
+  return down < price * 0.2 ? base + cmhcPremium(price, down, amortYears) : base;
 }
 
 export default function MortgageQualifierPage() {
@@ -73,7 +57,7 @@ export default function MortgageQualifierPage() {
   const baseLoan = Math.max(0, homePrice - downPayment);
   const downPct = homePrice > 0 ? (downPayment / homePrice) * 100 : 0;
   const needsInsurance = downPct < 20;
-  const cmhc = needsInsurance ? cmhcPremium(homePrice, downPayment) : 0;
+  const cmhc = needsInsurance ? cmhcPremium(homePrice, downPayment, amortization) : 0;
   const insuredLoan = baseLoan + cmhc;
   const qualRate = stressTestRate(interestRate);
   const monthlyPayment = payment({ principal: insuredLoan, annualRatePct: qualRate, amortYears: amortization, paymentsPerYear: 12 });
@@ -86,22 +70,38 @@ export default function MortgageQualifierPage() {
   const tds = (totalDebtMonthly * 12 / (safeIncome)) * 100;
   const gdsPass = gds <= QUALIFYING_RATIOS.GDS_MAX;
   const tdsPass = tds <= QUALIFYING_RATIOS.TDS_MAX;
-  const qualifies = gdsPass && tdsPass;
 
   const minDown = minDownPayment(homePrice);
-  const downPaymentOk = downPayment >= minDown;
-  const ltt = landTransferTax(homePrice, province, isFirstTime);
+  // Under 20% down the purchase must be insurable: minimum down payment met and price < $1.5M
+  const downPaymentOk = needsInsurance ? isInsurable(homePrice, downPayment) : true;
+  const qualifies = gdsPass && tdsPass && downPaymentOk;
+  const ltt = landTransferTax(homePrice, province, isFirstTime, insuredLoan);
   const closingCostsEst = homePrice * 0.015; // legal, inspection, etc
-  const totalCashNeeded = downPayment + ltt + closingCostsEst;
+  // Ontario charges 8% PST on the insurance premium; it can't be financed
+  const premiumTax = premiumPst(cmhc, province);
+  const totalCashNeeded = downPayment + ltt + closingCostsEst + premiumTax;
 
-  // Max purchase price (reverse-calc from TDS)
-  const maxHousingMonthly = (safeIncome / 12) * (QUALIFYING_RATIOS.TDS_MAX / 100) - monthlyDebts;
-  const maxPaymentMonthly = Math.max(0, maxHousingMonthly - monthlyPropertyTax - heatingMonthly - (condoFeesMonthly * 0.5));
-  const rMonthly = Math.pow(1 + qualRate / 200, 1 / 6) - 1;
-  const n = amortization * 12;
-  const maxInsuredLoan = maxPaymentMonthly > 0 && rMonthly > 0 ? maxPaymentMonthly * ((1 - Math.pow(1 + rMonthly, -n)) / rMonthly) : 0;
-  const maxDownBased = downPayment;
-  const maxPurchaseRough = maxInsuredLoan > 0 ? (maxInsuredLoan - (needsInsurance ? cmhcPremium(maxInsuredLoan + maxDownBased, maxDownBased) : 0)) + maxDownBased : 0;
+  // Max purchase price: largest price whose loan (incl. any premium) keeps BOTH GDS ≤ 39%
+  // and TDS ≤ 44% at the qualifying rate, and for which this down payment is still legal.
+  const nonMortgageHousing = monthlyPropertyTax + heatingMonthly + (condoFeesMonthly * 0.5);
+  const maxPaymentMonthly = Math.max(0, Math.min(
+    (safeIncome / 12) * (QUALIFYING_RATIOS.GDS_MAX / 100) - nonMortgageHousing,
+    (safeIncome / 12) * (QUALIFYING_RATIOS.TDS_MAX / 100) - monthlyDebts - nonMortgageHousing,
+  ));
+  const maxLoan = principalFromPayment({ monthlyPayment: maxPaymentMonthly, annualRatePct: qualRate, amortYears: amortization });
+  const priceIsFeasible = (p: number) =>
+    loanForPrice(p, downPayment, amortization) <= maxLoan &&
+    (downPayment >= p * 0.2 || isInsurable(p, downPayment));
+  let maxPurchaseRough = 0;
+  if (maxLoan > 0 && downPayment > 0 && priceIsFeasible(downPayment)) {
+    // Feasibility is monotonic in price, so bisect between the down payment and down + max loan
+    let lo = downPayment, hi = downPayment + maxLoan;
+    for (let i = 0; i < 60; i++) {
+      const mid = (lo + hi) / 2;
+      if (priceIsFeasible(mid)) lo = mid; else hi = mid;
+    }
+    maxPurchaseRough = lo;
+  }
 
   return (
     <>
@@ -143,13 +143,18 @@ export default function MortgageQualifierPage() {
               <div className="space-y-4 pt-4 border-t border-gray-700/50">
                 <div className="text-sm text-gold-400 uppercase tracking-wider font-medium">The Home</div>
                 <ValidatedInput label="Purchase Price" type="currency" value={homePrice} onChange={setHomePrice} validation={{ min: 50000, max: 10000000, message: "Enter the home's purchase price" }} />
-                <ValidatedInput label="Down Payment" type="currency" value={downPayment} onChange={setDownPayment} validation={{ min: 0, max: 10000000, message: "Enter your down payment" }} help={`Minimum required: $${Math.round(minDown).toLocaleString()} (${minDown < homePrice * 0.05 ? "5%" : minDown < homePrice * 0.2 ? "tiered" : "20%"})`} />
+                <ValidatedInput label="Down Payment" type="currency" value={downPayment} onChange={setDownPayment} validation={{ min: 0, max: 10000000, message: "Enter your down payment" }} help={`Minimum required: $${Math.round(minDown).toLocaleString()} (${homePrice >= INSURED_PRICE_CAP ? "20% — homes $1.5M+ can't be insured" : homePrice <= 500000 ? "5%" : "5% of first $500K + 10% above"})`} />
 
                 {downPayment < minDown && (
                   <div className="flex items-center gap-2 p-3 bg-red-950/40 border border-red-800/50 rounded-lg text-red-300 text-sm">
                     <XCircle className="w-4 h-4 flex-shrink-0" />
                     Down payment is below the legal minimum of ${Math.round(minDown).toLocaleString()}.
                   </div>
+                )}
+                {needsInsurance && amortization > 25 && (
+                  <p className="text-xs text-amber-300">
+                    30-year insured mortgages are only available to first-time buyers or for new builds; the premium includes a 0.20% surcharge.
+                  </p>
                 )}
 
                 <ValidatedSlider label="Interest Rate" value={interestRate} onChange={(v) => { setInterestRate(v); setHasUserEditedRate(true); }} min={0.5} max={10} step={0.01} formatValue={(v) => v.toFixed(2) + "%"} />
@@ -205,7 +210,9 @@ export default function MortgageQualifierPage() {
                     <div className="text-sm text-gray-400">
                       {qualifies
                         ? `Based on a ${qualRate.toFixed(2)}% qualifying rate and 39/44 GDS/TDS ratios.`
-                        : "See what needs to change below — it might be closer than you think."}
+                        : !downPaymentOk
+                          ? `Your down payment is below the minimum of $${Math.round(minDown).toLocaleString()} for this price.`
+                          : "See what needs to change below — it might be closer than you think."}
                     </div>
                   </div>
                 </div>
@@ -230,7 +237,7 @@ export default function MortgageQualifierPage() {
                   <div className="bg-gray-800/40 rounded-lg p-4">
                     <div className="text-xs text-gray-400 uppercase tracking-wider mb-1">CMHC Insurance</div>
                     <div className="text-xl font-bold text-gray-200">{needsInsurance ? `$${Math.round(cmhc).toLocaleString()}` : "$0"}</div>
-                    <div className="text-xs text-gray-500 mt-1">{needsInsurance ? `${(cmhcPremiumRate(downPct) * 100).toFixed(1)}% premium` : "20%+ down (conventional)"}</div>
+                    <div className="text-xs text-gray-500 mt-1">{needsInsurance ? `${(cmhcPremiumRate(downPct, amortization) * 100).toFixed(2)}% premium` : "20%+ down (conventional)"}</div>
                   </div>
                   <div className="bg-gray-800/40 rounded-lg p-4">
                     <div className="text-xs text-gray-400 uppercase tracking-wider mb-1">Total Mortgage</div>
@@ -267,7 +274,10 @@ export default function MortgageQualifierPage() {
                 <div className="text-sm text-gray-400 uppercase tracking-wider mb-3">Cash Needed at Closing</div>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between"><span className="text-gray-300">Down Payment</span><span className="text-gray-100">${Math.round(downPayment).toLocaleString()}</span></div>
-                  <div className="flex justify-between"><span className="text-gray-300">Land Transfer Tax {isFirstTime && ltt === 0 && "(exempt)"}</span><span className="text-gray-100">${Math.round(ltt).toLocaleString()}</span></div>
+                  <div className="flex justify-between"><span className="text-gray-300">{province === "AB" ? "Land Titles Fees (transfer + mortgage)" : "Land Transfer Tax"} {isFirstTime && ltt === 0 && "(exempt)"}</span><span className="text-gray-100">${Math.round(ltt).toLocaleString()}</span></div>
+                  {premiumTax > 0 && (
+                    <div className="flex justify-between"><span className="text-gray-300">PST on Insurance Premium (8%)</span><span className="text-gray-100">${Math.round(premiumTax).toLocaleString()}</span></div>
+                  )}
                   <div className="flex justify-between"><span className="text-gray-300">Legal, Inspection, etc.</span><span className="text-gray-100">${Math.round(closingCostsEst).toLocaleString()}</span></div>
                   <div className="flex justify-between pt-2 border-t border-gray-700/50 font-semibold"><span className="text-gray-200">Total Cash Needed</span><span className="text-gold-400">${Math.round(totalCashNeeded).toLocaleString()}</span></div>
                 </div>

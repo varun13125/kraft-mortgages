@@ -1,10 +1,26 @@
 // Next.js API route for serving static MLI microsite exports
 // This is used by the rewrites in next.config.mjs to serve /mli-select/:path* routes
 // All static assets from mli-select-complete/out are copied to public/mli-select during build
-import { join } from 'path';
+import { join, resolve, sep } from 'path';
 import { readFile } from 'fs/promises';
 import { stat } from 'fs/promises';
 import { NextResponse } from 'next/server';
+
+const MLI_ROOT = resolve(process.cwd(), 'public', 'mli-select');
+
+// SECURITY: reject path traversal. Catch-all params are URL-decoded, so a
+// segment like "..%2F..%2Fpackage.json" arrives as "../../package.json" and
+// join() would happily resolve it OUTSIDE public/mli-select (arbitrary file read).
+function resolveSafe(segments: string[]): string | null {
+  if (segments.some((seg) => seg.includes('\0') || seg.includes('..') || seg.includes('\\'))) {
+    return null;
+  }
+  const full = resolve(MLI_ROOT, ...segments);
+  if (full !== MLI_ROOT && !full.startsWith(MLI_ROOT + sep)) {
+    return null;
+  }
+  return full;
+}
 
 // MIME types for common files
 const MIME_TYPES: Record<string, string> = {
@@ -37,21 +53,19 @@ export async function GET(request: Request, { params }: { params: { path: string
   try {
     // Get the path segments and join them properly
     const pathSegments = params.path || [];
-    const filePath = pathSegments.join('/');
-    
+
     // Construct the full path to the file in public/mli-select
     // This serves files from apps/web/public/mli-select
-    const fullPath = join(process.cwd(), 'public', 'mli-select', filePath);
-    
-    console.log('[mli-proxy] Request for:', filePath);
-    console.log('[mli-proxy] Full path:', fullPath);
+    const fullPath = resolveSafe(pathSegments);
+    if (!fullPath) {
+      return new NextResponse('Not found', { status: 404 });
+    }
     
     // Check if file exists and get stats
     let fileStat;
     try {
       fileStat = await stat(fullPath);
     } catch (statError) {
-      console.log('[mli-proxy] File not found, trying index.html');
       // If file doesn't exist, try index.html (for directories)
       const indexPath = join(fullPath, 'index.html');
       try {
@@ -59,7 +73,6 @@ export async function GET(request: Request, { params }: { params: { path: string
         // Redirect to serve index.html
         return GET(request, { params: { path: [...pathSegments, 'index.html'] } });
       } catch (indexError) {
-        console.log('[mli-proxy] index.html not found either');
         return new NextResponse('File not found', { status: 404 });
       }
     }
@@ -72,7 +85,6 @@ export async function GET(request: Request, { params }: { params: { path: string
         // Redirect to serve index.html
         return GET(request, { params: { path: [...pathSegments, 'index.html'] } });
       } catch (indexError) {
-        console.log('[mli-proxy] Directory requested but no index.html found');
         return new NextResponse('Directory listing not available', { status: 404 });
       }
     }
@@ -81,9 +93,8 @@ export async function GET(request: Request, { params }: { params: { path: string
     const fileBuffer = await readFile(fullPath);
     const mimeType = getMimeType(fullPath);
     
-    console.log('[mli-proxy] Serving file with MIME type:', mimeType);
-    
-    return new NextResponse(fileBuffer, {
+
+return new NextResponse(fileBuffer, {
       status: 200,
       headers: {
         'Content-Type': mimeType,
@@ -95,7 +106,7 @@ export async function GET(request: Request, { params }: { params: { path: string
     console.error('[mli-proxy] Error serving file:', (error as Error)?.message || error);
     
     // Fallback: try to serve index.html for any error (this handles client-side routing)
-    if (params.path && params.path.length > 0) {
+    if (params.path && params.path.length > 0 && !(params.path.length === 1 && params.path[0] === 'index.html')) {
       return GET(request, { params: { path: ['index.html'] } });
     }
     

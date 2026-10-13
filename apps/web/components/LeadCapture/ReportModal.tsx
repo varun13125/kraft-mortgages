@@ -232,7 +232,7 @@ export function ReportModal({ isOpen, onClose, reportType, calculationData }: Re
 
                 <div className="mt-6 p-4 bg-blue-50 rounded-lg">
                   <p className="text-sm text-blue-900">
-                    <strong>What's next?</strong> A mortgage specialist will contact you within 24 hours to discuss your options.
+                    <strong>What&apos;s next?</strong> A mortgage specialist will contact you within 24 hours to discuss your options.
                   </p>
                 </div>
 

@@ -22,7 +22,7 @@ const pageRoutes: Record<string, { path: string; name: string; description: stri
         { path: '/commercial', name: 'Commercial Lending', description: 'Multi-family and commercial property financing' },
         { path: '/construction', name: 'Construction Financing', description: 'New build and renovation loans' },
         { path: '/private-lending', name: 'Private Lending', description: 'Alternative financing solutions' },
-        { path: '/self-employed', name: 'Self-Employed Mortgages', description: 'Mortgages for business owners' },
+        { path: '/calculators/self-employed', name: 'Self-Employed Mortgages', description: 'Mortgages for business owners' },
     ],
     info: [
         { path: '/about', name: 'About Us', description: 'Learn about Kraft Mortgages' },

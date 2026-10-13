@@ -13,83 +13,44 @@ async function initializeFirebase() {
 
 // Initialize Firebase Admin - completely lazy
 async function initializeAdmin() {
-  if (isInitialized || (admin && admin.apps.length > 0)) {
+  if (isInitialized) {
     return;
   }
 
+  // Shared credential parsing - same env vars as lib/firebaseAdmin.ts and lib/auth.ts
+  // (FIREBASE_SERVICE_ACCOUNT_JSON, FIREBASE_SERVICE_ACCOUNT, or the split
+  // FIREBASE_PROJECT_ID / FIREBASE_CLIENT_EMAIL / FIREBASE_PRIVATE_KEY vars).
+  const { getServiceAccountFromEnv } = await import('@/lib/firebaseAdmin');
+  const serviceAccount = getServiceAccountFromEnv();
+
   // Skip during build or if no credentials
-  if (!process.env.FIREBASE_SERVICE_ACCOUNT_JSON && !process.env.FIREBASE_PROJECT_ID) {
+  if (!serviceAccount) {
     console.log('No Firebase credentials found, skipping initialization');
     return;
   }
 
   await initializeFirebase();
 
-  let serviceAccount;
-
-  // Try using complete service account JSON first (recommended)
-  if (process.env.FIREBASE_SERVICE_ACCOUNT_JSON) {
-    try {
-      serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_JSON);
-      // Firebase Admin expects camelCase, but service account JSON uses snake_case
-      if (serviceAccount?.project_id && !serviceAccount?.projectId) {
-        serviceAccount.projectId = serviceAccount.project_id;
-      }
-    } catch (e) {
-      console.error('Failed to parse FIREBASE_SERVICE_ACCOUNT_JSON:', e);
-      return;
-    }
+  // Another module (lib/auth.ts / lib/firebaseAdmin.ts) may already have
+  // initialised the default app with the same credentials - reuse it instead
+  // of silently falling back to the mock store.
+  if (admin.apps.length > 0) {
+    isInitialized = true;
+    return;
   }
 
-  // Fallback to individual environment variables
-  if (!serviceAccount) {
-    const projectId = process.env.FIREBASE_PROJECT_ID;
-    const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
-    let privateKey = process.env.FIREBASE_PRIVATE_KEY;
-
-    // Skip initialization if required env vars are missing
-    if (!projectId || !clientEmail || !privateKey) {
-      return;
-    }
-
-    // Handle different private key formats
-    if (privateKey) {
-      // If it's base64 encoded, decode it
-      if (!privateKey.includes('BEGIN PRIVATE KEY')) {
-        try {
-          privateKey = Buffer.from(privateKey, 'base64').toString('utf-8');
-        } catch (e) {
-          console.log('Private key is not base64, using as-is');
-        }
-      }
-
-      // Replace literal \n with actual newlines
-      privateKey = privateKey.replace(/\\n/g, '\n');
-    }
-
-    serviceAccount = {
-      projectId,
-      clientEmail,
-      privateKey,
-    };
-  }
-
-  // Initialize admin
-  // Check for projectId in both camelCase and snake_case (Google's JSON uses snake_case)
-  const projectId = serviceAccount?.projectId || serviceAccount?.project_id;
-
-  if (serviceAccount && projectId) {
-    try {
-      admin.initializeApp({
-        credential: admin.credential.cert(serviceAccount),
-        projectId: projectId,
-      });
+  try {
+    admin.initializeApp({
+      credential: admin.credential.cert(serviceAccount),
+      projectId: serviceAccount.projectId,
+    });
+    isInitialized = true;
+  } catch (initError) {
+    if (admin.apps.length > 0) {
       isInitialized = true;
-    } catch (initError) {
+    } else {
       console.error('Firebase admin initialization error:', initError);
     }
-  } else {
-    // Missing serviceAccount or projectId - Firebase won't be available
   }
 }
 
@@ -197,59 +158,108 @@ export const nowTimestamp = async () => {
   return admin ? admin.firestore.Timestamp.now() : { toDate: () => new Date() };
 };
 
+// Firestore rejects `undefined` field values - strip them (shallow + inside plain objects/arrays).
+export function stripUndefined<T>(value: T): T {
+  if (Array.isArray(value)) {
+    return value.map((v) => stripUndefined(v)) as unknown as T;
+  }
+  if (value && typeof value === 'object' && Object.getPrototypeOf(value) === Object.prototype) {
+    const out: any = {};
+    for (const [k, v] of Object.entries(value as any)) {
+      if (v !== undefined) out[k] = stripUndefined(v);
+    }
+    return out;
+  }
+  return value;
+}
+
+// `steps` must be an array. Older runs may have been corrupted into a map
+// ({ "0": {...} }) by the previous dot-path update - normalise both shapes.
+function normalizeSteps(raw: any): any[] {
+  if (Array.isArray(raw)) return raw;
+  if (raw && typeof raw === 'object') {
+    return Object.keys(raw)
+      .filter((k) => /^\d+$/.test(k))
+      .sort((a, b) => Number(a) - Number(b))
+      .map((k) => raw[k]);
+  }
+  return [];
+}
+
+const toDateSafe = (v: any) => (v?.toDate ? v.toDate() : v instanceof Date ? v : v ? new Date(v) : undefined);
+
 // CRUD helpers
 export async function createRun(data: Omit<Run, 'id'>): Promise<string> {
-  const doc = await (await runsCol()).add({
+  const doc = await (await runsCol()).add(stripUndefined({
     ...data,
     startedAt: await nowTimestamp(),
-  });
+  }));
   return doc.id;
 }
 
 export async function getRun(runId: string): Promise<Run | null> {
   const doc = await (await runsCol()).doc(runId).get();
   if (!doc.exists) return null;
+  const data = doc.data() || {};
 
   return {
     id: doc.id,
-    ...doc.data(),
-    startedAt: doc.data()?.startedAt?.toDate(),
-    steps: doc.data()?.steps?.map((s: any) => ({
+    ...data,
+    startedAt: toDateSafe(data.startedAt),
+    steps: normalizeSteps(data.steps).map((s: any) => ({
       ...s,
-      startedAt: s.startedAt?.toDate(),
-      finishedAt: s.finishedAt?.toDate(),
-    })) || [],
+      startedAt: toDateSafe(s?.startedAt),
+      finishedAt: toDateSafe(s?.finishedAt),
+    })),
   } as Run;
 }
 
+/** Most recent runs (newest first). Uses the single-field startedAt index only. */
+export async function getRecentRuns(limit: number = 10): Promise<Run[]> {
+  const snap = await (await runsCol()).orderBy('startedAt', 'desc').limit(limit).get();
+  return (snap.docs || []).map((d: any) => {
+    const data = d.data() || {};
+    return { id: d.id, ...data, startedAt: toDateSafe(data.startedAt), steps: normalizeSteps(data.steps) } as Run;
+  });
+}
+
 export async function updateRun(runId: string, data: Partial<Run>): Promise<void> {
-  await (await runsCol()).doc(runId).update(data);
+  await (await runsCol()).doc(runId).update(stripUndefined(data));
 }
 
 export async function updateRunStep(runId: string, stepIndex: number, stepData: Partial<Step>): Promise<void> {
-  // Create update data, filtering out undefined values
-  const timestampData: any = {
+  // NOTE: Firestore cannot address array elements by index - the previous
+  // `update({ 'steps.N': ... })` replaced the whole `steps` array with a map
+  // (and dropped the step's `agent`), which broke getRun() on the next step.
+  // Read-modify-write the full array inside a transaction instead.
+  await initializeFirebase();
+  const toTs = (d?: Date) => (d && admin ? admin.firestore.Timestamp.fromDate(d) : d);
+
+  const patch: any = stripUndefined({
     ...stepData,
+    startedAt: toTs(stepData.startedAt),
+    finishedAt: toTs(stepData.finishedAt),
+  });
+
+  const ref = (await runsCol()).doc(runId);
+  const apply = (raw: any) => {
+    const steps = normalizeSteps(raw).map((s: any) => ({ ...s }));
+    steps[stepIndex] = { ...(steps[stepIndex] || {}), ...patch };
+    return steps;
   };
 
-  // Only add timestamp fields if they have values
-  if (stepData.startedAt) {
-    await initializeFirebase();
-    if (admin) {
-      timestampData.startedAt = admin.firestore.Timestamp.fromDate(stepData.startedAt);
-    }
+  const firestoreDb: any = await getDb();
+  if (typeof firestoreDb.runTransaction === 'function') {
+    await firestoreDb.runTransaction(async (tx: any) => {
+      const snap = await tx.get(ref);
+      if (!snap.exists) throw new Error(`Run ${runId} not found`);
+      tx.update(ref, { steps: apply(snap.data()?.steps) });
+    });
+  } else {
+    // Mock / build-time store
+    const snap = await ref.get();
+    await ref.update({ steps: apply(snap.data?.()?.steps) });
   }
-
-  if (stepData.finishedAt) {
-    await initializeFirebase();
-    if (admin) {
-      timestampData.finishedAt = admin.firestore.Timestamp.fromDate(stepData.finishedAt);
-    }
-  }
-
-  await (await runsCol()).doc(runId).update({
-    [`steps.${stepIndex}`]: timestampData,
-  });
 }
 
 export async function isAdmin(uid: string): Promise<boolean> {
@@ -263,26 +273,47 @@ export async function isAdmin(uid: string): Promise<boolean> {
   return doc.exists;
 }
 
-export async function savePost(post: Post): Promise<void> {
-  await initializeFirebase();
-  const timestampData = admin ? admin.firestore.Timestamp.fromDate(post.publishedAt) : post.publishedAt;
-
-  await (await postsCol()).doc(post.slug).set({
-    ...post,
-    publishedAt: timestampData,
-  });
+// Firestore does not support nested arrays (number[][]). Embedding vectors are
+// stored as an array of maps ({ v: number[] }) and decoded on read.
+export function encodeEmbeddings(embeddings: any): { v: number[] }[] | undefined {
+  const decoded = decodeEmbeddings(embeddings);
+  return decoded && decoded.length ? decoded.map((v) => ({ v })) : undefined;
 }
 
-export async function getPost(slug: string): Promise<Post | null> {
+export function decodeEmbeddings(raw: any): number[][] | undefined {
+  if (!Array.isArray(raw)) return undefined;
+  return raw
+    .map((item: any) => (Array.isArray(item) ? item : Array.isArray(item?.v) ? item.v : null))
+    .filter((v: any): v is number[] => Array.isArray(v));
+}
+
+export async function savePost(post: Post): Promise<void> {
+  await initializeFirebase();
+  const publishedAt = post.publishedAt instanceof Date && !isNaN(post.publishedAt.getTime()) ? post.publishedAt : new Date();
+  const timestampData = admin ? admin.firestore.Timestamp.fromDate(publishedAt) : publishedAt;
+
+  await (await postsCol()).doc(post.slug).set(stripUndefined({
+    ...post,
+    embeddings: encodeEmbeddings(post.embeddings),
+    publishedAt: timestampData,
+  }));
+}
+
+export async function getPost(slug: string, opts: { includeDrafts?: boolean } = {}): Promise<Post | null> {
   // FIRST: Try Firestore - API-ingested posts take priority
   try {
     const doc = await (await postsCol()).doc(slug).get();
     if (doc.exists) {
       const data = doc.data()!;
+      // Drafts (e.g. ingested with status: 'draft') must not be publicly readable
+      if (data.status === 'draft' && !opts.includeDrafts) {
+        return null;
+      }
       console.log(`[getPost] Found post in Firestore: ${slug}`);
       return {
         ...data,
         publishedAt: data.publishedAt?.toDate(),
+        embeddings: decodeEmbeddings(data.embeddings),
       } as Post;
     }
   } catch (error) {
@@ -2441,7 +2472,7 @@ A contractor assumed his $900,000 calculator result was solid. His actual pre-ap
   return null;
 }
 
-export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
+export async function getRecentPosts(limit: number = 20, opts: { includeDrafts?: boolean } = {}): Promise<Post[]> {
   // Full blog content for the mock post
   const fullBlogContent = `<h1>Beyond the Big Banks: How We Get Complex Files Approved Post-Stress Test</h1>
 
@@ -3118,13 +3149,20 @@ export async function getRecentPosts(limit: number = 20): Promise<Post[]> {
       .limit(200) // Get more to ensure comprehensive results
       .get();
 
-    const firestorePosts = snapshot.docs.map((doc: any) => ({
+    const allFirestorePosts = snapshot.docs.map((doc: any) => ({
       ...doc.data(),
       publishedAt: (() => { const p = doc.data().publishedAt; return p?.toDate ? p.toDate() : (p ? new Date(p) : null); })(),
+      embeddings: decodeEmbeddings(doc.data().embeddings),
     })) as Post[];
 
-    // Track which slugs are in Firestore (these take priority)
-    const firestoreSlugs = new Set(firestorePosts.map(p => p.slug));
+    // Track which slugs are in Firestore (these take priority - a Firestore
+    // draft also suppresses a hardcoded post with the same slug)
+    const firestoreSlugs = new Set(allFirestorePosts.map(p => p.slug));
+
+    // Drafts are excluded from public listings unless explicitly requested
+    const firestorePosts = opts.includeDrafts
+      ? allFirestorePosts
+      : allFirestorePosts.filter(p => p.status !== 'draft');
     console.log(`[getRecentPosts] Found ${firestorePosts.length} posts in Firestore`);
 
     // Collect all mock posts

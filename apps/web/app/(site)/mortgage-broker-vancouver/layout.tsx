@@ -1,5 +1,7 @@
 import { Metadata } from 'next';
 import { CityServiceJsonLd } from '@/components/SEO/CityServiceJsonLd';
+import Footer from '@/components/Footer';
+import { OG_DEFAULTS } from '@/lib/seo/og';
 
 export const metadata: Metadata = {
   title: 'Vancouver Mortgage Broker | Best Rates | Kraft Mortgages',
@@ -9,6 +11,7 @@ export const metadata: Metadata = {
     canonical: 'https://www.kraftmortgages.ca/mortgage-broker-vancouver',
   },
   openGraph: {
+    ...OG_DEFAULTS,
     title: 'Vancouver Mortgage Broker | Kraft Mortgages Canada',
     description: 'Trusted Vancouver mortgage broker with 18+ Years Combined Experience. Free pre-approval in 24 hours.',
     url: 'https://www.kraftmortgages.ca/mortgage-broker-vancouver',
@@ -21,6 +24,7 @@ export default function VancouverLayout({ children }: { children: React.ReactNod
     <>
       <CityServiceJsonLd cityName="Vancouver" provinceName="BC" description="Licensed mortgage broker serving Vancouver, BC. Residential, construction, self-employed, MLI Select, and private lending solutions." />
       {children}
+      <Footer />
     </>
   );
 }

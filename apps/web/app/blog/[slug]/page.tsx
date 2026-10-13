@@ -1,11 +1,35 @@
 import { Metadata } from 'next';
 export const dynamic = 'force-dynamic';
+import { cache } from 'react';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
+import Footer from '@/components/Footer';
+import { BUSINESS } from '@/lib/seo/business-config';
+import { ORG_ID } from '@/lib/seo/jsonld';
 import { Calendar, User, ArrowLeft, Clock, Tag } from 'lucide-react';
-import { getPost as getFsPost } from '@/lib/db/firestore';
+import { getPost } from '@/lib/db/firestore';
 import Navigation from '@/components/Navigation';
 import { processPostContent, decodeHtmlEntities } from '@/lib/utils/blog-content';
+
+// generateMetadata and the page both load the post; cache() dedupes the Firestore
+// read within a single request (fetch() is deduped automatically, Firestore isn't).
+const getFsPost = cache(getPost);
+
+const SITE_URL = 'https://www.kraftmortgages.ca';
+
+/** Make root-relative image paths absolute (OG/schema images must be absolute URLs). */
+function absoluteUrl(url: string): string {
+  if (!url) return url;
+  if (/^https?:\/\//i.test(url)) return url;
+  return SITE_URL + (url.startsWith('/') ? url : '/' + url);
+}
+
+/** Firestore returns camelCase Date fields; legacy Google-Sheets rows used lowercase strings. */
+function toIso(value: unknown): string | null {
+  if (!value) return null;
+  const d = value instanceof Date ? value : new Date(value as any);
+  return Number.isNaN(d.getTime()) ? null : d.toISOString();
+}
 
 // Auto-categorize based on content analysis (same logic as blog listing)
 function autoCategories(title: string, content: string): string[] {
@@ -51,7 +75,10 @@ function transformGoogleSheetsPost(post: any) {
 
   // Parse JSON strings if they exist
   const tags = post.tags ? (typeof post.tags === 'string' ? JSON.parse(post.tags || '[]') : post.tags) : [];
-  const content = post.markdown || post.content || '';
+  // Prefer rendered HTML when present: the publishing pipeline stores raw markdown in
+  // `markdown` and the converted HTML in `html`. Rendering `markdown` first showed
+  // unformatted markdown on pipeline-published posts.
+  const content = post.html || post.markdown || post.content || '';
 
   // Parse existing categories or auto-generate from content
   let categories: string[] = [];
@@ -74,8 +101,10 @@ function transformGoogleSheetsPost(post: any) {
     excerpt: decodedExcerpt,
     author: post.author?.name || post.author || 'Varun Chaudhry',
     authorEmail: post.authoremail || 'varun@kraftmortgages.ca',
-    publishedAt: post.publishedat || new Date().toISOString(),
-    updatedAt: post.updatedat || post.publishedat || new Date().toISOString(),
+    // Bug fix: Firestore posts carry `publishedAt` (camelCase Date); reading only the
+    // legacy lowercase `publishedat` made every post show today's date (UI, OG, schema).
+    publishedAt: toIso(post.publishedAt) || toIso(post.publishedat) || new Date().toISOString(),
+    updatedAt: toIso(post.updatedAt) || toIso(post.updatedat) || toIso(post.publishedAt) || toIso(post.publishedat) || new Date().toISOString(),
     status: post.status || 'published',
     featured: post.featured === 'true' || post.featured === true,
     categories,
@@ -84,7 +113,8 @@ function transformGoogleSheetsPost(post: any) {
       title: decodeHtmlEntities(post.seotitle || post.title || ''),
       description: decodeHtmlEntities(post.seodescription || post.excerpt || post.metaDescription || ''),
       keywords: post.seokeywords ? (typeof post.seokeywords === 'string' ? post.seokeywords.split(',').map((k: string) => k.trim()) : post.seokeywords) : tags,
-      ogImage: post.seoimage || '/images/blog-default.jpg',
+      // /images/blog-default.jpg never existed in /public — fall back to the site OG image.
+      ogImage: absoluteUrl(post.seoimage || post.featuredImage || BUSINESS.ogImageUrl),
       canonicalUrl: post.seocanonicalurl || `https://www.kraftmortgages.ca/blog/${post.slug}`
     },
     readingTime: parseInt(post.readingtime) || Math.ceil(content.length / 1000),
@@ -105,6 +135,8 @@ export async function generateMetadata(
   }
 
   return {
+    // Drafts stay viewable (admin preview links here) but must not be indexed.
+    ...(post.status === 'draft' ? { robots: { index: false, follow: false } } : {}),
     title: post.seo.title || `${post.title} | Kraft Mortgages`,
     description: post.seo.description,
     keywords: post.seo.keywords.join(', '),
@@ -170,18 +202,20 @@ export default async function BlogPostPage({
             image: post.seo.ogImage,
             author: {
               '@type': 'Person',
-              name: 'Varun Chaudhry',
+              name: typeof post.author === 'string' ? post.author : 'Varun Chaudhry',
               url: 'https://www.kraftmortgages.ca/about',
               jobTitle: 'Licensed Mortgage Broker',
-              honorificPrefix: 'BCFSA #SR220230 | RECA LIC-00655428 | FSRA #12918',
-              email: 'varun@kraftmortgages.ca',
+              // (licence numbers were stuffed into honorificPrefix — wrong property)
+              worksFor: { '@id': ORG_ID },
             },
+            // Reference the single org node from app/layout.tsx; logo URL was non-www (redirect).
             publisher: {
               '@type': 'Organization',
-              name: 'Kraft Mortgages',
+              '@id': ORG_ID,
+              name: BUSINESS.name,
               logo: {
                 '@type': 'ImageObject',
-                url: 'https://kraftmortgages.ca/kraft-logo.png',
+                url: BUSINESS.logoUrl,
               },
             },
             datePublished: post.publishedAt,
@@ -355,6 +389,7 @@ export default async function BlogPostPage({
           </div>
         </section>
       </div>
+      <Footer />
     </>
   );
 }

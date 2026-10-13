@@ -1,4 +1,5 @@
-"use client";
+// Server Component: this page has no client-side interactivity, so it no longer
+// ships as a client bundle ("use client" removed in the 2026-10 audit).
 import Navigation from "@/components/Navigation";
 import Link from "next/link";
 import { MapPin, Phone, Building, Users, Briefcase, Home } from "lucide-react";
@@ -16,10 +17,10 @@ export default function LethbridgePage() {
                             Lethbridge, Alberta
                         </div>
                         <h1 className="text-4xl md:text-6xl font-bold mb-6 text-white">
-                            Lethbridge's Premier Mortgage Brokerage
+                            Lethbridge&apos;s Premier Mortgage Brokerage
                         </h1>
                         <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-8">
-                            Southern Alberta's largest city combines small-town affordability with big-city amenities. Kraft Mortgages helps Lethbridge buyers — from university students to ranching families — find the right mortgage at the right price.
+                            Southern Alberta&apos;s largest city combines small-town affordability with big-city amenities. Kraft Mortgages helps Lethbridge buyers — from university students to ranching families — find the right mortgage at the right price.
                         </p>
                         <Link
                             href="/contact"
@@ -42,7 +43,7 @@ export default function LethbridgePage() {
                             </div>
                             <div className="bg-white/5 rounded-2xl p-6 border border-white/10">
                                 <Users className="w-10 h-10 text-gold-400 mb-4" />
-                                <h3 className="text-xl font-bold mb-3">Southern Alberta's Anchor</h3>
+                                <h3 className="text-xl font-bold mb-3">Southern Alberta&apos;s Anchor</h3>
                                 <p className="text-gray-400">With a population exceeding 105,000 and the University of Lethbridge driving a steady influx of students and staff, Lethbridge is the economic and cultural centre of southern Alberta. Agriculture, healthcare, and education form a diversified employment base.</p>
                             </div>
                         </div>
@@ -57,12 +58,12 @@ export default function LethbridgePage() {
                             <div className="bg-white/5 rounded-2xl p-6 border border-white/10">
                                 <Briefcase className="w-10 h-10 text-gold-400 mb-4" />
                                 <h3 className="text-xl font-bold mb-3">Self-Employed Mortgages</h3>
-                                <p className="text-gray-400">Southern Alberta's agricultural and small business economy means many buyers have income that does not fit standard T4 categories. We work with lenders offering stated income, bank statement, and alternative qualification programs.</p>
+                                <p className="text-gray-400">Southern Alberta&apos;s agricultural and small business economy means many buyers have income that does not fit standard T4 categories. We work with lenders offering stated income, bank statement, and alternative qualification programs.</p>
                             </div>
                             <div className="bg-white/5 rounded-2xl p-6 border border-white/10">
                                 <Building className="w-10 h-10 text-gold-400 mb-4" />
                                 <h3 className="text-xl font-bold mb-3">Rural & Acreage Financing</h3>
-                                <p className="text-gray-400">Surrounded by some of Canada's most productive farmland, Lethbridge buyers often seek rural properties. We arrange financing for acreages, hobby farms, and agricultural properties through specialized lenders who understand rural Alberta.</p>
+                                <p className="text-gray-400">Surrounded by some of Canada&apos;s most productive farmland, Lethbridge buyers often seek rural properties. We arrange financing for acreages, hobby farms, and agricultural properties through specialized lenders who understand rural Alberta.</p>
                             </div>
                             <div className="bg-white/5 rounded-2xl p-6 border border-white/10">
                                 <Users className="w-10 h-10 text-gold-400 mb-4" />

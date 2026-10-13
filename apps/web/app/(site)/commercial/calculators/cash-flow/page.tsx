@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
 import { Building, TrendingUp, Calculator, DollarSign, AlertTriangle, CheckCircle, PieChart } from "lucide-react";
 import Link from "next/link";
+import { payment } from "@/lib/calc/payment";
 
 export default function CommercialCashFlowCalculator() {
   const [purchasePrice, setPurchasePrice] = useState(2500000);
@@ -17,15 +18,16 @@ export default function CommercialCashFlowCalculator() {
   const [insurance, setInsurance] = useState(12000);
   const [maintenance, setMaintenance] = useState(15000);
 
-  // Calculated values
-  const loanAmount = purchasePrice - downPayment;
-  const downPaymentPercent = (downPayment / purchasePrice) * 100;
+  // Calculated values (guard against empty/zero/negative inputs)
+  const loanAmount = Math.max(0, purchasePrice - downPayment);
+  const downPaymentPercent = purchasePrice > 0 ? (downPayment / purchasePrice) * 100 : 0;
 
-  // Monthly mortgage payment calculation
-  const monthlyRate = interestRate / 100 / 12;
-  const numPayments = amortization * 12;
-  const monthlyPayment = (loanAmount * monthlyRate * Math.pow(1 + monthlyRate, numPayments)) / 
-                        (Math.pow(1 + monthlyRate, numPayments) - 1);
+  // Monthly mortgage payment — Canadian semi-annual compounding (same helper as the
+  // residential calculators and the AI investment tool). Some commercial lenders
+  // compound monthly; that would raise the payment slightly.
+  const monthlyPayment = loanAmount > 0
+    ? payment({ principal: loanAmount, annualRatePct: Math.max(0, interestRate), amortYears: amortization, paymentsPerYear: 12 })
+    : 0;
 
   // Annual cash flow analysis
   const effectiveGrossIncome = grossRent * (1 - vacancy / 100);
@@ -36,10 +38,11 @@ export default function CommercialCashFlowCalculator() {
   const monthlyBeforeTaxCashFlow = beforeTaxCashFlow / 12;
 
   // Key ratios
-  const dscr = netOperatingIncome / annualDebtService; // Debt Service Coverage Ratio
-  const capRate = (netOperatingIncome / purchasePrice) * 100; // Capitalization Rate
-  const cashOnCashReturn = (beforeTaxCashFlow / downPayment) * 100; // Cash-on-Cash Return
-  const loanToValue = (loanAmount / purchasePrice) * 100; // Loan-to-Value Ratio
+  const dscr = annualDebtService > 0 ? netOperatingIncome / annualDebtService : 0; // Debt Service Coverage Ratio
+  const capRate = purchasePrice > 0 ? (netOperatingIncome / purchasePrice) * 100 : 0; // Capitalization Rate
+  // Cash-on-cash = pre-tax cash flow / cash invested (down payment only; excludes closing costs)
+  const cashOnCashReturn = downPayment > 0 ? (beforeTaxCashFlow / downPayment) * 100 : 0;
+  const loanToValue = purchasePrice > 0 ? (loanAmount / purchasePrice) * 100 : 0; // Loan-to-Value Ratio
 
   // Qualification assessment
   const dscrGood = dscr >= 1.25;
@@ -272,11 +275,11 @@ export default function CommercialCashFlowCalculator() {
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-400">Less: Vacancy ({vacancy}%):</span>
-                      <span className="text-red-400">-${(grossRent * vacancy / 100).toLocaleString()}</span>
+                      <span className="text-red-400">-${Math.round(grossRent * vacancy / 100).toLocaleString()}</span>
                     </div>
                     <div className="flex justify-between border-t border-gray-700 pt-2">
                       <span className="text-gray-400">Effective Gross Income:</span>
-                      <span className="text-white font-semibold">${effectiveGrossIncome.toLocaleString()}</span>
+                      <span className="text-white font-semibold">${Math.round(effectiveGrossIncome).toLocaleString()}</span>
                     </div>
                     
                     <div className="mt-3 space-y-1">
@@ -300,18 +303,18 @@ export default function CommercialCashFlowCalculator() {
                     
                     <div className="flex justify-between border-t border-gray-700 pt-2">
                       <span className="text-gray-400">Net Operating Income:</span>
-                      <span className="text-purple-400 font-semibold">${netOperatingIncome.toLocaleString()}</span>
+                      <span className="text-purple-400 font-semibold">${Math.round(netOperatingIncome).toLocaleString()}</span>
                     </div>
                     
                     <div className="flex justify-between">
                       <span className="text-gray-400">Debt Service:</span>
-                      <span className="text-red-400">-${annualDebtService.toLocaleString()}</span>
+                      <span className="text-red-400">-${Math.round(annualDebtService).toLocaleString()}</span>
                     </div>
                     
                     <div className="flex justify-between border-t border-gray-700 pt-2">
                       <span className="text-gray-400">Before-Tax Cash Flow:</span>
                       <span className={`font-semibold ${beforeTaxCashFlow >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-                        ${beforeTaxCashFlow.toLocaleString()}
+                        ${Math.round(beforeTaxCashFlow).toLocaleString()}
                       </span>
                     </div>
                   </div>
@@ -331,7 +334,7 @@ export default function CommercialCashFlowCalculator() {
                       <div className="text-sm text-gray-400">
                         {goodInvestment 
                           ? `DSCR: ${dscr.toFixed(2)}, Cap Rate: ${capRate.toFixed(2)}%, Positive Cash Flow`
-                          : `Review: DSCR ${dscr < 1.25 ? 'low' : 'good'}, Cash Flow ${beforeTaxCashFlow < 0 ? 'negative' : 'positive'}`
+                          : `Review: DSCR ${dscr < 1.25 ? 'low' : 'good'}, Cap Rate ${capRate < 6 ? 'below 6%' : 'good'}, Cash Flow ${beforeTaxCashFlow < 0 ? 'negative' : 'positive'}`
                         }
                       </div>
                     </div>
@@ -360,6 +363,10 @@ export default function CommercialCashFlowCalculator() {
                 </div>
                 <div className="text-sm text-gray-400 mt-3">
                   Professional valuation and environmental assessments required for all commercial financing.
+                </div>
+                <div className="text-xs text-gray-500 mt-2">
+                  Estimates only. Payments assume Canadian semi-annual compounding; NOI excludes debt service, depreciation and capital
+                  expenditures. Lender DSCR/LTV thresholds vary (CMHC-insured multi-unit residential uses 1.10x). Not a commitment to lend.
                 </div>
               </div>
 

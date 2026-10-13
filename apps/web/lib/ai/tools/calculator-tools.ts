@@ -4,6 +4,34 @@
  */
 
 import { MortgageTool } from './types';
+import { payment, principalFromPayment } from '@/lib/calc/payment';
+import { stressTestRate } from '@/lib/calc/affordability';
+import { cmhcPremiumRate, minimumDownPayment, INSURED_PRICE_CAP } from '@/lib/calc/cmhc';
+
+/**
+ * Largest purchase price supported by a given down payment and a maximum
+ * (qualifying) mortgage, honouring Canadian minimum down payment rules and
+ * adding the CMHC premium to the loan when down payment is under 20%.
+ * Feasibility is monotonic in price, so a bisection search is exact enough.
+ */
+function maxPriceFor(downPayment: number, maxMortgage: number, amortYears = 25): number {
+    if (!(downPayment > 0)) return 0;
+    const feasible = (price: number) => {
+        if (downPayment < minimumDownPayment(price)) return false;
+        const downPct = (downPayment / price) * 100;
+        const insured = downPct < 20 && price < INSURED_PRICE_CAP;
+        const loan = Math.max(0, price - downPayment) * (1 + (insured ? cmhcPremiumRate(downPct, amortYears) : 0));
+        return loan <= maxMortgage;
+    };
+    let lo = downPayment;
+    let hi = downPayment + Math.max(0, maxMortgage) + 1;
+    if (!feasible(lo)) return 0;
+    for (let i = 0; i < 60; i++) {
+        const mid = (lo + hi) / 2;
+        if (feasible(mid)) lo = mid; else hi = mid;
+    }
+    return lo;
+}
 
 export class CalculatorTools {
     private static instance: CalculatorTools;
@@ -24,7 +52,7 @@ export class CalculatorTools {
         warning?: string;
     } {
         const { noi, marketValue } = params;
-        const capRate = (noi / marketValue) * 100;
+        const capRate = marketValue > 0 ? (noi / marketValue) * 100 : 0;
 
         let warning: string | undefined;
         if (capRate < 3) {
@@ -60,7 +88,7 @@ export class CalculatorTools {
         const vacancyLoss = grossPotentialIncome * (vacancyRate / 100);
         const effectiveGrossIncome = grossPotentialIncome - vacancyLoss;
         const noi = effectiveGrossIncome - expenses;
-        const expenseRatio = (expenses / effectiveGrossIncome) * 100;
+        const expenseRatio = effectiveGrossIncome > 0 ? (expenses / effectiveGrossIncome) * 100 : 0;
 
         return {
             noi,
@@ -95,10 +123,11 @@ Expense Ratio: ${expenseRatio.toFixed(1)}%`,
     } {
         const { principal, rate, amortizationYears } = params;
 
-        const monthlyRate = rate / 100 / 12;
         const numPayments = amortizationYears * 12;
 
-        const monthlyPayment = principal * (monthlyRate * Math.pow(1 + monthlyRate, numPayments)) / (Math.pow(1 + monthlyRate, numPayments) - 1);
+        // Canadian semi-annual compounding — same helper as /calculators/payment
+        // ($500,000 @ 5% / 25 yrs = $2,908.02, not the US-style $2,922.95).
+        const monthlyPayment = payment({ principal, annualRatePct: rate, amortYears: amortizationYears, paymentsPerYear: 12 });
         const totalCost = monthlyPayment * numPayments;
         const totalInterest = totalCost - principal;
 
@@ -114,8 +143,10 @@ Expense Ratio: ${expenseRatio.toFixed(1)}%`,
 | Interest Rate | ${rate}% |
 | Amortization | ${amortizationYears} years |
 | Monthly Payment | $${monthlyPayment.toFixed(2)} |
-| Total Interest | $${totalInterest.toLocaleString()} |
-| Total Cost | $${totalCost.toLocaleString()} |`,
+| Total Interest | $${Math.round(totalInterest).toLocaleString()} |
+| Total Cost | $${Math.round(totalCost).toLocaleString()} |
+
+*Canadian semi-annual compounding; assumes the rate stays the same for the full amortization.*`,
         };
     }
 
@@ -134,41 +165,46 @@ Expense Ratio: ${expenseRatio.toFixed(1)}%`,
         formatted: string;
     } {
         const { annualIncome, downPayment, monthlyDebts = 0, rate = 5.5 } = params;
+        // Optional annual property tax / heating (not in the original signature) — same
+        // defaults as /calculators/affordability so GDS isn't overstated.
+        const extra = params as typeof params & { propertyTax?: number; heating?: number };
+        const propertyTax = extra.propertyTax ?? 3000;
+        const heating = extra.heating ?? 1200;
 
-        // GDS limit is 39%, TDS limit is 44%
+        // GDS limit is 39%, TDS limit is 44% (housing = P&I at qualifying rate + tax + heat)
         const monthlyIncome = annualIncome / 12;
-        const maxHousingCost = monthlyIncome * 0.39;
-        const maxTotalDebt = monthlyIncome * 0.44;
+        const taxAndHeatMonthly = (propertyTax + heating) / 12;
+        const maxHousingCost = monthlyIncome * 0.39 - taxAndHeatMonthly;
+        const maxTotalDebt = monthlyIncome * 0.44 - taxAndHeatMonthly - monthlyDebts;
 
-        // Available for mortgage payment (after debts)
-        const availableForMortgage = Math.min(maxHousingCost, maxTotalDebt - monthlyDebts);
+        // Available for mortgage P&I
+        const availableForMortgage = Math.max(0, Math.min(maxHousingCost, maxTotalDebt));
 
-        // Convert to mortgage amount (25 year amortization, stress test rate +2%)
-        const stressTestRate = (rate + 2) / 100 / 12;
-        const numPayments = 25 * 12;
+        // OSFI stress test: qualify at max(contract + 2%, 5.25%), 25-yr amortization,
+        // Canadian semi-annual compounding.
+        const qualRate = stressTestRate(rate);
+        const maxMortgage = principalFromPayment({ monthlyPayment: availableForMortgage, annualRatePct: qualRate, amortYears: 25 });
+        // Respect minimum down payment rules and CMHC premium (added to the loan) when < 20% down
+        const maxPurchasePrice = maxPriceFor(downPayment, maxMortgage, 25);
 
-        const maxMortgage = availableForMortgage * (Math.pow(1 + stressTestRate, numPayments) - 1) / (stressTestRate * Math.pow(1 + stressTestRate, numPayments));
-        const maxPurchasePrice = maxMortgage + downPayment;
-
-        // Actual monthly payment at contract rate
-        const monthlyRate = rate / 100 / 12;
-        const monthlyPayment = maxMortgage * (monthlyRate * Math.pow(1 + monthlyRate, numPayments)) / (Math.pow(1 + monthlyRate, numPayments) - 1);
+        // Actual monthly payment at the contract rate on the qualifying mortgage
+        const monthlyPayment = payment({ principal: maxMortgage, annualRatePct: rate, amortYears: 25, paymentsPerYear: 12 });
 
         return {
             maxMortgage: Math.round(maxMortgage),
             maxPurchasePrice: Math.round(maxPurchasePrice),
             monthlyPayment: Math.round(monthlyPayment),
-            formatted: `**You could afford a home up to ~$${Math.round(maxPurchasePrice / 1000) * 1000 / 1000}K**
+            formatted: `**You could afford a home up to ~$${Math.round(maxPurchasePrice / 1000).toLocaleString()}K**
 
 | Calculation | Amount |
 |-------------|--------|
 | Annual Income | $${annualIncome.toLocaleString()} |
 | Down Payment | $${downPayment.toLocaleString()} |
-| Max Mortgage | ~$${Math.round(maxMortgage).toLocaleString()} |
+| Max Mortgage (qualifying) | ~$${Math.round(maxMortgage).toLocaleString()} |
 | Max Purchase Price | ~$${Math.round(maxPurchasePrice).toLocaleString()} |
 | Estimated Monthly Payment | ~$${Math.round(monthlyPayment).toLocaleString()} |
 
-*Based on ${rate}% rate, 25-year amortization, stress tested at ${rate + 2}%*`,
+*Based on ${rate}% rate, 25-year amortization, stress tested at ${qualRate.toFixed(2)}% (greater of rate + 2% or 5.25%), GDS 39% / TDS 44% including $${propertyTax.toLocaleString()}/yr property tax and $${heating.toLocaleString()}/yr heating. Max price honours minimum down payment rules and adds the CMHC premium to the loan when down payment is under 20%.*`,
         };
     }
 
@@ -189,17 +225,30 @@ Expense Ratio: ${expenseRatio.toFixed(1)}%`,
         formatted: string;
         recommendation: string;
     } {
-        const { currentBalance, currentRate, newRate, remainingTermMonths, penaltyAmount, closingCosts = 2500 } = params;
+        const { currentBalance, currentRate, newRate, remainingTermMonths, penaltyAmount, closingCosts = 2350 } = params; // legal $1,500 + appraisal $500 + discharge $350, as on the web calculator
+        // Optional (not in the original signature): amortizations for a payment-based comparison,
+        // matching /commercial/calculators/refinance.
+        const extra = params as typeof params & { remainingAmortizationYears?: number; newAmortizationYears?: number };
 
-        // Calculate 3-month interest penalty if not provided
+        // Penalty if not provided: higher of 3 months' interest or an IRD approximation
+        // (rate differential × remaining term) — same default as the web refinance calculator.
         const threeMonthPenalty = currentBalance * (currentRate / 100 / 12) * 3;
-        const penalty = penaltyAmount ?? threeMonthPenalty;
+        const irdPenalty = currentBalance * (Math.max(0, currentRate - newRate) / 100 / 12) * Math.max(0, remainingTermMonths);
+        const penalty = penaltyAmount ?? Math.max(threeMonthPenalty, irdPenalty);
 
         const totalCosts = penalty + closingCosts;
 
-        // Current monthly payment (simplified)
-        const currentMonthly = currentBalance * (currentRate / 100 / 12);
-        const newMonthly = currentBalance * (newRate / 100 / 12);
+        // Monthly savings: payment difference (semi-annual compounding) when amortizations are
+        // known; otherwise the first-month interest difference on the balance.
+        let currentMonthly: number;
+        let newMonthly: number;
+        if (extra.remainingAmortizationYears && extra.remainingAmortizationYears > 0) {
+            currentMonthly = payment({ principal: currentBalance, annualRatePct: currentRate, amortYears: extra.remainingAmortizationYears, paymentsPerYear: 12 });
+            newMonthly = payment({ principal: currentBalance, annualRatePct: newRate, amortYears: extra.newAmortizationYears || extra.remainingAmortizationYears, paymentsPerYear: 12 });
+        } else {
+            currentMonthly = currentBalance * (currentRate / 100 / 12);
+            newMonthly = currentBalance * (newRate / 100 / 12);
+        }
         const monthlySavings = currentMonthly - newMonthly;
 
         const breakEvenMonths = monthlySavings > 0 ? Math.ceil(totalCosts / monthlySavings) : Infinity;
@@ -222,6 +271,7 @@ Expense Ratio: ${expenseRatio.toFixed(1)}%`,
 | Current Rate | ${currentRate}% |
 | New Rate | ${newRate}% |
 | Monthly Savings | $${Math.round(monthlySavings).toLocaleString()} |
+| Penalty${penaltyAmount === undefined ? ' (est., higher of 3-month interest / IRD)' : ''} | $${Math.round(penalty).toLocaleString()} |
 | Total Costs | $${Math.round(totalCosts).toLocaleString()} |
 | Break-Even | ${breakEvenMonths === Infinity ? 'N/A' : breakEvenMonths + ' months'} |
 | 5-Year Net Savings | $${Math.round(fiveYearSavings).toLocaleString()} |

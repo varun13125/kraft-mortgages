@@ -1,4 +1,5 @@
-"use client";
+// Server Component: this page has no client-side interactivity, so it no longer
+// ships as a client bundle ("use client" removed in the 2026-10 audit).
 import Navigation from "@/components/Navigation";
 import Link from "next/link";
 import { MapPin, Phone, Building, Users, Briefcase, Home, TrendingUp } from "lucide-react";
@@ -16,10 +17,10 @@ export default function OttawaPage() {
               Ottawa, ON
             </div>
             <h1 className="text-4xl md:text-6xl font-bold mb-6 text-white tracking-tight">
-              Ottawa's Trusted Mortgage Brokerage
+              Ottawa&apos;s Trusted Mortgage Brokerage
             </h1>
             <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-8 leading-relaxed">
-              Secure your home in Canada's capital with confidence. From public sector professionals to tech sector innovators, we provide customized mortgage solutions and market-leading rates across Ottawa.
+              Secure your home in Canada&apos;s capital with confidence. From public sector professionals to tech sector innovators, we provide customized mortgage solutions and market-leading rates across Ottawa.
             </p>
             <Link
               href="/contact"
@@ -36,7 +37,7 @@ export default function OttawaPage() {
             <h2 className="text-3xl font-bold mb-6 text-center">The Ottawa Mortgage Market</h2>
             <div className="p-6 bg-slate-900/40 rounded-2xl border border-slate-800/60 shadow-xl">
               <p className="text-gray-300 text-lg mb-6 leading-relaxed">
-                Ottawa's real estate market is characterized by stability and consistent demand, anchored by a strong public sector and a thriving technology hub. Average home prices average around $650,000, offering an attractive balance of urban lifestyle and value.
+                Ottawa&apos;s real estate market is characterized by stability and consistent demand, anchored by a strong public sector and a thriving technology hub. Average home prices average around $650,000, offering an attractive balance of urban lifestyle and value.
               </p>
               <p className="text-gray-300 text-lg mb-6 leading-relaxed">
                 Whether you are buying in the family-friendly suburbs of Orleans, a tech-centered home in Kanata, or a heritage brick property in the Glebe, Kraft Mortgages delivers highly competitive interest rates and structured underwriting under FSRA compliance.
@@ -61,7 +62,7 @@ export default function OttawaPage() {
               <div className="bg-slate-900/50 rounded-2xl p-6 border border-slate-800 hover:border-gold-500/40 transition-all">
                 <TrendingUp className="w-10 h-10 text-gold-400 mb-4" />
                 <h3 className="text-xl font-bold mb-3">Tech Innovator Loans</h3>
-                <p className="text-gray-400">Work in Kanata's tech sector? We use specialized lenders who recognize stock options, bonuses, and tech-consultant structures as qualifying income.</p>
+                <p className="text-gray-400">Work in Kanata&apos;s tech sector? We use specialized lenders who recognize stock options, bonuses, and tech-consultant structures as qualifying income.</p>
               </div>
               <div className="bg-slate-900/50 rounded-2xl p-6 border border-slate-800 hover:border-gold-500/40 transition-all">
                 <Briefcase className="w-10 h-10 text-gold-400 mb-4" />
@@ -77,7 +78,7 @@ export default function OttawaPage() {
           <div className="max-w-4xl mx-auto text-center">
             <h2 className="text-3xl font-bold mb-6">Why Choose a Local Ottawa Mortgage Broker?</h2>
             <p className="text-gray-300 text-lg leading-relaxed">
-              Ottawa's market requires an understanding of diverse employment profiles and suburban micro-climates. A local broker guarantees that your file is positioned perfectly to leverage public stability or tech compensation for maximum rate cuts.
+              Ottawa&apos;s market requires an understanding of diverse employment profiles and suburban micro-climates. A local broker helps ensure that your file is positioned well to leverage public stability or tech compensation for maximum rate cuts.
             </p>
           </div>
         </section>
@@ -97,7 +98,7 @@ export default function OttawaPage() {
               </div>
               <div className="bg-slate-900/60 rounded-2xl p-6 border border-slate-800 shadow-lg">
                 <h3 className="font-bold text-lg mb-3 text-white flex gap-2">
-                  <span className="text-gold-400">Q:</span> How do I qualify for a mortgage if I work in Ottawa's tech sector?
+                  <span className="text-gold-400">Q:</span> How do I qualify for a mortgage if I work in Ottawa&apos;s tech sector?
                 </h3>
                 <p className="text-gray-300 leading-relaxed pl-6 border-l border-gold-500/30">
                   Tech professionals often have complex compensation, including stock options, bonuses, or contract income. We work with specialized lenders who recognize these alternative compensation streams as qualifying income.
@@ -105,7 +106,7 @@ export default function OttawaPage() {
               </div>
               <div className="bg-slate-900/60 rounded-2xl p-6 border border-slate-800 shadow-lg">
                 <h3 className="font-bold text-lg mb-3 text-white flex gap-2">
-                  <span className="text-gold-400">Q:</span> What should I know about buying in Ottawa's heritage districts?
+                  <span className="text-gold-400">Q:</span> What should I know about buying in Ottawa&apos;s heritage districts?
                 </h3>
                 <p className="text-gray-300 leading-relaxed pl-6 border-l border-gold-500/30">
                   Purchasing in historic areas like the Glebe or Rockcliffe Park requires understanding heritage guidelines and potential renovation restrictions. We ensure your appraisal and financing structure align with these unique property profiles.
@@ -121,10 +122,10 @@ export default function OttawaPage() {
               </div>
               <div className="bg-slate-900/60 rounded-2xl p-6 border border-slate-800 shadow-lg">
                 <h3 className="font-bold text-lg mb-3 text-white flex gap-2">
-                  <span className="text-gold-400">Q:</span> How does buying in Kanata compare to Orleans from a lender's perspective?
+                  <span className="text-gold-400">Q:</span> How does buying in Kanata compare to Orleans from a lender&apos;s perspective?
                 </h3>
                 <p className="text-gray-300 leading-relaxed pl-6 border-l border-gold-500/30">
-                  Lenders view both suburbs favorably, but Kanata's high concentration of tech employers and Orleans' rapid transit expansion create slightly different local market metrics. We optimize your application based on neighbourhood-specific property values.
+                  Lenders view both suburbs favorably, but Kanata&apos;s high concentration of tech employers and Orleans&apos; rapid transit expansion create slightly different local market metrics. We optimize your application based on neighbourhood-specific property values.
                 </p>
               </div>
             </div>

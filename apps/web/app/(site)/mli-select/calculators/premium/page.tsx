@@ -3,20 +3,30 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import Card from "@/components/mli/Card";
 import TierBadge from "@/components/mli/TierBadge";
-import { tierFromPoints, premiumDiscountFor } from "@/lib/mli/calcs";
+import { tierFromPoints, premiumDiscountFor, mliBasePremiumPct, mliAmortizationSurchargePct, type MliLoanPurpose } from "@/lib/mli/calcs";
 import { DollarSign, Percent, TrendingDown, PiggyBank, Award, Calculator } from "lucide-react";
 
 export default function PremiumPage() {
   const [loan, setLoan] = useState(15000000);
-  const [basePremium, setBasePremium] = useState(3.85);
+  const [ltv, setLtv] = useState(95);
+  const [purpose, setPurpose] = useState<MliLoanPurpose>("other");
+  const [amortYears, setAmortYears] = useState(50);
+  // null = use CMHC grid rate; a number = user override
+  const [baseOverride, setBaseOverride] = useState<number | null>(null);
   const [points, setPoints] = useState(100);
 
   const tier = tierFromPoints(points);
   const discount = premiumDiscountFor(tier);
+  const gridBase = mliBasePremiumPct(ltv, purpose);
+  const base = baseOverride ?? gridBase;
+  const amortSurcharge = mliAmortizationSurchargePct(amortYears);
+  // CMHC applies the MLI Select discount to the base premium plus surcharges.
+  const basePremium = base + amortSurcharge;
   const finalPremium = basePremium * (1 - discount);
-  const savings = loan * (basePremium - finalPremium) / 100;
-  const baseCost = loan * basePremium / 100;
-  const finalCost = loan * finalPremium / 100;
+  const safeLoan = Math.max(0, loan || 0);
+  const savings = safeLoan * (basePremium - finalPremium) / 100;
+  const baseCost = safeLoan * basePremium / 100;
+  const finalCost = safeLoan * finalPremium / 100;
 
   return (
     <div className="min-h-screen">
@@ -144,7 +154,7 @@ export default function PremiumPage() {
                   <div className={`absolute -inset-1 bg-gradient-to-r ${item.color} rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-300`}></div>
                   <div className="relative bg-gray-900/90 backdrop-blur-xl px-8 py-6 rounded-2xl border border-gray-700/50">
                     <Award className={`w-8 h-8 mx-auto mb-2 ${item.text}`} />
-                    <div className="text-xs text-gray-500 uppercase tracking-wider">Tier {item.tier}</div>
+                    <div className="text-xs text-gray-500 uppercase tracking-wider">{[50, 70, 100][item.tier - 1]}+ Points</div>
                     <div className={`text-3xl font-bold ${item.text}`}>{item.discount}%</div>
                     <div className="text-xs text-gray-400 mt-1">Discount</div>
                   </div>
@@ -187,18 +197,64 @@ export default function PremiumPage() {
                     </div>
                   </div>
 
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-300 mb-2">LTV / LTC (%)</label>
+                      <input
+                        className="w-full rounded-lg border border-gray-600 bg-gray-700/50 text-gray-100 px-3 py-3 text-sm focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500"
+                        type="number"
+                        min={0}
+                        max={95}
+                        step={0.5}
+                        value={ltv}
+                        onChange={e=>setLtv(Math.min(95, Math.max(0, +e.target.value)))}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-300 mb-2">Loan Purpose</label>
+                      <select
+                        className="w-full rounded-lg border border-gray-600 bg-gray-700/50 text-gray-100 px-3 py-3 text-sm focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500"
+                        value={purpose}
+                        onChange={e=>setPurpose(e.target.value as MliLoanPurpose)}
+                      >
+                        <option value="other">Purchase / Refinance</option>
+                        <option value="construction">Construction</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-300 mb-2">Amortization (yrs)</label>
+                      <input
+                        className="w-full rounded-lg border border-gray-600 bg-gray-700/50 text-gray-100 px-3 py-3 text-sm focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500"
+                        type="number"
+                        min={10}
+                        max={50}
+                        step={5}
+                        value={amortYears}
+                        onChange={e=>setAmortYears(Math.min(50, Math.max(1, +e.target.value)))}
+                      />
+                    </div>
+                  </div>
                   <div className="relative">
-                    <label className="block text-sm font-medium text-gray-300 mb-2">Base Premium Rate (%)</label>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">
+                      Base Premium Rate (%)
+                      {baseOverride === null ? (
+                        <span className="ml-2 text-xs text-gray-500">CMHC grid</span>
+                      ) : (
+                        <button type="button" className="ml-2 text-xs text-emerald-400 underline" onClick={() => setBaseOverride(null)}>
+                          Reset to CMHC grid ({gridBase.toFixed(2)}%)
+                        </button>
+                      )}
+                    </label>
                     <div className="relative">
                       <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <Percent className="h-5 w-5 text-gray-500" />
                       </div>
-                      <input 
+                      <input
                         className="w-full pl-10 rounded-lg border border-gray-600 bg-gray-700/50 text-gray-100 px-3 py-3 text-sm focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 placeholder-gray-500 transition-all duration-200"
-                        type="number" 
-                        step={0.05} 
-                        value={basePremium} 
-                        onChange={e=>setBasePremium(+e.target.value)} 
+                        type="number"
+                        step={0.05}
+                        value={base}
+                        onChange={e=>setBaseOverride(+e.target.value)}
                       />
                     </div>
                   </div>
@@ -222,7 +278,11 @@ export default function PremiumPage() {
                     <div className="space-y-2">
                       <div className="flex justify-between text-xs">
                         <span className="text-gray-400">Base Rate:</span>
-                        <span className="text-red-400 font-semibold">{basePremium}%</span>
+                        <span className="text-red-400 font-semibold">{base.toFixed(2)}%</span>
+                      </div>
+                      <div className="flex justify-between text-xs">
+                        <span className="text-gray-400">Amortization Surcharge:</span>
+                        <span className="text-red-400 font-semibold">+{amortSurcharge.toFixed(2)}%</span>
                       </div>
                       <div className="flex justify-between text-xs">
                         <span className="text-gray-400">Discount:</span>
@@ -286,7 +346,7 @@ export default function PremiumPage() {
                         <div className="text-xl font-bold text-red-400">
                           ${(baseCost / 1000).toFixed(0)}K
                         </div>
-                        <div className="text-xs text-gray-400">{basePremium}%</div>
+                        <div className="text-xs text-gray-400">{basePremium.toFixed(2)}%</div>
                       </div>
                     </motion.div>
 
@@ -312,18 +372,18 @@ export default function PremiumPage() {
                       <motion.div 
                         className="bg-gradient-to-r from-red-500 to-orange-500 flex items-center justify-center text-xs font-semibold text-white"
                         initial={{ width: 0 }}
-                        animate={{ width: `${((baseCost - savings) / baseCost) * 100}%` }}
+                        animate={{ width: `${baseCost > 0 ? ((baseCost - savings) / baseCost) * 100 : 100}%` }}
                         transition={{ duration: 1, delay: 0.8 }}
                       >
-                        {((baseCost - savings) / baseCost) * 100 >= 30 && 'Final Cost'}
+                        {baseCost > 0 && ((baseCost - savings) / baseCost) * 100 >= 30 && 'Final Cost'}
                       </motion.div>
                       <motion.div 
                         className="bg-gradient-to-r from-green-500 to-emerald-500 flex items-center justify-center text-xs font-semibold text-gray-900"
                         initial={{ width: 0 }}
-                        animate={{ width: `${(savings / baseCost) * 100}%` }}
+                        animate={{ width: `${baseCost > 0 ? (savings / baseCost) * 100 : 0}%` }}
                         transition={{ duration: 1, delay: 0.9 }}
                       >
-                        {(savings / baseCost) * 100 >= 15 && 'Savings'}
+                        {baseCost > 0 && (savings / baseCost) * 100 >= 15 && 'Savings'}
                       </motion.div>
                     </div>
                     <div className="flex justify-between mt-2 text-xs text-gray-500">
@@ -347,6 +407,12 @@ export default function PremiumPage() {
               </Card>
             </motion.div>
           </div>
+          <p className="mt-8 text-xs text-gray-500 max-w-4xl mx-auto text-center">
+            Estimates only. Base rates follow CMHC&apos;s multi-unit premium grid for standard rental housing (effective July 14, 2025);
+            LTV bands above 85% are available under MLI Select only. The amortization surcharge (0.25% per 5 years beyond 25) and
+            the MLI Select discount (10% / 20% / 30% at 50 / 70 / 100 points) are applied as published by CMHC. EGI, non-residential,
+            second-mortgage and other-shelter-model surcharges are not included. CMHC changes these tables periodically — confirm with your lender.
+          </p>
         </div>
       </section>
     </div>

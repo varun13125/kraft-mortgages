@@ -1,9 +1,34 @@
 import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
+import { limitByIp, maskEmail } from "@/lib/compliance/requestGuards";
+
+export const dynamic = "force-dynamic";
+
+const ReportRequestSchema = z.object({
+  name: z.string().trim().max(200).optional().default(""),
+  email: z.string().trim().email().max(254),
+  phone: z.string().trim().max(40).optional(),
+  calculatorType: z.string().trim().max(80).optional().default(""),
+  loanAmount: z.union([z.string().max(40), z.number()]).optional(),
+  message: z.string().max(5000).optional(),
+});
+
+// Values are interpolated into HTML - escape them.
+const esc = (v: unknown) =>
+  String(v ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]!));
 
 export async function POST(req: NextRequest) {
   try {
-    const data = await req.json();
-    const { name, email, phone, calculatorType, loanAmount, message } = data;
+    const limited = limitByIp(req, "calculator-report", 5, 10 * 60 * 1000);
+    if (limited) return limited;
+
+    const parsed = ReportRequestSchema.safeParse(await req.json().catch(() => null));
+    if (!parsed.success) {
+      return NextResponse.json({ success: false, error: "A valid email is required" }, { status: 400 });
+    }
+    const { calculatorType, email } = parsed.data;
+    const name = esc(parsed.data.name);
+    const loanAmount = esc(parsed.data.loanAmount);
 
     // Generate report based on calculator type
     const generateReport = (type: string) => {
@@ -106,10 +131,14 @@ export async function POST(req: NextRequest) {
 
     const report = generateReport(calculatorType);
 
-    // In a real implementation, you'd send this via email service like SendGrid, Mailgun, etc.
-    // For now, we'll simulate the email sending
-    console.log('Sending report email to:', email);
-    console.log('Report content:', report);
+    // NOTE: No email provider is wired up yet (Phase 7 — Brevo client in
+    // lib/email/brevo-client.ts is disabled). Do NOT claim the report was sent.
+    // The lead itself is captured by /api/lead, which the LeadModal calls first.
+    console.log('Calculator report requested (email delivery not configured):', {
+      email: maskEmail(email),
+      calculatorType,
+      reportTitle: report.title,
+    });
 
     // Here you would integrate with your email service:
     // await sendEmail({
@@ -121,13 +150,14 @@ export async function POST(req: NextRequest) {
     // Also save the lead to your database
     // await saveLeadToDatabase(data);
 
-    return NextResponse.json({ 
-      success: true, 
-      message: 'Report generated and sent successfully' 
+    return NextResponse.json({
+      success: true,
+      emailed: false,
+      message: 'Report request received. A mortgage specialist will follow up with your personalized report.'
     });
 
   } catch (error) {
-    console.error('Error generating report:', error);
+    console.error('Error generating report:', error instanceof Error ? error.message : error);
     return NextResponse.json(
       { success: false, error: 'Failed to generate report' },
       { status: 500 }

@@ -1,3 +1,19 @@
+import type { Metadata } from "next";
+import { OG_DEFAULTS } from "@/lib/seo/og";
+export const metadata: Metadata = {
+  title: "MLI Select Calculators | Points, Premium, DSCR & Max Loan | Kraft Mortgages",
+  description:
+    "Free CMHC MLI Select calculators: points, rent cap, maximum loan, DSCR, amortization, premium, break-even rent and scenario comparison.",
+  alternates: { canonical: "https://www.kraftmortgages.ca/mli-select/calculators" },
+  openGraph: {
+    ...OG_DEFAULTS,
+    title: "MLI Select Calculators | Points, Premium, DSCR & Max Loan",
+    description:
+      "Free CMHC MLI Select calculators: points, rent cap, maximum loan, DSCR, amortization, premium, break-even rent and scenario comparison.",
+    url: "https://www.kraftmortgages.ca/mli-select/calculators",
+  },
+};
+
 import Link from "next/link";
 import { Calculator } from "lucide-react";
 

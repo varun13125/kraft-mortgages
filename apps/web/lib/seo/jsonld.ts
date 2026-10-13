@@ -10,7 +10,9 @@ export function orgJsonLd() {
     '@context': 'https://schema.org',
     '@graph': [
       {
-        '@type': ['Organization', 'LocalBusiness', 'MortgageBroker', 'FinancialService'],
+        // 'MortgageBroker' is not a schema.org type (validators flag it); FinancialService
+        // (a LocalBusiness subtype) is the correct type for a mortgage brokerage.
+        '@type': ['Organization', 'LocalBusiness', 'FinancialService'],
         '@id': ORG_ID,
         name: BUSINESS.name,
         legalName: BUSINESS.legalName,
@@ -58,6 +60,9 @@ export function orgJsonLd() {
 }
 
 function websiteJsonLdGraph() {
+  // No SearchAction: /blog does not read a `q` parameter, so the advertised
+  // search URL returned the unfiltered blog index (and Google retired the
+  // sitelinks search box in Nov 2024). Re-add only if real site search ships.
   return {
     '@type': 'WebSite',
     '@id': SITE_ID,
@@ -65,14 +70,6 @@ function websiteJsonLdGraph() {
     url: SITE,
     inLanguage: BUSINESS.inLanguage,
     publisher: { '@id': ORG_ID },
-    potentialAction: {
-      '@type': 'SearchAction',
-      target: {
-        '@type': 'EntryPoint',
-        urlTemplate: `${SITE}/blog?q={search_term_string}`,
-      },
-      'query-input': 'required name=search_term_string',
-    },
   };
 }
 
@@ -115,7 +112,11 @@ export function cityServiceJsonLd(opts: {
 }) {
   return {
     '@context': 'https://schema.org',
-    '@type': ['FinancialService', 'Service'],
+    // Plain `Service` (not FinancialService): FinancialService is a LocalBusiness
+    // subtype, so typing a city node with it implied a second business at that city
+    // and triggered "missing address" warnings. The business itself is the
+    // `provider` (the single org node in app/layout.tsx).
+    '@type': 'Service',
     '@id': `${opts.url}#service`,
     name: `Mortgage Broker ${opts.cityName}`,
     serviceType: 'Mortgage Brokerage',

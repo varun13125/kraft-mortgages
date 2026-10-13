@@ -32,9 +32,10 @@ export default function ConstructionBudgetCalculator() {
   const totalProjectCost = totalLandCosts + totalConstructionCosts + contingencyAmount;
   
   // Financing calculations
+  // Loan sized as a % of total project cost (loan-to-cost)
   const maxLoanAmount = (totalProjectCost * ltv) / 100;
   const requiredEquity = totalProjectCost - maxLoanAmount;
-  const equityPercentage = (requiredEquity / totalProjectCost) * 100;
+  const equityPercentage = totalProjectCost > 0 ? (requiredEquity / totalProjectCost) * 100 : 0;
   
   // Construction loan interest (simplified - assumes 50% average advance)
   const averageBalance = maxLoanAmount * 0.5; // Assumes progressive draws
@@ -47,7 +48,7 @@ export default function ConstructionBudgetCalculator() {
   // Profitability analysis (if selling)
   const [sellingPrice, setSellingPrice] = useState(2100000);
   const grossProfit = sellingPrice - totalCostWithFinancing;
-  const profitMargin = (grossProfit / sellingPrice) * 100;
+  const profitMargin = sellingPrice > 0 ? (grossProfit / sellingPrice) * 100 : 0;
   
   // Cash flow timing
   const landEquityRequired = totalLandCosts;
@@ -206,7 +207,7 @@ export default function ConstructionBudgetCalculator() {
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-200 mb-2">
-                          Loan-to-Value (%)
+                          Loan-to-Cost (%)
                         </label>
                         <input
                           type="number"
@@ -262,15 +263,15 @@ export default function ConstructionBudgetCalculator() {
                       </div>
                       <div className="flex justify-between">
                         <span className="text-gray-400">Contingency ({contingency}%):</span>
-                        <span className="text-white font-semibold">${contingencyAmount.toLocaleString()}</span>
+                        <span className="text-white font-semibold">${Math.round(contingencyAmount).toLocaleString()}</span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-gray-400">Construction Interest:</span>
-                        <span className="text-orange-400 font-semibold">${constructionInterest.toLocaleString()}</span>
+                        <span className="text-orange-400 font-semibold">${Math.round(constructionInterest).toLocaleString()}</span>
                       </div>
                       <div className="flex justify-between border-t border-gray-600 pt-2">
                         <span className="text-gray-300">Total Project Cost:</span>
-                        <span className="text-orange-400 font-bold text-lg">${totalCostWithFinancing.toLocaleString()}</span>
+                        <span className="text-orange-400 font-bold text-lg">${Math.round(totalCostWithFinancing).toLocaleString()}</span>
                       </div>
                     </div>
                   </div>
@@ -282,15 +283,15 @@ export default function ConstructionBudgetCalculator() {
                       <div className="bg-gray-800/50 rounded-lg p-4">
                         <div className="text-sm text-gray-400 mb-1">Maximum Loan</div>
                         <div className="text-xl font-bold text-orange-400">
-                          ${maxLoanAmount.toLocaleString()}
+                          ${Math.round(maxLoanAmount).toLocaleString()}
                         </div>
-                        <div className="text-xs text-gray-500">{ltv}% LTV</div>
+                        <div className="text-xs text-gray-500">{ltv}% of project cost (LTC)</div>
                       </div>
 
                       <div className="bg-gray-800/50 rounded-lg p-4">
                         <div className="text-sm text-gray-400 mb-1">Required Equity</div>
                         <div className="text-xl font-bold text-orange-400">
-                          ${requiredEquity.toLocaleString()}
+                          ${Math.round(requiredEquity).toLocaleString()}
                         </div>
                         <div className="text-xs text-gray-500">{equityPercentage.toFixed(1)}% of total</div>
                       </div>
@@ -307,12 +308,12 @@ export default function ConstructionBudgetCalculator() {
                       </div>
                       <div className="flex justify-between">
                         <span className="text-gray-400">Total Project Cost:</span>
-                        <span className="text-red-400 font-semibold">${totalCostWithFinancing.toLocaleString()}</span>
+                        <span className="text-red-400 font-semibold">${Math.round(totalCostWithFinancing).toLocaleString()}</span>
                       </div>
                       <div className="flex justify-between border-t border-gray-600 pt-2">
                         <span className="text-gray-300">Gross Profit:</span>
                         <span className={`font-bold text-lg ${grossProfit >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-                          ${grossProfit.toLocaleString()}
+                          ${Math.round(grossProfit).toLocaleString()}
                         </span>
                       </div>
                       <div className="flex justify-between">
@@ -321,6 +322,10 @@ export default function ConstructionBudgetCalculator() {
                           {profitMargin.toFixed(1)}%
                         </span>
                       </div>
+                      <p className="text-xs text-gray-500 pt-2">
+                        Before selling costs (commissions, legal), GST/HST on new housing and income tax. Construction interest
+                        assumes a 50% average advance over the build — land advanced up front raises it.
+                      </p>
                     </div>
                   </div>
 

@@ -4,6 +4,8 @@ import { motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
 import { TrendingDown, CreditCard, Calculator, DollarSign, AlertTriangle, CheckCircle, ArrowRight } from "lucide-react";
 import Link from "next/link";
+import { useLiveRates } from "@/lib/useLiveRates";
+import { payment } from "@/lib/calc/payment";
 
 export default function DebtConsolidationCalculator() {
   const [homeValue, setHomeValue] = useState(750000);
@@ -13,45 +15,68 @@ export default function DebtConsolidationCalculator() {
   const [monthlyDebtPayments, setMonthlyDebtPayments] = useState(3200);
   const [income, setIncome] = useState(120000);
 
+  const [avgDebtRate, setAvgDebtRate] = useState(15); // blended rate on the debts being consolidated
+  const [refinanceCosts, setRefinanceCosts] = useState(3000); // legal, appraisal, discharge, any prepayment penalty
+  const { best5YrFixed } = useLiveRates();
+
   // Calculate available equity for debt consolidation
   const availableEquity = useMemo(() => {
     const maxLTV = creditScore >= 720 ? 0.80 : creditScore >= 680 ? 0.75 : 0.70;
     const maxLoanAmount = homeValue * maxLTV;
     const availableForConsolidation = Math.max(0, maxLoanAmount - currentMortgage);
-    return Math.min(availableForConsolidation, totalDebts); // Can't consolidate more than total debts
+    return Math.min(availableForConsolidation, Math.max(0, totalDebts)); // Can't consolidate more than total debts
   }, [homeValue, currentMortgage, creditScore, totalDebts]);
 
   // Calculate new mortgage payment if debt is consolidated
   const newMortgageAmount = currentMortgage + availableEquity;
+  // Estimated rate: current best 5-yr fixed + credit-based spread (same basis as the Home Equity calculator)
   const newRate = useMemo(() => {
-    // Equity lending rate range: 4.99% - 7.95%
-    if (creditScore >= 750) return 4.99;
-    if (creditScore >= 700) return 5.25;
-    if (creditScore >= 650) return 6.25;
-    return 7.50;
-  }, [creditScore]);
+    if (creditScore >= 750) return best5YrFixed + 0.30;
+    if (creditScore >= 700) return best5YrFixed + 0.60;
+    if (creditScore >= 650) return best5YrFixed + 1.60;
+    return best5YrFixed + 3.00;
+  }, [creditScore, best5YrFixed]);
 
-  // Monthly payment calculation (25 year amortization)
-  const monthlyRate = newRate / 100 / 12;
-  const numPayments = 25 * 12;
-  const newMortgagePayment = (newMortgageAmount * monthlyRate * Math.pow(1 + monthlyRate, numPayments)) / 
-                            (Math.pow(1 + monthlyRate, numPayments) - 1);
+  // Monthly payments, 25-year amortization, Canadian semi-annual compounding
+  const newMortgagePayment = newMortgageAmount > 0
+    ? payment({ principal: newMortgageAmount, annualRatePct: newRate, amortYears: 25, paymentsPerYear: 12 })
+    : 0;
+  const originalMortgagePayment = currentMortgage > 0
+    ? payment({ principal: currentMortgage, annualRatePct: newRate, amortYears: 25, paymentsPerYear: 12 })
+    : 0;
 
-  const originalMortgagePayment = (currentMortgage * monthlyRate * Math.pow(1 + monthlyRate, numPayments)) / 
-                                 (Math.pow(1 + monthlyRate, numPayments) - 1);
-
-  // Calculate savings
-  const remainingDebtPayments = monthlyDebtPayments * (availableEquity / totalDebts);
+  // Only the consolidated share of the debts (and their payments) goes away
+  const consolidatedShare = totalDebts > 0 ? availableEquity / totalDebts : 0;
+  const consolidatedDebtPayments = monthlyDebtPayments * consolidatedShare;
+  const remainingDebtPayments = Math.max(0, monthlyDebtPayments - consolidatedDebtPayments);
   const totalOriginalPayments = originalMortgagePayment + monthlyDebtPayments;
-  const monthlySavings = totalOriginalPayments - newMortgagePayment;
+  const totalNewPayments = newMortgagePayment + remainingDebtPayments;
+  const monthlySavings = totalOriginalPayments - totalNewPayments;
   const annualSavings = monthlySavings * 12;
 
-  // DTI calculations
-  const monthlyIncome = income / 12;
-  const newDTI = (newMortgagePayment / monthlyIncome) * 100;
-  const originalDTI = (totalOriginalPayments / monthlyIncome) * 100;
+  // Total-cost comparison for the consolidated debt (monthly payments alone are misleading:
+  // stretching consumer debt over 25 years can cost more interest overall).
+  const rDebt = Math.max(0, avgDebtRate) / 100 / 12;
+  const monthsToPayOffNow = (() => {
+    if (availableEquity <= 0 || consolidatedDebtPayments <= 0) return 0;
+    if (rDebt === 0) return availableEquity / consolidatedDebtPayments;
+    const x = 1 - (rDebt * availableEquity) / consolidatedDebtPayments;
+    return x > 0 ? -Math.log(x) / Math.log(1 + rDebt) : Infinity;
+  })();
+  const interestIfKeptAsIs = Number.isFinite(monthsToPayOffNow)
+    ? Math.max(0, consolidatedDebtPayments * monthsToPayOffNow - availableEquity)
+    : Infinity;
+  const addedMortgagePayment = newMortgagePayment - originalMortgagePayment;
+  const interestIfConsolidated = Math.max(0, addedMortgagePayment * 25 * 12 - availableEquity);
+  const totalCostConsolidated = interestIfConsolidated + Math.max(0, refinanceCosts);
+  const lifetimeSavings = interestIfKeptAsIs - totalCostConsolidated;
 
-  const isGoodCandidate = availableEquity > 50000 && monthlySavings > 500 && newDTI < 40;
+  // DTI calculations (debt payments / gross income; property tax & heat excluded)
+  const monthlyIncome = income / 12;
+  const newDTI = monthlyIncome > 0 ? (totalNewPayments / monthlyIncome) * 100 : 0;
+  const originalDTI = monthlyIncome > 0 ? (totalOriginalPayments / monthlyIncome) * 100 : 0;
+
+  const isGoodCandidate = availableEquity > 50000 && monthlySavings > 500 && newDTI < 40 && lifetimeSavings > 0;
 
   return (
     <>
@@ -176,6 +201,31 @@ export default function DebtConsolidationCalculator() {
                     className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-white"
                   />
                 </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-200 mb-2">
+                    Average Interest Rate on Debts (%)
+                  </label>
+                  <input
+                    type="number"
+                    step="0.1"
+                    value={avgDebtRate}
+                    onChange={(e) => setAvgDebtRate(Math.max(0, Number(e.target.value)))}
+                    className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-white"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-200 mb-2">
+                    Refinance Costs (legal, appraisal, penalty)
+                  </label>
+                  <input
+                    type="number"
+                    value={refinanceCosts}
+                    onChange={(e) => setRefinanceCosts(Math.max(0, Number(e.target.value)))}
+                    className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-white"
+                  />
+                </div>
               </div>
 
               {/* Results */}
@@ -186,7 +236,7 @@ export default function DebtConsolidationCalculator() {
                   <div className="bg-gray-800/50 rounded-lg p-4">
                     <div className="text-sm text-gray-400 mb-1">Available for Consolidation</div>
                     <div className="text-2xl font-bold text-emerald-400">
-                      ${availableEquity.toLocaleString()}
+                      ${Math.round(availableEquity).toLocaleString()}
                     </div>
                     <div className="text-xs text-gray-500">Based on home equity</div>
                   </div>
@@ -210,7 +260,7 @@ export default function DebtConsolidationCalculator() {
                   <div className="bg-gray-800/50 rounded-lg p-4">
                     <div className="text-sm text-gray-400 mb-1">New Mortgage Rate</div>
                     <div className="text-2xl font-bold text-emerald-400">{newRate.toFixed(2)}%</div>
-                    <div className="text-xs text-gray-500">Institutional rate</div>
+                    <div className="text-xs text-gray-500">Estimated (best 5-yr fixed + credit spread)</div>
                   </div>
                 </div>
 
@@ -247,11 +297,11 @@ export default function DebtConsolidationCalculator() {
                       </div>
                       <div className="flex justify-between">
                         <span className="text-gray-400">Remaining Debt Payments:</span>
-                        <span className="text-white">${Math.max(0, monthlyDebtPayments - remainingDebtPayments).toLocaleString(undefined, {maximumFractionDigits: 0})}</span>
+                        <span className="text-white">${remainingDebtPayments.toLocaleString(undefined, {maximumFractionDigits: 0})}</span>
                       </div>
                       <div className="flex justify-between border-t border-emerald-500/20 pt-2">
                         <span className="text-gray-400">Total Monthly:</span>
-                        <span className="text-emerald-400 font-semibold">${(newMortgagePayment + Math.max(0, monthlyDebtPayments - remainingDebtPayments)).toLocaleString(undefined, {maximumFractionDigits: 0})}</span>
+                        <span className="text-emerald-400 font-semibold">${totalNewPayments.toLocaleString(undefined, {maximumFractionDigits: 0})}</span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-gray-400">DTI Ratio:</span>
@@ -259,6 +309,36 @@ export default function DebtConsolidationCalculator() {
                       </div>
                     </div>
                   </div>
+                </div>
+
+                {/* Total cost comparison */}
+                <div className="bg-gray-800/50 rounded-lg p-4 mb-6 border border-gray-600/40">
+                  <h4 className="text-gray-100 font-semibold mb-3">Total Cost of the Consolidated Debt</h4>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-gray-400">Keep current payments ({avgDebtRate}%):</span>
+                      <span className="text-white">
+                        {Number.isFinite(interestIfKeptAsIs)
+                          ? `$${Math.round(interestIfKeptAsIs).toLocaleString()} interest over ${Math.ceil(monthsToPayOffNow)} months`
+                          : 'Payments do not cover interest — never paid off'}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-400">Add to mortgage (25 years):</span>
+                      <span className="text-white">${Math.round(interestIfConsolidated).toLocaleString()} interest + ${Math.round(refinanceCosts).toLocaleString()} costs</span>
+                    </div>
+                    <div className="flex justify-between border-t border-gray-600 pt-2">
+                      <span className="text-gray-300">Lifetime difference:</span>
+                      <span className={`font-semibold ${lifetimeSavings > 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                        {Number.isFinite(lifetimeSavings)
+                          ? `${lifetimeSavings > 0 ? 'Save' : 'Costs'} $${Math.round(Math.abs(lifetimeSavings)).toLocaleString()}`
+                          : 'Consolidation needed to pay off'}
+                      </span>
+                    </div>
+                  </div>
+                  <p className="text-xs text-gray-500 mt-3">
+                    Tip: keep paying close to your old total each month after consolidating to clear the added balance years sooner.
+                  </p>
                 </div>
 
                 <div className={`p-4 rounded-lg border ${isGoodCandidate ? 'bg-green-500/10 border-green-500/30' : 'bg-orange-500/10 border-orange-500/30'}`}>
@@ -274,7 +354,7 @@ export default function DebtConsolidationCalculator() {
                       </div>
                       <div className="text-sm text-gray-400">
                         {isGoodCandidate 
-                          ? `Save $${annualSavings.toLocaleString()} annually with improved cash flow and lower DTI ratio`
+                          ? `Save $${Math.round(annualSavings).toLocaleString()} a year in payments and less total interest after costs`
                           : 'Consider other debt reduction strategies or improve credit score for better rates'
                         }
                       </div>
@@ -295,6 +375,11 @@ export default function DebtConsolidationCalculator() {
                     <div className="text-sm text-gray-400 mb-1">Typical Credit Card Rate</div>
                     <div className="text-xl font-bold text-red-400">19.99%</div>
                   </div>
+                </div>
+                <div className="text-xs text-gray-500 mt-3">
+                  Estimates only. Assumes a refinance to a single mortgage at an estimated rate with a 25-year amortization and
+                  that consolidated debts are fully paid out. Consumer-debt payoff uses your average rate with monthly compounding.
+                  Qualification (stress test, TDS) is not assessed here.
                 </div>
                 <div className="text-sm text-gray-400 mt-3">
                   Access institutional rates typically reserved for prime lending, with professional service and flexible terms.

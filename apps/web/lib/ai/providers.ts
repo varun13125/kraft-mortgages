@@ -65,13 +65,20 @@ export function openAIProvider(model: string): ChatProvider {
       });
       const reader = res.body!.getReader();
       const enc = new TextEncoder();
+      // Single iterator for the whole stream (re-creating it per pull() dropped buffered tokens).
+      const chunks = sse(reader);
       return new ReadableStream<Uint8Array>({
         async pull(controller) {
-          for await (const chunk of sse(reader)) {
-            controller.enqueue(enc.encode(chunk));
-            return;
+          try {
+            const { value, done } = await chunks.next();
+            if (done) controller.close();
+            else controller.enqueue(enc.encode(value));
+          } catch (err) {
+            controller.error(err);
           }
-          controller.close();
+        },
+        async cancel() {
+          await reader.cancel().catch(() => {});
         }
       });
     }

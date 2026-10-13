@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import Card from "@/components/mli/Card";
-import { dscrMaxLoan, amortByTier, tierFromPoints } from "@/lib/mli/calcs";
+import { dscrMaxLoan, amortByTier, tierFromPoints, pmt } from "@/lib/mli/calcs";
 import { TrendingUp, Percent, DollarSign, Clock, Activity, Shield } from "lucide-react";
 import TierBadge from "@/components/mli/TierBadge";
 
@@ -18,14 +18,8 @@ export default function DSCRPage() {
   const safeNoi = Math.max(0, noi || 0);
 
   const loan = safeNoi > 0 ? dscrMaxLoan({ noi: safeNoi, rateAnnual: rate, years, minDcr: 1.10 }) : 0;
-  const annualDebtService = loan > 0
-    ? (() => {
-        const r = rate / 100;
-        const monthlyRate = Math.pow(1 + r / 2, 2 / 12) - 1;
-        const n = years * 12;
-        return loan * (monthlyRate * Math.pow(1 + monthlyRate, n)) / (Math.pow(1 + monthlyRate, n) - 1) * 12;
-      })()
-    : 0;
+  // Same Canadian semi-annual compounding as the loan sizing (lib/mli/calcs pmt), so coverage = 1.10x exactly.
+  const annualDebtService = loan > 0 ? pmt(rate, years, loan) * 12 : 0;
   const monthlyPayment = annualDebtService / 12;
   // Real coverage ratio (not hardcoded 1.10×)
   const coverage = annualDebtService > 0 ? (safeNoi / annualDebtService).toFixed(2) : "—";
@@ -332,7 +326,7 @@ export default function DSCRPage() {
                         <div className="text-2xl font-bold text-purple-400">
                           ${(annualDebtService / 1000).toFixed(0)}K
                         </div>
-                        <div className="text-xs text-gray-500 mt-1">Monthly: ${(monthlyPayment).toFixed(0).toLocaleString()}</div>
+                        <div className="text-xs text-gray-500 mt-1">Monthly: ${Math.round(monthlyPayment).toLocaleString()}</div>
                       </div>
                       <div className="w-16 h-16 bg-purple-500/10 rounded-full flex items-center justify-center">
                         <Activity className="w-8 h-8 text-purple-400" />

@@ -47,7 +47,7 @@ export default function EnhancedPointsPage() {
 
   const pctAff = units ? (affUnits / units) * 100 : 0;
   const aPts = affordabilityPoints(projectType === "new", pctAff, affYears);
-  const ePts = energyPoints(energyPct);
+  const ePts = energyPoints(energyPct, projectType === "new");
   const accPts = accessibilityPoints({
     visitableAll: visitAll,
     commonsBarrierFree: commons,

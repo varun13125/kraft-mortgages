@@ -193,6 +193,12 @@ export class PDFGenerator {
     pdf.setFontSize(8);
     pdf.setTextColor(156, 163, 175);
     pdf.text(
+      'Estimates for information only — not a mortgage approval, rate guarantee or financial advice. Rates and terms vary by lender.',
+      pageWidth / 2,
+      pageHeight - 28,
+      { align: 'center' }
+    );
+    pdf.text(
       'This report is confidential and intended solely for the recipient.',
       pageWidth / 2,
       pageHeight - 20,

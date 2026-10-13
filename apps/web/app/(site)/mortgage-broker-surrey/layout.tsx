@@ -1,5 +1,7 @@
 import { Metadata } from 'next';
 import { CityServiceJsonLd } from '@/components/SEO/CityServiceJsonLd';
+import Footer from '@/components/Footer';
+import { OG_DEFAULTS } from '@/lib/seo/og';
 
 export const metadata: Metadata = {
   title: 'Surrey Mortgage Broker | Best Rates & Fast Approval | Kraft Mortgages',
@@ -9,6 +11,7 @@ export const metadata: Metadata = {
     canonical: 'https://www.kraftmortgages.ca/mortgage-broker-surrey',
   },
   openGraph: {
+    ...OG_DEFAULTS,
     title: 'Surrey Mortgage Broker | Kraft Mortgages Canada',
     description: 'Top-rated Surrey mortgage broker with $2B+ funded and 18+ Years Combined Experience. Free pre-approval in 24 hours.',
     url: 'https://www.kraftmortgages.ca/mortgage-broker-surrey',
@@ -21,6 +24,7 @@ export default function SurreyLayout({ children }: { children: React.ReactNode }
     <>
       <CityServiceJsonLd cityName="Surrey" provinceName="BC" description="Licensed mortgage broker serving Surrey, BC. Residential, construction, self-employed, MLI Select, and private lending solutions." />
       {children}
+      <Footer />
     </>
   );
 }

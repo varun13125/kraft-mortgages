@@ -92,7 +92,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json(
       {
         success: false,
-        error: err?.message || "Failed to retrieve lender intelligence data.",
+        error: "Failed to retrieve lender intelligence data.",
       },
       { status: 500 }
     );

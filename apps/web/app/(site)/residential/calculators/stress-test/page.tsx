@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
 import { Shield, Home, Calculator, ArrowLeft, AlertTriangle, CheckCircle } from "lucide-react";
 import Link from "next/link";
+import { payment } from "@/lib/calc/payment";
 
 export default function StressTestCalculator() {
   const [income, setIncome] = useState(120000);
@@ -18,14 +19,14 @@ export default function StressTestCalculator() {
 
   const stressRate = useMemo(() => Math.max(contractRate + stressBuffer, 5.25), [contractRate, stressBuffer]);
   
-  const monthlyRate = stressRate / 100 / 12;
-  const numPayments = amortization * 12;
-  const monthlyPayment = (principal * monthlyRate * Math.pow(1 + monthlyRate, numPayments)) / 
-                        (Math.pow(1 + monthlyRate, numPayments) - 1);
+  // Canadian semi-annual compounding (same helper as /calculators/affordability and the AI tools)
+  const monthlyPayment = principal > 0
+    ? payment({ principal, annualRatePct: stressRate, amortYears: amortization, paymentsPerYear: 12 })
+    : 0;
 
   const housingCosts = monthlyPayment + propTax/12 + heat/12 + condoFees;
-  const gds = (housingCosts * 12) / income * 100;
-  const tds = ((housingCosts * 12) + debts) / income * 100;
+  const gds = income > 0 ? (housingCosts * 12) / income * 100 : 0;
+  const tds = income > 0 ? ((housingCosts * 12) + debts) / income * 100 : 0;
   
   const passesStressTest = gds <= 39 && tds <= 44;
 

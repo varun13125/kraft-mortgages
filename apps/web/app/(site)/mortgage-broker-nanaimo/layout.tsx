@@ -1,5 +1,7 @@
 import { Metadata } from 'next';
 import { CityServiceJsonLd } from '@/components/SEO/CityServiceJsonLd';
+import Footer from '@/components/Footer';
+import { OG_DEFAULTS } from '@/lib/seo/og';
 
 export const metadata: Metadata = {
   title: 'Nanaimo Mortgage Broker | Best Rates & Fast Approval | Kraft Mortgages',
@@ -9,6 +11,7 @@ export const metadata: Metadata = {
     canonical: 'https://www.kraftmortgages.ca/mortgage-broker-nanaimo',
   },
   openGraph: {
+    ...OG_DEFAULTS,
     title: 'Nanaimo Mortgage Broker | Kraft Mortgages Canada',
     description: 'Top-rated Nanaimo mortgage broker with $2B+ funded and 18+ Years Combined Experience. Free pre-approval in 24 hours.',
     url: 'https://www.kraftmortgages.ca/mortgage-broker-nanaimo',
@@ -21,6 +24,7 @@ export default function NanaimoLayout({ children }: { children: React.ReactNode 
     <>
       <CityServiceJsonLd cityName="Nanaimo" provinceName="BC" description="Licensed mortgage broker serving Nanaimo, BC. Residential, construction, self-employed, MLI Select, and private lending solutions." />
       {children}
+      <Footer />
     </>
   );
 }

@@ -63,7 +63,7 @@ export default function SelfEmployed() {
         {/* Calculator Section */}
         <section className="pb-20 px-4">
           <div className="max-w-4xl mx-auto">
-            <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl shadow-2xl border border-gray-700/50 p-8">
+            <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl shadow-2xl border border-gray-700/50 p-5 sm:p-8">
               <h2 className="text-2xl font-semibold text-gray-100 mb-6">Self-Employed Income Calculator</h2>
               
               <div className="mb-6">
@@ -121,7 +121,7 @@ export default function SelfEmployed() {
               <div className="grid gap-6 md:grid-cols-2 mb-8">
                 <div>
                   <label className="block text-sm font-medium text-gray-200 mb-2">
-                    Latest Year NOA (Net Income)
+                    Latest Year NOA (Total Income, Line 15000)
                   </label>
                   <input
                     type="number"
@@ -134,7 +134,7 @@ export default function SelfEmployed() {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-200 mb-2">
-                    Prior Year NOA (Net Income)
+                    Prior Year NOA (Total Income, Line 15000)
                   </label>
                   <input
                     type="number"
@@ -147,7 +147,7 @@ export default function SelfEmployed() {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-200 mb-2">
-                    Two Years Ago NOA (Net Income)
+                    Two Years Ago NOA (Total Income, Line 15000)
                   </label>
                   <input
                     type="number"
@@ -180,15 +180,15 @@ export default function SelfEmployed() {
                   <div className="bg-gray-800/50 rounded-lg p-4">
                     <div className="text-sm text-gray-400 mb-1">Qualifying Income</div>
                     <div className="text-2xl font-bold text-gold-400">
-                      ${r.qualifyingIncome.toLocaleString()}
+                      ${Math.round(r.qualifyingIncome).toLocaleString("en-CA")}
                     </div>
-                    <div className="text-xs text-gray-500">Lower of latest year or 2-year avg + addbacks</div>
+                    <div className="text-xs text-gray-500">Lower of latest year or 2-year average, plus add-backs</div>
                   </div>
 
                   <div className="bg-gray-800/50 rounded-lg p-4">
                     <div className="text-sm text-gray-400 mb-1">3-Year Average (Reference)</div>
                     <div className="text-2xl font-bold text-gold-400">
-                      ${r.threeYearAvg.toLocaleString()}
+                      ${Math.round(r.threeYearAvg).toLocaleString("en-CA")}
                     </div>
                     <div className="text-xs text-gray-500">Some lenders use for trend analysis</div>
                   </div>
@@ -200,7 +200,7 @@ export default function SelfEmployed() {
                     <div>
                       <div className="font-semibold text-blue-400">Income Calculation Method</div>
                       <div className="text-sm text-gray-400">
-                        Lenders typically use the lower of the most recent year or 2-year average, plus acceptable addbacks.
+                        Lenders typically use the 2-year average when income is stable or rising, and the lower most-recent year when income is falling, plus acceptable add-backs.
                       </div>
                     </div>
                   </div>
@@ -229,10 +229,10 @@ export default function SelfEmployed() {
                     <div className="font-semibold text-gold-300 mb-2">B-Lender Documents</div>
                     <ul className="space-y-1 text-xs">
                       <li>• <strong>12 months business bank statements</strong></li>
-                      <li>• Beacon score 500+</li>
+                      <li>• Credit score typically 550–600+ (varies by lender)</li>
                       <li>• Property appraisal</li>
-                      <li>• No tax returns required</li>
-                      <li>• No NOA required</li>
+                      <li>• Income stated, supported by bank statements</li>
+                      <li>• NOA often still requested to confirm no CRA arrears</li>
                     </ul>
                   </div>
                   <div>

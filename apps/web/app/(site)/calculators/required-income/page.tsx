@@ -13,17 +13,18 @@ import PdfLeadModal from "@/components/PdfLeadModal";
 /* ── Helpers ───────────────────────────────────────── */
 
 // CMHC premium via the shared helper (correct 2025 schedule)
-import { cmhcPremium as calcCMHC } from "@/lib/calc/cmhc";
+import { cmhcPremium as calcCMHC, cmhcPremiumRate, minimumDownPayment, isInsurable, QUALIFYING_RATIOS } from "@/lib/calc/cmhc";
+import { payment, principalFromPayment } from "@/lib/calc/payment";
 import { RelatedCalculators } from "@/components/calculators/RelatedCalculators";
-function cmhcPremium(downPayment: number, price: number): number {
-  return calcCMHC(price, downPayment);
+function cmhcPremium(downPayment: number, price: number, amortYears?: number): number {
+  return calcCMHC(price, downPayment, amortYears);
 }
 
+// annualRate is a PERCENT (e.g. 6.79). The previous version divided the percent by 12
+// (a 56%/month rate), producing qualifying payments ~80x too high. Now uses the shared
+// Canadian semi-annual compounding helper.
 function monthlyPayment(principal: number, annualRate: number, amortYears: number): number {
-  if (principal <= 0 || annualRate <= 0) return 0;
-  const r = annualRate / 12;
-  const n = amortYears * 12;
-  return principal * (r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+  return payment({ principal, annualRatePct: annualRate, amortYears });
 }
 
 function stressTestRate(contractRate: number): number {
@@ -35,11 +36,11 @@ function stressTestRate(contractRate: number): number {
 const faqs = [
   {
     q: "What is GDS and how is it calculated?",
-    a: "GDS (Gross Debt Service) ratio is the percentage of your gross monthly income used to cover housing costs: mortgage payment + property taxes + heating + 50% of condo fees (if applicable). For insured mortgages (less than 20% down), the maximum GDS is 32%. For conventional mortgages (20%+ down), it's 35%."
+    a: "GDS (Gross Debt Service) ratio is the percentage of your gross monthly income used to cover housing costs: mortgage payment + property taxes + heating + 50% of condo fees (if applicable). For insured mortgages (less than 20% down), the maximum GDS is 39%, calculated at the stress-test rate. Conventional (20%+ down) limits are set by each lender — often the same 39%, sometimes stricter."
   },
   {
     q: "What is TDS and how is it different from GDS?",
-    a: "TDS (Total Debt Service) ratio includes everything in GDS plus all other monthly debt obligations: car payments, credit card minimums, student loans, personal loans, child support, and any other fixed monthly debts. For insured mortgages the max TDS is 40%, for conventional it's 42%. TDS is typically the binding constraint for borrowers with existing debt."
+    a: "TDS (Total Debt Service) ratio includes everything in GDS plus all other monthly debt obligations: car payments, credit card minimums, student loans, personal loans, child support, and any other fixed monthly debts. For insured mortgages the max TDS is 44%; conventional limits vary by lender. TDS is typically the binding constraint for borrowers with existing debt."
   },
   {
     q: "What counts as income for mortgage qualification?",
@@ -47,7 +48,7 @@ const faqs = [
   },
   {
     q: "How does the stress test affect required income?",
-    a: "The stress test requires you to qualify at the higher of your contract rate + 2% or 5.25%. This means your monthly payment used for qualification is higher than your actual payment, which increases the income needed. For a $500K mortgage at 4.79%, you'd qualify at 6.79% instead — making the qualifying payment roughly $300-400/month higher."
+    a: "The stress test requires you to qualify at the higher of your contract rate + 2% or 5.25%. This means your monthly payment used for qualification is higher than your actual payment, which increases the income needed. For a $500K mortgage at 4.79% (25-year amortization), you'd qualify at 6.79% instead — making the qualifying payment roughly $590/month higher."
   },
   {
     q: "How can I improve my qualifying power?",
@@ -71,12 +72,16 @@ export default function RequiredIncomePage() {
 
   const downPayment = homePrice * downPaymentPct / 100;
   const baseMortgage = homePrice - downPayment;
-  const cmhc = cmhcPremium(downPayment, homePrice);
+  const cmhc = cmhcPremium(downPayment, homePrice, amortization);
   const totalMortgage = baseMortgage + cmhc;
   const isInsured = downPaymentPct < 20;
+  const minDown = minimumDownPayment(homePrice);
+  const downPaymentProblem = isInsured && !isInsurable(homePrice, downPayment);
 
-  const maxGDS = isInsured ? 0.32 : 0.35;
-  const maxTDS = isInsured ? 0.40 : 0.42;
+  // CMHC insured maxima (39% GDS / 44% TDS). Many lenders use the same limits for
+  // conventional mortgages; the old 32/40 & 35/42 values were outdated.
+  const maxGDS = QUALIFYING_RATIOS.GDS_MAX / 100;
+  const maxTDS = QUALIFYING_RATIOS.TDS_MAX / 100;
 
   const stRate = stressTestRate(mortgageRate);
   const stMonthly = monthlyPayment(totalMortgage, stRate, amortization);
@@ -100,9 +105,13 @@ export default function RequiredIncomePage() {
   const availableForHousing = Math.min(maxHousing, maxTotalDebt - otherDebts);
   const nonMortgageHousing = propertyTax + heating + condoHalf;
   const maxQualifyingPayment = Math.max(availableForHousing - nonMortgageHousing, 0);
-  const maxQualifyingMortgage = maxQualifyingPayment > 0
-    ? maxQualifyingPayment * (Math.pow(1 + stRate / 12, amortization * 12) - 1) / ((stRate / 12) * Math.pow(1 + stRate / 12, amortization * 12))
-    : 0;
+  // Max total loan (includes any insurance premium) at the qualifying rate
+  const maxQualifyingMortgage = principalFromPayment({ monthlyPayment: maxQualifyingPayment, annualRatePct: stRate, amortYears: amortization });
+  // Max price at the chosen down payment %: strip out the premium, then gross up by the down payment
+  const maxBaseMortgage = maxQualifyingMortgage / (1 + cmhcPremiumRate(downPaymentPct, amortization));
+  const maxHomePrice = downPaymentPct < 100 ? maxBaseMortgage / (1 - downPaymentPct / 100) : 0;
+  const maxHomeDownPayment = maxHomePrice * downPaymentPct / 100;
+  const maxHomeDownPaymentProblem = isInsured && maxHomePrice > 0 && !isInsurable(maxHomePrice, maxHomeDownPayment);
 
   const gdsLimiting = annualIncomeGDS >= annualIncomeTDS;
 
@@ -248,6 +257,11 @@ export default function RequiredIncomePage() {
                       step={1}
                       formatValue={(v) => `${v}% (${formatCurrency(homePrice * v / 100, 0)})`}
                     />
+                    {downPaymentProblem && tab === "income" && (
+                      <p className="text-xs text-red-300 -mt-3">
+                        Below the minimum down payment of {formatCurrency(minDown, 0)} for this price{homePrice >= 1500000 ? " (homes $1.5M+ require 20% down)" : ""}.
+                      </p>
+                    )}
                     <ValidatedInput
                       label="Mortgage Rate (%)"
                       value={mortgageRate}
@@ -444,17 +458,28 @@ export default function RequiredIncomePage() {
                       </h4>
                       <div className="space-y-3">
                         <div className="flex justify-between text-sm">
-                          <span className="text-gray-300">Max qualifying mortgage</span>
+                          <span className="text-gray-300">Max qualifying mortgage{isInsured ? " (incl. insurance)" : ""}</span>
                           <span className="font-semibold text-gold-400">{formatCurrency(maxQualifyingMortgage, 0)}</span>
                         </div>
+                        {isInsured && (
+                          <div className="flex justify-between text-sm">
+                            <span className="text-gray-300">− Mortgage insurance premium</span>
+                            <span className="font-semibold text-gray-200">{formatCurrency(maxQualifyingMortgage - maxBaseMortgage, 0)}</span>
+                          </div>
+                        )}
                         <div className="flex justify-between text-sm">
                           <span className="text-gray-300">+ Down payment ({downPaymentPct}%)</span>
-                          <span className="font-semibold text-gray-200">{formatCurrency(downPayment, 0)}</span>
+                          <span className="font-semibold text-gray-200">{formatCurrency(maxHomeDownPayment, 0)}</span>
                         </div>
                         <div className="border-t border-white/10 pt-3 flex justify-between">
                           <span className="font-semibold text-gray-200">Max home price</span>
-                          <span className="font-bold text-gold-400 text-lg">{formatCurrency(maxQualifyingMortgage + downPayment, 0)}</span>
+                          <span className="font-bold text-gold-400 text-lg">{formatCurrency(maxHomePrice, 0)}</span>
                         </div>
+                        {maxHomeDownPaymentProblem && (
+                          <p className="text-xs text-red-300">
+                            {downPaymentPct}% down is below the legal minimum at this price — you would need {formatCurrency(minimumDownPayment(maxHomePrice), 0)} down{maxHomePrice >= 1500000 ? " (20% for homes $1.5M+)" : ""}.
+                          </p>
+                        )}
                         <p className="text-xs text-gray-400 mt-2">
                           Based on {formatCurrency(userIncome, 0)} gross annual income, {downPaymentPct}% down, {amortization}-year amortization, {mortgageRate}% rate
                         </p>
@@ -497,7 +522,7 @@ export default function RequiredIncomePage() {
                 <div>
                   <h3 className="text-lg font-semibold text-blue-300 mb-3">Understanding This Calculator</h3>
                   <div className="space-y-2 text-sm text-blue-200">
-                    <p>• Qualifying ratios: GDS {isInsured ? "32%" : "35%"} max, TDS {isInsured ? "40%" : "42%"} max.</p>
+                    <p>• Qualifying ratios: GDS 39% max, TDS 44% max (CMHC insured limits; some lenders are stricter).</p>
                     <p>• Stress test rate: higher of contract rate + 2% or 5.25% — this is what lenders use for qualification.</p>
                     <p>• Heating costs default to $120/month (average). Property tax defaults to $350/month.</p>
                     <p>• 50% of condo fees are included in GDS calculation per CMHC guidelines.</p>
@@ -520,15 +545,15 @@ export default function RequiredIncomePage() {
 
               <h3 className="text-2xl font-semibold text-gray-100 mt-8">GDS vs TDS: What Lenders Look For</h3>
               <p>
-                The <strong>Gross Debt Service (GDS)</strong> ratio measures what percentage of your gross monthly income goes toward housing costs: mortgage payment, property taxes, heating, and half of condo fees (if applicable). For insured mortgages (less than 20% down), GDS must not exceed 32%. For conventional mortgages, the limit is 35%.
+                The <strong>Gross Debt Service (GDS)</strong> ratio measures what percentage of your gross monthly income goes toward housing costs: mortgage payment, property taxes, heating, and half of condo fees (if applicable). For insured mortgages (less than 20% down), GDS must not exceed 39%. For conventional mortgages, limits are set by each lender and are often the same.
               </p>
               <p>
-                The <strong>Total Debt Service (TDS)</strong> ratio adds all other monthly obligations on top of housing costs — car loans, credit card payments, student loans, personal loans, and child support payments. TDS is capped at 40% for insured mortgages and 42% for conventional. TDS is often the binding constraint for borrowers with significant existing debt.
+                The <strong>Total Debt Service (TDS)</strong> ratio adds all other monthly obligations on top of housing costs — car loans, credit card payments, student loans, personal loans, and child support payments. TDS is capped at 44% for insured mortgages; conventional limits vary by lender. TDS is often the binding constraint for borrowers with significant existing debt.
               </p>
 
               <h3 className="text-2xl font-semibold text-gray-100 mt-8">The Stress Test Impact</h3>
               <p>
-                Since 2018, all insured mortgages and most conventional mortgages must qualify at the Bank of Canada&apos;s stress test rate — the higher of your contract rate plus 2 percentage points or 5.25%. This means if your actual mortgage rate is 4.79%, you must qualify as if the rate were 6.79%. The stress test adds approximately $300-500/month to the qualifying payment on a typical mortgage, increasing the income needed by $10,000 to $20,000 per year.
+                All insured mortgages, and conventional mortgages from federally regulated lenders, must qualify at OSFI&apos;s minimum qualifying rate — the higher of your contract rate plus 2 percentage points or 5.25%. This means if your actual mortgage rate is 4.79%, you must qualify as if the rate were 6.79%. On a $500,000 mortgage that adds roughly $590/month to the qualifying payment, increasing the income needed by about $15,000 to $18,000 per year.
               </p>
 
               <h3 className="text-2xl font-semibold text-gray-100 mt-8">What Counts as Income</h3>
@@ -543,7 +568,7 @@ export default function RequiredIncomePage() {
 
               <h3 className="text-2xl font-semibold text-gray-100 mt-8">How to Improve Your Qualifying Power</h3>
               <p>
-                If the calculator shows you need more income than you have, there are several strategies. First, pay down existing debts — reducing a $400/month car payment to $0 can increase your qualifying power by roughly $80,000 in mortgage amount. Second, increase your down payment, which reduces the mortgage and potentially eliminates CMHC (shifting you to more lenient conventional ratios). Third, consider a longer amortization (30 years) to lower the monthly payment. Fourth, a co-signer or joint applicant adds their income to the qualification. Finally, shop around — some lenders have flexibility on ratios, especially for borrowers with strong credit or unique income structures.
+                If the calculator shows you need more income than you have, there are several strategies. First, pay down existing debts — reducing a $400/month car payment to $0 can increase your qualifying power by roughly $55,000–$60,000 in mortgage amount (at a 6.79% qualifying rate, 25 years). Second, increase your down payment, which reduces the mortgage and, at 20% or more, eliminates the mortgage insurance premium. Third, consider a longer amortization (30 years) to lower the monthly payment. Fourth, a co-signer or joint applicant adds their income to the qualification. Finally, shop around — some lenders have flexibility on ratios, especially for borrowers with strong credit or unique income structures.
               </p>
 
               <p>
@@ -599,7 +624,7 @@ export default function RequiredIncomePage() {
               "@context": "https://schema.org",
               "@type": "WebApplication",
               "name": "Required Income Calculator Canada",
-              "description": "Calculate the minimum income needed to qualify for a mortgage in Canada. Includes GDS/TDS ratios, stress test, and reverse mortgage qualification.",
+              "description": "Calculate the minimum income needed to qualify for a mortgage in Canada. Includes GDS/TDS ratios, the stress test, and a maximum-mortgage estimate from your income.",
               "url": "https://www.kraftmortgages.ca/calculators/required-income",
               "applicationCategory": "FinanceApplication",
               "operatingSystem": "Web",

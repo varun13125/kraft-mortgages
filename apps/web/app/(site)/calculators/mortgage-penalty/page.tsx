@@ -16,13 +16,15 @@ function ThreeMonthsInterest(balance: number, annualRate: number): number {
   return (balance * annualRate) / 12 * 3;
 }
 
+// Simplified IRD (most lenders' disclosed approximation). Never negative: if the comparison rate is
+// higher than your contract rate there is no differential and 3 months' interest applies.
 function IRD(
   contractRate: number,
-  currentRate: number,
+  comparisonRate: number,
   balance: number,
   remainingMonths: number
 ): number {
-  return (contractRate - currentRate) * balance * (remainingMonths / 12);
+  return Math.max(0, (contractRate - comparisonRate) * balance * (remainingMonths / 12));
 }
 
 function MortgageTypeToggle({
@@ -34,8 +36,6 @@ function MortgageTypeToggle({
 }) {
   return (
     <div className="flex gap-2">
-      <CalculatorSchema name="Mortgage Penalty Calculator" description="Estimate your mortgage prepayment penalty including IRD and 3-months interest." url="/calculators/mortgage-penalty" />
-
       {(["fixed", "variable"] as const).map((t) => (
         <button
           key={t}
@@ -64,7 +64,7 @@ const faqs = [
   },
   {
     q: "What is the posted rate and why does it matter for IRD?",
-    a: "The posted rate is the lender's published rate for a term matching your remaining time. Many lenders use posted rates rather than discounted rates in the IRD calculation, which can significantly increase your penalty. This calculator uses the current posted rate you provide for the remaining term."
+    a: "The posted rate is the lender's published rate for a term matching your remaining time. Many big banks compare against their posted rate minus the discount you received when you signed, which can significantly increase your penalty. This calculator uses the current posted rate you provide, less any original discount you enter, as the comparison rate."
   },
   {
     q: "Is a mortgage penalty tax-deductible?",
@@ -83,36 +83,36 @@ export default function MortgagePenaltyPage() {
   const [remainingMonths, setRemainingMonths] = useState(24);
   const [mortgageType, setMortgageType] = useState<"fixed" | "variable">("fixed");
   const [currentPostedRate, setCurrentPostedRate] = useState(4.49);
+  // Big-bank IRD: comparison rate = posted rate for remaining term − discount received at signing
+  const [originalDiscount, setOriginalDiscount] = useState(0);
+  // Rate available if you break and re-finance (for the break-even estimate)
+  const [newRate, setNewRate] = useState(4.39);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+
+  const comparisonRate = Math.max(0, currentPostedRate - originalDiscount);
+
+  // Approximate monthly interest saved by moving to the new rate (simple interest on current balance)
+  const monthlyInterestSaved = (contractRate / 100 - newRate / 100) * balance / 12;
 
   const results = useMemo(() => {
     const threeMo = ThreeMonthsInterest(balance, contractRate / 100);
-
-    if (mortgageType === "variable") {
-      return { penalty: threeMo, threeMonths: threeMo, ird: 0, type: "3 Months Interest" };
-    }
-
-    const ird = IRD(contractRate / 100, currentPostedRate / 100, balance, remainingMonths);
+    const ird = mortgageType === "variable" ? 0 : IRD(contractRate / 100, comparisonRate / 100, balance, remainingMonths);
     const penalty = Math.max(threeMo, ird);
+    // Break-even = penalty ÷ monthly interest saved at the new rate. (The old version divided the IRD by the
+    // differential to the posted rate, which always returned the remaining term.)
+    const breakEvenMonths = monthlyInterestSaved > 0 ? Math.ceil(penalty / monthlyInterestSaved) : null;
     return {
       penalty,
       threeMonths: threeMo,
       ird,
       type: ird > threeMo ? "IRD (Interest Rate Differential)" : "3 Months Interest",
-      breakEvenMonths:
-        ird > threeMo && contractRate / 100 > currentPostedRate / 100
-          ? Math.ceil(ird / ((contractRate / 100 - currentPostedRate / 100) * balance / 12))
-          : null,
+      breakEvenMonths,
     };
-  }, [balance, contractRate, remainingMonths, mortgageType, currentPostedRate]);
-
-  const monthlyInterestSaved =
-    mortgageType === "fixed"
-      ? (contractRate / 100 - currentPostedRate / 100) * balance / 12
-      : 0;
+  }, [balance, contractRate, remainingMonths, mortgageType, comparisonRate, monthlyInterestSaved]);
 
   return (
     <>
+      <CalculatorSchema name="Mortgage Penalty Calculator" description="Estimate your mortgage prepayment penalty including IRD and 3-months interest." url="/calculators/mortgage-penalty" />
       <Navigation />
       <main className="min-h-screen mt-16">
         {/* Breadcrumb */}
@@ -140,7 +140,7 @@ export default function MortgagePenaltyPage() {
                 <span className="bg-gradient-to-r from-gold-400 to-amber-500 bg-clip-text text-transparent">Mortgage Penalty</span> Calculator
               </h1>
               <p className="text-xl text-gray-400 max-w-3xl mx-auto">
-                Estimate your mortgage break penalty — IRD, three months' interest, and break-even analysis.
+                Estimate your mortgage break penalty — IRD, three months&apos; interest, and break-even analysis.
               </p>
             </motion.div>
           </div>
@@ -189,6 +189,8 @@ export default function MortgagePenaltyPage() {
                           { label: "Contract Rate", value: contractRate + "%" },
                           { label: "Remaining Term", value: remainingMonths + " months" },
                           { label: "Mortgage Type", value: mortgageType === "fixed" ? "Fixed" : "Variable" },
+                          ...(mortgageType === "fixed" ? [{ label: "IRD Comparison Rate", value: comparisonRate.toFixed(2) + "%" }] : []),
+                          { label: "New Rate (break-even)", value: newRate + "%" },
                         ]
                       },
                       {
@@ -197,10 +199,11 @@ export default function MortgagePenaltyPage() {
                           { label: "Estimated Penalty", value: "$" + Math.round(results.penalty).toLocaleString("en-CA"), highlight: true },
                           { label: "Penalty Type", value: results.type },
                           ...(monthlyInterestSaved > 0 ? [{ label: "Monthly Interest Saved", value: "$" + Math.round(monthlyInterestSaved).toLocaleString("en-CA") }] : []),
+                          ...(results.breakEvenMonths ? [{ label: "Break-Even", value: results.breakEvenMonths + " months" }] : []),
                         ]
                       }
                     ],
-                    educationalContent: "Variable-rate mortgages typically carry a 3-month interest penalty. Fixed-rate mortgages use the Interest Rate Differential (IRD), which can be significantly higher."
+                    educationalContent: "Estimate only — request a written payout statement from your lender. Variable-rate mortgages typically carry a 3-month interest penalty. Fixed-rate mortgages usually charge the greater of 3 months' interest or the Interest Rate Differential (IRD), which can be significantly higher."
                   });
                 }}
               />
@@ -252,9 +255,32 @@ export default function MortgagePenaltyPage() {
                             <Info className="w-3.5 h-3.5 mt-0.5 text-blue-400 flex-shrink-0" />
                             <span>This is the lender&apos;s current posted rate for a term matching your remaining months. Check your lender&apos;s website or call them directly.</span>
                           </div>
+                          <div className="mt-4">
+                            <ValidatedSlider
+                              label="Original Discount Received"
+                              value={originalDiscount}
+                              onChange={setOriginalDiscount}
+                              min={0}
+                              max={3}
+                              step={0.05}
+                              formatValue={(v) => `${v.toFixed(2)}%`}
+                            />
+                            <p className="text-xs text-gray-500 mt-2">
+                              Big banks often subtract the discount you got at signing (their posted rate then minus your contract rate) from today&apos;s posted rate. Leave at 0% if your lender compares against its current discounted rates. Comparison rate used: <strong className="text-gray-300">{comparisonRate.toFixed(2)}%</strong>
+                            </p>
+                          </div>
                         </div>
                       </motion.div>
                     )}
+                    <ValidatedSlider
+                      label="New Rate Available to You (for break-even)"
+                      value={newRate}
+                      onChange={setNewRate}
+                      min={1.0}
+                      max={12.0}
+                      step={0.01}
+                      formatValue={(v) => `${v.toFixed(2)}%`}
+                    />
                   </div>
                 </div>
               </motion.div>
@@ -270,6 +296,7 @@ export default function MortgagePenaltyPage() {
                   <p className="text-sm text-gray-300">
                     Based on <strong>{results.type}</strong> calculation
                   </p>
+                  <p className="text-xs text-gray-400 mt-2">Estimate only — your lender&apos;s payout statement is the final figure.</p>
                 </div>
 
                 {/* Comparison (fixed only) */}
@@ -300,16 +327,18 @@ export default function MortgagePenaltyPage() {
                 )}
 
                 {/* Break-Even Analysis */}
-                {mortgageType === "fixed" && results.breakEvenMonths && (
+                {results.breakEvenMonths && (
                   <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-white/20">
                     <h4 className="font-semibold mb-4 flex items-center gap-2">
                       <Clock className="w-5 h-5 text-gold-400" />
                       Break-Even Analysis
                     </h4>
                     <p className="text-gray-300 text-sm mb-3">
-                      Based on your penalty of <strong>{formatCurrency(results.penalty, 0)}</strong>, you would need to save{" "}
-                      <strong>{formatCurrency(monthlyInterestSaved, 0)}/month</strong> in interest to break even in{" "}
-                      <strong className="text-gold-400">{results.breakEvenMonths} months</strong>.
+                      Moving from {contractRate.toFixed(2)}% to {newRate.toFixed(2)}% saves about{" "}
+                      <strong>{formatCurrency(monthlyInterestSaved, 0)}/month</strong> in interest, so your penalty of{" "}
+                      <strong>{formatCurrency(results.penalty, 0)}</strong> is recovered in about{" "}
+                      <strong className="text-gold-400">{results.breakEvenMonths} months</strong>
+                      {results.breakEvenMonths > remainingMonths ? " — longer than your remaining term, so waiting for renewal is likely cheaper" : ""}.
                     </p>
                     <div className="w-full bg-gray-700 rounded-full h-3">
                       <div
@@ -392,7 +421,10 @@ export default function MortgagePenaltyPage() {
                 The Interest Rate Differential is designed to compensate the lender for the interest income they&apos;ll lose when you break your contract early. The basic formula is:
               </p>
               <p className="bg-white/5 rounded-lg p-4 font-mono text-sm">
-                IRD = (Contract Rate − Current Posted Rate) × Remaining Balance × Remaining Months ÷ 12
+                IRD = (Contract Rate − Comparison Rate) × Remaining Balance × Remaining Months ÷ 12
+              </p>
+              <p>
+                The comparison rate is the lender&apos;s current rate for a term close to your remaining term. Many big banks use their posted rate minus the discount you received when you signed, which makes the comparison rate lower and the penalty higher.
               </p>
               <p>
                 For example, if you have a $400,000 mortgage at 5.49% with 24 months remaining, and the current 2-year posted rate is 4.49%, your IRD would be: (0.0549 − 0.0449) × $400,000 × 2 = <strong>$8,000</strong>.

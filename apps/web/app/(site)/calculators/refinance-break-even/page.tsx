@@ -13,10 +13,29 @@ import { CalculatorSchema } from "@/components/SEO/CalculatorSchema";
 import { RelatedCalculators } from "@/components/calculators/RelatedCalculators";
 
 /* ── Mortgage Math ──────────────────────────────────── */
+// Canadian fixed-rate convention: semi-annual compounding, monthly rate = (1 + r/2)^(1/6) - 1
+function monthlyRate(annualRate: number): number {
+  return Math.pow(1 + annualRate / 100 / 2, 1 / 6) - 1;
+}
+
 function monthlyPayment(principal: number, annualRate: number, months: number): number {
-  if (annualRate === 0) return principal / months;
-  const r = annualRate / 100 / 12;
+  if (principal <= 0 || months <= 0) return 0;
+  const r = monthlyRate(annualRate);
+  if (r === 0) return principal / months;
   return (principal * r * Math.pow(1 + r, months)) / (Math.pow(1 + r, months) - 1);
+}
+
+// Interest paid over the next `months` months making `payment` each month
+function interestOverMonths(principal: number, annualRate: number, payment: number, months: number): number {
+  const r = monthlyRate(annualRate);
+  let balance = principal;
+  let interest = 0;
+  for (let i = 0; i < months && balance > 0; i++) {
+    const it = balance * r;
+    interest += it;
+    balance = Math.max(0, balance + it - payment);
+  }
+  return interest;
 }
 
 const faqs = [
@@ -46,7 +65,7 @@ export default function RefinanceBreakEvenPage() {
   const [showPdfModal, setShowPdfModal] = useState(false);
   const [currentBalance, setCurrentBalance] = useState(450000);
   const [currentRate, setCurrentRate] = useState(5.89);
-  const [currentPayment, setCurrentPayment] = useState(2850);
+  const [currentPayment, setCurrentPayment] = useState(3177); // consistent with $450K at 5.89% over 240 months
   const [remainingMonths, setRemainingMonths] = useState(240);
   const [newRate, setNewRate] = useState(4.49);
   const [newTermYears, setNewTermYears] = useState(5);
@@ -57,21 +76,27 @@ export default function RefinanceBreakEvenPage() {
 
   const results = useMemo(() => {
     const newTermMonths = newTermYears * 12;
-    const newPayment = monthlyPayment(currentBalance, newRate, newTermMonths);
+    // Compare over the new term (capped at the remaining amortization)
+    const horizonMonths = Math.min(newTermMonths, remainingMonths);
+    // New mortgage keeps the REMAINING AMORTIZATION (the term is only the rate-lock period)
+    const newPayment = monthlyPayment(currentBalance, newRate, remainingMonths);
     const monthlySavings = currentPayment - newPayment;
     const totalCosts = legalFees + appraisalFees + penaltyEstimate;
     const breakEvenMonths = monthlySavings > 0 ? Math.ceil(totalCosts / monthlySavings) : Infinity;
     const breakEvenYears = breakEvenMonths / 12;
 
-    // Interest remaining on current path
-    const totalCurrentInterest = (currentPayment * remainingMonths) - currentBalance;
-    // Interest on new mortgage
-    const totalNewInterest = (newPayment * newTermMonths) - currentBalance;
-    const interestSaved = totalCurrentInterest - totalNewInterest;
+    // Interest paid over the SAME horizon on each path (current rate + current payment vs new rate + new payment)
+    const currentPathInterest = interestOverMonths(currentBalance, currentRate, currentPayment, horizonMonths);
+    const newPathInterest = interestOverMonths(currentBalance, newRate, newPayment, horizonMonths);
+    const interestSaved = currentPathInterest - newPathInterest;
     const netSavings = interestSaved - totalCosts;
+    // Sanity check on the user's payment vs balance/rate/amortization
+    const impliedCurrentPayment = monthlyPayment(currentBalance, currentRate, remainingMonths);
 
-    return { newPayment, monthlySavings, totalCosts, breakEvenMonths, breakEvenYears, interestSaved, netSavings };
+    return { newPayment, monthlySavings, totalCosts, breakEvenMonths, breakEvenYears, interestSaved, netSavings, horizonMonths, impliedCurrentPayment };
   }, [currentBalance, currentRate, currentPayment, remainingMonths, newRate, newTermYears, legalFees, appraisalFees, penaltyEstimate]);
+
+  const paymentMismatch = results.impliedCurrentPayment > 0 && Math.abs(currentPayment - results.impliedCurrentPayment) / results.impliedCurrentPayment > 0.05;
 
   const makesSense = results.monthlySavings > 0 && results.breakEvenMonths !== Infinity;
 
@@ -153,7 +178,8 @@ export default function RefinanceBreakEvenPage() {
                           { label: "Current Balance", value: "$" + Math.round(currentBalance).toLocaleString("en-CA") },
                           { label: "Current Rate", value: currentRate + "%" },
                           { label: "Current Payment", value: "$" + Math.round(currentPayment).toLocaleString("en-CA") },
-                          { label: "Remaining Term", value: Math.round(remainingMonths / 12) + " years" },
+                          { label: "Remaining Amortization", value: Math.round(remainingMonths / 12 * 10) / 10 + " years" },
+                          { label: "New Term", value: newTermYears + " years" },
                           { label: "New Rate", value: newRate + "%" },
                           { label: "Penalty Estimate", value: "$" + Math.round(penaltyEstimate).toLocaleString("en-CA") },
                           { label: "Legal + Appraisal", value: "$" + Math.round(legalFees + appraisalFees).toLocaleString("en-CA") },
@@ -165,7 +191,7 @@ export default function RefinanceBreakEvenPage() {
                           { label: "New Monthly Payment", value: "$" + Math.round(results.newPayment).toLocaleString("en-CA"), highlight: true },
                           { label: "Monthly Savings", value: "$" + Math.round(results.monthlySavings).toLocaleString("en-CA") },
                           { label: "Break-Even", value: results.breakEvenMonths === Infinity ? "Never" : results.breakEvenMonths + " months", highlight: true },
-                          { label: "Interest Saved", value: "$" + Math.round(results.interestSaved).toLocaleString("en-CA") },
+                          { label: "Interest Saved (over new term)", value: "$" + Math.round(results.interestSaved).toLocaleString("en-CA") },
                           { label: "Net Savings", value: "$" + Math.round(results.netSavings).toLocaleString("en-CA"), highlight: true },
                         ]
                       }
@@ -181,6 +207,11 @@ export default function RefinanceBreakEvenPage() {
                     <ValidatedInput label="Current Interest Rate" value={currentRate} onChange={setCurrentRate} validation={{ min: 0.5, max: 15 }} type="percentage" />
                     <ValidatedInput label="Current Monthly Payment" value={currentPayment} onChange={setCurrentPayment} validation={{ min: 500, max: 20000 }} type="currency" />
                     <ValidatedInput label="Remaining Amortization (months)" value={remainingMonths} onChange={setRemainingMonths} validation={{ min: 12, max: 360 }} type="number" />
+                    {paymentMismatch && (
+                      <p className="text-xs text-amber-300 bg-amber-500/10 border border-amber-500/20 rounded-lg p-3">
+                        For this balance, rate and remaining amortization the payment would be about {formatCurrency(results.impliedCurrentPayment, 0)}/mo. Check your statement — a mismatched payment skews the savings estimate.
+                      </p>
+                    )}
                   </div>
                 </div>
 
@@ -233,12 +264,12 @@ export default function RefinanceBreakEvenPage() {
                     </div>
                     <div className="bg-white/5 rounded-lg p-4">
                       <span className="text-gray-400 block text-xs">Break-Even</span>
-                      <span className={`font-semibold text-xl ${results.breakEvenMonths < 24 ? "text-green-400" : "text-amber-400"}`}>
+                      <span className={`font-semibold text-xl ${results.breakEvenMonths <= Math.min(24, results.horizonMonths) ? "text-green-400" : "text-amber-400"}`}>
                         {results.breakEvenMonths === Infinity ? "N/A" : `${results.breakEvenMonths} mo (${results.breakEvenYears.toFixed(1)} yr)`}
                       </span>
                     </div>
                     <div className="bg-white/5 rounded-lg p-4">
-                      <span className="text-gray-400 block text-xs">Interest Saved</span>
+                      <span className="text-gray-400 block text-xs">Interest Saved ({Math.round(results.horizonMonths / 12 * 10) / 10}-yr term)</span>
                       <span className="font-semibold text-green-400 text-xl">{formatCurrency(results.interestSaved, 0)}</span>
                     </div>
                     <div className="bg-white/5 rounded-lg p-4">
@@ -248,6 +279,7 @@ export default function RefinanceBreakEvenPage() {
                       </span>
                     </div>
                   </div>
+                  <p className="text-xs text-gray-500 mt-3">Estimates only. New payment keeps your remaining amortization; savings compare interest paid over the new term at each rate (semi-annual compounding). Confirm your actual penalty with your lender.</p>
                 </div>
 
                 {/* Recommendation */}
@@ -288,7 +320,7 @@ export default function RefinanceBreakEvenPage() {
 
               <h3 className="text-2xl font-semibold text-gray-100 mt-8">Understanding Refinance Penalties</h3>
               <p>The biggest barrier to mid-term refinancing is the penalty your current lender charges. For variable-rate mortgages, this is typically the equivalent of three months of interest. For fixed-rate mortgages, lenders use the Interest Rate Differential (IRD), which compares your contract rate to their current rate for a similar term. The IRD can be significantly more expensive — sometimes $15,000 to $25,000 on larger mortgages.</p>
-              <p>Always request a penalty quote from your current lender before committing to a refinance. Lenders are required by law to provide this within a few business days. Some penalties are negotiable, especially if you have a strong payment history and are willing to escalate to a retention specialist.</p>
+              <p>Always request a written penalty quote from your current lender before committing to a refinance. Federally regulated lenders must disclose how their prepayment charge is calculated and provide a way to estimate it. Some penalties are negotiable, especially if you have a strong payment history and are willing to escalate to a retention specialist.</p>
 
               <h3 className="text-2xl font-semibold text-gray-100 mt-8">Common Refinancing Mistakes</h3>
               <ul className="list-disc pl-6 space-y-2">

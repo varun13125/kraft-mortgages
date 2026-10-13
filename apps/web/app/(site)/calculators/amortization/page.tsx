@@ -9,6 +9,7 @@ import { Calculator, HelpCircle, ChevronDown, ChevronUp, Info,
 import Link from "next/link";
 import { ValidatedInput, ValidatedSlider } from "@/components/ui/ValidatedInput";
 import { formatCurrency } from "@/lib/utils/validation";
+import { payment, periodicRate } from "@/lib/calc/payment";
 import PdfLeadModal from "@/components/PdfLeadModal";
 import { CalculatorSchema } from "@/components/SEO/CalculatorSchema";
 import { RelatedCalculators } from "@/components/calculators/RelatedCalculators";
@@ -23,13 +24,14 @@ interface ScheduleRow {
 }
 
 function buildSchedule(mortgage: number, rate: number, amortMonths: number, extraMonthly: number): ScheduleRow[] {
-  const r = rate / 100 / 12;
-  const basePayment = r > 0 ? (mortgage * r * Math.pow(1 + r, amortMonths)) / (Math.pow(1 + r, amortMonths) - 1) : mortgage / amortMonths;
+  // Canadian semi-annual compounding (fixed-rate convention), shared with the payment calculator
+  const r = periodicRate(rate, 12);
+  const basePayment = payment({ principal: mortgage, annualRatePct: rate, amortYears: amortMonths / 12 });
   const rows: ScheduleRow[] = [];
   let balance = mortgage;
   let cumInt = 0;
 
-  for (let m = 1; m <= amortMonths && balance > 0; m++) {
+  for (let m = 1; m <= amortMonths && balance > 0.005; m++) {
     const int = balance * r;
     const totalPay = Math.min(basePayment + extraMonthly, balance + int);
     const prin = totalPay - int;
@@ -43,15 +45,15 @@ function buildSchedule(mortgage: number, rate: number, amortMonths: number, extr
 const faqs = [
   {
     q: "What does amortization mean?",
-    a: "Amortization is the total length of time it takes to pay off your mortgage completely. In Canada, the maximum amortization for insured mortgages (less than 20% down) is 25 years. Uninsured mortgages (20%+ down) can go up to 30 years. The amortization determines your monthly payment — shorter amortization means higher payments but less total interest."
+    a: "Amortization is the total length of time it takes to pay off your mortgage completely. In Canada, insured mortgages (less than 20% down) are limited to 25 years, except that first-time buyers and buyers of newly built homes can amortize over 30 years (since December 15, 2024). Uninsured mortgages (20%+ down) can generally go up to 30 years. The amortization determines your monthly payment — shorter amortization means higher payments but less total interest."
   },
   {
     q: "Should I choose a 25-year or 30-year amortization?",
-    a: "A 25-year amortization saves significant interest — roughly $50,000 to $80,000 on a $500,000 mortgage at 5% compared to 30 years. However, the monthly payment is higher (about $300-$400 more). If you can comfortably afford the 25-year payment, it is the better financial choice. If cash flow is tight, start with 30 and make extra payments."
+    a: "A 25-year amortization saves significant interest — roughly $88,000 on a $500,000 mortgage at 5% compared to 30 years. However, the monthly payment is higher (about $240 more). If you can comfortably afford the 25-year payment, it is the better financial choice. If cash flow is tight, start with 30 and make extra payments."
   },
   {
     q: "Can I change my amortization after getting my mortgage?",
-    a: "You cannot extend your amortization when switching lenders at renewal (OSFI rules). However, you can shorten it by increasing your payment, making lump sum prepayments, or choosing a shorter amortization at renewal. Some lenders also allow you to adjust your payment frequency (bi-weekly accelerated) which effectively shortens the amortization."
+    a: "Extending your amortization generally means refinancing and re-qualifying; a straight switch to a new lender at renewal keeps the same balance and remaining amortization. However, you can shorten it by increasing your payment, making lump sum prepayments, or choosing a shorter amortization at renewal. Some lenders also allow you to adjust your payment frequency (bi-weekly accelerated) which effectively shortens the amortization."
   },
   {
     q: "What is the difference between amortization and mortgage term?",
@@ -262,13 +264,13 @@ export default function AmortizationPage() {
               <p>Amortization is the process of gradually paying off your mortgage over time through regular payments. Each payment is split between interest (the cost of borrowing) and principal (reducing your loan balance). In the early years, most of your payment goes to interest. As the balance shrinks, more of each payment goes to principal — this shift is called the amortization curve.</p>
 
               <h3 className="text-2xl font-semibold text-gray-100 mt-8">25-Year vs 30-Year Amortization</h3>
-              <p>The amortization length has a massive impact on your total cost. On a $500,000 mortgage at 5%, a 25-year amortization results in a monthly payment of approximately $2,910 and total interest of about $373,000. Stretching to 30 years drops the payment to about $2,668 but increases total interest to roughly $460,000 — that is $87,000 more in interest for the convenience of lower monthly payments. If you can afford the 25-year payment, it almost always makes financial sense.</p>
+              <p>The amortization length has a massive impact on your total cost. On a $500,000 mortgage at 5%, a 25-year amortization results in a monthly payment of approximately $2,910 and total interest of about $373,000. Stretching to 30 years drops the payment to about $2,668 but increases total interest to roughly $460,000 — that is about $88,000 more in interest for the convenience of lower monthly payments. If you can afford the 25-year payment, it almost always makes financial sense.</p>
 
               <h3 className="text-2xl font-semibold text-gray-100 mt-8">The Impact of Shorter Amortization</h3>
-              <p>Going shorter than 25 years — say 20 or 15 years — amplifies savings further but requires significantly higher payments. A 20-year amortization on $500,000 at 5% means payments around $3,280 and total interest of about $287,000, saving roughly $86,000 versus 25 years. A 15-year amortization pushes payments to about $3,940 but total interest drops to approximately $209,000. The trade-off is always monthly cash flow versus long-term savings.</p>
+              <p>Going shorter than 25 years — say 20 or 15 years — amplifies savings further but requires significantly higher payments. A 20-year amortization on $500,000 at 5% means payments around $3,286 and total interest of about $289,000, saving roughly $84,000 versus 25 years. A 15-year amortization pushes payments to about $3,940 but total interest drops to approximately $209,000. The trade-off is always monthly cash flow versus long-term savings.</p>
 
               <h3 className="text-2xl font-semibold text-gray-100 mt-8">How to Choose Your Amortization</h3>
-              <p>Start with the longest amortization that qualifies you, then use prepayment privileges to pay it down faster. This gives you the safety net of a lower required payment while still benefitting from aggressive repayment when your budget allows. For insured mortgages, 25 years is the maximum, so this decision is already made for most first-time buyers. If you have 20% or more down, the 30-year option gives flexibility — but always run the numbers to see the true cost of that extra 5 years.</p>
+              <p>Start with the longest amortization that qualifies you, then use prepayment privileges to pay it down faster. This gives you the safety net of a lower required payment while still benefitting from aggressive repayment when your budget allows. For insured mortgages, 25 years is the maximum unless you are a first-time buyer or buying a newly built home (30 years allowed, with a small extra insurance premium). If you have 20% or more down, the 30-year option gives flexibility — but always run the numbers to see the true cost of that extra 5 years.</p>
 
               <div className="mt-8">
                 <Link href="/calculators/payment" className="text-gold-400 hover:text-gold-300 underline">Payment Calculator</Link>

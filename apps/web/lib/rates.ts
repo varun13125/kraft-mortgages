@@ -201,7 +201,7 @@ function isDateToday(isoString: string): boolean {
       syncDate.getUTCDate() === now.getUTCDate()
     );
   } catch {
-    return true;
+    return false;
   }
 }
 
@@ -231,8 +231,18 @@ export function formatLiveRatesData(feed: RawRatesFeed, source: string): RatesAp
   const f1 = normalizeBenchmark(rb['1_year_fixed'], fb['1_year_fixed']!);
   const v3 = normalizeBenchmark(rb['3_year_variable'], fb['3_year_variable']!);
 
-  const lastSynced = feed.last_synced_utc || new Date().toISOString();
-  const isToday = isDateToday(lastSynced);
+  // A feed without a sync timestamp must not be presented as "today's" rates.
+  const lastSynced = feed.last_synced_utc || VERIFIED_SNAPSHOT.last_synced_utc || new Date(0).toISOString();
+  const isToday = feed.last_synced_utc ? isDateToday(lastSynced) : false;
+  const lastUpdatedHuman = isToday
+    ? 'Updated Today'
+    : `Updated ${new Date(lastSynced).toLocaleDateString('en-CA', { year: 'numeric', month: 'short', day: 'numeric', timeZone: 'America/Vancouver' })}`;
+  // Don't expose server filesystem paths (e.g. /var/task/...) in the public API.
+  const publicSource = /^https?:\/\//i.test(source)
+    ? source
+    : source === 'embedded_verified_snapshot'
+      ? source
+      : 'local_rates_file';
 
   const formatRate = (r: number) => `From ${r.toFixed(2)}%`;
   const formatSpread = (spread: string, rate: number, isVar: boolean) => {
@@ -418,9 +428,9 @@ export function formatLiveRatesData(feed: RawRatesFeed, source: string): RatesAp
 
   return {
     success: true,
-    source,
+    source: publicSource,
     last_synced_utc: lastSynced,
-    last_updated_human: 'Updated Today',
+    last_updated_human: lastUpdatedHuman,
     is_today: isToday,
     prime_rate: prime,
     benchmarks: {

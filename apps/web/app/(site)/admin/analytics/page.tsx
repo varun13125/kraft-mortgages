@@ -10,13 +10,18 @@ function toDateStr(d: Date) {
 
 export default async function Analytics() {
   let leads: Array<{ createdAt: Date; status: string }> = [] as any;
-  if (process.env.DATABASE_URL) {
-    leads = await prisma.lead.findMany({ select: { createdAt: true, status: true }, orderBy: { createdAt: 'asc' } }) as any;
-  } else {
-    const db = firestore();
-    const snap = await db.collection("leads").orderBy("createdAt","asc").get();
-    leads = snap.docs.map(d=> ({ createdAt: (d.data() as any).createdAt?.toDate?.() ?? new Date((d.data() as any).createdAt), status: (d.data() as any).status || "NEW" }));
+  try {
+    if (process.env.DATABASE_URL) {
+      leads = await prisma.lead.findMany({ select: { createdAt: true, status: true }, orderBy: { createdAt: 'asc' } }) as any;
+    } else {
+      const db = firestore();
+      const snap = await db.collection("leads").orderBy("createdAt","asc").get();
+      leads = snap.docs.map(d=> ({ createdAt: (d.data() as any).createdAt?.toDate?.() ?? new Date((d.data() as any).createdAt), status: (d.data() as any).status || "NEW" }));
+    }
+  } catch (err) {
+    console.error("[admin/analytics] failed to load leads:", err instanceof Error ? err.message : err);
   }
+  leads = leads.filter((l) => l.createdAt instanceof Date && !isNaN(l.createdAt.getTime()));
   const byDay = new Map<string, { new: number; qualified: number }>();
   for (const l of leads) {
     const key = toDateStr(l.createdAt);

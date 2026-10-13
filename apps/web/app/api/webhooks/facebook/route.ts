@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createHmac } from "crypto";
+import { createHmac, timingSafeEqual } from "crypto";
 import { triggerThinkrOutboundCall } from "@/lib/voice/thinkr";
+import { maskEmail } from "@/lib/compliance/requestGuards";
+
+export const dynamic = "force-dynamic";
 
 const VERIFY_TOKEN = process.env.FACEBOOK_WEBHOOK_VERIFY_TOKEN || "";
 const APP_SECRET = process.env.FACEBOOK_APP_SECRET || "";
@@ -14,15 +17,27 @@ const DISCORD_WEBHOOK = process.env.DISCORD_LEAD_WEBHOOK_URL || "";
 
 function verifySignature(payload: string, signature: string): boolean {
   if (!APP_SECRET) return false;
-  const expected = createHmac("sha256", APP_SECRET)
-    .update(payload)
-    .digest("hex");
-  return signature === `sha256=${expected}`;
+  const expected = Buffer.from(
+    `sha256=${createHmac("sha256", APP_SECRET).update(payload).digest("hex")}`
+  );
+  const given = Buffer.from(signature || "");
+  // constant-time compare
+  return given.length === expected.length && timingSafeEqual(given, expected);
 }
 
 async function fetchLeadData(leadgenId: string): Promise<Record<string, string> | null> {
+  // leadgen IDs are numeric; reject anything else so a forged payload cannot
+  // inject extra Graph API path/query segments into a page-token request.
+  if (!/^\d{1,32}$/.test(String(leadgenId))) {
+    console.warn("Rejected non-numeric leadgen_id");
+    return null;
+  }
+  if (!PAGE_ACCESS_TOKEN) {
+    console.error("FACEBOOK_PAGE_ACCESS_TOKEN is not set; cannot fetch lead data");
+    return null;
+  }
   try {
-    const url = `https://graph.facebook.com/v19.0/${leadgenId}?access_token=${PAGE_ACCESS_TOKEN}`;
+    const url = `https://graph.facebook.com/v19.0/${leadgenId}?access_token=${encodeURIComponent(PAGE_ACCESS_TOKEN)}`;
     const res = await fetch(url);
     if (!res.ok) {
       console.error("Graph API error:", res.status);
@@ -91,7 +106,8 @@ export async function GET(req: NextRequest) {
   const token = searchParams.get("hub.verify_token");
   const challenge = searchParams.get("hub.challenge");
 
-  if (mode === "subscribe" && token === VERIFY_TOKEN) {
+  // An unset verify token must never match an empty hub.verify_token
+  if (mode === "subscribe" && VERIFY_TOKEN && token === VERIFY_TOKEN) {
     console.log("Facebook webhook verified");
     return new NextResponse(challenge, { status: 200 });
   }
@@ -104,8 +120,17 @@ export async function POST(req: NextRequest) {
   const rawBody = await req.text();
   const signature = req.headers.get("x-hub-signature-256") || "";
 
-  if (APP_SECRET && !verifySignature(rawBody, signature)) {
+  // Signature verification. When FACEBOOK_APP_SECRET is configured, unsigned or
+  // mis-signed requests are rejected. If it is NOT configured we cannot verify the
+  // sender, so leads are still forwarded to the CRM/Discord (no data loss) but the
+  // outbound AI call is suppressed - otherwise anyone could make us phone arbitrary
+  // numbers. Set FACEBOOK_APP_SECRET in production.
+  const signatureVerified = APP_SECRET ? verifySignature(rawBody, signature) : false;
+  if (APP_SECRET && !signatureVerified) {
     return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
+  }
+  if (!APP_SECRET) {
+    console.warn("FACEBOOK_APP_SECRET not set - webhook payload is unverified; outbound calls disabled");
   }
 
   let body;
@@ -138,7 +163,8 @@ export async function POST(req: NextRequest) {
           await sendDiscordNotification(leadData);
 
           // Real-time speed-to-lead qualification call via Thinkrr AI
-          if (crmData.phone) {
+          // (only for signature-verified payloads)
+          if (crmData.phone && signatureVerified) {
             await triggerThinkrOutboundCall({
               name: `${crmData.firstName} ${crmData.lastName}`.trim() || "Facebook Lead",
               phone: crmData.phone,
@@ -148,8 +174,8 @@ export async function POST(req: NextRequest) {
           }
 
           console.log("Facebook lead processed:", {
-            name: crmData.firstName + " " + crmData.lastName,
-            email: crmData.email,
+            email: maskEmail(crmData.email),
+            verified: signatureVerified,
           });
         }
       }

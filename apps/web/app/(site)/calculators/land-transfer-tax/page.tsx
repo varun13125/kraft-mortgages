@@ -7,6 +7,10 @@ import { DollarSign, Calculator, Home, CheckCircle, AlertTriangle, ArrowRight, R
 import Link from "next/link";
 import { ValidatedInput } from "@/components/ui/ValidatedInput";
 import { formatCurrency } from "@/lib/utils/validation";
+import {
+  bcPropertyTransferTax, ontarioLandTransferTax, torontoMunicipalLandTransferTax,
+  bcFirstTimeBuyerExemption, albertaRegistrationFee, ON_FTHB_MAX_REFUND, TORONTO_FTHB_MAX_REBATE,
+} from "@/lib/calc/landTransferTax";
 import PdfLeadModal from "@/components/PdfLeadModal";
 import { CalculatorSchema } from "@/components/SEO/CalculatorSchema";
 import { RelatedCalculators } from "@/components/calculators/RelatedCalculators";
@@ -14,98 +18,16 @@ import { RelatedCalculators } from "@/components/calculators/RelatedCalculators"
 const PROVINCES = ["BC", "Alberta", "Ontario"] as const;
 type Province = (typeof PROVINCES)[number];
 
-function bcPTT(price: number): { brackets: { label: string; amount: number; rate: number }[]; total: number } {
-  const brackets: { label: string; amount: number; rate: number }[] = [];
-  let total = 0;
-
-  if (price > 0) {
-    const b1 = Math.min(price, 200000);
-    const t1 = b1 * 0.01;
-    if (b1 > 0) brackets.push({ label: "First $200,000", amount: t1, rate: 1.0 });
-    total += t1;
-  }
-  if (price > 200000) {
-    const b2 = Math.min(price - 200000, 1800000);
-    const t2 = b2 * 0.02;
-    if (b2 > 0) brackets.push({ label: "$200K – $2M", amount: t2, rate: 2.0 });
-    total += t2;
-  }
-  if (price > 2000000) {
-    const b3 = price - 2000000;
-    const t3 = b3 * 0.03;
-    if (b3 > 0) brackets.push({ label: "Over $2M", amount: t3, rate: 3.0 });
-    total += t3;
-  }
-
-  return { brackets, total };
-}
-
-function ontLTT(price: number): { brackets: { label: string; amount: number; rate: number }[]; total: number } {
-  const brackets: { label: string; amount: number; rate: number }[] = [];
-  let total = 0;
-
-  const tiers = [
-    { upTo: 55000, rate: 0.005, label: "First $55,000" },
-    { upTo: 250000, rate: 0.01, label: "$55K – $250K" },
-    { upTo: 400000, rate: 0.015, label: "$250K – $400K" },
-    { upTo: 2000000, rate: 0.02, label: "$400K – $2M" },
-  ];
-  let prev = 0;
-  for (const t of tiers) {
-    if (price > prev) {
-      const slab = Math.min(price - prev, t.upTo - prev);
-      const tax = slab * t.rate;
-      if (slab > 0) brackets.push({ label: t.label, amount: tax, rate: t.rate * 100 });
-      total += tax;
-    }
-    prev = t.upTo;
-  }
-  if (price > 2000000) {
-    const slab = price - 2000000;
-    const tax = slab * 0.025;
-    if (slab > 0) brackets.push({ label: "Over $2M", amount: tax, rate: 2.5 });
-    total += tax;
-  }
-
-  return { brackets, total };
-}
-
-function bcFTHRRebate(price: number): number {
-  // BC FTHB PTT Exemption 2025/2026
-  // Full exemption: ≤ $835,000 | Partial: $835,001 - $860,000
-  if (price <= 835000) return 1.0;
-  if (price <= 860000) return (860000 - price) / 25000;
-  return 0;
-}
-
-function torontoMLTT(price: number): { brackets: { label: string; amount: number; rate: number }[]; total: number } {
-  const brackets: { label: string; amount: number; rate: number }[] = [];
-  let total = 0;
-
-  const tiers = [
-    { upTo: 55000, rate: 0.005, label: "First $55,000" },
-    { upTo: 250000, rate: 0.01, label: "$55K – $250K" },
-    { upTo: 400000, rate: 0.015, label: "$250K – $400K" },
-    { upTo: 2000000, rate: 0.02, label: "$400K – $2M" },
-  ];
-  let prev = 0;
-  for (const t of tiers) {
-    if (price > prev) {
-      const slab = Math.min(price - prev, t.upTo - prev);
-      const tax = slab * t.rate;
-      if (slab > 0) brackets.push({ label: t.label, amount: tax, rate: t.rate * 100 });
-      total += tax;
-    }
-    prev = t.upTo;
-  }
-  if (price > 2000000) {
-    const slab = price - 2000000;
-    const tax = slab * 0.025;
-    if (slab > 0) brackets.push({ label: "Over $2M", amount: tax, rate: 2.5 });
-    total += tax;
-  }
-  return { brackets, total };
-}
+// All brackets / exemptions come from the shared helper (lib/calc/landTransferTax):
+// - BC: includes the further 2% on the residential portion above $3M (applies to everyone,
+//   not just foreign buyers); first-time exemption covers only the first $500K (max $8,000).
+// - Ontario: first-time refund max $4,000 (the old $4,475 figure is Toronto's municipal rebate).
+// - Toronto MLTT: includes the luxury tiers above $3M (rates as of Apr 1, 2026) and the
+//   municipal first-time rebate (max $4,475).
+// - Alberta: Land Titles fees $50 + $5 per $5,000 (transfer and mortgage).
+const bcPTT = bcPropertyTransferTax;
+const ontLTT = ontarioLandTransferTax;
+const torontoMLTT = torontoMunicipalLandTransferTax;
 
 export default function LandTransferTax() {
   const [showPdfModal, setShowPdfModal] = useState(false);
@@ -116,40 +38,37 @@ export default function LandTransferTax() {
 
   const results = useMemo(() => {
     if (province === "Alberta") {
-      const fee = 50 + Math.ceil(purchasePrice / 5000);
+      // Land Titles transfer fee on the price; the mortgage registration fee is extra
+      // (same formula on the mortgage amount) and depends on the loan size.
+      const fee = albertaRegistrationFee(purchasePrice);
       return {
         tax: 0, fee, totalOwing: fee,
-        brackets: [{ label: "Registration Fee", amount: fee, rate: 0 }],
-        rebate: 0, savings: 0, mltt: null,
+        brackets: [{ label: "Transfer Registration Fee", amount: fee, rate: 0 }],
+        rebate: 0, savings: 0, mltt: null, mlttRebate: 0,
       };
     }
 
     if (province === "BC") {
       const calc = bcPTT(purchasePrice);
-      let rebate = 0;
-      if (isFirstTime) {
-        rebate = calc.total * bcFTHRRebate(purchasePrice);
-      }
+      const rebate = isFirstTime ? Math.min(calc.total, bcFirstTimeBuyerExemption(purchasePrice)) : 0;
       return {
         tax: calc.total, fee: 0, totalOwing: calc.total - rebate,
         brackets: calc.brackets,
-        rebate, savings: rebate, mltt: null,
+        rebate, savings: rebate, mltt: null, mlttRebate: 0,
       };
     }
 
     // Ontario
     const calc = ontLTT(purchasePrice);
-    const ftRebate = isFirstTime ? Math.min(calc.total, 4475) : 0;
+    const ftRebate = isFirstTime ? Math.min(calc.total, ON_FTHB_MAX_REFUND) : 0;
 
-    let mltt = null;
-    if (isToronto) {
-      mltt = torontoMLTT(purchasePrice);
-    }
+    const mltt = isToronto ? torontoMLTT(purchasePrice) : null;
+    const mlttRebate = mltt && isFirstTime ? Math.min(mltt.total, TORONTO_FTHB_MAX_REBATE) : 0;
 
     return {
-      tax: calc.total, fee: 0, totalOwing: calc.total - ftRebate + (mltt?.total ?? 0),
+      tax: calc.total, fee: 0, totalOwing: calc.total - ftRebate + (mltt?.total ?? 0) - mlttRebate,
       brackets: calc.brackets,
-      rebate: ftRebate, savings: ftRebate, mltt,
+      rebate: ftRebate, savings: ftRebate + mlttRebate, mltt, mlttRebate,
     };
   }, [purchasePrice, province, isFirstTime, isToronto]);
 
@@ -254,7 +173,7 @@ export default function LandTransferTax() {
                   {formatCurrency(results.totalOwing, 0)}
                 </div>
                 {province === "Alberta" && (
-                  <p className="text-sm text-gray-400">Alberta has no land transfer tax — only a small registration fee</p>
+                  <p className="text-sm text-gray-400">Alberta has no land transfer tax — only a Land Titles transfer fee ($50 + $5 per $5,000). Registering your mortgage costs the same formula on the loan amount.</p>
                 )}
               </div>
 
@@ -307,10 +226,16 @@ export default function LandTransferTax() {
                   <div className="text-2xl font-bold text-gold-400 mb-3">{formatCurrency(results.mltt.total, 0)}</div>
                   {results.mltt.brackets.map((b, i) => (
                     <div key={i} className="flex justify-between py-1 text-sm text-gray-400">
-                      <span>{b.label}</span>
+                      <span>{b.label} ({b.rate}%)</span>
                       <span>{formatCurrency(b.amount, 0)}</span>
                     </div>
                   ))}
+                  {results.mlttRebate > 0 && (
+                    <div className="flex justify-between pt-2 text-sm text-green-400">
+                      <span>Toronto First-Time Buyer Rebate</span>
+                      <span>-{formatCurrency(results.mlttRebate, 0)}</span>
+                    </div>
+                  )}
                 </div>
               )}
 
@@ -320,7 +245,7 @@ export default function LandTransferTax() {
                   <Info className="w-5 h-5 text-blue-400 mt-0.5 flex-shrink-0" />
                   <div className="text-sm text-blue-200">
                     <strong className="text-blue-300">When is it due?</strong>
-                    <p className="mt-1">Land transfer tax is typically due on your closing date. Your lawyer or notary will arrange payment from the proceeds of your sale. Budget for this cost early in your home search.</p>
+                    <p className="mt-1">Land transfer tax is typically due on your closing date. Your lawyer or notary pays it on registration from the funds you provide. Budget for this cost early in your home search.</p>
                   </div>
                 </div>
               </div>
@@ -344,15 +269,15 @@ export default function LandTransferTax() {
 
             <h3 className="text-2xl font-semibold text-gold-400 mt-8 mb-4">British Columbia Property Transfer Tax</h3>
             <p className="text-gray-300 leading-relaxed mb-4">
-              BC charges a Property Transfer Tax (PTT) based on tiered brackets: 1% on the first $200,000, 2% between $200,000 and $2,000,000, and 3% on the portion over $2,000,000. An additional 2% applies to properties over $3,000,000 for foreign entities and satellite families (exempt for Canadian citizens and permanent residents living in BC).
+              BC charges a Property Transfer Tax (PTT) based on tiered brackets: 1% on the first $200,000, 2% between $200,000 and $2,000,000, and 3% on the portion over $2,000,000. A further 2% applies to the residential portion of a property above $3,000,000 for all buyers. Foreign nationals and foreign entities also pay an additional 20% foreign buyers tax on residential property in specified areas.
             </p>
             <p className="text-gray-300 leading-relaxed mb-4">
-              <strong>First-Time Home Buyers&apos; Program:</strong> First-time buyers in BC may be fully exempt from the PTT on homes up to $835,000. A partial exemption applies for homes between $835,000 and $860,000. To qualify, you must be a Canadian citizen or permanent resident, have lived in BC for at least 12 months, have never owned an interest in a principal residence anywhere, and the home must be your principal residence.
+              <strong>First-Time Home Buyers&apos; Program:</strong> First-time buyers in BC pay no PTT on the first $500,000 (a saving of up to $8,000) for homes valued up to $835,000; tax on any portion above $500,000 is still payable. A partial exemption applies for homes between $835,000 and $860,000. To qualify, you must be a Canadian citizen or permanent resident, have lived in BC for at least 12 months, have never owned an interest in a principal residence anywhere, and the home must be your principal residence.
             </p>
 
             <h3 className="text-2xl font-semibold text-gold-400 mt-8 mb-4">Alberta Land Registration</h3>
             <p className="text-gray-300 leading-relaxed mb-4">
-              Alberta is one of the few provinces that does not charge a land transfer tax. Instead, you pay a modest land titles registration fee. The base fee is approximately $50 plus a small additional amount based on property value. This makes Alberta an attractive option for buyers looking to minimize closing costs. However, it&apos;s worth noting that Alberta has periodically proposed introducing a land transfer tax, so it&apos;s important to stay informed about potential changes.
+              Alberta is one of the few provinces that does not charge a land transfer tax. Instead, you pay Land Titles registration fees. Since October 2024 these are $50 plus $5 for every $5,000 of value — about $550 to register the transfer of a $500,000 home — with the same formula charged on the mortgage amount. This still makes Alberta an attractive option for buyers looking to minimize closing costs.
             </p>
 
             <h3 className="text-2xl font-semibold text-gold-400 mt-8 mb-4">Ontario Land Transfer Tax</h3>
@@ -360,10 +285,10 @@ export default function LandTransferTax() {
               Ontario&apos;s Land Transfer Tax uses five progressive brackets: 0.5% on the first $55,000, 1.0% from $55,000 to $250,000, 1.5% from $250,000 to $400,000, 2.0% from $400,000 to $2,000,000, and 2.5% on amounts over $2,000,000.
             </p>
             <p className="text-gray-300 leading-relaxed mb-4">
-              <strong>First-Time Buyer Rebate:</strong> Ontario provides a rebate of up to $4,475 for first-time home buyers, which effectively eliminates the tax on the first $368,333 of the purchase price. You must be at least 18 years old, occupy the home as your principal residence within 9 months of closing, and neither you nor your spouse can have owned a home anywhere in the world.
+              <strong>First-Time Buyer Rebate:</strong> Ontario provides a refund of up to $4,000 for first-time home buyers, which effectively eliminates the tax on the first $368,333 of the purchase price. You must be at least 18 years old, occupy the home as your principal residence within 9 months of closing, and neither you nor your spouse can have owned a home anywhere in the world.
             </p>
             <p className="text-gray-300 leading-relaxed mb-4">
-              <strong>Toronto MLTT:</strong> If you&apos;re buying in Toronto, you pay an additional Municipal Land Transfer Tax with the same bracket structure as the provincial tax. First-time buyers in Toronto may be eligible for a separate municipal rebate of up to $4,475.
+              <strong>Toronto MLTT:</strong> If you&apos;re buying in Toronto, you pay an additional Municipal Land Transfer Tax that mirrors the provincial brackets up to $3,000,000, then rises in steps from 4.40% to 8.60% on the portion above $3,000,000 (rates as of April 1, 2026). First-time buyers in Toronto may be eligible for a separate municipal rebate of up to $4,475.
             </p>
 
             <h3 className="text-2xl font-semibold text-gold-400 mt-8 mb-4">When Is Land Transfer Tax Due?</h3>
@@ -404,7 +329,7 @@ export default function LandTransferTax() {
         </section>
 
             {/* PDF Report Download */}
-            <div className="mt-4">
+            <div className="mt-4 mb-8 px-4 max-w-6xl mx-auto">
               <motion.button
                 onClick={() => setShowPdfModal(true)}
                 className="w-full bg-gradient-to-r from-gold-500 to-amber-500 text-black font-semibold py-4 px-6 rounded-xl hover:from-gold-400 hover:to-amber-400 transition-all flex items-center justify-center gap-2 shadow-lg shadow-gold-500/20"
@@ -441,7 +366,7 @@ export default function LandTransferTax() {
                         rows: [
                           { label: "Provincial LTT", value: "$" + Math.round(results.tax).toLocaleString("en-CA"), highlight: true },
                           ...(results.mltt ? [{ label: "Municipal LTT", value: "$" + Math.round(results.mltt.total).toLocaleString("en-CA") }] : []),
-                          { label: "Rebate", value: "$" + Math.round(results.rebate).toLocaleString("en-CA") },
+                          { label: "First-Time Buyer Relief", value: "$" + Math.round(results.savings).toLocaleString("en-CA") },
                           { label: "Total Owing", value: "$" + Math.round(results.totalOwing).toLocaleString("en-CA"), highlight: true },
                         ]
                       }

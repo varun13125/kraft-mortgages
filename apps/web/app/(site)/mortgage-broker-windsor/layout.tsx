@@ -1,5 +1,7 @@
 import { Metadata } from 'next';
 import { CityServiceJsonLd } from '@/components/SEO/CityServiceJsonLd';
+import Footer from '@/components/Footer';
+import { OG_DEFAULTS } from '@/lib/seo/og';
 
 export const metadata: Metadata = {
   title: 'Windsor Mortgage Broker | Best Rates & Fast Approval | Kraft Mortgages',
@@ -9,6 +11,7 @@ export const metadata: Metadata = {
     canonical: 'https://www.kraftmortgages.ca/mortgage-broker-windsor',
   },
   openGraph: {
+    ...OG_DEFAULTS,
     title: 'Windsor Mortgage Broker | Kraft Mortgages Canada',
     description: 'Top-rated Windsor mortgage broker with $2B+ funded and 18+ Years Combined Experience. Free pre-approval in 24 hours.',
     url: 'https://www.kraftmortgages.ca/mortgage-broker-windsor',
@@ -21,6 +24,7 @@ export default function WindsorLayout({ children }: { children: React.ReactNode 
     <>
       <CityServiceJsonLd cityName="Windsor" provinceName="ON" description="Licensed mortgage broker serving Windsor, ON. Residential, construction, self-employed, MLI Select, and private lending solutions." />
       {children}
+      <Footer />
     </>
   );
 }

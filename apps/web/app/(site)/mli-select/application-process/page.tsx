@@ -1,7 +1,6 @@
 "use client";
 import { motion } from "framer-motion";
 import { CheckCircle, Clock, FileText, Users, Building, Award, ArrowRight, Calendar } from "lucide-react";
-import Navigation from "@/components/Navigation";
 import Breadcrumb from "@/components/Breadcrumb";
 
 export default function ApplicationProcessPage() {
@@ -118,7 +117,6 @@ export default function ApplicationProcessPage() {
 
   return (
     <>
-      <Navigation />
       <main className="min-h-screen mt-16">
         {/* Breadcrumb */}
         <div className="px-4 py-6">

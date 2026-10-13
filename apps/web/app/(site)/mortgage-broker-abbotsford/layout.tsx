@@ -1,5 +1,7 @@
 import { Metadata } from 'next';
 import { CityServiceJsonLd } from '@/components/SEO/CityServiceJsonLd';
+import Footer from '@/components/Footer';
+import { OG_DEFAULTS } from '@/lib/seo/og';
 
 export const metadata: Metadata = {
   title: 'Abbotsford Mortgage Broker | Best Rates & Fast Approval | Kraft Mortgages',
@@ -8,6 +10,13 @@ export const metadata: Metadata = {
   alternates: {
     canonical: 'https://www.kraftmortgages.ca/mortgage-broker-abbotsford',
   },
+  // Without its own openGraph this page inherited the homepage's og:title/og:url.
+  openGraph: {
+    ...OG_DEFAULTS,
+    title: 'Abbotsford Mortgage Broker | Best Rates & Fast Approval | Kraft Mortgages',
+    description: 'Licensed Abbotsford mortgage broker with $2B+ funded and 18+ Years Combined Experience. Expert in residential, commercial, construction, and private lending. Free pre-approval in 24 hours.',
+    url: 'https://www.kraftmortgages.ca/mortgage-broker-abbotsford',
+  },
 };
 
 export default function AbbotsfordLayout({ children }: { children: React.ReactNode }) {
@@ -15,6 +24,7 @@ export default function AbbotsfordLayout({ children }: { children: React.ReactNo
     <>
       <CityServiceJsonLd cityName="Abbotsford" provinceName="BC" description="Licensed mortgage broker serving Abbotsford, BC. Residential, construction, self-employed, MLI Select, and private lending solutions." />
       {children}
+      <Footer />
     </>
   );
 }

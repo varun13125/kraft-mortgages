@@ -7,7 +7,8 @@ import { DollarSign, Calculator, Home, CheckCircle, ArrowRight, Gift, PiggyBank,
 import Link from "next/link";
 import { ValidatedInput, ValidatedSlider } from "@/components/ui/ValidatedInput";
 import { formatCurrency, formatPercentage } from "@/lib/utils/validation";
-import { payment } from "@/lib/calc/payment";
+import { cmhcPremiumRate, minimumDownPayment, isInsurable } from "@/lib/calc/cmhc";
+import { landTransferTax } from "@/lib/calc/landTransferTax";
 import PdfLeadModal from "@/components/PdfLeadModal";
 import { CalculatorSchema } from "@/components/SEO/CalculatorSchema";
 import { RelatedCalculators } from "@/components/calculators/RelatedCalculators";
@@ -15,59 +16,32 @@ import { RelatedCalculators } from "@/components/calculators/RelatedCalculators"
 const PROVINCES = ["BC", "Alberta", "Ontario"] as const;
 type Province = (typeof PROVINCES)[number];
 
+// Shared CMHC schedule (rate as a decimal; below the 5% minimum it isn't insurable — flagged in the UI)
 function calcCMHCPremium(downPaymentPct: number): number {
-  if (downPaymentPct >= 20) return 0;
-  if (downPaymentPct >= 15) return 0.028;
-  if (downPaymentPct >= 10) return 0.031;
-  if (downPaymentPct >= 5) return 0.04;
-  return 0;
+  return cmhcPremiumRate(downPaymentPct);
 }
 
+// Shared LTT helper: BC exemption covers only the first $500K (max $8,000) up to $835K,
+// phasing out at $860K; Ontario refund max $4,000; Alberta has no LTT (land titles fees only).
 function calcLandTransferTax(price: number, province: Province, isFirstTime: boolean): { tax: number; rebate: number } {
   if (province === "Alberta") return { tax: 0, rebate: 0 };
-
-  let tax = 0;
-  if (province === "BC") {
-    if (price <= 200000) tax = price * 0.01;
-    else if (price <= 2000000) tax = 200000 * 0.01 + (price - 200000) * 0.02;
-    else tax = 200000 * 0.01 + 1800000 * 0.02 + (price - 2000000) * 0.03;
-
-    if (isFirstTime) {
-      if (price <= 835000) return { tax, rebate: tax };
-      if (price <= 860000) {
-        const partial = tax * ((860000 - price) / 25000);
-        return { tax, rebate: partial };
-      }
-    }
-    return { tax, rebate: 0 };
-  }
-
-  // Ontario
-  if (price <= 55000) tax = price * 0.005;
-  else if (price <= 250000) tax = 55000 * 0.005 + (price - 55000) * 0.01;
-  else if (price <= 400000) tax = 55000 * 0.005 + 195000 * 0.01 + (price - 250000) * 0.015;
-  else if (price <= 2000000) tax = 55000 * 0.005 + 195000 * 0.01 + 150000 * 0.015 + (price - 400000) * 0.02;
-  else tax = 55000 * 0.005 + 195000 * 0.01 + 150000 * 0.015 + 1600000 * 0.02 + (price - 2000000) * 0.025;
-
-  if (isFirstTime) {
-    const rebate = Math.min(tax, 4000);
-    return { tax, rebate };
-  }
-  return { tax, rebate: 0 };
+  const r = landTransferTax({ price, province: province === "BC" ? "BC" : "ON", firstTime: isFirstTime });
+  return { tax: r.provincialTax, rebate: r.provincialRelief };
 }
 
 function calcGSTRebate(price: number, isNewBuild: boolean): number {
-  if (!isNewBuild) return 0;
-  if (price >= 800000) return 0;
-  // Federal GST new-housing rebate: 36% of GST on the first $350K, phasing out $350K–$450K
-  // Max rebate = $350,000 × 5% × 36% = $6,300
-  if (price <= 350000) return price * 0.05 * 0.36;
-  if (price <= 450000) {
-    const maxRebate = 350000 * 0.05 * 0.36; // $6,300
-    const phaseOutFactor = Math.max(0, (450000 - price) / 100000);
-    return maxRebate * phaseOutFactor;
-  }
-  return 0;
+  if (!isNewBuild || !(price > 0)) return 0;
+  // Existing federal GST new housing rebate: 36% of GST (max $6,300) to $350K, phased out by $450K
+  let newHousingRebate = 0;
+  if (price <= 350000) newHousingRebate = price * 0.05 * 0.36;
+  else if (price < 450000) newHousingRebate = 6300 * (450000 - price) / 100000;
+  // First-Time Home Buyers' GST rebate (law since Mar 12, 2026): full GST (max $50,000) on new
+  // homes up to $1M, phased out linearly to $0 at $1.5M. It tops up the new housing rebate.
+  const fullGst = Math.min(price * 0.05, 50000);
+  let firstTimeRebate = 0;
+  if (price <= 1000000) firstTimeRebate = fullGst;
+  else if (price < 1500000) firstTimeRebate = fullGst * (1500000 - price) / 500000;
+  return Math.max(newHousingRebate, firstTimeRebate);
 }
 
 export default function FirstTimeHomeBuyer() {
@@ -86,8 +60,9 @@ export default function FirstTimeHomeBuyer() {
     const fhsaMaxLifetime = 40000;
     const fhsaYearsNeeded = fhsaAnnualContrib > 0 ? Math.ceil(Math.min(savings, fhsaMaxLifetime) / fhsaAnnualContrib) : 0;
     const fhsaContributed = Math.min(savings, fhsaMaxLifetime);
-    // Tax savings = first-year contribution × marginal rate (the $8K annual cap applies)
-    const fhsaTaxSavings = fhsaAnnualContrib * (marginalRate / 100);
+    // Tax savings on everything contributed (max $8K/yr, $40K lifetime) — matches the
+    // "contributed over N years" label (it previously showed only one year's deduction)
+    const fhsaTaxSavings = fhsaContributed * (marginalRate / 100);
 
     // HBP
     const hbpLimit = isCouple ? 120000 : 60000;
@@ -109,6 +84,8 @@ export default function FirstTimeHomeBuyer() {
     const cmhcPremiumRate = calcCMHCPremium(downPaymentPct);
     const mortgageAmount = purchasePrice - savings;
     const cmhcPremium = cmhcPremiumRate > 0 ? mortgageAmount * cmhcPremiumRate : 0;
+    const minDown = minimumDownPayment(purchasePrice);
+    const belowMinimumDown = downPaymentPct < 20 && !isInsurable(purchasePrice, savings);
 
     // Total
     const totalIncentiveValue = fhsaTaxSavings + lttSavings + gstRebate;
@@ -121,7 +98,7 @@ export default function FirstTimeHomeBuyer() {
       hbpWithdrawal, hbpMonthlyRepayment, hbpRepaymentYears,
       lttSavings, ltt: ltt.tax - ltt.rebate,
       gstRebate,
-      cmhcPremium, cmhcPremiumRate,
+      cmhcPremium, cmhcPremiumRate, minDown, belowMinimumDown, downPaymentPct,
       totalIncentiveValue, effectiveDown, mortgageAmount,
     };
   }, [purchasePrice, annualIncome, savings, province, isNewBuild, isCouple, marginalRate]);
@@ -249,8 +226,14 @@ export default function FirstTimeHomeBuyer() {
 
                 {isNewBuild && (
                   <div className="flex justify-between items-center py-3 border-b border-white/10">
-                    <div><div className="font-medium">GST Rebate</div><div className="text-xs text-gray-400">New home GST rebate</div></div>
+                    <div><div className="font-medium">GST Rebate</div><div className="text-xs text-gray-400">First-time buyer GST rebate on a new home (agreements signed 2025–2030; confirm eligibility with CRA)</div></div>
                     <span className="font-semibold text-green-400">+{formatCurrency(results.gstRebate, 0)}</span>
+                  </div>
+                )}
+
+                {results.belowMinimumDown && (
+                  <div className="py-3 border-b border-white/10 text-sm text-red-300">
+                    Your savings ({results.downPaymentPct.toFixed(1)}%) are below the minimum down payment of {formatCurrency(results.minDown, 0)} for this price{purchasePrice >= 1500000 ? " — homes $1.5M+ need 20% down" : ""}.
                   </div>
                 )}
 
@@ -262,7 +245,7 @@ export default function FirstTimeHomeBuyer() {
                 )}
 
                 <div className="flex justify-between items-center py-3 border-b border-white/10">
-                  <div><div className="font-medium">Effective Down Payment</div><div className="text-xs text-gray-400">Savings + program benefits</div></div>
+                  <div><div className="font-medium">Savings + Program Benefits</div><div className="text-xs text-gray-400">Not all of this is cash at closing — LTT relief lowers closing costs, FHSA refunds arrive at tax time, and GST rebates are usually credited by the builder</div></div>
                   <span className="font-semibold text-gold-400">{formatCurrency(results.effectiveDown, 0)}</span>
                 </div>
               </div>
@@ -300,18 +283,18 @@ export default function FirstTimeHomeBuyer() {
 
             <h3 className="text-2xl font-semibold text-gold-400 mt-8 mb-4">Land Transfer Tax Rebates by Province</h3>
             <p className="text-gray-300 leading-relaxed mb-4">
-              <strong>British Columbia:</strong> First-time home buyers may qualify for a full exemption from the Property Transfer Tax on properties valued up to $500,000, with a partial exemption for properties up to $525,000 under the FTHR (First Time Home Buyers&apos; Program).
+              <strong>British Columbia:</strong> Under the First Time Home Buyers&apos; Program (since April 1, 2024), qualifying buyers pay no Property Transfer Tax on the first $500,000 of homes valued up to $835,000 — a saving of up to $8,000. The exemption phases out between $835,000 and $860,000. Newly built homes up to $1.1 million may qualify for a separate new-home exemption.
             </p>
             <p className="text-gray-300 leading-relaxed mb-4">
-              <strong>Alberta:</strong> Alberta does not have a provincial land transfer tax. Instead, a small registration fee of approximately $50 plus $1 per $5,000 of property value applies.
+              <strong>Alberta:</strong> Alberta does not have a provincial land transfer tax. Instead, Land Titles registration fees apply: $50 plus $5 per $5,000 of property value for the transfer, and the same formula on the mortgage amount (about $550 each on $500,000). There is no first-time buyer exemption.
             </p>
             <p className="text-gray-300 leading-relaxed mb-4">
-              <strong>Ontario:</strong> First-time buyers receive a rebate of up to $4,475 on the Ontario Land Transfer Tax. This effectively eliminates the tax on the first $368,000 of the purchase price.
+              <strong>Ontario:</strong> First-time buyers receive a refund of up to $4,000 on the Ontario Land Transfer Tax, which eliminates the provincial tax on the first $368,333 of the purchase price. Buyers in Toronto can also claim a municipal rebate of up to $4,475.
             </p>
 
             <h3 className="text-2xl font-semibold text-gold-400 mt-8 mb-4">GST/HST Rebate on New Homes</h3>
             <p className="text-gray-300 leading-relaxed mb-4">
-              If you&apos;re purchasing a newly built home, you may be eligible for a GST rebate of 36% of the GST paid, up to a maximum rebate of $6,300. This applies to new homes priced under $450,000, with the rebate phasing out entirely at $800,000. This can save you thousands at closing.
+              First-time buyers of a newly built home can now recover the full 5% GST (up to $50,000) on homes priced up to $1 million, with the rebate phasing out between $1 million and $1.5 million (First-Time Home Buyers&apos; GST Rebate, law since March 2026, for qualifying agreements signed from 2025 and before 2031). It tops up the older new housing rebate (36% of the GST, max $6,300, for homes under $450,000). Ontario also offers a rebate of up to $80,000 of the provincial portion of HST for first-time buyers of new homes. Confirm eligibility with your builder or the CRA.
             </p>
 
             <h3 className="text-2xl font-semibold text-gold-400 mt-8 mb-4">CMHC Mortgage Loan Insurance</h3>
@@ -357,7 +340,7 @@ export default function FirstTimeHomeBuyer() {
 
             <div className="flex flex-wrap gap-4 text-sm">
               <Link href="/calculators/affordability" className="text-gold-400 hover:text-gold-300 underline">Affordability Calculator</Link>
-              <Link href="/calculators/pre-approval" className="text-gold-400 hover:text-gold-300 underline">Stress Test Calculator</Link>
+              <Link href="/calculators/stress-test" className="text-gold-400 hover:text-gold-300 underline">Stress Test Calculator</Link>
               <Link href="/calculators/closing-costs" className="text-gold-400 hover:text-gold-300 underline">Closing Costs Calculator</Link>
               <Link href="/calculators/payment" className="text-gold-400 hover:text-gold-300 underline">Mortgage Payment Calculator</Link>
             </div>
@@ -365,7 +348,7 @@ export default function FirstTimeHomeBuyer() {
         </section>
 
             {/* PDF Report Download */}
-            <div className="mt-4">
+            <div className="mt-4 mb-8 px-4 max-w-6xl mx-auto">
               <motion.button
                 onClick={() => setShowPdfModal(true)}
                 className="w-full bg-gradient-to-r from-gold-500 to-amber-500 text-black font-semibold py-4 px-6 rounded-xl hover:from-gold-400 hover:to-amber-400 transition-all flex items-center justify-center gap-2 shadow-lg shadow-gold-500/20"
@@ -414,7 +397,7 @@ export default function FirstTimeHomeBuyer() {
                         rows: [
                           { label: "Mortgage Amount", value: "$" + Math.round(results.mortgageAmount || 0).toLocaleString("en-CA"), highlight: true },
                           { label: "CMHC Premium", value: "$" + Math.round(results.cmhcPremium || 0).toLocaleString("en-CA") },
-                          { label: "Gap to Purchase", value: "$" + Math.round(results.mortgageAmount - savings || 0).toLocaleString("en-CA") },
+                          { label: "Down Payment %", value: results.downPaymentPct.toFixed(1) + "%" + (results.belowMinimumDown ? " (below the $" + Math.round(results.minDown).toLocaleString("en-CA") + " minimum)" : "") },
                         ]
                       }
                     ],

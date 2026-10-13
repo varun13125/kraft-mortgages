@@ -7,6 +7,31 @@ import { ValidatedInput, ValidatedSlider } from "@/components/ui/ValidatedInput"
 import { payment } from "@/lib/calc/payment";
 import { CheckCircle, XCircle, TrendingDown, TrendingUp, Info } from "lucide-react";
 
+// Canadian fixed-rate convention: semi-annual compounding (same as lib/calc/payment.ts)
+const monthlyRate = (ratePct: number) => Math.pow(1 + ratePct / 100 / 2, 1 / 6) - 1;
+
+// Interest paid on an amortizing loan across consecutive rate segments (payment re-set at each rate change)
+function interestOver(principal: number, segments: { ratePct: number; months: number }[], amortMonths: number): number {
+  let balance = principal;
+  let interest = 0;
+  let elapsed = 0;
+  for (const seg of segments) {
+    if (seg.months <= 0) continue;
+    const remaining = Math.max(1, amortMonths - elapsed);
+    const pmt = payment({ principal: balance, annualRatePct: seg.ratePct, amortYears: remaining / 12, paymentsPerYear: 12 });
+    const r = monthlyRate(seg.ratePct);
+    for (let i = 0; i < seg.months && balance > 0; i++) {
+      const it = balance * r;
+      interest += it;
+      balance = Math.max(0, balance + it - pmt);
+    }
+    elapsed += seg.months;
+  }
+  return interest;
+}
+
+const HORIZON_MONTHS = 60;
+
 export default function PortVsBreakPage() {
   const [currentBalance, setCurrentBalance] = useState(350000);
   const [currentRate, setCurrentRate] = useState(2.89);
@@ -18,28 +43,43 @@ export default function PortVsBreakPage() {
   const [additionalMortgage, setAdditionalMortgage] = useState(300000);
   const [portFee, setPortFee] = useState(500);
   const [blendRate, setBlendRate] = useState(4.25);
+  const [mortgageType, setMortgageType] = useState<"fixed" | "variable">("fixed");
 
   const safeBalance = Math.max(1, currentBalance);
   const safeAmort = Math.max(1, remainingAmortYears);
+  const safeAdditional = Math.max(0, additionalMortgage);
+  const totalLoan = safeBalance + safeAdditional;
+  const newAmortMonths = newAmortYears * 12;
 
-  // OPTION A: Port (keep existing mortgage + blend/extend for new amount)
-  const portPayment = payment({ principal: safeBalance, annualRatePct: currentRate, amortYears: safeAmort, paymentsPerYear: 12 });
-  const additionalPayment = payment({ principal: additionalMortgage, annualRatePct: newRate, amortYears: newAmortYears, paymentsPerYear: 12 });
-  const totalPortMonthly = portPayment + additionalPayment;
-  const blendMonthly = payment({ principal: safeBalance + additionalMortgage, annualRatePct: blendRate, amortYears: newAmortYears, paymentsPerYear: 12 });
-  // Port typically offers: keep current rate on existing balance + new rate on new money, or a blended rate
-  // We show both options
-  const portTotalCost5yr = (totalPortMonthly * 60) + portFee;
+  // OPTION A: Port with blend-and-increase — one blended rate on the combined balance for the rest of
+  // your current term, then renewal at the new rate (assumption) for the remainder of the 5-year window.
+  const totalPortMonthly = payment({ principal: totalLoan, annualRatePct: blendRate, amortYears: newAmortYears, paymentsPerYear: 12 });
+  // Alternative structure some lenders use: existing portion stays at your rate, new money at today's rate
+  const existingPortionPayment = payment({ principal: safeBalance, annualRatePct: currentRate, amortYears: safeAmort, paymentsPerYear: 12 });
+  const newMoneyPayment = safeAdditional > 0 ? payment({ principal: safeAdditional, annualRatePct: newRate, amortYears: newAmortYears, paymentsPerYear: 12 }) : 0;
+  const twoPartMonthly = existingPortionPayment + newMoneyPayment;
+  const weightedRate = (safeBalance * currentRate + safeAdditional * newRate) / totalLoan;
+  const blendMonths = Math.min(Math.max(0, monthsLeftInTerm), HORIZON_MONTHS);
+  const portInterest5yr = interestOver(totalLoan, [
+    { ratePct: blendRate, months: blendMonths },
+    { ratePct: newRate, months: HORIZON_MONTHS - blendMonths },
+  ], newAmortMonths);
+  // 5-year cost = interest paid + fees (principal repaid is not a cost)
+  const portTotalCost5yr = portInterest5yr + portFee;
 
   // OPTION B: Break (pay penalty, get entirely new mortgage)
-  // Penalty = greater of 3 months interest or IRD
+  // Penalty: variable = 3 months' interest; fixed = greater of 3 months' interest or IRD
   const monthlyInterest = safeBalance * (currentRate / 100) / 12;
   const threeMonthsInterest = monthlyInterest * 3;
-  // Simplified IRD: (currentRate - newRate) * balance * (monthsLeft / 12), only if currentRate > newRate
-  const ird = currentRate > newRate ? 0 : Math.abs(currentRate - newRate) * safeBalance * (monthsLeftInTerm / 12) * 0.01;
+  // Simplified IRD: (contract rate − comparison rate) × balance × months left / 12 — only when your rate is HIGHER.
+  // Uses the new rate as the comparison rate; big banks using posted rates can charge much more.
+  const ird = mortgageType === "fixed" && currentRate > newRate
+    ? (currentRate - newRate) / 100 * safeBalance * (Math.max(0, monthsLeftInTerm) / 12)
+    : 0;
   const penalty = Math.max(threeMonthsInterest, ird);
-  const breakPayment = payment({ principal: safeBalance + additionalMortgage, annualRatePct: newRate, amortYears: newAmortYears, paymentsPerYear: 12 });
-  const breakTotalCost5yr = (breakPayment * 60) + penalty;
+  const breakPayment = payment({ principal: totalLoan, annualRatePct: newRate, amortYears: newAmortYears, paymentsPerYear: 12 });
+  const breakInterest5yr = interestOver(totalLoan, [{ ratePct: newRate, months: HORIZON_MONTHS }], newAmortMonths);
+  const breakTotalCost5yr = breakInterest5yr + penalty;
 
   const monthlyDiff = totalPortMonthly - breakPayment; // positive = port costs more monthly
   const totalDiff = portTotalCost5yr - breakTotalCost5yr;
@@ -74,6 +114,17 @@ export default function PortVsBreakPage() {
               <ValidatedSlider label="Current Interest Rate" value={currentRate} onChange={setCurrentRate} min={0.5} max={10} step={0.01} formatValue={(v) => v.toFixed(2) + "%"} />
               <ValidatedSlider label="Remaining Amortization" value={remainingAmortYears} onChange={(v) => setRemainingAmortYears(Math.round(v))} min={1} max={30} step={1} formatValue={(v) => Math.round(v) + " years"} />
               <ValidatedSlider label="Months Left in Term" value={monthsLeftInTerm} onChange={(v) => setMonthsLeftInTerm(Math.round(v))} min={1} max={60} step={1} formatValue={(v) => Math.round(v) + " months"} />
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">Current Mortgage Type</label>
+                <div className="flex gap-2">
+                  {(["fixed", "variable"] as const).map((t) => (
+                    <button key={t} onClick={() => setMortgageType(t)}
+                      className={`flex-1 py-2.5 px-4 rounded-xl font-semibold text-sm transition-all border ${mortgageType === t ? "bg-gold-500 text-black border-gold-500" : "bg-white/5 text-gray-300 border-white/10 hover:bg-white/10"}`}>
+                      {t === "fixed" ? "Fixed Rate" : "Variable Rate"}
+                    </button>
+                  ))}
+                </div>
+              </div>
 
               <div className="pt-4 border-t border-gray-700/50 space-y-4">
                 <h2 className="text-xl font-semibold text-gray-100">New Mortgage (If Breaking)</h2>
@@ -86,6 +137,7 @@ export default function PortVsBreakPage() {
                 <h2 className="text-xl font-semibold text-gray-100">Port-Specific Costs</h2>
                 <ValidatedInput label="Port/Transfer Fee" type="currency" value={portFee} onChange={setPortFee} validation={{ min: 0, max: 5000, message: "Lender's port/transfer fee" }} />
                 <ValidatedSlider label="Blended Rate (if porting)" value={blendRate} onChange={setBlendRate} min={0.5} max={10} step={0.01} formatValue={(v) => v.toFixed(2) + "%"} />
+                <p className="text-xs text-gray-500">Use the blended rate your lender quotes. A simple weighted average of your current rate and the new rate is {weightedRate.toFixed(2)}% — lenders often blend using their own rates, so quotes can be higher.</p>
               </div>
             </div>
 
@@ -115,14 +167,15 @@ export default function PortVsBreakPage() {
                   <div className={`rounded-lg p-4 border ${!breakWins ? "border-emerald-600/30 bg-emerald-950/20" : "border-gray-700/50 bg-gray-800/40"}`}>
                     <div className="text-xs text-gray-400 uppercase tracking-wider mb-2">Option A: Port</div>
                     <div className="text-xl font-bold text-gray-100">${Math.round(totalPortMonthly).toLocaleString()}<span className="text-xs text-gray-400">/mo</span></div>
-                    <div className="text-xs text-gray-500 mt-1">Current rate + new money</div>
-                    <div className="text-xs text-gray-500 mt-2 pt-2 border-t border-gray-700/30">5-yr cost: ${Math.round(portTotalCost5yr).toLocaleString()}</div>
+                    <div className="text-xs text-gray-500 mt-1">Blended {blendRate.toFixed(2)}% on ${Math.round(totalLoan).toLocaleString()}</div>
+                    <div className="text-xs text-gray-500 mt-1">Split structure: ~${Math.round(twoPartMonthly).toLocaleString()}/mo</div>
+                    <div className="text-xs text-gray-500 mt-2 pt-2 border-t border-gray-700/30">5-yr interest + fees: ${Math.round(portTotalCost5yr).toLocaleString()}</div>
                   </div>
                   <div className={`rounded-lg p-4 border ${breakWins ? "border-emerald-600/30 bg-emerald-950/20" : "border-gray-700/50 bg-gray-800/40"}`}>
                     <div className="text-xs text-gray-400 uppercase tracking-wider mb-2">Option B: Break</div>
                     <div className="text-xl font-bold text-gray-100">${Math.round(breakPayment).toLocaleString()}<span className="text-xs text-gray-400">/mo</span></div>
                     <div className="text-xs text-gray-500 mt-1">New rate entirely</div>
-                    <div className="text-xs text-gray-500 mt-2 pt-2 border-t border-gray-700/30">5-yr cost: ${Math.round(breakTotalCost5yr).toLocaleString()}</div>
+                    <div className="text-xs text-gray-500 mt-2 pt-2 border-t border-gray-700/30">5-yr interest + penalty: ${Math.round(breakTotalCost5yr).toLocaleString()}</div>
                   </div>
                 </div>
 
@@ -131,12 +184,12 @@ export default function PortVsBreakPage() {
                   <div className="text-sm text-gray-400 uppercase tracking-wider mb-3">Penalty to Break</div>
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between"><span className="text-gray-300">3 Months&apos; Interest</span><span className="text-gray-100">${Math.round(threeMonthsInterest).toLocaleString()}</span></div>
-                    <div className="flex justify-between"><span className="text-gray-300">Interest Rate Differential (est.)</span><span className="text-gray-100">${Math.round(ird).toLocaleString()}</span></div>
+                    <div className="flex justify-between"><span className="text-gray-300">Interest Rate Differential (est.)</span><span className="text-gray-100">{mortgageType === "variable" ? "N/A (variable)" : `$${Math.round(ird).toLocaleString()}`}</span></div>
                     <div className="flex justify-between pt-2 border-t border-gray-700/50 font-semibold"><span className="text-gray-200">Estimated Penalty</span><span className="text-gold-400">${Math.round(penalty).toLocaleString()}</span></div>
                   </div>
                   <div className="mt-3 flex items-start gap-2 text-xs text-gray-500">
                     <Info className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" />
-                    <span>Your lender charges the greater of 3 months&apos; interest or the IRD. Actual penalty may vary by lender.</span>
+                    <span>Fixed-rate lenders usually charge the greater of 3 months&apos; interest or the IRD; variable-rate mortgages usually 3 months&apos; interest. This IRD uses the new rate as the comparison rate — banks using posted rates can charge significantly more. Get a written quote from your lender.</span>
                   </div>
                 </div>
 
@@ -147,6 +200,8 @@ export default function PortVsBreakPage() {
                     {monthlyDiff > 0 ? "+" : ""}${Math.round(Math.abs(monthlyDiff)).toLocaleString()}/mo
                   </span>
                 </div>
+
+                <p className="text-xs text-gray-500 mb-4">Estimates only. Costs compare interest paid over 5 years plus fees/penalty (semi-annual compounding). Assumes the blended rate applies until your current term ends, then renews at the new rate.</p>
 
                 <a href="https://r.mtg-app.com/varun-chaudhry" target="_blank" rel="noopener noreferrer" className="block w-full py-3.5 px-6 bg-gradient-to-r from-gold-500 to-gold-600 text-gray-900 font-semibold rounded-lg hover:from-gold-400 hover:to-gold-500 transition-all text-center shadow-lg shadow-gold-500/20">
                   Talk to a Broker

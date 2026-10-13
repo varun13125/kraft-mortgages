@@ -14,29 +14,27 @@ type ChecklistItem = {
 export default function EligibilityChecklistPage() {
   const [checklist, setChecklist] = useState<ChecklistItem[]>([
     // Basic Eligibility
-    { id: "units", category: "Basic", requirement: "5+ Rental Units", description: "Property must have at least 5 rental units", checked: false, required: true },
-    { id: "purpose", category: "Basic", requirement: "Rental Purpose", description: "Property must be for rental housing purposes", checked: false, required: true },
-    { id: "location", category: "Basic", requirement: "Canadian Location", description: "Property must be located in Canada", checked: false, required: true },
-    { id: "mortgage", category: "Basic", requirement: "CMHC Insured Mortgage", description: "Must obtain CMHC mortgage loan insurance", checked: false, required: true },
-    
-    // Affordability Requirements
-    { id: "affordability", category: "Affordability", requirement: "Affordability Commitment", description: "Commit to affordable housing for minimum period", checked: false, required: true },
-    { id: "income_limits", category: "Affordability", requirement: "Income Limits", description: "Tenant income limits based on median household income", checked: false, required: true },
-    { id: "rent_limits", category: "Affordability", requirement: "Rent Limits", description: "Rent must not exceed 30% of median household income", checked: false, required: true },
-    
-    // Energy Efficiency
-    { id: "energy_audit", category: "Energy", requirement: "Energy Audit", description: "Conduct energy audit or assessment", checked: false, required: false },
-    { id: "energy_improve", category: "Energy", requirement: "Energy Improvements", description: "Implement energy efficiency improvements", checked: false, required: false },
-    
-    // Accessibility
-    { id: "visitable", category: "Accessibility", requirement: "Visitable Units", description: "Units meet visitable design standards", checked: false, required: false },
-    { id: "accessible", category: "Accessibility", requirement: "Accessible Units", description: "Some units fully accessible", checked: false, required: false },
-    { id: "barrier_free", category: "Accessibility", requirement: "Barrier-Free Commons", description: "Common areas are barrier-free", checked: false, required: false },
-    
-    // Documentation
-    { id: "business_plan", category: "Documentation", requirement: "Business Plan", description: "Submit detailed business plan", checked: false, required: true },
-    { id: "financial_docs", category: "Documentation", requirement: "Financial Documents", description: "Provide financial statements and projections", checked: false, required: true },
-    { id: "construction_docs", category: "Documentation", requirement: "Construction Documents", description: "Submit construction plans and specifications", checked: false, required: true },
+    { id: "units", category: "Basic", requirement: "5+ Rental Units", description: "Minimum 5 residential units (retirement homes: 50+ units/beds)", checked: false, required: true },
+    { id: "purpose", category: "Basic", requirement: "Rental Purpose", description: "Standard rental, SRO, supportive or retirement housing (student housing: energy & accessibility only)", checked: false, required: true },
+    { id: "nonres", category: "Basic", requirement: "Non-Residential ≤ 30%", description: "Non-residential space must not exceed 30% of gross floor area or 30% of lending value", checked: false, required: true },
+    { id: "mortgage", category: "Basic", requirement: "CMHC Insured Mortgage", description: "Financing through a CMHC Approved Lender with mortgage loan insurance", checked: false, required: true },
+    { id: "points", category: "Basic", requirement: "Minimum 50 Points", description: "Any combination of affordability, energy efficiency and accessibility commitments totalling 50+ points", checked: false, required: true },
+    // Affordability (optional outcome)
+    { id: "affordability", category: "Affordability", requirement: "Affordable Units", description: "New: 10% / 15% / 25% of units; existing: 40% / 60% / 80% of units (50 / 70 / 100 points)", checked: false, required: false },
+    { id: "rent_limits", category: "Affordability", requirement: "Rent Limits", description: "Affordable-unit rents at or below 30% of the market's median renter income", checked: false, required: false },
+    { id: "affordability_term", category: "Affordability", requirement: "10+ Year Commitment", description: "Maintain affordability for at least 10 years (20+ years earns 30 bonus points); annual compliance reporting", checked: false, required: false },
+    // Energy Efficiency (optional outcome)
+    { id: "energy_audit", category: "Energy", requirement: "Energy Model / Audit", description: "New: modelled vs NECB/NBC Tier 1; existing: baseline energy audit", checked: false, required: false },
+    { id: "energy_improve", category: "Energy", requirement: "Energy Target", description: "New: 25% / 50% / 60% better than NECB Tier 1; existing: 15% / 25% / 40% reduction (20 / 35 / 50 points)", checked: false, required: false },
+    // Accessibility (optional outcome)
+    { id: "visitable", category: "Accessibility", requirement: "100% Visitable Units", description: "Prerequisite for accessibility points: all units visitable per CSA B651:23", checked: false, required: false },
+    { id: "barrier_free", category: "Accessibility", requirement: "Barrier-Free Commons", description: "Prerequisite: common areas barrier-free per CSA B651:23", checked: false, required: false },
+    { id: "accessible", category: "Accessibility", requirement: "Accessible / Universal Units", description: "15% accessible or universal-design units, or RHFAC v4.0 60–79% (20 pts); higher thresholds or RHFAC Gold (30 pts)", checked: false, required: false },
+    // Borrower & Documentation
+    { id: "experience", category: "Documentation", requirement: "Management Experience", description: "5+ years managing similar multi-unit rentals, or a professional property management contract", checked: false, required: true },
+    { id: "net_worth", category: "Documentation", requirement: "Net Worth", description: "Borrower net worth of at least 25% of the loan amount (minimum $100,000)", checked: false, required: true },
+    { id: "financial_docs", category: "Documentation", requirement: "Financial Documents", description: "Financial statements, rent roll / pro forma and operating projections", checked: false, required: true },
+    { id: "construction_docs", category: "Documentation", requirement: "Construction Documents", description: "New construction only: plans, specifications, budget and permits", checked: false, required: false },
   ]);
 
   const toggleItem = (id: string) => {

@@ -260,7 +260,7 @@ export default function AmortizationPage() {
                       style={{ animationDelay: `${index * 0.1 + 0.6}s` }}
                     >
                       <div className="text-center">
-                        <div className="text-xs text-gray-500 uppercase tracking-wider mb-1">{p.years} Year Term</div>
+                        <div className="text-xs text-gray-500 uppercase tracking-wider mb-1">{p.years}-Year Amortization</div>
                         <div className={`text-2xl font-bold mb-2 ${
                           p.years === 25 ? 'text-red-400' :
                           p.years === 40 ? 'text-orange-400' :

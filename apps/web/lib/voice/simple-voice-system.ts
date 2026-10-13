@@ -49,7 +49,6 @@ export class SimpleVoiceSystem {
       const transcript = result[0].transcript;
       const isFinal = result.isFinal;
 
-      console.log('Speech recognition result:', { transcript, isFinal });
 
       if (this.callbacks.onTranscript && transcript) {
         this.callbacks.onTranscript(transcript, isFinal);
@@ -100,8 +99,11 @@ export class SimpleVoiceSystem {
     }
 
     try {
-      // Request microphone permission
-      await navigator.mediaDevices.getUserMedia({ audio: true });
+      // Request microphone permission, then release the stream immediately: SpeechRecognition
+      // opens its own capture. Leaving these tracks running kept the browser's "mic in use"
+      // indicator on for the rest of the session.
+      const permissionStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      permissionStream.getTracks().forEach((track) => track.stop());
 
       this.recognition.start();
       return true;
@@ -164,7 +166,12 @@ export class SimpleVoiceSystem {
           URL.revokeObjectURL(audioUrl);
           resolve(false);
         };
-        audio.play();
+        // play() rejects when autoplay is blocked; without this the promise never settled and
+        // the UI stayed in "speaking" state with the mic disabled.
+        audio.play().catch(() => {
+          URL.revokeObjectURL(audioUrl);
+          resolve(false);
+        });
       });
     } catch (error) {
       console.error('Speech synthesis error:', error);
@@ -203,10 +210,19 @@ export class SimpleVoiceSystem {
 
   // Cleanup
   destroy() {
+    this.callbacks = {};
     if (this.recognition) {
-      this.recognition.stop();
+      try {
+        this.recognition.onresult = null;
+        this.recognition.onstart = null;
+        this.recognition.onend = null;
+        this.recognition.onerror = null;
+        this.recognition.abort();
+      } catch {
+        // ignore - recognition may not have been started
+      }
       this.recognition = null;
     }
-    this.callbacks = {};
+    this.isListening = false;
   }
 }

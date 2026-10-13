@@ -1,5 +1,6 @@
 import { firestore } from "@/lib/firebaseAdmin";
 import { getLiveRatesData } from "@/lib/rates";
+import { payment } from "@/lib/calc/payment";
 import { ToolResult, MortgageTool, Province } from "./types";
 
 export interface RateData {
@@ -188,31 +189,21 @@ export class RateTools {
       const rates = ratesResult.data.rates;
       const amortization = 25; // Standard amortization
 
-      // Calculate payments for each rate
-      const comparisons = rates.map((rateInfo: any, index: number) => {
-        const monthlyRate = rateInfo.rate / 100 / 12;
-        const numPayments = amortization * 12;
-        
-        let monthlyPayment: number;
-        if (monthlyRate === 0) {
-          monthlyPayment = loanAmount / numPayments;
-        } else {
-          monthlyPayment = loanAmount * 
-            (monthlyRate * Math.pow(1 + monthlyRate, numPayments)) / 
-            (Math.pow(1 + monthlyRate, numPayments) - 1);
-        }
-        
+      // Calculate payments for each rate (Canadian semi-annual compounding, same as the calculators)
+      const numPayments = amortization * 12;
+      const withPayments = rates.map((rateInfo: any) => {
+        const monthlyPayment = payment({ principal: loanAmount, annualRatePct: rateInfo.rate, amortYears: amortization });
         const totalInterest = (monthlyPayment * numPayments) - loanAmount;
-        const savings = index === 0 ? 0 : (comparisons?.[0]?.totalInterest || 0) - totalInterest;
-
-        return {
-          lender: rateInfo.lender,
-          rate: rateInfo.rate,
-          monthlyPayment: Math.round(monthlyPayment),
-          totalInterest: Math.round(totalInterest),
-          savings: Math.round(savings)
-        };
+        return { rateInfo, monthlyPayment, totalInterest };
       });
+      const baseInterest = withPayments[0]?.totalInterest ?? 0;
+      const comparisons = withPayments.map(({ rateInfo, monthlyPayment, totalInterest }: { rateInfo: any; monthlyPayment: number; totalInterest: number }, index: number) => ({
+        lender: rateInfo.lender,
+        rate: rateInfo.rate,
+        monthlyPayment: Math.round(monthlyPayment),
+        totalInterest: Math.round(totalInterest),
+        savings: index === 0 ? 0 : Math.round(baseInterest - totalInterest)
+      }));
 
       const result = {
         loanAmount,

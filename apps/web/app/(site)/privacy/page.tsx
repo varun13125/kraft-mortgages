@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import { OG_DEFAULTS } from "@/lib/seo/og";
 import {
   Shield,
   Lock,
@@ -28,6 +29,7 @@ export const metadata: Metadata = {
     canonical: "https://www.kraftmortgages.ca/privacy",
   },
   openGraph: {
+    ...OG_DEFAULTS,
     title: "Privacy Policy | Kraft Mortgages Canada Inc.",
     description:
       "Learn how Kraft Mortgages Canada Inc. collects, safeguards, and processes personal and financial information under Canadian privacy laws.",

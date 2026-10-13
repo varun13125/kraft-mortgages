@@ -46,7 +46,7 @@ export async function GET() {
     return NextResponse.json(
       {
         success: false,
-        error: err?.message || "Failed to load live rates",
+        error: "Failed to load live rates",
         benchmarks: null,
       },
       { status: 500 }
@@ -58,11 +58,12 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json().catch(() => ({}));
     const data = await fetchRatesWithRemoteFallback();
+    const requestedProvince = ["BC", "AB", "ON"].includes(body?.province) ? body.province : null;
 
     return NextResponse.json(
       {
         ...data,
-        requestedProvince: body?.province ?? null,
+        requestedProvince,
       },
       {
         status: 200,
@@ -77,7 +78,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(
       {
         success: false,
-        error: err?.message || "Failed to load live rates",
+        error: "Failed to load live rates",
       },
       { status: 500 }
     );

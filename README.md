@@ -2,6 +2,17 @@
 
 A single Next.js application with integrated AI content generation pipeline for automated mortgage industry content creation.
 
+## Developer quick reference (updated 2026-10)
+
+The sections further down describe the original AI content pipeline and are partly out of date. Current facts:
+
+- **Monorepo:** pnpm workspaces. `apps/web` (`@kraft/web`, the site, Next.js 14 App Router), `mli-select-complete` (`mli-portal`, a static-export microsite copied into `apps/web/public/mli-select` at build time), `packages/prisma` (optional Postgres schema), `packages/ui` (empty placeholder).
+- **Install / run (local):** `pnpm install` → `pnpm dev` (http://localhost:3000). Other scripts: `pnpm typecheck`, `pnpm lint`, `pnpm build`.
+- **Env vars:** copy `apps/web/.env.example` to `apps/web/.env.local`. Next.js only reads env files from `apps/web/`. That example file is the full, commented list of every variable the code reads.
+- **Vercel deploy (as configured today):** the project Root Directory is the **repo root**, so the **root `vercel.json` is the one in effect**. It uses `npm install` (resolved from `package-lock.json`) and runs `npm run build`, which uses pnpm to build `mli-portal` and then `@kraft/web`. `apps/web/vercel.json` is **ignored**, so its apex→www redirect, `X-Robots-Tag` header, `/crewapi` rewrite and `/api/cron/daily` cron do not run. Two lockfiles exist (`package-lock.json` for prod, `pnpm-lock.yaml` for local/CI). See `DEVLOG/audit-2026-10/platform-build-deps.md` before changing any of this.
+- **Cron:** `/api/orchestrate` runs at `5 9 * * *`. Vercel cron times are **UTC**, so that is 09:05 UTC (about 2:05 AM Vancouver), not 9:05 AM local time. Set `CRON_SECRET` in Vercel so cron calls are authenticated.
+- **CI:** `.github/workflows/ci.yml` runs a blocking typecheck, a lint job that does not block yet (existing errors still need fixing), and a build.
+
 ## 🚀 Features
 
 - **AI Agent Pipeline**: Scout → Brief → Writer → Gate → Editor → Publisher
@@ -14,7 +25,7 @@ A single Next.js application with integrated AI content generation pipeline for 
 
 ## 📋 Environment Variables Required
 
-Create `.env.local` with these variables:
+Create `apps/web/.env.local` (subset shown — the full list is in `apps/web/.env.example`):
 
 ```env
 # Firebase Web Config (Required)
@@ -55,7 +66,7 @@ CREWAPI_SECRET=your-random-secret-string
 
 ### 1. Install Dependencies
 ```bash
-npm install
+pnpm install
 ```
 
 ### 2. Firebase Setup
@@ -87,7 +98,7 @@ npm install
 3. Add all environment variables in Vercel dashboard
 4. Deploy!
 
-The system will automatically run daily at 9:05 AM Vancouver time via Vercel Cron.
+The system runs daily at 09:05 UTC (`5 9 * * *` in the root `vercel.json`, about 2:05 AM Vancouver) via Vercel Cron.
 
 ## 📊 Dashboard Usage
 
@@ -144,16 +155,16 @@ Login with your Firebase admin account.
 
 ```bash
 # Install dependencies
-npm install
+pnpm install
 
 # Start development server
-npm run dev
+pnpm dev
 
 # Open browser
 http://localhost:3000
 ```
 
-For local development, update `.env.local` with your API keys and Firebase config.
+For local development, put your API keys and Firebase config in `apps/web/.env.local`.
 
 ## 🔒 Security Features
 
@@ -198,7 +209,7 @@ If Google Search Console is configured:
 ## 📖 Content Generation Process
 
 ### Automated Daily Runs
-1. Cron triggers `/api/orchestrate` at 9:05 AM Vancouver time
+1. Cron triggers `/api/orchestrate` at 09:05 UTC
 2. System creates new auto-discovery run
 3. Scout finds trending mortgage topics from authoritative sources
 4. Brief creates SEO-optimized content strategy

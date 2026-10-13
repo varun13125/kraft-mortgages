@@ -2,7 +2,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown, HelpCircle, DollarSign, Calendar, Building, Users } from "lucide-react";
-import Navigation from "@/components/Navigation";
 import Breadcrumb from "@/components/Breadcrumb";
 
 export default function FAQPage() {
@@ -19,11 +18,11 @@ export default function FAQPage() {
         },
         {
           q: "Who is eligible for MLI Select?",
-          a: "Developers and property owners building new multi-unit residential projects (5+ units) can apply. Projects must meet minimum scoring thresholds and commit to long-term affordability requirements."
+          a: "Owners and developers of new or existing rental projects with 5+ units (50+ for retirement homes) — standard rental, SRO, supportive and retirement housing; student housing qualifies through energy efficiency and accessibility only. Projects must score at least 50 points."
         },
         {
           q: "What are the minimum requirements?",
-          a: "Projects must achieve at least 50 points across the three categories (Affordability, Energy Efficiency, Accessibility) and maintain certain rent-to-income ratios for eligible tenants."
+          a: "Projects must achieve at least 50 points from any combination of Affordability, Energy Efficiency and Accessibility commitments. Affordability is optional — if chosen, the affordable units' rents must stay at or below 30% of median renter income for at least 10 years."
         }
       ]
     },
@@ -33,7 +32,7 @@ export default function FAQPage() {
       questions: [
         {
           q: "How does the scoring system work?",
-          a: "Projects earn points in three categories: Affordability (up to 50 points), Energy Efficiency (up to 30 points), and Accessibility (up to 20 points). Total points determine your tier level and benefits."
+          a: "Projects earn points in three categories: Affordability (50 / 70 / 100 points, plus 30 bonus points for a 20+ year commitment), Energy Efficiency (20 / 35 / 50 points) and Accessibility (20 / 30 points). Total points (minimum 50) determine your tier and benefits."
         },
         {
           q: "What are the tier thresholds?",
@@ -51,15 +50,15 @@ export default function FAQPage() {
       questions: [
         {
           q: "How much can I save on insurance premiums?",
-          a: "Premium discounts range from 5-10% for Tier 50, 15-20% for Tier 70, and up to 25% for Tier 100. On a $10M project, this could mean savings of $75K to $500K."
+          a: "CMHC discounts the premium (base rate plus surcharges) by 10% at 50 points, 20% at 70 points and 30% at 100 points. Under CMHC's July 2025 premium grid that is roughly $60K–$250K on a $10M insured loan, depending on LTV, loan purpose and amortization."
         },
         {
           q: "What loan-to-value ratios are available?",
-          a: "MLI Select offers enhanced LTV ratios compared to standard CMHC programs. Higher tiers unlock progressively better leverage, reducing your equity requirements."
+          a: "New construction: up to 95% loan-to-cost at 50, 70 or 100 points. Existing properties: up to 85% loan-to-value at 50 points and up to 95% at 70+ points (residential component; non-residential space is capped at 75%)."
         },
         {
           q: "Are there extended amortization options?",
-          a: "Yes, MLI Select projects can qualify for amortization periods up to 40 years, significantly improving cash flow compared to standard 25-year terms."
+          a: "Yes — up to 40 years at 50 points, 45 years at 70 points and 50 years at 100 points (never beyond the property's remaining economic life). CMHC adds a premium surcharge of 0.25% for each 5 years beyond 25."
         }
       ]
     },
@@ -69,7 +68,7 @@ export default function FAQPage() {
       questions: [
         {
           q: "How long does the approval process take?",
-          a: "Initial review typically takes 4-6 weeks. Higher tier applications (Tier 70+) receive priority processing, with Tier 100 projects getting expedited approval."
+          a: "Timelines vary with the lender, CMHC volumes and file completeness — plan for several weeks from a complete submission. CMHC does not publish faster processing for higher tiers; a complete, well-documented package is the best way to avoid delays."
         },
         {
           q: "What documentation is required?",
@@ -103,7 +102,6 @@ export default function FAQPage() {
 
   return (
     <>
-      <Navigation />
       <main className="min-h-screen mt-16">
         {/* Breadcrumb */}
         <div className="px-4 py-6">

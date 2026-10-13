@@ -1,5 +1,7 @@
 import { Metadata } from 'next';
 import { CityServiceJsonLd } from '@/components/SEO/CityServiceJsonLd';
+import Footer from '@/components/Footer';
+import { OG_DEFAULTS } from '@/lib/seo/og';
 
 export const metadata: Metadata = {
   title: 'Victoria Mortgage Broker | Best Rates & Fast Approval | Kraft Mortgages',
@@ -9,6 +11,7 @@ export const metadata: Metadata = {
     canonical: 'https://www.kraftmortgages.ca/mortgage-broker-victoria',
   },
   openGraph: {
+    ...OG_DEFAULTS,
     title: 'Victoria Mortgage Broker | Kraft Mortgages Canada',
     description: 'Top-rated Victoria mortgage broker with $2B+ funded and 18+ Years Combined Experience. Free pre-approval in 24 hours.',
     url: 'https://www.kraftmortgages.ca/mortgage-broker-victoria',
@@ -21,6 +24,7 @@ export default function VictoriaLayout({ children }: { children: React.ReactNode
     <>
       <CityServiceJsonLd cityName="Victoria" provinceName="BC" description="Licensed mortgage broker serving Victoria, BC. Residential, construction, self-employed, MLI Select, and private lending solutions." />
       {children}
+      <Footer />
     </>
   );
 }

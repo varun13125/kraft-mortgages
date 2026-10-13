@@ -1,4 +1,5 @@
-"use client";
+// Server Component: this page has no client-side interactivity, so it no longer
+// ships as a client bundle ("use client" removed in the 2026-10 audit).
 import Navigation from "@/components/Navigation";
 import Link from "next/link";
 import { MapPin, Phone, Building, TrendingUp, Home, Wheat } from "lucide-react";
@@ -16,7 +17,7 @@ export default function AbbotsfordPage() {
                             Abbotsford, BC
                         </div>
                         <h1 className="text-4xl md:text-6xl font-bold mb-6 text-white">
-                            Abbotsford's Trusted Mortgage Experts
+                            Abbotsford&apos;s Trusted Mortgage Experts
                         </h1>
                         <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-8">
                             Nestled in the heart of the Fraser Valley, Abbotsford is a community rich in opportunity. Kraft Mortgages provides expert mortgage services to farmers, entrepreneurs, and families.
@@ -38,12 +39,12 @@ export default function AbbotsfordPage() {
                             <div className="bg-white/5 rounded-2xl p-6 border border-white/10">
                                 <Home className="w-10 h-10 text-gold-400 mb-4" />
                                 <h3 className="text-xl font-bold mb-3">Residential Mortgages</h3>
-                                <p className="text-gray-400">Whether you're looking for a home in the city or a property with more space, we offer mortgage solutions tailored to the Abbotsford market.</p>
+                                <p className="text-gray-400">Whether you&apos;re looking for a home in the city or a property with more space, we offer mortgage solutions tailored to the Abbotsford market.</p>
                             </div>
                             <div className="bg-white/5 rounded-2xl p-6 border border-white/10">
                                 <TrendingUp className="w-10 h-10 text-gold-400 mb-4" />
                                 <h3 className="text-xl font-bold mb-3">Self-Employed Mortgages</h3>
-                                <p className="text-gray-400">The Fraser Valley's economy is built by entrepreneurs. We offer specialized mortgage products designed for the self-employed.</p>
+                                <p className="text-gray-400">The Fraser Valley&apos;s economy is built by entrepreneurs. We offer specialized mortgage products designed for the self-employed.</p>
                             </div>
                             <div className="bg-white/5 rounded-2xl p-6 border border-white/10">
                                 <Wheat className="w-10 h-10 text-gold-400 mb-4" />

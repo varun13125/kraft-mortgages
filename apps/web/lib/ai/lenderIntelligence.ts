@@ -112,51 +112,105 @@ const LENDER_ALIASES: Record<string, string[]> = {
   'vault': ['Vault Capital Inc.']
 };
 
+// Words that appear in lender names but are generic mortgage / English vocabulary.
+// They can never identify a lender on their own (e.g. "home" must not resolve to
+// Home Trust, "for" must not resolve to "MCAN Home - Precision Prime for Insured").
+const GENERIC_NAME_WORDS = new Set([
+  'bank', 'banks', 'corp', 'canada', 'canadian', 'inc', 'ltd', 'financial', 'finance', 'financi', 'fin',
+  'mortgage', 'mortgages', 'capital', 'services', 'group', 'the', 'of', 'and', 'corporation', 'credit',
+  'credits', 'union', 'for', 'all', 'home', 'homes', 'first', 'national', 'trust', 'savings', 'private',
+  'lending', 'lender', 'lenders', 'investment', 'investments', 'equity', 'prime', 'insured', 'precision',
+  'west', 'western', 'coast', 'coastal', 'island', 'valley', 'community', 'peoples', 'royal',
+  'alternative', 'alt', 'asset', 'management', 'funding', 'fund', 'funds', 'holdings', 'direct', 'choice',
+  'classic', 'connect', 'secure', 'solutions', 'source', 'point', 'near', 'one', 'three', 'seven', 'sun',
+  'farm', 'micro', 'neo', 'domain', 'mandate', 'access', 'effort', 'stop', 'reliable', 'professional',
+  'professionals', 'premiere', 'reverse', 'shelter', 'trailer', 'consumers', 'company', 'brokers',
+  'quebec', 'montreal', 'mic', 'mip', 'circle', 'peaks', 'den',
+]);
+
+// Brand tokens / aliases that are also ordinary English words. They only count as a
+// lender reference when the query also contains lender-context vocabulary.
+const AMBIGUOUS_BRAND_WORDS = new Set([
+  'aspire', 'strive', 'optimum', 'marathon', 'radius', 'bloom', 'cove', 'chip', 'vault', 'alpine',
+  'neighbourhood', 'equitable', 'envision', 'meridian', 'cambridge', 'excalibur', 'drake', 'cedar',
+  'pioneer', 'armada', 'atrium', 'lanyard', 'lions', 'eclipse', 'sequence', 'fraction', 'greenlight',
+  'calvert', 'resco',
+]);
+
+const LENDER_CONTEXT_RE =
+  /\b(lender|lenders|bank|banks|mic|trust|capital|financial|credit union|underwrit\w*|guideline\w*|polic(?:y|ies)|bdm|approv\w*|programs?|products?|offers?|offering|lends?|lending|rates? (?:at|from|with))\b/;
+
+const distinctiveTokens = (name: string): string[] =>
+  name
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, ' ')
+    .split(/\s+/)
+    .filter(w => w.length >= 3 && !GENERIC_NAME_WORDS.has(w));
+
+/**
+ * Resolves an alias target name to a lender record. Exact name match first, then a
+ * lender whose distinctive tokens are all contained in the target's tokens
+ * (e.g. alias target "CTBC Bank Corp. (Canada)" -> dataset "CTBC Bank").
+ */
+const findLenderForAliasTarget = (targetName: string): LenderDetail | undefined => {
+  const exact = CANADIAN_LENDERS.find(l => l.name.toLowerCase() === targetName.toLowerCase());
+  if (exact) return exact;
+  const targetTokens = new Set(distinctiveTokens(targetName));
+  if (targetTokens.size === 0) return undefined;
+  return CANADIAN_LENDERS.find(l => {
+    const tokens = distinctiveTokens(l.name);
+    return tokens.length > 0 && tokens.every(t => targetTokens.has(t));
+  });
+};
+
 /**
  * Universal Lender Resolver
- * Matches ANY query against all 125 Canadian lenders in the database.
+ * Matches a query against the Canadian lender database. Deliberately conservative:
+ * a false positive injects the wrong lender's dossier into the chat prompt, which is
+ * far worse than falling back to a general answer.
  */
 export const resolveLenderFromQuery = (query: string): LenderDetail | null => {
-  const cleanQ = query.toLowerCase().replace(/[^a-z0-9\s]/g, ' ');
-  const words = cleanQ.split(/\s+/).filter(w => w.length > 0);
+  const cleanQ = ` ${query.toLowerCase().replace(/[^a-z0-9\s]/g, ' ').replace(/\s+/g, ' ').trim()} `;
+  const words = cleanQ.trim().split(' ').filter(w => w.length > 0);
+  const hasLenderContext = LENDER_CONTEXT_RE.test(cleanQ);
 
-  // 1. Direct Alias & Acronym Matching
+  // 1. Direct Alias & Acronym Matching (whole-word / whole-phrase only)
   for (const [alias, fullNames] of Object.entries(LENDER_ALIASES)) {
-    const isMultiWord = alias.includes(' ');
-    const isMatch = isMultiWord
-      ? cleanQ.includes(alias)
-      : words.includes(alias) || cleanQ.includes(` ${alias} `) || cleanQ.startsWith(`${alias} `) || cleanQ.endsWith(` ${alias}`);
+    const isMatch = alias.includes(' ') ? cleanQ.includes(` ${alias} `) : words.includes(alias);
+    if (!isMatch) continue;
+    if (AMBIGUOUS_BRAND_WORDS.has(alias) && !hasLenderContext) continue;
 
-    if (isMatch) {
-      for (const fn of fullNames) {
-        const found = CANADIAN_LENDERS.find(l => l.name.toLowerCase() === fn.toLowerCase());
-        if (found) return found;
-      }
+    for (const fn of fullNames) {
+      const found = findLenderForAliasTarget(fn);
+      if (found) return found;
     }
   }
 
-  // 2. Full Name / Brand Match across all 125 lenders
+  // 2. Full Name / Distinctive Brand Token Match
   for (const lender of CANADIAN_LENDERS) {
-    const lName = lender.name.toLowerCase();
-
-    // Check if cleaned query contains full lender name
-    if (cleanQ.includes(lName)) {
+    const normalizedName = lender.name.toLowerCase().replace(/[^a-z0-9\s]/g, ' ').replace(/\s+/g, ' ').trim();
+    if (normalizedName.length >= 4 && cleanQ.includes(` ${normalizedName} `)) {
       return lender;
     }
 
-    // Check if key distinctive brand name word matches
-    const distinctiveWords = lName
-      .replace(/[^a-z0-9\s]/g, ' ')
-      .split(/\s+/)
-      .filter(w => !['bank', 'corp', 'canada', 'inc', 'ltd', 'financial', 'mortgage', 'mortgages', 'capital', 'services', 'group', 'the', 'of', 'and', 'corporation', 'credit', 'union'].includes(w) && w.length >= 3);
-
-    for (const dw of distinctiveWords) {
-      if (words.includes(dw)) {
-        return lender;
-      }
+    for (const dw of distinctiveTokens(lender.name)) {
+      if (dw.length < 3 || !words.includes(dw)) continue;
+      if (AMBIGUOUS_BRAND_WORDS.has(dw) && !hasLenderContext) continue;
+      return lender;
     }
   }
 
+  return null;
+};
+
+type ProvinceCode = 'BC' | 'ON' | 'AB' | 'QC';
+
+/** Whole-word province detection (the old substring checks matched "want" as ON, "abc" as BC). */
+const detectProvince = (q: string, includeQuebec = true): { code: ProvinceCode; name: string } | null => {
+  if (/\b(bc|british columbia|vancouver)\b|b\.c\./.test(q)) return { code: 'BC', name: 'British Columbia (BC)' };
+  if (/\b(ontario|ont|toronto|ottawa)\b/.test(q)) return { code: 'ON', name: 'Ontario (ON)' };
+  if (/\b(alberta|calgary|edmonton)\b/.test(q)) return { code: 'AB', name: 'Alberta (AB)' };
+  if (includeQuebec && /\b(quebec|québec|montreal)\b/.test(q)) return { code: 'QC', name: 'Quebec (QC)' };
   return null;
 };
 
@@ -307,7 +361,7 @@ export const generateLenderUnderwritingDossier = (lender: LenderDetail, userQuer
 • **Underwriting Policies & Notes:**
   ${lender.underwritingNotes}
 • **Fit Rationale:** ${lender.fitRationale}
-• **BDM / Underwriting Contact:** ${lender.bdm}
+• **Submission:** Files are placed through the Kraft Mortgages advisory team (604-593-1550); lender guidelines and pricing change frequently and are confirmed at application.
 
 *Would you like me to evaluate an exact deal scenario or calculate TDS debt service ratios for ${lender.name}?*`;
 };
@@ -326,22 +380,9 @@ export const resolveGeographicUnderwritingQuery = (query: string): string | null
   // Check specific lender + province inquiry
   const matchedLender = resolveLenderFromQuery(query);
   if (matchedLender) {
-    let checkedProvince: 'BC' | 'ON' | 'AB' | 'QC' | null = null;
-    let provFullName = '';
-
-    if (q.includes('bc') || q.includes('british columbia') || q.includes('vancouver')) {
-      checkedProvince = 'BC';
-      provFullName = 'British Columbia (BC)';
-    } else if (q.includes('ontario') || q.includes('ont') || q.includes('toronto')) {
-      checkedProvince = 'ON';
-      provFullName = 'Ontario (ON)';
-    } else if (q.includes('alberta') || q.includes('calgary') || q.includes('edmonton')) {
-      checkedProvince = 'AB';
-      provFullName = 'Alberta (AB)';
-    } else if (q.includes('quebec') || q.includes('montreal')) {
-      checkedProvince = 'QC';
-      provFullName = 'Quebec (QC)';
-    }
+    const detected = detectProvince(q);
+    const checkedProvince: ProvinceCode | null = detected?.code ?? null;
+    const provFullName = detected?.name ?? '';
 
     if (checkedProvince) {
       const lendsInProv = matchedLender.provinces?.includes(checkedProvince);
@@ -359,7 +400,7 @@ export const resolveGeographicUnderwritingQuery = (query: string): string | null
 • **Maximum LTV:** ${matchedLender.maxLTV}%
 • **Minimum Beacon Score:** ${matchedLender.minBeacon}
 • **Lowest Rate:** ${matchedLender.lowestRate ? `${matchedLender.lowestRate.toFixed(2)}%` : matchedLender.benchmarkRate}
-• **BDM Submission Desk:** ${matchedLender.bdm}
+• **Next Step:** The Kraft Mortgages advisory team (604-593-1550) can confirm current eligibility and pricing for your file.
 
 *Would you like to review their complete underwriting policy, rental income treatment, or submit a deal for triage?*`;
       } else {
@@ -389,28 +430,18 @@ ${alternativeLenders || '• Big-6 Chartered Banks & National Monolines (First N
   }
 
   // Check general regional inquiries: "Which credit unions lend in BC?"
-  if ((q.includes('which') || q.includes('what') || q.includes('list')) && (q.includes('lender') || q.includes('credit union') || q.includes('bank') || q.includes('mic'))) {
-    let targetProv: 'BC' | 'ON' | 'AB' | null = null;
-    let provName = '';
-
-    if (q.includes('bc') || q.includes('british columbia')) {
-      targetProv = 'BC';
-      provName = 'British Columbia (BC)';
-    } else if (q.includes('ontario') || q.includes('ont')) {
-      targetProv = 'ON';
-      provName = 'Ontario (ON)';
-    } else if (q.includes('alberta')) {
-      targetProv = 'AB';
-      provName = 'Alberta (AB)';
-    }
+  if (/\b(which|what|list)\b/.test(q) && /\b(lenders?|credit unions?|banks?|mics?)\b/.test(q)) {
+    const detected = detectProvince(q, false);
+    const targetProv = detected?.code as 'BC' | 'ON' | 'AB' | undefined;
+    const provName = detected?.name ?? '';
 
     if (targetProv) {
-      let filtered = CANADIAN_LENDERS.filter(l => l.provinces?.includes(targetProv!));
-      if (q.includes('credit union')) {
+      let filtered = CANADIAN_LENDERS.filter(l => l.provinces?.includes(targetProv));
+      if (/\bcredit unions?\b/.test(q)) {
         filtered = filtered.filter(l => l.channel === 'Credit Union');
-      } else if (q.includes('private') || q.includes('mic')) {
+      } else if (/\b(private|mics?)\b/.test(q)) {
         filtered = filtered.filter(l => l.channel === 'Private / MIC');
-      } else if (q.includes('alt') || q.includes('b lender')) {
+      } else if (/\b(alt|alternative|b[- ]lenders?)\b/.test(q)) {
         filtered = filtered.filter(l => l.channel === 'Alternative (B)');
       }
 
@@ -448,8 +479,11 @@ export const generateAuthoritativeUnderwritingAnswer = (
     ? 'National (All 10 Canadian Provinces)' 
     : (lender.provinces?.join(', ') || 'National');
 
-  // 1. Income calculation query on B-Side / Alt-B (e.g. Equitable Bank, Home Trust, Haventree)
-  if (q.includes('income') || q.includes('b side') || q.includes('bfs') || q.includes('stated') || q.includes('calculate')) {
+  // 1. Income calculation query on B-Side / Alt-B (e.g. Equitable Bank, Home Trust, Haventree).
+  // Only Alternative (B) lenders get this template: it describes stated-income / BFS programs
+  // and extended ratios that Prime, Monoline, Credit Union and Private lenders do not offer.
+  const isAltB = lender.channel === 'Alternative (B)';
+  if (isAltB && (q.includes('income') || q.includes('b side') || q.includes('bfs') || q.includes('stated') || q.includes('calculate'))) {
     return `### **${lender.name} (${lender.channel}) – How Income is Calculated on the B-Side**
 
 Here is the exact underwriting breakdown for **${lender.name}** under their Alternative (B-Side) programs:

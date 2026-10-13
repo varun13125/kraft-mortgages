@@ -85,6 +85,6 @@ export async function GET(req: NextRequest) {
     });
   } catch (err: any) {
     console.error("[api/criteria] Error fetching criteria matrix:", err);
-    return NextResponse.json({ success: false, error: err.message }, { status: 500 });
+    return NextResponse.json({ success: false, error: "Failed to load criteria matrix." }, { status: 500 });
   }
 }

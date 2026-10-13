@@ -4,13 +4,14 @@ import { motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
 import { Building, DollarSign, TrendingDown, AlertTriangle, CheckCircle, RefreshCw, Calculator } from "lucide-react";
 import Link from "next/link";
+import { payment } from "@/lib/calc/payment";
 
 export default function RefinanceCalculator() {
     // Current Mortgage
     const [currentBalance, setCurrentBalance] = useState(400000);
     const [currentRate, setCurrentRate] = useState(5.75);
-    const [remainingTerm, setRemainingTerm] = useState(36); // months
-    const [originalTerm, setOriginalTerm] = useState(60); // months (for IRD)
+    const [remainingTerm, setRemainingTerm] = useState(36); // months left in the current TERM (drives penalty)
+    const [remainingAmortization, setRemainingAmortization] = useState(22); // years left to pay off the loan
 
     // New Mortgage
     const [newRate, setNewRate] = useState(4.79);
@@ -27,7 +28,8 @@ export default function RefinanceCalculator() {
     // Calculate 3-month interest penalty
     const threeMonthPenalty = currentBalance * (currentRate / 100 / 12) * 3;
 
-    // Calculate IRD penalty
+    // Calculate IRD penalty (approximation: uses the new rate as the lender's comparison rate;
+    // lenders actually use their own posted/comparison rate for the remaining term, often higher penalties)
     const rateDifferential = Math.max(0, currentRate - newRate);
     const irdPenalty = currentBalance * (rateDifferential / 100 / 12) * remainingTerm;
 
@@ -38,18 +40,16 @@ export default function RefinanceCalculator() {
     // Total refinance costs
     const totalCosts = selectedPenalty + legalFees + appraisalFee + dischargeFee;
 
-    // Monthly payment calculations
-    const currentMonthlyPayment = (() => {
-        const monthlyRate = currentRate / 100 / 12;
-        const months = remainingTerm;
-        return (currentBalance * monthlyRate * Math.pow(1 + monthlyRate, months)) / (Math.pow(1 + monthlyRate, months) - 1);
-    })();
+    // Monthly payment calculations — Canadian semi-annual compounding.
+    // The current payment amortizes the balance over the REMAINING AMORTIZATION (not the remaining
+    // term — amortizing over the term would imply paying the loan off at maturity and overstate savings).
+    const currentMonthlyPayment = currentBalance > 0
+        ? payment({ principal: currentBalance, annualRatePct: currentRate, amortYears: Math.max(1, remainingAmortization), paymentsPerYear: 12 })
+        : 0;
 
-    const newMonthlyPayment = (() => {
-        const monthlyRate = newRate / 100 / 12;
-        const months = newAmortization * 12;
-        return (currentBalance * monthlyRate * Math.pow(1 + monthlyRate, months)) / (Math.pow(1 + monthlyRate, months) - 1);
-    })();
+    const newMonthlyPayment = currentBalance > 0
+        ? payment({ principal: currentBalance, annualRatePct: newRate, amortYears: newAmortization, paymentsPerYear: 12 })
+        : 0;
 
     const monthlySavings = currentMonthlyPayment - newMonthlyPayment;
     const breakEvenMonths = monthlySavings > 0 ? Math.ceil(totalCosts / monthlySavings) : Infinity;
@@ -147,6 +147,16 @@ export default function RefinanceCalculator() {
                                             inputMode="numeric"
                                         />
                                     </div>
+                                    <div>
+                                        <label className="block text-sm text-gray-400 mb-1">Remaining Amortization (years)</label>
+                                        <input
+                                            type="number"
+                                            value={remainingAmortization}
+                                            onChange={(e) => setRemainingAmortization(Math.max(1, Math.min(40, Number(e.target.value))))}
+                                            className="w-full px-4 py-3 min-h-[48px] bg-white/5 border border-white/20 rounded-lg focus:border-red-400 transition-colors"
+                                            inputMode="numeric"
+                                        />
+                                    </div>
                                 </div>
 
                                 <h3 className="text-xl font-bold mb-6 mt-8 flex items-center gap-2">
@@ -182,7 +192,7 @@ export default function RefinanceCalculator() {
                                 {/* Penalty Type Toggle */}
                                 <div className="mt-6">
                                     <label className="block text-sm text-gray-400 mb-2">Penalty Calculation</label>
-                                    <div className="flex gap-2">
+                                    <div className="flex flex-wrap gap-2">
                                         {(['3month', 'ird', 'both'] as const).map((type) => (
                                             <button
                                                 key={type}
@@ -297,8 +307,15 @@ export default function RefinanceCalculator() {
                             </motion.div>
                         </div>
 
+                        <p className="mt-8 text-xs text-gray-500 text-center max-w-3xl mx-auto">
+                            Estimates only. Payments use Canadian semi-annual compounding. Monthly savings compare your current payment
+                            (remaining amortization) with the new payment; choosing a longer new amortization lowers the payment partly by
+                            extending the payoff period. The IRD shown uses the new rate as the comparison rate — get a written penalty quote
+                            from your lender. Legal, appraisal and discharge fees are typical estimates.
+                        </p>
+
                         {/* CTA */}
-                        <div className="mt-12 flex gap-4 justify-center">
+                        <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
                             <Link
                                 href="/contact"
                                 className="bg-purple-500 text-white font-semibold py-4 px-8 rounded-xl hover:bg-purple-400 transition-colors"

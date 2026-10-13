@@ -22,7 +22,7 @@ export default function EquityLending() {
   const services = [
     {
       title: "Home Equity Lines of Credit",
-      description: "Access up to 80% of your home's equity with competitive rates",
+      description: "Borrow up to 80% of your home's value, less your mortgage, at competitive rates",
       features: ["Institutional rates", "Flexible access", "Interest-only payments", "Reusable credit line"],
       icon: Home,
       rate: "Starting from 4.99%"
@@ -68,14 +68,14 @@ export default function EquityLending() {
     {
       title: "Cash-Out Refinance Calculator",
       description: "Analyze cash-out refinancing options and costs",
-      href: "/equity-lending/calculators/cash-out-refinance",
+      href: "/calculators/refinance-cashout",
       icon: DollarSign,
       popular: false
     },
     {
-      title: "Investment Opportunity Calculator",
-      description: "Evaluate investment property purchases using home equity",
-      href: "/equity-lending/calculators/investment-opportunity",
+      title: "HELOC Calculator",
+      description: "Estimate your home equity line of credit limit, rate and qualification",
+      href: "/equity-lending/calculators/heloc",
       icon: TrendingUp,
       popular: false
     }
@@ -134,7 +134,7 @@ export default function EquityLending() {
                 <span className="bg-gradient-to-r from-emerald-400 to-green-500 bg-clip-text text-transparent">Equity</span> Lending
               </h1>
               <p className="text-xl text-gray-400 max-w-3xl mx-auto mb-8">
-                Professional equity lending solutions with institutional rates. Access your home's equity through established lenders, not high-cost private alternatives.
+                Professional equity lending solutions with institutional rates. Access your home&apos;s equity through established lenders, not high-cost private alternatives.
               </p>
               
               <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-emerald-500/20 p-4 max-w-2xl mx-auto mb-8">
@@ -365,7 +365,7 @@ export default function EquityLending() {
               viewport={{ once: true }}
             >
               <h2 className="text-3xl md:text-4xl font-bold text-gray-100 mb-6">
-                Ready to Access Your <span className="bg-gradient-to-r from-emerald-400 to-green-500 bg-clip-text text-transparent">Home's Equity?</span>
+                Ready to Access Your <span className="bg-gradient-to-r from-emerald-400 to-green-500 bg-clip-text text-transparent">Home&apos;s Equity?</span>
               </h2>
               <p className="text-xl mb-8 text-gray-400">
                 Professional equity lending with institutional rates and white-glove service.

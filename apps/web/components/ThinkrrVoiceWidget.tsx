@@ -115,6 +115,21 @@ export function ThinkrrVoiceWidget() {
     };
   }, [isCalling]);
 
+  // Close the modal (and end any session) with Escape.
+  useEffect(() => {
+    if (!isOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setIsCalling(false);
+        setActiveAgent(null);
+        if (widgetContainerRef.current) widgetContainerRef.current.innerHTML = "";
+        setIsOpen(false);
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [isOpen]);
+
   const formatDuration = (secs: number) => {
     const mins = Math.floor(secs / 60);
     const remaining = secs % 60;
@@ -154,10 +169,12 @@ export function ThinkrrVoiceWidget() {
 
   return (
     <>
-      {/* FLOATING ACTION PILL TRIGGER (Placed beside chat trigger) */}
-      <div className="fixed bottom-6 right-24 z-40 hidden sm:block">
+      {/* FLOATING ACTION PILL TRIGGER (placed left of the WhatsApp + AI chat dock, which spans
+          right-6 .. ~148px; the old right-24 position sat underneath the WhatsApp button) */}
+      <div className="fixed bottom-6 right-40 z-40 hidden sm:block">
         <motion.button
           onClick={() => setIsOpen(true)}
+          aria-label="Talk to the Kraft Mortgages voice AI assistant"
           whileHover={{ scale: 1.04 }}
           whileTap={{ scale: 0.96 }}
           className="group relative flex items-center gap-2.5 px-4 py-3 rounded-full bg-slate-900/95 hover:bg-slate-900 border border-gold-500/40 hover:border-gold-500 shadow-xl shadow-black/40 backdrop-blur-md transition-all text-white font-sans"
@@ -183,10 +200,12 @@ export function ThinkrrVoiceWidget() {
         </motion.button>
       </div>
 
-      {/* MOBILE FLOATING TRIGGER BUTTON */}
-      <div className="fixed bottom-20 right-6 z-40 sm:hidden">
+      {/* MOBILE FLOATING TRIGGER BUTTON (left of the chat dock; the old bottom-20 right-6
+          position covered the chat window's send button when the chat was open) */}
+      <div className="fixed bottom-7 right-40 z-40 sm:hidden">
         <button
           onClick={() => setIsOpen(true)}
+          aria-label="Talk to the Kraft Mortgages voice AI assistant"
           className="w-12 h-12 rounded-full bg-slate-900 border border-gold-500/50 flex items-center justify-center text-gold-400 shadow-xl"
         >
           <Mic className="w-5 h-5" />
@@ -198,10 +217,13 @@ export function ThinkrrVoiceWidget() {
         {isOpen && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
             <motion.div
+              role="dialog"
+              aria-modal="true"
+              aria-label="Kraft Mortgages voice AI assistant"
               initial={{ opacity: 0, scale: 0.95, y: 15 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 15 }}
-              className="relative w-full max-w-xl bg-slate-950 border border-gold-500/30 rounded-2xl shadow-2xl overflow-hidden text-gray-100"
+              className="relative w-full max-w-xl max-h-[calc(100dvh-2rem)] overflow-y-auto bg-slate-950 border border-gold-500/30 rounded-2xl shadow-2xl text-gray-100"
             >
               {/* Header */}
               <div className="p-5 border-b border-gray-800 bg-slate-900/60 flex items-center justify-between">
@@ -214,7 +236,7 @@ export function ThinkrrVoiceWidget() {
                       Kraft Mortgages Voice AI Deal Desk
                     </h3>
                     <p className="text-xs text-gray-400">
-                      Enterprise Voice AI • Powered by Thinkrr LiveKit WebRTC
+                      AI voice assistant • English &amp; Hindi
                     </p>
                   </div>
                 </div>
@@ -224,6 +246,7 @@ export function ThinkrrVoiceWidget() {
                     handleEndCall();
                     setIsOpen(false);
                   }}
+                  aria-label="Close voice assistant"
                   className="w-8 h-8 rounded-lg bg-gray-800 hover:bg-gray-700 flex items-center justify-center text-gray-400 hover:text-white transition-colors"
                 >
                   <X className="w-4 h-4" />
@@ -262,10 +285,10 @@ export function ThinkrrVoiceWidget() {
                     <div className="p-3 bg-amber-950/30 border border-amber-500/30 rounded-xl text-xs text-amber-200 text-left max-w-md mx-auto space-y-1">
                       <div className="flex items-center gap-2 font-bold text-amber-400">
                         <Radio className="w-3.5 h-3.5 animate-pulse text-amber-400 shrink-0" />
-                        <span>Thinkrr WebRTC Stream Initializing</span>
+                        <span>Connecting your voice session</span>
                       </div>
                       <p className="text-[11px] text-amber-200/80 leading-relaxed">
-                        If browser microphone permission does not appear or voice is not streaming, your Thinkrr Dashboard requires whitelisting <code className="bg-black/50 px-1 py-0.5 rounded font-mono text-[10px] text-amber-300">kraftmortgages.ca</code> under <strong>Julia &rarr; Web Agent tab</strong>.
+                        Allow microphone access when your browser asks. If the call doesn&apos;t start within a few seconds, use the phone or WhatsApp options below.
                       </p>
                     </div>
 
@@ -383,9 +406,19 @@ export function ThinkrrVoiceWidget() {
                       ))}
                     </div>
 
-                    <div className="p-3 bg-gray-900/70 rounded-xl border border-gray-800 text-[11px] text-gray-400 flex items-center justify-between">
-                      <span>Twilio Inbound &amp; Twilio SIP Trunk Verified</span>
-                      <span className="text-gold-400 font-mono">BC • AB • ON Licensed</span>
+                    <div className="p-3 bg-gray-900/70 rounded-xl border border-gray-800 text-[11px] text-gray-400 space-y-1.5">
+                      <div className="flex items-center justify-between">
+                        <span>Kraft Mortgages Canada Inc.</span>
+                        <span className="text-gold-400 font-mono">BC • AB • ON Licensed</span>
+                      </div>
+                      {/* AI + recording disclosure shown before the visitor connects */}
+                      <p className="leading-snug">
+                        You&apos;ll be speaking with an AI assistant, not a licensed advisor. Calls may be recorded and transcribed so our team can follow up on your inquiry. Information provided is general and not financial advice or a mortgage approval. By connecting, you agree to our{" "}
+                        <a href="/privacy" target="_blank" rel="noopener noreferrer" className="underline hover:text-gray-200">
+                          Privacy Policy
+                        </a>
+                        .
+                      </p>
                     </div>
                   </div>
                 )}

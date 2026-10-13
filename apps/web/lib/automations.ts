@@ -6,8 +6,17 @@ export interface Transport {
   send(msg: Message): Promise<void>;
 }
 
+// Development/no-provider transport. Recipient is masked so lead emails/phones
+// are not written to production logs (PIPEDA). Nothing is actually delivered.
+function maskRecipient(to: string): string {
+  if (!to) return '-';
+  if (to.includes('@')) { const [u, d] = to.split('@'); return `${u.slice(0, 1)}***@${d}`; }
+  const digits = to.replace(/\D/g, '');
+  return digits.length >= 4 ? `***${digits.slice(-4)}` : '***';
+}
+
 export function consoleTransport(): Transport {
-  return { name: 'console', async send(msg) { console.log('SEND', msg); } };
+  return { name: 'console', async send(msg) { console.log('SEND (not delivered - console transport)', { ...msg, to: maskRecipient(msg.to) }); } };
 }
 
 export async function runNurtureSequence(lead: Lead, transport: Transport = consoleTransport()) {

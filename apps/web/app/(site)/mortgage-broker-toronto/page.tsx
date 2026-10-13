@@ -1,4 +1,5 @@
-"use client";
+// Server Component: this page has no client-side interactivity, so it no longer
+// ships as a client bundle ("use client" removed in the 2026-10 audit).
 import Navigation from "@/components/Navigation";
 import Link from "next/link";
 import { MapPin, Phone, Building, Users, Briefcase, Home, TrendingUp } from "lucide-react";
@@ -16,7 +17,7 @@ export default function TorontoPage() {
               Toronto, ON
             </div>
             <h1 className="text-4xl md:text-6xl font-bold mb-6 text-white tracking-tight">
-              Toronto's Trusted Mortgage Brokerage
+              Toronto&apos;s Trusted Mortgage Brokerage
             </h1>
             <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-8 leading-relaxed">
               Navigating the competitive Toronto housing market demands elite financial strategy. From high-rise downtown condos to detached homes in Lawrence Park, we deliver custom mortgage solutions and preferred institutional rates.
@@ -36,7 +37,7 @@ export default function TorontoPage() {
             <h2 className="text-3xl font-bold mb-6 text-center">The Toronto Mortgage Market</h2>
             <div className="p-6 bg-slate-900/40 rounded-2xl border border-slate-800/60 shadow-xl">
               <p className="text-gray-300 text-lg mb-6 leading-relaxed">
-                Toronto's world-class housing market is highly competitive, with average home prices exceeding $1.1 million. Successful buying requires a combination of swift pre-approval, aggressive lender negotiation, and customized mortgage structure.
+                Toronto&apos;s world-class housing market is highly competitive, with average home prices exceeding $1.1 million. Successful buying requires a combination of swift pre-approval, aggressive lender negotiation, and customized mortgage structure.
               </p>
               <p className="text-gray-300 text-lg mb-6 leading-relaxed">
                 Whether you are buying a downtown condo, upgrading to a detached home in the GTA, or adding a laneway suite in Leslieville to generate high-yield rental income, Kraft Mortgages secures premium institutional rates and alternative lending structures under FSRA regulation.
@@ -77,7 +78,7 @@ export default function TorontoPage() {
           <div className="max-w-4xl mx-auto text-center">
             <h2 className="text-3xl font-bold mb-6">Why Choose a Local Toronto Mortgage Broker?</h2>
             <p className="text-gray-300 text-lg leading-relaxed">
-              Toronto's real estate market demands speed and customized underwriting. A local broker understands double transfer taxes, municipal accessory unit zoning, condo corporation financials, and high-ratio thresholds to guarantee a seamless closing.
+              Toronto&apos;s real estate market demands speed and customized underwriting. A local broker understands double transfer taxes, municipal accessory unit zoning, condo corporation financials, and high-ratio thresholds to help ensure a smooth closing.
             </p>
           </div>
         </section>
@@ -89,7 +90,7 @@ export default function TorontoPage() {
             <div className="space-y-6">
               <div className="bg-slate-900/60 rounded-2xl p-6 border border-slate-800 shadow-lg">
                 <h3 className="font-bold text-lg mb-3 text-white flex gap-2">
-                  <span className="text-gold-400">Q:</span> How do I navigate Toronto's double Land Transfer Tax?
+                  <span className="text-gold-400">Q:</span> How do I navigate Toronto&apos;s double Land Transfer Tax?
                 </h3>
                 <p className="text-gray-300 leading-relaxed pl-6 border-l border-gold-500/30">
                   Buyers in the City of Toronto pay both Ontario provincial and Toronto municipal land transfer taxes. First-time buyers receive rebates on both. We calculate these upfront so your closing costs are fully covered.
@@ -108,15 +109,15 @@ export default function TorontoPage() {
                   <span className="text-gold-400">Q:</span> Can I secure financing for a laneway suite or garden suite in Toronto?
                 </h3>
                 <p className="text-gray-300 leading-relaxed pl-6 border-l border-gold-500/30">
-                  Yes! Toronto's bylaws allow secondary suites to increase density. We specialize in construction and refinance loans that factor in the future rental income of laneway suites to boost your borrowing power.
+                  Yes! Toronto&apos;s bylaws allow secondary suites to increase density. We specialize in construction and refinance loans that factor in the future rental income of laneway suites to boost your borrowing power.
                 </p>
               </div>
               <div className="bg-slate-900/60 rounded-2xl p-6 border border-slate-800 shadow-lg">
                 <h3 className="font-bold text-lg mb-3 text-white flex gap-2">
-                  <span className="text-gold-400">Q:</span> What down payment is required for a Toronto home over $1 Million?
+                  <span className="text-gold-400">Q:</span> What down payment is required for a Toronto home over $1.5 Million?
                 </h3>
                 <p className="text-gray-300 leading-relaxed pl-6 border-l border-gold-500/30">
-                  Purchases of $1,000,000 or more require a minimum 20% down payment as they are ineligible for government-backed mortgage default insurance. We offer specialized jumbo loan programs with preferred pricing for these high-value properties.
+                  Purchases of $1,500,000 or more require a minimum 20% down payment as they are ineligible for government-backed mortgage default insurance (the insured price cap rose from $1 million to $1.5 million on December 15, 2024). Below $1.5 million, the minimum is 5% on the first $500,000 and 10% on the remainder. We offer specialized jumbo loan programs with preferred pricing for these high-value properties.
                 </p>
               </div>
               <div className="bg-slate-900/60 rounded-2xl p-6 border border-slate-800 shadow-lg">

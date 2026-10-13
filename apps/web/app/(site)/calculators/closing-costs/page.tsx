@@ -14,53 +14,18 @@ type Province = "BC" | "AB" | "ON";
 
 /* ── Land Transfer Tax ──────────────────────────────── */
 
-function bcLTT(price: number, firstTime: boolean): number {
-  // BC First-Time Home Buyers' Program (2025/2026):
-  // Full exemption: ≤ $835,000
-  // Partial exemption: $835,001 - $860,000 (gradual phase-out)
-  // No exemption: > $860,000
-  // Savings up to ~$14,700 for qualifying buyers
-  if (firstTime && price <= 835000) return 0;
-  if (firstTime && price <= 860000) {
-    const phaseOut = 1 - ((price - 835000) / 25000);
-    return bcPTTBase(price) * (1 - phaseOut);
-  }
-  return bcPTTBase(price);
-}
-
-function bcPTTBase(price: number): number {
-  // Standard BC Property Transfer Tax brackets:
-  // 1% on first $200K, 2% on $200K-$2M, 3% over $2M
-  if (price <= 200000) return price * 0.01;
-  let tax = 200000 * 0.01 + Math.min(price - 200000, 1800000) * 0.02;
-  if (price > 2000000) tax += (price - 2000000) * 0.03;
-  return tax;
-}
-
-function abLTT(): number {
-  return 0; // Alberta has no provincial LTT (small title registration fee ~$50)
-}
-
-function onLTT(price: number): number {
-  let tax = 0;
-  if (price <= 55000) tax = price * 0.005;
-  else if (price <= 250000) tax = 55000 * 0.005 + (price - 55000) * 0.01;
-  else if (price <= 400000) tax = 55000 * 0.005 + 195000 * 0.01 + (price - 250000) * 0.015;
-  else if (price <= 2000000) tax = 55000 * 0.005 + 195000 * 0.01 + 150000 * 0.015 + (price - 400000) * 0.02;
-  else tax = 55000 * 0.005 + 195000 * 0.01 + 150000 * 0.015 + 1600000 * 0.02 + (price - 2000000) * 0.025;
-  return tax;
-}
-
-function landTransferTax(price: number, province: Province, firstTime: boolean): number {
-  if (province === "BC") return bcLTT(price, firstTime);
-  if (province === "AB") return abLTT();
-  return onLTT(price);
+// Shared helper (lib/calc/landTransferTax): BC first-time exemption covers only the first
+// $500K (max $8,000) and phases out $835K–$860K; Ontario first-time refund (max $4,000) is
+// now applied; Alberta returns Land Titles fees for the transfer + mortgage registration.
+function landTransferTax(price: number, province: Province, firstTime: boolean, mortgageAmount = 0): number {
+  return sharedLandTransferTax({ price, province, firstTime, mortgageAmount }).total;
 }
 
 /* ── CMHC Premium ───────────────────────────────────── */
 
 // CMHC premium via the shared helper (correct 2025 schedule)
-import { cmhcPremium as calcCMHC } from "@/lib/calc/cmhc";
+import { cmhcPremium as calcCMHC, premiumPst } from "@/lib/calc/cmhc";
+import { landTransferTax as sharedLandTransferTax } from "@/lib/calc/landTransferTax";
 import { CalculatorSchema } from "@/components/SEO/CalculatorSchema";
 import { RelatedCalculators } from "@/components/calculators/RelatedCalculators";
 function cmhcPremium(downPayment: number, price: number): number {
@@ -79,19 +44,19 @@ function estimatedPropertyTax(price: number, propertyType: string): number {
 const faqs = [
   {
     q: "How much are closing costs on average in BC?",
-    a: "Closing costs in BC typically range from 1.5% to 4% of the purchase price. For a $700,000 home, expect to pay $10,500 to $28,000. The biggest variable is land transfer tax, which for first-time buyers on homes up to $835,000 is fully exempt."
+    a: "Closing costs in BC typically range from 1.5% to 4% of the purchase price. For a $700,000 home, expect to pay $10,500 to $28,000. The biggest variable is Property Transfer Tax: first-time buyers on homes up to $835,000 pay no tax on the first $500,000 (saving up to $8,000) but still pay 2% on the portion above $500,000."
   },
   {
     q: "Does Alberta really have no land transfer tax?",
-    a: "Correct — Alberta does not charge a provincial land transfer tax. Instead, there's a small title registration fee (approximately $50) and a mortgage registration fee. This makes Alberta one of the most affordable provinces for closing costs."
+    a: "Correct — Alberta does not charge a provincial land transfer tax. Instead, Land Titles charges registration fees of $50 plus $5 per $5,000 of value for the transfer, and the same on the mortgage amount (roughly $550 each on $500,000). This still makes Alberta one of the most affordable provinces for closing costs."
   },
   {
     q: "How do first-time home buyer programs help with closing costs?",
-    a: "BC's First-Time Home Buyers' Program fully exempts land transfer tax on homes up to $835,000, with a partial exemption up to $860,000. Ontario offers a rebate of up to $4,000 for first-time buyers. These programs can save thousands at closing — check eligibility based on your province and purchase price."
+    a: "BC's First-Time Home Buyers' Program exempts the tax on the first $500,000 (up to $8,000) for homes up to $835,000, with a partial exemption up to $860,000. Ontario offers a refund of up to $4,000 for first-time buyers (plus up to $4,475 from the City of Toronto). These programs can save thousands at closing — check eligibility based on your province and purchase price."
   },
   {
     q: "Can I roll closing costs into my mortgage?",
-    a: "Some closing costs like CMHC insurance premiums can be added to your mortgage balance. However, most costs (legal fees, inspections, land transfer tax) must be paid in cash on closing day. Budget for these separately to avoid last-minute surprises."
+    a: "The CMHC insurance premium is added to your mortgage balance (in Ontario the 8% PST on it must still be paid in cash). However, most costs (legal fees, inspections, land transfer tax) must be paid in cash on closing day. Budget for these separately to avoid last-minute surprises."
   },
   {
     q: "What's the difference between closing costs and a down payment?",
@@ -117,30 +82,43 @@ export default function ClosingCostsPage() {
 
   const downPayment = (purchasePrice * downPaymentPct) / 100;
 
+  // The insurance premium is added to the mortgage — shown for information, NOT counted in cash
+  // closing costs (it previously inflated "Total Closing Costs" and "Total Cash Needed").
+  const cmhcFinanced = cmhcPremium(downPayment, purchasePrice);
+
   const costs = useMemo((): CostItem[] => {
-    const ltt = landTransferTax(purchasePrice, province, firstTime);
-    const lttWithoutExemption = landTransferTax(purchasePrice, province, false);
-    const cmhc = cmhcPremium(downPayment, purchasePrice);
+    const mortgageAmount = Math.max(0, purchasePrice - downPayment) + cmhcFinanced;
+    const ltt = landTransferTax(purchasePrice, province, firstTime, mortgageAmount);
+    const lttWithoutExemption = landTransferTax(purchasePrice, province, false, mortgageAmount);
     const legal = 2000;
     const inspection = 550;
     const titleInsurance = 325;
     const appraisal = 500;
-    const propTax = estimatedPropertyTax(purchasePrice, propertyType);
+    // Ontario charges 8% PST on the premium, payable in cash at closing (can't be financed)
+    const premiumTax = premiumPst(cmhcFinanced, province);
+    // Prorated adjustment: assume ~6 months of prepaid property tax reimbursed to the seller
+    const propTax = estimatedPropertyTax(purchasePrice, propertyType) * 0.5;
     const utilities = 350;
     const moving = 1000;
+    const hasFthbSavings = firstTime && ltt < lttWithoutExemption;
 
     return [
-      { label: "Land Transfer Tax", amount: ltt, note: province === "BC" && firstTime ? `First-time buyer savings: ${formatCurrency(lttWithoutExemption - ltt, 0)}` : undefined, highlight: firstTime && province === "BC" && ltt < lttWithoutExemption },
+      {
+        label: province === "AB" ? "Land Titles Fees (transfer + mortgage)" : "Land Transfer Tax",
+        amount: ltt,
+        note: hasFthbSavings ? `First-time buyer savings: ${formatCurrency(lttWithoutExemption - ltt, 0)}` : province === "AB" ? "Alberta has no land transfer tax" : undefined,
+        highlight: hasFthbSavings,
+      },
       { label: "Legal Fees", amount: legal },
       { label: "Home Inspection", amount: inspection },
       { label: "Title Insurance", amount: titleInsurance },
       { label: "Property Appraisal", amount: appraisal },
-      ...(cmhc > 0 ? [{ label: "CMHC Insurance Premium", amount: cmhc, note: `${formatCurrency(downPaymentPct, 0)}% down — can be added to mortgage` }] : []),
-      { label: "Property Tax Adjustment", amount: propTax, note: "Estimated annual property tax" },
+      ...(premiumTax > 0 ? [{ label: "PST on Mortgage Insurance Premium", amount: premiumTax, note: "8% Ontario PST — must be paid in cash at closing" }] : []),
+      { label: "Property Tax Adjustment", amount: propTax, note: "Prorated estimate (~6 months); actual depends on closing date" },
       { label: "Utility Connections", amount: utilities },
       { label: "Moving Costs", amount: moving },
     ];
-  }, [purchasePrice, downPaymentPct, province, firstTime, propertyType, downPayment]);
+  }, [purchasePrice, province, firstTime, propertyType, downPayment, cmhcFinanced]);
 
   const totalClosing = costs.reduce((s, c) => s + c.amount, 0);
   const totalCash = downPayment + totalClosing;
@@ -266,7 +244,7 @@ export default function ClosingCostsPage() {
                           <button
                             key={p}
                             onClick={() => setProvince(p)}
-                            className={`flex-1 py-3 px-4 rounded-xl font-semibold text-sm transition-all border ${
+                            className={`flex-1 py-3 px-2 sm:px-4 rounded-xl font-semibold text-sm transition-all border ${
                               province === p
                                 ? "bg-gold-500 text-black border-gold-500"
                                 : "bg-white/5 text-gray-300 border-white/10 hover:bg-white/10"
@@ -369,6 +347,12 @@ export default function ClosingCostsPage() {
                     <span className="font-semibold text-gray-200">Total</span>
                     <span className="font-bold text-gold-400 text-lg">{formatCurrency(totalClosing, 0)}</span>
                   </div>
+                  {cmhcFinanced > 0 && (
+                    <div className="mt-3 flex justify-between gap-4 text-xs text-gray-400">
+                      <span>Mortgage insurance premium ({downPaymentPct}% down) — added to your mortgage, not included above</span>
+                      <span className="whitespace-nowrap">{formatCurrency(cmhcFinanced, 0)}</span>
+                    </div>
+                  )}
                 </div>
 
                 {/* CTA */}
@@ -396,9 +380,9 @@ export default function ClosingCostsPage() {
                   <div className="space-y-2 text-sm text-blue-200">
                     <p>• Closing costs vary by lender, lawyer, and specific transaction details.</p>
                     <p>• This calculator uses average estimates — actual costs may be higher or lower.</p>
-                    <p>• CMHC premiums shown can be added to your mortgage balance (not required in cash).</p>
+                    <p>• CMHC premiums are added to your mortgage balance, so they are not counted as cash closing costs (Ontario PST on the premium is).</p>
                     <p>• Property tax estimates are based on provincial averages and may differ for your specific property.</p>
-                    <p>• Toronto buyers should add the Municipal Land Transfer Tax (not included in this calculation).</p>
+                    <p>• Toronto buyers should add the Municipal Land Transfer Tax (not included here — see the Land Transfer Tax Calculator).</p>
                   </div>
                 </div>
               </div>
@@ -417,15 +401,15 @@ export default function ClosingCostsPage() {
 
               <h3 className="text-2xl font-semibold text-gray-100 mt-8">Closing Costs by Province</h3>
 
-              <p><strong>British Columbia:</strong> BC charges land transfer tax (officially Property Transfer Tax) at 1% on the first $200,000, 2% up to $2,000,000, and 3% above that. The First-Time Home Buyers&apos; Program fully exempts homes priced at $835,000 or less, with partial exemptions up to $860,000 — saving up to $14,700. For a $700,000 home, a qualifying first-time buyer pays $0 in LTT.</p>
+              <p><strong>British Columbia:</strong> BC charges land transfer tax (officially Property Transfer Tax) at 1% on the first $200,000, 2% up to $2,000,000, and 3% above that. A further 2% applies to the residential portion above $3,000,000. The First-Time Home Buyers&apos; Program removes the tax on the first $500,000 (saving up to $8,000) for homes priced at $835,000 or less, with partial exemptions up to $860,000. For a $700,000 home, a qualifying first-time buyer pays $4,000 instead of $12,000.</p>
 
-              <p><strong>Alberta:</strong> Alberta is the only province without a land transfer tax. Instead, you pay a small title registration fee (approximately $50) and mortgage registration fee. This makes Alberta significantly more affordable for closing costs — often saving buyers $10,000 or more compared to BC or Ontario on equivalent purchases.</p>
+              <p><strong>Alberta:</strong> Alberta (like Saskatchewan) has no land transfer tax. Instead, you pay Land Titles registration fees on the transfer and the mortgage ($50 plus $5 per $5,000 of value each). This makes Alberta significantly more affordable for closing costs — often saving buyers $10,000 or more compared to BC or Ontario on equivalent purchases.</p>
 
               <p><strong>Ontario:</strong> Ontario has a tiered land transfer tax system starting at 0.5% on the first $55,000 and rising to 2.5% on amounts over $2,000,000. Toronto buyers pay an additional Municipal Land Transfer Tax (MLTT), effectively doubling the cost within city limits. First-time buyers can claim a rebate of up to $4,000.</p>
 
               <h3 className="text-2xl font-semibold text-gray-100 mt-8">First-Time Home Buyer Programs</h3>
               <p>
-                Each province offers programs to reduce closing costs for first-time buyers. BC&apos;s First-Time Home Buyers&apos; Program can save up to $13,000 in land transfer tax. Ontario&apos;s Land Transfer Tax refund provides up to $4,000. The federal First-Time Home Buyer Incentive (where available) can also reduce your mortgage amount, though the program has evolved over the years. Check current availability with your mortgage broker.
+                Each province offers programs to reduce closing costs for first-time buyers. BC&apos;s First-Time Home Buyers&apos; Program can save up to $8,000 in Property Transfer Tax. Ontario&apos;s Land Transfer Tax refund provides up to $4,000, and Toronto adds up to $4,475 off its municipal tax. First-time buyers of newly built homes may also qualify for the federal First-Time Home Buyers&apos; GST rebate (up to $50,000). (The former First-Time Home Buyer Incentive shared-equity program closed to new applications in 2024.) Check current eligibility with your mortgage broker.
               </p>
 
               <h3 className="text-2xl font-semibold text-gray-100 mt-8">Tips to Prepare for Closing Costs</h3>

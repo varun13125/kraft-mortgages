@@ -1,3 +1,6 @@
+> **Superseded (2026-10-12):** new session entries go in `DEVLOG/SESSIONS.md`. Start with `DEVLOG/README.md`.
+> This file is kept as history (2025-08 → 2026-10-04); its ordering is inconsistent.
+
 ---
 **Timestamp:** 2026-10-04 10:30:00 PDT
 **Agent:** Antigravity AI

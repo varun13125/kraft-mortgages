@@ -1,4 +1,5 @@
-"use client";
+// Server Component: this page has no client-side interactivity, so it no longer
+// ships as a client bundle ("use client" removed in the 2026-10 audit).
 import Navigation from "@/components/Navigation";
 import Link from "next/link";
 import { MapPin, Phone, Building, Users, Briefcase, Home, Train } from "lucide-react";
@@ -16,7 +17,7 @@ export default function BurnabyPage() {
                             Burnaby, BC
                         </div>
                         <h1 className="text-4xl md:text-6xl font-bold mb-6 text-white">
-                            Burnaby's Premier Mortgage Brokerage
+                            Burnaby&apos;s Premier Mortgage Brokerage
                         </h1>
                         <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-8">
                             From the high-rise towers of Metrotown to the family-friendly streets of Edmonds, Kraft Mortgages has been helping Burnaby buyers secure the best rates for over two decades.
@@ -35,7 +36,7 @@ export default function BurnabyPage() {
                     <div className="max-w-5xl mx-auto">
                         <h2 className="text-3xl font-bold mb-6 text-center">The Burnaby Mortgage Market</h2>
                         <p className="text-gray-300 text-lg mb-6">
-                            Burnaby has emerged as one of Metro Vancouver's most desirable cities, with an average home price around $950,000 as of early 2025. Its strategic location between Vancouver and Surrey, combined with extensive SkyTrain connectivity, makes it a magnet for both homeowners and investors.
+                            Burnaby has emerged as one of Metro Vancouver&apos;s most desirable cities, with an average home price around $950,000 as of early 2025. Its strategic location between Vancouver and Surrey, combined with extensive SkyTrain connectivity, makes it a magnet for both homeowners and investors.
                         </p>
                         <p className="text-gray-300 text-lg mb-6">
                             Metrotown remains the tallest and densest neighbourhood in BC outside downtown Vancouver, with thousands of condo units ranging from entry-level one-bedrooms to luxury penthouses. The Brentwood area has experienced a massive transformation, with new condo developments commanding premium prices thanks to the Brentwood Town Centre SkyTrain station. Further south, Edmonds offers a quieter, more affordable alternative with excellent transit access and a growing retail scene.
@@ -54,7 +55,7 @@ export default function BurnabyPage() {
                             <div className="bg-white/5 rounded-2xl p-6 border border-white/10">
                                 <Building className="w-10 h-10 text-gold-400 mb-4" />
                                 <h3 className="text-xl font-bold mb-3">Condo & Presale Financing</h3>
-                                <p className="text-gray-400">Burnaby's skyline is built on new developments. We specialize in presale assignment financing and condo mortgages, navigating strata reviews and builder requirements with ease.</p>
+                                <p className="text-gray-400">Burnaby&apos;s skyline is built on new developments. We specialize in presale assignment financing and condo mortgages, navigating strata reviews and builder requirements with ease.</p>
                             </div>
                             <div className="bg-white/5 rounded-2xl p-6 border border-white/10">
                                 <Train className="w-10 h-10 text-gold-400 mb-4" />
@@ -64,7 +65,7 @@ export default function BurnabyPage() {
                             <div className="bg-white/5 rounded-2xl p-6 border border-white/10">
                                 <Home className="w-10 h-10 text-gold-400 mb-4" />
                                 <h3 className="text-xl font-bold mb-3">First-Time Home Buyer Plans</h3>
-                                <p className="text-gray-400">Burnaby offers more entry-level options than Vancouver. We help first-timers take advantage of RRSP Home Buyers' Plan, GST rebates, and the First-Time Home Buyer Incentive where applicable.</p>
+                                <p className="text-gray-400">Burnaby offers more entry-level options than Vancouver. We help first-timers take advantage of RRSP Home Buyers&apos; Plan, GST rebates, and the First-Time Home Buyer Incentive where applicable.</p>
                             </div>
                         </div>
                     </div>
@@ -91,11 +92,11 @@ export default function BurnabyPage() {
                             </div>
                             <div className="bg-white/5 rounded-xl p-6 border border-white/10">
                                 <h3 className="font-bold text-lg mb-2">Can I assign my Burnaby presale contract?</h3>
-                                <p className="text-gray-400">Presale assignments are possible but depend on the builder's policies. Some Burnaby developers allow assignments after a certain percentage is paid, while others restrict them entirely. We have experience with assignment financing and can guide you through the process.</p>
+                                <p className="text-gray-400">Presale assignments are possible but depend on the builder&apos;s policies. Some Burnaby developers allow assignments after a certain percentage is paid, while others restrict them entirely. We have experience with assignment financing and can guide you through the process.</p>
                             </div>
                             <div className="bg-white/5 rounded-xl p-6 border border-white/10">
                                 <h3 className="font-bold text-lg mb-2">Is it easier to get a mortgage in Burnaby than Vancouver?</h3>
-                                <p className="text-gray-400">The qualification criteria are the same nationally, but Burnaby's lower average price point means your dollar goes further. A $950,000 Burnaby home may require a smaller mortgage than a comparable Vancouver property, making it easier to meet debt service ratios.</p>
+                                <p className="text-gray-400">The qualification criteria are the same nationally, but Burnaby&apos;s lower average price point means your dollar goes further. A $950,000 Burnaby home may require a smaller mortgage than a comparable Vancouver property, making it easier to meet debt service ratios.</p>
                             </div>
                             <div className="bg-white/5 rounded-xl p-6 border border-white/10">
                                 <h3 className="font-bold text-lg mb-2">What are the best Burnaby neighbourhoods for investment properties?</h3>
@@ -113,7 +114,7 @@ export default function BurnabyPage() {
                 <section className="py-16 px-4">
                     <div className="max-w-4xl mx-auto text-center">
                         <h2 className="text-3xl font-bold mb-6">Ready to Buy in Burnaby?</h2>
-                        <p className="text-gray-400 mb-8">Get a free mortgage consultation tailored to Burnaby's market.</p>
+                        <p className="text-gray-400 mb-8">Get a free mortgage consultation tailored to Burnaby&apos;s market.</p>
                         <div className="flex gap-4 justify-center">
                             <Link
                                 href="/contact"

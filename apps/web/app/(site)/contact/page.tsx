@@ -182,6 +182,10 @@ export default function ContactPage() {
                             "Send Message"
                           )}
                         </button>
+                        <p className="text-xs text-gray-400 text-center">
+                          By submitting, you agree to be contacted about your inquiry. Your information is handled in accordance with our{" "}
+                          <a href="/privacy" className="underline hover:text-gold-400">Privacy Policy</a>.
+                        </p>
                       </motion.form>
                     )}
                   </AnimatePresence>

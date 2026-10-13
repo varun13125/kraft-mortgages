@@ -1,5 +1,5 @@
 import { stressTestRate, gdsTds } from "@/lib/calc/affordability";
-import { payment, biweeklySavings } from "@/lib/calc/payment";
+import { payment, biweeklySavings, principalFromPayment } from "@/lib/calc/payment";
 import { cashflow } from "@/lib/calc/investment";
 import { interestOnlyCost } from "@/lib/calc/construction";
 
@@ -82,8 +82,8 @@ export class MortgageTools {
         paymentsPerYear: 12
       });
       
-      // Calculate total housing costs
-      const housingAnnual = monthlyPI * 12 + propertyTax + heating + condoFees * 12;
+      // Calculate total housing costs (CMHC: 50% of condo fees count toward GDS/TDS)
+      const housingAnnual = monthlyPI * 12 + propertyTax + heating + condoFees * 12 * 0.5;
       
       // Calculate ratios
       const ratios = gdsTds({
@@ -94,11 +94,14 @@ export class MortgageTools {
       
       const qualifies = ratios.gds <= 39 && ratios.tds <= 44;
       
-      // Calculate maximum affordable amount
-      const maxHousingPayment = (income * 0.39) / 12; // 39% GDS
-      const maxPI = maxHousingPayment - (propertyTax + heating + condoFees * 12) / 12;
-      
-      // Reverse calculate maximum principal
+      // Calculate maximum affordable amount: the binding one of GDS 39% and TDS 44%
+      // (debts are annual, per the tool contract)
+      const otherHousingMonthly = (propertyTax + heating + condoFees * 12 * 0.5) / 12;
+      const maxPIByGds = (income * 0.39) / 12 - otherHousingMonthly;
+      const maxPIByTds = (income * 0.44) / 12 - otherHousingMonthly - debts / 12;
+      const maxPI = Math.max(0, Math.min(maxPIByGds, maxPIByTds));
+
+      // Reverse calculate maximum principal (Canadian semi-annual compounding, at the qualifying rate)
       const maxPrincipal = this.calculateMaxPrincipal(maxPI, qualRate, 25);
       const maxPrice = maxPrincipal + downPayment;
 
@@ -124,7 +127,7 @@ export class MortgageTools {
           monthlyPI: monthlyPI,
           monthlyPropertyTax: propertyTax / 12,
           monthlyHeating: heating / 12,
-          monthlyCondoFees: condoFees,
+          monthlyCondoFees: condoFees * 0.5, // 50% counted toward GDS (CMHC)
           totalHousingCosts: housingAnnual / 12
         }
       };
@@ -182,7 +185,9 @@ export class MortgageTools {
         result.biweekly = {
           payment: biweeklyData.acceleratedBiweekly,
           annualSavings: biweeklyData.annualSavings,
-          timeSaved: estimatedTimeSaved
+          // Simulated payoff (accelerated bi-weekly) instead of the old linear estimate
+          totalInterestSaved: biweeklyData.totalInterestSaved,
+          timeSaved: Math.round(biweeklyData.yearsSaved * 10) / 10 || estimatedTimeSaved
         };
       }
 
@@ -275,9 +280,14 @@ export class MortgageTools {
     try {
       const { rate, draws } = params;
 
+      if (!Array.isArray(draws) || draws.length === 0) {
+        throw new Error("At least one draw is required");
+      }
       const result = interestOnlyCost({ draws, annualRatePct: rate });
       const totalProjectCost = draws.reduce((sum, draw) => sum + draw.amount, 0);
-      const constructionPeriod = Math.max(...draws.map(d => d.month));
+      // Use the period interest was actually accrued over (min 12 months / last draw),
+      // so the average monthly interest matches the total.
+      const constructionPeriod = result.constructionPeriodMonths;
 
       const analysis = {
         project: {
@@ -287,8 +297,8 @@ export class MortgageTools {
         },
         financing: {
           totalInterest: result.totalInterest,
-          monthlyAverage: result.totalInterest / constructionPeriod,
-          percentOfProject: (result.totalInterest / totalProjectCost) * 100
+          monthlyAverage: constructionPeriod > 0 ? result.totalInterest / constructionPeriod : 0,
+          percentOfProject: totalProjectCost > 0 ? (result.totalInterest / totalProjectCost) * 100 : 0
         },
         draws: draws.map(draw => ({
           ...draw,
@@ -315,14 +325,9 @@ export class MortgageTools {
 
   // Helper method to calculate max principal from payment
   private calculateMaxPrincipal(monthlyPayment: number, rate: number, years: number): number {
-    const monthlyRate = rate / 100 / 12;
-    const numPayments = years * 12;
-    
-    if (monthlyRate === 0) {
-      return monthlyPayment * numPayments;
-    }
-    
-    return monthlyPayment * ((1 - Math.pow(1 + monthlyRate, -numPayments)) / monthlyRate);
+    // Inverse of payment() with Canadian semi-annual compounding (was monthly compounding,
+    // which understated the qualifying mortgage by ~0.5–1%).
+    return principalFromPayment({ monthlyPayment, annualRatePct: rate, amortYears: years });
   }
 
   private formatAffordabilityResult(data: any): string {
@@ -332,19 +337,19 @@ export class MortgageTools {
 
 **Qualification Results:**
 - Stress Test Rate: ${qualification.stressTestRate.toFixed(2)}%
-- Monthly Payment (P&I): $${qualification.monthlyPayment.toLocaleString()}
+- Monthly Payment (P&I at stress-test rate, for a purchase with 20% down): $${Math.round(qualification.monthlyPayment).toLocaleString()}
 - GDS Ratio: ${qualification.gdsRatio.toFixed(1)}% (max 39%)
 - TDS Ratio: ${qualification.tdsRatio.toFixed(1)}% (max 44%)
 - **Status: ${qualification.qualifies ? "✅ QUALIFIED" : "❌ NEEDS ADJUSTMENT"}**
 
-**Maximum Affordable Price: $${qualification.maxAffordablePrice.toLocaleString()}**
+**Maximum Affordable Price: $${Math.round(qualification.maxAffordablePrice).toLocaleString()}** (binding of GDS 39% / TDS 44%; minimum down payment and CMHC premium not applied)
 
 **Monthly Housing Costs:**
-- Principal & Interest: $${breakdown.monthlyPI.toLocaleString()}
-- Property Tax: $${breakdown.monthlyPropertyTax.toLocaleString()}
-- Heating: $${breakdown.monthlyHeating.toLocaleString()}
-- Condo Fees: $${breakdown.monthlyCondoFees.toLocaleString()}
-- **Total: $${breakdown.totalHousingCosts.toLocaleString()}**`;
+- Principal & Interest: $${Math.round(breakdown.monthlyPI).toLocaleString()}
+- Property Tax: $${Math.round(breakdown.monthlyPropertyTax).toLocaleString()}
+- Heating: $${Math.round(breakdown.monthlyHeating).toLocaleString()}
+- Condo Fees (50% counted): $${Math.round(breakdown.monthlyCondoFees).toLocaleString()}
+- **Total: $${Math.round(breakdown.totalHousingCosts).toLocaleString()}**`;
   }
 
   private formatPaymentResult(data: any): string {
@@ -355,15 +360,15 @@ export class MortgageTools {
 - Interest Rate: ${data.rate}%
 - Amortization: ${data.amortization} years
 
-**Monthly Payment: $${data.monthlyPayment.toLocaleString()}**
-**Total Interest: $${data.totalInterest.toLocaleString()}**`;
+**Monthly Payment: $${(Math.round(data.monthlyPayment * 100) / 100).toLocaleString()}**
+**Total Interest: $${Math.round(data.totalInterest).toLocaleString()}**`;
 
     if (data.biweekly) {
       result += `
 
 **Accelerated Bi-Weekly Option:**
-- Bi-weekly Payment: $${data.biweekly.payment.toLocaleString()}
-- Annual Savings: $${data.biweekly.annualSavings.toLocaleString()}
+- Bi-weekly Payment: $${(Math.round(data.biweekly.payment * 100) / 100).toLocaleString()}
+- Total Interest Saved: $${Math.round(data.biweekly.totalInterestSaved ?? data.biweekly.annualSavings * data.amortization).toLocaleString()}
 - Time Saved: ${data.biweekly.timeSaved} years`;
     }
 
@@ -381,8 +386,8 @@ export class MortgageTools {
 - Mortgage Amount: $${property.mortgageAmount.toLocaleString()}
 
 **Financial Performance:**
-- Net Operating Income: $${analysis.noi.toLocaleString()}/month
-- Cash Flow: $${analysis.cashFlow.toLocaleString()}/month
+- Net Operating Income: $${Math.round(analysis.noi).toLocaleString()}/month
+- Cash Flow: $${Math.round(analysis.cashFlow).toLocaleString()}/month
 - Cap Rate: ${analysis.capRate.toFixed(2)}%
 - DSCR: ${analysis.dscr.toFixed(2)}
 
@@ -404,8 +409,8 @@ ${analysis.isGoodInvestment
 - Interest Rate: ${project.interestRate}%
 
 **Interest Costs:**
-- Total Interest During Construction: $${financing.totalInterest.toLocaleString()}
-- Average Monthly Interest: $${financing.monthlyAverage.toLocaleString()}
+- Total Interest During Construction: $${Math.round(financing.totalInterest).toLocaleString()}
+- Average Monthly Interest: $${Math.round(financing.monthlyAverage).toLocaleString()}
 - Interest as % of Project: ${financing.percentOfProject.toFixed(2)}%
 
 **Note:** Interest is calculated on funds drawn during construction. Final costs depend on actual draw timing and lender terms.`;

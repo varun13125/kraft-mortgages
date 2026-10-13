@@ -13,7 +13,7 @@ export default function RefinanceCashOutPage() {
   const [currentBalance, setCurrentBalance] = useState(280000);
   const [newRate, setNewRate] = useState(5.19);
   const [newAmortYears, setNewAmortYears] = useState(25);
-  const [maxLtvPct, setMaxLtvPct] = useState(80); // conventional max is 80%; insured refi up to 90%
+  const [maxLtvPct, setMaxLtvPct] = useState(80); // legal max for uninsured (conventional) refinance is 80%; insured refinances aren't available (secondary-suite program excepted)
 
   const safeValue = Math.max(1, homeValue);
   const safeBalance = Math.max(0, currentBalance);
@@ -22,6 +22,7 @@ export default function RefinanceCashOutPage() {
   const cashOut = availableEquity;
 
   const newMortgage = safeBalance + cashOut;
+  // Payment on the existing balance alone at the SAME new rate/amortization — isolates the cost of the cash-out
   const currentPayment = payment({ principal: safeBalance, annualRatePct: newRate, amortYears: newAmortYears, paymentsPerYear: 12 });
   const newPayment = payment({ principal: newMortgage, annualRatePct: newRate, amortYears: newAmortYears, paymentsPerYear: 12 });
   const paymentDiff = newPayment - currentPayment;
@@ -60,7 +61,7 @@ export default function RefinanceCashOutPage() {
                 <ValidatedSlider label="New Interest Rate" value={newRate} onChange={setNewRate} min={0.5} max={10} step={0.01} formatValue={(v) => v.toFixed(2) + "%"} />
                 <ValidatedSlider label="New Amortization" value={newAmortYears} onChange={(v) => setNewAmortYears(Math.round(v))} min={5} max={30} step={1} formatValue={(v) => Math.round(v) + " years"} />
                 <ValidatedSlider label="Max Loan-to-Value (LTV)" value={maxLtvPct} onChange={(v) => setMaxLtvPct(Math.round(v))} min={65} max={80} step={1} formatValue={(v) => Math.round(v) + "%"} />
-                <p className="text-xs text-gray-500">Conventional refinance max is 80% LTV. Insured refinances can reach 90% but require CMHC insurance.</p>
+                <p className="text-xs text-gray-500">A refinance is capped at 80% LTV — insured (CMHC) refinancing isn&apos;t available, except the federal secondary-suite program (up to 90% of the as-improved value, for adding a rental suite).</p>
               </div>
 
               <ComplianceBanner feature="LEAD_FORM" />
@@ -90,7 +91,7 @@ export default function RefinanceCashOutPage() {
                   <div className="bg-gray-800/40 rounded-lg p-4">
                     <div className="text-xs text-gray-400 uppercase tracking-wider mb-1">New Monthly Payment</div>
                     <div className="text-2xl font-bold text-gold-400">${Math.round(newPayment).toLocaleString()}</div>
-                    <div className="text-xs text-gray-500 mt-1">was ${Math.round(currentPayment).toLocaleString()}</div>
+                    <div className="text-xs text-gray-500 mt-1">vs ${Math.round(currentPayment).toLocaleString()} on current balance (same rate &amp; amortization)</div>
                   </div>
                   <div className="bg-gray-800/40 rounded-lg p-4">
                     <div className="text-xs text-gray-400 uppercase tracking-wider mb-1">LTV After Refinance</div>
@@ -106,6 +107,8 @@ export default function RefinanceCashOutPage() {
                   </div>
                 )}
 
+                <p className="text-xs text-gray-500 mb-4">Estimate only. Excludes any prepayment penalty on your current mortgage, legal and appraisal fees, and lender approval (income and credit still apply; you must qualify at the stress-test rate).</p>
+
                 <a href="https://r.mtg-app.com/varun-chaudhry" target="_blank" rel="noopener noreferrer" className="block w-full py-3.5 px-6 bg-gradient-to-r from-gold-500 to-gold-600 text-gray-900 font-semibold rounded-lg hover:from-gold-400 hover:to-gold-500 transition-all text-center shadow-lg shadow-gold-500/20">
                   Start Refinance Application
                 </a>
@@ -115,7 +118,7 @@ export default function RefinanceCashOutPage() {
         </section>
 
         <div className="max-w-6xl mx-auto px-4 mt-8">
-          <RelatedCalculators current="refinance-cashout" related={["refinance-break-even", "refinance-vs-heloc-vs-second", "equity-lending", "payment"]} />
+          <RelatedCalculators current="refinance-cashout" related={["refinance-break-even", "refinance-vs-heloc-vs-second", "a-vs-equity", "payment"]} />
         </div>
       </main>
     </>

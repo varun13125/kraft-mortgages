@@ -46,3 +46,27 @@ __pycache__/
 .env
 .vercel
 apps/web/tsconfig.tsbuildinfo
+
+# --- Added by 2026-10 platform audit (see DEVLOG/audit-2026-10/platform-build-deps.md) ---
+# NOTE: ignoring a path does NOT untrack files that are already committed.
+# Already-tracked files listed here must be removed with `git rm --cached <path>`.
+.env*.local
+*.tsbuildinfo
+build-log.txt
+*.pem
+/coverage
+.pnp
+.pnp.js
+.yarn/install-state.gz
+.wrangler/
+# Test runner artefacts (proposed Vitest/Playwright setup)
+playwright-report/
+test-results/
+# Local tool config that can contain credentials (both are currently tracked —
+# untrack with `git rm --cached .mcp.json .claude/settings.local.json`)
+.mcp.json
+.claude/settings.local.json
+# Root notes files that contain live credentials (currently tracked — rotate the
+# keys, then `git rm --cached API postiz-config.md` and purge history)
+/API
+/postiz-config.md

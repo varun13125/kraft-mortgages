@@ -4,6 +4,9 @@ import Link from 'next/link';
 import { Calendar, User, ArrowRight, Clock, Tag, Star, Mail, Phone, FileText } from 'lucide-react';
 import { getRecentPosts } from '@/lib/db/firestore';
 import Navigation from '@/components/Navigation';
+import Footer from '@/components/Footer';
+import { OG_DEFAULTS } from '@/lib/seo/og';
+import { ORG_ID } from '@/lib/seo/jsonld';
 import { generateExcerpt, decodeHtmlEntities } from '@/lib/utils/blog-content';
 
 export const metadata: Metadata = {
@@ -14,18 +17,11 @@ export const metadata: Metadata = {
     canonical: 'https://www.kraftmortgages.ca/blog',
   },
   openGraph: {
+    // OG_DEFAULTS supplies the site share image — /images/blog-default.jpg never existed.
+    ...OG_DEFAULTS,
     title: 'Surrey Mortgage Broker Blog | Expert Advice & Rates | Kraft Mortgages',
     description: 'Expert mortgage advice and market insights from licensed broker Varun Chaudhry.',
-    type: 'website',
     url: 'https://www.kraftmortgages.ca/blog',
-    images: [
-      {
-        url: 'https://www.kraftmortgages.ca/images/blog-default.jpg',
-        width: 1200,
-        height: 630,
-        alt: 'Kraft Mortgages Blog',
-      },
-    ],
   },
 };
 
@@ -117,7 +113,11 @@ function transformPost(post: any) {
 
 export default async function BlogPage() {
   const fsPosts = await getRecentPosts(100);
-  const posts = (fsPosts || []).map(transformPost).filter(Boolean); // Filter out null posts
+  // getRecentPosts() does not filter by status, so drafts were listed publicly.
+  const posts = (fsPosts || [])
+    .filter((p: any) => p && p.status !== 'draft')
+    .map(transformPost)
+    .filter(Boolean); // Filter out null posts
   const featuredPosts = posts.filter(post => post?.featured);
   const regularPosts = posts.filter(post => !post?.featured);
 
@@ -141,19 +141,9 @@ export default async function BlogPage() {
               name: 'Varun Chaudhry',
               email: 'varun@kraftmortgages.ca',
               jobTitle: 'Licensed Mortgage Broker',
-              worksFor: {
-                '@type': 'Organization',
-                name: 'Kraft Mortgages',
-              },
+              worksFor: { '@id': ORG_ID },
             },
-            publisher: {
-              '@type': 'Organization',
-              name: 'Kraft Mortgages',
-              logo: {
-                '@type': 'ImageObject',
-                url: 'https://www.kraftmortgages.ca/kraft-logo.png',
-              },
-            },
+            publisher: { '@id': ORG_ID },
           }),
         }}
       />
@@ -278,7 +268,7 @@ export default async function BlogPage() {
                     Need Mortgage Advice Right Now?
                   </h3>
                   <p className="text-gray-400 mb-6">
-                    Don't wait for the next blog post. Get personalized mortgage guidance today.
+                    Don&apos;t wait for the next blog post. Get personalized mortgage guidance today.
                   </p>
                   <div className="flex flex-col sm:flex-row gap-4 justify-center">
                     <a
@@ -424,6 +414,7 @@ export default async function BlogPage() {
           </div>
         </section>
       </div>
+      <Footer />
     </>
   );
 }

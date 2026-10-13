@@ -1,5 +1,7 @@
 import { Metadata } from 'next';
 import { CityServiceJsonLd } from '@/components/SEO/CityServiceJsonLd';
+import Footer from '@/components/Footer';
+import { OG_DEFAULTS } from '@/lib/seo/og';
 
 export const metadata: Metadata = {
   title: 'Coquitlam Mortgage Broker | Best Rates & Fast Approval | Kraft Mortgages',
@@ -9,6 +11,7 @@ export const metadata: Metadata = {
     canonical: 'https://www.kraftmortgages.ca/mortgage-broker-coquitlam',
   },
   openGraph: {
+    ...OG_DEFAULTS,
     title: 'Coquitlam Mortgage Broker | Kraft Mortgages Canada',
     description: 'Top-rated Coquitlam mortgage broker with $2B+ funded and 18+ Years Combined Experience. Free pre-approval in 24 hours.',
     url: 'https://www.kraftmortgages.ca/mortgage-broker-coquitlam',
@@ -21,6 +24,7 @@ export default function CoquitlamLayout({ children }: { children: React.ReactNod
     <>
       <CityServiceJsonLd cityName="Coquitlam" provinceName="BC" description="Licensed mortgage broker serving Coquitlam, BC. Residential, construction, self-employed, MLI Select, and private lending solutions." />
       {children}
+      <Footer />
     </>
   );
 }

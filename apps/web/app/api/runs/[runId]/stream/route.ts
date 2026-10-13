@@ -3,28 +3,20 @@ export const dynamic = 'force-dynamic';
 
 import { NextRequest } from 'next/server';
 import { getRun } from '@/lib/db/firestore';
-import { verifyFirebaseToken } from '@/lib/auth';
-
-async function verifyAuth(request: NextRequest) {
-  const authHeader = request.headers.get('authorization');
-  const url = new URL(request.url);
-  const token = authHeader?.replace('Bearer ', '') || url.searchParams.get('token');
-  
-  if (!token) {
-    throw new Error('Missing authorization token');
-  }
-
-  const decodedToken = await verifyFirebaseToken(token);
-  return decodedToken;
-}
+import { getBearerToken, requireAdmin } from '@/lib/auth';
 
 export async function GET(
   request: NextRequest,
   { params }: { params: { runId: string } }
 ) {
   try {
-    // Verify authentication
-    await verifyAuth(request);
+    // Verify authentication (admin only). EventSource cannot send headers, so the
+    // dashboard passes the Firebase ID token as ?token= (short-lived, 1h).
+    const token = getBearerToken(request) || new URL(request.url).searchParams.get('token');
+    const adminCheck = await requireAdmin(request, token);
+    if (!adminCheck.ok) {
+      return new Response(adminCheck.error, { status: adminCheck.status });
+    }
     
     const { runId } = params;
     
@@ -108,18 +100,12 @@ export async function GET(
         'Content-Type': 'text/event-stream',
         'Cache-Control': 'no-cache',
         'Connection': 'keep-alive',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET',
-        'Access-Control-Allow-Headers': 'authorization',
+        // (Removed wildcard CORS: the dashboard is same-origin.)
       },
     });
 
   } catch (error) {
     console.error('SSE stream error:', error);
-    
-    if (error instanceof Error && error.message.includes('authorization')) {
-      return new Response('Unauthorized', { status: 401 });
-    }
 
     return new Response('Internal server error', { status: 500 });
   }

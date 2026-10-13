@@ -155,7 +155,7 @@ export const PaymentReport: React.FC<{ data: PaymentReportData }> = ({ data }) =
               ]}
             />
             <p style={{ color: '#065F46', fontSize: '14px', marginTop: '15px', marginBottom: 0 }}>
-              By making payments every two weeks instead of monthly, you'll make 26 half-payments per year 
+              By making payments every two weeks instead of monthly, you&apos;ll make 26 half-payments per year 
               (equivalent to 13 monthly payments), helping you pay off your mortgage faster.
             </p>
           </div>

@@ -78,6 +78,13 @@ export default function ConstructionFinancing() {
       href: "/construction/calculators/builder-program",
       icon: Building,
       popular: false
+    },
+    {
+      title: "Construction Draw Calculator",
+      description: "Construction-to-permanent loan sizing, draw schedule and interest",
+      href: "/construction/calculators/construction-draw",
+      icon: Calculator,
+      popular: false
     }
   ];
 

@@ -4,6 +4,8 @@ import { TodaysRates, RatesTicker } from '@/components/rates';
 import { ComplianceBanner } from '@/components/ComplianceBanner';
 import { Calculator, ArrowRight, ShieldCheck, HelpCircle } from 'lucide-react';
 import Link from 'next/link';
+import Footer from '@/components/Footer';
+import { OG_DEFAULTS } from '@/lib/seo/og';
 
 export const metadata: Metadata = {
   title: "Today's Verified Canadian Mortgage Rates | Kraft Mortgages",
@@ -11,6 +13,7 @@ export const metadata: Metadata = {
     'Live mortgage rate benchmarks across 30+ Canadian lenders. Lowest 5-year fixed, 3-year fixed, variable ARMs, HELOCs, and private 2nd mortgages for BC, Alberta, and Ontario.',
   alternates: { canonical: 'https://www.kraftmortgages.ca/rates' },
   openGraph: {
+    ...OG_DEFAULTS,
     title: "Today's Verified Mortgage Rates | Kraft Mortgages Canada",
     description:
       'Compare lowest insured, insurable, and conventional mortgage rates updated daily from Canadian lenders.',
@@ -35,16 +38,16 @@ export default function RatesPage() {
           </div>
         </div>
 
-        {/* Main Rates Component */}
-        <TodaysRates />
+        {/* Main Rates Component — renders the page h1 here (was h2-only, no h1) */}
+        <TodaysRates headingLevel="h1" />
 
         {/* Quick Calculator Linking Bar */}
         <section className="py-16 px-4 bg-slate-900/40 border-t border-slate-800">
           <div className="max-w-6xl mx-auto">
             <div className="text-center mb-10">
-              <h3 className="text-2xl sm:text-3xl font-bold text-white mb-2">
+              <h2 className="text-2xl sm:text-3xl font-bold text-white mb-2">
                 Test These Live Rates In Our Calculators
-              </h3>
+              </h2>
               <p className="text-sm text-slate-400">
                 Default interest rates are automatically synchronized to today&apos;s lowest market benchmark.
               </p>
@@ -66,9 +69,9 @@ export default function RatesPage() {
                     <div className="w-8 h-8 rounded-lg bg-gold-500/10 border border-gold-500/30 flex items-center justify-center mb-3">
                       <Calculator className="w-4 h-4 text-gold-400" />
                     </div>
-                    <h4 className="font-bold text-white text-base mb-1 group-hover:text-gold-300 transition-colors">
+                    <h3 className="font-bold text-white text-base mb-1 group-hover:text-gold-300 transition-colors">
                       {calc.title}
-                    </h4>
+                    </h3>
                     <p className="text-xs text-slate-400">{calc.desc}</p>
                   </div>
                   <div className="mt-4 flex items-center gap-1 text-xs font-semibold text-gold-400">
@@ -83,6 +86,7 @@ export default function RatesPage() {
 
         <ComplianceBanner feature="LEAD_FORM" />
       </main>
+      <Footer />
     </>
   );
 }

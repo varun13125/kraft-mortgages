@@ -1,5 +1,13 @@
 # Kraft Mortgages - AI Assistant Implementation Status
 
+> **READ FIRST: `DEVLOG/README.md`.** The developer log in `DEVLOG/` is the source of truth for current status
+> (`STATUS.md`), open bugs (`FINDINGS.md`), the feature backlog (`FEATURES.md`) and the session history (`SESSIONS.md`).
+> Follow its handoff protocol, and update it before you stop.
+> The status sections below date from 2025 and are **partly stale**. Some file paths no longer exist
+> (`lib/utils/formatting.ts`, `lib/validation/`). Tool calling is not wired into the live chat; Phase 6
+> HubSpot is unused (Twenty CRM via n8n is live). Trust the code and the DEVLOG over this file.
+> Type-check with `cd apps/web && ./node_modules/.bin/tsc --noEmit --incremental false -p .` (`npx tsc` resolves the wrong package).
+
 ## 🎯 PROJECT OVERVIEW
 Advanced mortgage advisory platform with AI assistant, lead generation, and CRM integration. Built with Next.js, TypeScript, and multiple AI providers for cost optimization.
 

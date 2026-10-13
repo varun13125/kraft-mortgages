@@ -65,7 +65,7 @@ export default function VarunLandingPage() {
                                 {...fadeInUpDelay(0.4)}
                                 className="text-lg sm:text-xl text-zinc-400 mb-4"
                             >
-                                Fill out our form below and we'll call you back to discuss your mortgage needs — whether you're buying, refinancing, or renewing.
+                                Fill out our form below and we&apos;ll call you back to discuss your mortgage needs — whether you&apos;re buying, refinancing, or renewing.
                             </motion.p>
 
                             {/* Geo Relevance Line */}
@@ -200,7 +200,7 @@ export default function VarunLandingPage() {
                             <div className="w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-gold-500 to-gold-600 rounded-2xl flex items-center justify-center mb-6 text-xl sm:text-2xl font-bold text-gray-900">
                                 2
                             </div>
-                            <h3 className="text-xl sm:text-2xl font-semibold text-zinc-100 mb-4">We'll Reach Out</h3>
+                            <h3 className="text-xl sm:text-2xl font-semibold text-zinc-100 mb-4">We&apos;ll Reach Out</h3>
                             <p className="text-zinc-400 leading-relaxed text-base">
                                 Our team will contact you to discuss your situation and answer questions.
                             </p>
@@ -243,7 +243,7 @@ export default function VarunLandingPage() {
                                 </span>
                             </h2>
                             <p className="text-lg sm:text-xl text-zinc-400 mb-2">
-                                Fill out the form below and we'll be in touch shortly.
+                                Fill out the form below and we&apos;ll be in touch shortly.
                             </p>
                         </motion.div>
 
@@ -267,7 +267,7 @@ export default function VarunLandingPage() {
 
                             {/* Expectation Setting */}
                             <p className="text-zinc-400 text-sm sm:text-base text-center mb-6">
-                                After you submit, we'll call you during business hours to discuss your situation and next steps.
+                                After you submit, we&apos;ll call you during business hours to discuss your situation and next steps.
                             </p>
 
                             {/* GHL Form Embed */}
@@ -357,7 +357,7 @@ export default function VarunLandingPage() {
                                         <ClipboardCheck className="w-6 h-6 text-gold-400" />
                                     </div>
                                     <h4 className="text-lg font-semibold text-zinc-100 mb-2">Secure Application Portal</h4>
-                                    <p className="text-zinc-400 text-sm mb-3">Start a full application when you're ready.</p>
+                                    <p className="text-zinc-400 text-sm mb-3">Start a full application when you&apos;re ready.</p>
                                     <span className="text-gold-400 text-sm font-medium group-hover:underline">Open →</span>
                                 </a>
                             </div>
@@ -426,7 +426,7 @@ export default function VarunLandingPage() {
                             <div>
                                 <h3 className="text-xl sm:text-2xl font-semibold text-zinc-100 mb-3">Personalized Service</h3>
                                 <p className="text-zinc-400 leading-relaxed text-base">
-                                    Every client's situation is unique. We take time to understand your goals and find solutions that fit.
+                                    Every client&apos;s situation is unique. We take time to understand your goals and find solutions that fit.
                                 </p>
                             </div>
                         </motion.div>
@@ -474,7 +474,7 @@ export default function VarunLandingPage() {
                                 How quickly will I hear from you?
                             </h3>
                             <p className="text-zinc-400 leading-relaxed text-base">
-                                We aim to reach out within a few hours during business hours (9 AM - 6 PM PT, Monday-Saturday). If you submit after hours, we'll contact you the next business day.
+                                We aim to reach out within a few hours during business hours (9 AM - 6 PM PT, Monday-Saturday). If you submit after hours, we&apos;ll contact you the next business day.
                             </p>
                         </motion.div>
 
@@ -490,7 +490,7 @@ export default function VarunLandingPage() {
                                 Is there any cost for the consultation?
                             </h3>
                             <p className="text-zinc-400 leading-relaxed text-base">
-                                No. The initial consultation is completely free with no obligation. We'll discuss your needs and provide guidance at no charge.
+                                No. The initial consultation is completely free with no obligation. We&apos;ll discuss your needs and provide guidance at no charge.
                             </p>
                         </motion.div>
 
@@ -506,7 +506,7 @@ export default function VarunLandingPage() {
                                 What information do I need to provide?
                             </h3>
                             <p className="text-zinc-400 leading-relaxed text-base">
-                                Just the basics in our form: your name, contact info, income range, and what type of mortgage you're interested in. We'll gather additional details during our conversation.
+                                Just the basics in our form: your name, contact info, income range, and what type of mortgage you&apos;re interested in. We&apos;ll gather additional details during our conversation.
                             </p>
                         </motion.div>
 
@@ -522,7 +522,7 @@ export default function VarunLandingPage() {
                                 Do you work with first-time homebuyers?
                             </h3>
                             <p className="text-zinc-400 leading-relaxed text-base">
-                                Absolutely! We help first-time buyers navigate the process, explain programs available, and find the best rates. We'll walk you through each step.
+                                Absolutely! We help first-time buyers navigate the process, explain programs available, and find the best rates. We&apos;ll walk you through each step.
                             </p>
                         </motion.div>
                     </div>

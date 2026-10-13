@@ -1,4 +1,5 @@
-"use client";
+// Server Component: this page has no client-side interactivity, so it no longer
+// ships as a client bundle ("use client" removed in the 2026-10 audit).
 import Navigation from "@/components/Navigation";
 import Link from "next/link";
 import { MapPin, Phone, Building, Users, Briefcase, Home, TrendingUp } from "lucide-react";
@@ -16,10 +17,10 @@ export default function VancouverPage() {
                             Vancouver, BC
                         </div>
                         <h1 className="text-4xl md:text-6xl font-bold mb-6 text-white">
-                            Vancouver's Trusted Mortgage Brokerage
+                            Vancouver&apos;s Trusted Mortgage Brokerage
                         </h1>
                         <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-8">
-                            Navigating Vancouver's real estate market takes more than luck — it takes a mortgage broker who knows every neighbourhood, every lender, and every strategy to get you the best rate.
+                            Navigating Vancouver&apos;s real estate market takes more than luck — it takes a mortgage broker who knows every neighbourhood, every lender, and every strategy to get you the best rate.
                         </p>
                         <Link
                             href="/contact"
@@ -41,7 +42,7 @@ export default function VancouverPage() {
                             What makes Vancouver unique is its diversity of property types and price points. East Vancouver has become one of the hottest markets in the country, attracting young families and investors alike with its character homes and rising condo developments. The corridor along the Burnaby border — areas like Renfrew-Collingwood and Victoria-Fraserview — offers relative value compared to the West Side while still delivering strong appreciation.
                         </p>
                         <p className="text-gray-300 text-lg">
-                            Whether you are buying your first condo in Mount Pleasant, upgrading to a detached home in Kerrisdale, or investing in a rental property in East Van, having a mortgage broker who understands Vancouver's micro-markets is essential. Kraft Mortgages has been serving Vancouver families and investors for over 18+ years, with access to 40+ lenders and $2 billion in funded mortgages.
+                            Whether you are buying your first condo in Mount Pleasant, upgrading to a detached home in Kerrisdale, or investing in a rental property in East Van, having a mortgage broker who understands Vancouver&apos;s micro-markets is essential. Kraft Mortgages has been serving Vancouver families and investors for over 18+ years, with access to 40+ lenders and $2 billion in funded mortgages.
                         </p>
                     </div>
                 </section>
@@ -59,7 +60,7 @@ export default function VancouverPage() {
                             <div className="bg-white/5 rounded-2xl p-6 border border-white/10">
                                 <TrendingUp className="w-10 h-10 text-gold-400 mb-4" />
                                 <h3 className="text-xl font-bold mb-3">Investment Property Mortgages</h3>
-                                <p className="text-gray-400">Vancouver is Canada's premier rental market. We work with lenders who understand the unique math of investment properties — from single-suite conversions to full multi-unit buildings.</p>
+                                <p className="text-gray-400">Vancouver is Canada&apos;s premier rental market. We work with lenders who understand the unique math of investment properties — from single-suite conversions to full multi-unit buildings.</p>
                             </div>
                             <div className="bg-white/5 rounded-2xl p-6 border border-white/10">
                                 <Briefcase className="w-10 h-10 text-gold-400 mb-4" />
@@ -75,7 +76,7 @@ export default function VancouverPage() {
                     <div className="max-w-4xl mx-auto">
                         <h2 className="text-3xl font-bold mb-6 text-center">Why Choose a Local Vancouver Mortgage Broker?</h2>
                         <p className="text-gray-300 text-lg text-center mb-8">
-                            Vancouver's real estate market moves fast and rewards preparation. A local broker understands the difference between a Mount Pleasant condo and a False Creek townhouse — not just in price, but in how lenders view them. We know which lenders specialize in strata properties over 20 years old, which ones favour presale assignments, and which private lenders can close in days when you need speed. That neighbourhood-level knowledge translates directly into better rates, faster approvals, and fewer surprises at closing.
+                            Vancouver&apos;s real estate market moves fast and rewards preparation. A local broker understands the difference between a Mount Pleasant condo and a False Creek townhouse — not just in price, but in how lenders view them. We know which lenders specialize in strata properties over 20 years old, which ones favour presale assignments, and which private lenders can close in days when you need speed. That neighbourhood-level knowledge translates directly into better rates, faster approvals, and fewer surprises at closing.
                         </p>
                     </div>
                 </section>
@@ -87,11 +88,11 @@ export default function VancouverPage() {
                         <div className="space-y-6">
                             <div className="bg-white/5 rounded-xl p-6 border border-white/10">
                                 <h3 className="font-bold text-lg mb-2">What is the minimum down payment to buy in Vancouver?</h3>
-                                <p className="text-gray-400">For homes under $500,000, the minimum is 5%. For homes between $500,000 and $999,999, it is 5% on the first $500,000 and 10% on the remainder. For homes over $1 million, the minimum is 20%. Given Vancouver's average price, most buyers will need at least $60,000–$100,000 down.</p>
+                                <p className="text-gray-400">For homes up to $500,000, the minimum is 5%. For homes between $500,000 and $1,499,999, it is 5% on the first $500,000 and 10% on the remainder. For homes of $1.5 million or more, the minimum is 20%. Given Vancouver&apos;s average price, most buyers will need at least $60,000–$100,000 down.</p>
                             </div>
                             <div className="bg-white/5 rounded-xl p-6 border border-white/10">
                                 <h3 className="font-bold text-lg mb-2">Can I buy a Vancouver condo with less than 20% down?</h3>
-                                <p className="text-gray-400">Yes, if the purchase price is under $1 million, you can put as little as 5% down. However, you will need mortgage default insurance (CMHC or private), and the strata must meet the lender's criteria — including financial health, age of the building, and any pending special assessments.</p>
+                                <p className="text-gray-400">Yes, if the purchase price is under $1.5 million, you can put less than 20% down (5% on the first $500,000 and 10% on the rest). However, you will need mortgage default insurance (CMHC or private), and the strata must meet the lender&apos;s criteria — including financial health, age of the building, and any pending special assessments.</p>
                             </div>
                             <div className="bg-white/5 rounded-xl p-6 border border-white/10">
                                 <h3 className="font-bold text-lg mb-2">How does the Vancouver vacancy tax affect my investment property mortgage?</h3>
@@ -102,7 +103,7 @@ export default function VancouverPage() {
                                 <p className="text-gray-400">Both areas offer strong value relative to the West Side. East Vancouver neighbourhoods like Hastings-Sunrise and Grandview-Woodland have seen significant appreciation. Areas along the Burnaby border like Renfrew-Collingwood benefit from SkyTrain access. We can help you compare the numbers.</p>
                             </div>
                             <div className="bg-white/5 rounded-xl p-6 border border-white/10">
-                                <h3 className="font-bold text-lg mb-2">How fast can I get pre-approved in Vancouver's competitive market?</h3>
+                                <h3 className="font-bold text-lg mb-2">How fast can I get pre-approved in Vancouver&apos;s competitive market?</h3>
                                 <p className="text-gray-400">We can provide a pre-approval within 24 hours — often the same day. In a market where multiple offers are common, having a firm pre-approval in hand can be the difference between winning and losing your dream home.</p>
                             </div>
                         </div>

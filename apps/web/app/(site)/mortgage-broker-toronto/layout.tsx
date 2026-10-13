@@ -1,5 +1,7 @@
 import { Metadata } from 'next';
 import { CityServiceJsonLd } from '@/components/SEO/CityServiceJsonLd';
+import Footer from '@/components/Footer';
+import { OG_DEFAULTS } from '@/lib/seo/og';
 
 export const metadata: Metadata = {
   title: 'Toronto Mortgage Broker | Premium Rates | Kraft Mortgages',
@@ -9,6 +11,7 @@ export const metadata: Metadata = {
     canonical: 'https://www.kraftmortgages.ca/mortgage-broker-toronto',
   },
   openGraph: {
+    ...OG_DEFAULTS,
     title: 'Toronto Mortgage Broker | Kraft Mortgages Canada',
     description: 'Trusted Toronto mortgage broker with low interest rates. Free pre-approval in 24 hours.',
     url: 'https://www.kraftmortgages.ca/mortgage-broker-toronto',
@@ -21,6 +24,7 @@ export default function TorontoLayout({ children }: { children: React.ReactNode 
     <>
       <CityServiceJsonLd cityName="Toronto" provinceName="ON" description="Licensed mortgage broker serving Toronto, ON. Residential, construction, self-employed, MLI Select, and private lending solutions." />
       {children}
+      <Footer />
     </>
   );
 }

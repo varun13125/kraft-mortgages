@@ -1,12 +1,16 @@
 import { NextRequest } from "next/server";
 import { mortgageTools } from "@/lib/ai/tools/mortgage-tools";
 import { rateToolsInstance } from "@/lib/ai/tools/rate-tools";
+import { rateLimit, tooManyRequests } from "@/lib/ai/request-guards";
 
 export async function POST(req: NextRequest) {
+  const limited = rateLimit(req, "ai-tools-min", 60, 60_000);
+  if (!limited.ok) return tooManyRequests(limited.retryAfterSec);
+
   try {
     const { tool, parameters } = await req.json();
 
-    if (!tool || !parameters) {
+    if (!tool || typeof tool !== "string" || !parameters || typeof parameters !== "object") {
       return new Response(
         JSON.stringify({ error: "Tool and parameters are required" }),
         { status: 400, headers: { "Content-Type": "application/json" } }
@@ -72,12 +76,11 @@ export async function POST(req: NextRequest) {
     );
 
   } catch (error) {
-    console.error("Tool execution error:", error);
+    console.error("Tool execution error:", error instanceof Error ? error.message : error);
     
     return new Response(
       JSON.stringify({
         error: "Tool execution failed",
-        message: error instanceof Error ? error.message : "Unknown error",
       }),
       {
         status: 500,

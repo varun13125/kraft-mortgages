@@ -84,7 +84,8 @@ export function useLiveRates(): UseLiveRatesReturn {
     DEFAULT_RATES.bestPrivateSecond;
 
   const primeRate = data?.prime_rate ?? DEFAULT_RATES.primeRate;
-  const isToday = data?.is_today ?? true;
+  // Fallback defaults are NOT today's rates - don't claim they are.
+  const isToday = data?.is_today ?? false;
   const featuredRates = data?.featured_rates ?? [];
   const allRates = data?.all_rates ?? [];
 

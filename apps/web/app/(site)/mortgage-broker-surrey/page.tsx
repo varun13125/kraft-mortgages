@@ -1,4 +1,5 @@
-"use client";
+// Server Component: this page has no client-side interactivity, so it no longer
+// ships as a client bundle ("use client" removed in the 2026-10 audit).
 import Navigation from "@/components/Navigation";
 import Link from "next/link";
 import { MapPin, Phone, Building, Users, Briefcase, Home } from "lucide-react";
@@ -16,10 +17,10 @@ export default function SurreyPage() {
                             Surrey, BC
                         </div>
                         <h1 className="text-4xl md:text-6xl font-bold mb-6 text-white">
-                            Surrey's Top-Rated Mortgage Brokerage
+                            Surrey&apos;s Top-Rated Mortgage Brokerage
                         </h1>
                         <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-8">
-                            For over a decade, Kraft Mortgages has been a dedicated partner to the Surrey community, helping families and investors navigate one of Canada's most dynamic real estate markets.
+                            For over a decade, Kraft Mortgages has been a dedicated partner to the Surrey community, helping families and investors navigate one of Canada&apos;s most dynamic real estate markets.
                         </p>
                         <Link
                             href="/contact"
@@ -38,7 +39,7 @@ export default function SurreyPage() {
                             <div className="bg-white/5 rounded-2xl p-6 border border-white/10">
                                 <Briefcase className="w-10 h-10 text-gold-400 mb-4" />
                                 <h3 className="text-xl font-bold mb-3">Self-Employed Mortgages</h3>
-                                <p className="text-gray-400">Surrey's entrepreneurial spirit is booming. We specialize in stated income loans that showcase the true strength of your business.</p>
+                                <p className="text-gray-400">Surrey&apos;s entrepreneurial spirit is booming. We specialize in stated income loans that showcase the true strength of your business.</p>
                             </div>
                             <div className="bg-white/5 rounded-2xl p-6 border border-white/10">
                                 <Building className="w-10 h-10 text-gold-400 mb-4" />
@@ -59,7 +60,7 @@ export default function SurreyPage() {
                     <div className="max-w-4xl mx-auto">
                         <h2 className="text-3xl font-bold mb-6 text-center">Why Choose a Local Surrey Mortgage Broker?</h2>
                         <p className="text-gray-300 text-lg text-center mb-8">
-                            In a competitive market like Surrey, local expertise is your greatest advantage. Unlike a big bank, we have one priority: you. We leverage our strong relationships with a wide network of lenders—including local credit unions and private lenders who understand the nuances of Surrey's property values.
+                            In a competitive market like Surrey, local expertise is your greatest advantage. Unlike a big bank, we have one priority: you. We leverage our strong relationships with a wide network of lenders—including local credit unions and private lenders who understand the nuances of Surrey&apos;s property values.
                         </p>
                     </div>
                 </section>
@@ -71,7 +72,7 @@ export default function SurreyPage() {
                         <div className="space-y-6">
                             <div className="bg-white/5 rounded-xl p-6 border border-white/10">
                                 <h3 className="font-bold text-lg mb-2">What is the minimum down payment for a home in Surrey?</h3>
-                                <p className="text-gray-400">For most properties in Surrey, the minimum down payment is 5% of the purchase price for homes under $500,000. For homes between $500,000 and $999,999, it's 5% on the first $500,000 and 10% on the remainder.</p>
+                                <p className="text-gray-400">For most properties in Surrey, the minimum down payment is 5% of the purchase price for homes up to $500,000. For homes between $500,000 and $1,499,999, it&apos;s 5% on the first $500,000 and 10% on the remainder. Homes of $1.5 million or more require 20% down.</p>
                             </div>
                             <div className="bg-white/5 rounded-xl p-6 border border-white/10">
                                 <h3 className="font-bold text-lg mb-2">How can I compete in popular Surrey neighbourhoods like Fleetwood or Guildford?</h3>

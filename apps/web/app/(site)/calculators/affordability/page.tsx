@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
 import { useLiveRates } from "@/lib/useLiveRates";
 import { stressTestRate, gdsTds } from "@/lib/calc/affordability";
-import { payment } from "@/lib/calc/payment";
+import { payment, principalFromPayment } from "@/lib/calc/payment";
 import { ComplianceBanner } from "@/components/ComplianceBanner";
 import { DollarSign, Calculator, Home, AlertTriangle, CheckCircle, ArrowRight, CreditCard, Download } from "lucide-react";
 import Link from "next/link";
@@ -25,6 +25,7 @@ export default function Affordability() {
   const [rate, setRate] = useState(4.39);
   const [hasUserEdited, setHasUserEdited] = useState(false);
   const [principal, setPrincipal] = useState(650000);
+  const [amortYears, setAmortYears] = useState(25);
 
   useEffect(() => {
     if (!hasUserEdited && best5YrFixed) {
@@ -33,10 +34,19 @@ export default function Affordability() {
   }, [best5YrFixed, hasUserEdited]);
   
   const qualRate = useMemo(() => stressTestRate(rate), [rate]);
-  const monthlyPI = payment({ principal, annualRatePct: qualRate, amortYears: 25, paymentsPerYear: 12 });
-  const housingAnnual = monthlyPI * 12 + propTax + heat + condoFees * 12;
+  const monthlyPI = payment({ principal, annualRatePct: qualRate, amortYears, paymentsPerYear: 12 });
+  // GDS counts 50% of condo fees (CMHC guideline)
+  const nonMortgageHousingAnnual = propTax + heat + condoFees * 12 * 0.5;
+  const housingAnnual = monthlyPI * 12 + nonMortgageHousingAnnual;
   const { gds, tds } = gdsTds({ incomeAnnual: income, housingCostsAnnual: housingAnnual, totalDebtAnnual: debts * 12 });
-  const pass = gds <= 39 && tds <= 44; // typical guideline
+  const pass = gds <= 39 && tds <= 44; // CMHC insured maxima
+
+  // Largest mortgage that keeps GDS ≤ 39% and TDS ≤ 44% at the qualifying rate
+  const maxMonthlyPI = Math.max(0, Math.min(
+    (income * 0.39 - nonMortgageHousingAnnual) / 12,
+    (income * 0.44 - nonMortgageHousingAnnual) / 12 - debts,
+  ));
+  const maxPrincipal = principalFromPayment({ monthlyPayment: maxMonthlyPI, annualRatePct: qualRate, amortYears });
 
   return (
     <>
@@ -131,15 +141,17 @@ export default function Affordability() {
                           { label: "Property Tax (annual)", value: "$" + Math.round(propTax).toLocaleString("en-CA") },
                           { label: "Heating (annual)", value: "$" + Math.round(heat).toLocaleString("en-CA") },
                           { label: "Condo Fees (monthly)", value: "$" + Math.round(condoFees).toLocaleString("en-CA") },
-                          { label: "Interest Rate", value: rate + "%" },
-                          { label: "Qualifying Rate (Stress Test)", value: qualRate + "%" },
+                          { label: "Interest Rate", value: rate.toFixed(2) + "%" },
+                          { label: "Qualifying Rate (Stress Test)", value: qualRate.toFixed(2) + "%" },
+                          { label: "Amortization", value: amortYears + " years" },
                         ]
                       },
                       {
                         title: "Your Results",
                         rows: [
-                          { label: "Maximum Mortgage Amount", value: "$" + Math.round(principal).toLocaleString("en-CA"), highlight: true },
-                          { label: "Monthly P&I Payment", value: "$" + Math.round(monthlyPI).toLocaleString("en-CA") },
+                          { label: "Mortgage Amount Tested", value: "$" + Math.round(principal).toLocaleString("en-CA") },
+                          { label: "Estimated Maximum Mortgage", value: "$" + Math.round(maxPrincipal).toLocaleString("en-CA"), highlight: true },
+                          { label: "Monthly P&I (at qualifying rate)", value: "$" + Math.round(monthlyPI).toLocaleString("en-CA") },
                           { label: "Annual Housing Costs", value: "$" + Math.round(housingAnnual).toLocaleString("en-CA") },
                           { label: "GDS Ratio", value: gds.toFixed(1) + "%" + " (max 39%)" },
                           { label: "TDS Ratio", value: tds.toFixed(1) + "%" + " (max 44%)" },
@@ -188,7 +200,7 @@ export default function Affordability() {
                       label="Annual Property Tax"
                       value={propTax}
                       onChange={setPropTax}
-                      validation={{ min: 1000, max: 20000 }}
+                      validation={{ min: 0, max: 50000 }}
                       type="currency"
                     />
 
@@ -196,7 +208,7 @@ export default function Affordability() {
                       label="Annual Heating Costs"
                       value={heat}
                       onChange={setHeat}
-                      validation={{ min: 600, max: 6000 }}
+                      validation={{ min: 0, max: 6000 }}
                       type="currency"
                     />
 
@@ -204,9 +216,9 @@ export default function Affordability() {
                       label="Monthly Condo Fees"
                       value={condoFees}
                       onChange={setCondoFees}
-                      validation={{ min: 0, max: 1000 }}
+                      validation={{ min: 0, max: 3000 }}
                       type="currency"
-                      help="Leave as 0 if not applicable"
+                      help="Leave as 0 if not applicable. Lenders count 50% of condo fees in GDS."
                       className="sm:col-span-2"
                     />
                   </div>
@@ -232,6 +244,21 @@ export default function Affordability() {
                       step={0.05}
                       formatValue={(v) => `${v.toFixed(2)}%`}
                     />
+
+                    <ValidatedSlider
+                      label={`Amortization (${amortYears} years)`}
+                      value={amortYears}
+                      onChange={(v) => setAmortYears(Math.round(v))}
+                      min={5}
+                      max={30}
+                      step={1}
+                      formatValue={(v) => `${Math.round(v)} years`}
+                    />
+                    {amortYears > 25 && (
+                      <p className="text-xs text-amber-300 -mt-3">
+                        Insured mortgages (less than 20% down) allow 30 years only for first-time buyers or new builds.
+                      </p>
+                    )}
 
                     <ValidatedInput
                       label="Mortgage Principal"
@@ -273,6 +300,15 @@ export default function Affordability() {
                   </p>
                 </div>
 
+                {/* Maximum mortgage at these inputs */}
+                <div className="bg-gradient-to-br from-gold-500/20 to-amber-500/10 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-gold-500/30">
+                  <p className="text-sm text-gold-300 font-medium mb-1">Estimated Maximum Mortgage</p>
+                  <p className="text-3xl sm:text-4xl font-bold text-gold-400">{formatCurrency(maxPrincipal, 0)}</p>
+                  <p className="text-xs text-gray-400 mt-2">
+                    Largest loan keeping GDS ≤ 39% and TDS ≤ 44% at the {formatPercentage(qualRate)} qualifying rate over {amortYears} years. If your down payment is under 20%, this includes the mortgage insurance premium.
+                  </p>
+                </div>
+
                 {/* Qualification Metrics */}
                 <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-white/20">
                   <h4 className="font-semibold mb-6">Qualification Metrics</h4>
@@ -282,7 +318,7 @@ export default function Affordability() {
                       <span className="font-semibold text-lg text-gold-400">{formatPercentage(qualRate)}</span>
                     </div>
                     <div className="bg-white/5 rounded-lg p-4">
-                      <span className="text-gray-300 block">Monthly P&I</span>
+                      <span className="text-gray-300 block">Qualifying P&I</span>
                       <span className="font-semibold text-lg">{formatCurrency(monthlyPI, 0)}</span>
                     </div>
                     <div className="bg-white/5 rounded-lg p-4">
@@ -369,7 +405,7 @@ export default function Affordability() {
                     <p>• <strong>GDS (Gross Debt Service) Ratio:</strong> Housing costs ÷ gross income (max 39%)</p>
                     <p>• <strong>TDS (Total Debt Service) Ratio:</strong> All debts + housing ÷ gross income (max 44%)</p>
                     <p>• <strong>Stress Test:</strong> Qualification rate is higher of contract rate + 2% or 5.25%</p>
-                    <p>• Housing costs include: mortgage payment, property tax, heating, and condo fees</p>
+                    <p>• Housing costs include: mortgage payment (at the qualifying rate), property tax, heating, and 50% of condo fees</p>
                     <p>• These are guidelines - individual lender requirements may vary</p>
                   </div>
                 </div>

@@ -1,13 +1,11 @@
 "use client";
 import { motion } from "framer-motion";
 import { Award, Calendar, TrendingUp, Zap, DollarSign, CheckCircle } from "lucide-react";
-import Navigation from "@/components/Navigation";
 import Breadcrumb from "@/components/Breadcrumb";
 
 export default function BenefitsPage() {
   return (
     <>
-      <Navigation />
       <main className="min-h-screen mt-16">
         {/* Breadcrumb */}
         <div className="px-4 py-6">
@@ -53,12 +51,12 @@ export default function BenefitsPage() {
                   textColor: "text-amber-400",
                   borderColor: "border-amber-500/30",
                   benefits: [
-                    { icon: Calendar, text: "40-year amortization", highlight: true },
-                    { icon: DollarSign, text: "Basic premium discount", highlight: false },
-                    { icon: TrendingUp, text: "Standard LTV ratios", highlight: false },
-                    { icon: Zap, text: "Standard processing", highlight: false }
+                    { icon: Calendar, text: "Up to 40-year amortization", highlight: true },
+                    { icon: DollarSign, text: "10% premium discount", highlight: false },
+                    { icon: TrendingUp, text: "95% LTC (new) / 85% LTV (existing)", highlight: false },
+                    { icon: Zap, text: "Full recourse", highlight: false }
                   ],
-                  premium: "5-10% discount",
+                  premium: "10% discount",
                   amortization: "Up to 40 years"
                 },
                 {
@@ -68,13 +66,13 @@ export default function BenefitsPage() {
                   textColor: "text-gold-400",
                   borderColor: "border-gold-500/30",
                   benefits: [
-                    { icon: Calendar, text: "Extended amortization", highlight: true },
-                    { icon: DollarSign, text: "Enhanced premium discount", highlight: true },
-                    { icon: TrendingUp, text: "Higher LTV ratios", highlight: true },
-                    { icon: Zap, text: "Priority processing", highlight: false }
+                    { icon: Calendar, text: "Up to 45-year amortization", highlight: true },
+                    { icon: DollarSign, text: "20% premium discount", highlight: true },
+                    { icon: TrendingUp, text: "Up to 95% LTC / LTV", highlight: true },
+                    { icon: Zap, text: "Full recourse", highlight: false }
                   ],
-                  premium: "15-20% discount",
-                  amortization: "Up to 40 years",
+                  premium: "20% discount",
+                  amortization: "Up to 45 years",
                   highlight: true
                 },
                 {
@@ -84,13 +82,13 @@ export default function BenefitsPage() {
                   textColor: "text-emerald-400", 
                   borderColor: "border-emerald-500/30",
                   benefits: [
-                    { icon: Calendar, text: "Maximum amortization", highlight: true },
-                    { icon: DollarSign, text: "Maximum premium discount", highlight: true },
-                    { icon: TrendingUp, text: "Highest LTV available", highlight: true },
-                    { icon: Zap, text: "Expedited approval", highlight: true }
+                    { icon: Calendar, text: "Up to 50-year amortization", highlight: true },
+                    { icon: DollarSign, text: "30% premium discount", highlight: true },
+                    { icon: TrendingUp, text: "Up to 95% LTC / LTV", highlight: true },
+                    { icon: Zap, text: "Limited recourse available", highlight: true }
                   ],
-                  premium: "Up to 25% discount",
-                  amortization: "Up to 40 years"
+                  premium: "30% discount",
+                  amortization: "Up to 50 years"
                 }
               ].map((tier, i) => (
                 <motion.div
@@ -173,8 +171,8 @@ export default function BenefitsPage() {
                   title: "Financial Benefits",
                   icon: DollarSign,
                   benefits: [
-                    "Premium discounts ranging from 5% to 25%",
-                    "Extended amortization periods up to 40 years",
+                    "Premium discounts of 10%, 20% or 30% (50 / 70 / 100 points)",
+                    "Extended amortization periods of up to 40, 45 or 50 years",
                     "Higher loan-to-value ratios for reduced equity requirements",
                     "Improved cash flow through lower monthly payments",
                     "Potential savings of hundreds of thousands on large projects"

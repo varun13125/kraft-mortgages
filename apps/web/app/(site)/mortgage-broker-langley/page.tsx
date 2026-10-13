@@ -1,4 +1,5 @@
-"use client";
+// Server Component: this page has no client-side interactivity, so it no longer
+// ships as a client bundle ("use client" removed in the 2026-10 audit).
 import Navigation from "@/components/Navigation";
 import Link from "next/link";
 import { MapPin, Phone, Building, Users, Briefcase, Home, TreePine } from "lucide-react";
@@ -16,7 +17,7 @@ export default function LangleyPage() {
                             Langley, BC
                         </div>
                         <h1 className="text-4xl md:text-6xl font-bold mb-6 text-white">
-                            Langley's Trusted Mortgage Broker
+                            Langley&apos;s Trusted Mortgage Broker
                         </h1>
                         <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-8">
                             From acreage properties to Willowbrook townhomes, Kraft Mortgages has been helping Langley families and farmers find the right mortgage for over 18+ years.
@@ -35,10 +36,10 @@ export default function LangleyPage() {
                     <div className="max-w-5xl mx-auto">
                         <h2 className="text-3xl font-bold mb-6 text-center">The Langley Mortgage Market</h2>
                         <p className="text-gray-300 text-lg mb-6">
-                            Langley offers some of the best value in Metro Vancouver, with an average home price around $850,000 as of early 2025. The Township of Langley and the City of Langley together form one of the region's fastest-growing communities, attracting families, farmers, and investors who want more space without leaving the metro area.
+                            Langley offers some of the best value in Metro Vancouver, with an average home price around $850,000 as of early 2025. The Township of Langley and the City of Langley together form one of the region&apos;s fastest-growing communities, attracting families, farmers, and investors who want more space without leaving the metro area.
                         </p>
                         <p className="text-gray-300 text-lg mb-6">
-                            What sets Langley apart is its incredible property diversity. In Willowbrook and the Langley City core, you will find modern townhomes and condos priced well below Vancouver and Burnaby equivalents. The Murrayville and Brookswood neighbourhoods offer established single-family communities with mature trees and larger lots. And then there is Langley's agricultural land — acreages, hobby farms, and working equestrian properties that require specialized mortgage knowledge.
+                            What sets Langley apart is its incredible property diversity. In Willowbrook and the Langley City core, you will find modern townhomes and condos priced well below Vancouver and Burnaby equivalents. The Murrayville and Brookswood neighbourhoods offer established single-family communities with mature trees and larger lots. And then there is Langley&apos;s agricultural land — acreages, hobby farms, and working equestrian properties that require specialized mortgage knowledge.
                         </p>
                         <p className="text-gray-300 text-lg">
                             Fort Langley, the birthplace of British Columbia, adds a historic charm that draws both residents and tourists. Properties in this area range from restored heritage homes to new infill developments. The Fraser Highway corridor and upcoming SkyTrain extension (the Surrey-Langley SkyTrain project) are already influencing property values, making Langley one of the most compelling markets in the region for both homeowners and investors.
@@ -54,12 +55,12 @@ export default function LangleyPage() {
                             <div className="bg-white/5 rounded-2xl p-6 border border-white/10">
                                 <TreePine className="w-10 h-10 text-gold-400 mb-4" />
                                 <h3 className="text-xl font-bold mb-3">Acreage & Farm Financing</h3>
-                                <p className="text-gray-400">Langley's Agricultural Land Reserve (ALR) properties require specialized lenders. We have deep experience with rural mortgages, hobby farm financing, and equestrian property loans.</p>
+                                <p className="text-gray-400">Langley&apos;s Agricultural Land Reserve (ALR) properties require specialized lenders. We have deep experience with rural mortgages, hobby farm financing, and equestrian property loans.</p>
                             </div>
                             <div className="bg-white/5 rounded-2xl p-6 border border-white/10">
                                 <Home className="w-10 h-10 text-gold-400 mb-4" />
                                 <h3 className="text-xl font-bold mb-3">First-Time Buyer Programs</h3>
-                                <p className="text-gray-400">Langley's lower price point makes it one of the best places in Metro Vancouver for first-time buyers. We help you maximize incentives like the RRSP Home Buyers' Plan and First-Time Home Buyer Incentive.</p>
+                                <p className="text-gray-400">Langley&apos;s lower price point makes it one of the best places in Metro Vancouver for first-time buyers. We help you maximize incentives like the RRSP Home Buyers&apos; Plan and First-Time Home Buyer Incentive.</p>
                             </div>
                             <div className="bg-white/5 rounded-2xl p-6 border border-white/10">
                                 <Users className="w-10 h-10 text-gold-400 mb-4" />
@@ -75,7 +76,7 @@ export default function LangleyPage() {
                     <div className="max-w-4xl mx-auto">
                         <h2 className="text-3xl font-bold mb-6 text-center">Why Choose a Local Langley Mortgage Broker?</h2>
                         <p className="text-gray-300 text-lg text-center mb-8">
-                            Langley's property types are far more diverse than most people realize. A half-acre in Brookswood is financed differently than a condo in Willowbrook, and a working farm on ALR land follows entirely different rules. Big banks often struggle with rural properties and acreages — they are unfamiliar with well and septic inspections, agricultural zoning, and the unique appraisal challenges of hobby farms. Kraft Mortgages works with lenders who specialize in exactly these situations. We have been financing Langley properties for over two decades and understand the local market from the ground up.
+                            Langley&apos;s property types are far more diverse than most people realize. A half-acre in Brookswood is financed differently than a condo in Willowbrook, and a working farm on ALR land follows entirely different rules. Big banks often struggle with rural properties and acreages — they are unfamiliar with well and septic inspections, agricultural zoning, and the unique appraisal challenges of hobby farms. Kraft Mortgages works with lenders who specialize in exactly these situations. We have been financing Langley properties for over two decades and understand the local market from the ground up.
                         </p>
                     </div>
                 </section>
@@ -99,7 +100,7 @@ export default function LangleyPage() {
                             </div>
                             <div className="bg-white/5 rounded-xl p-6 border border-white/10">
                                 <h3 className="font-bold text-lg mb-2">Are there first-time buyer incentives specific to Langley?</h3>
-                                <p className="text-gray-400">The federal and provincial programs (RRSP Home Buyers' Plan, BC First-Time Home Buyer Program, GST rebate) apply in Langley just as they do elsewhere. Langley's lower prices mean these incentives go further here than in Vancouver or Burnaby.</p>
+                                <p className="text-gray-400">The federal and provincial programs (RRSP Home Buyers&apos; Plan, BC First-Time Home Buyer Program, GST rebate) apply in Langley just as they do elsewhere. Langley&apos;s lower prices mean these incentives go further here than in Vancouver or Burnaby.</p>
                             </div>
                             <div className="bg-white/5 rounded-xl p-6 border border-white/10">
                                 <h3 className="font-bold text-lg mb-2">How does well and septic affect mortgage approval?</h3>

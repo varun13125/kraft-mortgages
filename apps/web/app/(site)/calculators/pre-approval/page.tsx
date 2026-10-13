@@ -8,6 +8,9 @@ import Link from "next/link";
 import PdfLeadModal from "@/components/PdfLeadModal";
 import { CalculatorSchema } from "@/components/SEO/CalculatorSchema";
 import { RelatedCalculators } from "@/components/calculators/RelatedCalculators";
+import { useLiveRates } from "@/lib/useLiveRates";
+import { payment, principalFromPayment } from "@/lib/calc/payment";
+import { cmhcPremiumRate as sharedCmhcPremiumRate, INSURED_PRICE_CAP } from "@/lib/calc/cmhc";
 
 // Pre-approval calculation logic
 function calculatePreApproval({
@@ -17,7 +20,8 @@ function calculatePreApproval({
   creditScore,
   heatingCosts = 150,
   propertyTax = 300,
-  condoFees = 0
+  condoFees = 0,
+  baseRate = 4.39,
 }: {
   grossIncome: number;
   monthlyDebts: number;
@@ -26,33 +30,38 @@ function calculatePreApproval({
   heatingCosts?: number;
   propertyTax?: number;
   condoFees?: number;
+  /** Best live 5-year fixed rate; credit tiers are priced as spreads above it */
+  baseRate?: number;
 }) {
-  // Get stress test rate and mortgage rate based on credit score
+  // Estimated contract rate by credit tier. Previously hardcoded at 5.49–6.89% (stale);
+  // now the same spreads are applied on top of the live best 5-year fixed rate.
   let mortgageRate: number;
-  
-  if (creditScore >= 780) mortgageRate = 5.49;
-  else if (creditScore >= 720) mortgageRate = 5.69;
-  else if (creditScore >= 680) mortgageRate = 5.89;
-  else if (creditScore >= 640) mortgageRate = 6.19;
-  else mortgageRate = 6.89;
+
+  if (creditScore >= 780) mortgageRate = baseRate;
+  else if (creditScore >= 720) mortgageRate = baseRate + 0.2;
+  else if (creditScore >= 680) mortgageRate = baseRate + 0.4;
+  else if (creditScore >= 640) mortgageRate = baseRate + 0.7;
+  else mortgageRate = baseRate + 1.4;
 
   // Correct Canadian stress test: max(contract rate + 2%, 5.25% floor) per OSFI B-20
   const stressTestRate = Math.max(mortgageRate + 2, 5.25);
-  
+
   // CMHC insurance requirements
   const isHighRatio = downPayment < 0.20;
   const minDownPayment = downPayment >= 0.05 ? downPayment : 0.05;
-  
+
   // Calculate maximum purchase price using stress test
   const monthlyIncome = grossIncome / 12;
-  
+  // GDS counts 50% of condo fees (CMHC guideline)
+  const condoCounted = condoFees * 0.5;
+
   // GDS ratio calculation (max 39% for stress test)
   const maxGDS = monthlyIncome * 0.39;
-  const availableForMortgage = maxGDS - heatingCosts - propertyTax - condoFees;
-  
-  // TDS ratio calculation (max 44% for stress test) 
+  const availableForMortgage = maxGDS - heatingCosts - propertyTax - condoCounted;
+
+  // TDS ratio calculation (max 44% for stress test)
   const maxTDS = monthlyIncome * 0.44;
-  const availableForMortgageWithDebts = maxTDS - heatingCosts - propertyTax - condoFees - monthlyDebts;
+  const availableForMortgageWithDebts = maxTDS - heatingCosts - propertyTax - condoCounted - monthlyDebts;
   
   // Use the lower of GDS or TDS available amount
   const maxMortgagePayment = Math.min(availableForMortgage, availableForMortgageWithDebts);
@@ -73,48 +82,56 @@ function calculatePreApproval({
     };
   }
   
-  // Calculate maximum mortgage amount using stress test rate
-  // Use Canadian semi-annual compounding (matches the shared payment() function)
-  const rDecimal = stressTestRate / 100;
-  const monthlyStressRate = Math.pow(1 + rDecimal / 2, 2 / 12) - 1;
-  const numPayments = 25 * 12; // 25 year amortization
-  
-  const maxMortgageAmount = maxMortgagePayment * ((1 - Math.pow(1 + monthlyStressRate, -numPayments)) / monthlyStressRate);
-  
-  // Calculate maximum purchase price
-  const maxPurchasePrice = maxMortgageAmount / (1 - minDownPayment);
-  
-  // CMHC premium calculation for high-ratio mortgages
-  let cmhcPremiumRate = 0;
+  // Maximum TOTAL loan (including any insurance premium) the qualifying payment supports
+  // at the stress-test rate — Canadian semi-annual compounding, 25-year amortization.
+  const AMORT_YEARS = 25;
+  const maxLoanAtStress = principalFromPayment({ monthlyPayment: maxMortgagePayment, annualRatePct: stressTestRate, amortYears: AMORT_YEARS });
+
+  // The premium is part of the loan you qualify for (previously it was added ON TOP of the
+  // qualifying maximum, so the real ratios exceeded 39/44 while the page said "qualifies").
+  const cmhcPremiumRate = isHighRatio ? sharedCmhcPremiumRate(minDownPayment * 100) : 0;
+  let baseLoan = maxLoanAtStress / (1 + cmhcPremiumRate);
+  let maxPurchasePrice = baseLoan / (1 - minDownPayment);
+
+  // With less than 20% down the price is also capped by the minimum down payment rules
+  // (5% to $500K, 10% above, 20% at $1.5M+ where insurance isn't available).
+  let cappedByDownPayment = false;
   if (isHighRatio) {
-    if (minDownPayment < 0.10) cmhcPremiumRate = 0.04;
-    else if (minDownPayment < 0.15) cmhcPremiumRate = 0.031;
-    else cmhcPremiumRate = 0.028;
+    const priceCap = minDownPayment <= 0.05 + 1e-9 ? 500000
+      : minDownPayment < 0.10 ? Math.min(25000 / (0.10 - minDownPayment), INSURED_PRICE_CAP - 1)
+      : INSURED_PRICE_CAP - 1;
+    if (maxPurchasePrice > priceCap) {
+      maxPurchasePrice = priceCap;
+      baseLoan = maxPurchasePrice * (1 - minDownPayment);
+      cappedByDownPayment = true;
+    }
   }
-  
-  const cmhcPremium = isHighRatio ? maxMortgageAmount * cmhcPremiumRate : 0;
-  
-  // Calculate actual monthly payment at contract rate
-  const rMonthly = Math.pow(1 + mortgageRate / 200, 1/6) - 1; // semi-annual → monthly
-  const actualMortgageAmount = maxMortgageAmount + cmhcPremium;
-  const monthlyPayment = actualMortgageAmount * (rMonthly * Math.pow(1 + rMonthly, numPayments)) / (Math.pow(1 + rMonthly, numPayments) - 1);
-  
-  // Calculate actual ratios
-  const totalHousingCosts = monthlyPayment + heatingCosts + propertyTax + condoFees;
+
+  const cmhcPremium = baseLoan * cmhcPremiumRate;
+  const actualMortgageAmount = baseLoan + cmhcPremium;
+
+  // Payment you'd actually make at the contract rate
+  const monthlyPayment = payment({ principal: actualMortgageAmount, annualRatePct: mortgageRate, amortYears: AMORT_YEARS });
+
+  // Qualifying ratios (lenders use the stress-test payment); at the maximum these sit at the limit
+  const qualifyingPayment = payment({ principal: actualMortgageAmount, annualRatePct: stressTestRate, amortYears: AMORT_YEARS });
+  const totalHousingCosts = qualifyingPayment + heatingCosts + propertyTax + condoCounted;
   const gdsRatio = (totalHousingCosts / monthlyIncome) * 100;
   const tdsRatio = ((totalHousingCosts + monthlyDebts) / monthlyIncome) * 100;
-  
-  const qualifies = gdsRatio <= 39 && tdsRatio <= 44 && maxMortgagePayment > 0;
-  
+
+  const qualifies = maxPurchasePrice > 0 && gdsRatio <= 39 + 1e-6 && tdsRatio <= 44 + 1e-6;
+
   let recommendation = "";
   if (qualifies) {
-    recommendation = "You qualify for pre-approval!";
+    recommendation = cappedByDownPayment
+      ? `Limited by the minimum down payment rules at ${(minDownPayment * 100).toFixed(0)}% down — a larger down payment would raise this.`
+      : "Estimated maximum purchase price at the qualifying (stress test) rate.";
   } else if (gdsRatio > 39) {
     recommendation = "Reduce housing costs or increase income";
   } else if (tdsRatio > 44) {
     recommendation = "Pay down existing debts to improve qualification";
   }
-  
+
   return {
     maxPurchasePrice,
     maxMortgageAmount: actualMortgageAmount,
@@ -139,6 +156,7 @@ export default function PreApprovalCalculator() {
   const [heatingCosts, setHeatingCosts] = useState(150);
   const [propertyTax, setPropertyTax] = useState(300);
   const [condoFees, setCondoFees] = useState(0);
+  const { best5YrFixed } = useLiveRates();
 
   const results = calculatePreApproval({
     grossIncome,
@@ -147,8 +165,10 @@ export default function PreApprovalCalculator() {
     creditScore,
     heatingCosts,
     propertyTax,
-    condoFees
+    condoFees,
+    baseRate: best5YrFixed,
   });
+  const fmt0 = (v: number) => (Number.isFinite(v) ? Math.round(v).toLocaleString("en-CA") : "—");
 
   return (
     <>
@@ -282,7 +302,7 @@ export default function PreApprovalCalculator() {
                       <input
                         type="range"
                         min="600"
-                        max="850"
+                        max="900"
                         value={creditScore}
                         onChange={(e) => setCreditScore(Number(e.target.value))}
                         className="w-full h-2 bg-white/20 rounded-lg appearance-none cursor-pointer slider"
@@ -290,7 +310,7 @@ export default function PreApprovalCalculator() {
                       <div className="flex justify-between text-sm text-gray-400 mt-2">
                         <span>600</span>
                         <span className="font-semibold text-gold-400">{creditScore}</span>
-                        <span>850</span>
+                        <span>900</span>
                       </div>
                     </div>
 
@@ -363,10 +383,10 @@ export default function PreApprovalCalculator() {
                     ) : (
                       <AlertTriangle className="w-6 h-6 text-red-400" />
                     )}
-                    <h3 className="text-xl font-bold">Pre-Approval Amount</h3>
+                    <h3 className="text-xl font-bold">Estimated Maximum Purchase Price</h3>
                   </div>
                   <div className={`text-4xl font-bold mb-2 ${results.qualifies ? 'text-green-400' : 'text-red-400'}`}>
-                    ${results.maxPurchasePrice.toLocaleString()}
+                    ${fmt0(results.maxPurchasePrice)}
                   </div>
                   <p className={`text-sm ${results.qualifies ? 'text-green-200' : 'text-red-200'}`}>
                     {results.recommendation}
@@ -379,14 +399,14 @@ export default function PreApprovalCalculator() {
                   <div className="grid grid-cols-2 gap-4 text-sm">
                     <div>
                       <span className="text-gray-300 block">Mortgage Amount</span>
-                      <span className="font-semibold text-lg">${results.maxMortgageAmount.toLocaleString()}</span>
+                      <span className="font-semibold text-lg">${fmt0(results.maxMortgageAmount)}</span>
                     </div>
                     <div>
                       <span className="text-gray-300 block">Monthly Payment</span>
-                      <span className="font-semibold text-lg">${results.monthlyPayment.toLocaleString()}</span>
+                      <span className="font-semibold text-lg">${fmt0(results.monthlyPayment)}</span>
                     </div>
                     <div>
-                      <span className="text-gray-300 block">Mortgage Rate</span>
+                      <span className="text-gray-300 block">Est. Rate (by credit tier)</span>
                       <span className="font-semibold text-lg">{results.mortgageRate.toFixed(2)}%</span>
                     </div>
                     <div>
@@ -402,7 +422,7 @@ export default function PreApprovalCalculator() {
                   <div className="space-y-4">
                     <div>
                       <div className="flex justify-between items-center mb-2">
-                        <span className="text-sm text-gray-300">GDS Ratio (max 39%)</span>
+                        <span className="text-sm text-gray-300">Qualifying GDS (max 39%)</span>
                         <span className={`font-semibold ${results.gdsRatio <= 39 ? 'text-green-400' : 'text-red-400'}`}>
                           {results.gdsRatio.toFixed(1)}%
                         </span>
@@ -416,7 +436,7 @@ export default function PreApprovalCalculator() {
                     </div>
                     <div>
                       <div className="flex justify-between items-center mb-2">
-                        <span className="text-sm text-gray-300">TDS Ratio (max 44%)</span>
+                        <span className="text-sm text-gray-300">Qualifying TDS (max 44%)</span>
                         <span className={`font-semibold ${results.tdsRatio <= 44 ? 'text-green-400' : 'text-red-400'}`}>
                           {results.tdsRatio.toFixed(1)}%
                         </span>
@@ -442,7 +462,7 @@ export default function PreApprovalCalculator() {
                       Down payment less than 20% requires mortgage insurance
                     </p>
                     <div className="text-lg font-semibold text-yellow-400">
-                      ${results.cmhcPremium.toLocaleString()} premium
+                      ${fmt0(results.cmhcPremium)} premium (added to the mortgage)
                     </div>
                   </div>
                 )}
@@ -476,7 +496,8 @@ export default function PreApprovalCalculator() {
                 <div>
                   <h3 className="text-lg font-semibold text-blue-300 mb-3">About Pre-Approval</h3>
                   <div className="space-y-2 text-sm text-blue-200">
-                    <p>• This calculator uses the current stress test rate of {results.stressTestRate}%</p>
+                    <p>• Qualifies you at the stress test rate of {results.stressTestRate.toFixed(2)}% (estimated rate + 2%, minimum 5.25%) over a 25-year amortization</p>
+                    <p>• Estimated rates are based on today&apos;s best 5-year fixed rate plus an illustrative credit-score adjustment</p>
                     <p>• Pre-approval is valid for 90-120 days depending on the lender</p>
                     <p>• Actual rates and approval are subject to credit and income verification</p>
                     <p>• CMHC insurance is required for down payments under 20%</p>
@@ -489,7 +510,7 @@ export default function PreApprovalCalculator() {
         </section>
 
             {/* PDF Report Download */}
-            <div className="mt-4">
+            <div className="mt-4 mb-8 px-4 max-w-6xl mx-auto">
               <motion.button
                 onClick={() => setShowPdfModal(true)}
                 className="w-full bg-gradient-to-r from-gold-500 to-amber-500 text-black font-semibold py-4 px-6 rounded-xl hover:from-gold-400 hover:to-amber-400 transition-all flex items-center justify-center gap-2 shadow-lg shadow-gold-500/20"
@@ -517,7 +538,7 @@ export default function PreApprovalCalculator() {
                         title: "Your Inputs",
                         rows: [
                           { label: "Gross Annual Income", value: "$" + Math.round(grossIncome).toLocaleString("en-CA") },
-                          { label: "Down Payment", value: "$" + Math.round(downPayment).toLocaleString("en-CA") },
+                          { label: "Down Payment", value: (downPayment * 100).toFixed(0) + "% ($" + fmt0(results.maxPurchasePrice * downPayment) + " at max price)" },
                           { label: "Monthly Debts", value: "$" + Math.round(monthlyDebts).toLocaleString("en-CA") },
                           { label: "Credit Score", value: String(creditScore) },
                         ]

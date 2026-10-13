@@ -2,6 +2,7 @@
 import { motion } from "framer-motion";
 import { MapPin, Home, TrendingUp, Shield, Building, Users, DollarSign, CheckCircle, ArrowRight, Phone, Clock, Target } from "lucide-react";
 import Link from "next/link";
+import { BUSINESS } from "@/lib/seo/business-config";
 
 export default function BC() {
   return (
@@ -338,7 +339,7 @@ export default function BC() {
                 <Phone className="w-5 h-5 text-gold-500 mt-0.5" />
                 <div>
                   <p className="font-semibold text-white">Phone</p>
-                  <p className="text-sm text-gray-300">(604) 555-0123<br />1-800-KRAFT-MTG</p>
+                  <p className="text-sm text-gray-300">{BUSINESS.telephoneDisplay}</p>
                 </div>
               </div>
               <div className="flex items-start gap-3">
@@ -352,11 +353,11 @@ export default function BC() {
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/calculators/affordability" className="px-8 py-4 bg-gold-500 hover:bg-gold-600 text-white font-semibold rounded-lg transition-colors inline-flex items-center justify-center gap-2">
+            <Link href="/calculators/affordability" className="px-8 py-4 bg-gold-500 hover:bg-gold-600 text-gray-900 font-semibold rounded-lg transition-colors inline-flex items-center justify-center gap-2">
               Start BC Application
               <ArrowRight className="w-5 h-5" />
             </Link>
-            <a href="tel:604-555-0123" className="px-8 py-4 bg-gray-800 hover:bg-gray-700 text-white font-semibold rounded-lg border border-gray-600 transition-colors inline-flex items-center justify-center gap-2">
+            <a href={`tel:${BUSINESS.telephone}`} className="px-8 py-4 bg-gray-800 hover:bg-gray-700 text-white font-semibold rounded-lg border border-gray-600 transition-colors inline-flex items-center justify-center gap-2">
               <Phone className="w-4 h-4" />
               Call BC Office
             </a>

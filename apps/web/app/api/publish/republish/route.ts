@@ -1,28 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import admin from 'firebase-admin';
-import { isAdmin, getPost } from '@/lib/db/firestore';
+import { getPost } from '@/lib/db/firestore';
+import { requireAdmin } from '@/lib/auth';
+
+export const dynamic = 'force-dynamic';
 
 const RepublishRequestSchema = z.object({
-  slug: z.string().min(1),
+  slug: z.string().min(1).max(200),
 });
-
-async function verifyAuth(request: NextRequest) {
-  const authHeader = request.headers.get('authorization');
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    throw new Error('Missing or invalid authorization header');
-  }
-
-  const token = authHeader.replace('Bearer ', '');
-  const decodedToken = await admin.auth().verifyIdToken(token);
-  
-  const userIsAdmin = await isAdmin(decodedToken.uid);
-  if (!userIsAdmin) {
-    throw new Error('Admin access required');
-  }
-
-  return decodedToken;
-}
 
 async function republishToWordPress(post: any): Promise<string> {
   if (!process.env.WORDPRESS_BASE_URL || !process.env.WORDPRESS_USERNAME || !process.env.WORDPRESS_APP_PASSWORD) {
@@ -54,7 +39,7 @@ async function republishToWordPress(post: any): Promise<string> {
 
   if (!response.ok) {
     const error = await response.text();
-    throw new Error(`WordPress API error: ${response.statusText} - ${error}`);
+    throw new Error(`WordPress API error: ${response.status} ${response.statusText} - ${error.slice(0, 300)}`);
   }
 
   const result = await response.json();
@@ -63,15 +48,23 @@ async function republishToWordPress(post: any): Promise<string> {
 
 export async function POST(request: NextRequest) {
   try {
-    // Verify authentication and admin status
-    const user = await verifyAuth(request);
-    
-    // Parse and validate request body
-    const body = await request.json();
-    const { slug } = RepublishRequestSchema.parse(body);
+    // Verify authentication and admin status.
+    // (Previously used admin.auth() directly, which throws "default Firebase app
+    // does not exist" unless another module had initialised Firebase first.)
+    const adminCheck = await requireAdmin(request);
+    if (!adminCheck.ok) {
+      return NextResponse.json({ error: adminCheck.error }, { status: adminCheck.status });
+    }
 
-    // Get existing post
-    const post = await getPost(slug);
+    // Parse and validate request body
+    const parsed = RepublishRequestSchema.safeParse(await request.json().catch(() => null));
+    if (!parsed.success) {
+      return NextResponse.json({ error: 'slug is required' }, { status: 400 });
+    }
+    const { slug } = parsed.data;
+
+    // Get existing post (admins may republish drafts)
+    const post = await getPost(slug, { includeDrafts: true });
     if (!post) {
       return NextResponse.json(
         { error: 'Post not found' },
@@ -93,14 +86,9 @@ export async function POST(request: NextRequest) {
       method = 'firestore';
     }
 
-    // Update post with republish timestamp
-    const updatedPost = {
-      ...post,
-      republishedAt: new Date(),
-      republishedBy: user.uid,
-    };
-
-    // Save updated post (implementation would go here)
+    // TODO (not implemented): persist republishedAt / republishedBy (adminCheck.uid)
+    // on the Firestore post. NOTE: republishToWordPress() always POSTs a NEW
+    // WordPress post, so repeated republishes create duplicates there.
     
     return NextResponse.json({
       success: true,
@@ -112,15 +100,6 @@ export async function POST(request: NextRequest) {
 
   } catch (error) {
     console.error('Republish error:', error);
-    
-    if (error instanceof Error) {
-      if (error.message.includes('authorization') || error.message.includes('Admin')) {
-        return NextResponse.json(
-          { error: error.message },
-          { status: 401 }
-        );
-      }
-    }
 
     return NextResponse.json(
       { error: 'Internal server error' },

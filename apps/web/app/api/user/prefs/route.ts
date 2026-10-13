@@ -1,6 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
 import { verifyFirebaseToken } from '@/lib/auth';
 import { db } from '@/lib/db/firestore';
+
+export const dynamic = 'force-dynamic';
+
+// Bounded, primitive-only preference map (previously any object of any size was stored).
+const PreferencesSchema = z
+  .record(z.string().max(64), z.union([z.string().max(200), z.number(), z.boolean(), z.null()]))
+  .refine((p) => Object.keys(p).length <= 30, 'Too many preference keys');
 
 export async function GET(request: NextRequest) {
   try {
@@ -56,15 +64,20 @@ export async function POST(request: NextRequest) {
     }
 
     const token = authHeader.split('Bearer ')[1];
-    const decodedToken = await verifyFirebaseToken(token);
-    const uid = decodedToken.uid;
+    let uid: string;
+    try {
+      uid = (await verifyFirebaseToken(token)).uid;
+    } catch {
+      return NextResponse.json({ error: 'Invalid authentication token' }, { status: 401 });
+    }
 
-    const body = await request.json();
-    const { preferences } = body;
+    const body = await request.json().catch(() => null);
+    const parsedPrefs = PreferencesSchema.safeParse(body?.preferences);
 
-    if (!preferences || typeof preferences !== 'object') {
+    if (!parsedPrefs.success) {
       return NextResponse.json({ error: 'Invalid preferences data' }, { status: 400 });
     }
+    const preferences = parsedPrefs.data;
 
     // Save user preferences to Firestore
     await (await db.collection('users')).doc(uid).set({

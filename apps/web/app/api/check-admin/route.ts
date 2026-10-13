@@ -1,75 +1,47 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { verifyFirebaseToken } from '@/lib/auth';
-import { isAdmin, adminsCol } from '@/lib/db/firestore';
+import { verifyFirebaseToken, getBearerToken } from '@/lib/auth';
+import { isAdmin } from '@/lib/db/firestore';
+
+export const dynamic = 'force-dynamic';
 
 export async function GET(request: NextRequest) {
   try {
     // Get the auth token
-    const authHeader = request.headers.get('authorization');
-    if (!authHeader?.startsWith('Bearer ')) {
-      return NextResponse.json({ 
+    const token = getBearerToken(request);
+    if (!token) {
+      return NextResponse.json({
         error: 'Missing authorization header',
-        isAdmin: false 
+        isAdmin: false
       }, { status: 401 });
     }
 
-    const token = authHeader.split('Bearer ')[1];
-    
     // Verify token
     let decodedToken;
     try {
       decodedToken = await verifyFirebaseToken(token);
-    } catch (error) {
-      return NextResponse.json({ 
+    } catch {
+      return NextResponse.json({
         error: 'Invalid token',
-        details: error instanceof Error ? error.message : 'Unknown error',
-        isAdmin: false 
+        isAdmin: false
       }, { status: 401 });
     }
-    
-    const uid = decodedToken.uid;
-    const email = decodedToken.email;
-    
-    // Check admin status
-    const adminStatus = await isAdmin(uid);
-    
-    // Also fetch the admin document directly for debugging
-    const adminsCollection = await adminsCol();
-    const adminDoc = await adminsCollection.doc(uid).get();
-    
-    const adminData = adminDoc.exists ? adminDoc.data() : null;
-    
-    // Debug: List all admin documents
-    const allAdmins = await adminsCollection.get();
-    const allAdminData = allAdmins.docs.map((doc: any) => ({
-      id: doc.id,
-      data: doc.data()
-    }));
-    
-    return NextResponse.json({ 
+
+    // Check admin status.
+    // SECURITY: this endpoint previously returned every document in the `admins`
+    // collection (other admins' UIDs/emails) plus token internals to ANY signed-in
+    // Firebase user. It now only reports on the caller.
+    const adminStatus = await isAdmin(decodedToken.uid);
+
+    return NextResponse.json({
       isAdmin: adminStatus,
-      uid,
-      email,
-      adminDocExists: adminDoc.exists,
-      adminData,
-      allAdmins: allAdminData,
-      debug: {
-        tokenUid: decodedToken.uid,
-        tokenEmail: decodedToken.email,
-        totalAdminDocs: allAdminData.length,
-        decodedToken: {
-          uid: decodedToken.uid,
-          email: decodedToken.email,
-          email_verified: decodedToken.email_verified
-        }
-      }
+      uid: decodedToken.uid,
+      email: decodedToken.email,
     });
 
   } catch (error) {
-    console.error('Check admin error:', error);
-    return NextResponse.json({ 
+    console.error('Check admin error:', error instanceof Error ? error.message : error);
+    return NextResponse.json({
       error: 'Failed to check admin status',
-      details: error instanceof Error ? error.message : 'Unknown error',
       isAdmin: false
     }, { status: 500 });
   }

@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import Footer from "@/components/Footer";
+import { OG_DEFAULTS } from "@/lib/seo/og";
 
 export const metadata: Metadata = {
   title: "Compliance, Security & Consumer Protection Hub | Kraft Mortgages Canada Inc.",
@@ -7,6 +9,7 @@ export const metadata: Metadata = {
   keywords:
     "FINTRAC compliance, mortgage broker compliance, BCFSA licensed, RECA licensed, FSRA licensed, anti-money laundering, PCMLTFA, consumer protection mortgage, mortgage security, identity verification mortgage, beneficial ownership",
   openGraph: {
+    ...OG_DEFAULTS,
     title: "Compliance, Security & Consumer Protection Hub | Kraft Mortgages",
     description:
       "Fully licensed by BCFSA, RECA, and FSRA. Upholding the highest FINTRAC, anti-money laundering, and consumer protection standards across Canada.",
@@ -30,5 +33,10 @@ export default function ComplianceSecurityLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <>{children}</>;
+  return (
+    <>
+      {children}
+      <Footer />
+    </>
+  );
 }

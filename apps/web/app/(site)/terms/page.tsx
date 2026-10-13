@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
+import { OG_DEFAULTS } from "@/lib/seo/og";
 import {
   Scale,
   Shield,
@@ -27,6 +28,7 @@ export const metadata: Metadata = {
     canonical: "https://www.kraftmortgages.ca/terms",
   },
   openGraph: {
+    ...OG_DEFAULTS,
     title: "Terms of Service | Kraft Mortgages Canada Inc.",
     description:
       "Review the legal terms, disclaimers, user responsibilities, and regulatory framework governing Kraft Mortgages Canada Inc.",

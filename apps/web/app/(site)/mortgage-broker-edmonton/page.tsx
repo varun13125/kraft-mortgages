@@ -1,4 +1,5 @@
-"use client";
+// Server Component: this page has no client-side interactivity, so it no longer
+// ships as a client bundle ("use client" removed in the 2026-10 audit).
 import Navigation from "@/components/Navigation";
 import Link from "next/link";
 import { MapPin, Phone, Building, Users, Briefcase, Home, TrendingUp } from "lucide-react";
@@ -16,10 +17,10 @@ export default function EdmontonPage() {
               Edmonton, AB
             </div>
             <h1 className="text-4xl md:text-6xl font-bold mb-6 text-white tracking-tight">
-              Edmonton's Premier Mortgage Brokerage
+              Edmonton&apos;s Premier Mortgage Brokerage
             </h1>
             <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-8 leading-relaxed">
-              Edmonton's real estate market offers incredible affordability and opportunity. From mature neighbourhoods like Strathcona to new developments in Windermere, we secure the absolute lowest interest rates for your home purchase.
+              Edmonton&apos;s real estate market offers incredible affordability and opportunity. From mature neighbourhoods like Strathcona to new developments in Windermere, we shop our lender network for competitive interest rates on your home purchase.
             </p>
             <Link
               href="/contact"
@@ -66,7 +67,7 @@ export default function EdmontonPage() {
               <div className="bg-slate-900/50 rounded-2xl p-6 border border-slate-800 hover:border-gold-500/40 transition-all">
                 <Briefcase className="w-10 h-10 text-gold-400 mb-4" />
                 <h3 className="text-xl font-bold mb-3">First-Time Buyer Rebates</h3>
-                <p className="text-gray-400">Take advantage of Edmonton's entry-level affordability. We leverage federal programs and preferred rates to get you approved with minimal down payments.</p>
+                <p className="text-gray-400">Take advantage of Edmonton&apos;s entry-level affordability. We leverage federal programs and preferred rates to get you approved with minimal down payments.</p>
               </div>
             </div>
           </div>
@@ -77,7 +78,7 @@ export default function EdmontonPage() {
           <div className="max-w-4xl mx-auto text-center">
             <h2 className="text-3xl font-bold mb-6">Why Choose a Local Edmonton Mortgage Broker?</h2>
             <p className="text-gray-300 text-lg leading-relaxed">
-              Edmonton's local market is distinct, spanning century-old strata rules and massive suburban communities. A local broker understands reserve fund financial audits, builder credentials, and regional municipal bylaws to keep your transaction on track.
+              Edmonton&apos;s local market is distinct, spanning century-old strata rules and massive suburban communities. A local broker understands reserve fund financial audits, builder credentials, and regional municipal bylaws to keep your transaction on track.
             </p>
           </div>
         </section>
@@ -116,7 +117,7 @@ export default function EdmontonPage() {
                   <span className="text-gold-400">Q:</span> What strata considerations apply to Edmonton condos?
                 </h3>
                 <p className="text-gray-300 leading-relaxed pl-6 border-l border-gold-500/30">
-                  Lenders review the building's reserve fund study and condo corporation finances. Whether buying near the University of Alberta or downtown, we ensure your building choice meets all lending requirements.
+                  Lenders review the building&apos;s reserve fund study and condo corporation finances. Whether buying near the University of Alberta or downtown, we ensure your building choice meets all lending requirements.
                 </p>
               </div>
               <div className="bg-slate-900/60 rounded-2xl p-6 border border-slate-800 shadow-lg">
@@ -124,7 +125,7 @@ export default function EdmontonPage() {
                   <span className="text-gold-400">Q:</span> How does the local economy affect Edmonton mortgage rates?
                 </h3>
                 <p className="text-gray-300 leading-relaxed pl-6 border-l border-gold-500/30">
-                  While global bond yields drive fixed rates, Edmonton's diverse economic sectors (health, education, tech, energy) create unique local lending incentives. We compare over 40 lenders to find the optimal fit.
+                  While global bond yields drive fixed rates, Edmonton&apos;s diverse economic sectors (health, education, tech, energy) create unique local lending incentives. We compare over 40 lenders to find the optimal fit.
                 </p>
               </div>
             </div>

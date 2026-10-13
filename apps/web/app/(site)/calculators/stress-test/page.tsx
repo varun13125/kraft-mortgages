@@ -8,15 +8,16 @@ import { Calculator, Shield, CheckCircle, AlertTriangle, HelpCircle,
 import Link from "next/link";
 import { ValidatedInput, ValidatedSlider } from "@/components/ui/ValidatedInput";
 import { formatCurrency } from "@/lib/utils/validation";
+import { payment } from "@/lib/calc/payment";
+import { cmhcPremium, minimumDownPayment, isInsurable } from "@/lib/calc/cmhc";
 import PdfLeadModal from "@/components/PdfLeadModal";
 import { CalculatorSchema } from "@/components/SEO/CalculatorSchema";
 import { RelatedCalculators } from "@/components/calculators/RelatedCalculators";
 
 /* ── Math ───────────────────────────────────────────── */
+// Canadian semi-annual compounding via the shared helper (was US-style monthly compounding)
 function monthlyPayment(principal: number, annualRate: number, months: number): number {
-  if (annualRate === 0) return principal / months;
-  const r = annualRate / 100 / 12;
-  return (principal * r * Math.pow(1 + r, months)) / (Math.pow(1 + r, months) - 1);
+  return payment({ principal, annualRatePct: annualRate, amortYears: months / 12 });
 }
 
 const STRESS_BUFFER = 2.0;
@@ -25,11 +26,11 @@ const MIN_QUALIFYING_RATE = 5.25;
 const faqs = [
   {
     q: "What is Canada's mortgage stress test?",
-    a: "The mortgage stress test requires all federally regulated lenders to qualify borrowers at a higher rate than their actual mortgage rate. As of 2025, you must qualify at either your contract rate plus 2% or the Bank of Canada's 5-year benchmark rate (floor of 5.25%) — whichever is higher. This ensures you can still afford your payments if rates rise."
+    a: "The mortgage stress test requires borrowers to qualify at a higher rate than their actual mortgage rate. You must qualify at the greater of your contract rate plus 2% or a 5.25% floor (OSFI's minimum qualifying rate, which replaced the Bank of Canada benchmark in 2021 and is unchanged in 2026). This ensures you can still afford your payments if rates rise."
   },
   {
     q: "Who needs to pass the stress test?",
-    a: "All borrowers getting a mortgage from a federally regulated lender (banks, most credit unions, and trust companies) must pass the stress test. This applies to purchases, refinances, and switch-at-renewal (since 2023). Private lenders and some provincially regulated lenders are exempt but charge higher rates."
+    a: "Borrowers at federally regulated lenders (banks and federally regulated trust and loan companies) must pass it for purchases and refinances, and all insured (less than 20% down) mortgages are qualified the same way regardless of lender. Many provincially regulated credit unions apply a similar test. Private lenders are generally exempt but charge higher rates."
   },
   {
     q: "What are GDS and TDS ratios?",
@@ -41,7 +42,7 @@ const faqs = [
   },
   {
     q: "Does the stress test apply at mortgage renewal?",
-    a: "Since June 2023, borrowers switching lenders at renewal must pass the stress test again. Staying with your current lender at renewal does not require re-qualifying, which gives your existing lender a significant advantage. This makes it critical to compare your current lender's renewal offer with market rates."
+    a: "Not for a straight switch. Since November 21, 2024, OSFI no longer requires the stress test when an uninsured borrower switches to a new lender at renewal without increasing the loan amount or extending the amortization (insured mortgages already could switch without re-qualifying). Adding money or extending the amortization is a refinance and must be stress tested. This makes it easier to compare your current lender's renewal offer with market rates."
   }
 ];
 
@@ -58,16 +59,23 @@ export default function StressTestPage() {
   const [openFaq, setOpenFaq] = useState<number | null>(null)
 
   const downPayment = (purchasePrice * downPaymentPct) / 100;
-  const mortgage = purchasePrice - downPayment;
+  const baseMortgage = purchasePrice - downPayment;
+  // With less than 20% down the insurance premium is added to the loan you must qualify for
+  const insurancePremium = downPaymentPct < 20 ? cmhcPremium(purchasePrice, downPayment, amortYears) : 0;
+  const mortgage = baseMortgage + insurancePremium;
+  const minDown = minimumDownPayment(purchasePrice);
+  const downPaymentProblem = downPaymentPct < 20 && !isInsurable(purchasePrice, downPayment);
   const n = amortYears * 12;
 
   const stressRate = useMemo(() => Math.max(contractRate + STRESS_BUFFER, MIN_QUALIFYING_RATE), [contractRate]);
   const regularPayment = useMemo(() => monthlyPayment(mortgage, contractRate, n), [mortgage, contractRate, n]);
   const stressPayment = useMemo(() => monthlyPayment(mortgage, stressRate, n), [mortgage, stressRate, n]);
 
-  const housingCosts = stressPayment + propertyTax / 12 + heat / 12 + (condoFees * 0.5) / 12;
+  // condoFees is monthly; GDS counts 50% of condo fees
+  const housingCosts = stressPayment + propertyTax / 12 + heat / 12 + condoFees * 0.5;
   const incomeNeededGDS = housingCosts * 12 / 0.39;
-  const incomeNeededTDS = (housingCosts * 12 + otherDebts) / 0.44;
+  // otherDebts is a MONTHLY amount → annualize before dividing by the TDS limit
+  const incomeNeededTDS = (housingCosts + otherDebts) * 12 / 0.44;
   const incomeNeeded = Math.max(incomeNeededGDS, incomeNeededTDS);
 
   return (
@@ -97,7 +105,7 @@ export default function StressTestPage() {
               <h1 className="text-4xl sm:text-6xl font-bold tracking-tight text-gray-100 mb-6">
                 <span className="bg-gradient-to-r from-gold-400 to-amber-500 bg-clip-text text-transparent">Stress Test</span> Calculator
               </h1>
-              <p className="text-xl text-gray-400 max-w-3xl mx-auto">See if you qualify under Canada's mortgage stress test rules.</p>
+              <p className="text-xl text-gray-400 max-w-3xl mx-auto">See if you qualify under Canada&apos;s mortgage stress test rules.</p>
             </motion.div>
           </div>
         </section>
@@ -163,6 +171,16 @@ export default function StressTestPage() {
                   <div className="space-y-6">
                     <ValidatedInput label="Purchase Price" value={purchasePrice} onChange={setPurchasePrice} validation={{ min: 100000, max: 5000000 }} type="currency" />
                     <ValidatedSlider label={`Down Payment (${downPaymentPct}%)`} value={downPaymentPct} onChange={setDownPaymentPct} min={5} max={50} step={1} formatValue={(v) => `${v}% (${formatCurrency(purchasePrice * v / 100, 0)})`} />
+                    {downPaymentProblem && (
+                      <p className="text-xs text-red-300 -mt-3">
+                        Below the minimum down payment of {formatCurrency(minDown, 0)} for this price{purchasePrice >= 1500000 ? " (homes $1.5M+ require 20% down)" : ""}.
+                      </p>
+                    )}
+                    {downPaymentPct < 20 && amortYears > 25 && (
+                      <p className="text-xs text-amber-300 -mt-3">
+                        30-year insured mortgages are limited to first-time buyers and new builds (premium includes the 0.20% surcharge).
+                      </p>
+                    )}
                     <ValidatedInput label="Mortgage Rate" value={contractRate} onChange={setContractRate} validation={{ min: 1, max: 15 }} type="percentage" />
                     <ValidatedSlider label={`Amortization (${amortYears} years)`} value={amortYears} onChange={setAmortYears} min={5} max={30} step={5} formatValue={(v) => `${v} years`} />
                   </div>
@@ -210,9 +228,15 @@ export default function StressTestPage() {
                   <h4 className="font-semibold mb-4 flex items-center gap-2"><Home className="w-5 h-5 text-gold-400" /> Qualification Details</h4>
                   <div className="space-y-3 text-sm">
                     <div className="flex justify-between">
-                      <span className="text-gray-400">Mortgage Amount</span>
+                      <span className="text-gray-400">Mortgage Amount{insurancePremium > 0 ? " (incl. insurance)" : ""}</span>
                       <span className="text-gray-200 font-medium">{formatCurrency(mortgage, 0)}</span>
                     </div>
+                    {insurancePremium > 0 && (
+                      <div className="flex justify-between">
+                        <span className="text-gray-400">Mortgage Insurance Premium</span>
+                        <span className="text-gray-200 font-medium">{formatCurrency(insurancePremium, 0)}</span>
+                      </div>
+                    )}
                     <div className="flex justify-between">
                       <span className="text-gray-400">Monthly Housing Costs (PITH + ½ condo)</span>
                       <span className="text-gray-200 font-medium">{formatCurrency(housingCosts, 0)}</span>
@@ -234,7 +258,8 @@ export default function StressTestPage() {
                     <div>
                       <h3 className="text-lg font-semibold text-blue-300 mb-2">Understanding This Calculation</h3>
                       <div className="space-y-1 text-sm text-blue-200">
-                        <p>• Uses the 2025 OSFI qualifying rate: your rate + 2% (minimum 5.25%)</p>
+                        <p>• Uses the OSFI minimum qualifying rate: your rate + 2% (minimum 5.25%)</p>
+                        <p>• With less than 20% down, the mortgage insurance premium is added to the loan you qualify for</p>
                         <p>• GDS limit: 39% | TDS limit: 44% (insured mortgages)</p>
                         <p>• Other debts lower the income you can qualify with</p>
                         <p>• Actual qualification depends on credit score, employment, and lender criteria</p>
@@ -257,13 +282,13 @@ export default function StressTestPage() {
           <div className="max-w-4xl mx-auto prose prose-invert">
             <h2 className="text-3xl font-bold text-gray-100 mb-8">Understanding Canada&apos;s Mortgage Stress Test</h2>
             <div className="text-gray-300 space-y-4 leading-relaxed">
-              <p>Canada&apos;s mortgage stress test was introduced in 2018 by the Office of the Superintendent of Financial Institutions (OSFI) to ensure borrowers could handle potential interest rate increases. The rule requires federally regulated lenders to qualify borrowers at a rate higher than their actual mortgage rate — either the contract rate plus 2 percentage points, or the Bank of Canada&apos;s five-year benchmark rate (currently 5.25%), whichever is higher.</p>
+              <p>Canada&apos;s mortgage stress test — applied to insured mortgages since 2016 and extended to uninsured mortgages by the Office of the Superintendent of Financial Institutions (OSFI) in 2018 — exists to ensure borrowers could handle potential interest rate increases. The rule requires federally regulated lenders to qualify borrowers at a rate higher than their actual mortgage rate — either the contract rate plus 2 percentage points, or a minimum qualifying rate floor of 5.25%, whichever is higher.</p>
 
               <h3 className="text-2xl font-semibold text-gray-100 mt-8">How the Stress Test Protects Borrowers</h3>
               <p>The stress test acts as a financial safety net. If your contract rate is 4.79%, the stress test qualifies you as if your rate were 6.79% (or 5.25%, whichever is higher). This means you must prove you can afford payments at 6.79% — even though you&apos;ll actually pay 4.79%. If rates rise during your term, you have built-in breathing room. Without this buffer, a 2% rate increase on a $700,000 mortgage would add over $800/month to your payment.</p>
 
               <h3 className="text-2xl font-semibold text-gray-100 mt-8">OSFI Rules and Recent Changes</h3>
-              <p>In June 2023, OSFI extended the stress test to mortgage renewals when switching lenders. Previously, borrowers could switch to a new lender at renewal without re-qualifying. This change gave existing lenders significant leverage at renewal time. Borrowers staying with their current lender do not need to re-qualify, but those wanting to shop for a better rate at renewal must now pass the stress test at current rates — which may be higher than when they originally qualified.</p>
+              <p>Until late 2024, uninsured borrowers who wanted to switch lenders at renewal had to pass the stress test again, which gave existing lenders significant leverage at renewal time. Effective November 21, 2024, OSFI removed that requirement for straight switches — moving an uninsured mortgage to a new lender at renewal without increasing the loan amount or extending the amortization. Borrowers who add funds or extend their amortization are refinancing and must still qualify at the stress-test rate.</p>
 
               <h3 className="text-2xl font-semibold text-gray-100 mt-8">Tips to Pass the Stress Test</h3>
               <ul className="list-disc pl-6 space-y-2">

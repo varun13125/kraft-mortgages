@@ -32,7 +32,7 @@ const EMPLOYMENT_TYPES = [
 ];
 
 export default function QualifyPage() {
-  const { data, best5YrFixed, best3YrFixed, best5YrVariable, bestHeloc, bestPrivateSecond } = useLiveRates();
+  const { data, best5YrFixed, best3YrFixed, best5YrVariable, bestHeloc, bestPrivateSecond, isToday } = useLiveRates();
   const [requestedTerm, setRequestedTerm] = useState("");
   const [callingStatus, setCallingStatus] = useState<CallingHoursStatus | null>(null);
   const [preferredCallback, setPreferredCallback] = useState("");
@@ -727,7 +727,8 @@ export default function QualifyPage() {
               <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-400"></span>
             </span>
             <ShieldCheck className="w-4 h-4 text-emerald-400" />
-            <span>CURRENT VERIFIED MORTGAGE RATES • UPDATED TODAY</span>
+            {/* Only claim "updated today" when the live rate feed actually returned today's data */}
+            <span>{isToday ? "CURRENT VERIFIED MORTGAGE RATES • UPDATED TODAY" : "INDICATIVE MORTGAGE RATES • SUBJECT TO CHANGE"}</span>
           </div>
 
           <div className="grid sm:grid-cols-4 gap-4 max-w-[1000px] mx-auto mb-10">

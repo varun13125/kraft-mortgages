@@ -20,7 +20,7 @@ export default function Renewal() {
   const [currentRate, setCurrentRate] = useState(5.89);
   const [marketRate, setMarketRate] = useState(4.39);
   const [hasUserEdited, setHasUserEdited] = useState(false);
-  const [penalty, setPenalty] = useState(2500);
+  const [penalty, setPenalty] = useState(20000); // realistic fixed-rate IRD for the defaults below (see estimate hint)
 
   useEffect(() => {
     if (!hasUserEdited && best5YrFixed) {
@@ -31,12 +31,20 @@ export default function Renewal() {
   // Guards
   const safeBalance = Math.max(1, balance || 0);
   const safeAmort = Math.max(1, remainingAmortYears || 1);
+  const safeCurrentRate = Math.max(0, currentRate || 0);
+  const safeMarketRate = Math.max(0, marketRate || 0);
+  const safeMonthsLeft = Math.max(0, monthsLeft || 0);
+  const safePenalty = Math.max(0, penalty || 0);
 
-  const currPay = payment({ principal: safeBalance, annualRatePct: currentRate, amortYears: safeAmort, paymentsPerYear: 12 });
-  const newPay = payment({ principal: safeBalance, annualRatePct: marketRate, amortYears: safeAmort, paymentsPerYear: 12 });
+  const currPay = payment({ principal: safeBalance, annualRatePct: safeCurrentRate, amortYears: safeAmort, paymentsPerYear: 12 });
+  const newPay = payment({ principal: safeBalance, annualRatePct: safeMarketRate, amortYears: safeAmort, paymentsPerYear: 12 });
   const monthlySavings = currPay - newPay;
-  const breakEvenMonths = monthlySavings > 0 ? Math.ceil(penalty / monthlySavings) : 0;
-  const worthSwitching = monthlySavings > 0 && breakEvenMonths <= monthsLeft && breakEvenMonths <= 12;
+  const hasSavings = monthlySavings > 0;
+  const breakEvenMonths = hasSavings ? Math.ceil(safePenalty / monthlySavings) : Infinity;
+  const worthSwitching = hasSavings && breakEvenMonths <= safeMonthsLeft && breakEvenMonths <= 12;
+  // Rough penalty guide: variable = 3 months' interest; fixed = greater of that or IRD (using the market rate as comparison rate)
+  const threeMonthsInterest = safeBalance * (safeCurrentRate / 100) / 4;
+  const irdEstimate = Math.max(0, (safeCurrentRate - safeMarketRate) / 100 * safeBalance * (safeMonthsLeft / 12));
 
   return (
     <>
@@ -74,7 +82,7 @@ export default function Renewal() {
                 <span className="bg-gradient-to-r from-gold-400 to-amber-500 bg-clip-text text-transparent">Renewal</span> Optimizer
               </h1>
               <p className="text-xl text-gray-400 max-w-3xl mx-auto mb-8">
-                Compare your renewal options and calculate if it's worth breaking your current mortgage early.
+                Compare your renewal options and calculate if it&apos;s worth breaking your current mortgage early.
               </p>
             </motion.div>
           </div>
@@ -83,7 +91,7 @@ export default function Renewal() {
         {/* Calculator Section */}
         <section className="pb-20 px-4">
           <div className="max-w-4xl mx-auto">
-            <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl shadow-2xl border border-gray-700/50 p-8">
+            <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl shadow-2xl border border-gray-700/50 p-5 sm:p-8">
               <h2 className="text-2xl font-semibold text-gray-100 mb-6">Renewal Optimizer</h2>
               
               <div className="mb-6">
@@ -129,7 +137,7 @@ export default function Renewal() {
                           { label: "Current Payment", value: "$" + Math.round(currPay).toLocaleString("en-CA") },
                           { label: "New Payment", value: "$" + Math.round(newPay).toLocaleString("en-CA"), highlight: true },
                           { label: "Monthly Savings", value: "$" + Math.round(monthlySavings).toLocaleString("en-CA") },
-                          { label: "Break-Even Months", value: String(breakEvenMonths) },
+                          { label: "Break-Even Months", value: hasSavings ? String(breakEvenMonths) : "N/A (no savings)" },
                           { label: "Worth Switching?", value: worthSwitching ? "Yes" : "Consider waiting", highlight: true },
                         ]
                       }
@@ -222,8 +230,15 @@ export default function Renewal() {
                     type="number"
                     value={penalty}
                     onChange={(e) => setPenalty(Number(e.target.value))}
+                    min="0"
                     className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent text-white placeholder-gray-400"
                   />
+                  <p className="text-xs text-gray-500 mt-1">
+                    Rough guide for your inputs: 3 months&apos; interest ≈ ${Math.round(threeMonthsInterest).toLocaleString("en-CA")}{" "}
+                    (variable rate); fixed rate is usually the greater of that or the IRD ≈ ${Math.round(irdEstimate).toLocaleString("en-CA")}.{" "}
+                    Big banks often charge more.{" "}
+                    <Link href="/calculators/mortgage-penalty" className="text-gold-400 underline">Estimate your penalty</Link>
+                  </p>
                 </div>
               </div>
 
@@ -251,7 +266,7 @@ export default function Renewal() {
                   <div className="bg-gray-800/50 rounded-lg p-4">
                     <div className="text-sm text-gray-400 mb-1">Monthly Savings</div>
                     <div className={`text-2xl font-bold ${monthlySavings > 0 ? 'text-green-400' : 'text-red-400'}`}>
-                      ${monthlySavings.toLocaleString(undefined, {maximumFractionDigits: 0})}
+                      {monthlySavings < 0 ? "-" : ""}${Math.abs(monthlySavings).toLocaleString(undefined, {maximumFractionDigits: 0})}
                     </div>
                     <div className="text-xs text-gray-500">Per month</div>
                   </div>
@@ -259,7 +274,7 @@ export default function Renewal() {
                   <div className="bg-gray-800/50 rounded-lg p-4">
                     <div className="text-sm text-gray-400 mb-1">Break-even Period</div>
                     <div className="text-2xl font-bold text-gold-400">
-                      {breakEvenMonths} months
+                      {hasSavings ? `${breakEvenMonths} months` : "N/A"}
                     </div>
                     <div className="text-xs text-gray-500">To recover penalty</div>
                   </div>
@@ -278,8 +293,10 @@ export default function Renewal() {
                       </div>
                       <div className="text-sm text-gray-400">
                         {worthSwitching 
-                          ? `You'll recover the penalty in ${breakEvenMonths} months and save ${monthlySavings.toLocaleString()} monthly`
-                          : 'The break-even period is too long or savings are minimal'
+                          ? `You'll recover the penalty in ${breakEvenMonths} months and save $${Math.round(monthlySavings).toLocaleString("en-CA")} monthly`
+                          : hasSavings
+                            ? `Break-even of ${breakEvenMonths} months is too long (needs to be within 12 months and your ${safeMonthsLeft} months left)`
+                            : 'The new rate does not lower your payment — renew or switch at maturity instead'
                         }
                       </div>
                     </div>
@@ -297,11 +314,11 @@ export default function Renewal() {
                 <div className="grid gap-4 md:grid-cols-2 text-sm text-gray-400">
                   <div>
                     <div className="font-semibold text-gray-200 mb-2">Timing Matters</div>
-                    <p>Start shopping for rates 120 days before renewal. You can negotiate with your current lender or switch without penalty.</p>
+                    <p>Start shopping for rates 120 days before renewal. At maturity you can negotiate with your current lender or switch without penalty. Since Nov 21, 2024, a straight switch of an uninsured mortgage to a federally regulated lender at renewal (same balance and amortization) no longer requires the stress test; insured mortgages could already switch without re-qualifying.</p>
                   </div>
                   <div>
                     <div className="font-semibold text-gray-200 mb-2">Breaking Early</div>
-                    <p>If rates drop significantly, breaking early might save money despite penalties. Calculate the break-even point carefully.</p>
+                    <p>If rates drop significantly, breaking early might save money despite penalties. Calculate the break-even point carefully. Savings here are based on the payment difference over your remaining amortization (an estimate).</p>
                   </div>
                 </div>
               </div>

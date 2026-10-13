@@ -1,4 +1,5 @@
-"use client";
+// Server Component: this page has no client-side interactivity, so it no longer
+// ships as a client bundle ("use client" removed in the 2026-10 audit).
 import Navigation from "@/components/Navigation";
 import Link from "next/link";
 import { MapPin, Phone, Building, Users, Briefcase, Home, TrendingUp } from "lucide-react";
@@ -16,10 +17,10 @@ export default function CalgaryPage() {
               Calgary, AB
             </div>
             <h1 className="text-4xl md:text-6xl font-bold mb-6 text-white tracking-tight">
-              Calgary's Premier Mortgage Brokerage
+              Calgary&apos;s Premier Mortgage Brokerage
             </h1>
             <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-8 leading-relaxed">
-              Navigating Calgary's dynamic real estate market takes more than luck — it takes a mortgage broker who knows every neighbourhood, from Beltline condos to detached homes in Mahogany, and every strategy to secure the best rates.
+              Navigating Calgary&apos;s dynamic real estate market takes more than luck — it takes a mortgage broker who knows every neighbourhood, from Beltline condos to detached homes in Mahogany, and every strategy to secure the best rates.
             </p>
             <Link
               href="/contact"
@@ -36,10 +37,10 @@ export default function CalgaryPage() {
             <h2 className="text-3xl font-bold mb-6 text-center">The Calgary Mortgage Market</h2>
             <div className="p-6 bg-slate-900/40 rounded-2xl border border-slate-800/60 shadow-xl">
               <p className="text-gray-300 text-lg mb-6 leading-relaxed">
-                Calgary's real estate market has experienced rapid growth, with the average home price near $580,000 in early 2025. Driven by interprovincial migration and strong economic fundamentals, the market spans highly sought-after inner-city condos and expansive suburban single-family developments.
+                Calgary&apos;s real estate market has experienced rapid growth, with the average home price near $580,000 in early 2025. Driven by interprovincial migration and strong economic fundamentals, the market spans highly sought-after inner-city condos and expansive suburban single-family developments.
               </p>
               <p className="text-gray-300 text-lg mb-6 leading-relaxed">
-                Whether you are buying your first condo in the Beltline, upgrading to a detached home in Aspen Woods, or investing in a rental property in Mahogany, having a mortgage broker who understands Calgary's micro-markets is essential. Kraft Mortgages brings access to over 40 top lenders and customized rate structures under RECA compliance.
+                Whether you are buying your first condo in the Beltline, upgrading to a detached home in Aspen Woods, or investing in a rental property in Mahogany, having a mortgage broker who understands Calgary&apos;s micro-markets is essential. Kraft Mortgages brings access to over 40 top lenders and customized rate structures under RECA compliance.
               </p>
               <p className="text-gray-300 text-lg leading-relaxed">
                 Our Calgary team has deep expertise in structured progress draws for custom builders, refinancing pipelines for equity extraction, and alternative lending strategies for self-employed professionals.
@@ -77,7 +78,7 @@ export default function CalgaryPage() {
           <div className="max-w-4xl mx-auto text-center">
             <h2 className="text-3xl font-bold mb-6">Why Choose a Local Calgary Mortgage Broker?</h2>
             <p className="text-gray-300 text-lg leading-relaxed">
-              Calgary's real estate market moves fast and rewards preparation. A local broker understands Alberta's land title registration system, property transfer procedures, and local market dynamics, assuring a smooth closing process.
+              Calgary&apos;s real estate market moves fast and rewards preparation. A local broker understands Alberta&apos;s land title registration system, property transfer procedures, and local market dynamics, assuring a smooth closing process.
             </p>
           </div>
         </section>
@@ -92,7 +93,7 @@ export default function CalgaryPage() {
                   <span className="text-gold-400">Q:</span> What is the minimum down payment required in Calgary?
                 </h3>
                 <p className="text-gray-300 leading-relaxed pl-6 border-l border-gold-500/30">
-                  For homes under $500,000, the minimum is 5%. For homes between $500,000 and $999,999, it is 5% on the first $500,000 and 10% on the remainder. For homes over $1 million, it is 20%. Given Calgary's relative affordability, many buyers can enter the market with under $40,000 down.
+                  For homes up to $500,000, the minimum is 5%. For homes between $500,000 and $1,499,999, it is 5% on the first $500,000 and 10% on the remainder. For homes of $1.5 million or more, it is 20% (the insured-mortgage price cap rose from $1 million to $1.5 million on December 15, 2024). Given Calgary&apos;s relative affordability, many buyers can enter the market with under $40,000 down.
                 </p>
               </div>
               <div className="bg-slate-900/60 rounded-2xl p-6 border border-slate-800 shadow-lg">
@@ -100,7 +101,7 @@ export default function CalgaryPage() {
                   <span className="text-gold-400">Q:</span> How does the Alberta prompt-pay legislation affect builder mortgages in Calgary?
                 </h3>
                 <p className="text-gray-300 leading-relaxed pl-6 border-l border-gold-500/30">
-                  Alberta's prompt payment rules keep construction projects moving. For custom home builds or developer draws in neighbourhoods like Mahogany or Aspen Woods, we structure progress draw mortgages that align perfectly with contractor billing schedules.
+                  Alberta&apos;s prompt payment rules keep construction projects moving. For custom home builds or developer draws in neighbourhoods like Mahogany or Aspen Woods, we structure progress draw mortgages that align perfectly with contractor billing schedules.
                 </p>
               </div>
               <div className="bg-slate-900/60 rounded-2xl p-6 border border-slate-800 shadow-lg">
@@ -124,7 +125,7 @@ export default function CalgaryPage() {
                   <span className="text-gold-400">Q:</span> Do I need a local Calgary mortgage broker?
                 </h3>
                 <p className="text-gray-300 leading-relaxed pl-6 border-l border-gold-500/30">
-                  Absolutely. A local broker understands Alberta's land title registration system, property transfer procedures, and local market dynamics, assuring a smooth closing process.
+                  Absolutely. A local broker understands Alberta&apos;s land title registration system, property transfer procedures, and local market dynamics, assuring a smooth closing process.
                 </p>
               </div>
             </div>

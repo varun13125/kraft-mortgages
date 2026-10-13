@@ -16,7 +16,34 @@ import { RelatedCalculators } from "@/components/calculators/RelatedCalculators"
 
 type Province = "BC" | "AB" | "ON";
 
+/* ── Mortgage math (Canadian semi-annual compounding, same as lib/calc/payment.ts) ── */
+function monthlyRate(annualRate: number): number {
+  return Math.pow(1 + annualRate / 100 / 2, 1 / 6) - 1;
+}
+
+function monthlyPayment(principal: number, annualRate: number, months: number): number {
+  if (principal <= 0 || months <= 0) return 0;
+  const r = monthlyRate(annualRate);
+  if (r === 0) return principal / months;
+  return principal * (r * Math.pow(1 + r, months)) / (Math.pow(1 + r, months) - 1);
+}
+
+// Interest actually paid during the first `months` payments
+function interestOverMonths(principal: number, annualRate: number, payment: number, months: number): number {
+  const r = monthlyRate(annualRate);
+  let balance = principal;
+  let interest = 0;
+  for (let i = 0; i < months && balance > 0; i++) {
+    const it = balance * r;
+    interest += it;
+    balance = Math.max(0, balance + it - payment);
+  }
+  return interest;
+}
+
 /* ── Marginal tax rates by province ─────────────── */
+// Approximate combined federal + provincial marginal rates for roughly $115K–$137K of income
+// (2025 brackets; ON includes surtax). Users can override.
 const marginalTaxRates: Record<Province, number> = {
   BC: 38.29,
   AB: 36.0,
@@ -38,11 +65,11 @@ const faqs = [
   },
   {
     q: "What's the maximum LTV for B-lenders?",
-    a: "Most B-lenders lend up to 80% loan-to-value (LTV) for conventional mortgages. Some may go slightly higher to 85% in specific situations, but 80% is the standard. This means you need a minimum 20% down payment for B-lender financing, compared to as low as 5% with an A-lender for insured mortgages."
+    a: "Most B-lenders lend up to 80% loan-to-value (LTV) for conventional mortgages — the legal limit for uninsured lending by federally regulated lenders. This means you need a minimum 20% down payment for B-lender financing, compared to as low as 5% with an A-lender for insured mortgages."
   },
   {
     q: "How are B-lender rates determined?",
-    a: "B-lender rates are based on several factors: the Bank of Canada benchmark rate, the lender's cost of funds, the risk profile of the borrower, the property type and LTV, and the loan amount. Rates typically sit 1.5-3% above A-lender rates. Shopping with a mortgage broker who has access to multiple B-lenders ensures you get the most competitive rate available for your situation."
+    a: "B-lender rates are based on several factors: the Bank of Canada benchmark rate, the lender's cost of funds, the risk profile of the borrower, the property type and LTV, and the loan amount. Rates typically sit roughly 0.5–2% above comparable A-lender rates, and higher for weaker credit or unusual properties. Shopping with a mortgage broker who has access to multiple B-lenders ensures you get the most competitive rate available for your situation."
   }
 ];
 
@@ -59,26 +86,30 @@ export default function SelfEmployedAVsBPage() {
   const [isInvestment, setIsInvestment] = useState(false);
   const [bFee, setBFee] = useState(1);
   const [autoTax, setAutoTax] = useState(true);
+  // Years of extra declared income to count (null = follow the term). Lenders usually average your
+  // 2 most recent NOAs at application, so the true number of years can be shorter than the term.
+  const [taxYears, setTaxYears] = useState<number | null>(null);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [pdfModalOpen, setPdfModalOpen] = useState(false);
 
   const effectiveTaxRate = autoTax ? marginalTaxRates[province] : taxRate;
+  const effectiveTaxYears = taxYears ?? term;
+  const ltv = propertyValue > 0 ? (mortgageAmount / propertyValue) * 100 : 0;
 
   const results = useMemo(() => {
-    const aMonthlyRate = aRate / 100 / 12;
-    const bMonthlyRate = bRate / 100 / 12;
     const totalPayments = amortization * 12;
+    // A term can't be longer than the amortization
+    const termMonths = Math.min(term, amortization) * 12;
 
-    const aMonthly = mortgageAmount * (aMonthlyRate * Math.pow(1 + aMonthlyRate, totalPayments)) / (Math.pow(1 + aMonthlyRate, totalPayments) - 1);
-    const bMonthly = mortgageAmount * (bMonthlyRate * Math.pow(1 + bMonthlyRate, totalPayments)) / (Math.pow(1 + bMonthlyRate, totalPayments) - 1);
+    const aMonthly = monthlyPayment(mortgageAmount, aRate, totalPayments);
+    const bMonthly = monthlyPayment(mortgageAmount, bRate, totalPayments);
 
-    const aTotalPaid = aMonthly * term * 12;
-    const bTotalPaid = bMonthly * term * 12;
-    const aInterest = aTotalPaid - mortgageAmount;
-    const bInterest = bTotalPaid - mortgageAmount;
+    // Interest actually paid during the term (the old "payments − full principal" went negative)
+    const aInterest = interestOverMonths(mortgageAmount, aRate, aMonthly, termMonths);
+    const bInterest = interestOverMonths(mortgageAmount, bRate, bMonthly, termMonths);
 
     const bFeeAmount = mortgageAmount * (bFee / 100);
-    const additionalTax = additionalIncome * (effectiveTaxRate / 100) * term;
+    const additionalTax = additionalIncome * (effectiveTaxRate / 100) * effectiveTaxYears;
 
     const aTotalCost = aInterest + additionalTax;
     const bTotalCost = bInterest + bFeeAmount;
@@ -94,11 +125,13 @@ export default function SelfEmployedAVsBPage() {
     return {
       aMonthly, bMonthly, aInterest, bInterest, aTotalCost, bTotalCost,
       bFeeAmount, additionalTax, netSavings, bWins, investmentTaxSavings: bTaxSavings,
+      aInvestmentTaxSavings: aTaxSavings,
+      aNetCost: aTotalCost - aTaxSavings, bNetCost: bTotalCost - bTaxSavings,
       monthlyDiff: Math.abs(aMonthly - bMonthly),
     };
-  }, [mortgageAmount, aRate, bRate, term, amortization, additionalIncome, effectiveTaxRate, isInvestment, bFee]);
+  }, [mortgageAmount, aRate, bRate, term, amortization, additionalIncome, effectiveTaxRate, effectiveTaxYears, isInvestment, bFee]);
 
-  const maxTotalCost = Math.max(results.aTotalCost, results.bTotalCost);
+  const maxTotalCost = Math.max(results.aNetCost, results.bNetCost, 1);
 
   return (
     <>
@@ -128,7 +161,7 @@ export default function SelfEmployedAVsBPage() {
                 Self-Employed Borrower Tool
               </div>
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-gray-100 mb-6">
-                <span className="bg-gradient-to-r from-blue-400 to-blue-500">A-Lender</span>
+                <span className="bg-gradient-to-r from-blue-400 to-blue-500 bg-clip-text text-transparent">A-Lender</span>
                 {" vs "}
                 <span className="bg-gradient-to-r from-gold-400 to-amber-500 bg-clip-text text-transparent">B-Lender</span>
               </h1>
@@ -149,9 +182,9 @@ export default function SelfEmployedAVsBPage() {
                 <div>
                   <h3 className="text-lg font-semibold text-gold-300 mb-2">The Hidden Tax Trap</h3>
                   <p className="text-sm text-gray-300 leading-relaxed">
-                    Declaring extra income to qualify at a bank means paying taxes on that income for every year of your mortgage term. 
-                    For a $500K mortgage, declaring $60K more income at 38% marginal tax costs <strong className="text-gold-300">$114,000 in taxes over 5 years</strong> — 
-                    often far more than the higher interest on a B-lender. This calculator shows you the real math.
+                    Declaring extra income to qualify at a bank means paying tax on that income for each year you declare it.
+                    For a $500K mortgage, declaring $60K more income at 38% marginal tax costs <strong className="text-gold-300">$22,800 a year — $114,000 if you keep declaring it for a 5-year term</strong> —
+                    often far more than the higher interest on a B-lender. Lenders usually review your two most recent years, so set the number of years that fits your plan.
                   </p>
                 </div>
               </div>
@@ -172,7 +205,12 @@ export default function SelfEmployedAVsBPage() {
               <ComplianceBanner feature="LEAD_FORM" />
               <div className="grid sm:grid-cols-2 gap-6">
                 <ValidatedInput label="Mortgage Amount Needed" value={mortgageAmount} onChange={setMortgageAmount} validation={{ min: 50000, max: 5000000 }} type="currency" />
-                <ValidatedInput label="Property Value" value={propertyValue} onChange={setPropertyValue} validation={{ min: 100000, max: 10000000 }} type="currency" />
+                <div>
+                  <ValidatedInput label="Property Value" value={propertyValue} onChange={setPropertyValue} validation={{ min: 100000, max: 10000000 }} type="currency" />
+                  <p className={`text-xs mt-1.5 ${ltv > 80 ? "text-amber-300" : "text-gray-500"}`}>
+                    LTV {ltv.toFixed(1)}%{ltv > 80 ? " — above the 80% maximum for B-lenders (and A-lender financing above 80% must be insured)" : ""}
+                  </p>
+                </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-2">Province</label>
                   <div className="flex gap-2">
@@ -201,6 +239,10 @@ export default function SelfEmployedAVsBPage() {
                   )}
                 </div>
                 <ValidatedSlider label={`Term (${term} years)`} value={term} onChange={setTerm} min={1} max={10} step={1} formatValue={(v) => `${v} years`} />
+                <div>
+                  <ValidatedSlider label="Years of Extra Declared Income" value={effectiveTaxYears} onChange={(v) => setTaxYears(Math.round(v))} min={1} max={10} step={1} formatValue={(v) => `${v} year${v > 1 ? "s" : ""}`} />
+                  <p className="text-xs text-gray-500 mt-1.5">Defaults to your term. A-lenders typically average your 2 most recent NOAs, so you may only need to declare higher income for those years (unless you&apos;ll need to re-qualify later).</p>
+                </div>
                 <ValidatedSlider label={`Amortization (${amortization} years)`} value={amortization} onChange={setAmortization} min={5} max={30} step={5} formatValue={(v) => `${v} years`} />
                 <ValidatedInput label="B-Lender Fee (%)" value={bFee} onChange={setBFee} validation={{ min: 0, max: 3 }} type="percentage" />
                 <div className="flex items-center gap-3 py-2">
@@ -229,9 +271,10 @@ export default function SelfEmployedAVsBPage() {
                 {results.bWins
                   ? `B-lender saves you ${formatCurrency(Math.abs(results.netSavings), 0)} over the ${term}-year term`
                   : `A-lender saves you ${formatCurrency(Math.abs(results.netSavings), 0)} over the ${term}-year term`}
-                {isInvestment && results.bWins && results.investmentTaxSavings > 0 && (
-                  <span className="block mt-1 text-green-300/80">+ {formatCurrency(results.investmentTaxSavings, 0)} in investment property tax savings</span>
+                {isInvestment && (
+                  <span className="block mt-1 text-green-300/80">Includes interest deductibility on both options (investment property)</span>
                 )}
+                <span className="block mt-1 text-xs text-gray-500">For incorporated owners, the real cost of declaring more income is the extra personal tax versus leaving it in the company — usually less than the full marginal rate. Ask your accountant.</span>
               </p>
             </motion.div>
 
@@ -249,15 +292,20 @@ export default function SelfEmployedAVsBPage() {
                   <div className="flex justify-between"><span className="text-gray-400 text-sm">Total Interest ({term}yr)</span><span className="font-semibold text-gray-200">{formatCurrency(results.aInterest, 0)}</span></div>
                   <div className="border-t border-white/10 pt-4">
                     <div className="flex justify-between"><span className="text-gray-400 text-sm">Extra Income Tax on Declared Income</span><span className="font-semibold text-red-400">{formatCurrency(results.additionalTax, 0)}</span></div>
-                    <p className="text-xs text-gray-500 mt-1">{formatCurrency(additionalIncome, 0)}/yr × {effectiveTaxRate.toFixed(1)}% × {term}yr</p>
+                    <p className="text-xs text-gray-500 mt-1">{formatCurrency(additionalIncome, 0)}/yr × {effectiveTaxRate.toFixed(1)}% × {effectiveTaxYears}yr</p>
                   </div>
+                  {isInvestment && results.aInvestmentTaxSavings > 0 && (
+                    <div className="bg-green-500/10 rounded-lg p-3 border border-green-500/20">
+                      <div className="flex justify-between"><span className="text-green-300 text-sm">Tax Savings (Interest Deductible)</span><span className="font-semibold text-green-400">-{formatCurrency(results.aInvestmentTaxSavings, 0)}</span></div>
+                    </div>
+                  )}
                   <div className="border-t border-white/10 pt-4 flex justify-between">
                     <span className="font-semibold text-gray-200">Total Cost Over Term</span>
-                    <span className="text-xl font-bold text-blue-400">{formatCurrency(results.aTotalCost, 0)}</span>
+                    <span className="text-xl font-bold text-blue-400">{formatCurrency(results.aNetCost, 0)}</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-500">Monthly tax burden</span>
-                    <span className="text-gray-400">{formatCurrency(results.additionalTax / 12 / term, 0)}/mo</span>
+                    <span className="text-gray-400">{formatCurrency(additionalIncome * (effectiveTaxRate / 100) / 12, 0)}/mo</span>
                   </div>
                 </div>
               </motion.div>
@@ -283,7 +331,7 @@ export default function SelfEmployedAVsBPage() {
                   )}
                   <div className="border-t border-white/10 pt-4 flex justify-between">
                     <span className="font-semibold text-gray-200">Total Cost Over Term</span>
-                    <span className="text-xl font-bold text-gold-400">{formatCurrency(results.bTotalCost - (isInvestment ? results.investmentTaxSavings : 0), 0)}</span>
+                    <span className="text-xl font-bold text-gold-400">{formatCurrency(results.bNetCost, 0)}</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-500">Monthly difference vs A-lender</span>
@@ -303,20 +351,20 @@ export default function SelfEmployedAVsBPage() {
                 <div>
                   <div className="flex justify-between text-sm mb-2">
                     <span className="text-blue-300 font-medium">A-Lender (Bank)</span>
-                    <span className="text-blue-300 font-semibold">{formatCurrency(results.aTotalCost, 0)}</span>
+                    <span className="text-blue-300 font-semibold">{formatCurrency(results.aNetCost, 0)}</span>
                   </div>
                   <div className="h-10 bg-gray-800 rounded-xl overflow-hidden">
-                    <motion.div initial={{ width: 0 }} animate={{ width: `${(results.aTotalCost / maxTotalCost) * 100}%` }}
+                    <motion.div initial={{ width: 0 }} animate={{ width: `${Math.max(0, (results.aNetCost / maxTotalCost) * 100)}%` }}
                       transition={{ duration: 1, delay: 0.4 }} className="h-full bg-gradient-to-r from-blue-500 to-blue-400 rounded-xl" />
                   </div>
                 </div>
                 <div>
                   <div className="flex justify-between text-sm mb-2">
                     <span className="text-gold-300 font-medium">B-Lender (Alternative)</span>
-                    <span className="text-gold-300 font-semibold">{formatCurrency(results.bTotalCost - (isInvestment ? results.investmentTaxSavings : 0), 0)}</span>
+                    <span className="text-gold-300 font-semibold">{formatCurrency(results.bNetCost, 0)}</span>
                   </div>
                   <div className="h-10 bg-gray-800 rounded-xl overflow-hidden">
-                    <motion.div initial={{ width: 0 }} animate={{ width: `${((results.bTotalCost - (isInvestment ? results.investmentTaxSavings : 0)) / maxTotalCost) * 100}%` }}
+                    <motion.div initial={{ width: 0 }} animate={{ width: `${Math.max(0, (results.bNetCost / maxTotalCost) * 100)}%` }}
                       transition={{ duration: 1, delay: 0.5 }} className="h-full bg-gradient-to-r from-gold-500 to-amber-400 rounded-xl" />
                   </div>
                 </div>
@@ -356,10 +404,10 @@ export default function SelfEmployedAVsBPage() {
                   <h4 className="font-semibold text-gold-300 mb-3">B-Lender (Alternative) Requirements</h4>
                   <ul className="space-y-2 text-sm text-gray-300">
                     <li className="flex items-start gap-2"><span className="text-gold-400 mt-0.5">•</span><strong>12 months business bank statements</strong> (most lenders)</li>
-                    <li className="flex items-start gap-2"><span className="text-gold-400 mt-0.5">•</span>Beacon score 500+ (some accept lower)</li>
-                    <li className="flex items-start gap-2"><span className="text-gold-400 mt-0.5">•</span>No GDS/TDS limits (most lenders)</li>
+                    <li className="flex items-start gap-2"><span className="text-gold-400 mt-0.5">•</span>Credit score typically 550–600+ (varies by lender)</li>
+                    <li className="flex items-start gap-2"><span className="text-gold-400 mt-0.5">•</span>More flexible GDS/TDS limits (often up to ~50% TDS)</li>
                     <li className="flex items-start gap-2"><span className="text-gold-400 mt-0.5">•</span>Property appraisal</li>
-                    <li className="flex items-start gap-2"><span className="text-gold-400 mt-0.5">•</span>No tax returns or NOAs required</li>
+                    <li className="flex items-start gap-2"><span className="text-gold-400 mt-0.5">•</span>Stated income supported by bank statements; NOA often still requested to confirm no CRA arrears</li>
                     <li className="flex items-start gap-2"><span className="text-gold-400 mt-0.5">•</span>Lender fee (0.5-2% of mortgage)</li>
                   </ul>
                 </div>
@@ -399,7 +447,9 @@ export default function SelfEmployedAVsBPage() {
                 const { generateCalculatorReport } = await import("@/components/calculator-report/generateAvsBReport");
                 await generateCalculatorReport({
                   userName,
-                  results,
+                  // Report shows aTotalCost as the A-lender total; pass it net of the investment deduction so it
+                  // matches the page (B side is already netted inside the report)
+                  results: { ...results, aTotalCost: results.aNetCost },
                   inputs: { mortgageAmount, propertyValue, aRate, bRate, term, amortization, province, additionalIncome, effectiveTaxRate, isInvestment, bFee },
                 });
               }}
@@ -425,18 +475,18 @@ export default function SelfEmployedAVsBPage() {
                 Here&apos;s the core insight that most self-employed borrowers miss: banks qualify you based on your <strong>CRA-declared personal income</strong>, while B-lenders qualify you based on your <strong>actual business cash flow</strong>. For a bank, if your T1 General shows $80,000 of personal income, that&apos;s what they use — regardless of whether your business actually generated $200,000. Many self-employed Canadians minimize their taxable income through legitimate deductions (business expenses, RRSP contributions, income splitting). This is smart tax planning, but it creates a problem when you need a mortgage.
               </p>
               <p>
-                B-lenders solve this by looking at 12 months of business bank statements. They analyze your actual deposits and cash flow to determine your real earning capacity. No tax returns, no NOAs, no income declarations needed. If your business consistently deposits $10,000/month, a B-lender sees a $120,000/year income — even if your tax return shows $60,000.
+                B-lenders solve this by looking at 12 months of business bank statements. They analyze your actual deposits and cash flow to determine your real earning capacity. Your income is stated and supported by those deposits rather than calculated from your tax return (many lenders still ask for an NOA to confirm you have no CRA arrears). If your business consistently deposits $10,000/month, a B-lender may accept a reasonable stated income well above the $60,000 on your tax return.
               </p>
 
               <h3 className="text-2xl font-semibold text-gray-100 mt-8">The Hidden Cost of A-Lender Qualification for Self-Employed Borrowers</h3>
               <p>
-                This is the tax trap that catches thousands of self-employed Canadians every year. To qualify for a larger mortgage at a bank, you may need to declare significantly more personal income than you currently do. The problem? <strong>You pay tax on that declared income for every year you hold the mortgage.</strong>
+                This is the tax trap that catches thousands of self-employed Canadians every year. To qualify for a larger mortgage at a bank, you may need to declare significantly more personal income than you currently do. The problem? <strong>You pay tax on that declared income for every year you declare it.</strong>
               </p>
               <p>
                 Consider a concrete example: You need a $500,000 mortgage. Your current declared income is $80,000, but to qualify you need to show $140,000. That&apos;s $60,000 in additional declared income per year. At a 38% marginal tax rate in BC, that&apos;s $22,800 per year in extra taxes — or <strong>$114,000 over a 5-year term</strong>. And here&apos;s the critical point: you pay this tax whether or not the bank actually lends to you. Once you declare the income, CRA expects their share.
               </p>
               <p>
-                Meanwhile, the same mortgage with a B-lender at 5.49% (vs 4.99% at a bank) costs roughly $37,500 more in interest over 5 years, plus a $5,000 lender fee. Total B-lender premium: $42,500. The tax savings by going with the B-lender: $71,500 — and you keep your business capital working for you instead of sending it to CRA.
+                Meanwhile, the same mortgage with a B-lender at 5.49% (vs 4.99% at a bank) costs roughly $12,000 more in interest over 5 years, plus a $5,000 lender fee. Total B-lender premium: about $17,000. If you would otherwise declare the extra income for all 5 years, the B-lender path comes out roughly $97,000 ahead; if you only need to declare it for the 2 years lenders review (about $45,600 in tax), it&apos;s still roughly $29,000 ahead.
               </p>
 
               <h3 className="text-2xl font-semibold text-gray-100 mt-8">When B-Lending Makes Mathematical Sense</h3>
@@ -454,14 +504,14 @@ export default function SelfEmployedAVsBPage() {
               <ul className="list-disc pl-6 space-y-2">
                 <li><strong>The income gap is small</strong> — If you only need to declare an extra $10,000-$20,000/year, the additional tax burden may be less than the B-lender rate premium. Use this calculator to find your breakeven point.</li>
                 <li><strong>You already declare enough income</strong> — If your current tax returns support the mortgage you need, there&apos;s no tax trap. Take the lower bank rate.</li>
-                <li><strong>You have less than 20% down</strong> — B-lenders typically can&apos;t do insured mortgages (below 80% LTV). If you only have 5-15% down, an A-lender is often your only institutional option.</li>
+                <li><strong>You have less than 20% down</strong> — B-lenders typically can&apos;t do insured mortgages (above 80% LTV). If you only have 5-15% down, an A-lender is often your only institutional option.</li>
                 <li><strong>You want the absolute lowest rate</strong> — Even with the tax savings, some borrowers prioritize the lowest possible monthly payment for cash flow reasons.</li>
                 <li><strong>Long-term holding plans</strong> — If you plan to stay in this mortgage for 10+ years at high balances, the compounding rate difference may eventually outweigh the one-time tax savings.</li>
               </ul>
 
               <h3 className="text-2xl font-semibold text-gray-100 mt-8">Investment Property Bonus: B-Lender Interest Is Tax-Deductible</h3>
               <p>
-                For investment properties, there&apos;s an additional advantage to B-lending: <strong>mortgage interest on rental properties is tax-deductible against rental income</strong>. Since B-lender rates are higher, you deduct more interest, generating larger tax savings. A $500,000 B-lender mortgage at B-lender at 5.49% generates approximately $158,750 in interest over 5 years. At a 38% marginal rate, that&apos;s roughly $60,325 in tax deductions — savings that partially offset the higher interest rate.
+                For investment properties, there&apos;s an additional consideration: <strong>mortgage interest on rental properties is generally tax-deductible against rental income</strong> — with either lender. Since B-lender rates are higher, you deduct more interest. A $500,000 B-lender mortgage at 5.49% generates approximately $128,800 in interest over 5 years; at a 38% marginal rate, that&apos;s roughly $48,900 in tax savings (versus about $44,400 on the A-lender&apos;s $116,800 of interest). The deduction narrows the after-tax gap between the two rates.
               </p>
               <p>
                 This creates a counterintuitive but mathematically sound result: for investment properties, the after-tax cost of a B-lender mortgage can be significantly closer to an A-lender than the headline rates suggest. Toggle the investment property switch in this calculator to see the exact impact for your situation.
@@ -472,13 +522,13 @@ export default function SelfEmployedAVsBPage() {
                 Meet Sarah, a self-employed consultant in Vancouver. She wants to buy a $750,000 condo with 20% down ($150,000), needing a $600,000 mortgage. Her business nets $180,000/year, but her accountant optimizes her personal declarations to $70,000. To qualify at a bank for $600K, she needs to show $130,000 in personal income — an extra $60,000/year.
               </p>
               <p>
-                <strong>A-Lender path:</strong> 4.99% rate, monthly payment $3,514. Total interest over 5 years: $110,840. Additional tax on $60K declared income at BC&apos;s ~38% rate: $22,800 × 5 = $114,000. <strong>Total cost over term: $224,840.</strong>
+                <strong>A-Lender path:</strong> 4.99% rate, monthly payment $3,486. Total interest over 5 years: about $140,100. Additional tax on $60K declared income at BC&apos;s ~38% rate: $22,800 × 5 = $114,000. <strong>Total cost over term: about $254,100.</strong>
               </p>
               <p>
-                <strong>B-Lender path:</strong> 6.49% rate, monthly payment $4,087. Total interest over 5 years: $145,220. Lender fee at 1%: $6,000. <strong>Total cost over term: $151,220.</strong>
+                <strong>B-Lender path:</strong> 6.49% rate, monthly payment $4,015. Total interest over 5 years: about $183,600. Lender fee at 1%: $6,000. <strong>Total cost over term: about $189,600.</strong>
               </p>
               <p>
-                <strong>Result:</strong> B-lender saves Sarah <strong>$73,620 over the 5-year term</strong>. She pays $573 more per month, but saves over $73K in total by not over-declaring income. At renewal, if her income situation has changed, she can refinance to an A-lender.
+                <strong>Result:</strong> B-lender saves Sarah <strong>about $64,500 over the 5-year term</strong>. She pays $529 more per month, but saves over $64K in total by not over-declaring income for five years. At renewal, if her income situation has changed, she can refinance to an A-lender.
               </p>
               <p className="text-sm text-gray-500 italic">
                 Note: This example uses illustrative rates and is simplified for clarity. Actual costs vary based on your specific situation. Consult a licensed mortgage broker for personalized advice.

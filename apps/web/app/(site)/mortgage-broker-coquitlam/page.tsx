@@ -1,4 +1,5 @@
-"use client";
+// Server Component: this page has no client-side interactivity, so it no longer
+// ships as a client bundle ("use client" removed in the 2026-10 audit).
 import Navigation from "@/components/Navigation";
 import Link from "next/link";
 import { MapPin, Phone, Building, Users, Briefcase, Home } from "lucide-react";
@@ -16,10 +17,10 @@ export default function CoquitlamPage() {
                             Coquitlam, BC
                         </div>
                         <h1 className="text-4xl md:text-6xl font-bold mb-6 text-white">
-                            Coquitlam's Premier Mortgage Brokerage
+                            Coquitlam&apos;s Premier Mortgage Brokerage
                         </h1>
                         <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-8">
-                            The Tri-Cities is one of Metro Vancouver's most desirable places to live, and Coquitlam sits at its heart. Kraft Mortgages helps families, investors, and first-time buyers secure competitive financing in this rapidly growing market.
+                            The Tri-Cities is one of Metro Vancouver&apos;s most desirable places to live, and Coquitlam sits at its heart. Kraft Mortgages helps families, investors, and first-time buyers secure competitive financing in this rapidly growing market.
                         </p>
                         <Link
                             href="/contact"
@@ -38,7 +39,7 @@ export default function CoquitlamPage() {
                             <div className="bg-white/5 rounded-2xl p-6 border border-white/10">
                                 <Home className="w-10 h-10 text-gold-400 mb-4" />
                                 <h3 className="text-xl font-bold mb-3">Average Home Price</h3>
-                                <p className="text-gray-400">Coquitlam's benchmark home price is approximately $950,000, with townhomes averaging around $800,000 and condominiums near $600,000. Burquitlam and the Burke Mountain area have seen significant price growth as new developments transform these neighbourhoods.</p>
+                                <p className="text-gray-400">Coquitlam&apos;s benchmark home price is approximately $950,000, with townhomes averaging around $800,000 and condominiums near $600,000. Burquitlam and the Burke Mountain area have seen significant price growth as new developments transform these neighbourhoods.</p>
                             </div>
                             <div className="bg-white/5 rounded-2xl p-6 border border-white/10">
                                 <Users className="w-10 h-10 text-gold-400 mb-4" />
@@ -57,7 +58,7 @@ export default function CoquitlamPage() {
                             <div className="bg-white/5 rounded-2xl p-6 border border-white/10">
                                 <Briefcase className="w-10 h-10 text-gold-400 mb-4" />
                                 <h3 className="text-xl font-bold mb-3">Self-Employed Mortgages</h3>
-                                <p className="text-gray-400">Coquitlam's diverse economy supports thousands of small business owners. We specialize in mortgages for entrepreneurs who may not fit traditional bank income requirements, using alternative qualification methods.</p>
+                                <p className="text-gray-400">Coquitlam&apos;s diverse economy supports thousands of small business owners. We specialize in mortgages for entrepreneurs who may not fit traditional bank income requirements, using alternative qualification methods.</p>
                             </div>
                             <div className="bg-white/5 rounded-2xl p-6 border border-white/10">
                                 <Building className="w-10 h-10 text-gold-400 mb-4" />
@@ -78,7 +79,7 @@ export default function CoquitlamPage() {
                     <div className="max-w-4xl mx-auto">
                         <h2 className="text-3xl font-bold mb-6 text-center">Why Choose a Local Coquitlam Mortgage Broker?</h2>
                         <p className="text-gray-300 text-lg text-center mb-8">
-                            Coquitlam's real estate landscape is constantly evolving, from the SkyTrain-driven densification around Burquitlam to the master-planned communities on Burke Mountain. A local broker understands these dynamics and how they affect property values and lender appetites. We shop across more than 50 lenders — banks, credit unions, and private — so you get options a single institution simply cannot offer.
+                            Coquitlam&apos;s real estate landscape is constantly evolving, from the SkyTrain-driven densification around Burquitlam to the master-planned communities on Burke Mountain. A local broker understands these dynamics and how they affect property values and lender appetites. We shop across more than 50 lenders — banks, credit unions, and private — so you get options a single institution simply cannot offer.
                         </p>
                     </div>
                 </section>
@@ -94,11 +95,11 @@ export default function CoquitlamPage() {
                             </div>
                             <div className="bg-white/5 rounded-xl p-6 border border-white/10">
                                 <h3 className="font-bold text-lg mb-2">What do I need for a pre-sale assignment?</h3>
-                                <p className="text-gray-400">Assignment financing requires the original purchase contract, developer consent, and the buyer's qualification. Not all lenders handle assignments. We work with those who do, structuring your financing so you can complete on time and on budget.</p>
+                                <p className="text-gray-400">Assignment financing requires the original purchase contract, developer consent, and the buyer&apos;s qualification. Not all lenders handle assignments. We work with those who do, structuring your financing so you can complete on time and on budget.</p>
                             </div>
                             <div className="bg-white/5 rounded-xl p-6 border border-white/10">
                                 <h3 className="font-bold text-lg mb-2">Can I buy a home in Coquitlam with less than 20% down?</h3>
-                                <p className="text-gray-400">Yes. Properties under $1 million can be purchased with as little as 5% down. For homes priced between $500,000 and $999,999, the minimum down payment is 5% on the first $500,000 and 10% on the balance above that.</p>
+                                <p className="text-gray-400">Yes. Properties under $1.5 million can be purchased with less than 20% down. The minimum is 5% on the first $500,000 and 10% on any portion between $500,000 and $1,499,999; homes of $1.5 million or more require 20% down.</p>
                             </div>
                         </div>
                     </div>

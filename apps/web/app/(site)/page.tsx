@@ -38,7 +38,7 @@ const services = [
 ];
 
 const cities = [
-  { city: "Surrey", province: "BC", desc: "Our headquarters and home base — serving Surrey and the broader Lower Mainland since 2002.", href: "/mortgage-broker-surrey" },
+  { city: "Surrey", province: "BC", desc: "Our headquarters and home base — serving Surrey and the broader Lower Mainland.", href: "/mortgage-broker-surrey" },
   { city: "Vancouver", province: "BC", desc: "Canada's most competitive market. We help buyers navigate bidding wars and complex financing.", href: "/mortgage-broker-vancouver" },
   { city: "Burnaby", province: "BC", desc: "A growing hub for families and investors — from Metrotown condos to Brentwood developments.", href: "/mortgage-broker-burnaby" },
   { city: "Richmond", province: "BC", desc: "Strong rental and investment market. We secure financing for condos, townhomes, and multi-unit builds.", href: "/mortgage-broker-richmond" },
@@ -385,7 +385,7 @@ export default function ModernHomepage() {
                   </a>
                 </div>
                 <div className="flex items-center gap-2"><Phone className="w-4 h-4 shrink-0" /><a href={`tel:${BUSINESS.telephoneDisplay}`} className="hover:text-gold-400 transition-colors">{BUSINESS.telephoneDisplay}</a></div>
-                <div className="flex items-center gap-2"><Phone className="w-4 h-4 shrink-0" /><a href={`tel:${BUSINESS.secondaryPhoneDisplay}`} className="hover:text-gold-400 transition-colors">{BUSINESS.secondaryPhoneDisplay}</a></div>
+                <div className="flex items-center gap-2"><Phone className="w-4 h-4 shrink-0" /><a href={`tel:${BUSINESS.secondaryPhone}`} className="hover:text-gold-400 transition-colors">{BUSINESS.secondaryPhoneDisplay}</a></div>
                 <div className="flex items-center gap-2"><Mail className="w-4 h-4 shrink-0" /><a href={`mailto:${BUSINESS.email}`} className="hover:text-gold-400 transition-colors">{BUSINESS.email}</a></div>
                 <div className="flex items-center gap-2"><MapPin className="w-4 h-4 shrink-0" /><span>{BUSINESS.address.streetAddress}<br />{BUSINESS.address.addressLocality}, {BUSINESS.address.addressRegion} {BUSINESS.address.postalCode}</span></div>
               </div>

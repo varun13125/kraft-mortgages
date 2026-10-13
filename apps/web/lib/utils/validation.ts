@@ -71,6 +71,8 @@ export function validateNumericInput(
  * Format currency for display
  */
 export function formatCurrency(value: number, decimals: number = 0): string {
+  // Never render "$NaN" / "$∞" from empty or out-of-range inputs
+  if (!Number.isFinite(value)) return '—';
   return new Intl.NumberFormat('en-CA', {
     style: 'currency',
     currency: 'CAD',
@@ -83,6 +85,7 @@ export function formatCurrency(value: number, decimals: number = 0): string {
  * Format percentage for display
  */
 export function formatPercentage(value: number, decimals: number = 2): string {
+  if (!Number.isFinite(value)) return '—';
   return `${value.toFixed(decimals)}%`;
 }
 
@@ -90,6 +93,7 @@ export function formatPercentage(value: number, decimals: number = 2): string {
  * Format number with proper rounding
  */
 export function formatNumber(value: number, decimals: number = 0): string {
+  if (!Number.isFinite(value)) return '—';
   return new Intl.NumberFormat('en-CA', {
     minimumFractionDigits: decimals,
     maximumFractionDigits: decimals
@@ -129,8 +133,8 @@ export const validationRules = {
   },
   creditScore: {
     min: 300,
-    max: 850,
-    message: 'Credit score must be between 300 and 850'
+    max: 900, // Equifax / TransUnion Canada scores range 300–900
+    message: 'Credit score must be between 300 and 900'
   },
   monthlyDebts: {
     min: 0,

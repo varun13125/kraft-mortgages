@@ -1,5 +1,6 @@
 // Contact page metadata - import in layout or use via generateMetadata
 import { Metadata } from 'next';
+import { OG_DEFAULTS } from '@/lib/seo/og';
 
 export const contactMetadata: Metadata = {
   title: 'Contact Us | Surrey Mortgage Broker | Kraft Mortgages',
@@ -9,6 +10,7 @@ export const contactMetadata: Metadata = {
     canonical: 'https://www.kraftmortgages.ca/contact',
   },
   openGraph: {
+    ...OG_DEFAULTS,
     title: 'Contact Us | Surrey Mortgage Broker | Kraft Mortgages',
     description: 'Contact Kraft Mortgages for expert mortgage advice. Office in Surrey BC. Call 604-593-1550.',
     url: 'https://www.kraftmortgages.ca/contact',

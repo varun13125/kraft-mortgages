@@ -3,26 +3,19 @@ export const dynamic = 'force-dynamic';
 
 import { NextRequest, NextResponse } from 'next/server';
 import { getRun } from '@/lib/db/firestore';
-import { verifyFirebaseToken } from '@/lib/auth';
-
-async function verifyAuth(request: NextRequest) {
-  const authHeader = request.headers.get('authorization');
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    throw new Error('Missing or invalid authorization header');
-  }
-
-  const token = authHeader.replace('Bearer ', '');
-  const decodedToken = await verifyFirebaseToken(token);
-  return decodedToken;
-}
+import { requireAdmin } from '@/lib/auth';
 
 export async function GET(
   request: NextRequest,
   { params }: { params: { runId: string } }
 ) {
   try {
-    // Verify authentication
-    await verifyAuth(request);
+    // Verify authentication - run data is admin-only (previously any signed-in
+    // Firebase user could read any run).
+    const adminCheck = await requireAdmin(request);
+    if (!adminCheck.ok) {
+      return NextResponse.json({ error: adminCheck.error }, { status: adminCheck.status });
+    }
     
     const { runId } = params;
     
@@ -46,13 +39,6 @@ export async function GET(
 
   } catch (error) {
     console.error('Get run error:', error);
-    
-    if (error instanceof Error && error.message.includes('authorization')) {
-      return NextResponse.json(
-        { error: error.message },
-        { status: 401 }
-      );
-    }
 
     return NextResponse.json(
       { error: 'Internal server error' },

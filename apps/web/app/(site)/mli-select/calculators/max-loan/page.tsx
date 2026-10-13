@@ -115,9 +115,9 @@ export default function MaxLoanPage() {
               className="flex flex-wrap justify-center gap-8 mt-10"
             >
               {[
-                { tier: 1, leverage: projectType === "new" ? 85 : 85, color: "from-amber-600 to-orange-600" },
-                { tier: 2, leverage: projectType === "new" ? 90 : 85, color: "from-emerald-600 to-teal-600" },
-                { tier: 3, leverage: projectType === "new" ? 95 : 85, color: "from-cyan-600 to-blue-600" },
+                { tier: 50, leverage: leverageFor(projectType === "new", 50) * 100, color: "from-amber-600 to-orange-600" },
+                { tier: 70, leverage: leverageFor(projectType === "new", 70) * 100, color: "from-emerald-600 to-teal-600" },
+                { tier: 100, leverage: leverageFor(projectType === "new", 100) * 100, color: "from-cyan-600 to-blue-600" },
               ].map((item) => (
                 <motion.div 
                   key={item.tier}
@@ -128,9 +128,9 @@ export default function MaxLoanPage() {
                   <div className={`absolute -inset-1 bg-gradient-to-r ${item.color} rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-300`}></div>
                   <div className="relative bg-gray-900/90 backdrop-blur-xl px-8 py-6 rounded-2xl border border-gray-700/50">
                     <div className="text-center">
-                      <div className="text-xs text-gray-500 uppercase tracking-wider mb-1">Tier {item.tier}</div>
+                      <div className="text-xs text-gray-500 uppercase tracking-wider mb-1">{item.tier}+ Points</div>
                       <div className="text-4xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">{item.leverage}%</div>
-                      <div className="text-xs text-gray-400 mt-1">Max LTV</div>
+                      <div className="text-xs text-gray-400 mt-1">{projectType === "new" ? "Max LTC" : "Max LTV"}</div>
                     </div>
                   </div>
                 </motion.div>
@@ -338,6 +338,11 @@ export default function MaxLoanPage() {
               </Card>
             </motion.div>
           </div>
+          <p className="mt-8 text-xs text-gray-500 max-w-4xl mx-auto text-center">
+            Leverage caps per CMHC MLI Select (residential component): new construction up to 95% LTC at 50/70/100 points;
+            existing properties up to 85% LTV at 50 points and 95% at 70+ points. The insured loan is the lesser of this
+            leverage cap and the loan supported by a 1.10 DCR (standard rental) — see the DSCR calculator. Estimates only.
+          </p>
         </div>
       </section>
     </div>

@@ -1,5 +1,7 @@
 import { Metadata } from 'next';
 import { CityServiceJsonLd } from '@/components/SEO/CityServiceJsonLd';
+import Footer from '@/components/Footer';
+import { OG_DEFAULTS } from '@/lib/seo/og';
 
 export const metadata: Metadata = {
   title: 'Calgary Mortgage Broker | Best Rates | Kraft Mortgages',
@@ -9,6 +11,7 @@ export const metadata: Metadata = {
     canonical: 'https://www.kraftmortgages.ca/mortgage-broker-calgary',
   },
   openGraph: {
+    ...OG_DEFAULTS,
     title: 'Calgary Mortgage Broker | Kraft Mortgages Canada',
     description: 'Trusted Calgary mortgage broker with low interest rates. Free pre-approval in 24 hours.',
     url: 'https://www.kraftmortgages.ca/mortgage-broker-calgary',
@@ -21,6 +24,7 @@ export default function CalgaryLayout({ children }: { children: React.ReactNode 
     <>
       <CityServiceJsonLd cityName="Calgary" provinceName="AB" description="Licensed mortgage broker serving Calgary, AB. Residential, construction, self-employed, MLI Select, and private lending solutions." />
       {children}
+      <Footer />
     </>
   );
 }

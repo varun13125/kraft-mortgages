@@ -1,56 +1,33 @@
 import { contactMetadata } from './metadata';
+import Footer from '@/components/Footer';
+import { JsonLd } from '@/components/SEO/JsonLd';
+import { ORG_ID, SITE_ID } from '@/lib/seo/jsonld';
 
 export const metadata = contactMetadata;
 
+// The page used to emit its own LocalBusiness node (@id "/#contact") with a
+// different geo point (49.1014,-122.7927 — Newton, not the 152nd St office),
+// different hours (Mon–Fri 9–6, Sat 10–4) and a non-schema.org type
+// ("CanadianProvince"), contradicting the canonical org node rendered in
+// app/layout.tsx from lib/seo/business-config.ts. A ContactPage that points at
+// that single org node avoids conflicting structured data.
+const contactPageJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ContactPage',
+  '@id': 'https://www.kraftmortgages.ca/contact#webpage',
+  url: 'https://www.kraftmortgages.ca/contact',
+  name: 'Contact Kraft Mortgages',
+  isPartOf: { '@id': SITE_ID },
+  about: { '@id': ORG_ID },
+  mainEntity: { '@id': ORG_ID },
+};
+
 export default function ContactLayout({ children }: { children: React.ReactNode }) {
-  const schema = {
-    "@context": "https://schema.org",
-    "@graph": [{
-      "@type": "LocalBusiness",
-      "@id": "https://www.kraftmortgages.ca/#contact",
-      name: "Kraft Mortgages Canada",
-      url: "https://www.kraftmortgages.ca/contact",
-      telephone: "+1-604-593-1550",
-      email: "varun@kraftmortgages.ca",
-      image: "https://www.kraftmortgages.ca/kraft-logo.png",
-      address: {
-        "@type": "PostalAddress",
-        streetAddress: "#301 - 1688 152nd Street",
-        addressLocality: "Surrey",
-        addressRegion: "BC",
-        postalCode: "V4A 4N2",
-        addressCountry: "CA"
-      },
-      geo: {
-        "@type": "GeoCoordinates",
-        latitude: 49.1014,
-        longitude: -122.7927
-      },
-      areaServed: [
-        { "@type": "CanadianProvince", "name": "British Columbia" },
-        { "@type": "CanadianProvince", "name": "Alberta" },
-        { "@type": "CanadianProvince", "name": "Ontario" }
-      ],
-      openingHoursSpecification: [
-        {
-          "@type": "OpeningHoursSpecification",
-          dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-          opens: "09:00",
-          closes: "18:00"
-        },
-        {
-          "@type": "OpeningHoursSpecification",
-          dayOfWeek: "Saturday",
-          opens: "10:00",
-          closes: "16:00"
-        }
-      ]
-    }]
-  };
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
+      <JsonLd data={contactPageJsonLd} />
       {children}
+      <Footer />
     </>
   );
 }

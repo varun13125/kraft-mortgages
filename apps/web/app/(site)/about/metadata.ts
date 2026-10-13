@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import { OG_DEFAULTS } from '@/lib/seo/og';
 
 export const aboutMetadata: Metadata = {
   title: 'About Kraft Mortgages | $2B+ Funded | 18+ Years Combined Experience',
@@ -8,6 +9,7 @@ export const aboutMetadata: Metadata = {
     canonical: 'https://www.kraftmortgages.ca/about',
   },
   openGraph: {
+    ...OG_DEFAULTS,
     title: 'About Kraft Mortgages | $2B+ Funded | 18+ Years Combined Experience',
     description: 'Surrey-based mortgage brokerage. $2B+ funded, 18+ Years Combined Experience. Licensed BC, AB & ON.',
     url: 'https://www.kraftmortgages.ca/about',

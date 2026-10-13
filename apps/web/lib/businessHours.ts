@@ -81,9 +81,10 @@ export function getCallingHoursStatus(date: Date = new Date()): CallingHoursStat
     };
   } catch (err) {
     console.error("Error computing calling hours:", err);
-    // Safe fallback: treat as open during daylight hours UTC
+    // Fail CLOSED: if we can't determine Pacific time, queue the callback rather
+    // than risk an automated call outside CRTC-permitted hours.
     return {
-      isOpen: true,
+      isOpen: false,
       currentPtTime: "Pacific Time",
       nextAvailableTime: "Next Business Morning at 9:15 AM PT",
       dayName: "Mon",

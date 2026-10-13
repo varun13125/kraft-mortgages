@@ -11,6 +11,7 @@ import { formatCurrency } from "@/lib/utils/validation";
 import PdfLeadModal from "@/components/PdfLeadModal";
 import { CalculatorSchema } from "@/components/SEO/CalculatorSchema";
 import { RelatedCalculators } from "@/components/calculators/RelatedCalculators";
+import { cmhcPremium } from "@/lib/calc/cmhc";
 
 const faqs = [
   {
@@ -31,32 +32,32 @@ const faqs = [
   },
   {
     q: "What hidden costs of homeownership do people forget?",
-    a: "The most commonly overlooked costs are maintenance (budget 1-2% of home value per year), property tax increases, rising insurance premiums, and transaction costs when you eventually sell (real estate commissions of 3-7%). This calculator includes maintenance, property tax, and insurance — but actual costs can vary."
+    a: "The most commonly overlooked costs are maintenance (budget 1-2% of home value per year), property tax increases, rising insurance premiums, and transaction costs when you buy (land transfer tax, legal) and eventually sell (real estate commissions of 3-7%). This calculator includes maintenance, property tax, insurance, purchase closing costs and selling costs — but actual costs can vary."
   }
 ];
 
-function cmhcPremium(downPayment: number, price: number): number {
-  const loan = price - downPayment;
-  if (downPayment >= price * 0.2) return 0;
-  const ltv = loan / price;
-  let rate: number;
-  if (ltv <= 0.65) rate = 0.006;
-  else if (ltv <= 0.75) rate = 0.015;
-  else if (ltv <= 0.8) rate = 0.024;
-  else if (ltv <= 0.85) rate = 0.028;
-  else if (ltv <= 0.9) rate = 0.031;
-  else if (ltv <= 0.95) rate = 0.04;
-  else rate = 0.042;
-  return loan * rate;
+// Minimum down payment (federal rules since Dec 15, 2024): 5% of the first $500K, 10% of the portion
+// from $500K to $1.5M; homes of $1.5M+ are not insurable and need 20%.
+function minDownPayment(price: number): number {
+  if (price >= 1_500_000) return price * 0.2;
+  if (price <= 500_000) return price * 0.05;
+  return 25_000 + (price - 500_000) * 0.1;
+}
+
+// Canadian fixed-rate convention: semi-annual compounding, monthly rate = (1 + r/2)^(1/6) - 1
+function monthlyRate(annualRate: number): number {
+  return Math.pow(1 + annualRate / 100 / 2, 1 / 6) - 1;
 }
 
 function monthlyPayment(principal: number, annualRate: number, years: number): number {
   if (principal <= 0) return 0;
-  const r = annualRate / 100 / 12;
+  const r = monthlyRate(annualRate);
   const n = years * 12;
   if (r === 0) return principal / n;
   return (principal * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
 }
+
+const HORIZON_YEARS = 25;
 
 export default function RentVsBuyPage() {
   const [showPdfModal, setShowPdfModal] = useState(false);
@@ -70,83 +71,79 @@ export default function RentVsBuyPage() {
   const [propertyTaxYear, setPropertyTaxYear] = useState(4200);
   const [maintenanceYear, setMaintenanceYear] = useState(4200);
   const [insuranceYear, setInsuranceYear] = useState(1800);
+  const [rentIncrease, setRentIncrease] = useState(2.5); // %/yr, applied to rent and ownership running costs
+  const [closingCostPct, setClosingCostPct] = useState(1.5); // land transfer tax, legal, inspection at purchase
+  const [sellingCostPct, setSellingCostPct] = useState(4.0); // commission + legal when you sell
   const [openFaq, setOpenFaq] = useState<number | null>(null)
 
   const results = useMemo(() => {
-    const down = homePrice * downPaymentPct / 100;
-    const cmhc = cmhcPremium(down, homePrice);
-    const loan = homePrice - down + cmhc;
+    const requestedDown = homePrice * downPaymentPct / 100;
+    const minDown = minDownPayment(homePrice);
+    // Below the legal minimum the purchase isn't possible — model the minimum and warn
+    const down = Math.max(requestedDown, minDown);
+    const belowMinimum = requestedDown < minDown - 0.5;
+    const insured = down < homePrice * 0.2;
+    let cmhc = insured ? cmhcPremium(homePrice, down) : 0;
+    // 30-year insured amortization (first-time buyers / new builds only) adds a 0.20% premium surcharge
+    if (insured && amortization > 25) cmhc += (homePrice - down) * 0.002;
+    const loan = homePrice - down + cmhc; // premium is added to the mortgage, not paid in cash
     const mortgage = monthlyPayment(loan, mortgageRate, amortization);
     const monthlyTax = propertyTaxYear / 12;
     const monthlyMaint = maintenanceYear / 12;
     const monthlyIns = insuranceYear / 12;
     const buyMonthly = mortgage + monthlyTax + monthlyMaint + monthlyIns;
 
-    const investableCash = down + cmhc;
-    const rentInvestmentMonthly = investableCash > 0
-      ? ((buyMonthly - monthlyRent) > 0 ? 0 : (monthlyRent - buyMonthly) + (investableCash * investmentReturn / 100 / 12))
-      : 0;
+    // Cash the buyer spends up front — a renter keeps this invested instead
+    const purchaseClosing = homePrice * closingCostPct / 100;
+    const investableCash = down + purchaseClosing;
 
+    const r = monthlyRate(mortgageRate);
+    const invMonthly = Math.pow(1 + investmentReturn / 100, 1 / 12) - 1; // effective monthly for the annual return
     const years = [5, 10, 15, 20, 25];
-    const buyCosts: number[] = [];
-    const rentCosts: number[] = [];
-    const buyNetWorth: number[] = [];
-    const rentNetWorth: number[] = [];
-
+    const yearly: { year: number; buyCost: number; rentCost: number; buyNW: number; rentNW: number }[] = [];
+    let balance = loan;
+    let rentPortfolio = investableCash; // renter: invests the up-front cash + any month buying costs more than renting
+    let buyPortfolio = 0;               // buyer: invests any month renting would have cost more
+    let cumBuy = 0;
+    let cumRent = 0;
     let breakEvenYear: number | null = null;
 
-    for (let y = 1; y <= 25; y++) {
-      // Buying costs — NET cost = cash outflow minus equity accumulated (principal paydown + appreciation)
-      // A buyer's real "cost" is what they've spent that they can't recover: interest + taxes + fees
-      // not the full P+I payment (principal becomes equity)
-      const buyCostY = buyMonthly * 12 * y;  // total cash outflow (kept for reference)
-      buyCosts.push(buyCostY);
-
-      // Renting costs
-      const rentCostY = monthlyRent * 12 * y;
-      rentCosts.push(rentCostY);
-
-      // Buy net worth: home equity (appreciated value minus remaining mortgage)
-      const appreciatedValue = homePrice * Math.pow(1 + appreciation / 100, y);
-      let remainingMortgage = loan;
-      for (let m = 0; m < y * 12; m++) {
-        const interest = remainingMortgage * mortgageRate / 100 / 12;
-        const principalPaid = mortgage - interest;
-        remainingMortgage = Math.max(0, remainingMortgage - principalPaid);
+    for (let m = 1; m <= HORIZON_YEARS * 12; m++) {
+      const inflate = Math.pow(1 + rentIncrease / 100, Math.floor((m - 1) / 12));
+      const rentM = monthlyRent * inflate;
+      const ownCostsM = (monthlyTax + monthlyMaint + monthlyIns) * inflate;
+      // Mortgage stops once it is paid off (amortization shorter than the horizon)
+      let mortgagePaid = 0;
+      if (balance > 0) {
+        const interest = balance * r;
+        mortgagePaid = Math.min(mortgage, balance + interest);
+        balance = Math.max(0, balance + interest - mortgagePaid);
       }
-      const homeEquity = appreciatedValue - remainingMortgage;
-      buyNetWorth.push(homeEquity);
+      const buyCostM = mortgagePaid + ownCostsM;
+      rentPortfolio = rentPortfolio * (1 + invMonthly) + Math.max(0, buyCostM - rentM);
+      buyPortfolio = buyPortfolio * (1 + invMonthly) + Math.max(0, rentM - buyCostM);
+      cumBuy += buyCostM;
+      cumRent += rentM;
 
-      // Rent net worth: invested down payment + monthly savings (when rent is cheaper)
-      let rentPortfolio = investableCash;
-      for (let m = 0; m < y * 12; m++) {
-        rentPortfolio += Math.max(0, monthlyRent - buyMonthly);
-        rentPortfolio *= (1 + investmentReturn / 100 / 12);
-      }
-      rentNetWorth.push(rentPortfolio);
-
-      // Break-even: cumulative buy cost <= cumulative rent cost
-      // Break-even: buyer's NET cost (cash outflow minus equity at sale) vs renter's total rent
-      const buyNetCostY = buyCostY - homeEquity; // what you've spent that you can't recover
-      if (breakEvenYear === null && buyNetCostY <= rentCostY) {
-        breakEvenYear = y;
+      if (m % 12 === 0) {
+        const y = m / 12;
+        const value = homePrice * Math.pow(1 + appreciation / 100, y);
+        // Net worth if you sold at year end: value less selling costs and mortgage, plus any invested savings
+        const buyNW = value * (1 - sellingCostPct / 100) - balance + buyPortfolio;
+        const rentNW = rentPortfolio;
+        yearly.push({ year: y, buyCost: down + purchaseClosing + cumBuy, rentCost: cumRent, buyNW, rentNW });
+        if (breakEvenYear === null && buyNW >= rentNW) breakEvenYear = y;
       }
     }
 
     return {
-      down, cmhc, loan, mortgage, buyMonthly,
+      down, minDown, belowMinimum, insured, cmhc, loan, mortgage, buyMonthly,
       monthlyTax, monthlyMaint, monthlyIns,
-      years: years.map(y => ({
-        year: y,
-        buyCost: buyCosts[y - 1],
-        rentCost: rentCosts[y - 1],
-        buyNW: buyNetWorth[y - 1],
-        rentNW: rentNetWorth[y - 1]
-      })),
+      years: years.map(y => yearly[y - 1]),
       breakEvenYear,
       investableCash
     };
-  }, [homePrice, downPaymentPct, mortgageRate, amortization, monthlyRent, appreciation, investmentReturn, propertyTaxYear, maintenanceYear, insuranceYear]);
+  }, [homePrice, downPaymentPct, mortgageRate, amortization, monthlyRent, appreciation, investmentReturn, propertyTaxYear, maintenanceYear, insuranceYear, rentIncrease, closingCostPct, sellingCostPct]);
 
   return (
     <>
@@ -224,11 +221,13 @@ export default function RentVsBuyPage() {
                         title: "Your Inputs",
                         rows: [
                           { label: "Home Price", value: "$" + Math.round(homePrice).toLocaleString("en-CA") },
-                          { label: "Down Payment", value: downPaymentPct + "%" },
+                          { label: "Down Payment", value: "$" + Math.round(results.down).toLocaleString("en-CA") + (results.belowMinimum ? " (legal minimum)" : " (" + downPaymentPct + "%)") },
                           { label: "Mortgage Rate", value: mortgageRate + "%" },
                           { label: "Monthly Rent", value: "$" + Math.round(monthlyRent).toLocaleString("en-CA") },
                           { label: "Appreciation Rate", value: appreciation + "%/yr" },
                           { label: "Investment Return", value: investmentReturn + "%/yr" },
+                          { label: "Rent & Cost Increase", value: rentIncrease + "%/yr" },
+                          { label: "Purchase / Selling Costs", value: closingCostPct + "% / " + sellingCostPct + "%" },
                         ]
                       },
                       {
@@ -237,12 +236,13 @@ export default function RentVsBuyPage() {
                           { label: "Monthly Cost of Buying", value: "$" + Math.round(results.buyMonthly).toLocaleString("en-CA"), highlight: true },
                           { label: "Monthly Rent", value: "$" + Math.round(monthlyRent).toLocaleString("en-CA") },
                           { label: "Monthly Difference", value: "$" + Math.round(Math.abs(results.buyMonthly - monthlyRent)).toLocaleString("en-CA") },
-                          { label: "Mortgage Amount", value: "$" + Math.round(results.mortgage).toLocaleString("en-CA") },
+                          { label: "Mortgage Amount", value: "$" + Math.round(results.loan).toLocaleString("en-CA") },
+                          { label: "Monthly Mortgage Payment", value: "$" + Math.round(results.mortgage).toLocaleString("en-CA") },
                           ...(results.breakEvenYear ? [{ label: "Break-Even Year", value: "Year " + results.breakEvenYear, highlight: true }] : []),
                         ]
                       }
                     ],
-                    educationalContent: "The rent vs buy decision depends on more than just monthly costs. Consider long-term wealth building through home equity, flexibility of renting, and your personal goals."
+                    educationalContent: "Projections based on your assumptions, not guarantees. The rent vs buy decision depends on more than just monthly costs. Consider long-term wealth building through home equity, flexibility of renting, and your personal goals."
                   });
                 }}
               />
@@ -254,6 +254,18 @@ export default function RentVsBuyPage() {
                     <ValidatedSlider label={`Mortgage Rate (${mortgageRate}%)`} value={mortgageRate} onChange={setMortgageRate} min={0.5} max={12} step={0.1} formatValue={(v) => `${v}%`} />
                     <ValidatedSlider label={`Amortization (${amortization} years)`} value={amortization} onChange={setAmortization} min={5} max={30} step={5} formatValue={(v) => `${v} years`} />
                     <ValidatedSlider label={`Annual Appreciation (${appreciation}%)`} value={appreciation} onChange={setAppreciation} min={0} max={10} step={0.5} formatValue={(v) => `${v}%`} />
+                    <ValidatedSlider label="Purchase Closing Costs" value={closingCostPct} onChange={setClosingCostPct} min={0} max={5} step={0.25} formatValue={(v) => `${v}% (${formatCurrency(homePrice * v / 100, 0)})`} />
+                    <ValidatedSlider label="Selling Costs When You Sell" value={sellingCostPct} onChange={setSellingCostPct} min={0} max={8} step={0.5} formatValue={(v) => `${v}% of value`} />
+                    {results.belowMinimum && (
+                      <p className="text-xs text-amber-300 bg-amber-500/10 border border-amber-500/20 rounded-lg p-3">
+                        The minimum down payment on a {formatCurrency(homePrice, 0)} home is {formatCurrency(results.minDown, 0)} ({(results.minDown / homePrice * 100).toFixed(1)}%){homePrice >= 1500000 ? " — homes of $1.5M+ need 20% down" : " (5% of the first $500K, 10% of the rest)"}. Results use the minimum.
+                      </p>
+                    )}
+                    {results.insured && amortization > 25 && (
+                      <p className="text-xs text-blue-200 bg-blue-500/10 border border-blue-500/20 rounded-lg p-3">
+                        Insured mortgages over 25 years are only available to first-time buyers or for new builds, and add a 0.20% premium surcharge (included).
+                      </p>
+                    )}
                   </div>
                 </div>
 
@@ -268,6 +280,7 @@ export default function RentVsBuyPage() {
                     <ValidatedInput label="Maintenance / Year" value={maintenanceYear} onChange={setMaintenanceYear} validation={{ min: 0, max: 30000 }} type="currency" />
                     <ValidatedInput label="Home Insurance / Year" value={insuranceYear} onChange={setInsuranceYear} validation={{ min: 0, max: 10000 }} type="currency" />
                     <ValidatedSlider label={`Investment Return (${investmentReturn}%)`} value={investmentReturn} onChange={setInvestmentReturn} min={0} max={12} step={0.5} formatValue={(v) => `${v}% (down payment opportunity cost)`} />
+                    <ValidatedSlider label="Annual Rent & Ownership-Cost Increase" value={rentIncrease} onChange={setRentIncrease} min={0} max={6} step={0.5} formatValue={(v) => `${v}%/yr`} />
                   </div>
                 </div>
               </motion.div>
@@ -311,7 +324,7 @@ export default function RentVsBuyPage() {
                   ) : (
                     <p className="text-xl font-semibold text-amber-400">Beyond 25 years (or never)</p>
                   )}
-                  <p className="text-xs text-gray-500 mt-1">When cumulative buying costs fall below cumulative renting costs</p>
+                  <p className="text-xs text-gray-500 mt-1">First year your projected net worth from buying (after selling costs) exceeds renting and investing the difference</p>
                 </div>
 
                 {/* Multi-year comparison */}
@@ -352,11 +365,15 @@ export default function RentVsBuyPage() {
                       <AlertTriangle className="w-5 h-5 text-blue-400 mt-0.5 flex-shrink-0" />
                       <div>
                         <p className="text-sm text-blue-300 font-medium mb-1">CMHC Insurance Included</p>
-                        <p className="text-xs text-blue-200">With {downPaymentPct}% down, CMHC adds {formatCurrency(results.cmhc, 0)} to your mortgage. Increasing to 20% eliminates this cost entirely.</p>
+                        <p className="text-xs text-blue-200">With {(results.down / homePrice * 100).toFixed(1)}% down, CMHC adds {formatCurrency(results.cmhc, 0)} to your mortgage. Increasing to 20% eliminates this cost entirely.</p>
                       </div>
                     </div>
                   </div>
                 )}
+
+                <p className="text-xs text-gray-500">
+                  Projections only, based on your assumptions — not a forecast or advice. Assumes the mortgage rate stays the same for the full amortization, rent and ownership costs rise {rentIncrease}%/yr, investments compound at {investmentReturn}%/yr with no tax (e.g. TFSA), and no capital gains tax on a principal residence. Net worth assumes you sell at year end ({sellingCostPct}% selling costs). Excludes moving costs and PST on CMHC premiums (ON).
+                </p>
 
                 {/* CTA */}
                 <div className="flex flex-col sm:flex-row gap-4">

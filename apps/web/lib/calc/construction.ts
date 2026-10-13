@@ -1,17 +1,28 @@
 export type Draw = { month: number; amount: number };
 
-export function interestOnlyCost({ draws, annualRatePct }: { draws: Draw[]; annualRatePct: number }) {
-  const r = annualRatePct / 100 / 12;
+// Interest-only cost of a progressive-draw construction loan (simple monthly interest on drawn balance).
+// Not financial advice.
+export function interestOnlyCost({ draws, annualRatePct, periodMonths }: { draws: Draw[]; annualRatePct: number; periodMonths?: number }) {
+  const r = Math.max(0, annualRatePct || 0) / 100 / 12;
+  // Normalise draws: whole months clamped to 1..60 (5 years) so a month of 0, a negative or a
+  // fractional month is not silently dropped from the interest calc; negative amounts ignored.
+  const norm = draws.map((d) => ({
+    month: Math.min(60, Math.max(1, Math.round(Number(d.month) || 1))),
+    amount: Math.max(0, Number(d.amount) || 0),
+  }));
+  const lastDrawMonth = Math.max(1, ...norm.map((d) => d.month));
+  // Interest runs to the end of the construction period: the given period (if any), otherwise at
+  // least 12 months, and never shorter than the last draw. Clamped to 60 months to prevent runaway loops.
+  const requested = periodMonths && periodMonths > 0 ? Math.round(periodMonths) : 12;
+  const maxMonth = Math.min(60, Math.max(requested, lastDrawMonth));
   let bal = 0;
   const timeline: { month: number; draw: number; balance: number; interest: number }[] = [];
-  // Clamp to max 60 months (5 years) to prevent runaway loops on bad input
-  const maxMonth = Math.min(60, Math.max(12, ...draws.map((d: any) => Math.max(1, d.month || 1))));
   for (let m = 1; m <= maxMonth; m++) {
-    const added = draws.filter((d: any) => d.month === m).reduce((a: number, b: any) => a + b.amount, 0);
+    const added = norm.filter((d) => d.month === m).reduce((a, b) => a + b.amount, 0);
     bal += added;
     const interest = bal * r;
     timeline.push({ month: m, draw: added, balance: bal, interest });
   }
-  const totalInterest = timeline.reduce((a: number, b: any) => a + b.interest, 0);
+  const totalInterest = timeline.reduce((a, b) => a + b.interest, 0);
   return { timeline, totalInterest, constructionPeriodMonths: maxMonth };
 }

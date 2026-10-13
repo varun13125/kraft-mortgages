@@ -641,3 +641,49 @@ input[type="number"]::-webkit-inner-spin-button {
 input[type="number"] {
   -moz-appearance: textfield;
 }
+
+/* ===== Accessibility: honour the OS "reduce motion" setting =====
+   Stops the site-wide infinite background animations (mesh blobs, spotlights,
+   glow, gradient borders) and Tailwind animate-* utilities for users who opt
+   out of motion. Framer Motion is handled by <MotionProvider> in app/layout.tsx. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ===== Performance: freeze the heavy ambient background on small screens =====
+   Four 500–800px blur(120px) blobs + three blurred spotlights animating forever
+   are expensive to composite on low-end phones. Keep them visible but static. */
+@media (max-width: 767px) {
+  .glowing-mesh-blob,
+  .spotlight {
+    animation: none !important;
+    will-change: auto;
+  }
+}
+
+/* ===== Blog article typography =====
+   @tailwindcss/typography is NOT installed, so the `prose-*` utility classes on
+   app/blog/[slug] are no-ops and Tailwind's preflight left post headings at body
+   size and lists without bullets. Minimal readable defaults, scoped to blog
+   articles only (other `.prose` usages are unaffected). */
+article .prose h2 { font-size: 1.5rem; line-height: 2rem; font-weight: 700; margin: 2.5rem 0 1rem; }
+article .prose h3 { font-size: 1.25rem; line-height: 1.75rem; font-weight: 700; margin: 2rem 0 0.75rem; }
+article .prose h4 { font-size: 1.125rem; line-height: 1.75rem; font-weight: 600; margin: 1.5rem 0 0.5rem; }
+article .prose p { margin-bottom: 1.25rem; line-height: 1.75; }
+article .prose ul { list-style: disc; padding-left: 1.5rem; margin: 1rem 0 1.5rem; }
+article .prose ol { list-style: decimal; padding-left: 1.5rem; margin: 1rem 0 1.5rem; }
+article .prose li { margin: 0.375rem 0; }
+article .prose a { color: #d4af37; text-decoration: underline; text-underline-offset: 2px; }
+article .prose a:hover { color: #fcd34d; }
+article .prose hr { border-color: #374151; margin: 2.5rem 0; }
+article .prose img { border-radius: 0.5rem; margin: 1.5rem 0; max-width: 100%; height: auto; }
+article .prose blockquote { border-left: 4px solid rgba(212, 175, 55, 0.5); padding: 0.75rem 1.25rem; margin: 1.5rem 0; background: rgba(31, 41, 55, 0.5); }
+article .prose table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; display: block; overflow-x: auto; }
+article .prose th, article .prose td { border: 1px solid #374151; padding: 0.5rem 0.75rem; text-align: left; }

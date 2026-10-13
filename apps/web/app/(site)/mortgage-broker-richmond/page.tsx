@@ -1,4 +1,5 @@
-"use client";
+// Server Component: this page has no client-side interactivity, so it no longer
+// ships as a client bundle ("use client" removed in the 2026-10 audit).
 import Navigation from "@/components/Navigation";
 import Link from "next/link";
 import { MapPin, Phone, Building, Users, Briefcase, Home, Globe } from "lucide-react";
@@ -16,10 +17,10 @@ export default function RichmondPage() {
                             Richmond, BC
                         </div>
                         <h1 className="text-4xl md:text-6xl font-bold mb-6 text-white">
-                            Richmond's Go-To Mortgage Broker
+                            Richmond&apos;s Go-To Mortgage Broker
                         </h1>
                         <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-8">
-                            Richmond is one of Canada's most diverse and dynamic real estate markets. Kraft Mortgages brings 18+ Years Combined Experience, multilingual service, and deep lender relationships to every Richmond transaction.
+                            Richmond is one of Canada&apos;s most diverse and dynamic real estate markets. Kraft Mortgages brings 18+ Years Combined Experience, multilingual service, and deep lender relationships to every Richmond transaction.
                         </p>
                         <Link
                             href="/contact"
@@ -35,13 +36,13 @@ export default function RichmondPage() {
                     <div className="max-w-5xl mx-auto">
                         <h2 className="text-3xl font-bold mb-6 text-center">The Richmond Mortgage Market</h2>
                         <p className="text-gray-300 text-lg mb-6">
-                            Richmond's average home price sits around $1 million as of early 2025, making it one of Metro Vancouver's most significant real estate markets. The city's unique position — an island municipality connected to Vancouver by bridge, adjacent to YVR airport, and home to one of Canada's largest immigrant communities — creates a mortgage landscape unlike any other in BC.
+                            Richmond&apos;s average home price sits around $1 million as of early 2025, making it one of Metro Vancouver&apos;s most significant real estate markets. The city&apos;s unique position — an island municipality connected to Vancouver by bridge, adjacent to YVR airport, and home to one of Canada&apos;s largest immigrant communities — creates a mortgage landscape unlike any other in BC.
                         </p>
                         <p className="text-gray-300 text-lg mb-6">
-                            Richmond attracts buyers from around the world. Its vibrant Chinese, South Asian, and Filipino communities have shaped neighbourhoods that range from the luxury homes of Broadmoor and Terra Nova to the high-density condo corridor along No. 3 Road. Steveston, Richmond's historic waterfront village, offers a charming mix of heritage homes, townhouses, and newer developments that command premium prices.
+                            Richmond attracts buyers from around the world. Its vibrant Chinese, South Asian, and Filipino communities have shaped neighbourhoods that range from the luxury homes of Broadmoor and Terra Nova to the high-density condo corridor along No. 3 Road. Steveston, Richmond&apos;s historic waterfront village, offers a charming mix of heritage homes, townhouses, and newer developments that command premium prices.
                         </p>
                         <p className="text-gray-300 text-lg">
-                            Investment activity in Richmond remains strong, driven by the city's proximity to the airport, excellent transit, and consistent rental demand. Many clients come to us with international income, foreign credit histories, or unique financial structures that big banks struggle to accommodate. Kraft Mortgages specializes in these situations — connecting newcomers and investors with lenders who understand Richmond's market and its buyers.
+                            Investment activity in Richmond remains strong, driven by the city&apos;s proximity to the airport, excellent transit, and consistent rental demand. Many clients come to us with international income, foreign credit histories, or unique financial structures that big banks struggle to accommodate. Kraft Mortgages specializes in these situations — connecting newcomers and investors with lenders who understand Richmond&apos;s market and its buyers.
                         </p>
                     </div>
                 </section>
@@ -54,12 +55,12 @@ export default function RichmondPage() {
                             <div className="bg-white/5 rounded-2xl p-6 border border-white/10">
                                 <Globe className="w-10 h-10 text-gold-400 mb-4" />
                                 <h3 className="text-xl font-bold mb-3">Newcomer & Immigrant Mortgages</h3>
-                                <p className="text-gray-400">Richmond is home to one of Canada's largest newcomer populations. We specialize in helping recent immigrants navigate Canadian mortgage requirements, including foreign income verification and alternative credit programs.</p>
+                                <p className="text-gray-400">Richmond is home to one of Canada&apos;s largest newcomer populations. We specialize in helping recent immigrants navigate Canadian mortgage requirements, including foreign income verification and alternative credit programs.</p>
                             </div>
                             <div className="bg-white/5 rounded-2xl p-6 border border-white/10">
                                 <Building className="w-10 h-10 text-gold-400 mb-4" />
                                 <h3 className="text-xl font-bold mb-3">Investment Property Financing</h3>
-                                <p className="text-gray-400">Richmond's strong rental market and international buyer interest make it an investor favourite. We work with lenders who understand multi-property portfolios and can structure financing for growing portfolios.</p>
+                                <p className="text-gray-400">Richmond&apos;s strong rental market and international buyer interest make it an investor favourite. We work with lenders who understand multi-property portfolios and can structure financing for growing portfolios.</p>
                             </div>
                             <div className="bg-white/5 rounded-2xl p-6 border border-white/10">
                                 <Home className="w-10 h-10 text-gold-400 mb-4" />
@@ -75,7 +76,7 @@ export default function RichmondPage() {
                     <div className="max-w-4xl mx-auto">
                         <h2 className="text-3xl font-bold mb-6 text-center">Why Choose a Local Richmond Mortgage Broker?</h2>
                         <p className="text-gray-300 text-lg text-center mb-8">
-                            Richmond's real estate market is shaped by international forces — immigration policy, foreign buyer taxes, cross-border income, and global capital flows. A local broker who works in Richmond every day understands how these factors affect your mortgage options. We have relationships with lenders who are experienced with international buyers, foreign income documentation, and the specific property types that define Richmond — from new-build condos in City Centre to waterfront homes in Steveston.
+                            Richmond&apos;s real estate market is shaped by international forces — immigration policy, foreign buyer taxes, cross-border income, and global capital flows. A local broker who works in Richmond every day understands how these factors affect your mortgage options. We have relationships with lenders who are experienced with international buyers, foreign income documentation, and the specific property types that define Richmond — from new-build condos in City Centre to waterfront homes in Steveston.
                         </p>
                     </div>
                 </section>
@@ -95,7 +96,7 @@ export default function RichmondPage() {
                             </div>
                             <div className="bg-white/5 rounded-xl p-6 border border-white/10">
                                 <h3 className="font-bold text-lg mb-2">What is the average condo price in Richmond City Centre?</h3>
-                                <p className="text-gray-400">Richmond's City Centre (the No. 3 Road corridor) has a benchmark condo price around $600,000–$750,000 as of early 2025, depending on size, age, and proximity to the Canada Line.</p>
+                                <p className="text-gray-400">Richmond&apos;s City Centre (the No. 3 Road corridor) has a benchmark condo price around $600,000–$750,000 as of early 2025, depending on size, age, and proximity to the Canada Line.</p>
                             </div>
                             <div className="bg-white/5 rounded-xl p-6 border border-white/10">
                                 <h3 className="font-bold text-lg mb-2">Is Richmond a good market for rental property investment?</h3>
@@ -103,7 +104,7 @@ export default function RichmondPage() {
                             </div>
                             <div className="bg-white/5 rounded-xl p-6 border border-white/10">
                                 <h3 className="font-bold text-lg mb-2">How does flood risk affect mortgage approval in Richmond?</h3>
-                                <p className="text-gray-400">Richmond is below sea level in many areas, which can affect insurance requirements. Some lenders have stricter policies for properties in designated flood zones. We work with lenders experienced with Richmond's geography to ensure smooth approvals.</p>
+                                <p className="text-gray-400">Richmond is below sea level in many areas, which can affect insurance requirements. Some lenders have stricter policies for properties in designated flood zones. We work with lenders experienced with Richmond&apos;s geography to ensure smooth approvals.</p>
                             </div>
                         </div>
                     </div>

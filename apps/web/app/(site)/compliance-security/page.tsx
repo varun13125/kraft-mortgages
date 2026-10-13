@@ -105,58 +105,10 @@ export default function ComplianceSecurityPage() {
                     },
                   })),
                 },
-                {
-                  "@type": "LocalBusiness",
-                  name: "Kraft Mortgages Canada Inc.",
-                  description:
-                    "Licensed mortgage brokerage serving British Columbia, Alberta, and Ontario with compliance-first consumer protection standards.",
-                  url: "https://www.kraftmortgages.ca",
-                  telephone: "+1-604-593-1550",
-                  email: "varun@kraftmortgages.ca",
-                  address: {
-                    "@type": "PostalAddress",
-                    streetAddress: "Suite 202 - 12725 80 Avenue",
-                    addressLocality: "Surrey",
-                    addressRegion: "BC",
-                    postalCode: "V3W 3A6",
-                    addressCountry: "CA",
-                  },
-                  geo: {
-                    "@type": "GeoCoordinates",
-                    latitude: 49.1427,
-                    longitude: -122.8037,
-                  },
-                  hasOfferCatalog: {
-                    "@type": "OfferCatalog",
-                    name: "Mortgage Licensing & Compliance",
-                    itemListElement: [
-                      {
-                        "@type": "Offer",
-                        itemOffered: {
-                          "@type": "Service",
-                          name: "BCFSA Licensed Mortgage Brokerage",
-                          description: "License #SR220230 — British Columbia Financial Services Authority",
-                        },
-                      },
-                      {
-                        "@type": "Offer",
-                        itemOffered: {
-                          "@type": "Service",
-                          name: "RECA Licensed Mortgage Brokerage",
-                          description: "License #LIC-00655428 — Real Estate Council of Alberta",
-                        },
-                      },
-                      {
-                        "@type": "Offer",
-                        itemOffered: {
-                          "@type": "Service",
-                          name: "FSRA Licensed Mortgage Brokerage",
-                          description: "License #12918 — Financial Services Regulatory Authority of Ontario",
-                        },
-                      },
-                    ],
-                  },
-                },
+                // (Removed a second LocalBusiness node: it used a different street address,
+                // postal code and geo point than the canonical org node in app/layout.tsx,
+                // giving search engines conflicting NAP data. The org node already carries
+                // the three licences via hasCredential.)
               ],
             }),
           }}

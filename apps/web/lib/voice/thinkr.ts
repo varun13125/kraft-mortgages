@@ -3,6 +3,8 @@
  * Triggers speed-to-lead qualification calls programmatically via Thinkrr REST API.
  */
 
+import { maskPhone } from "@/lib/ai/request-guards";
+
 export interface ThinkrCallPayload {
   name: string;
   phone: string;
@@ -43,11 +45,11 @@ export async function triggerThinkrOutboundCall(contact: ThinkrCallPayload): Pro
       recipient_email: contact.email || "",
       custom_variables: {
         company_name: "Kraft Mortgages Canada",
-        intro_greeting: contact.customGreeting || `Hi ${contact.name.split(" ")[0]}, thanks for contacting Kraft Mortgages!`
+        intro_greeting: contact.customGreeting || `Hi ${(contact.name || "there").split(" ")[0]}, thanks for contacting Kraft Mortgages!`
       }
     };
 
-    console.log(`📞 Thinkrr API: Dispatching outbound qualification call for ${contact.name} to ${formattedPhone}...`);
+    console.log(`📞 Thinkrr API: Dispatching outbound qualification call to ${maskPhone(formattedPhone)}...`);
 
     // Thinkrr REST API uses /v1/calls or /v1/outbound
     const response = await fetch("https://api.thinkrr.ai/v1/calls", {
@@ -61,11 +63,11 @@ export async function triggerThinkrOutboundCall(contact: ThinkrCallPayload): Pro
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error(`❌ Thinkrr API: Call failed with status ${response.status}:`, errorText);
+      console.error(`❌ Thinkrr API: Call failed with status ${response.status}:`, errorText.slice(0, 300));
       return false;
     }
 
-    console.log(`✅ Thinkrr API: Outbound call triggered successfully for ${contact.name}.`);
+    console.log(`✅ Thinkrr API: Outbound call triggered successfully (${maskPhone(formattedPhone)}).`);
     return true;
   } catch (error) {
     console.error("❌ Thinkrr API: Failed to trigger outbound qualification call:", error);

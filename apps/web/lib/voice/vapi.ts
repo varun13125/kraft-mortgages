@@ -3,6 +3,8 @@
  * Triggers Julia's speed-to-lead qualification calls programmatically via Vapi REST API.
  */
 
+import { maskPhone } from "@/lib/ai/request-guards";
+
 export interface VapiCallPayload {
   name: string;
   phone: string;
@@ -43,7 +45,7 @@ export async function triggerVapiOutboundCall(contact: VapiCallPayload): Promise
       }
     };
 
-    console.log(`📞 Vapi API: Dispatching Julia outbound qualification call for ${contact.name} to ${formattedPhone}...`);
+    console.log(`📞 Vapi API: Dispatching Julia outbound qualification call to ${maskPhone(formattedPhone)}...`);
 
     const response = await fetch("https://api.vapi.ai/call/phone", {
       method: "POST",
@@ -57,7 +59,7 @@ export async function triggerVapiOutboundCall(contact: VapiCallPayload): Promise
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error(`❌ Vapi API call failed (${response.status}):`, errorText);
+      console.error(`❌ Vapi API call failed (${response.status}):`, errorText.slice(0, 300));
       return false;
     }
 

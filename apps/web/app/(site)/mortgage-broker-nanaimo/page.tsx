@@ -1,4 +1,5 @@
-"use client";
+// Server Component: this page has no client-side interactivity, so it no longer
+// ships as a client bundle ("use client" removed in the 2026-10 audit).
 import Navigation from "@/components/Navigation";
 import Link from "next/link";
 import { MapPin, Phone, Building, Users, Briefcase, Home } from "lucide-react";
@@ -16,10 +17,10 @@ export default function NanaimoPage() {
                             Nanaimo, BC
                         </div>
                         <h1 className="text-4xl md:text-6xl font-bold mb-6 text-white">
-                            Nanaimo's Trusted Mortgage Brokerage
+                            Nanaimo&apos;s Trusted Mortgage Brokerage
                         </h1>
                         <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-8">
-                            Nestled on the east coast of Vancouver Island, Nanaimo is one of BC's fastest-growing mid-sized cities. Kraft Mortgages brings over two decades of mortgage expertise to help Nanaimo buyers navigate this evolving market with confidence.
+                            Nestled on the east coast of Vancouver Island, Nanaimo is one of BC&apos;s fastest-growing mid-sized cities. Kraft Mortgages brings over two decades of mortgage expertise to help Nanaimo buyers navigate this evolving market with confidence.
                         </p>
                         <Link
                             href="/contact"
@@ -43,7 +44,7 @@ export default function NanaimoPage() {
                             <div className="bg-white/5 rounded-2xl p-6 border border-white/10">
                                 <Users className="w-10 h-10 text-gold-400 mb-4" />
                                 <h3 className="text-xl font-bold mb-3">A Growing Community</h3>
-                                <p className="text-gray-400">With a population surpassing 104,000 and steady growth driven by mainland migration and remote work trends, Nanaimo's demand for housing continues to outpace supply. Neighbourhoods like Hammond Bay, Departure Bay, and the Old City Quarter remain highly sought after.</p>
+                                <p className="text-gray-400">With a population surpassing 104,000 and steady growth driven by mainland migration and remote work trends, Nanaimo&apos;s demand for housing continues to outpace supply. Neighbourhoods like Hammond Bay, Departure Bay, and the Old City Quarter remain highly sought after.</p>
                             </div>
                         </div>
                     </div>
@@ -57,7 +58,7 @@ export default function NanaimoPage() {
                             <div className="bg-white/5 rounded-2xl p-6 border border-white/10">
                                 <Briefcase className="w-10 h-10 text-gold-400 mb-4" />
                                 <h3 className="text-xl font-bold mb-3">Self-Employed Mortgages</h3>
-                                <p className="text-gray-400">Nanaimo's small business community is thriving. We work with lenders who understand entrepreneurial income and offer stated-income and alternative documentation programs tailored to self-employed professionals.</p>
+                                <p className="text-gray-400">Nanaimo&apos;s small business community is thriving. We work with lenders who understand entrepreneurial income and offer stated-income and alternative documentation programs tailored to self-employed professionals.</p>
                             </div>
                             <div className="bg-white/5 rounded-2xl p-6 border border-white/10">
                                 <Building className="w-10 h-10 text-gold-400 mb-4" />
@@ -67,7 +68,7 @@ export default function NanaimoPage() {
                             <div className="bg-white/5 rounded-2xl p-6 border border-white/10">
                                 <Users className="w-10 h-10 text-gold-400 mb-4" />
                                 <h3 className="text-xl font-bold mb-3">Newcomer Mortgages</h3>
-                                <p className="text-gray-400">Whether you are relocating from elsewhere in Canada or arriving from abroad, we guide newcomers through Nanaimo's mortgage landscape with patience and clarity, connecting you with lenders who welcome new Canadians.</p>
+                                <p className="text-gray-400">Whether you are relocating from elsewhere in Canada or arriving from abroad, we guide newcomers through Nanaimo&apos;s mortgage landscape with patience and clarity, connecting you with lenders who welcome new Canadians.</p>
                             </div>
                         </div>
                     </div>
@@ -78,7 +79,7 @@ export default function NanaimoPage() {
                     <div className="max-w-4xl mx-auto">
                         <h2 className="text-3xl font-bold mb-6 text-center">Why Choose a Local Nanaimo Mortgage Broker?</h2>
                         <p className="text-gray-300 text-lg text-center mb-8">
-                            Vancouver Island's real estate market operates differently from the mainland. Property valuations, strata rules, water access considerations, and local zoning all play a role. We understand Nanaimo's nuances and leverage relationships with Vancouver Island credit unions and lenders who know this market inside and out. Our single priority is getting you the best rate and terms — not meeting a bank's sales targets.
+                            Vancouver Island&apos;s real estate market operates differently from the mainland. Property valuations, strata rules, water access considerations, and local zoning all play a role. We understand Nanaimo&apos;s nuances and leverage relationships with Vancouver Island credit unions and lenders who know this market inside and out. Our single priority is getting you the best rate and terms — not meeting a bank&apos;s sales targets.
                         </p>
                     </div>
                 </section>
@@ -90,7 +91,7 @@ export default function NanaimoPage() {
                         <div className="space-y-6">
                             <div className="bg-white/5 rounded-xl p-6 border border-white/10">
                                 <h3 className="font-bold text-lg mb-2">What is the minimum down payment for a home in Nanaimo?</h3>
-                                <p className="text-gray-400">For properties under $500,000, the minimum down payment is 5%. For homes between $500,000 and $999,999, it is 5% on the first $500,000 and 10% on the portion above that. Homes over $1 million require a minimum 20% down payment.</p>
+                                <p className="text-gray-400">For properties up to $500,000, the minimum down payment is 5%. For homes between $500,000 and $1,499,999, it is 5% on the first $500,000 and 10% on the portion above that. Homes of $1.5 million or more require a minimum 20% down payment.</p>
                             </div>
                             <div className="bg-white/5 rounded-xl p-6 border border-white/10">
                                 <h3 className="font-bold text-lg mb-2">Can I get a mortgage with a mainland-based lender for a Nanaimo property?</h3>

@@ -46,15 +46,41 @@ const faqs = [
   }
 ];
 
+// Canadian fixed-rate convention: semi-annual compounding, monthly rate = (1 + r/2)^(1/6) - 1
+function monthlyRate(annualRate: number): number {
+  return Math.pow(1 + annualRate / 100 / 2, 1 / 6) - 1;
+}
+
 function calcMonthly(principal: number, annualRate: number, amortYears: number): number {
-  if (annualRate === 0) return principal / (amortYears * 12);
-  const r = annualRate / 100 / 12;
   const n = amortYears * 12;
+  if (principal <= 0 || n <= 0) return 0;
+  const r = monthlyRate(annualRate);
+  if (r === 0) return principal / n;
   return principal * (r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
 }
 
+// Interest paid over the next `months` months on an amortizing loan
+function interestOverMonths(principal: number, annualRate: number, payment: number, months: number): number {
+  const r = monthlyRate(annualRate);
+  let balance = principal;
+  let interest = 0;
+  for (let i = 0; i < months && balance > 0; i++) {
+    const it = balance * r;
+    interest += it;
+    balance = Math.max(0, balance + it - payment);
+  }
+  return interest;
+}
+
+const HORIZON_MONTHS = 60;
+// Typical maximum combined LTVs: refinance & HELOC 80% (legal limit for uninsured lending; HELOC revolving
+// portion max 65% under OSFI B-20); private/equity lenders often up to ~85%.
+const MAX_LTV_INSTITUTIONAL = 80;
+const MAX_LTV_PRIVATE = 85;
+const MAX_HELOC_LTV = 65;
+
 export default function RefinanceVsHelocVsSecondPage() {
-  const { best5YrFixed, bestHeloc, bestPrivateSecond } = useLiveRates();
+  const { data: liveRates, bestHeloc, bestPrivateSecond } = useLiveRates();
   const [showPdfModal, setShowPdfModal] = useState(false);
   const [homeValue, setHomeValue] = useState(900000);
   const [firstBalance, setFirstBalance] = useState(500000);
@@ -67,77 +93,93 @@ export default function RefinanceVsHelocVsSecondPage() {
 
   const equity = homeValue - firstBalance;
   const ltv = (firstBalance / homeValue) * 100;
+  // Combined LTV after borrowing the cash — this is what lenders cap, not today's LTV
+  const newLtv = ((firstBalance + cashNeeded) / homeValue) * 100;
 
   const results = useMemo(() => {
     const currentMonthly = calcMonthly(firstBalance, firstRate, firstAmort);
-    const remainingMonths = firstAmort * 12;
+    const horizon = Math.min(HORIZON_MONTHS, firstAmort * 12);
+    // Interest on the existing first mortgage if it stays in place (HELOC / second-mortgage options)
+    const firstInterest5yr = interestOverMonths(firstBalance, firstRate, currentMonthly, horizon);
 
-    // Option 1: Refinance
+    // Option 1: Refinance (uninsured — insured refinancing isn't available, so use conventional pricing)
     const refiTotal = firstBalance + cashNeeded;
+    const liveConv5 = liveRates?.benchmarks?.fixed_5yr?.conventional?.lowest_rate;
+    const liveAlt5 = liveRates?.raw_benchmarks?.alt_5_year_fixed?.lowest_rate;
     let refiRate: number;
-    if (firstType === "a-lender") refiRate = best5YrFixed || 4.39; // live market benchmark
-    else if (firstType === "b-lender") refiRate = 6.04;
+    if (firstType === "a-lender") refiRate = typeof liveConv5 === "number" ? liveConv5 : 4.39; // live conventional 5-yr benchmark
+    else if (firstType === "b-lender") refiRate = typeof liveAlt5 === "number" ? liveAlt5 : 6.04; // live alternative 5-yr benchmark
     else refiRate = 6.95;
 
-    const refiFee = firstType === "b-lender" ? refiTotal * 0.01 : 0;
+    // Lender fees: B-lender ~1%; private/equity lenders typically 1–3% (2% used; broker fees extra)
+    const refiFee = firstType === "b-lender" ? refiTotal * 0.01 : firstType === "equity" ? refiTotal * 0.02 : 0;
     // Penalty = 3 months' INTEREST (not full P+I payment). Interest = balance * rate / 12.
     const monthlyInterest = firstBalance * (firstRate / 100) / 12;
     const penalty = monthlyInterest * 3;
     const legalAppraisal = 2000;
     const refiMonthly = calcMonthly(refiTotal, refiRate, firstAmort);
-    const refiTotalInterest = refiMonthly * remainingMonths - refiTotal;
-    const refiTotalCost5yr = (refiMonthly * 60) + refiFee + penalty + legalAppraisal;
+    const refiInterest5yr = interestOverMonths(refiTotal, refiRate, refiMonthly, horizon);
+    // 5-year cost = interest on ALL mortgage debt + fees/penalty (principal repaid is not a cost)
+    const refiTotalCost5yr = refiInterest5yr + refiFee + penalty + legalAppraisal;
     const refiPaymentChange = refiMonthly - currentMonthly;
+    const refiFeasible = newLtv <= (firstType === "equity" ? MAX_LTV_PRIVATE : MAX_LTV_INSTITUTIONAL);
 
-    // Option 2: HELOC
+    // Option 2: HELOC (interest-only, variable)
     const helocRate = firstType === "a-lender" ? (bestHeloc || 4.95) : 8.49;
     const helocMonthly = cashNeeded * (helocRate / 100) / 12; // interest-only
-    const helocFee = cashNeeded * 0.015;
-    const helocSetupFee = 500;
-    const helocTotalCost5yr = (helocMonthly * 60) + helocFee + helocSetupFee;
+    // Most A-lender HELOCs have no setup fee; alternative-lender HELOCs often charge ~1–2%
+    const helocFee = firstType === "a-lender" ? 0 : cashNeeded * 0.015;
+    const helocSetupFee = 500; // legal / registration estimate
+    const helocTotalCost5yr = firstInterest5yr + (helocMonthly * HORIZON_MONTHS) + helocFee + helocSetupFee;
     const combinedMonthly = currentMonthly + helocMonthly;
+    const helocFeasible = newLtv <= MAX_LTV_INSTITUTIONAL && (cashNeeded / homeValue) * 100 <= MAX_HELOC_LTV;
 
-    // Option 3: Second Mortgage
+    // Option 3: Second Mortgage (private/equity lender — typically interest-only)
     const secondRate = bestPrivateSecond || 7.99; // live verified private 2nd benchmark
-    const secondAmort = 15;
-    const secondMonthly = calcMonthly(cashNeeded, secondRate, secondAmort);
+    const secondMonthly = cashNeeded * (secondRate / 100) / 12; // interest-only
     const secondFee = cashNeeded * 0.02;
     const secondLegal = 1500;
-    const secondTotalCost5yr = (secondMonthly * 60) + secondFee + secondLegal;
+    const secondTotalCost5yr = firstInterest5yr + (secondMonthly * HORIZON_MONTHS) + secondFee + secondLegal;
     const combinedSecondMonthly = currentMonthly + secondMonthly;
+    const secondFeasible = newLtv <= MAX_LTV_PRIVATE;
 
-    // Find cheapest
+    // Find cheapest among options that fit typical LTV limits
     const options = [
-      { name: "Refinance", cost: refiTotalCost5yr },
-      { name: "HELOC", cost: helocTotalCost5yr },
-      { name: "Second Mortgage", cost: secondTotalCost5yr },
-    ];
+      { name: "Refinance", cost: refiTotalCost5yr, ok: refiFeasible },
+      { name: "HELOC", cost: helocTotalCost5yr, ok: helocFeasible },
+      { name: "Second Mortgage", cost: secondTotalCost5yr, ok: secondFeasible },
+    ].filter(o => o.ok);
     options.sort((a, b) => a.cost - b.cost);
-    const cheapest = options[0].name;
+    const cheapest = options.length ? options[0].name : "None";
 
     return {
       currentMonthly,
       // Refi
-      refiRate, refiMonthly, refiTotalInterest, refiFee, penalty, legalAppraisal: 2000,
-      refiTotalCost5yr, refiPaymentChange,
+      refiRate, refiMonthly, refiFee, penalty, legalAppraisal,
+      refiTotalCost5yr, refiPaymentChange, refiFeasible,
       // HELOC
-      helocRate, helocMonthly, helocFee, helocSetupFee, helocTotalCost5yr, combinedMonthly,
+      helocRate, helocMonthly, helocFee, helocSetupFee, helocTotalCost5yr, combinedMonthly, helocFeasible,
       // Second
-      secondRate, secondMonthly, secondFee, secondLegal, secondTotalCost5yr, combinedSecondMonthly,
+      secondRate, secondMonthly, secondFee, secondLegal, secondTotalCost5yr, combinedSecondMonthly, secondFeasible,
       cheapest,
     };
-  }, [homeValue, firstBalance, firstRate, firstAmort, cashNeeded, firstType, best5YrFixed, bestHeloc, bestPrivateSecond]);
+  }, [homeValue, firstBalance, firstRate, firstAmort, cashNeeded, firstType, newLtv, liveRates, bestHeloc, bestPrivateSecond]);
 
   const recommendation = useMemo(() => {
+    const ltvText = `${newLtv.toFixed(1)}%`;
+    if (newLtv > MAX_LTV_PRIVATE) return `At ${ltvText} combined LTV, most lenders won't lend — even private lenders usually stop around 85%. Consider borrowing less or speak with a broker about options.`;
+    const aboveInstitutional = newLtv > MAX_LTV_INSTITUTIONAL;
+    const privateFallback = `Second Mortgage — at ${ltvText} combined LTV you're above the 80% limit for refinances and HELOCs; some private lenders go to ~85% combined LTV at higher rates and fees.`;
     if (purpose === "debt-consolidation") {
-      if (ltv < 80 && firstType === "a-lender") return "Refinance — consolidating at a lower rate saves the most over time. The penalty is a one-time cost you'll recover.";
-      if (ltv < 80) return "Refinance — even with a B-lender rate, rolling everything into one payment simplifies your finances and the rate is lower than a HELOC or second mortgage.";
-      return "HELOC or Second Mortgage — since your LTV is above 80%, refinancing may not be possible. A HELOC offers flexibility; a second mortgage is faster.";
+      if (aboveInstitutional) return privateFallback;
+      if (firstType === "a-lender") return "Refinance — consolidating at a lower rate saves the most over time. The penalty is a one-time cost you'll recover.";
+      return "Refinance — even with a B-lender rate, rolling everything into one payment simplifies your finances and the rate is lower than a HELOC or second mortgage.";
     }
+    if (!results.helocFeasible) return aboveInstitutional ? privateFallback : "Refinance or Second Mortgage — the amount exceeds the 65% LTV limit for a HELOC's revolving portion.";
     if (purpose === "investment") return "HELOC — interest-only payments keep monthly costs low while you deploy capital. The flexibility to draw and repay is ideal for investment cycles.";
     if (purpose === "renovation") return "HELOC — draw funds as needed during renovation rather than taking everything upfront. Interest-only payments during the project keep costs manageable.";
     return "HELOC or Second Mortgage — for purchasing another property, keeping your first mortgage intact avoids penalties and preserves your current rate.";
-  }, [purpose, ltv, firstType]);
+  }, [purpose, newLtv, firstType, results.helocFeasible]);
 
   return (
     <>
@@ -226,7 +268,7 @@ export default function RefinanceVsHelocVsSecondPage() {
                         rows: [
                           { label: "New Payment", value: "$" + Math.round(results.refiMonthly).toLocaleString("en-CA") },
                           { label: "Payment Change", value: "$" + Math.round(results.refiPaymentChange).toLocaleString("en-CA") },
-                          { label: "Total Cost (5yr)", value: "$" + Math.round(results.refiTotalCost5yr).toLocaleString("en-CA") },
+                          { label: "5-yr Interest + Fees", value: "$" + Math.round(results.refiTotalCost5yr).toLocaleString("en-CA") },
                         ]
                       },
                       {
@@ -235,6 +277,7 @@ export default function RefinanceVsHelocVsSecondPage() {
                           { label: "Amount", value: "$" + Math.round(cashNeeded).toLocaleString("en-CA") },
                           { label: "Rate", value: results.helocRate + "%" },
                           { label: "Monthly Interest Only", value: "$" + Math.round(results.helocMonthly).toLocaleString("en-CA") },
+                          { label: "5-yr Interest + Fees (incl. 1st mortgage)", value: "$" + Math.round(results.helocTotalCost5yr).toLocaleString("en-CA") },
                         ]
                       },
                       {
@@ -242,13 +285,15 @@ export default function RefinanceVsHelocVsSecondPage() {
                         rows: [
                           { label: "Amount", value: "$" + Math.round(cashNeeded).toLocaleString("en-CA") },
                           { label: "Rate", value: results.secondRate + "%" },
-                          { label: "Monthly Payment", value: "$" + Math.round(results.secondMonthly).toLocaleString("en-CA") },
+                          { label: "Monthly Payment (interest-only)", value: "$" + Math.round(results.secondMonthly).toLocaleString("en-CA") },
+                          { label: "5-yr Interest + Fees (incl. 1st mortgage)", value: "$" + Math.round(results.secondTotalCost5yr).toLocaleString("en-CA") },
                         ]
                       },
                       {
                         title: "Recommendation",
                         rows: [
-                          { label: "Lowest Cost Option", value: results.cheapest, highlight: true },
+                          { label: "Lowest Cost Option (within typical LTV limits)", value: results.cheapest, highlight: true },
+                          { label: "Combined LTV After", value: newLtv.toFixed(1) + "%" },
                         ]
                       }
                     ],
@@ -265,7 +310,7 @@ export default function RefinanceVsHelocVsSecondPage() {
                     <ValidatedInput label="Remaining Amortization (years)" value={firstAmort} onChange={setFirstAmort} validation={{ min: 1, max: 30 }} type="number" />
                     <ValidatedInput label="Cash Needed" value={cashNeeded} onChange={setCashNeeded} validation={{ min: 10000, max: 5000000 }} type="currency" />
 
-                    <div className="flex gap-4 text-sm">
+                    <div className="flex gap-2 sm:gap-4 text-sm">
                       <div className="flex-1 bg-white/5 rounded-lg p-3">
                         <span className="text-gray-400 block text-xs">Available Equity</span>
                         <span className={`font-semibold ${equity > 0 ? "text-green-400" : "text-red-400"}`}>{formatCurrency(equity, 0)}</span>
@@ -273,6 +318,10 @@ export default function RefinanceVsHelocVsSecondPage() {
                       <div className="flex-1 bg-white/5 rounded-lg p-3">
                         <span className="text-gray-400 block text-xs">Current LTV</span>
                         <span className="font-semibold text-gray-200">{ltv.toFixed(1)}%</span>
+                      </div>
+                      <div className="flex-1 bg-white/5 rounded-lg p-3">
+                        <span className="text-gray-400 block text-xs">LTV After Cash</span>
+                        <span className={`font-semibold ${newLtv > MAX_LTV_INSTITUTIONAL ? "text-red-400" : "text-gray-200"}`}>{newLtv.toFixed(1)}%</span>
                       </div>
                     </div>
 
@@ -330,7 +379,8 @@ export default function RefinanceVsHelocVsSecondPage() {
                       <div className="flex justify-between"><span className="text-gray-400">Prepayment Penalty</span><span className="text-amber-400">~{formatCurrency(results.penalty, 0)}</span></div>
                       <div className="flex justify-between"><span className="text-gray-400">Lender Fee</span><span className="text-gray-300">{formatCurrency(results.refiFee, 0)}</span></div>
                       <div className="flex justify-between"><span className="text-gray-400">Legal + Appraisal</span><span className="text-gray-300">{formatCurrency(results.legalAppraisal, 0)}</span></div>
-                      <div className="border-t border-white/10 pt-2 flex justify-between font-bold"><span className="text-gray-300">Total Cost (5yr)</span><span className="text-gray-100">{formatCurrency(results.refiTotalCost5yr, 0)}</span></div>
+                      <div className="border-t border-white/10 pt-2 flex justify-between font-bold"><span className="text-gray-300">5-yr Interest + Fees</span><span className="text-gray-100">{formatCurrency(results.refiTotalCost5yr, 0)}</span></div>
+                      {!results.refiFeasible && <p className="text-xs text-red-400">Exceeds the typical {firstType === "equity" ? MAX_LTV_PRIVATE : MAX_LTV_INSTITUTIONAL}% maximum LTV for a refinance.</p>}
                     </div>
                   </div>
 
@@ -347,9 +397,10 @@ export default function RefinanceVsHelocVsSecondPage() {
                       <div className="flex justify-between"><span className="text-gray-400">HELOC Rate</span><span className="text-gray-200">{results.helocRate}%</span></div>
                       <div className="flex justify-between"><span className="text-gray-400">Interest-Only Payment</span><span className="text-gray-200">{formatCurrency(results.helocMonthly, 0)}/mo</span></div>
                       <div className="flex justify-between"><span className="text-gray-400">Combined Monthly</span><span className="text-gray-200">{formatCurrency(results.combinedMonthly, 0)}</span></div>
-                      <div className="flex justify-between"><span className="text-gray-400">Setup Fee</span><span className="text-gray-300">{formatCurrency(results.helocFee, 0)}</span></div>
+                      <div className="flex justify-between"><span className="text-gray-400">Setup Fee + Legal (est.)</span><span className="text-gray-300">{formatCurrency(results.helocFee + results.helocSetupFee, 0)}</span></div>
                       <div className="flex justify-between"><span className="text-gray-400">First Mortgage</span><span className="text-green-400">No change (no penalty)</span></div>
-                      <div className="border-t border-white/10 pt-2 flex justify-between font-bold"><span className="text-gray-300">Total Cost (5yr)</span><span className="text-gray-100">{formatCurrency(results.helocTotalCost5yr, 0)}</span></div>
+                      <div className="border-t border-white/10 pt-2 flex justify-between font-bold"><span className="text-gray-300">5-yr Interest + Fees*</span><span className="text-gray-100">{formatCurrency(results.helocTotalCost5yr, 0)}</span></div>
+                      {!results.helocFeasible && <p className="text-xs text-red-400">Exceeds typical HELOC limits (65% LTV revolving, 80% combined).</p>}
                     </div>
                   </div>
 
@@ -364,14 +415,17 @@ export default function RefinanceVsHelocVsSecondPage() {
                     </div>
                     <div className="space-y-2 text-sm">
                       <div className="flex justify-between"><span className="text-gray-400">2nd Mortgage Rate</span><span className="text-gray-200">{results.secondRate}%</span></div>
-                      <div className="flex justify-between"><span className="text-gray-400">Monthly Payment</span><span className="text-gray-200">{formatCurrency(results.secondMonthly, 0)}/mo</span></div>
+                      <div className="flex justify-between"><span className="text-gray-400">Interest-Only Payment</span><span className="text-gray-200">{formatCurrency(results.secondMonthly, 0)}/mo</span></div>
                       <div className="flex justify-between"><span className="text-gray-400">Combined Monthly</span><span className="text-gray-200">{formatCurrency(results.combinedSecondMonthly, 0)}</span></div>
-                      <div className="flex justify-between"><span className="text-gray-400">Lender Fee</span><span className="text-gray-300">{formatCurrency(results.secondFee, 0)}</span></div>
+                      <div className="flex justify-between"><span className="text-gray-400">Lender Fee + Legal</span><span className="text-gray-300">{formatCurrency(results.secondFee + results.secondLegal, 0)}</span></div>
                       <div className="flex justify-between"><span className="text-gray-400">First Mortgage</span><span className="text-green-400">No change (no penalty)</span></div>
-                      <div className="border-t border-white/10 pt-2 flex justify-between font-bold"><span className="text-gray-300">Total Cost (5yr)</span><span className="text-gray-100">{formatCurrency(results.secondTotalCost5yr, 0)}</span></div>
+                      <div className="border-t border-white/10 pt-2 flex justify-between font-bold"><span className="text-gray-300">5-yr Interest + Fees*</span><span className="text-gray-100">{formatCurrency(results.secondTotalCost5yr, 0)}</span></div>
+                      {!results.secondFeasible && <p className="text-xs text-red-400">Exceeds the ~85% combined LTV most private lenders allow.</p>}
                     </div>
                   </div>
                 </div>
+
+                <p className="text-xs text-gray-500">*HELOC and second-mortgage totals include interest on your existing first mortgage, so all three options compare the same total debt. Principal repaid is not counted as a cost.</p>
 
                 {/* Recommendation */}
                 <div className="bg-gold-500/10 backdrop-blur-sm rounded-2xl p-5 border border-gold-500/30">
@@ -389,7 +443,7 @@ export default function RefinanceVsHelocVsSecondPage() {
                     Keep in Mind
                   </h4>
                   <div className="space-y-2 text-sm text-gray-400">
-                    <p>• <strong className="text-gray-300">Refinance</strong> resets your amortization to the full term — you&apos;ll pay more interest over the life of the loan even if monthly payments are lower.</p>
+                    <p>• <strong className="text-gray-300">Refinance</strong> can reset your amortization (this estimate keeps your remaining amortization) — stretching it lowers payments but adds interest over the life of the loan.</p>
                     <p>• <strong className="text-gray-300">HELOC</strong> is flexible (draw and repay as needed) but rates are usually variable and can increase.</p>
                     <p>• <strong className="text-gray-300">Second mortgage</strong> is the most expensive per dollar borrowed but doesn&apos;t touch your first mortgage or trigger penalties.</p>
                   </div>
@@ -419,10 +473,11 @@ export default function RefinanceVsHelocVsSecondPage() {
                   <h3 className="text-lg font-semibold text-blue-300 mb-3">Understanding These Estimates</h3>
                   <div className="space-y-2 text-sm text-blue-200">
                     <p>• Refinance rates shown are blended estimates based on current market conditions for each lender type.</p>
-                    <p>• HELOC rates reflect Home Trust Equityline ranges and typical prime+ spreads.</p>
-                    <p>• Second mortgage rates based on equity lender data (Antrim, First Circle, Secure Capital, PHL Capital).</p>
+                    <p>• A-lender refinance uses the live conventional 5-year benchmark (insured refinancing isn&apos;t available); A-lender HELOC uses the live HELOC benchmark. B-lender/private HELOC rate (8.49%) is illustrative.</p>
+                    <p>• Second mortgage rate is the live private-second benchmark, modelled as interest-only. Private seconds usually renew yearly with renewal fees, and broker fees may apply — not included.</p>
                     <p>• Prepayment penalty estimate uses 3 months&apos; interest — actual penalty could be higher with IRD calculation.</p>
-                    <p>• Total cost over 5 years includes fees but not property tax or insurance changes.</p>
+                    <p>• 5-year cost = interest on all mortgage debt plus fees and penalty, assuming rates stay constant (HELOCs are variable). Excludes property tax and insurance.</p>
+                    <p>• Limits used: refinance and HELOC up to 80% combined LTV (HELOC revolving portion up to 65%); private lenders up to ~85%.</p>
                   </div>
                 </div>
               </div>

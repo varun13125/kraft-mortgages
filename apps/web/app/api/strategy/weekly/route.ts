@@ -1,23 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 import admin from 'firebase-admin';
-import { isAdmin, db } from '@/lib/db/firestore';
+import { db } from '@/lib/db/firestore';
 import { llm } from '@/lib/ai/llm';
+import { requireAdmin } from '@/lib/auth';
 
-async function verifyAuth(request: NextRequest) {
-  const authHeader = request.headers.get('authorization');
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    throw new Error('Missing or invalid authorization header');
-  }
+export const dynamic = 'force-dynamic';
 
-  const token = authHeader.replace('Bearer ', '');
-  const decodedToken = await admin.auth().verifyIdToken(token);
-  
-  const userIsAdmin = await isAdmin(decodedToken.uid);
-  if (!userIsAdmin) {
-    throw new Error('Admin access required');
-  }
-
-  return decodedToken;
+// (Previously used admin.auth() directly, which throws "default Firebase app does
+// not exist" unless another module had initialised Firebase in the same lambda.)
+async function verifyAuth(request: NextRequest): Promise<NextResponse | null> {
+  const adminCheck = await requireAdmin(request);
+  return adminCheck.ok ? null : NextResponse.json({ error: adminCheck.error }, { status: adminCheck.status });
 }
 
 async function getSearchConsoleData(): Promise<any> {
@@ -31,21 +24,11 @@ async function getSearchConsoleData(): Promise<any> {
   }
 
   try {
-    // This would implement GSC API calls
-    // For now, return mock data structure
-    return {
-      available: true,
-      currentWeek: [
-        { query: 'mortgage rates canada', clicks: 45, impressions: 1200, position: 8.5 },
-        { query: 'first time home buyer bc', clicks: 32, impressions: 890, position: 6.2 },
-        { query: 'mortgage broker surrey', clicks: 28, impressions: 520, position: 4.1 }
-      ],
-      previousWeek: [
-        { query: 'mortgage rates canada', clicks: 38, impressions: 1100, position: 9.2 },
-        { query: 'first time home buyer bc', clicks: 29, impressions: 820, position: 6.8 },
-        { query: 'mortgage broker surrey', clicks: 31, impressions: 580, position: 3.9 }
-      ]
-    };
+    // NOT IMPLEMENTED: the Search Console API call was never written. This used to
+    // return hard-coded sample queries flagged `available: true`, so the weekly
+    // "strategy" was generated from fabricated numbers. Report honestly instead.
+    void siteUrl;
+    return { available: false, reason: 'GSC API integration not implemented yet (credentials present)' };
   } catch (error) {
     console.error('GSC data fetch failed:', error);
     return { available: false, reason: 'GSC API error' };
@@ -133,7 +116,8 @@ Return JSON format:
 export async function POST(request: NextRequest) {
   try {
     // Verify authentication and admin status
-    await verifyAuth(request);
+    const denied = await verifyAuth(request);
+    if (denied) return denied;
 
     console.log('Starting weekly strategy generation...');
 
@@ -174,15 +158,6 @@ export async function POST(request: NextRequest) {
 
   } catch (error) {
     console.error('Weekly strategy error:', error);
-    
-    if (error instanceof Error) {
-      if (error.message.includes('authorization') || error.message.includes('Admin')) {
-        return NextResponse.json(
-          { error: error.message },
-          { status: 401 }
-        );
-      }
-    }
 
     return NextResponse.json(
       { error: 'Internal server error' },
@@ -194,7 +169,8 @@ export async function POST(request: NextRequest) {
 // Get latest strategy
 export async function GET(request: NextRequest) {
   try {
-    await verifyAuth(request);
+    const denied = await verifyAuth(request);
+    if (denied) return denied;
 
     const latestStrategy = await (await db.collection('strategy'))
       .orderBy('createdAt', 'desc')
@@ -214,20 +190,11 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({
       available: true,
       ...data,
-      createdAt: data.createdAt.toDate()
+      createdAt: data.createdAt?.toDate ? data.createdAt.toDate() : data.createdAt
     });
 
   } catch (error) {
     console.error('Get strategy error:', error);
-    
-    if (error instanceof Error) {
-      if (error.message.includes('authorization') || error.message.includes('Admin')) {
-        return NextResponse.json(
-          { error: error.message },
-          { status: 401 }
-        );
-      }
-    }
 
     return NextResponse.json(
       { error: 'Internal server error' },

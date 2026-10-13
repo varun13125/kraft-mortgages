@@ -32,8 +32,10 @@
 - Create custom error classes for specific error types
 - Provide meaningful error messages
 
-### Build/Lint/Test Commands
-- Build: `npm run build`
-- Lint: `npm run lint`
-- Test: `npm run test`
-- Run a single test: `npm run test -- path/to/test/file`
+### Build/Lint/Test Commands (pnpm workspace; run from repo root)
+- Install: `pnpm install`
+- Dev server: `pnpm dev` (apps/web on http://localhost:3000)
+- Typecheck: `pnpm typecheck` (tsc --noEmit for apps/web)
+- Lint: `pnpm lint` (next lint for apps/web)
+- Build: `pnpm build` (builds mli-portal, then apps/web, then copies the MLI export)
+- Test: no test runner is configured yet. A Vitest + Playwright setup is proposed in DEVLOG/audit-2026-10/platform-build-deps.md

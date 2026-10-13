@@ -114,7 +114,7 @@ export const SimpleVoiceControls: React.FC<SimpleVoiceControlsProps> = ({
       
       {transcript && (
         <div className="flex-1 text-xs text-gray-600 italic">
-          "{transcript}"
+          &quot;{transcript}&quot;
         </div>
       )}
       

@@ -7,7 +7,11 @@ import { TrendingUp, ShieldCheck, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 
 export const RatesTicker: React.FC = () => {
-  const { data, best5YrFixed, best3YrFixed, best5YrVariable, bestHeloc, bestPrivateSecond, primeRate } = useLiveRates();
+  const { data, loading, best5YrFixed, best3YrFixed, best5YrVariable, bestHeloc, bestPrivateSecond, primeRate } = useLiveRates();
+  // Only claim "Updated Today" when the API says the feed synced today; the hook's
+  // hardcoded fallback values must not be presented as live.
+  const isLive = Boolean(data?.is_today);
+  const freshnessLabel = data?.last_updated_human ?? (loading ? 'Loading rates' : 'Indicative rates');
 
   const tickerItems = [
     {
@@ -22,7 +26,7 @@ export const RatesTicker: React.FC = () => {
       sub: 'Fixed',
     },
     {
-      label: '5-Yr Variable ARM',
+      label: '5-Yr Variable',
       rate: `From ${best5YrVariable.toFixed(2)}%`,
       sub: data?.benchmarks?.variable_5yr?.insured?.lowest_spread || 'Prime - 1.01%',
       highlight: true,
@@ -38,9 +42,10 @@ export const RatesTicker: React.FC = () => {
       sub: 'Fast Equity',
     },
     {
-      label: 'BoC Prime Benchmark',
+      // Prime is set by the banks (not the Bank of Canada, which sets the policy rate).
+      label: 'Prime Rate',
       rate: `${primeRate.toFixed(2)}%`,
-      sub: 'Bank of Canada',
+      sub: 'Bank prime',
       prime: true,
     },
   ];
@@ -56,8 +61,8 @@ export const RatesTicker: React.FC = () => {
           </span>
           <span className="font-semibold uppercase tracking-wider text-emerald-400 flex items-center gap-1">
             <ShieldCheck className="w-3.5 h-3.5" />
-            <span className="hidden sm:inline">Updated Today</span>
-            <span className="sm:hidden">Live</span>
+            <span className="hidden sm:inline">{freshnessLabel}</span>
+            <span className="sm:hidden">{isLive ? 'Live' : 'Rates'}</span>
           </span>
           <span className="text-slate-500 hidden md:inline">•</span>
           <span className="text-slate-400 hidden md:inline">30+ Lenders</span>

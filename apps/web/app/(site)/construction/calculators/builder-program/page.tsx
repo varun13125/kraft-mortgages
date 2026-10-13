@@ -25,7 +25,7 @@ const builderPrograms: BuilderProgram[] = [
         minDownPayment: 25,
         interestRate: 6.75,
         maxLoanAmount: 2000000,
-        features: ["Fast approval (5-7 days)", "Flexible draw schedule", "No builder insurance required"],
+        features: ["Fast approval (5-7 days)", "Flexible draw schedule", "Streamlined documentation"],
         requirements: ["2+ years experience", "3+ completed projects", "Strong credit (680+)"]
     },
     {
@@ -286,8 +286,12 @@ export default function BuilderProgramCalculator() {
                             })}
                         </div>
 
-                        {/* CTA */}
-                        <div className="mt-12 flex gap-4 justify-center">
+                        <p className="mt-8 text-xs text-gray-500 text-center max-w-3xl mx-auto">
+                            Illustrative program profiles only — lender names, rates and limits are examples, not current offers.
+                            Interest assumes a 50% average advance. New homes built for sale require third-party home warranty
+                            coverage and builder licensing (BC Housing, Tarion in Ontario, Alberta New Home Buyer Protection).
+                        </p>
+                        <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
                             <Link
                                 href="/contact"
                                 className="bg-gold-500 text-black font-semibold py-4 px-8 rounded-xl hover:bg-gold-400 transition-colors"

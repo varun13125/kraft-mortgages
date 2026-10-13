@@ -1,4 +1,5 @@
-"use client";
+// Server Component: this page has no client-side interactivity, so it no longer
+// ships as a client bundle ("use client" removed in the 2026-10 audit).
 import Navigation from "@/components/Navigation";
 import Link from "next/link";
 import { MapPin, Phone, Building, TrendingUp, Home, Sun } from "lucide-react";
@@ -16,7 +17,7 @@ export default function KelownaPage() {
                             Kelowna, BC
                         </div>
                         <h1 className="text-4xl md:text-6xl font-bold mb-6 text-white">
-                            Kelowna's Trusted Mortgage Experts
+                            Kelowna&apos;s Trusted Mortgage Experts
                         </h1>
                         <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-8">
                             From the beautiful shores of Okanagan Lake to the thriving downtown core, Kraft Mortgages is proud to serve the Kelowna community with tailored mortgage solutions.
@@ -38,12 +39,12 @@ export default function KelownaPage() {
                             <div className="bg-white/5 rounded-2xl p-6 border border-white/10">
                                 <Home className="w-10 h-10 text-gold-400 mb-4" />
                                 <h3 className="text-xl font-bold mb-3">Residential Mortgages</h3>
-                                <p className="text-gray-400">Whether you're buying your first home near the Mission or a family home in Glenmore, we provide access to the best rates and terms.</p>
+                                <p className="text-gray-400">Whether you&apos;re buying your first home near the Mission or a family home in Glenmore, we provide access to the best rates and terms.</p>
                             </div>
                             <div className="bg-white/5 rounded-2xl p-6 border border-white/10">
                                 <TrendingUp className="w-10 h-10 text-gold-400 mb-4" />
                                 <h3 className="text-xl font-bold mb-3">Self-Employed Mortgages</h3>
-                                <p className="text-gray-400">Kelowna's economy is driven by entrepreneurs. We specialize in crafting applications that reflect the true income of self-employed individuals.</p>
+                                <p className="text-gray-400">Kelowna&apos;s economy is driven by entrepreneurs. We specialize in crafting applications that reflect the true income of self-employed individuals.</p>
                             </div>
                             <div className="bg-white/5 rounded-2xl p-6 border border-white/10">
                                 <Building className="w-10 h-10 text-gold-400 mb-4" />

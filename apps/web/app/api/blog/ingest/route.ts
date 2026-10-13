@@ -1,27 +1,29 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { savePost } from '@/lib/db/firestore';
+import { safeEqual } from '@/lib/auth';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
-// Pillar pages for internal linking
+// Pillar pages for internal linking. Every url must be an existing route
+// (keep in sync with DEAD_PILLAR_REDIRECTS in lib/utils/blog-content.ts).
 const PILLAR_PAGES: { keywords: string[]; title: string; url: string }[] = [
-  { keywords: ['private mortgage', 'private lender', 'private lending', 'alternative lender', 'b-lender', 'b lender'], title: 'Private Mortgages', url: '/private-mortgages' },
+  { keywords: ['private mortgage', 'private lender', 'private lending', 'alternative lender', 'b-lender', 'b lender'], title: 'Private Mortgages', url: '/private-lending' },
   { keywords: ['commercial', 'office building', 'retail space', 'industrial', 'multi-unit', 'commercial mortgage'], title: 'Commercial Financing', url: '/commercial' },
-  { keywords: ['construction', 'builder', 'draw mortgage', 'build your', 'construction loan', 'construction financing'], title: 'Construction Financing', url: '/construction-financing' },
-  { keywords: ['self-employed', 'self employed', 'business owner', 'stated income'], title: 'Self-Employed Mortgages', url: '/self-employed-mortgages' },
-  { keywords: ['refinance', 'refinancing', 'equity take out', 'cash out', 'debt consolidation'], title: 'Mortgage Refinancing', url: '/refinancing' },
-  { keywords: ['investment property', 'rental property', 'investor', 'rental income', 'income property'], title: 'Investment Property Mortgages', url: '/investment-properties' },
-  { keywords: ['first-time', 'first time buyer', 'first home', 'first home buyer'], title: 'First-Time Home Buyer Programs', url: '/first-time-home-buyers' },
-  { keywords: ['mlb select', 'ml i select', 'cmhc insured', 'multi-family insurance'], title: 'MLI Select Program', url: '/mli-select' },
+  { keywords: ['construction', 'builder', 'draw mortgage', 'build your', 'construction loan', 'construction financing'], title: 'Construction Financing', url: '/construction' },
+  { keywords: ['self-employed', 'self employed', 'business owner', 'stated income'], title: 'Self-Employed Mortgages', url: '/calculators/self-employed' },
+  { keywords: ['refinance', 'refinancing', 'equity take out', 'cash out', 'debt consolidation'], title: 'Mortgage Refinancing', url: '/equity-lending' },
+  { keywords: ['investment property', 'rental property', 'investor', 'rental income', 'income property'], title: 'Investment Property Mortgages', url: '/calculators/investment' },
+  { keywords: ['first-time', 'first time buyer', 'first home', 'first home buyer'], title: 'First-Time Home Buyer Programs', url: '/calculators/first-time-home-buyer' },
+  { keywords: ['mli select', 'mli-select', 'cmhc insured', 'multi-family insurance'], title: 'MLI Select Program', url: '/mli-select' },
 ];
 
-const SITE_URL = 'https://kraftmortgages.ca';
+const SITE_URL = 'https://www.kraftmortgages.ca';
 
 // Count existing internal links in content
 function countInternalLinks(content: string): number {
   // Match markdown links [text](/path) or [text](https://kraftmortgages.ca/path)
-  const internalLinkPattern = /\[([^\]]+)\]\(\/?[a-z][^)]*\)|\[([^\]]+)\]\(https?:\/\/kraftmortgages\.ca[^)]*\)/gi;
+  const internalLinkPattern = /\[([^\]]+)\]\(\/?[a-z][^)]*\)|\[([^\]]+)\]\(https?:\/\/(?:www\.)?kraftmortgages\.ca[^)]*\)/gi;
   return (content.match(internalLinkPattern) || []).length;
 }
 
@@ -162,14 +164,20 @@ export async function POST(req: NextRequest) {
     }
 
     const token = auth.startsWith('Bearer ') ? auth.replace('Bearer ', '') : '';
-    if (token !== required) {
+    if (!safeEqual(token, required)) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const body = await req.json();
+    const body = await req.json().catch(() => null);
+    if (!body || typeof body !== 'object') {
+      return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 });
+    }
     // Decode HTML entities from WordPress/Marblism content
-    const title: string = decodeHtmlEntities(body.title || '');
-    const slug: string = body.slug || slugify(title);
+    const title: string = decodeHtmlEntities(String(body.title || '')).slice(0, 300);
+    // The slug becomes the Firestore document ID: it must not contain '/' (would
+    // address a sub-collection) or be '.'/'..'. Unsafe slugs are normalised.
+    const rawSlug = typeof body.slug === 'string' ? body.slug.trim() : '';
+    const slug: string = rawSlug && /^[A-Za-z0-9][A-Za-z0-9_-]{0,199}$/.test(rawSlug) ? rawSlug : slugify(rawSlug || title);
     const markdown: string = decodeHtmlEntities(body.content || body.markdown || '');
     const html: string = decodeHtmlEntities(body.html || '');
 
@@ -180,7 +188,19 @@ export async function POST(req: NextRequest) {
       console.log(`[ingest] Auto-added ${linksAdded.length} internal links to "${title}": ${linksAdded.join(', ')}`);
     }
     const metaDescription: string = decodeHtmlEntities(body.excerpt || body.metaDescription || '');
-    const keywords: string[] = Array.isArray(body.tags) ? body.tags : (typeof body.tags === 'string' ? JSON.parse(body.tags || '[]') : []);
+    let keywords: string[] = [];
+    if (Array.isArray(body.tags)) {
+      keywords = body.tags;
+    } else if (typeof body.tags === 'string' && body.tags.trim()) {
+      try {
+        const parsedTags = JSON.parse(body.tags);
+        keywords = Array.isArray(parsedTags) ? parsedTags : [];
+      } catch {
+        // Accept comma-separated tags instead of failing the whole ingest
+        keywords = body.tags.split(',').map((t: string) => t.trim()).filter(Boolean);
+      }
+    }
+    keywords = keywords.map((k) => String(k).slice(0, 100)).slice(0, 50);
 
     // Auto-categorize based on content if no categories provided
     const categories: string[] = (Array.isArray(body.categories) && body.categories.length > 0)
@@ -188,7 +208,8 @@ export async function POST(req: NextRequest) {
       : (typeof body.categories === 'string' && body.categories.trim()
         ? [body.categories]
         : autoCategories(title, markdown));
-    const publishedAt = body.publishedAt ? new Date(body.publishedAt) : new Date();
+    const parsedDate = body.publishedAt ? new Date(body.publishedAt) : new Date();
+    const publishedAt = isNaN(parsedDate.getTime()) ? new Date() : parsedDate;
     const status: 'published' | 'draft' = body.status === 'draft' ? 'draft' : 'published';
 
     if (!slug || !title) {
@@ -214,7 +235,8 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ success: true, slug, autoLinks: linksAdded });
   } catch (e: any) {
-    return NextResponse.json({ error: e?.message || String(e) }, { status: 500 });
+    console.error('[blog/ingest] failed:', e?.message || e);
+    return NextResponse.json({ error: 'Ingest failed' }, { status: 500 });
   }
 }
 

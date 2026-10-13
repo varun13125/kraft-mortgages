@@ -1,5 +1,7 @@
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
+// Runs up to 10 LLM stages sequentially - the default function timeout is far too short.
+export const maxDuration = 300;
 
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyFirebaseToken } from '@/lib/auth';
@@ -15,14 +17,20 @@ export async function POST(request: NextRequest) {
     }
 
     const token = authHeader.split(' ')[1];
-    const decodedToken = await verifyFirebaseToken(token);
+    let decodedToken;
+    try {
+      decodedToken = await verifyFirebaseToken(token);
+    } catch {
+      return NextResponse.json({ error: 'Invalid authentication token' }, { status: 401 });
+    }
     const userIsAdmin = await isAdmin(decodedToken.uid);
     if (!userIsAdmin) {
       return NextResponse.json({ error: 'Admin required' }, { status: 403 });
     }
 
     // Get runId from body
-    const { runId } = await request.json();
+    const body = await request.json().catch(() => ({}));
+    const runId = typeof body?.runId === 'string' ? body.runId.slice(0, 128) : '';
     if (!runId) {
       return NextResponse.json({ error: 'runId required' }, { status: 400 });
     }
@@ -69,9 +77,8 @@ export async function POST(request: NextRequest) {
 
   } catch (error) {
     console.error('Orchestration error:', error);
-    return NextResponse.json({ 
-      error: 'Orchestration failed',
-      details: (error as Error).message 
+    return NextResponse.json({
+      error: 'Orchestration failed'
     }, { status: 500 });
   }
 }

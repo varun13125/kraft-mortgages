@@ -14,15 +14,18 @@ import { RelatedCalculators } from "@/components/calculators/RelatedCalculators"
 export default function ConstructionPro() {
   const [showPdfModal, setShowPdfModal] = useState(false);
   const [rate, setRate] = useState(7.25);
+  const [periodMonths, setPeriodMonths] = useState(12);
   const [draws, setDraws] = useState([
     { month: 1, amount: 200000 }, 
     { month: 4, amount: 250000 }, 
     { month: 7, amount: 300000 }
   ] as {month: number, amount: number}[]);
   
-  const result = useMemo(() => interestOnlyCost({ draws, annualRatePct: rate }), [draws, rate]);
-  
-  const totalProjectCost = draws.reduce((sum, draw) => sum + draw.amount, 0);
+  const result = useMemo(() => interestOnlyCost({ draws, annualRatePct: rate, periodMonths }), [draws, rate, periodMonths]);
+
+  // Negative draw amounts are ignored by the interest calc, so ignore them in the total too
+  const totalProjectCost = draws.reduce((sum, draw) => sum + Math.max(0, draw.amount || 0), 0);
+  const peakMonthlyInterest = result.timeline.length ? Math.max(...result.timeline.map(t => t.interest)) : 0;
 
   const addDraw = () => {
     const lastMonth = draws.at(-1)?.month || 1;
@@ -86,7 +89,7 @@ export default function ConstructionPro() {
         {/* Calculator Section */}
         <section className="pb-20 px-4">
           <div className="max-w-4xl mx-auto">
-            <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl shadow-2xl border border-gray-700/50 p-8">
+            <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl shadow-2xl border border-gray-700/50 p-5 sm:p-8">
               <h2 className="text-2xl font-semibold text-gray-100 mb-6">Construction Cost Analysis</h2>
               
               <div className="mb-6">
@@ -105,7 +108,24 @@ export default function ConstructionPro() {
                   onChange={(e) => setRate(Number(e.target.value))}
                   className="w-full max-w-xs px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent text-white placeholder-gray-400"
                   placeholder="7.25"
+                  min="0"
                 />
+              </div>
+
+              {/* Construction Period */}
+              <div className="mb-8">
+                <label className="block text-sm font-medium text-gray-200 mb-2">
+                  Construction Period (months until completion)
+                </label>
+                <input
+                  type="number"
+                  value={periodMonths}
+                  onChange={(e) => setPeriodMonths(Math.min(60, Math.max(1, Math.round(Number(e.target.value) || 1))))}
+                  className="w-full max-w-xs px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent text-white placeholder-gray-400"
+                  min="1"
+                  max="60"
+                />
+                <p className="text-xs text-gray-500 mt-1">Interest is charged on drawn funds until completion (never shorter than your last draw; max 60 months).</p>
               </div>
 
               {/* Draw Schedule */}
@@ -133,13 +153,13 @@ export default function ConstructionPro() {
                       key={index}
                       initial={{ opacity: 0, scale: 0.95 }}
                       animate={{ opacity: 1, scale: 1 }}
-                      className="grid grid-cols-3 gap-4 items-center bg-gray-700/30 rounded-lg p-3"
+                      className="grid grid-cols-3 gap-2 sm:gap-4 items-center bg-gray-700/30 rounded-lg p-2 sm:p-3"
                     >
                       <input
                         type="number"
                         value={draw.month}
                         onChange={(e) => updateDraw(index, 'month', Number(e.target.value))}
-                        className="px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent text-white placeholder-gray-400"
+                        className="w-full min-w-0 px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent text-white placeholder-gray-400"
                         placeholder="Month"
                         min="1"
                       />
@@ -147,7 +167,7 @@ export default function ConstructionPro() {
                         type="number"
                         value={draw.amount}
                         onChange={(e) => updateDraw(index, 'amount', Number(e.target.value))}
-                        className="px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent text-white placeholder-gray-400"
+                        className="w-full min-w-0 px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent text-white placeholder-gray-400"
                         placeholder="Amount"
                         min="0"
                       />
@@ -169,7 +189,7 @@ export default function ConstructionPro() {
                 
                 <div className="grid gap-4 md:grid-cols-3 mb-6">
                   <div className="bg-gray-800/50 rounded-lg p-4">
-                    <div className="text-sm text-gray-400 mb-1">Total Project Cost</div>
+                    <div className="text-sm text-gray-400 mb-1">Total Draws (Loan Advanced)</div>
                     <div className="text-2xl font-bold text-gold-400">
                       ${totalProjectCost.toLocaleString()}
                     </div>
@@ -181,13 +201,13 @@ export default function ConstructionPro() {
                     <div className="text-2xl font-bold text-red-400">
                       ${result.totalInterest.toLocaleString(undefined, {maximumFractionDigits: 0})}
                     </div>
-                    <div className="text-xs text-gray-500">Interest-only period</div>
+                    <div className="text-xs text-gray-500">Peak monthly interest: ${Math.round(peakMonthlyInterest).toLocaleString()}</div>
                   </div>
 
                   <div className="bg-gray-800/50 rounded-lg p-4">
                     <div className="text-sm text-gray-400 mb-1">Construction Period</div>
                     <div className="text-2xl font-bold text-gold-400">
-                      {result.constructionPeriodMonths || Math.max(...draws.map(d => d.month), 12)} months
+                      {result.constructionPeriodMonths} months
                     </div>
                     <div className="text-xs text-gray-500">Interest calculated over full period</div>
                   </div>
@@ -254,7 +274,8 @@ export default function ConstructionPro() {
                           title: "Your Inputs",
                           rows: [
                             { label: "Construction Rate", value: rate + "%" },
-                            { label: "Total Project Cost", value: "$" + Math.round(totalProjectCost).toLocaleString("en-CA") },
+                            { label: "Total Draws (Loan Advanced)", value: "$" + Math.round(totalProjectCost).toLocaleString("en-CA") },
+                            { label: "Construction Period", value: result.constructionPeriodMonths + " months" },
                             { label: "Number of Draws", value: String(draws.length) },
                           ]
                         },
@@ -281,11 +302,11 @@ export default function ConstructionPro() {
                   Payment Calculator
                 </Link>
                 <Link 
-                  href={"/private-lending/calculators/hard-money" as any}
+                  href={"/construction/calculators/progressive-draw" as any}
                   className="inline-flex items-center gap-2 px-4 py-2 bg-gold-500/20 text-gold-400 rounded-lg hover:bg-gold-500/30 transition-colors"
                 >
                   <Clock className="w-4 h-4" />
-                  Hard Money Calculator
+                  Progressive Draw Calculator
                 </Link>
                 <Link 
                   href={"/calculators" as any}

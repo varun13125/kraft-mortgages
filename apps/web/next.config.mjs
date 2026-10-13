@@ -1,6 +1,29 @@
 import createMDX from '@next/mdx';
 const withMDX = createMDX({ extension: /\.mdx?$/ });
 
+// Baseline security headers (applied to every route, incl. /api and public/).
+// Deliberately NOT included here:
+//  - Content-Security-Policy: a strict CSP would break the Thinkrr widget
+//    (cloudfront), SalesCloser iframe, GA/Segment, Vercel Analytics, Firebase,
+//    LeadConnector forms. Roll one out in Report-Only mode first — see
+//    DEVLOG/audit-2026-10/platform-build-deps.md for the proposed policy.
+//  - microphone in Permissions-Policy: voice features (Thinkrr, SalesCloser
+//    iframe, ChatWidget VoiceInput) need it, so it keeps the browser default
+//    (self + iframes that declare allow="microphone").
+//  - HSTS includeSubDomains/preload: Vercel already sends
+//    `max-age=63072000`; only widen it once every *.kraftmortgages.ca host
+//    (blog., varun., crm/webhook hosts) is confirmed HTTPS-only.
+const securityHeaders = [
+  { key: 'X-Content-Type-Options', value: 'nosniff' },
+  { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
+  { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+  {
+    key: 'Permissions-Policy',
+    value: 'camera=(), geolocation=(), payment=(), usb=(), browsing-topics=()',
+  },
+  { key: 'Strict-Transport-Security', value: 'max-age=63072000' },
+];
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   experimental: {
@@ -8,11 +31,16 @@ const nextConfig = {
     serverComponentsExternalPackages: ['farmhash-modern']
   },
   reactStrictMode: true,
+  poweredByHeader: false,
   pageExtensions: ['ts','tsx','mdx'],
   eslint: {
     // Warning: This allows production builds to successfully complete even if
-    // your project has ESLint errors.
+    // your project has ESLint errors. (~172 react/no-unescaped-entities errors
+    // remain as of 2026-10 — fix those before turning this off.)
     ignoreDuringBuilds: true,
+  },
+  async headers() {
+    return [{ source: '/:path*', headers: securityHeaders }];
   },
   // Redirect old URLs to new structure
   async redirects() {

@@ -70,6 +70,7 @@ export default function Navigation() {
                   }}
                   className="p-2 rounded-lg bg-gray-800/70 border border-gray-700 hover:bg-gray-700 transition-all group"
                   title="Go Back"
+                  aria-label="Go back"
                 >
                   <ArrowLeft className="w-5 h-5 text-gray-300 group-hover:text-gold-400 transition-colors" />
                 </motion.button>
@@ -114,8 +115,18 @@ export default function Navigation() {
               </Link>
 
               {/* Services Dropdown */}
-              <div className="relative">
+              <div
+                className="relative"
+                onBlur={(e) => { if (!e.currentTarget.contains(e.relatedTarget as Node)) setServicesDropdown(false); }}
+                onKeyDown={(e) => { if (e.key === 'Escape') setServicesDropdown(false); }}
+              >
                 <button
+                  type="button"
+                  aria-haspopup="true"
+                  aria-expanded={servicesDropdown}
+                  // Keyboard activation (Enter/Space => click with detail 0) toggles the menu;
+                  // mouse users keep the existing hover behaviour.
+                  onClick={(e) => { if (e.detail === 0) setServicesDropdown((v) => !v); }}
                   onMouseEnter={() => setServicesDropdown(true)}
                   onMouseLeave={() => setServicesDropdown(false)}
                   className="flex items-center gap-1.5 px-2 xl:px-3 py-1.5 text-gray-300 hover:text-gold-400 transition-colors text-xs xl:text-sm font-medium whitespace-nowrap"
@@ -243,8 +254,18 @@ export default function Navigation() {
               </div>
 
               {/* Calculators Dropdown */}
-              <div className="relative">
+              <div
+                className="relative"
+                onBlur={(e) => { if (!e.currentTarget.contains(e.relatedTarget as Node)) setCalculatorsDropdown(false); }}
+                onKeyDown={(e) => { if (e.key === 'Escape') setCalculatorsDropdown(false); }}
+              >
                 <button
+                  type="button"
+                  aria-haspopup="true"
+                  aria-expanded={calculatorsDropdown}
+                  // Keyboard activation (Enter/Space => click with detail 0) toggles the menu;
+                  // mouse users keep the existing hover behaviour.
+                  onClick={(e) => { if (e.detail === 0) setCalculatorsDropdown((v) => !v); }}
                   onMouseEnter={() => setCalculatorsDropdown(true)}
                   onMouseLeave={() => setCalculatorsDropdown(false)}
                   className="flex items-center gap-1.5 px-2 xl:px-3 py-1.5 text-gray-300 hover:text-gold-400 transition-colors text-xs xl:text-sm font-medium whitespace-nowrap"
@@ -327,8 +348,18 @@ export default function Navigation() {
               </div>
 
               {/* MLI Select Dropdown */}
-              <div className="relative">
+              <div
+                className="relative"
+                onBlur={(e) => { if (!e.currentTarget.contains(e.relatedTarget as Node)) setMliDropdown(false); }}
+                onKeyDown={(e) => { if (e.key === 'Escape') setMliDropdown(false); }}
+              >
                 <button
+                  type="button"
+                  aria-haspopup="true"
+                  aria-expanded={mliDropdown}
+                  // Keyboard activation (Enter/Space => click with detail 0) toggles the menu;
+                  // mouse users keep the existing hover behaviour.
+                  onClick={(e) => { if (e.detail === 0) setMliDropdown((v) => !v); }}
                   onMouseEnter={() => setMliDropdown(true)}
                   onMouseLeave={() => setMliDropdown(false)}
                   className="flex items-center gap-1.5 px-2 xl:px-3 py-1.5 text-gray-300 hover:text-gold-400 transition-colors text-xs xl:text-sm font-medium whitespace-nowrap"
@@ -397,8 +428,18 @@ export default function Navigation() {
               </Link>
 
               {/* About Dropdown (Includes Company, Compliance & Blog) */}
-              <div className="relative">
+              <div
+                className="relative"
+                onBlur={(e) => { if (!e.currentTarget.contains(e.relatedTarget as Node)) setAboutDropdown(false); }}
+                onKeyDown={(e) => { if (e.key === 'Escape') setAboutDropdown(false); }}
+              >
                 <button
+                  type="button"
+                  aria-haspopup="true"
+                  aria-expanded={aboutDropdown}
+                  // Keyboard activation (Enter/Space => click with detail 0) toggles the menu;
+                  // mouse users keep the existing hover behaviour.
+                  onClick={(e) => { if (e.detail === 0) setAboutDropdown((v) => !v); }}
                   onMouseEnter={() => setAboutDropdown(true)}
                   onMouseLeave={() => setAboutDropdown(false)}
                   className="flex items-center gap-1.5 px-2 xl:px-3 py-1.5 text-gray-300 hover:text-gold-400 transition-colors text-xs xl:text-sm font-medium whitespace-nowrap"
@@ -491,6 +532,9 @@ export default function Navigation() {
             {/* Mobile / Tablet Menu Button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+              aria-expanded={mobileMenuOpen}
+              aria-controls="mobile-menu"
               className="lg:hidden p-2 rounded-lg bg-gray-800/50 border border-gray-700 hover:bg-gray-700 transition-all"
             >
               {mobileMenuOpen ? (
@@ -510,6 +554,7 @@ export default function Navigation() {
             initial={{ opacity: 0, x: "100%" }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: "100%" }}
+            id="mobile-menu"
             className="fixed inset-0 z-40 bg-gray-900/95 backdrop-blur-xl lg:hidden"
             style={{ top: '64px' }}
           >

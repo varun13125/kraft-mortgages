@@ -28,7 +28,8 @@ export const INTERNAL_LINKS = {
   // Resource pages
   resources: [
     { path: '/blog', text: 'mortgage insights', keywords: ['blog', 'articles', 'insights', 'resources'] },
-    { path: '/faq', text: 'frequently asked questions', keywords: ['faq', 'questions', 'help'] }
+    // There is no /faq route; the only FAQ page is the MLI Select FAQ.
+    { path: '/mli-select/faq', text: 'MLI Select FAQs', keywords: ['faq', 'questions', 'help'] }
   ]
 };
 

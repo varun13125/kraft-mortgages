@@ -5,53 +5,71 @@ import Navigation from "@/components/Navigation";
 import { ComplianceBanner } from "@/components/ComplianceBanner";
 import { CreditCard, Calculator, DollarSign, ArrowRight, TrendingUp, Percent, Home, AlertTriangle } from "lucide-react";
 import Link from "next/link";
+import { useLiveRates } from "@/lib/useLiveRates";
+import { payment } from "@/lib/calc/payment";
+import { stressTestRate } from "@/lib/calc/affordability";
 
 // HELOC calculation logic
+// OSFI B-20 (federally regulated lenders): the revolving HELOC portion is capped at 65% of
+// property value, and HELOC + amortizing mortgage combined at 80%. Qualification uses the
+// stress-test rate (max(contract + 2%, 5.25%)) on the full limit amortized over 25 years.
 function calculateHELOC({
   homeValue,
   mortgageBalance,
   creditScore,
-  income
+  monthlyIncome,
+  mortgagePayment,
+  otherMonthlyCosts,
+  primeRate
 }: {
   homeValue: number;
   mortgageBalance: number;
   creditScore: number;
-  income: number;
+  monthlyIncome: number;
+  mortgagePayment: number;
+  otherMonthlyCosts: number;
+  primeRate: number;
 }) {
-  // HELOC limit is typically 65% of home value minus existing mortgage
-  const maxLTV = 0.65;
-  const maxCombinedLoan = homeValue * maxLTV;
-  const availableEquity = Math.max(0, maxCombinedLoan - mortgageBalance);
-  
-  // Minimum HELOC amounts and credit-based rates
-  const minHELOC = 10000;
-  const maxHELOC = Math.min(availableEquity, 500000); // Cap at $500k
-  
-  // Rate based on credit score
-  let rate: number;
-  if (creditScore >= 780) rate = 6.95;
-  else if (creditScore >= 720) rate = 7.45;
-  else if (creditScore >= 680) rate = 7.95;
-  else if (creditScore >= 640) rate = 8.95;
-  else rate = 10.45;
-  
-  // Interest-only payment calculation
-  const monthlyRate = rate / 100 / 12;
-  const interestOnlyPayment = maxHELOC * monthlyRate;
-  
-  // Qualification check - payment should be under 5% of gross income
-  const maxPaymentRatio = 0.05;
-  const maxQualifyingPayment = income * maxPaymentRatio;
-  const qualifies = interestOnlyPayment <= maxQualifyingPayment;
-  
+  const value = Math.max(0, homeValue);
+  const balance = Math.max(0, mortgageBalance);
+  const revolvingCap = value * 0.65;
+  const combinedRoom = value * 0.80 - balance;
+  const availableEquity = Math.max(0, Math.min(revolvingCap, combinedRoom));
+  const ltvLimit = Math.min(availableEquity, 500000); // illustrative cap used by many lenders' standard HELOCs
+
+  // Estimated variable rate = prime + credit-based spread (estimates; lender pricing varies)
+  let spread: number;
+  if (creditScore >= 780) spread = 0.5;
+  else if (creditScore >= 720) spread = 0.75;
+  else if (creditScore >= 680) spread = 1.0;
+  else if (creditScore >= 640) spread = 2.0; // typically alternative (B) lender
+  else spread = 3.5; // typically private / alternative lender
+  const rate = primeRate + spread;
+
+  // Income test (TDS ≤ 44%): existing obligations + stress-tested payment on the HELOC limit
+  const qualRate = stressTestRate(rate);
+  const qualPaymentPerDollar = payment({ principal: 1, annualRatePct: qualRate, amortYears: 25, paymentsPerYear: 12 });
+  const roomForHeloc = monthlyIncome * 0.44 - Math.max(0, mortgagePayment) - Math.max(0, otherMonthlyCosts);
+  const incomeSupported = Math.max(0, roomForHeloc / qualPaymentPerDollar);
+  const maxHELOC = Math.max(0, Math.min(ltvLimit, incomeSupported));
+  const qualifies = incomeSupported >= ltvLimit;
+  const tdsAtLimit = monthlyIncome > 0
+    ? ((Math.max(0, mortgagePayment) + Math.max(0, otherMonthlyCosts) + ltvLimit * qualPaymentPerDollar) / monthlyIncome) * 100
+    : 0;
+
+  // Interest-only payment if the available limit is fully drawn
+  const interestOnlyPayment = maxHELOC * rate / 100 / 12;
+
   return {
     availableEquity,
-    maxHELOC: Math.max(0, Math.min(maxHELOC, qualifies ? maxHELOC : 0)),
+    maxHELOC,
     rate,
+    qualRate,
     interestOnlyPayment,
     qualifies,
-    currentLTV: (mortgageBalance / homeValue) * 100,
-    newLTV: ((mortgageBalance + maxHELOC) / homeValue) * 100
+    tdsAtLimit,
+    currentLTV: value > 0 ? (balance / value) * 100 : 0,
+    newLTV: value > 0 ? ((balance + maxHELOC) / value) * 100 : 0
   };
 }
 
@@ -60,12 +78,18 @@ export default function HELOCCalculator() {
   const [mortgageBalance, setMortgageBalance] = useState(400000);
   const [creditScore, setCreditScore] = useState(750);
   const [income, setIncome] = useState(120000);
+  const [mortgagePayment, setMortgagePayment] = useState(2300);
+  const [otherMonthlyCosts, setOtherMonthlyCosts] = useState(600);
+  const { primeRate } = useLiveRates();
 
   const results = calculateHELOC({
     homeValue,
     mortgageBalance,
     creditScore,
-    income: income / 12 // Convert to monthly
+    monthlyIncome: income / 12,
+    mortgagePayment,
+    otherMonthlyCosts,
+    primeRate
   });
 
   return (
@@ -206,6 +230,44 @@ export default function HELOCCalculator() {
                         />
                       </div>
                     </div>
+
+                    {/* Current Mortgage Payment */}
+                    <div>
+                      <label className="block text-sm font-medium mb-2 flex items-center gap-2">
+                        <DollarSign className="w-4 h-4 text-gold-400" />
+                        Current Mortgage Payment (monthly)
+                      </label>
+                      <div className="relative">
+                        <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">$</span>
+                        <input
+                          type="number"
+                          value={mortgagePayment}
+                          onChange={(e) => setMortgagePayment(Math.max(0, Number(e.target.value)))}
+                          className="w-full pl-8 pr-4 py-3 bg-white/5 border border-white/20 rounded-xl focus:border-gold-400 focus:ring-2 focus:ring-gold-400/20 transition-colors"
+                          min="0"
+                          step="50"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Other monthly costs */}
+                    <div>
+                      <label className="block text-sm font-medium mb-2 flex items-center gap-2">
+                        <DollarSign className="w-4 h-4 text-gold-400" />
+                        Property Tax, Heat &amp; Other Debt Payments (monthly)
+                      </label>
+                      <div className="relative">
+                        <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">$</span>
+                        <input
+                          type="number"
+                          value={otherMonthlyCosts}
+                          onChange={(e) => setOtherMonthlyCosts(Math.max(0, Number(e.target.value)))}
+                          className="w-full pl-8 pr-4 py-3 bg-white/5 border border-white/20 rounded-xl focus:border-gold-400 focus:ring-2 focus:ring-gold-400/20 transition-colors"
+                          min="0"
+                          step="50"
+                        />
+                      </div>
+                    </div>
                   </div>
                 </div>
               </motion.div>
@@ -224,10 +286,10 @@ export default function HELOCCalculator() {
                     <h3 className="text-xl font-bold">HELOC Available</h3>
                   </div>
                   <div className="text-4xl font-bold text-gold-400 mb-2">
-                    ${results.maxHELOC.toLocaleString()}
+                    ${Math.round(results.maxHELOC).toLocaleString()}
                   </div>
                   <p className="text-gray-300 text-sm">
-                    Maximum line of credit amount
+                    Estimated line of credit — lesser of equity limit (65% revolving / 80% combined) and income qualification
                   </p>
                 </div>
 
@@ -242,7 +304,7 @@ export default function HELOCCalculator() {
                       <div className="text-2xl font-bold text-gold-400">
                         {results.rate.toFixed(2)}%
                       </div>
-                      <p className="text-sm text-gray-400">Variable rate</p>
+                      <p className="text-sm text-gray-400">Variable (prime + spread, est.)</p>
                     </div>
                     <div>
                       <div className="flex items-center gap-2 mb-2">
@@ -250,9 +312,9 @@ export default function HELOCCalculator() {
                         <h4 className="font-semibold">Monthly Payment</h4>
                       </div>
                       <div className="text-2xl font-bold">
-                        ${results.interestOnlyPayment.toLocaleString()}
+                        ${Math.round(results.interestOnlyPayment).toLocaleString()}
                       </div>
-                      <p className="text-sm text-gray-400">Interest only</p>
+                      <p className="text-sm text-gray-400">Interest only, if fully drawn</p>
                     </div>
                   </div>
                 </div>
@@ -266,8 +328,8 @@ export default function HELOCCalculator() {
                           <ArrowRight className="w-4 h-4 text-white" />
                         </div>
                         <div>
-                          <h4 className="font-semibold text-green-300">Pre-Qualified</h4>
-                          <p className="text-sm text-green-200">Based on the information provided</p>
+                          <h4 className="font-semibold text-green-300">Income Supports Full Limit</h4>
+                          <p className="text-sm text-green-200">TDS {results.tdsAtLimit.toFixed(1)}% at a {results.qualRate.toFixed(2)}% stress-test rate (max 44%)</p>
                         </div>
                       </>
                     ) : (
@@ -276,8 +338,8 @@ export default function HELOCCalculator() {
                           <AlertTriangle className="w-4 h-4 text-white" />
                         </div>
                         <div>
-                          <h4 className="font-semibold text-red-300">Income Insufficient</h4>
-                          <p className="text-sm text-red-200">Payment exceeds 5% of income</p>
+                          <h4 className="font-semibold text-red-300">Limited by Income</h4>
+                          <p className="text-sm text-red-200">TDS would be {results.tdsAtLimit.toFixed(1)}% at the full equity limit (max 44% at a {results.qualRate.toFixed(2)}% stress-test rate) — limit reduced to what your income supports</p>
                         </div>
                       </>
                     )}
@@ -298,7 +360,7 @@ export default function HELOCCalculator() {
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-300">Available Equity</span>
-                      <span className="font-semibold text-gold-400">${results.availableEquity.toLocaleString()}</span>
+                      <span className="font-semibold text-gold-400">${Math.round(results.availableEquity).toLocaleString()}</span>
                     </div>
                   </div>
                 </div>
@@ -333,11 +395,12 @@ export default function HELOCCalculator() {
                   <h3 className="text-lg font-semibold text-blue-300 mb-3">Important HELOC Information</h3>
                   <div className="space-y-2 text-sm text-blue-200">
                     <p>• HELOC rates are variable and subject to change</p>
-                    <p>• Maximum combined loan-to-value is typically 65% in Canada</p>
+                    <p>• HELOC limit is capped at 65% of home value; HELOC plus mortgage combined at 80% (OSFI B-20)</p>
                     <p>• Credit score and income verification required</p>
                     <p>• Property appraisal may be required</p>
-                    <p>• Interest-only payments during draw period (typically 10 years)</p>
-                    <p>• Principal and interest payments required during repayment period</p>
+                    <p>• Minimum payment is usually interest-only on the balance used; you can repay any time</p>
+                    <p>• Lenders qualify you at the stress-test rate as if the full limit were amortized over 25 years</p>
+                    <p>• Rates shown are estimates (prime + a credit-based spread); lower credit scores may require an alternative lender</p>
                   </div>
                 </div>
               </div>

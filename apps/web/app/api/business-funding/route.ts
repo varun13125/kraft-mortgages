@@ -1,6 +1,31 @@
 import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
 import { prisma } from "@/lib/db";
 import { firestore } from "@/lib/firebaseAdmin";
+import { limitByIp } from "@/lib/compliance/requestGuards";
+
+export const dynamic = "force-dynamic";
+
+const s = (max: number) => z.string().trim().max(max);
+const BusinessFundingSchema = z
+  .object({
+    first_name: s(100).min(1),
+    last_name: s(100).min(1),
+    email: z.string().trim().email().max(254),
+    phone: s(40).min(7),
+    business_name: s(200).min(1),
+    company_website: s(300).optional().default(""),
+    business_owner_with_linkedin: s(40).optional().default(""),
+    business_type: s(100).optional().default(""),
+    how_long_in_business: s(100).optional().default(""),
+    average_monthly_revenue: s(100).optional().default(""),
+    funding_amount: s(60).optional().default(""),
+    purpose_of_funding: s(120).optional().default(""),
+    other_purpose: s(300).optional(),
+    when_are_funds_needed: s(100).optional().default(""),
+    notes: s(5000).optional(),
+  })
+  .strip();
 
 interface BusinessFundingData {
   first_name: string;
@@ -45,14 +70,14 @@ async function sendToGoHighLevel(data: BusinessFundingData) {
 }
 
 // Discord notification for real-time alerts
-async function sendDiscordNotification(data: BusinessFundingData) {
+async function sendDiscordNotification(data: BusinessFundingData): Promise<boolean> {
   const webhookUrl = process.env.DISCORD_LEAD_WEBHOOK_URL;
-  if (!webhookUrl) return;
+  if (!webhookUrl) return false;
 
   const fullName = `${data.first_name} ${data.last_name}`.trim();
 
   try {
-    await fetch(webhookUrl, {
+    const res = await fetch(webhookUrl, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -81,22 +106,28 @@ async function sendDiscordNotification(data: BusinessFundingData) {
         ],
       }),
     });
+    return res.ok;
   } catch (error) {
-    console.error("Discord error:", error);
+    console.error("Discord error:", error instanceof Error ? error.message : error);
+    return false;
   }
 }
 
 export async function POST(req: NextRequest) {
   try {
-    const body: BusinessFundingData = await req.json();
+    const limited = limitByIp(req, "business-funding", 3, 10 * 60 * 1000);
+    if (limited) return limited;
+
+    const parsed = BusinessFundingSchema.safeParse(await req.json().catch(() => null));
 
     // Basic Validation
-    if (!body.email || !body.first_name || !body.last_name || !body.business_name || !body.phone) {
+    if (!parsed.success) {
       return NextResponse.json(
-        { error: "Required fields are missing: first_name, last_name, email, phone, and business_name are required." },
+        { error: "Required fields are missing or invalid: first_name, last_name, a valid email, phone, and business_name are required." },
         { status: 400 }
       );
     }
+    const body: BusinessFundingData = parsed.data;
 
     // Save lead to local database / firestore for redundancy
     const leadData = {
@@ -108,6 +139,7 @@ export async function POST(req: NextRequest) {
       createdAt: new Date(),
     };
 
+    let dbSaved = false;
     try {
       if (process.env.DATABASE_URL) {
         await prisma.lead.create({
@@ -124,25 +156,28 @@ export async function POST(req: NextRequest) {
         const db = firestore();
         await db.collection("leads").add(leadData);
       }
+      dbSaved = true;
     } catch (dbError) {
-      console.error("Redundant DB logging failed, continuing with integrations:", dbError);
+      console.error("Redundant DB logging failed, continuing with integrations:", dbError instanceof Error ? dbError.message : dbError);
     }
 
     // Submit to GoHighLevel (LeadConnector Webhook)
     const ghlSuccess = await sendToGoHighLevel(body);
 
     // Send Discord Real-Time Alert
-    await sendDiscordNotification(body);
+    const discordSent = await sendDiscordNotification(body);
 
+    // The application counts as received if ANY sink recorded it; previously a GHL
+    // outage returned success:false and the page told the user to resubmit (duplicates).
     return NextResponse.json({
-      success: ghlSuccess,
+      success: ghlSuccess || dbSaved || discordSent,
       message: ghlSuccess
         ? "Thank you! Your business funding application has been submitted successfully."
         : "Application received. Our team will contact you shortly.",
     });
 
   } catch (error) {
-    console.error("Business funding API error:", error);
+    console.error("Business funding API error:", error instanceof Error ? error.message : error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

@@ -5,6 +5,7 @@ import Navigation from "@/components/Navigation";
 import { ComplianceBanner } from "@/components/ComplianceBanner";
 import { Building, Calculator, DollarSign, Percent, TrendingUp, Clock, AlertTriangle } from "lucide-react";
 import Link from "next/link";
+import { interestOnlyCost } from "@/lib/calc/construction";
 
 export default function ProgressiveDrawCalculator() {
     const [totalLoanAmount, setTotalLoanAmount] = useState(600000);
@@ -18,25 +19,18 @@ export default function ProgressiveDrawCalculator() {
         { month: 11, percentage: 5, description: "Final Completion" },
     ]);
 
-    // Calculate interest on progressive draws
+    // Calculate interest on progressive draws.
+    // Uses the shared interestOnlyCost helper (same as the AI construction tool) so both give
+    // identical answers: interest-only on the advanced balance, a draw accrues interest from the
+    // month it is advanced through the end of the project (month 12, or the last draw month if later).
     const calculateInterest = () => {
         const monthlyRate = interestRate / 100 / 12;
-        let totalInterest = 0;
         let cumulativeDrawn = 0;
         const drawDetails: { month: number; drawnAmount: number; cumulativeBalance: number; monthlyInterest: number; description: string }[] = [];
 
-        draws.forEach((draw, index) => {
+        draws.forEach((draw) => {
             const drawAmount = (draw.percentage / 100) * totalLoanAmount;
             cumulativeDrawn += drawAmount;
-
-            // Calculate months until next draw or end (assume 12 month project)
-            const nextDrawMonth = draws[index + 1]?.month || 12;
-            const monthsAtThisBalance = nextDrawMonth - draw.month;
-
-            // Interest is calculated on the cumulative drawn amount
-            const interestForPeriod = cumulativeDrawn * monthlyRate * monthsAtThisBalance;
-            totalInterest += interestForPeriod;
-
             drawDetails.push({
                 month: draw.month,
                 drawnAmount: drawAmount,
@@ -46,11 +40,16 @@ export default function ProgressiveDrawCalculator() {
             });
         });
 
-        return { totalInterest, drawDetails, finalBalance: cumulativeDrawn };
+        const { totalInterest, constructionPeriodMonths } = interestOnlyCost({
+            draws: drawDetails.map(d => ({ month: d.month, amount: d.drawnAmount })),
+            annualRatePct: interestRate,
+        });
+
+        return { totalInterest, drawDetails, finalBalance: cumulativeDrawn, constructionPeriodMonths };
     };
 
     const results = calculateInterest();
-    const avgMonthlyInterest = results.totalInterest / 12;
+    const avgMonthlyInterest = results.constructionPeriodMonths > 0 ? results.totalInterest / results.constructionPeriodMonths : 0;
 
     // Validation
     const totalPercentage = draws.reduce((sum, d) => sum + d.percentage, 0);
@@ -176,7 +175,7 @@ export default function ProgressiveDrawCalculator() {
                                         ${results.totalInterest.toLocaleString(undefined, { maximumFractionDigits: 0 })}
                                     </div>
                                     <p className="text-gray-300 text-sm">
-                                        Total construction interest (12-month project)
+                                        Total construction interest ({results.constructionPeriodMonths}-month project, interest-only on advanced funds)
                                     </p>
                                     <div className="mt-4 pt-4 border-t border-white/20">
                                         <div className="flex justify-between text-sm">
@@ -221,8 +220,8 @@ export default function ProgressiveDrawCalculator() {
                                                 <td className="py-4 px-2 font-semibold">{draw.month}</td>
                                                 <td className="py-4 px-2">{draw.description}</td>
                                                 <td className="py-4 px-2 text-right">{draws[index].percentage}%</td>
-                                                <td className="py-4 px-2 text-right text-gold-400">${draw.drawnAmount.toLocaleString()}</td>
-                                                <td className="py-4 px-2 text-right font-semibold">${draw.cumulativeBalance.toLocaleString()}</td>
+                                                <td className="py-4 px-2 text-right text-gold-400">${Math.round(draw.drawnAmount).toLocaleString()}</td>
+                                                <td className="py-4 px-2 text-right font-semibold">${Math.round(draw.cumulativeBalance).toLocaleString()}</td>
                                                 <td className="py-4 px-2 text-right text-red-300">${draw.monthlyInterest.toLocaleString(undefined, { maximumFractionDigits: 0 })}</td>
                                             </tr>
                                         ))}
@@ -231,8 +230,12 @@ export default function ProgressiveDrawCalculator() {
                             </div>
                         </motion.div>
 
-                        {/* CTA */}
-                        <div className="mt-12 flex gap-4 justify-center">
+                        <p className="mt-8 text-xs text-gray-500 text-center max-w-3xl mx-auto">
+                            Estimates only. Interest is simple monthly interest on the cumulative advanced balance; each draw accrues interest
+                            from its draw month to the end of the project. A statutory 10% lien holdback (BC Builders Lien Act, Ontario
+                            Construction Act, Alberta Prompt Payment and Construction Lien Act) is usually retained from each advance, which can shift timing.
+                        </p>
+                        <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
                             <Link
                                 href="/contact"
                                 className="bg-gold-500 text-black font-semibold py-4 px-8 rounded-xl hover:bg-gold-400 transition-colors"

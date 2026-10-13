@@ -1,4 +1,7 @@
 import type { Metadata } from "next";
+import Footer from "@/components/Footer";
+import { OG_DEFAULTS } from "@/lib/seo/og";
+import { ORG_ID } from "@/lib/seo/jsonld";
 
 export const metadata: Metadata = {
   title: "Private Lending BC | Fast Approval | Kraft Mortgages",
@@ -8,6 +11,7 @@ export const metadata: Metadata = {
     canonical: 'https://www.kraftmortgages.ca/private-lending',
   },
   openGraph: {
+    ...OG_DEFAULTS,
     title: "Private Lending BC | Fast Approval | Kraft Mortgages",
     description: "Fast private mortgage solutions for credit challenges, unique properties, and time-sensitive deals across BC, AB & ON.",
     url: "https://www.kraftmortgages.ca/private-lending",
@@ -15,35 +19,26 @@ export const metadata: Metadata = {
 };
 
 export default function PrivateLendingLayout({ children }: { children: React.ReactNode }) {
+  // Service node; the business itself is the single org node (provider) in app/layout.tsx.
   const schema = {
     "@context": "https://schema.org",
-    "@graph": [{
-      "@type": "FinancialService",
-      "@id": "https://www.kraftmortgages.ca/#private-lending",
-      name: "Kraft Mortgages Canada",
-      url: "https://www.kraftmortgages.ca/private-lending",
-      telephone: "+1-604-593-1550",
-      description: "Private mortgage solutions for credit challenges, unique properties, and time-sensitive deals across BC, AB & ON.",
-      address: {
-        "@type": "PostalAddress",
-        streetAddress: "#301 - 1688 152nd Street",
-        addressLocality: "Surrey",
-        addressRegion: "BC",
-        postalCode: "V4A 4N2",
-        addressCountry: "CA"
-      },
-      areaServed: [
-        { "@type": "CanadianProvince", "name": "British Columbia" },
-        { "@type": "CanadianProvince", "name": "Alberta" },
-        { "@type": "CanadianProvince", "name": "Ontario" }
-      ],
-      serviceType: "private mortgages"
-    }]
+    "@type": "Service",
+    "@id": "https://www.kraftmortgages.ca/private-lending#service",
+    serviceType: "private mortgages",
+    provider: { "@id": ORG_ID },
+    url: "https://www.kraftmortgages.ca/private-lending",
+    description: "Private mortgage solutions for credit challenges, unique properties, and time-sensitive deals across BC, AB & ON.",
+    areaServed: [
+      { "@type": "AdministrativeArea", name: "British Columbia" },
+      { "@type": "AdministrativeArea", name: "Alberta" },
+      { "@type": "AdministrativeArea", name: "Ontario" }
+    ]
   };
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
       {children}
+      <Footer />
     </>
   );
 }

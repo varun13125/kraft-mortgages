@@ -9,6 +9,7 @@ import { CleanVoiceControls } from "./CleanVoiceControls";
 import { ToolResults } from "./ToolResults";
 import { MultilingualVoiceService } from "@/lib/voice/multilingual-voice";
 import { getPageContext } from "@/lib/ai/page-context";
+import { evaluate as evaluateCompliance } from "@/lib/compliance/rules";
 import { WhatsAppIcon, WHATSAPP_LINK, WHATSAPP_PHONE_DISPLAY } from "@/components/icons/WhatsAppIcon";
 
 interface Message {
@@ -42,6 +43,19 @@ interface QuickAction {
 
 const STORAGE_KEY = "kraft-chat-messages";
 const MAX_MESSAGES = 50; // Increased from default to 50
+const MAX_INPUT_CHARS = 2000; // keep in sync with /api/chat
+// No hard-coded rates here: this text is persisted in localStorage and would go stale.
+const WELCOME_CONTENT =
+  "Hi! I'm the Kraft Mortgages AI assistant. I can walk you through today's benchmark rates, 30-year amortization rules, and qualification basics across BC, Alberta, and Ontario. Which city or province are you exploring?";
+
+// Blob URLs only live as long as the page, so never persist them.
+function toStorable(messages: Message[]) {
+  return messages.map((m) =>
+    m.metadata?.voice?.audioUrl
+      ? { ...m, metadata: { ...m.metadata, voice: { ...m.metadata.voice, audioUrl: undefined } } }
+      : m
+  );
+}
 
 export function ChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
@@ -60,13 +74,23 @@ export function ChatWidget() {
   const chatContainerRef = useRef<HTMLDivElement>(null);
   const voiceService = useRef(new MultilingualVoiceService());
   const audioRefs = useRef<Record<string, HTMLAudioElement>>({});
+  const objectUrlsRef = useRef<string[]>([]);
+  const [primeRate, setPrimeRate] = useState<number | null>(null);
+  const ratesRequestedRef = useRef(false);
+  const complianceNotes = evaluateCompliance(selectedProvince as "BC" | "AB" | "ON", "CHATBOT").disclaimers;
 
   // Load messages from localStorage on mount
   useEffect(() => {
+    const welcomeMessage: Message = {
+      id: "welcome",
+      content: WELCOME_CONTENT,
+      sender: "assistant",
+      timestamp: new Date(),
+    };
     try {
       const savedMessages = localStorage.getItem(STORAGE_KEY);
-      if (savedMessages) {
-        const parsed = JSON.parse(savedMessages);
+      const parsed = savedMessages ? JSON.parse(savedMessages) : null;
+      if (Array.isArray(parsed) && parsed.length > 0) {
         // Convert timestamp strings back to Date objects
         const messagesWithDates = parsed.map((msg: any) => ({
           ...msg,
@@ -75,23 +99,11 @@ export function ChatWidget() {
         setMessages(messagesWithDates);
       } else {
         // Initialize with welcome message if no saved messages
-        const welcomeMessage = {
-          id: "welcome",
-          content: "Hi! I'm your Senior Mortgage Associate at Kraft Mortgages. I can provide live rate benchmarks (Prime 4.45%, 5-Yr Fixed from 4.39%), 30-year amortization advice, and qualification insights across BC, Alberta, and Ontario. Which city or province are you exploring?",
-          sender: "assistant" as const,
-          timestamp: new Date(),
-        };
         setMessages([welcomeMessage]);
       }
     } catch (error) {
       console.error("Error loading chat messages:", error);
       // Fallback to welcome message
-      const welcomeMessage = {
-        id: "welcome",
-        content: "Hi! I'm your Senior Mortgage Associate at Kraft Mortgages. I can provide live rate benchmarks (Prime 4.45%, 5-Yr Fixed from 4.39%), 30-year amortization advice, and qualification insights across BC, Alberta, and Ontario. Which city or province are you exploring?",
-        sender: "assistant" as const,
-        timestamp: new Date(),
-      };
       setMessages([welcomeMessage]);
     }
   }, []);
@@ -100,12 +112,37 @@ export function ChatWidget() {
   useEffect(() => {
     if (messages.length > 0) {
       try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(messages));
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(toStorable(messages)));
       } catch (error) {
         console.error("Error saving chat messages:", error);
       }
     }
   }, [messages]);
+
+  // Release audio elements and blob URLs when the widget unmounts.
+  useEffect(() => {
+    const audios = audioRefs.current;
+    const urls = objectUrlsRef.current;
+    return () => {
+      Object.values(audios).forEach((audio) => {
+        audio.pause();
+        audio.src = "";
+      });
+      urls.forEach((url) => URL.revokeObjectURL(url));
+    };
+  }, []);
+
+  // Fetch the live prime rate the first time the chat is opened (instead of a hard-coded value).
+  useEffect(() => {
+    if (!isOpen || ratesRequestedRef.current) return;
+    ratesRequestedRef.current = true;
+    fetch("/api/rates")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data && typeof data.prime_rate === "number") setPrimeRate(data.prime_rate);
+      })
+      .catch(() => {});
+  }, [isOpen]);
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
@@ -134,7 +171,7 @@ export function ChatWidget() {
   const clearChat = () => {
     const welcomeMessage = {
       id: "welcome",
-      content: "Hi! I'm your Senior Mortgage Associate at Kraft Mortgages. I can provide live rate benchmarks (Prime 4.45%, 5-Yr Fixed from 4.39%), 30-year amortization advice, and qualification insights across BC, Alberta, and Ontario. Which city or province are you exploring?",
+      content: WELCOME_CONTENT,
       sender: "assistant" as const,
       timestamp: new Date(),
     };
@@ -197,7 +234,7 @@ export function ChatWidget() {
     metadata?: any;
   }> => {
     try {
-      console.log("[ChatWidget] Sending message:", content);
+      console.log("[ChatWidget] Sending message");
       setIsTyping(true);
 
       // Call the AI API endpoint with selected province and conversation history  
@@ -221,6 +258,12 @@ export function ChatWidget() {
 
       if (!response.ok) {
         console.error("[ChatWidget] Response not OK:", response.status);
+        // The API returns a user-facing `reply` for rate limits (429) and over-long input (413).
+        const errorData = await response.json().catch(() => null);
+        if (errorData && typeof errorData.reply === "string") {
+          setIsTyping(false);
+          return { content: errorData.reply };
+        }
         throw new Error("Failed to get response");
       }
 
@@ -250,6 +293,7 @@ export function ChatWidget() {
             const voiceResponse = await voiceService.current.speak(fullContent);
 
             const audioUrl = URL.createObjectURL(voiceResponse.audioBlob);
+            objectUrlsRef.current.push(audioUrl);
 
             metadata.voice = {
               language: voiceResponse.language,
@@ -332,7 +376,7 @@ export function ChatWidget() {
       setIsPlayingVoice(null);
     } else {
       audio.currentTime = 0;
-      audio.play();
+      audio.play().catch(() => setIsPlayingVoice(null));
       setIsPlayingVoice(messageId);
     }
   };
@@ -411,7 +455,9 @@ export function ChatWidget() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ duration: 0.2 }}
-            className="fixed bottom-24 right-6 w-96 h-[600px] bg-gray-800 rounded-xl shadow-2xl flex flex-col overflow-hidden z-40 border border-gray-700"
+            role="dialog"
+            aria-label="Kraft Mortgages AI chat assistant"
+            className="fixed bottom-24 right-4 sm:right-6 w-[calc(100vw-2rem)] sm:w-96 h-[min(600px,calc(100dvh-7.5rem))] bg-gray-800 rounded-xl shadow-2xl flex flex-col overflow-hidden z-40 border border-gray-700"
           >
             {/* Header */}
             <div className="bg-gradient-to-r from-gold-500 to-gold-600 p-4 text-white">
@@ -441,6 +487,8 @@ export function ChatWidget() {
                       : 'bg-white/10 text-white/70 hover:bg-white/15'
                       }`}
                     title={showVoiceControls ? 'Hide voice controls' : 'Show voice controls'}
+                    aria-label={showVoiceControls ? 'Hide voice controls' : 'Show voice controls'}
+                    aria-pressed={showVoiceControls}
                   >
                     <Volume2 className="w-3.5 h-3.5" />
                   </button>
@@ -466,6 +514,8 @@ export function ChatWidget() {
                         key={prov}
                         type="button"
                         onClick={() => setSelectedProvince(prov)}
+                        aria-pressed={selectedProvince === prov}
+                        aria-label={`Province ${prov}`}
                         className={`px-2 py-0.5 rounded font-bold transition-all ${
                           selectedProvince === prov
                             ? "bg-white text-gray-900 shadow-sm"
@@ -478,15 +528,18 @@ export function ChatWidget() {
                   </div>
                 </div>
 
-                <div className="text-[11px] font-mono opacity-90 font-medium">
-                  Prime: <span className="font-bold text-white">4.45%</span>
-                </div>
+                {primeRate !== null && (
+                  <div className="text-[11px] font-mono opacity-90 font-medium">
+                    Prime: <span className="font-bold text-white">{primeRate.toFixed(2)}%</span>
+                  </div>
+                )}
               </div>
             </div>
 
             {/* Voice Controls Panel */}
             {showVoiceControls && (
               <CleanVoiceControls
+                province={selectedProvince}
                 onVoiceMessage={(text) => {
                   // Add user message from voice
                   const newMessage: Message = {
@@ -513,6 +566,8 @@ export function ChatWidget() {
             {/* Messages */}
             <div
               ref={chatContainerRef}
+              role="log"
+              aria-live="polite"
               className="flex-1 overflow-y-auto p-4 space-y-3 bg-gray-900/50"
             >
               {messages.map((message) => (
@@ -547,6 +602,7 @@ export function ChatWidget() {
                               : 'bg-gray-600/50 text-gray-400 hover:bg-gray-500/50 hover:text-gray-300'
                               }`}
                             title={isPlayingVoice === message.id ? 'Stop' : 'Play voice'}
+                            aria-label={isPlayingVoice === message.id ? 'Stop voice playback' : 'Play voice'}
                           >
                             <Volume2 className="w-3 h-3" />
                           </button>
@@ -597,6 +653,8 @@ export function ChatWidget() {
                     <button
                       key={index}
                       onClick={() => handleQuickAction(action)}
+                      aria-label={action.label}
+                      title={action.label}
                       className="flex items-center gap-1 px-2 py-1 bg-gray-700/50 hover:bg-gray-600/50 rounded text-xs text-gray-300 transition-colors border border-gray-600/50"
                     >
                       {action.icon}
@@ -625,15 +683,27 @@ export function ChatWidget() {
               </a>
             </div>
 
+            {/* AI / privacy disclosure (provincial disclaimer text comes from lib/compliance/rules) */}
+            <div className="px-4 pt-2 text-[10px] leading-snug text-gray-400 border-t border-gray-700">
+              AI assistant: general information only, not financial advice or a mortgage approval. Rates are indicative, O.A.C.
+              {complianceNotes[0] ? ` ${complianceNotes[0]}` : ""} Please don&apos;t share your SIN or banking details here. If you share contact
+              details, our team may follow up about your inquiry.{" "}
+              <a href="/privacy" target="_blank" rel="noopener noreferrer" className="underline hover:text-gray-200">
+                Privacy
+              </a>
+            </div>
+
             {/* Input Form */}
-            <form onSubmit={handleSubmit} className="p-4 border-t border-gray-700">
+            <form onSubmit={handleSubmit} className="p-4 pt-2">
               <div className="flex gap-2">
                 <input
                   type="text"
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
                   placeholder="Type your message..."
-                  className="flex-1 px-4 py-2 bg-gray-700 text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-gold-500 placeholder-gray-400"
+                  aria-label="Type your message"
+                  maxLength={MAX_INPUT_CHARS}
+                  className="flex-1 min-w-0 px-4 py-2 bg-gray-700 text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-gold-500 placeholder-gray-400"
                   disabled={isLoading}
                 />
                 <VoiceInput
@@ -642,6 +712,7 @@ export function ChatWidget() {
                 />
                 <button
                   type="submit"
+                  aria-label="Send message"
                   disabled={isLoading || !inputValue.trim()}
                   className="px-4 py-2 bg-gradient-to-r from-gold-500 to-gold-600 text-white rounded-lg hover:from-gold-400 hover:to-gold-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                 >

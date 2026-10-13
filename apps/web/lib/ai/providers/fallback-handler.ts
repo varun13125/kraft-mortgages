@@ -20,9 +20,21 @@ export interface AttemptResult {
   cost: number;
 }
 
+// Bound the in-memory attempt history (it previously grew by one entry per request, forever).
+const MAX_TRACKED_SESSIONS = 500;
+
 export class FallbackHandler {
   private config: FallbackConfig;
   private attempts: Map<string, AttemptResult[]> = new Map();
+
+  private recordAttempts(sessionId: string, attempts: AttemptResult[]) {
+    this.attempts.set(sessionId, attempts);
+    while (this.attempts.size > MAX_TRACKED_SESSIONS) {
+      const oldest = this.attempts.keys().next().value;
+      if (oldest === undefined) break;
+      this.attempts.delete(oldest);
+    }
+  }
 
   constructor(config: Partial<FallbackConfig> = {}) {
     this.config = {
@@ -79,7 +91,7 @@ export class FallbackHandler {
         totalCost += modelSelection.estimatedCost;
         
         // Success! Store attempts and return
-        this.attempts.set(sessionId, attempts);
+        this.recordAttempts(sessionId, attempts);
         
         return {
           response: result,
@@ -109,7 +121,6 @@ export class FallbackHandler {
             model: modelSelection.model,
             provider: modelSelection.provider,
             errorMessage: error instanceof Error ? error.message : String(error),
-            stack: error instanceof Error ? error.stack : undefined,
             attemptError: attemptResult.error,
             duration,
           });
@@ -123,7 +134,7 @@ export class FallbackHandler {
     }
 
     // All attempts failed - return error response
-    this.attempts.set(sessionId, attempts);
+    this.recordAttempts(sessionId, attempts);
     
     return {
       response: "I apologize, but I'm experiencing technical difficulties. Please try again in a moment, or contact us directly at 604-593-1550.",

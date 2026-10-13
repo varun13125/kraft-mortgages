@@ -12,6 +12,8 @@ import {
   leverageFor,
   premiumDiscountFor,
   maxLoanFromValueOrCost,
+  mliBasePremiumPct,
+  mliAmortizationSurchargePct,
 } from "@/lib/mli/calcs";
 
 type Scenario = {
@@ -28,7 +30,6 @@ type Scenario = {
   udPct: number;
   rhf: number;
   valueOrCost: number;
-  basePremium: number;
 };
 
 const defaultScenario: Omit<Scenario, 'id' | 'name'> = {
@@ -43,7 +44,6 @@ const defaultScenario: Omit<Scenario, 'id' | 'name'> = {
   udPct: 0,
   rhf: 0,
   valueOrCost: 20000000,
-  basePremium: 3.85,
 };
 
 export default function ScenarioComparePage() {
@@ -74,7 +74,7 @@ export default function ScenarioComparePage() {
   const calculateResults = (scenario: Scenario) => {
     const pctAff = scenario.units ? (scenario.affUnits / scenario.units) * 100 : 0;
     const aPts = affordabilityPoints(scenario.projectType === "new", pctAff, scenario.affYears);
-    const ePts = energyPoints(scenario.energyPct);
+    const ePts = energyPoints(scenario.energyPct, scenario.projectType === "new");
     const accPts = accessibilityPoints({
       visitableAll: scenario.visitAll,
       commonsBarrierFree: scenario.commons,
@@ -87,9 +87,15 @@ export default function ScenarioComparePage() {
     const amort = amortByTier(tier);
     const leverage = leverageFor(scenario.projectType === "new", tier);
     const discount = premiumDiscountFor(tier);
-    const finalPremium = scenario.basePremium * (1 - discount);
     const maxLoan = maxLoanFromValueOrCost(scenario.projectType === "new", tier, scenario.valueOrCost);
-    const premiumSavings = scenario.valueOrCost * (scenario.basePremium - finalPremium) / 100;
+    // CMHC premium grid (2025-07-14): base by LTV & purpose + amortization surcharge, then MLI Select discount.
+    // New construction is priced on the construction grid; existing on "all other purposes".
+    const basePremium =
+      mliBasePremiumPct(leverage * 100, scenario.projectType === "new" ? "construction" : "other") +
+      mliAmortizationSurchargePct(amort);
+    const finalPremium = basePremium * (1 - discount);
+    // Premium is charged on the insured loan amount, not the project value.
+    const premiumSavings = maxLoan * (basePremium - finalPremium) / 100;
 
     return {
       aPts, ePts, accPts, total, tier, amort, leverage, discount, finalPremium, maxLoan, premiumSavings
@@ -191,7 +197,7 @@ export default function ScenarioComparePage() {
                         />
                       </div>
                       <div>
-                        <label className="block text-xs font-medium text-gray-400 mb-1">Energy %</label>
+                        <label className="block text-xs font-medium text-gray-400 mb-1">{scenario.projectType === "new" ? "Energy % vs NECB" : "Energy % reduction"}</label>
                         <input 
                           className="w-full text-xs rounded border border-gray-600 bg-gray-700/50 text-gray-100 px-2 py-1 focus:ring-1 focus:ring-gold-500/50"
                           type="number" 
@@ -298,15 +304,20 @@ export default function ScenarioComparePage() {
                         { label: "Max Amortization", key: "amort", suffix: " years" },
                         { label: "Leverage", key: "leverage", multiply: 100, suffix: "%" },
                         { label: "Premium Discount", key: "discount", multiply: 100, suffix: "%" },
-                      ].map(metric => (
+                        { label: "Max Loan", key: "maxLoan", money: true },
+                        { label: "Est. Premium Rate (after discount)", key: "finalPremium", decimals: 2, suffix: "%" },
+                        { label: "Premium Savings vs. No Discount", key: "premiumSavings", money: true },
+                      ].map((metric: { label: string; key: string; multiply?: number; suffix?: string; money?: boolean; decimals?: number }) => (
                         <tr key={metric.label}>
                           <td className="py-2 text-gray-300">{metric.label}</td>
                           {scenarios.map(scenario => {
                             const results = calculateResults(scenario);
                             let value = results[metric.key as keyof typeof results] as number;
                             if (metric.multiply) value *= metric.multiply;
-                            const formatted = typeof value === 'number' ? 
-                              (metric.multiply ? value.toFixed(0) : value.toString()) : 
+                            const formatted = typeof value === 'number' ?
+                              (metric.money ? `$${Math.round(value).toLocaleString()}` :
+                                metric.decimals !== undefined ? value.toFixed(metric.decimals) :
+                                metric.multiply ? value.toFixed(0) : value.toString()) :
                               value;
                             return (
                               <td key={scenario.id} className="text-center py-2 text-gray-100 font-medium">
@@ -319,6 +330,12 @@ export default function ScenarioComparePage() {
                     </tbody>
                   </table>
                 </div>
+                <p className="mt-4 text-xs text-gray-500">
+                  Premium estimates use CMHC&apos;s standard rental premium grid (effective July 14, 2025): base rate by LTV/LTC
+                  and loan purpose (new construction priced as construction financing), plus 0.25% per 5 years of amortization
+                  beyond 25, less the MLI Select discount. Excludes EGI, non-residential and second-mortgage surcharges.
+                  CMHC updates these tables periodically — confirm with your lender.
+                </p>
               </Card>
             </div>
           )}

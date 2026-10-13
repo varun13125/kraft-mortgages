@@ -300,7 +300,7 @@ export function generateGenericReport(config: GenericReportConfig) {
   }
 
   doc.save(
-    `kraft-mortgages-${config.calculatorName.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${config.userName.replace(/\s+/g, "-").toLowerCase()}.pdf`
+    `kraft-mortgages-${config.calculatorName.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${config.userName.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "report"}.pdf`
   );
 }
 

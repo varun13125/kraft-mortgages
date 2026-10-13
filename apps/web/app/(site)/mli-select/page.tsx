@@ -100,7 +100,7 @@ export default function MLISelectPage() {
             <div className="p-8 bg-gray-800/50 backdrop-blur-sm rounded-xl shadow-2xl border border-gray-700/50">
               <h3 className="text-xl font-semibold text-gray-100 mb-3">Talk to an MLI Select Specialist</h3>
               <p className="text-gray-400 mb-6">
-                Get a free assessment of your project — we'll size your deal, optimize points, and map your timeline.
+                Get a free assessment of your project — we&apos;ll size your deal, optimize points, and map your timeline.
               </p>
               <Link 
                 href="/contact"

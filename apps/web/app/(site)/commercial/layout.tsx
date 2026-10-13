@@ -1,4 +1,7 @@
 import type { Metadata } from "next";
+import Footer from "@/components/Footer";
+import { OG_DEFAULTS } from "@/lib/seo/og";
+import { ORG_ID } from "@/lib/seo/jsonld";
 
 export const metadata: Metadata = {
   title: "Commercial Mortgages BC | Kraft Mortgages",
@@ -8,6 +11,7 @@ export const metadata: Metadata = {
     canonical: 'https://www.kraftmortgages.ca/commercial',
   },
   openGraph: {
+    ...OG_DEFAULTS,
     title: "Commercial Mortgages BC | Kraft Mortgages",
     description: "Commercial mortgage financing for multi-unit, office, retail, and industrial properties across BC, AB & ON.",
     url: "https://www.kraftmortgages.ca/commercial",
@@ -15,35 +19,26 @@ export const metadata: Metadata = {
 };
 
 export default function CommercialLayout({ children }: { children: React.ReactNode }) {
+  // Service node; the business itself is the single org node (provider) in app/layout.tsx.
   const schema = {
     "@context": "https://schema.org",
-    "@graph": [{
-      "@type": "FinancialService",
-      "@id": "https://www.kraftmortgages.ca/#commercial",
-      name: "Kraft Mortgages Canada",
-      url: "https://www.kraftmortgages.ca/commercial",
-      telephone: "+1-604-593-1550",
-      description: "Commercial mortgage financing for multi-unit, office, retail, and industrial properties across BC, AB & ON.",
-      address: {
-        "@type": "PostalAddress",
-        streetAddress: "#301 - 1688 152nd Street",
-        addressLocality: "Surrey",
-        addressRegion: "BC",
-        postalCode: "V4A 4N2",
-        addressCountry: "CA"
-      },
-      areaServed: [
-        { "@type": "CanadianProvince", "name": "British Columbia" },
-        { "@type": "CanadianProvince", "name": "Alberta" },
-        { "@type": "CanadianProvince", "name": "Ontario" }
-      ],
-      serviceType: "commercial mortgages"
-    }]
+    "@type": "Service",
+    "@id": "https://www.kraftmortgages.ca/commercial#service",
+    serviceType: "commercial mortgages",
+    provider: { "@id": ORG_ID },
+    url: "https://www.kraftmortgages.ca/commercial",
+    description: "Commercial mortgage financing for multi-unit, office, retail, and industrial properties across BC, AB & ON.",
+    areaServed: [
+      { "@type": "AdministrativeArea", name: "British Columbia" },
+      { "@type": "AdministrativeArea", name: "Alberta" },
+      { "@type": "AdministrativeArea", name: "Ontario" }
+    ]
   };
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
       {children}
+      <Footer />
     </>
   );
 }

@@ -27,8 +27,8 @@ export default function AlternativeIncomeCalculator() {
   const [incomeDocumentation, setIncomeDocumentation] = useState("stated"); // stated, bank-statements, tax-returns
   
   // Private Lending Parameters
-  const loanAmount = purchasePrice - downPayment;
-  const ltvRatio = (loanAmount / purchasePrice) * 100;
+  const loanAmount = Math.max(0, purchasePrice - downPayment);
+  const ltvRatio = purchasePrice > 0 ? (loanAmount / purchasePrice) * 100 : 0;
   
   // Interest rate based on risk profile
   const interestRate = useMemo(() => {
@@ -52,22 +52,31 @@ export default function AlternativeIncomeCalculator() {
   // Income calculations
   const totalGrossIncome = employmentIncome + selfEmployedIncome + rentalIncome + investmentIncome + otherIncome;
   const adjustedRentalIncome = rentalIncome * 0.75; // 75% of rental income considered
-  const adjustedSelfEmployedIncome = selfEmployedIncome * 0.85; // 85% of self-employed income
+  // Self-employed: with tax returns (NOAs), alternative lenders commonly gross up net business
+  // income by 15%; bank-statement and stated programs use the reasonable declared income as-is.
+  const selfEmployedFactor = incomeDocumentation === "tax-returns" ? 1.15 : 1.0;
+  const adjustedSelfEmployedIncome = selfEmployedIncome * selfEmployedFactor;
   const totalQualifyingIncome = employmentIncome + adjustedSelfEmployedIncome + adjustedRentalIncome + investmentIncome + otherIncome;
   
   // Monthly calculations
   const monthlyQualifyingIncome = totalQualifyingIncome / 12;
-  const monthlyDebts = (creditCardDebt + carLoans + otherDebts) / 12; // Simplified monthly payment estimate
-  
-  // Mortgage payment calculation (2-year term typical for private)
-  const monthlyRate = interestRate / 100 / 12;
-  const amortizationMonths = 25 * 12; // 25-year amortization
-  const monthlyPayment = (loanAmount * monthlyRate * Math.pow(1 + monthlyRate, amortizationMonths)) / 
-                        (Math.pow(1 + monthlyRate, amortizationMonths) - 1);
-  
-  // Ratios
-  const gdsRatio = (monthlyPayment / monthlyQualifyingIncome) * 100;
-  const tdsRatio = ((monthlyPayment + monthlyDebts) / monthlyQualifyingIncome) * 100;
+  // Inputs are outstanding BALANCES; lenders use ~3% of the balance per month when the actual
+  // payment is unknown (previously balances were divided by 12, overstating payments ~2.8x).
+  const monthlyDebts = (creditCardDebt + carLoans + otherDebts) * 0.03;
+
+  // Private mortgages are typically interest-only on a 1-year (renewable) term
+  const monthlyPayment = loanAmount * interestRate / 100 / 12;
+
+  // Typical private-lending fees (deducted from or added to the advance)
+  const lenderFee = loanAmount * 0.02; // 1–3% lender fee
+  const brokerFee = loanAmount * 0.01; // ~1% brokerage fee
+  const totalFees = lenderFee + brokerFee;
+  // Effective first-year cost of borrowing: interest + fees, as % of loan
+  const effectiveAnnualCost = loanAmount > 0 ? ((monthlyPayment * 12 + totalFees) / loanAmount) * 100 : 0;
+
+  // Ratios (payment only — property tax and heat not included)
+  const gdsRatio = monthlyQualifyingIncome > 0 ? (monthlyPayment / monthlyQualifyingIncome) * 100 : 0;
+  const tdsRatio = monthlyQualifyingIncome > 0 ? ((monthlyPayment + monthlyDebts) / monthlyQualifyingIncome) * 100 : 0;
   
   // Private lending qualification (more flexible than traditional)
   const privateLendingGDS = gdsRatio <= 50; // More flexible than traditional 39%
@@ -113,7 +122,7 @@ export default function AlternativeIncomeCalculator() {
                 <span className="bg-gradient-to-r from-rose-400 to-pink-500 bg-clip-text text-transparent">Alternative Income</span> Calculator
               </h1>
               <p className="text-xl text-gray-400 max-w-3xl mx-auto mb-8">
-                Qualify for financing with flexible income verification when traditional lending doesn't fit your situation.
+                Qualify for financing with flexible income verification when traditional lending doesn&apos;t fit your situation.
               </p>
             </motion.div>
           </div>
@@ -228,7 +237,7 @@ export default function AlternativeIncomeCalculator() {
                     <div className="space-y-4">
                       <div>
                         <label className="block text-sm font-medium text-gray-200 mb-2">
-                          Credit Card Debt
+                          Credit Card Balance
                         </label>
                         <input
                           type="number"
@@ -239,7 +248,7 @@ export default function AlternativeIncomeCalculator() {
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-200 mb-2">
-                          Car Loans
+                          Car Loan Balance
                         </label>
                         <input
                           type="number"
@@ -250,7 +259,7 @@ export default function AlternativeIncomeCalculator() {
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-gray-200 mb-2">
-                          Other Debts
+                          Other Debt Balances
                         </label>
                         <input
                           type="number"
@@ -326,13 +335,13 @@ export default function AlternativeIncomeCalculator() {
                         <div className="text-xl font-bold text-rose-400">
                           ${monthlyPayment.toLocaleString(undefined, {maximumFractionDigits: 0})}
                         </div>
-                        <div className="text-xs text-gray-500">25-year amortization</div>
+                        <div className="text-xs text-gray-500">Interest-only</div>
                       </div>
 
                       <div className="bg-gray-800/50 rounded-lg p-4">
                         <div className="text-sm text-gray-400 mb-1">Term</div>
-                        <div className="text-xl font-bold text-rose-400">2 Years</div>
-                        <div className="text-xs text-gray-500">Typical private term</div>
+                        <div className="text-xl font-bold text-rose-400">1 Year</div>
+                        <div className="text-xs text-gray-500">Typical private term (renewable)</div>
                       </div>
                     </div>
                   </div>
@@ -347,16 +356,47 @@ export default function AlternativeIncomeCalculator() {
                       </div>
                       <div className="flex justify-between">
                         <span className="text-gray-400">Adjusted Rental Income (75%):</span>
-                        <span className="text-white">${adjustedRentalIncome.toLocaleString()}</span>
+                        <span className="text-white">${Math.round(adjustedRentalIncome).toLocaleString()}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-gray-400">Adjusted Self-Employed (85%):</span>
-                        <span className="text-white">${adjustedSelfEmployedIncome.toLocaleString()}</span>
+                        <span className="text-gray-400">Self-Employed ({selfEmployedFactor > 1 ? '15% gross-up' : 'as declared'}):</span>
+                        <span className="text-white">${Math.round(adjustedSelfEmployedIncome).toLocaleString()}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-400">Est. Monthly Debt Payments (3% of balances):</span>
+                        <span className="text-white">${Math.round(monthlyDebts).toLocaleString()}</span>
                       </div>
                       <div className="flex justify-between border-t border-gray-600 pt-2">
                         <span className="text-gray-300">Qualifying Income:</span>
-                        <span className="text-rose-400 font-bold">${totalQualifyingIncome.toLocaleString()}</span>
+                        <span className="text-rose-400 font-bold">${Math.round(totalQualifyingIncome).toLocaleString()}</span>
                       </div>
+                    </div>
+                  </div>
+
+                  {/* Cost of Borrowing */}
+                  <div className="bg-gray-700/50 rounded-xl p-6">
+                    <h3 className="text-lg font-semibold text-gray-100 mb-4">Estimated Cost of Borrowing</h3>
+                    <div className="space-y-3 text-sm">
+                      <div className="flex justify-between">
+                        <span className="text-gray-400">Lender Fee (est. 2%):</span>
+                        <span className="text-white">${Math.round(lenderFee).toLocaleString()}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-400">Broker Fee (est. 1%):</span>
+                        <span className="text-white">${Math.round(brokerFee).toLocaleString()}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-400">Interest, First Year:</span>
+                        <span className="text-white">${Math.round(monthlyPayment * 12).toLocaleString()}</span>
+                      </div>
+                      <div className="flex justify-between border-t border-gray-600 pt-2">
+                        <span className="text-gray-300">Effective First-Year Cost:</span>
+                        <span className="text-rose-400 font-bold">{effectiveAnnualCost.toFixed(2)}%</span>
+                      </div>
+                      <p className="text-xs text-gray-500">
+                        Fees vary by lender and deal (lender fees typically 1–3%); legal and appraisal costs are extra.
+                        Plan an exit (refinance to a B or A lender, or sale) before the term ends.
+                      </p>
                     </div>
                   </div>
 
@@ -369,7 +409,7 @@ export default function AlternativeIncomeCalculator() {
                         <div className={`text-xl font-bold ${privateLendingGDS ? 'text-green-400' : 'text-red-400'}`}>
                           {gdsRatio.toFixed(1)}%
                         </div>
-                        <div className="text-xs text-gray-500">Max: 50% (private)</div>
+                        <div className="text-xs text-gray-500">Max: 50% (private) • P&amp;I only</div>
                       </div>
 
                       <div className="bg-gray-800/50 rounded-lg p-4">

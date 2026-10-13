@@ -19,6 +19,7 @@ export default function Investment() {
   const [rent, setRent] = useState(4200);
   const [vacancy, setVacancy] = useState(3);
   const [expenses, setExpenses] = useState(1200);
+  const [closingCosts, setClosingCosts] = useState(15000);
   
   const r = cashflow({ 
     price, 
@@ -27,10 +28,15 @@ export default function Investment() {
     amortYears: years, 
     rentMonthly: rent, 
     vacancyPct: vacancy, 
-    expensesMonthly: expenses 
+    expensesMonthly: expenses,
+    closingCosts
   });
   
-  const isGoodInvestment = r.cf > 0 && r.dscr >= 1.2 && r.capRate >= 4;
+  const hasMortgage = r.pmt > 0;
+  // Rental (non-owner-occupied) properties need at least 20% down — default insurance isn't available
+  const downPct = price > 0 ? (down / price) * 100 : 0;
+  const belowRentalMinimum = price > 0 && downPct < 20;
+  const isGoodInvestment = r.cf > 0 && (!hasMortgage || r.dscr >= 1.2) && r.capRate >= 4;
 
   return (
     <>
@@ -77,7 +83,7 @@ export default function Investment() {
         {/* Calculator Section */}
         <section className="pb-20 px-4">
           <div className="max-w-4xl mx-auto">
-            <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl shadow-2xl border border-gray-700/50 p-8">
+            <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl shadow-2xl border border-gray-700/50 p-5 sm:p-8">
               <h2 className="text-2xl font-semibold text-gray-100 mb-6">Investment Property Analysis</h2>
               
               <div className="mb-6">
@@ -120,7 +126,8 @@ export default function Investment() {
                         rows: [
                           { label: "Monthly Cash Flow", value: "$" + Math.round(r.cf).toLocaleString("en-CA"), highlight: true },
                           { label: "Cap Rate", value: r.capRate.toFixed(2) + "%", highlight: true },
-                          { label: "DSCR", value: r.dscr.toFixed(2) },
+                          { label: "DSCR", value: hasMortgage ? r.dscr.toFixed(2) : "N/A (no mortgage)" },
+                          { label: "Cash-on-Cash Return", value: r.cashOnCash.toFixed(2) + "%" },
                           { label: "NOI", value: "$" + Math.round(r.noi).toLocaleString("en-CA") },
                         ]
                       }
@@ -141,7 +148,8 @@ export default function Investment() {
                   <input
                     type="number"
                     value={price}
-                    onChange={(e) => setPrice(Number(e.target.value))}
+                    onChange={(e) => setPrice(Math.max(0, Number(e.target.value)))}
+                    min="0"
                     className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent text-white placeholder-gray-400"
                   />
                 </div>
@@ -153,20 +161,22 @@ export default function Investment() {
                   <input
                     type="number"
                     value={down}
-                    onChange={(e) => setDown(Number(e.target.value))}
+                    onChange={(e) => setDown(Math.max(0, Number(e.target.value)))}
+                    min="0"
                     className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent text-white placeholder-gray-400"
                   />
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-gray-200 mb-2">
-                    Interest Rate (% APR)
+                    Interest Rate (%)
                   </label>
                   <input
                     type="number"
                     step="0.01"
                     value={rate}
-                    onChange={(e) => setRate(Number(e.target.value))}
+                    onChange={(e) => setRate(Math.max(0, Number(e.target.value)))}
+                    min="0"
                     className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent text-white placeholder-gray-400"
                   />
                 </div>
@@ -194,7 +204,8 @@ export default function Investment() {
                   <input
                     type="number"
                     value={rent}
-                    onChange={(e) => setRent(Number(e.target.value))}
+                    onChange={(e) => setRent(Math.max(0, Number(e.target.value)))}
+                    min="0"
                     className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent text-white placeholder-gray-400"
                   />
                 </div>
@@ -206,30 +217,54 @@ export default function Investment() {
                   <input
                     type="number"
                     value={vacancy}
-                    onChange={(e) => setVacancy(Number(e.target.value))}
+                    onChange={(e) => setVacancy(Math.min(100, Math.max(0, Number(e.target.value))))}
+                    min="0"
+                    max="100"
                     className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent text-white placeholder-gray-400"
                   />
                 </div>
 
-                <div className="md:col-span-2 lg:col-span-3">
+                <div>
+                  <label className="block text-sm font-medium text-gray-200 mb-2">
+                    Closing Costs (one-time)
+                  </label>
+                  <input
+                    type="number"
+                    value={closingCosts}
+                    onChange={(e) => setClosingCosts(Math.max(0, Number(e.target.value)))}
+                    min="0"
+                    className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent text-white placeholder-gray-400"
+                    placeholder="Land transfer tax, legal, inspection"
+                  />
+                </div>
+
+                <div className="md:col-span-2">
                   <label className="block text-sm font-medium text-gray-200 mb-2">
                     Monthly Operating Expenses
                   </label>
                   <input
                     type="number"
                     value={expenses}
-                    onChange={(e) => setExpenses(Number(e.target.value))}
+                    onChange={(e) => setExpenses(Math.max(0, Number(e.target.value)))}
+                    min="0"
                     className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent text-white placeholder-gray-400"
                     placeholder="Property taxes, insurance, maintenance, etc."
                   />
                 </div>
               </div>
 
+              {belowRentalMinimum && (
+                <div className="mb-6 p-4 rounded-lg border bg-orange-500/10 border-orange-500/30 text-sm text-orange-300 flex items-start gap-3">
+                  <AlertTriangle className="w-5 h-5 flex-shrink-0 mt-0.5" />
+                  <span>Your down payment is {downPct.toFixed(1)}% of the price. Rental (non-owner-occupied) properties generally require at least 20% down because mortgage default insurance isn&apos;t available for them. Owner-occupied 2–4 unit homes have different rules.</span>
+                </div>
+              )}
+
               {/* Results */}
-              <div className="bg-gray-700/50 rounded-xl p-6 mb-6">
+              <div className="bg-gray-700/50 rounded-xl p-4 sm:p-6 mb-6">
                 <h3 className="text-lg font-semibold text-gray-100 mb-4">Investment Analysis</h3>
                 
-                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5 mb-6">
+                <div className="grid gap-4 grid-cols-2 lg:grid-cols-3 mb-6">
                   <div className="bg-gray-800/50 rounded-lg p-4">
                     <div className="text-sm text-gray-400 mb-1">Monthly Payment</div>
                     <div className="text-2xl font-bold text-red-400">
@@ -259,15 +294,23 @@ export default function Investment() {
                     <div className="text-2xl font-bold text-gold-400">
                       {r.capRate.toFixed(2)}%
                     </div>
-                    <div className="text-xs text-gray-500">Annual return</div>
+                    <div className="text-xs text-gray-500">Annual NOI ÷ price</div>
                   </div>
 
                   <div className="bg-gray-800/50 rounded-lg p-4">
                     <div className="text-sm text-gray-400 mb-1">DSCR</div>
-                    <div className={`text-2xl font-bold ${r.dscr >= 1.2 ? 'text-green-400' : 'text-orange-400'}`}>
-                      {r.dscr.toFixed(2)}
+                    <div className={`text-2xl font-bold ${!hasMortgage || r.dscr >= 1.2 ? 'text-green-400' : 'text-orange-400'}`}>
+                      {hasMortgage ? r.dscr.toFixed(2) : "N/A"}
                     </div>
-                    <div className="text-xs text-gray-500">Debt coverage</div>
+                    <div className="text-xs text-gray-500">{hasMortgage ? "NOI ÷ mortgage payment" : "No mortgage"}</div>
+                  </div>
+
+                  <div className="bg-gray-800/50 rounded-lg p-4">
+                    <div className="text-sm text-gray-400 mb-1">Cash-on-Cash</div>
+                    <div className={`text-2xl font-bold ${r.cashOnCash >= 0 ? 'text-gold-400' : 'text-red-400'}`}>
+                      {r.cashOnCash.toFixed(2)}%
+                    </div>
+                    <div className="text-xs text-gray-500">Annual cash flow ÷ cash invested</div>
                   </div>
                 </div>
 
@@ -284,7 +327,7 @@ export default function Investment() {
                       </div>
                       <div className="text-sm text-gray-400">
                         {isGoodInvestment 
-                          ? `Positive cash flow with ${r.capRate.toFixed(1)}% cap rate and ${r.dscr.toFixed(2)} DSCR`
+                          ? `Positive cash flow with ${r.capRate.toFixed(1)}% cap rate${hasMortgage ? ` and ${r.dscr.toFixed(2)} DSCR` : ""}`
                           : 'Consider adjusting purchase price, down payment, or rental income'
                         }
                       </div>
@@ -293,7 +336,7 @@ export default function Investment() {
                 </div>
 
                 <div className="mt-4 text-xs text-gray-400">
-                  <strong>Note:</strong> This analysis excludes closing costs, vacancy periods, and major repairs. Consult with a financial advisor for comprehensive investment planning.
+                  <strong>Note:</strong> Estimates only, before income tax. Cash flow excludes capital expenditures/major repairs, rent growth and appreciation; closing costs are used only for cash-on-cash return. Lenders may qualify rental income differently (e.g. 50% add-back or rental offset). Consult a financial advisor for comprehensive investment planning.
                 </div>
               </div>
 

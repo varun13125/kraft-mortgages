@@ -1,11 +1,17 @@
 import { NextResponse } from 'next/server';
 
+// Computed per request (was statically rendered at build time, freezing weekId).
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
   try {
     // For now, return a sample strategy response
     // This would normally fetch from your strategy database/collection
     
+    // NOTE: static placeholder - the real generated strategy is served by
+    // GET /api/strategy/weekly (admin). `sample: true` flags this to callers.
     const sampleStrategy = {
+      sample: true,
       weekId: `${new Date().getFullYear()}-W${Math.ceil((Date.now() - new Date(new Date().getFullYear(), 0, 1).getTime()) / (7 * 24 * 60 * 60 * 1000))}`,
       actions: [
         {

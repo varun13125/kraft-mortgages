@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { AlertTriangle, DollarSign, Percent } from "lucide-react";
-import { validateNumericInput, ValidationRule } from "@/lib/utils/validation";
+import { validateNumericInput, ValidationRule, formatCurrency } from "@/lib/utils/validation";
 
 interface ValidatedInputProps {
   label: string;
@@ -121,6 +121,12 @@ export function ValidatedInput({
           <AlertTriangle className="w-3.5 h-3.5 flex-shrink-0" />
           <span>{error}</span>
         </div>
+      )}
+      {error && localValue !== value.toString() && (
+        // Invalid entries are never passed to onChange, so make it explicit which value results use
+        <p className="text-xs text-gray-500 mt-1">
+          Results are using the last valid value ({type === 'currency' ? formatCurrency(value) : type === 'percentage' ? `${value}%` : value.toLocaleString('en-CA')}).
+        </p>
       )}
       {help && !error && (
         <p className="text-xs text-gray-500 mt-1.5 leading-relaxed">{help}</p>

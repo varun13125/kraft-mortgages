@@ -504,6 +504,10 @@ export default function BusinessFundingPage() {
                               </>
                             )}
                           </button>
+                          <p className="mt-3 text-xs text-gray-400 text-center">
+                            By submitting, you agree to be contacted about your funding request. Your information is handled in accordance with our{" "}
+                            <a href="/privacy" className="underline hover:text-gold-400">Privacy Policy</a>.
+                          </p>
                         </div>
                       </motion.form>
                     )}

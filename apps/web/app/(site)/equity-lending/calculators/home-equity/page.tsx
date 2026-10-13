@@ -4,36 +4,51 @@ import { motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
 import { TrendingUp, Home, Calculator, DollarSign, AlertTriangle, CheckCircle } from "lucide-react";
 import Link from "next/link";
+import { useLiveRates } from "@/lib/useLiveRates";
+import { payment } from "@/lib/calc/payment";
+import { stressTestRate } from "@/lib/calc/affordability";
 
 export default function HomeEquityCalculator() {
   const [homeValue, setHomeValue] = useState(800000);
   const [currentMortgage, setCurrentMortgage] = useState(400000);
   const [creditScore, setCreditScore] = useState(750);
-  const [income, setIncome] = useState(100000);
-  const [monthlyDebts, setMonthlyDebts] = useState(2000);
+  const [income, setIncome] = useState(150000);
+  const [monthlyDebts, setMonthlyDebts] = useState(500);
+  const [taxAndHeat, setTaxAndHeat] = useState(450);
+  const { best5YrFixed } = useLiveRates();
 
-  // Calculate available equity
+  // Calculate available equity (LTV room): 80% max for a conventional refinance
   const availableEquity = useMemo(() => {
     const maxLTV = creditScore >= 720 ? 0.80 : creditScore >= 680 ? 0.75 : 0.70;
     const maxLoanAmount = homeValue * maxLTV;
     return Math.max(0, maxLoanAmount - currentMortgage);
   }, [homeValue, currentMortgage, creditScore]);
 
-  // Calculate qualification metrics
+  // Rate estimation: current best 5-yr fixed + credit-based spread (estimates; refinances are uninsured)
+  const estimatedRate = useMemo(() => {
+    if (creditScore >= 750) return best5YrFixed + 0.30;
+    if (creditScore >= 700) return best5YrFixed + 0.60;
+    if (creditScore >= 650) return best5YrFixed + 1.60; // typically alternative (B) lender
+    return best5YrFixed + 3.00;
+  }, [creditScore, best5YrFixed]);
+
+  // Qualification (refinance): the whole new mortgage is stress-tested at max(rate + 2%, 5.25%)
+  // over 25 years; TDS = mortgage + property tax/heat + other debts ≤ 44% of gross income.
   const monthlyIncome = income / 12;
-  const debtToIncome = (monthlyDebts / monthlyIncome) * 100;
+  const qualRate = stressTestRate(estimatedRate);
+  const qualPerDollar = payment({ principal: 1, annualRatePct: qualRate, amortYears: 25, paymentsPerYear: 12 });
+  const maxMortgageByIncome = Math.max(0, (monthlyIncome * 0.44 - monthlyDebts - taxAndHeat) / qualPerDollar);
+  const availableByIncome = Math.max(0, maxMortgageByIncome - currentMortgage);
+  const availableToBorrow = Math.min(availableEquity, availableByIncome);
+  const debtToIncome = monthlyIncome > 0
+    ? (((currentMortgage + availableEquity) * qualPerDollar + monthlyDebts + taxAndHeat) / monthlyIncome) * 100
+    : 0;
   const qualifiesBasic = debtToIncome <= 44 && creditScore >= 600;
 
-  // Rate estimation based on credit score and equity position
-  const estimatedRate = useMemo(() => {
-    // Equity lending rate range: 4.99% - 7.95%
-    if (creditScore >= 750) return 4.99;
-    if (creditScore >= 700) return 5.50;
-    if (creditScore >= 650) return 6.50;
-    return 7.95;
-  }, [creditScore]);
-
-  const monthlyPaymentIOOnly = (availableEquity * estimatedRate / 100) / 12;
+  // Estimated payment on the new money at the contract rate, 25-year amortization (semi-annual compounding)
+  const monthlyPaymentNewMoney = availableToBorrow > 0
+    ? payment({ principal: availableToBorrow, annualRatePct: estimatedRate, amortYears: 25, paymentsPerYear: 12 })
+    : 0;
 
   return (
     <>
@@ -146,6 +161,18 @@ export default function HomeEquityCalculator() {
                     className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-white"
                   />
                 </div>
+
+                <div className="md:col-span-2">
+                  <label className="block text-sm font-medium text-gray-200 mb-2">
+                    Property Tax &amp; Heating (monthly)
+                  </label>
+                  <input
+                    type="number"
+                    value={taxAndHeat}
+                    onChange={(e) => setTaxAndHeat(Math.max(0, Number(e.target.value)))}
+                    className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-white"
+                  />
+                </div>
               </div>
 
               {/* Results */}
@@ -164,9 +191,11 @@ export default function HomeEquityCalculator() {
                   <div className="bg-gray-800/50 rounded-lg p-4">
                     <div className="text-sm text-gray-400 mb-1">Available to Borrow</div>
                     <div className="text-2xl font-bold text-emerald-400">
-                      ${availableEquity.toLocaleString(undefined, {maximumFractionDigits: 0})}
+                      ${availableToBorrow.toLocaleString(undefined, {maximumFractionDigits: 0})}
                     </div>
-                    <div className="text-xs text-gray-500">Based on LTV limits</div>
+                    <div className="text-xs text-gray-500">
+                      Lesser of LTV room (${Math.round(availableEquity).toLocaleString()}) and income limit (${Math.round(availableByIncome).toLocaleString()})
+                    </div>
                   </div>
 
                   <div className="bg-gray-800/50 rounded-lg p-4">
@@ -176,11 +205,11 @@ export default function HomeEquityCalculator() {
                   </div>
 
                   <div className="bg-gray-800/50 rounded-lg p-4">
-                    <div className="text-sm text-gray-400 mb-1">Interest Only Payment</div>
+                    <div className="text-sm text-gray-400 mb-1">Payment on New Money</div>
                     <div className="text-2xl font-bold text-emerald-400">
-                      ${monthlyPaymentIOOnly.toLocaleString(undefined, {maximumFractionDigits: 0})}
+                      ${monthlyPaymentNewMoney.toLocaleString(undefined, {maximumFractionDigits: 0})}
                     </div>
-                    <div className="text-xs text-gray-500">Monthly interest only</div>
+                    <div className="text-xs text-gray-500">Monthly, 25-yr amortization (est.)</div>
                   </div>
                 </div>
 
@@ -196,10 +225,10 @@ export default function HomeEquityCalculator() {
                         {qualifiesBasic ? 'Likely Qualifies' : 'May Need Review'}
                       </div>
                       <div className="text-sm text-gray-400">
-                        Debt-to-income: {debtToIncome.toFixed(1)}% 
-                        {qualifiesBasic 
-                          ? ' - Within acceptable range'
-                          : ' - May require additional documentation'
+                        TDS at full LTV room: {debtToIncome.toFixed(1)}% (stress-tested at {qualRate.toFixed(2)}%, max 44%)
+                        {qualifiesBasic
+                          ? ' - Within guideline'
+                          : ' - Income limits the amount; an alternative lender or smaller amount may be needed'
                         }
                       </div>
                     </div>
@@ -217,11 +246,16 @@ export default function HomeEquityCalculator() {
                   </div>
                   <div>
                     <div className="text-sm text-gray-400 mb-1">Private Lender Rate</div>
-                    <div className="text-xl font-bold text-red-400">12-18%</div>
+                    <div className="text-xl font-bold text-red-400">8-15%+</div>
                   </div>
                 </div>
                 <div className="text-sm text-gray-400 mt-3">
                   Save thousands with our institutional rates and professional service.
+                </div>
+                <div className="text-xs text-gray-500 mt-2">
+                  Estimates only. Assumes a refinance of the whole mortgage, qualified at the federal stress-test rate with a 44% TDS limit.
+                  Rates are estimated from current best 5-year fixed rates plus a credit-based spread; refinance penalties, legal and
+                  appraisal costs are not included.
                 </div>
               </div>
 

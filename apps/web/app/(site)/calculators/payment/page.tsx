@@ -10,6 +10,7 @@ import { Calculator, DollarSign, TrendingUp, ArrowRight, Clock, Download } from 
 import Link from "next/link";
 import PdfLeadModal from "@/components/PdfLeadModal";
 import { CalculatorSchema } from "@/components/SEO/CalculatorSchema";
+import Navigation from "@/components/Navigation";
 import { RelatedCalculators } from "@/components/calculators/RelatedCalculators";
 
 export default function PaymentCalculatorPage() {
@@ -47,12 +48,13 @@ export default function PaymentCalculatorPage() {
   }
 
   const monthly = validationError ? 0 : payment({ principal, annualRatePct: rate, amortYears: years, paymentsPerYear: 12 });
-  const { acceleratedBiweekly, annualSavings } = validationError 
-    ? { acceleratedBiweekly: 0, annualSavings: 0 } 
+  const { acceleratedBiweekly, totalInterestSaved, yearsSaved } = validationError
+    ? { acceleratedBiweekly: 0, totalInterestSaved: 0, yearsSaved: 0 }
     : biweeklySavings({ principal, annualRatePct: rate, amortYears: years });
 
   return (
     <>
+      <Navigation />
 <main className="min-h-screen mt-16">
       <CalculatorSchema name="Mortgage Payment Calculator" description="Calculate monthly mortgage payments and accelerated biweekly savings with live scenarios." url="/calculators/payment" />
 
@@ -135,7 +137,7 @@ export default function PaymentCalculatorPage() {
                         title: "Your Inputs",
                         rows: [
                           { label: "Mortgage Amount", value: "$" + Math.round(principal).toLocaleString("en-CA") },
-                          { label: "Interest Rate", value: rate + "%" },
+                          { label: "Interest Rate", value: rate.toFixed(2) + "%" },
                           { label: "Amortization", value: years + " years" },
                         ]
                       },
@@ -143,8 +145,9 @@ export default function PaymentCalculatorPage() {
                         title: "Your Results",
                         rows: [
                           { label: "Monthly Payment", value: "$" + Math.round(monthly).toLocaleString("en-CA"), highlight: true },
-                          { label: "Accelerated Biweekly", value: "$" + acceleratedBiweekly.toLocaleString("en-CA", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) },
-                          { label: "Annual Savings (Biweekly)", value: "$" + Math.round(annualSavings).toLocaleString("en-CA") },
+                          { label: "Accelerated Bi-weekly Payment", value: "$" + acceleratedBiweekly.toLocaleString("en-CA", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) },
+                          { label: "Interest Saved (Accelerated Bi-weekly)", value: "$" + Math.round(totalInterestSaved).toLocaleString("en-CA") },
+                          { label: "Time Saved (Accelerated Bi-weekly)", value: yearsSaved.toFixed(1) + " years" },
                           { label: "Total Paid (Monthly, over amortization)", value: "$" + Math.round(monthly * years * 12).toLocaleString("en-CA") },
                         ]
                       }
@@ -173,7 +176,7 @@ export default function PaymentCalculatorPage() {
                 <div>
                   <div className="flex items-center justify-between mb-2">
                     <label className="block text-sm font-medium text-gray-200">
-                      Interest Rate (% APR)
+                      Interest Rate (%)
                     </label>
                     <span className="text-[11px] text-emerald-400 font-medium flex items-center gap-1">
                       <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
@@ -247,19 +250,19 @@ export default function PaymentCalculatorPage() {
                   </div>
 
                   <div className="bg-gray-800/50 rounded-lg p-4">
-                    <div className="text-sm text-gray-400 mb-1">Bi-weekly Payment</div>
+                    <div className="text-sm text-gray-400 mb-1">Accelerated Bi-weekly</div>
                     <div className="text-2xl font-bold text-gold-400">
                       ${acceleratedBiweekly.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}
                     </div>
-                    <div className="text-xs text-gray-500">26 payments/year</div>
+                    <div className="text-xs text-gray-500">Monthly ÷ 2, 26 payments/year</div>
                   </div>
 
                   <div className="bg-gray-800/50 rounded-lg p-4">
-                    <div className="text-sm text-gray-400 mb-1">Annual Savings</div>
+                    <div className="text-sm text-gray-400 mb-1">Interest Saved</div>
                     <div className="text-2xl font-bold text-green-400">
-                      ${annualSavings.toLocaleString(undefined, {maximumFractionDigits: 0})}
+                      ${totalInterestSaved.toLocaleString(undefined, {maximumFractionDigits: 0})}
                     </div>
-                    <div className="text-xs text-gray-500">With bi-weekly payments</div>
+                    <div className="text-xs text-gray-500">Over the life of the mortgage, bi-weekly</div>
                   </div>
                 </div>
 
@@ -269,7 +272,7 @@ export default function PaymentCalculatorPage() {
                     <div>
                       <div className="font-semibold text-green-400">Accelerated Payment Benefits</div>
                       <div className="text-sm text-gray-400">
-                        By switching to bi-weekly payments, you could save ${annualSavings.toLocaleString()} annually and pay off your mortgage faster.
+                        By switching to accelerated bi-weekly payments, you could save about ${totalInterestSaved.toLocaleString(undefined, {maximumFractionDigits: 0})} in interest and pay off your mortgage about {yearsSaved.toFixed(1)} years sooner.
                       </div>
                     </div>
                   </div>
@@ -292,7 +295,7 @@ export default function PaymentCalculatorPage() {
               </div>
 
               <div className="text-sm text-gray-400 mb-6">
-                <strong>Note:</strong> This calculator includes payment frequency comparison analysis. Provincial taxes and fees may apply. Results are for educational purposes only.
+                <strong>Note:</strong> Payments assume interest compounded semi-annually, the standard for Canadian fixed-rate mortgages (variable-rate products may compound monthly), and a constant rate for the full amortization. Results are for educational purposes only.
               </div>
 
               {/* Related Calculators */}

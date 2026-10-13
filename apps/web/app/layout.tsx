@@ -4,6 +4,7 @@ import { Analytics } from "@/components/Analytics";
 import { Analytics as VercelAnalytics } from "@vercel/analytics/react";
 import { PrefSync } from "@/components/PrefSync";
 import { PWA } from "@/components/PWA";
+import { MotionProvider } from "@/components/MotionProvider";
 import { JsonLd } from "@/components/SEO/JsonLd";
 import { orgJsonLd } from "@/lib/seo/jsonld";
 import { BUSINESS } from "@/lib/seo/business-config";
@@ -31,9 +32,10 @@ export const metadata: Metadata = {
   title: 'Kraft Mortgages Canada Inc. | Mortgage Broker Surrey',
   description: 'Licensed Canadian mortgage brokerage firm providing optimized financing strategies across BC, AB, and ON. Specializing in CMHC MLI Select and commercial draw systems.',
   keywords: "mortgage broker Surrey, Surrey mortgage broker, mortgage broker BC, mortgage broker Alberta, mortgage broker Ontario, MLI Select, construction financing, self-employed mortgages, private lending, best mortgage broker Surrey",
-  alternates: {
-    canonical: 'https://www.kraftmortgages.ca',
-  },
+  // NOTE: no `alternates.canonical` here on purpose. A root-level canonical is
+  // inherited by every page that doesn't set its own, which made dozens of
+  // calculator/MLI pages declare the HOMEPAGE as their canonical. The homepage
+  // sets its own canonical in app/(site)/page.tsx; every other page must too.
   icons: {
     icon: [
       { url: '/favicon-16.png', sizes: '16x16', type: 'image/png' },
@@ -48,7 +50,8 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Kraft Mortgages Canada Inc. | Mortgage Broker Surrey',
     description: 'Licensed Canadian mortgage brokerage firm providing optimized financing strategies across BC, AB, and ON. Specializing in CMHC MLI Select and commercial draw systems.',
-    url: 'https://www.kraftmortgages.ca',
+    // No `url` here: it would be inherited as og:url = homepage by every page
+    // without its own openGraph. Pages set their own og:url.
     siteName: 'Kraft Mortgages',
     locale: 'en_CA',
     type: 'website',
@@ -60,13 +63,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en-CA" className="dark overflow-x-hidden max-w-full">
       <head>
-        {/* Preconnect to external domains for faster resource loading */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link rel="preconnect" href="https://vercel.live" />
+        {/* (Removed unused preconnects to fonts.googleapis.com / fonts.gstatic.com /
+            vercel.live — no Google Fonts or Vercel toolbar are loaded, so they only
+            opened idle connections that competed with critical requests.) */}
         <JsonLd data={orgJsonLd()} />
       </head>
       <body className="min-h-screen overflow-x-hidden w-full max-w-full">
+        <MotionProvider>
         <div className="relative min-h-screen overflow-x-hidden w-full max-w-full bg-slate-950 text-gray-100 antialiased selection:bg-gold-500/30 selection:text-gold-200">
           {/* Unified Site-wide Animated Background */}
           <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
@@ -100,6 +103,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
         {/* Global Thinkrr Voice AI Dual-Agent (English & Hindi) WebRTC Widget */}
         <ThinkrrVoiceWidget />
+        </MotionProvider>
 
         <Analytics />
         <VercelAnalytics />

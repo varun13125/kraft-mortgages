@@ -8,6 +8,8 @@ import { Calculator, ChevronDown, ChevronUp, AlertTriangle, CheckCircle, XCircle
 import Link from "next/link";
 import { ValidatedInput, ValidatedSlider } from "@/components/ui/ValidatedInput";
 import { formatCurrency } from "@/lib/utils/validation";
+import { payment } from "@/lib/calc/payment";
+import { cmhcPremium as sharedCmhcPremium, QUALIFYING_RATIOS } from "@/lib/calc/cmhc";
 import PdfLeadModal from "@/components/PdfLeadModal";
 import { CalculatorSchema } from "@/components/SEO/CalculatorSchema";
 import { RelatedCalculators } from "@/components/calculators/RelatedCalculators";
@@ -15,15 +17,15 @@ import { RelatedCalculators } from "@/components/calculators/RelatedCalculators"
 const faqs = [
   {
     q: "What is a good GDS ratio in Canada?",
-    a: "CMHC and most lenders cap GDS at 32% for insured mortgages and 35% for conventional. A lower GDS (25-30%) gives you more financial breathing room. Some alternative lenders accept GDS up to 44%, but at higher interest rates."
+    a: "CMHC's maximum GDS for insured mortgages is 39%, calculated at the stress-test rate. Some lenders apply stricter limits (for example 32–35%), especially on conventional mortgages. A lower GDS (25-30%) gives you more financial breathing room."
   },
   {
     q: "What is a good TDS ratio in Canada?",
-    a: "The standard TDS limit is 40% for CMHC-insured mortgages and 42-44% for conventional. A TDS below 35% is considered comfortable. If your TDS is above 42%, you may need to reduce existing debts, increase income, or work with an alternative lender."
+    a: "CMHC's maximum TDS for insured mortgages is 44%. Some lenders apply stricter limits (for example 40–42%). A TDS below 35% is considered comfortable. If your TDS is above 44%, you may need to reduce existing debts, increase income, or work with an alternative lender."
   },
   {
     q: "Does CMHC use stress test rates for GDS/TDS calculations?",
-    a: "Yes. CMHC requires the mortgage qualifying rate (minimum of contract rate + 2% or the Bank of Canada benchmark) for GDS/TDS calculations. This means your ratios will be higher than what your actual payments would be at the contracted rate."
+    a: "Yes. GDS/TDS are calculated with the payment at the minimum qualifying rate — the greater of your contract rate + 2% or 5.25%. This means your ratios will be higher than what your actual payments would be at the contracted rate."
   },
   {
     q: "How can I improve my debt service ratios?",
@@ -31,31 +33,18 @@ const faqs = [
   },
   {
     q: "Do all lenders use the same GDS/TDS limits?",
-    a: "No. CMHC sets guidelines, but lenders can be more restrictive. Big banks often use 32/40 for insured. Monoline lenders may stretch to 35/42. Alternative and private lenders have their own criteria and often don't use standard ratios at all, focusing instead on equity and property value."
+    a: "No. Mortgage insurers (CMHC, Sagen, Canada Guaranty) cap insured mortgages at 39% GDS / 44% TDS, but individual lenders can be more restrictive, particularly for conventional mortgages or weaker credit. Alternative and private lenders have their own criteria and often don't use standard ratios at all, focusing instead on equity and property value."
   }
 ];
 
+// Canadian semi-annual compounding via the shared helper (was US-style monthly compounding)
 function monthlyPayment(principal: number, annualRate: number, years: number): number {
-  if (principal <= 0) return 0;
-  const r = annualRate / 100 / 12;
-  const n = years * 12;
-  if (r === 0) return principal / n;
-  return (principal * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+  return payment({ principal, annualRatePct: annualRate, amortYears: years });
 }
 
-function cmhcPremium(downPayment: number, price: number): number {
-  const loan = price - downPayment;
-  if (downPayment >= price * 0.2) return 0;
-  const ltv = loan / price;
-  let rate: number;
-  if (ltv <= 0.65) rate = 0.006;
-  else if (ltv <= 0.75) rate = 0.015;
-  else if (ltv <= 0.8) rate = 0.024;
-  else if (ltv <= 0.85) rate = 0.028;
-  else if (ltv <= 0.9) rate = 0.031;
-  else if (ltv <= 0.95) rate = 0.04;
-  else rate = 0.042;
-  return loan * rate;
+// Shared CMHC schedule (the old local table had a fabricated 1.5% / 4.2% tier)
+function cmhcPremium(downPayment: number, price: number, amortYears?: number): number {
+  return sharedCmhcPremium(price, downPayment, amortYears);
 }
 
 export default function DebtServiceRatioPage() {
@@ -82,12 +71,16 @@ export default function DebtServiceRatioPage() {
     const totalIncome = annualIncome + coApplicantIncome;
     const monthlyIncome = totalIncome / 12;
 
+    // Use the correct stress test rate: max(contract rate + 2%, 5.25%) per OSFI B-20
+    const stressTestRate = Math.max(mortgageRate + 2, 5.25);
+
     let mortgagePayment: number;
     if (calcMethod === "auto") {
       const down = homePrice * downPaymentPct / 100;
-      const cmhc = cmhcPremium(down, homePrice);
+      const cmhc = cmhcPremium(down, homePrice, amortization);
       const loan = homePrice - down + cmhc;
-      mortgagePayment = monthlyPayment(loan, mortgageRate, amortization);
+      // Lenders calculate GDS/TDS with the payment at the qualifying (stress test) rate
+      mortgagePayment = monthlyPayment(loan, stressTestRate, amortization);
     } else {
       mortgagePayment = manualMortgage;
     }
@@ -107,8 +100,6 @@ export default function DebtServiceRatioPage() {
     // Estimate max mortgage from max housing budget
     const nonMortgageHousing = monthlyPropertyTax + monthlyHeating + halfCondo;
     const maxMonthlyMortgage = Math.max(0, maxHousing - nonMortgageHousing);
-    // Use the correct stress test rate: max(contract rate + 2%, 5.25%) per OSFI B-20
-    const stressTestRate = Math.max(mortgageRate + 2, 5.25);
     const rDecimal = stressTestRate / 100;
     const r = Math.pow(1 + rDecimal / 2, 2 / 12) - 1; // Canadian semi-annual → monthly
     const n = amortization * 12;
@@ -116,16 +107,18 @@ export default function DebtServiceRatioPage() {
       ? maxMonthlyMortgage * (Math.pow(1 + r, n) - 1) / (r * Math.pow(1 + r, n))
       : 0;
 
-    const gdsPass = gds <= 32;
-    const tdsPass = tds <= 40;
-    const conventionalGdsPass = gds <= 35;
-    const conventionalTdsPass = tds <= 42;
+    // CMHC insured maxima are 39% GDS / 44% TDS (the previous 32/40 check contradicted
+    // the 39/44 max-mortgage math and the PDF). Some lenders apply stricter 35/42 limits.
+    const gdsPass = monthlyIncome > 0 && gds <= QUALIFYING_RATIOS.GDS_MAX;
+    const tdsPass = monthlyIncome > 0 && tds <= QUALIFYING_RATIOS.TDS_MAX;
+    const conventionalGdsPass = monthlyIncome > 0 && gds <= 35;
+    const conventionalTdsPass = monthlyIncome > 0 && tds <= 42;
 
     return {
       totalIncome, monthlyIncome, mortgagePayment, housingCosts, totalDebts,
       gds, tds, halfCondo, gdsPass, tdsPass,
       conventionalGdsPass, conventionalTdsPass,
-      cmhcMaxMortgage, maxMonthlyMortgage
+      cmhcMaxMortgage, maxMonthlyMortgage, stressTestRate
     };
   }, [annualIncome, coApplicantIncome, calcMethod, manualMortgage, homePrice, downPaymentPct, mortgageRate, amortization, monthlyPropertyTax, monthlyHeating, condoFees, carPayment, creditCards, studentLoans, otherDebts, otherMortgages]);
 
@@ -214,10 +207,10 @@ export default function DebtServiceRatioPage() {
                         rows: [
                           { label: "GDS Ratio", value: results.gds.toFixed(1) + "%", highlight: true },
                           { label: "GDS Limit (Insured)", value: "39%" },
-                          { label: "GDS Limit (Conventional)", value: "35%" },
+                          { label: "GDS Limit (Stricter lenders)", value: "35%" },
                           { label: "TDS Ratio", value: results.tds.toFixed(1) + "%", highlight: true },
                           { label: "TDS Limit (Insured)", value: "44%" },
-                          { label: "TDS Limit (Conventional)", value: "42%" },
+                          { label: "TDS Limit (Stricter lenders)", value: "42%" },
                           { label: "Max Mortgage", value: "$" + Math.round(results.cmhcMaxMortgage).toLocaleString("en-CA"), highlight: true },
                         ]
                       }
@@ -251,7 +244,7 @@ export default function DebtServiceRatioPage() {
                       ))}
                     </div>
                     {calcMethod === "manual" ? (
-                      <ValidatedInput label="Monthly Mortgage Payment" value={manualMortgage} onChange={setManualMortgage} validation={{ min: 0, max: 15000 }} type="currency" />
+                      <ValidatedInput label="Monthly Mortgage Payment" value={manualMortgage} onChange={setManualMortgage} validation={{ min: 0, max: 15000 }} type="currency" help="For a lender-style result, enter the payment at the stress-test rate (contract rate + 2% or 5.25%)." />
                     ) : (
                       <div className="space-y-4">
                         <ValidatedInput label="Home Purchase Price" value={homePrice} onChange={setHomePrice} validation={{ min: 100000, max: 5000000 }} type="currency" />
@@ -299,7 +292,7 @@ export default function DebtServiceRatioPage() {
                     </div>
                     <div className="flex-1 bg-white/5 rounded-lg p-3">
                       <span className="text-gray-400 block text-xs">CMHC Limit</span>
-                      <span className="font-semibold text-gray-200">32%</span>
+                      <span className="font-semibold text-gray-200">39%</span>
                     </div>
                   </div>
                   {/* Visual bar */}
@@ -309,7 +302,7 @@ export default function DebtServiceRatioPage() {
                     </div>
                     <div className="flex justify-between mt-1 text-xs text-gray-500">
                       <span>0%</span>
-                      <span className="text-green-400">32% CMHC limit</span>
+                      <span className="text-green-400">39% CMHC limit</span>
                       <span>50%</span>
                     </div>
                   </div>
@@ -331,7 +324,7 @@ export default function DebtServiceRatioPage() {
                     </div>
                     <div className="flex-1 bg-white/5 rounded-lg p-3">
                       <span className="text-gray-400 block text-xs">CMHC Limit</span>
-                      <span className="font-semibold text-gray-200">40%</span>
+                      <span className="font-semibold text-gray-200">44%</span>
                     </div>
                   </div>
                   <div className="mt-4">
@@ -340,7 +333,7 @@ export default function DebtServiceRatioPage() {
                     </div>
                     <div className="flex justify-between mt-1 text-xs text-gray-500">
                       <span>0%</span>
-                      <span className="text-green-400">40% CMHC limit</span>
+                      <span className="text-green-400">44% CMHC limit</span>
                       <span>55%</span>
                     </div>
                   </div>
@@ -350,7 +343,7 @@ export default function DebtServiceRatioPage() {
                 <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
                   <h4 className="font-semibold mb-3 flex items-center gap-2">
                     <Info className="w-5 h-5 text-gold-400" />
-                    Conventional (20%+ Down) Limits
+                    Stricter Lender Guidelines (some conventional lenders)
                   </h4>
                   <div className="grid grid-cols-2 gap-4 text-sm">
                     <div className={`rounded-lg p-3 ${results.conventionalGdsPass ? "bg-green-500/10" : "bg-red-500/10"}`}>
@@ -368,7 +361,7 @@ export default function DebtServiceRatioPage() {
                 <div className="bg-gradient-to-br from-gold-500/20 to-amber-500/10 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-gold-500/30">
                   <p className="text-sm text-gold-300 font-medium mb-1">CMHC Maximum Qualifying Mortgage</p>
                   <p className="text-3xl sm:text-4xl font-bold text-gold-400">{formatCurrency(results.cmhcMaxMortgage, 0)}</p>
-                  <p className="text-xs text-gray-500 mt-1">Based on {amortization}-year amortization, assuming 5.34% stress test rate</p>
+                  <p className="text-xs text-gray-500 mt-1">Based on {amortization}-year amortization at a {results.stressTestRate.toFixed(2)}% stress test rate ({mortgageRate.toFixed(2)}% contract rate + 2%, min 5.25%){calcMethod === "manual" ? " — adjust the rate under “Calculate from Purchase”" : ""}</p>
                 </div>
 
                 {/* CTA */}
@@ -396,7 +389,7 @@ export default function DebtServiceRatioPage() {
 
               <h3 className="text-2xl font-semibold text-gray-100 mt-8">What Is GDS (Gross Debt Service)?</h3>
               <p>
-                Your GDS ratio measures the percentage of your gross monthly income that goes toward housing costs. Housing costs include your mortgage payment (principal + interest), property taxes, heating costs, and 50% of condo fees if applicable. For CMHC-insured mortgages (less than 20% down payment), the GDS limit is 32%. For conventional mortgages (20%+ down), most lenders allow up to 35%.
+                Your GDS ratio measures the percentage of your gross monthly income that goes toward housing costs. Housing costs include your mortgage payment (principal + interest), property taxes, heating costs, and 50% of condo fees if applicable. For CMHC-insured mortgages (less than 20% down payment), the maximum GDS is 39%. For conventional mortgages (20%+ down), limits are set by each lender — many use 39%, some are stricter (32–35%).
               </p>
               <p>
                 <strong>Formula:</strong> GDS = (Mortgage Payment + Property Tax + Heating + 50% Condo Fees) ÷ Gross Monthly Income × 100
@@ -404,7 +397,7 @@ export default function DebtServiceRatioPage() {
 
               <h3 className="text-2xl font-semibold text-gray-100 mt-8">What Is TDS (Total Debt Service)?</h3>
               <p>
-                Your TDS ratio includes everything in your GDS calculation plus all other monthly debt obligations: car payments, credit card minimums, student loans, lines of credit, child support, and any other mortgages. The CMHC limit is 40% for insured mortgages and 42% for conventional. Some lenders stretch to 44% for strong applicants. TDS is the stricter measure because it accounts for your entire debt picture.
+                Your TDS ratio includes everything in your GDS calculation plus all other monthly debt obligations: car payments, credit card minimums, student loans, lines of credit, child support, and any other mortgages. The CMHC maximum is 44% for insured mortgages; conventional limits vary by lender (commonly 40–44%). TDS is the stricter measure because it accounts for your entire debt picture.
               </p>
               <p>
                 <strong>Formula:</strong> TDS = (Housing Costs + All Other Debts) ÷ Gross Monthly Income × 100
@@ -412,7 +405,7 @@ export default function DebtServiceRatioPage() {
 
               <h3 className="text-2xl font-semibold text-gray-100 mt-8">CMHC Qualification Ratios</h3>
               <p>
-                The Canada Mortgage and Housing Corporation sets the standard qualification ratios used by most lenders. For CMHC-insured mortgages, you must have a GDS of 32% or less and a TDS of 40% or less. These ratios are calculated using the mortgage qualifying rate (the higher of your contract rate + 2% or the Bank of Canada benchmark rate), not your actual contracted rate. This stress test ensures you can afford payments even if rates rise.
+                The Canada Mortgage and Housing Corporation sets the standard qualification ratios used by most lenders. For CMHC-insured mortgages, you must have a GDS of 39% or less and a TDS of 44% or less (with a minimum credit score of 600 for at least one borrower). These ratios are calculated using the minimum qualifying rate (the higher of your contract rate + 2% or 5.25%), not your actual contracted rate. This stress test ensures you can afford payments even if rates rise.
               </p>
 
               <h3 className="text-2xl font-semibold text-gray-100 mt-8">How to Improve Your Ratios</h3>

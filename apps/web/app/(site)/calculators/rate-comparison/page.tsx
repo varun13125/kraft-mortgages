@@ -15,11 +15,11 @@ import { RelatedCalculators } from "@/components/calculators/RelatedCalculators"
 const faqs = [
   {
     q: "How much does a 0.25% rate difference really save?",
-    a: "On a $500,000 mortgage with 25-year amortization, dropping from 5.25% to 5.00% saves about $67/month and roughly $20,000 in interest over the amortization. Over a 5-year term, you save about $4,800 in interest. Small rate differences compound into significant savings over time."
+    a: "On a $500,000 mortgage with 25-year amortization, dropping from 5.25% to 5.00% saves about $72/month and roughly $21,500 in interest over the amortization (if the rate held for the full 25 years). Over a 5-year term, you save about $6,000 in interest. Small rate differences compound into significant savings over time."
   },
   {
     q: "Should I choose a fixed or variable rate?",
-    a: "Fixed rates provide payment certainty — your mortgage payment stays the same for the entire term. Variable rates fluctuate with the Bank of Canada&apos;s policy rate. When rate spreads between fixed and variable are narrow (under 0.5%), fixed is often preferred. When the spread is wider, variable can save money if rates stay stable or decrease. Consider your risk tolerance and ability to handle payment increases."
+    a: "Fixed rates provide payment certainty — your mortgage payment stays the same for the entire term. Variable rates fluctuate with the Bank of Canada's policy rate. When rate spreads between fixed and variable are narrow (under 0.5%), fixed is often preferred. When the spread is wider, variable can save money if rates stay stable or decrease. Consider your risk tolerance and ability to handle payment increases."
   },
   {
     q: "When is the best time to lock in a rate?",
@@ -35,12 +35,31 @@ const faqs = [
   }
 ];
 
+// Canadian fixed-rate mortgages compound semi-annually (Interest Act):
+// monthly periodic rate = (1 + r/2)^(1/6) - 1 — same convention as lib/calc/payment.ts.
+function monthlyRate(annualRate: number): number {
+  return Math.pow(1 + annualRate / 100 / 2, 1 / 6) - 1;
+}
+
 function monthlyPayment(principal: number, annualRate: number, years: number): number {
   if (principal <= 0) return 0;
-  const r = annualRate / 100 / 12;
+  const r = monthlyRate(annualRate);
   const n = years * 12;
   if (r === 0) return principal / n;
   return (principal * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+}
+
+// Interest actually paid over the first `months` payments (balance declines as principal is repaid).
+function interestOverMonths(principal: number, annualRate: number, payment: number, months: number): number {
+  const r = monthlyRate(annualRate);
+  let balance = principal;
+  let interest = 0;
+  for (let i = 0; i < months && balance > 0; i++) {
+    const it = balance * r;
+    interest += it;
+    balance = Math.max(0, balance + it - payment);
+  }
+  return interest;
 }
 
 export default function RateComparisonPage() {
@@ -64,12 +83,15 @@ export default function RateComparisonPage() {
     if (showRate3) all.push({ label: "Rate 3", rate: rate3, color: "from-green-400 to-emerald-500" });
     if (showRate4) all.push({ label: "Rate 4", rate: rate4, color: "from-purple-400 to-violet-500" });
 
+    // A term can't run longer than the amortization
+    const termMonths = Math.min(term, amortization) * 12;
     return all.map(r => {
       const mp = monthlyPayment(loanAmount, r.rate, amortization);
       const totalPaidAmort = mp * amortization * 12;
       const totalInterestAmort = totalPaidAmort - loanAmount;
-      const totalPaidTerm = mp * term * 12;
-      const totalInterestTerm = totalPaidTerm - loanAmount;
+      const totalPaidTerm = mp * termMonths;
+      // Previously (payments over term − full loan) which was negative; this is interest actually paid in the term
+      const totalInterestTerm = interestOverMonths(loanAmount, r.rate, mp, termMonths);
       return { ...r, monthly: mp, totalInterestTerm, totalInterestAmort, totalPaidTerm, totalPaidAmort };
     });
   }, [loanAmount, amortization, term, rate1, rate2, rate3, rate4, showRate3, showRate4]);
@@ -173,12 +195,12 @@ export default function RateComparisonPage() {
                           title: "Savings",
                           rows: [
                             { label: "Monthly Savings (best vs worst)", value: "$" + Math.round(monthlySavings).toLocaleString("en-CA") },
-                            { label: "5-Year Savings", value: "$" + Math.round(monthlySavings * term * 12).toLocaleString("en-CA") },
+                            { label: `${term}-Year Payment Savings`, value: "$" + Math.round(monthlySavings * Math.min(term, amortization) * 12).toLocaleString("en-CA") },
                           ]
                         }
                       ];
                     })(),
-                    educationalContent: "Even a 0.25% rate difference on a $500K mortgage saves ~$7,500 over 5 years. Always compare rates from multiple lenders."
+                    educationalContent: "Even a 0.25% rate difference on a $500K mortgage (25-year amortization) saves about $6,000 in interest over a 5-year term. Always compare rates from multiple lenders. Estimates assume semi-annual compounding and are not a rate offer."
                   });
                 }}
               />
@@ -197,8 +219,8 @@ export default function RateComparisonPage() {
                     Rate Inputs
                   </h2>
                   <div className="space-y-5">
-                    <ValidatedSlider label={`Rate 1 (${rate1}%)`} value={rate1} onChange={setRate1} min={1} max={12} step={0.01} formatValue={(v) => `${v}%`} />
-                    <ValidatedSlider label={`Rate 2 (${rate2}%)`} value={rate2} onChange={setRate2} min={1} max={12} step={0.01} formatValue={(v) => `${v}%`} />
+                    <ValidatedSlider label="Rate 1" value={rate1} onChange={setRate1} min={1} max={12} step={0.01} formatValue={(v) => `${v.toFixed(2)}%`} />
+                    <ValidatedSlider label="Rate 2" value={rate2} onChange={setRate2} min={1} max={12} step={0.01} formatValue={(v) => `${v.toFixed(2)}%`} />
                     <div className="flex items-center gap-3">
                       <button onClick={() => setShowRate3(!showRate3)} className={`w-12 h-6 rounded-full transition-all ${showRate3 ? "bg-gold-500" : "bg-gray-600"} relative`}>
                         <span className={`absolute top-0.5 w-5 h-5 bg-white rounded-full transition-all ${showRate3 ? "left-6" : "left-0.5"}`} />
@@ -207,7 +229,7 @@ export default function RateComparisonPage() {
                     </div>
                     {showRate3 && (
                       <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }}>
-                        <ValidatedSlider label={`Rate 3 (${rate3}%)`} value={rate3} onChange={setRate3} min={1} max={12} step={0.01} formatValue={(v) => `${v}%`} />
+                        <ValidatedSlider label="Rate 3" value={rate3} onChange={setRate3} min={1} max={12} step={0.01} formatValue={(v) => `${v.toFixed(2)}%`} />
                       </motion.div>
                     )}
                     <div className="flex items-center gap-3">
@@ -218,7 +240,7 @@ export default function RateComparisonPage() {
                     </div>
                     {showRate4 && (
                       <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }}>
-                        <ValidatedSlider label={`Rate 4 (${rate4}%)`} value={rate4} onChange={setRate4} min={1} max={12} step={0.01} formatValue={(v) => `${v}%`} />
+                        <ValidatedSlider label="Rate 4" value={rate4} onChange={setRate4} min={1} max={12} step={0.01} formatValue={(v) => `${v.toFixed(2)}%`} />
                       </motion.div>
                     )}
                   </div>
@@ -231,7 +253,7 @@ export default function RateComparisonPage() {
                 <div className="bg-gradient-to-br from-gold-500/20 to-amber-500/10 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-gold-500/30">
                   <p className="text-sm text-gold-300 font-medium mb-1">Monthly Savings (Best vs Worst Rate)</p>
                   <p className="text-4xl sm:text-5xl font-bold text-gold-400 mb-2">{formatCurrency(monthlySavings, 0)}<span className="text-xl">/mo</span></p>
-                  <p className="text-sm text-gray-300">Over your {term}-year term, that&apos;s {formatCurrency(monthlySavings * term * 12, 0)} in payment savings</p>
+                  <p className="text-sm text-gray-300">Over your {term}-year term, that&apos;s {formatCurrency(monthlySavings * Math.min(term, amortization) * 12, 0)} in payment savings</p>
                 </div>
 
                 {/* Rate cards */}
@@ -244,7 +266,7 @@ export default function RateComparisonPage() {
                           <div className="flex items-center gap-3">
                             <div className={`w-3 h-3 rounded-full bg-gradient-to-r ${r.color}`} />
                             <span className="font-semibold text-gray-200">{r.label}</span>
-                            <span className="text-xl font-bold text-gray-100">{r.rate}%</span>
+                            <span className="text-xl font-bold text-gray-100">{r.rate.toFixed(2)}%</span>
                             {isLowest && <span className="text-[10px] bg-green-500/20 text-green-400 px-2 py-0.5 rounded-full font-semibold">LOWEST</span>}
                           </div>
                         </div>
@@ -254,7 +276,7 @@ export default function RateComparisonPage() {
                             <p className="text-lg font-bold text-gray-100">{formatCurrency(r.monthly, 0)}</p>
                           </div>
                           <div>
-                            <p className="text-xs text-gray-400">Interest ({term}-yr term)</p>
+                            <p className="text-xs text-gray-400">Interest ({Math.min(term, amortization)}-yr term)</p>
                             <p className="text-lg font-bold text-gray-100">{formatCurrency(r.totalInterestTerm, 0)}</p>
                           </div>
                           <div>
@@ -308,7 +330,7 @@ export default function RateComparisonPage() {
                   <h3 className="text-lg font-semibold text-blue-300 mb-3">Understanding Rate Comparison</h3>
                   <div className="space-y-2 text-sm text-blue-200">
                     <p>• Rates shown are for comparison only — actual rates depend on credit score, down payment, property type, and lender.</p>
-                    <p>• Total interest over amortization assumes you renew at the same rate for each term (unlikely in practice).</p>
+                    <p>• Payments use Canadian semi-annual compounding (standard for fixed rates). Total interest over amortization assumes you renew at the same rate for each term (unlikely in practice).</p>
                     <p>• Payment difference calculations are approximate and don&apos;t account for prepayment privileges.</p>
                     <p>• Variable rate payments would change if the prime rate adjusts during the term.</p>
                   </div>
@@ -324,12 +346,12 @@ export default function RateComparisonPage() {
             <h2 className="text-3xl font-bold text-gray-100 mb-8">How Mortgage Rate Differences Impact Your Finances</h2>
             <div className="text-gray-300 space-y-4 leading-relaxed">
               <p>
-                When shopping for a mortgage, most Canadians focus on the monthly payment difference between rates. But the real impact of even small rate differences extends far beyond your monthly budget. A 0.25% difference on a $500,000 mortgage might save you $67 per month — but over a 25-year amortization, that&apos;s over $20,000 in interest savings. Understanding these numbers is critical to making an informed mortgage decision.
+                When shopping for a mortgage, most Canadians focus on the monthly payment difference between rates. But the real impact of even small rate differences extends far beyond your monthly budget. A 0.25% difference on a $500,000 mortgage might save you about $72 per month — but over a 25-year amortization, that&apos;s over $21,000 in interest savings. Understanding these numbers is critical to making an informed mortgage decision.
               </p>
 
               <h3 className="text-2xl font-semibold text-gray-100 mt-8">Why Even 0.25% Matters Thousands</h3>
               <p>
-                Let&apos;s break down the math. On a $500,000 mortgage at 5.00% over 25 years, your monthly payment is approximately $2,908 and total interest is $372,400. Bump the rate to 5.25%, and you&apos;re paying $2,975/month with $392,500 in total interest. That 0.25% difference costs you an extra $67/month and $20,100 over the life of the mortgage. On a $750,000 mortgage, the same 0.25% costs over $30,000 in additional interest. This is why rate shopping matters — and why working with a broker who has access to 30+ lenders can save you thousands.
+                Let&apos;s break down the math. On a $500,000 mortgage at 5.00% over 25 years, your monthly payment is approximately $2,908 and total interest is $372,400. Bump the rate to 5.25%, and you&apos;re paying about $2,980/month with roughly $393,900 in total interest. That 0.25% difference costs you an extra $72/month and about $21,500 over the life of the mortgage. On a $750,000 mortgage, the same 0.25% costs over $30,000 in additional interest. This is why rate shopping matters — and why working with a broker who has access to 30+ lenders can save you thousands.
               </p>
 
               <h3 className="text-2xl font-semibold text-gray-100 mt-8">Fixed vs Variable Rate Considerations</h3>

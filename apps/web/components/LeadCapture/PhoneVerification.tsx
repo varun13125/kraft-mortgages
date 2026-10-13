@@ -128,7 +128,7 @@ export function PhoneVerification({ phoneNumber, onVerified, onResend }: PhoneVe
         </div>
         <h3 className="text-2xl font-bold text-gray-900">Verify Your Phone</h3>
         <p className="text-gray-600 mt-2">
-          We've sent a 6-digit code to
+          We&apos;ve sent a 6-digit code to
         </p>
         <p className="text-gray-900 font-semibold mt-1 flex items-center justify-center gap-2">
           <Phone className="w-4 h-4" />
@@ -176,7 +176,7 @@ export function PhoneVerification({ phoneNumber, onVerified, onResend }: PhoneVe
       {/* Resend Code */}
       <div className="text-center">
         <p className="text-sm text-gray-600 mb-2">
-          Didn't receive the code?
+          Didn&apos;t receive the code?
         </p>
         <button
           onClick={handleResend}

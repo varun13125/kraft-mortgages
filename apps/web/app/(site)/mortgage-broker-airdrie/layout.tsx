@@ -1,5 +1,7 @@
 import { Metadata } from 'next';
 import { CityServiceJsonLd } from '@/components/SEO/CityServiceJsonLd';
+import Footer from '@/components/Footer';
+import { OG_DEFAULTS } from '@/lib/seo/og';
 
 export const metadata: Metadata = {
   title: 'Airdrie Mortgage Broker | Best Rates & Fast Approval | Kraft Mortgages',
@@ -9,6 +11,7 @@ export const metadata: Metadata = {
     canonical: 'https://www.kraftmortgages.ca/mortgage-broker-airdrie',
   },
   openGraph: {
+    ...OG_DEFAULTS,
     title: 'Airdrie Mortgage Broker | Kraft Mortgages Canada',
     description: 'Top-rated Airdrie mortgage broker with $2B+ funded and 18+ Years Combined Experience. Free pre-approval in 24 hours.',
     url: 'https://www.kraftmortgages.ca/mortgage-broker-airdrie',
@@ -21,6 +24,7 @@ export default function AirdrieLayout({ children }: { children: React.ReactNode 
     <>
       <CityServiceJsonLd cityName="Airdrie" provinceName="AB" description="Licensed mortgage broker serving Airdrie, AB. Residential, construction, self-employed, MLI Select, and private lending solutions." />
       {children}
+      <Footer />
     </>
   );
 }
