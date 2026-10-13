@@ -1,7 +1,7 @@
 # Kraft Mortgages — Live Verified Rate Intelligence Summary
-**Last Synchronized:** 2026-10-10T13:30:19.659115+00:00
+**Last Synchronized:** 2026-10-13T13:31:00.857010+00:00
 **Bank of Canada Prime Rate:** 4.45%
-**Spotlight Snapshot:** 20261010_043004 | **Source Mode:** auto
+**Spotlight Snapshot:** 20261013_043005 | **Source Mode:** auto
 **Audit Integrity:** Verified active feeds (Spotlight Pro + Intraday BDM Blasts)
 
 ## Prime Benchmarks (A-Lenders: Insured / Insurable / Conventional)
@@ -78,8 +78,8 @@ _Uninsured products from alternative lenders (e.g. Home Trust Classic, Equitable
 ## Recent Verified Rate Sheet Updates
 | Date | Lender | Update Note |
 |---|---|---|
+| 2026-10-13 | Yiannisandreou | Weekly follow-up promoting a co-brokering fee-split program for residential and commercial private mortgage files declined by all contacted  |
+| 2026-10-13 | Strive Capital | Strive Capital promotes 5-year ARM bonus comp at P-0.75% (max comp) or P-0.85% (great rate) for insured & insurable new deals, alongside fix |
 | 2026-10-10 | BMO Bank of Montreal | BMO Pricing Desk rates effective Oct 9, 2026, with underwriting turnaround 1-2 days and documentation review 3 days. Cashback offers up to $ |
 | 2026-10-10 | Home Trust | Home Trust Classic 1-year rate now starts at 5.29% effective October 6, 2026. Rates for 1, 2, and 3-year terms are 5.29%, 5.39%, and 5.49% r |
 | 2026-10-10 | Shinhan Bank | Shinhan Bank Canada is offering a 0.05% mortgage rate discount to clients who open a Shinhan Bank account and set it up as their pre-authori |
-| 2026-10-10 | Coast Capital | Coast Capital is changing its 5-year fixed conventional mortgage rate to 5.34%, with +10 bps adjustments for 30-year amortization and rental |
-| 2026-10-09 | National Lenders | Automated harvest: 7365 rates and 0 guidelines updated. |
