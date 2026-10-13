@@ -70,3 +70,11 @@ test-results/
 # keys, then `git rm --cached API postiz-config.md` and purge history)
 /API
 /postiz-config.md
+
+# Secrets: ignore EVERY .env* file (e.g. .env.vercel, .env.production) except the
+# committed templates, plus token files. Put real keys in apps/web/.env.local —
+# never in .env.example (that file is committed and pushed to GitHub).
+.env*
+!.env.example
+*.token
+.vercel-token
