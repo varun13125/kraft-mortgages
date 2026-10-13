@@ -21,7 +21,7 @@ export default function VarunLandingPage() {
     }
 
     return (
-        <main className="min-h-screen bg-black pb-20 md:pb-0">
+        <main id="main-content" className="min-h-screen bg-black pb-20 md:pb-0">
             {/* ========== HERO SECTION ========== */}
             <section className="min-h-screen flex items-center justify-center bg-gradient-to-b from-black via-zinc-900 to-black relative overflow-hidden">
                 {/* Animated background gradient */}

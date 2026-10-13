@@ -6,12 +6,16 @@ import { RelatedCalculators } from "@/components/calculators/RelatedCalculators"
 import { ValidatedInput, ValidatedSlider } from "@/components/ui/ValidatedInput";
 import { ComplianceBanner } from "@/components/ComplianceBanner";
 import { payment } from "@/lib/calc/payment";
-import { TrendingUp, DollarSign, Info } from "lucide-react";
+import { useLiveRates } from "@/lib/useLiveRates";
+import { liveRate, useLiveDefault } from "../_lib/liveRateDefaults";
+import { LiveRateNote } from "../_lib/LiveRateNote";
 
 export default function RefinanceCashOutPage() {
+  const { data: liveRates } = useLiveRates();
   const [homeValue, setHomeValue] = useState(900000);
   const [currentBalance, setCurrentBalance] = useState(280000);
-  const [newRate, setNewRate] = useState(5.19);
+  // A refinance is uninsured → conventional 5-yr fixed (not best5YrFixed, which is the insured rate)
+  const [newRate, setNewRate, newRateSource] = useLiveDefault(5.19, liveRate(liveRates, "fixed5Conventional"));
   const [newAmortYears, setNewAmortYears] = useState(25);
   const [maxLtvPct, setMaxLtvPct] = useState(80); // legal max for uninsured (conventional) refinance is 80%; insured refinances aren't available (secondary-suite program excepted)
 
@@ -58,7 +62,10 @@ export default function RefinanceCashOutPage() {
 
               <div className="pt-4 border-t border-gray-700/50 space-y-4">
                 <h2 className="text-xl font-semibold text-gray-100">New Mortgage Terms</h2>
-                <ValidatedSlider label="New Interest Rate" value={newRate} onChange={setNewRate} min={0.5} max={10} step={0.01} formatValue={(v) => v.toFixed(2) + "%"} />
+                <div>
+                  <ValidatedSlider label="New Interest Rate" value={newRate} onChange={setNewRate} min={0.5} max={10} step={0.01} formatValue={(v) => v.toFixed(2) + "%"} />
+                  <LiveRateNote data={liveRates} product="fixed5Conventional" source={newRateSource} />
+                </div>
                 <ValidatedSlider label="New Amortization" value={newAmortYears} onChange={(v) => setNewAmortYears(Math.round(v))} min={5} max={30} step={1} formatValue={(v) => Math.round(v) + " years"} />
                 <ValidatedSlider label="Max Loan-to-Value (LTV)" value={maxLtvPct} onChange={(v) => setMaxLtvPct(Math.round(v))} min={65} max={80} step={1} formatValue={(v) => Math.round(v) + "%"} />
                 <p className="text-xs text-gray-500">A refinance is capped at 80% LTV — insured (CMHC) refinancing isn&apos;t available, except the federal secondary-suite program (up to 90% of the as-improved value, for adding a rental suite).</p>

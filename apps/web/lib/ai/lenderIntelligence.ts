@@ -1,5 +1,70 @@
 import { CANADIAN_LENDERS, LenderDetail, LenderChannel } from '@/data/canadianLendersData';
 
+// ---------------------------------------------------------------------------
+// Code-side corrections for known errors in the generated lender data.
+// `data/canadianLendersData.ts` is regenerated outside this repo, so fixes there are
+// overwritten on the next refresh. Each correction only applies while the record still
+// carries the known-wrong value, so a fix made upstream always wins.
+// Every consumer (chat, /api/lenders, AI tools) must read `LENDERS`, not CANADIAN_LENDERS.
+// ---------------------------------------------------------------------------
+interface LenderCorrection {
+  /** Matched against `id` first, then the exact (case-insensitive) lender name. */
+  ids: string[];
+  names: string[];
+  /** Only applied while the record still has this channel. */
+  whenChannel: LenderChannel;
+  reason: string;
+  patch: (lender: LenderDetail) => Partial<LenderDetail>;
+}
+
+const CHANNEL_CORRECTIONS: LenderCorrection[] = [
+  {
+    // BUG-027: CTBC Bank Corp. (Canada) is an OSFI-regulated Schedule II chartered bank (prime
+    // lender). The feed tags it 'Alternative (B)', which made its AI dossiers quote Alt-B
+    // 50% GDS / 50% TDS ratios and stated-income programs.
+    ids: ['lender_sp_ctbc_bank'],
+    names: ['ctbc bank', 'ctbc bank corp. (canada)', 'ctbc bank canada'],
+    whenChannel: 'Alternative (B)',
+    reason: 'Schedule II chartered bank mis-tagged as Alternative (B) in the generated data',
+    patch: (l) => ({
+      channel: 'Prime (A)',
+      categoryRaw: 'Chartered Bank / Schedule II',
+      programs: (l.programs || []).filter((p) => p !== 'Alternative B'),
+      bestFor: 'Uninsured (conventional) residential mortgages through a Schedule II chartered bank, with prime-based pricing.',
+      fitRationale: 'OSFI-regulated Schedule II bank lending under prime (OSFI B-20) underwriting through the broker channel.',
+    }),
+  },
+];
+
+function findCorrection(lender: LenderDetail): LenderCorrection | undefined {
+  const id = (lender.id || '').toLowerCase();
+  const name = (lender.name || '').trim().toLowerCase();
+  return CHANNEL_CORRECTIONS.find(
+    (c) => c.whenChannel === lender.channel && (c.ids.includes(id) || c.names.includes(name))
+  );
+}
+
+/** Returns the lender with any known data corrections applied (a new object; input untouched). */
+export function applyLenderCorrections(lender: LenderDetail): LenderDetail {
+  const correction = findCorrection(lender);
+  return correction ? { ...lender, ...correction.patch(lender) } : lender;
+}
+
+/** The lender dataset with code-side corrections applied. Use this everywhere lenders are read. */
+export const LENDERS: LenderDetail[] = CANADIAN_LENDERS.map(applyLenderCorrections);
+
+const CONTACT_PAREN_RE = /\s*\([^()]*@[^()]*\)/g;
+const EMAIL_RE = /[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/g;
+
+/**
+ * Removes e-mail addresses (and "(name@domain)" parentheticals) from free-text lender fields
+ * before they are shown to website visitors. Some generated fields embed named BDM contacts.
+ */
+export function scrubContactDetails(text: string | undefined | null): string {
+  if (!text) return '';
+  return text.replace(CONTACT_PAREN_RE, '').replace(EMAIL_RE, '[contact via Kraft Mortgages]');
+}
+
 // Normalized Dictionary of Canadian Lender Aliases, Acronyms, and Core Brands
 const LENDER_ALIASES: Record<string, string[]> = {
   // Schedule II / International Prime Banks
@@ -153,11 +218,11 @@ const distinctiveTokens = (name: string): string[] =>
  * (e.g. alias target "CTBC Bank Corp. (Canada)" -> dataset "CTBC Bank").
  */
 const findLenderForAliasTarget = (targetName: string): LenderDetail | undefined => {
-  const exact = CANADIAN_LENDERS.find(l => l.name.toLowerCase() === targetName.toLowerCase());
+  const exact = LENDERS.find(l => l.name.toLowerCase() === targetName.toLowerCase());
   if (exact) return exact;
   const targetTokens = new Set(distinctiveTokens(targetName));
   if (targetTokens.size === 0) return undefined;
-  return CANADIAN_LENDERS.find(l => {
+  return LENDERS.find(l => {
     const tokens = distinctiveTokens(l.name);
     return tokens.length > 0 && tokens.every(t => targetTokens.has(t));
   });
@@ -187,7 +252,7 @@ export const resolveLenderFromQuery = (query: string): LenderDetail | null => {
   }
 
   // 2. Full Name / Distinctive Brand Token Match
-  for (const lender of CANADIAN_LENDERS) {
+  for (const lender of LENDERS) {
     const normalizedName = lender.name.toLowerCase().replace(/[^a-z0-9\s]/g, ' ').replace(/\s+/g, ' ').trim();
     if (normalizedName.length >= 4 && cleanQ.includes(` ${normalizedName} `)) {
       return lender;
@@ -221,7 +286,10 @@ export const getChannelRentalPolicy = (channel: LenderChannel, lenderName: strin
   const lowerName = lenderName.toLowerCase();
 
   // Alternative B Lenders (Home Trust, Equitable, Haventree, Community Trust)
-  if (channel === 'Alternative (B)' || lowerName.includes('home trust') || lowerName.includes('equitable') || lowerName.includes('haventree') || lowerName.includes('community trust')) {
+  // Name fallback for Alt-B brands, but never for their reverse-mortgage arms (e.g. "Equitable
+  // Reverse Mortgages" is a Monoline product and must not get the Alt-B 80% worksheet).
+  const altBByName = !lowerName.includes('reverse') && (lowerName.includes('home trust') || lowerName.includes('equitable') || lowerName.includes('haventree') || lowerName.includes('community trust'));
+  if (channel === 'Alternative (B)' || altBByName) {
     return {
       subjectOwnerOccupied: "**50% Rental Add-Back** to borrower gross qualifying income. The subject property's PITH remains fully counted as a liability in GDS/TDS (no subject PITH offset). Requires signed lease or appraisal Market Rent Schedule (Form 214 / Schedule A).",
       subjectPureRental: "**80% Rental Offset Worksheet** `((Gross Rent × 80%) - Subject PITH = Net Surplus/Deficit)` OR qualifying on a **Debt Service Coverage Ratio (DSCR / DCR)** basis (typically minimum **1.00x – 1.10x DSCR** up to 75%–80% LTV), exempt from standard personal income / Line 15000 NOA constraints.",
@@ -266,7 +334,8 @@ export const getChannelGdsTdsLimits = (channel: LenderChannel, lenderName: strin
   const lowerName = lenderName.toLowerCase();
 
   // Alternative B
-  if (channel === 'Alternative (B)' || lowerName.includes('home trust') || lowerName.includes('equitable') || lowerName.includes('haventree')) {
+  const altBByName = !lowerName.includes('reverse') && (lowerName.includes('home trust') || lowerName.includes('equitable') || lowerName.includes('haventree'));
+  if (channel === 'Alternative (B)' || altBByName) {
     return {
       standardGds: "Up to 50%",
       standardTds: "Up to 50%",
@@ -356,11 +425,11 @@ export const generateLenderUnderwritingDossier = (lender: LenderDetail, userQuer
 ---
 
 ### 5. Key Program Parameters & Guidelines
-• **Best Suited For:** ${lender.bestFor}
-• **Special Features:** ${lender.specialFeatures.join(', ')}
+• **Best Suited For:** ${scrubContactDetails(lender.bestFor) || 'See the Kraft Mortgages team for program fit.'}
+• **Special Features:** ${scrubContactDetails((lender.specialFeatures || []).join(', '))}
 • **Underwriting Policies & Notes:**
-  ${lender.underwritingNotes}
-• **Fit Rationale:** ${lender.fitRationale}
+  ${scrubContactDetails(lender.underwritingNotes)}
+• **Fit Rationale:** ${scrubContactDetails(lender.fitRationale)}
 • **Submission:** Files are placed through the Kraft Mortgages advisory team (604-593-1550); lender guidelines and pricing change frequently and are confirmed at application.
 
 *Would you like me to evaluate an exact deal scenario or calculate TDS debt service ratios for ${lender.name}?*`;
@@ -405,7 +474,7 @@ export const resolveGeographicUnderwritingQuery = (query: string): string | null
 *Would you like to review their complete underwriting policy, rental income treatment, or submit a deal for triage?*`;
       } else {
         // Recommend alternative lenders in that province
-        const alternativeLenders = CANADIAN_LENDERS
+        const alternativeLenders = LENDERS
           .filter(l => l.channel === matchedLender.channel && l.provinces?.includes(checkedProvince!))
           .slice(0, 4)
           .map(l => `• **${l.name}** (${l.lowestRate ? `${l.lowestRate.toFixed(2)}%` : l.benchmarkRate} lowest rate | Max ${l.maxLTV}% LTV)`)
@@ -436,7 +505,7 @@ ${alternativeLenders || '• Big-6 Chartered Banks & National Monolines (First N
     const provName = detected?.name ?? '';
 
     if (targetProv) {
-      let filtered = CANADIAN_LENDERS.filter(l => l.provinces?.includes(targetProv));
+      let filtered = LENDERS.filter(l => l.provinces?.includes(targetProv));
       if (/\bcredit unions?\b/.test(q)) {
         filtered = filtered.filter(l => l.channel === 'Credit Union');
       } else if (/\b(private|mics?)\b/.test(q)) {

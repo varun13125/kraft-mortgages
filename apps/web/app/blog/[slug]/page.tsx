@@ -1,15 +1,21 @@
 import { Metadata } from 'next';
-export const dynamic = 'force-dynamic';
+// ISR (was force-dynamic): each post is rendered on first request and cached for
+// 5 minutes. No generateStaticParams, and dynamicParams stays at its default (true),
+// so any slug is rendered on demand. getPost() excludes drafts by default, so a
+// draft resolves to 404 (and the noindex branch below is a second safety net).
+export const revalidate = 300;
 import { cache } from 'react';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import Footer from '@/components/Footer';
 import { BUSINESS } from '@/lib/seo/business-config';
 import { ORG_ID } from '@/lib/seo/jsonld';
+import { OG_DEFAULTS } from '@/lib/seo/og';
 import { Calendar, User, ArrowLeft, Clock, Tag } from 'lucide-react';
 import { getPost } from '@/lib/db/firestore';
 import Navigation from '@/components/Navigation';
 import { processPostContent, decodeHtmlEntities } from '@/lib/utils/blog-content';
+import { sanitizeBlogHtml } from '@/lib/security/sanitizeHtml';
 
 // generateMetadata and the page both load the post; cache() dedupes the Firestore
 // read within a single request (fetch() is deduped automatically, Firestore isn't).
@@ -141,10 +147,15 @@ export async function generateMetadata(
     description: post.seo.description,
     keywords: post.seo.keywords.join(', '),
     openGraph: {
+      // Was missing og:url / site name / locale (Next replaces, not merges, openGraph).
+      siteName: OG_DEFAULTS.siteName,
+      locale: OG_DEFAULTS.locale,
+      url: post.seo.canonicalUrl,
       title: post.seo.title || post.title,
       description: post.seo.description,
       type: 'article',
       publishedTime: post.publishedAt,
+      modifiedTime: post.updatedAt,
       authors: [post.author],
       images: [
         {
@@ -180,7 +191,7 @@ export default async function BlogPostPage({
   }
 
   // Process content to handle image placeholders
-  const processedContent = processPostContent(post.content);
+  const processedContent = sanitizeBlogHtml(processPostContent(post.content));
 
   const publishedDate = new Date(post.publishedAt);
   const updatedDate = new Date(post.updatedAt);
@@ -228,7 +239,7 @@ export default async function BlogPostPage({
         }}
       />
 
-      <div className="min-h-screen bg-gray-900">
+      <main id="main-content" className="min-h-screen bg-gray-900">
         {/* Header */}
         <header className="bg-gray-800/50 backdrop-blur-sm border-b border-gray-700/50">
           <div className="max-w-6xl mx-auto px-4 py-8">
@@ -311,7 +322,7 @@ export default async function BlogPostPage({
                 prose-hr:border-gray-700
                 [&>button]:bg-gold-500 [&>button]:hover:bg-gold-400 [&>button]:text-gray-900 [&>button]:font-semibold [&>button]:px-4 [&>button]:py-2 [&>button]:rounded-lg [&>button]:transition-colors
                 [&>button]:cursor-pointer [&>button]:inline-flex [&>button]:items-center [&>button]:justify-center
-                [&>em_small]:text-gray-500 [&>em_small]:text-sm [&>em_small]:italic
+                [&>em_small]:text-gray-400 [&>em_small]:text-sm [&>em_small]:italic
                 [&>img]:w-full [&>img]:rounded-lg [&>img]:shadow-lg [&>img]:my-6
                 [&>h1]:text-gray-100 [&>h2]:text-gray-100 [&>h3]:text-gray-100">
                 <div dangerouslySetInnerHTML={{ __html: processedContent }} />
@@ -321,7 +332,7 @@ export default async function BlogPostPage({
               {post.tags.length > 0 && (
                 <div className="mt-12 pt-8 border-t border-gray-700">
                   <div className="flex flex-wrap items-center gap-2">
-                    <Tag className="w-5 h-5 text-gray-500" />
+                    <Tag className="w-5 h-5 text-gray-400" aria-hidden="true" />
                     <span className="text-gray-300 font-medium">Tags:</span>
                     {post.tags.map((tag: string) => (
                       <span
@@ -350,7 +361,7 @@ export default async function BlogPostPage({
                         Licensed mortgage broker with over 18+ years of combined experience in the Canadian mortgage industry.
                         Specializing in MLI Select, construction financing, and self-employed mortgages across BC, AB, and ON.
                       </p>
-                      <div className="flex flex-wrap gap-4 text-sm text-gray-500">
+                      <div className="flex flex-wrap gap-4 text-sm text-gray-400">
                         <span>📧 {post.authorEmail}</span>
                         <span>🏢 BCFSA #SR220230 | RECA LIC-00655428 | FSRA #12918</span>
                         <span>📍 Surrey, BC</span>
@@ -388,7 +399,7 @@ export default async function BlogPostPage({
             </div>
           </div>
         </section>
-      </div>
+      </main>
       <Footer />
     </>
   );

@@ -8,6 +8,7 @@ import Link from "next/link";
 import { useLiveRates } from "@/lib/useLiveRates";
 import { payment } from "@/lib/calc/payment";
 import { stressTestRate } from "@/lib/calc/affordability";
+import { livePrime, ratesAsOf } from "@/components/calculators/liveRateDefaults";
 
 // HELOC calculation logic
 // OSFI B-20 (federally regulated lenders): the revolving HELOC portion is capped at 65% of
@@ -80,7 +81,9 @@ export default function HELOCCalculator() {
   const [income, setIncome] = useState(120000);
   const [mortgagePayment, setMortgagePayment] = useState(2300);
   const [otherMonthlyCosts, setOtherMonthlyCosts] = useState(600);
-  const { primeRate } = useLiveRates();
+  const { primeRate, data: liveRates, loading: ratesLoading } = useLiveRates();
+  const primeIsLive = livePrime(liveRates) !== undefined;
+  const asOf = ratesAsOf(liveRates);
 
   const results = calculateHELOC({
     homeValue,
@@ -305,6 +308,11 @@ export default function HELOCCalculator() {
                         {results.rate.toFixed(2)}%
                       </div>
                       <p className="text-sm text-gray-400">Variable (prime + spread, est.)</p>
+                      <p className="text-xs text-gray-500 mt-1">
+                        Prime {primeRate.toFixed(2)}%
+                        {primeIsLive ? (asOf ? ` as of ${asOf}` : "") : ratesLoading ? " (loading today's rate)" : " (example — live rates unavailable)"}
+                        {" "}+ {(results.rate - primeRate).toFixed(2)}% est. credit spread
+                      </p>
                     </div>
                     <div>
                       <div className="flex items-center gap-2 mb-2">

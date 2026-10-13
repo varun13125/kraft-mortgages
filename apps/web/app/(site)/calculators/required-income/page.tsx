@@ -9,11 +9,15 @@ import Link from "next/link";
 import { ValidatedInput, ValidatedSlider } from "@/components/ui/ValidatedInput";
 import { formatCurrency } from "@/lib/utils/validation";
 import PdfLeadModal from "@/components/PdfLeadModal";
+import { useLiveRates } from "@/lib/useLiveRates";
+import { maxPurchasePrice } from "@/lib/calc/affordability";
+import { liveRate, purchaseRateProduct, useLiveDefault } from "../_lib/liveRateDefaults";
+import { LiveRateNote } from "../_lib/LiveRateNote";
 
 /* ── Helpers ───────────────────────────────────────── */
 
-// CMHC premium via the shared helper (correct 2025 schedule)
-import { cmhcPremium as calcCMHC, cmhcPremiumRate, minimumDownPayment, isInsurable, QUALIFYING_RATIOS } from "@/lib/calc/cmhc";
+// CMHC premium via the shared helper (current schedule, verified 2026-10-13)
+import { cmhcPremium as calcCMHC, minimumDownPayment, isInsurable, QUALIFYING_RATIOS } from "@/lib/calc/cmhc";
 import { payment, principalFromPayment } from "@/lib/calc/payment";
 import { RelatedCalculators } from "@/components/calculators/RelatedCalculators";
 function cmhcPremium(downPayment: number, price: number, amortYears?: number): number {
@@ -60,8 +64,13 @@ export default function RequiredIncomePage() {
   const [showPdfModal, setShowPdfModal] = useState(false);
   const [homePrice, setHomePrice] = useState(700000);
   const [downPaymentPct, setDownPaymentPct] = useState(20);
-  const [mortgageRate, setMortgageRate] = useState(4.79);
   const [amortization, setAmortization] = useState(25);
+  // Rate follows today's 5-yr fixed for this purchase (insured / insurable / conventional) until edited
+  const { data: liveRates } = useLiveRates();
+  const rateProduct = purchaseRateProduct(downPaymentPct, homePrice, amortization);
+  const [mortgageRate, setMortgageRate, mortgageRateSource] = useLiveDefault(4.79, liveRate(liveRates, rateProduct));
+  // Max Mortgage tab: the savings you actually have for a down payment
+  const [downAvailable, setDownAvailable] = useState(140000);
   const [propertyTax, setPropertyTax] = useState(350);
   const [heating, setHeating] = useState(120);
   const [condoFees, setCondoFees] = useState(0);
@@ -107,11 +116,14 @@ export default function RequiredIncomePage() {
   const maxQualifyingPayment = Math.max(availableForHousing - nonMortgageHousing, 0);
   // Max total loan (includes any insurance premium) at the qualifying rate
   const maxQualifyingMortgage = principalFromPayment({ monthlyPayment: maxQualifyingPayment, annualRatePct: stRate, amortYears: amortization });
-  // Max price at the chosen down payment %: strip out the premium, then gross up by the down payment
-  const maxBaseMortgage = maxQualifyingMortgage / (1 + cmhcPremiumRate(downPaymentPct, amortization));
-  const maxHomePrice = downPaymentPct < 100 ? maxBaseMortgage / (1 - downPaymentPct / 100) : 0;
-  const maxHomeDownPayment = maxHomePrice * downPaymentPct / 100;
-  const maxHomeDownPaymentProblem = isInsured && maxHomePrice > 0 && !isInsurable(maxHomePrice, maxHomeDownPayment);
+  // Max price for the down payment you have: bisect for the highest price whose loan (incl. any premium)
+  // fits the qualifying maximum AND for which that down payment is still legal (same rule as the
+  // Mortgage Qualifier). The old version grossed up by the Income tab's down %, ignoring actual savings.
+  const maxPrice = maxPurchasePrice({ down: downAvailable, maxLoan: maxQualifyingMortgage, amortYears: amortization });
+  const maxHomePrice = maxPrice.price;
+  const maxPriceInsured = maxHomePrice > 0 && downAvailable < maxHomePrice * 0.2;
+  const maxPricePremium = maxPriceInsured ? cmhcPremium(downAvailable, maxHomePrice, amortization) : 0;
+  const maxPriceDownPct = maxHomePrice > 0 ? (downAvailable / maxHomePrice) * 100 : 0;
 
   const gdsLimiting = annualIncomeGDS >= annualIncomeTDS;
 
@@ -241,34 +253,50 @@ export default function RequiredIncomePage() {
             </div>
                                     <ComplianceBanner feature="LEAD_FORM" />
                   <div className="space-y-6">
-                    <ValidatedInput
-                      label="Home Purchase Price"
-                      value={homePrice}
-                      onChange={setHomePrice}
-                      validation={{ min: 100000, max: 3000000 }}
-                      type="currency"
-                    />
-                    <ValidatedSlider
-                      label={`Down Payment (${downPaymentPct}%)`}
-                      value={downPaymentPct}
-                      onChange={setDownPaymentPct}
-                      min={5}
-                      max={35}
-                      step={1}
-                      formatValue={(v) => `${v}% (${formatCurrency(homePrice * v / 100, 0)})`}
-                    />
-                    {downPaymentProblem && tab === "income" && (
-                      <p className="text-xs text-red-300 -mt-3">
-                        Below the minimum down payment of {formatCurrency(minDown, 0)} for this price{homePrice >= 1500000 ? " (homes $1.5M+ require 20% down)" : ""}.
-                      </p>
+                    {tab === "income" ? (
+                      <>
+                        <ValidatedInput
+                          label="Home Purchase Price"
+                          value={homePrice}
+                          onChange={setHomePrice}
+                          validation={{ min: 100000, max: 3000000 }}
+                          type="currency"
+                        />
+                        <ValidatedSlider
+                          label={`Down Payment (${downPaymentPct}%)`}
+                          value={downPaymentPct}
+                          onChange={setDownPaymentPct}
+                          min={5}
+                          max={35}
+                          step={1}
+                          formatValue={(v) => `${v}% (${formatCurrency(homePrice * v / 100, 0)})`}
+                        />
+                        {downPaymentProblem && (
+                          <p className="text-xs text-red-300 -mt-3">
+                            Below the minimum down payment of {formatCurrency(minDown, 0)} for this price{homePrice >= 1500000 ? " (homes $1.5M+ require 20% down)" : ""}.
+                          </p>
+                        )}
+                      </>
+                    ) : (
+                      <ValidatedInput
+                        label="Down Payment Available ($)"
+                        value={downAvailable}
+                        onChange={setDownAvailable}
+                        validation={{ min: 0, max: 5000000 }}
+                        type="currency"
+                        help="Savings you can put down (not counting closing costs). The minimum down payment rules cap the price: 5% of the first $500K, 10% above that, 20% at $1.5M+."
+                      />
                     )}
-                    <ValidatedInput
-                      label="Mortgage Rate (%)"
-                      value={mortgageRate}
-                      onChange={setMortgageRate}
-                      validation={{ min: 0.5, max: 15 }}
-                      type="percentage"
-                    />
+                    <div>
+                      <ValidatedInput
+                        label="Mortgage Rate (%)"
+                        value={mortgageRate}
+                        onChange={setMortgageRate}
+                        validation={{ min: 0.5, max: 15 }}
+                        type="percentage"
+                      />
+                      <LiveRateNote data={liveRates} product={rateProduct} source={mortgageRateSource} />
+                    </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-300 mb-2">Amortization</label>
                       <div className="flex gap-2">
@@ -457,31 +485,39 @@ export default function RequiredIncomePage() {
                         What You Can Afford
                       </h4>
                       <div className="space-y-3">
-                        <div className="flex justify-between text-sm">
-                          <span className="text-gray-300">Max qualifying mortgage{isInsured ? " (incl. insurance)" : ""}</span>
-                          <span className="font-semibold text-gold-400">{formatCurrency(maxQualifyingMortgage, 0)}</span>
-                        </div>
-                        {isInsured && (
-                          <div className="flex justify-between text-sm">
-                            <span className="text-gray-300">− Mortgage insurance premium</span>
-                            <span className="font-semibold text-gray-200">{formatCurrency(maxQualifyingMortgage - maxBaseMortgage, 0)}</span>
-                          </div>
-                        )}
-                        <div className="flex justify-between text-sm">
-                          <span className="text-gray-300">+ Down payment ({downPaymentPct}%)</span>
-                          <span className="font-semibold text-gray-200">{formatCurrency(maxHomeDownPayment, 0)}</span>
-                        </div>
-                        <div className="border-t border-white/10 pt-3 flex justify-between">
-                          <span className="font-semibold text-gray-200">Max home price</span>
-                          <span className="font-bold text-gold-400 text-lg">{formatCurrency(maxHomePrice, 0)}</span>
-                        </div>
-                        {maxHomeDownPaymentProblem && (
-                          <p className="text-xs text-red-300">
-                            {downPaymentPct}% down is below the legal minimum at this price — you would need {formatCurrency(minimumDownPayment(maxHomePrice), 0)} down{maxHomePrice >= 1500000 ? " (20% for homes $1.5M+)" : ""}.
+                        {maxHomePrice > 0 ? (
+                          <>
+                            <div className="flex justify-between text-sm">
+                              <span className="text-gray-300">Mortgage at that price{maxPriceInsured ? " (incl. insurance)" : ""}</span>
+                              <span className="font-semibold text-gold-400">{formatCurrency(maxPrice.loan, 0)}</span>
+                            </div>
+                            {maxPriceInsured && (
+                              <div className="flex justify-between text-sm">
+                                <span className="text-gray-300">− Mortgage insurance premium (financed)</span>
+                                <span className="font-semibold text-gray-200">{formatCurrency(maxPricePremium, 0)}</span>
+                              </div>
+                            )}
+                            <div className="flex justify-between text-sm">
+                              <span className="text-gray-300">+ Your down payment ({maxPriceDownPct.toFixed(1)}%)</span>
+                              <span className="font-semibold text-gray-200">{formatCurrency(downAvailable, 0)}</span>
+                            </div>
+                            <div className="border-t border-white/10 pt-3 flex justify-between">
+                              <span className="font-semibold text-gray-200">Max home price</span>
+                              <span className="font-bold text-gold-400 text-lg">{formatCurrency(maxHomePrice, 0)}</span>
+                            </div>
+                            <p className="text-xs text-gray-400">
+                              {maxPrice.limitedBy === "downPayment"
+                                ? `Limited by the minimum down payment rules: your income would support a mortgage up to ${formatCurrency(maxQualifyingMortgage, 0)}, but ${formatCurrency(downAvailable, 0)} down only covers a home up to this price${maxHomePrice >= 1499000 ? " (20% is required at $1.5M+)" : ""}.`
+                                : "Limited by your income (39% GDS / 44% TDS at the qualifying rate). A bigger down payment raises the price but not the mortgage."}
+                            </p>
+                          </>
+                        ) : (
+                          <p className="text-sm text-amber-300">
+                            {maxQualifyingMortgage > 0 ? "Enter the down payment you have available to see a maximum home price." : "Your debts and housing costs already exceed the GDS/TDS limits at this income."}
                           </p>
                         )}
                         <p className="text-xs text-gray-400 mt-2">
-                          Based on {formatCurrency(userIncome, 0)} gross annual income, {downPaymentPct}% down, {amortization}-year amortization, {mortgageRate}% rate
+                          Based on {formatCurrency(userIncome, 0)} gross annual income, {formatCurrency(downAvailable, 0)} down, {amortization}-year amortization, {mortgageRate}% rate ({stRate.toFixed(2)}% qualifying). Property tax, heat and condo fees as entered.
                         </p>
                       </div>
                     </div>

@@ -29,7 +29,9 @@ function maxLtvForAge(age: number): number {
 export default function ReverseMortgagePage() {
   const [homeValue, setHomeValue] = useState(800000);
   const [borrowerAge, setBorrowerAge] = useState(70);
-  const [interestRate, setInterestRate] = useState(7.74); // CHIP typical rate
+  // Reverse-mortgage rates aren't in our live rate feed and the lenders' rate tables couldn't be sourced
+  // (Oct 2026), so this stays an illustrative default. They run well above regular mortgage rates.
+  const [interestRate, setInterestRate] = useState(7.74);
   const [yearsProjected, setYearsProjected] = useState(15);
   const [existingDebt, setExistingDebt] = useState(0);
 
@@ -81,7 +83,10 @@ export default function ReverseMortgagePage() {
               <h2 className="text-xl font-semibold text-gray-100 border-b border-gray-700/50 pb-4">Your Situation</h2>
               <ValidatedInput label="Home Value" type="currency" value={homeValue} onChange={setHomeValue} validation={{ min: 100000, max: 10000000, message: "Current estimated home value" }} />
               <ValidatedSlider label="Youngest Borrower Age" value={borrowerAge} onChange={(v) => setBorrowerAge(Math.round(v))} min={55} max={95} step={1} formatValue={(v) => Math.round(v) + " years"} />
-              <ValidatedSlider label="Interest Rate" value={interestRate} onChange={setInterestRate} min={4} max={12} step={0.01} formatValue={(v) => v.toFixed(2) + "%"} />
+              <div>
+                <ValidatedSlider label="Interest Rate" value={interestRate} onChange={setInterestRate} min={4} max={12} step={0.01} formatValue={(v) => v.toFixed(2) + "%"} />
+                <p className="text-xs text-gray-400 mt-1.5">Illustrative rate. Reverse-mortgage rates (HomeEquity Bank, Equitable Bank) are typically well above regular mortgage rates and change often. Ask us for a current quote.</p>
+              </div>
               <ValidatedSlider label="Projection Period" value={yearsProjected} onChange={(v) => setYearsProjected(Math.round(v))} min={5} max={30} step={1} formatValue={(v) => Math.round(v) + " years"} />
               <ValidatedInput label="Existing Mortgage / HELOC Balance" type="currency" value={existingDebt} onChange={setExistingDebt} validation={{ min: 0, max: 10000000, message: "Must be paid off from the reverse mortgage" }} />
 

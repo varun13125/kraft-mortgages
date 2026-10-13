@@ -25,7 +25,7 @@ export default function RatesPage() {
   return (
     <>
       <Navigation />
-      <main className="min-h-screen mt-16 bg-slate-950 text-white">
+      <main id="main-content" className="min-h-screen mt-16 bg-slate-950 text-white">
         {/* Ticker Strip */}
         <RatesTicker />
 

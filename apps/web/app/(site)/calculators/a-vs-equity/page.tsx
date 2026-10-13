@@ -11,13 +11,20 @@ import { ValidatedInput, ValidatedSlider } from "@/components/ui/ValidatedInput"
 import { formatCurrency } from "@/lib/utils/validation";
 import PdfLeadModal from "@/components/PdfLeadModal";
 import { RelatedCalculators } from "@/components/calculators/RelatedCalculators";
+import { useLiveRates } from "@/lib/useLiveRates";
+import { liveRate, ratesAsOf, useLiveDefault } from "../_lib/liveRateDefaults";
+import { LiveRateNote } from "../_lib/LiveRateNote";
+
+// Equity-lender (private/MIC) FIRST mortgages have no benchmark in our live rate feed, so the 1st-position
+// default stays illustrative. In 2nd position the default follows the live private-second benchmark.
+const EQUITY_FIRST_ILLUSTRATIVE_RATE = 6.95;
 
 type Province = "BC" | "AB" | "ON";
 type LoanPosition = "1st" | "2nd";
 
-// Approximate combined federal + provincial marginal rates for roughly $115K–$137K of income (2025
-// brackets; ON includes surtax). Same defaults as the Self-Employed A vs B calculator. (BC was 20.5% —
-// the federal bracket rate alone.)
+// Combined federal + provincial marginal rates on ordinary income for 2026 (verified 2026-10-13), for taxable
+// income of about $117K up to $140K (BC) / $154K (AB) / $150K (ON); ON includes surtax. Same defaults and
+// sources as the Self-Employed A vs B calculator. (BC was once 20.5% — the federal bracket rate alone.)
 const defaultTaxRates: Record<Province, number> = { BC: 38.29, AB: 36.0, ON: 43.41 };
 
 // Canadian convention: semi-annual compounding, monthly rate = (1 + r/2)^(1/6) - 1 (same as lib/calc/payment.ts)
@@ -60,7 +67,7 @@ const faqs = [
   },
   {
     q: "What LTV do equity lenders typically require?",
-    a: "Most equity lenders lend up to 65-75% of the property value for first mortgages, and up to 85% combined LTV for second mortgages. Lower LTV means lower rates — for example, Capital Direct starts at 4.89% at 50% LTV, while Antrim Investments offers 6.95% at 50-65% LTV vs 7.49% at 70-75% LTV. Having more equity in the property translates to better terms."
+    a: "Most equity lenders lend up to 65-75% of the property value for first mortgages, and up to 85% combined LTV for second mortgages. Lower LTV means lower rates: the same lender will typically price a 50% LTV loan noticeably below a 70–75% LTV loan, and fees follow the same pattern. Having more equity in the property translates to better terms."
   },
   {
     q: "Why would I choose equity lending over an A-lender?",
@@ -75,8 +82,16 @@ export default function AVsEquityPage() {
   const [loanPosition, setLoanPosition] = useState<LoanPosition>("1st");
   const [term, setTerm] = useState(2);
   const [amortization, setAmortization] = useState(25);
-  const [aRate, setARate] = useState(4.49);
-  const [eqRate, setEqRate] = useState(6.95);
+  const { data: liveRates } = useLiveRates();
+  const ratesDate = ratesAsOf(liveRates);
+  // A-lender default = conventional 5-yr fixed (uninsured; best5YrFixed is the insured rate)
+  const liveConventional5 = liveRate(liveRates, "fixed5Conventional");
+  const [aRate, setARate, aRateSource] = useLiveDefault(4.49, liveConventional5);
+  const livePrivateSecond = liveRate(liveRates, "privateSecond");
+  const [eqRate, setEqRate, eqRateSource] = useLiveDefault(
+    EQUITY_FIRST_ILLUSTRATIVE_RATE,
+    loanPosition === "2nd" ? livePrivateSecond : EQUITY_FIRST_ILLUSTRATIVE_RATE,
+  );
   const [province, setProvince] = useState<Province>("BC");
   const [additionalIncome, setAdditionalIncome] = useState(80000);
   const [marginalRate, setMarginalRate] = useState(defaultTaxRates.BC);
@@ -237,7 +252,10 @@ export default function AVsEquityPage() {
                         <Building2 className="w-4 h-4 text-blue-400" /> A-Lender Settings
                       </h3>
                       <div className="space-y-4">
-                        <ValidatedInput label="A-Lender Rate (%)" value={aRate} onChange={setARate} validation={{ min: 1, max: 15 }} type="percentage" />
+                        <div>
+                          <ValidatedInput label="A-Lender Rate (%)" value={aRate} onChange={setARate} validation={{ min: 1, max: 15 }} type="percentage" />
+                          <LiveRateNote data={liveRates} product="fixed5Conventional" source={aRateSource} />
+                        </div>
                       </div>
                     </div>
 
@@ -246,7 +264,12 @@ export default function AVsEquityPage() {
                         <TrendingUp className="w-4 h-4 text-emerald-400" /> Equity Lender Settings
                       </h3>
                       <div className="space-y-4">
-                        <ValidatedInput label="Equity Lender Rate (%)" value={eqRate} onChange={setEqRate} validation={{ min: 1, max: 20 }} type="percentage" />
+                        <div>
+                          <ValidatedInput label="Equity Lender Rate (%)" value={eqRate} onChange={setEqRate} validation={{ min: 1, max: 20 }} type="percentage" />
+                          {loanPosition === "2nd" && livePrivateSecond !== undefined
+                            ? <LiveRateNote data={liveRates} product="privateSecond" source={eqRateSource} />
+                            : <p className="text-xs text-gray-400 mt-1.5">{eqRateSource === "user" ? "" : "Illustrative equity-lender rate (no live benchmark for private first mortgages). "}Equity-lender rates depend mostly on LTV, location and exit strategy. Enter the quote you received.</p>}
+                        </div>
                         <ValidatedInput label="Equity Lender Fee (%)" value={eqFee} onChange={setEqFee} validation={{ min: 0, max: 5 }} type="percentage" />
                       </div>
                     </div>
@@ -269,7 +292,7 @@ export default function AVsEquityPage() {
                         </div>
                         <ValidatedInput label="Additional Income Needed to Qualify ($/year)" value={additionalIncome} onChange={setAdditionalIncome} validation={{ min: 0, max: 500000 }} type="currency" />
                         <ValidatedInput label="Your Marginal Tax Rate (%)" value={marginalRate} onChange={setMarginalRate} validation={{ min: 0, max: 55 }} type="percentage" />
-                        <p className="text-xs text-gray-500">This is the extra income you&apos;d need to declare on your T1 to qualify with an A-lender. Province defaults are approximate combined marginal rates for about $115K–$137K of income — enter your own. For incorporated owners, the true cost is usually lower (personal vs corporate tax).</p>
+                        <p className="text-xs text-gray-500">This is the extra income you&apos;d need to declare on your T1 to qualify with an A-lender. Province defaults are 2026 combined marginal rates for about $117K–$140K of income. Enter your own. For incorporated owners, the true cost is usually lower (personal vs corporate tax).</p>
                       </div>
                     </div>
 
@@ -452,11 +475,11 @@ export default function AVsEquityPage() {
                 <div>
                   <h3 className="text-lg font-semibold text-blue-300 mb-3">Understanding This Comparison</h3>
                   <div className="space-y-2 text-sm text-blue-200">
-                    <p>• Rates shown are based on current lender data from our database — actual rates vary by application.</p>
+                    <p>• The A-lender default follows our live rate feed; the equity-lender default is illustrative. Actual rates vary by application.</p>
                     <p>• Tax calculations are estimates. Consult a CPA for your specific tax situation.</p>
                     <p>• Equity lender fees (lender/broker fees) may be partially or fully financed into the mortgage.</p>
                     <p>• Investment property interest deductibility depends on your specific situation — verify with your accountant.</p>
-                    <p>• VWR Capital charges flat fees ($750-$5,750) rather than percentage-based fees — not reflected in the percentage input above.</p>
+                    <p>• Some equity lenders charge a flat administrative fee instead of a percentage. Convert it to a percentage of the loan for the input above.</p>
                   </div>
                 </div>
               </div>
@@ -480,10 +503,10 @@ export default function AVsEquityPage() {
 
               <h3 className="text-2xl font-semibold text-gray-100 mt-8">How Equity Lenders Differ from A-Lenders and B-Lenders</h3>
               <p>
-                The Canadian mortgage market has three tiers. A-lenders (banks, credit unions, monoline lenders like Marathon Mortgage and Neo Financial) offer the lowest rates — currently 3.74% to 5.99% — but require full income verification, strong credit scores (typically 680+), and standard qualification criteria including GDS/TDS ratios. B-lenders sit in the middle, offering slightly higher rates with more flexible qualification, but still generally require some form of income verification.
+                The Canadian mortgage market has three tiers. A-lenders (banks, credit unions and monoline lenders) offer the lowest rates{ratesDate && liveConventional5 !== undefined ? ` (as of ${ratesDate}, conventional 5-year fixed rates in our live feed start at ${liveConventional5.toFixed(2)}%)` : ""}, see <Link href="/rates" className="text-gold-400 hover:text-gold-300 underline">today&apos;s rates</Link>, but they require full income verification, strong credit scores (typically 680+), and standard qualification criteria including GDS/TDS ratios. B-lenders sit in the middle, offering slightly higher rates with more flexible qualification, but still generally require some form of income verification.
               </p>
               <p>
-                Equity lenders operate on an entirely different model. They assess the property value, the loan amount relative to that value, and the exit strategy. Income verification is typically not required at all. Current equity lending rates range from approximately 4.89% to 9.99% depending on the lender, LTV, and province. Capital Direct offers first mortgages starting at 4.89% (50% LTV), while Neighbourhood Holdings offers closed-term products starting at 6.60% with no lender fee. Lender fees typically range from 1% to 3% of the loan amount, though some lenders like VWR Capital charge flat administrative fees ($750 to $5,750) rather than percentage-based fees — a significant cost advantage on larger mortgages.
+                Equity lenders operate on an entirely different model. They assess the property value, the loan amount relative to that value, and the exit strategy. Income verification is typically not required at all. Equity-lender rates sit above A- and B-lender rates and vary widely by lender, LTV, property type and province{ratesDate && livePrivateSecond !== undefined ? ` (for reference, the lowest private second-mortgage rate in our live feed is ${livePrivateSecond.toFixed(2)}% as of ${ratesDate})` : ""}. Lender fees are commonly 1% to 3% of the loan amount, and some lenders charge a flat administrative fee instead, which can be cheaper on larger mortgages. Ask us for current quotes from several equity lenders.
               </p>
 
               <h3 className="text-2xl font-semibold text-gray-100 mt-8">The Hidden Tax Cost of Qualifying with an A-Lender</h3>
@@ -530,24 +553,19 @@ export default function AVsEquityPage() {
                 Equity lending is often a strategic short-term solution. Here&apos;s a common transition path: (1) Use equity lending to close your purchase quickly, often within 3-7 business days. (2) Over the next 1-2 years, gradually declare more income on your tax returns, establish a consistent income pattern, and maintain your credit score. (3) When your equity lender term matures, refinance to an A-lender at a lower rate using your now-documented income. This strategy works especially well for self-employed borrowers whose businesses are growing and whose income trajectory is upward.
               </p>
 
-              <h3 className="text-2xl font-semibold text-gray-100 mt-8">Top Equity Lenders in Canada: Antrim, VWR Capital, First Circle</h3>
+              <h3 className="text-2xl font-semibold text-gray-100 mt-8">Choosing an Equity Lender: What Drives the Rate and Fees</h3>
               <p>
-                <strong>Capital Direct:</strong> One of Canada&apos;s largest equity lenders. First mortgage rates from 4.89% at 50% LTV, 5.89% at 60%, 6.39% at 65% — with a 1% lender fee. Their FlexiLine product offers revolving credit from 5.99% (50% LTV) with a 2% fee. No income verification required. Available across Canada.
+                Equity lenders in Canada range from large national mortgage investment corporations (MICs) to regional private funds and individual lenders. Their pricing changes often, so we don&apos;t publish lender-by-lender rate tables here. What moves your rate and fee:
               </p>
+              <ul className="list-disc list-inside space-y-2 ml-4">
+                <li><strong>LTV:</strong> the biggest factor. Pricing steps up as LTV rises, and most lenders stop at about 65–75% on a first mortgage.</li>
+                <li><strong>Position:</strong> second mortgages cost more than firsts because the lender ranks behind the first-mortgage holder.</li>
+                <li><strong>Location and property type:</strong> urban detached homes get the best terms; rural, unusual or mixed-use properties cost more or are declined.</li>
+                <li><strong>Fee structure:</strong> most charge a percentage fee (commonly 1–3%); some charge a flat administrative fee, which favours larger loans. Compare the all-in cost, not just the rate.</li>
+                <li><strong>Term and exit:</strong> equity loans are usually 1–2 year terms, often interest-only. A clear exit plan (refinance to an A- or B-lender, or a sale) gets better pricing.</li>
+              </ul>
               <p>
-                <strong>Neighbourhood Holdings:</strong> Offers open, closed, and partial open mortgages. Closed-term products start at 6.60% with no lender fee — a competitive option for borrowers who want to minimize upfront costs. Open terms start at 5.80% with a 1% fee. Rates are LTV and beacon score dependent.
-              </p>
-              <p>
-                <strong>Antrim Investments:</strong> One of Canada&apos;s most established equity lenders. First mortgage rates from 6.95% at lower LTVs (50-65%), 7.49% at 70-75% LTV. Standard 1% lender fee. No income verification required — qualification is based entirely on property equity and a professional appraisal. Available across Canada.
-              </p>
-              <p>
-                <strong>VWR Capital:</strong> A unique player in the equity lending space because they charge flat administrative fees ($750 to $5,750 depending on province and LTV) rather than percentage-based fees. This can save borrowers thousands on larger mortgages. Rates are province and LTV-dependent.
-              </p>
-              <p>
-                <strong>First Circle Financial:</strong> Offers competitive equity lending with a 1% fee on first mortgages and 1.5-2% on second mortgages. Flexible qualification criteria and reasonable turnaround times.
-              </p>
-              <p>
-                <strong>Sequence Capital:</strong> Rates from 5.99% to 7.75% with a 1% lender fee — often among the lower-cost equity options. <strong>Secure Capital MIC:</strong> Rates from 6.99% to 9.99% with 2-3% fees. <strong>LCM Capital:</strong> First mortgages from 7.45% with a 1% fee.
+                We compare several equity lenders for each file. <Link href="/contact" className="text-gold-400 hover:text-gold-300 underline">Contact us</Link> for current quotes, or see <Link href="/rates" className="text-gold-400 hover:text-gold-300 underline">today&apos;s A-lender and private-second benchmarks</Link>.
               </p>
 
               <div className="mt-8">

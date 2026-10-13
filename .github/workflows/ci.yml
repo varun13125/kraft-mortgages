@@ -45,6 +45,21 @@ jobs:
       - name: Lint (apps/web)
         run: pnpm --filter @kraft/web run lint
 
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with: { version: 9 }
+      - uses: actions/setup-node@v4
+        with:
+          # Node >= 22.18 strips TypeScript types natively, so the tests import lib/calc/*.ts directly.
+          node-version: 24
+          cache: 'pnpm'
+      - run: pnpm install --frozen-lockfile
+      - name: Calculator + MLI math tests (apps/web/tests)
+        run: pnpm --filter @kraft/web test
+
   build:
     runs-on: ubuntu-latest
     needs: typecheck

@@ -14,6 +14,74 @@ Each row's **Ref** points at the detailed entry in an audit report, using `<repo
 | `plat` | [`audit-2026-10/platform-build-deps.md`](audit-2026-10/platform-build-deps.md) |
 
 Paths are relative to `apps/web/` unless they start with `/` (repo root).
+Round-2 reports (2026-10-13/14) use `r2-ai`, `r2-be`, `r2-fe`, `r2-calc`, `r2-sp` → `audit-2026-10/round2-*.md`.
+
+---
+
+## 0. Current status of every item (updated 2026-10-14, round 2 — supersedes the Status column in §1–§2)
+
+| ID | Status | Note |
+| --- | --- | --- |
+| BUG-001 | in-progress (owner) | Secret files untracked + gitignored (no longer in new commits). **Still in git history: rotate all keys, then purge history.** |
+| BUG-002 | open (owner) | Rotate Vapi key → set `VAPI_*` in Vercel → delete fallbacks in `lib/voice/vapi.ts`. |
+| BUG-003 | fixed 2026-10-14 | Next.js 14.2.35 (web, root). Next 15.5 upgrade still recommended later (advisories with no 14.x fix). |
+| BUG-004 | blocked (owner deploy) | `/firestore.rules` (deny all client access) + `/firebase.json` written. Run `firebase deploy --only firestore:rules`. |
+| BUG-005 | fixed — wording pending legal review | Unticked consent boxes on contact, qualify, LeadModal, PdfLeadModal, business-funding (shared text in `lib/compliance/consent.ts`, versioned). AI auto-dial only when `consentToCall === true`; consent + version + time + IP stored with every lead. Facebook leads are called only if the Lead Ad form has an affirmative consent answer (**owner: add a consent question to FB Lead Ad forms**). |
+| BUG-006 | open (owner) | Env vars — see STATUS.md "Owner checklist". Only `/admin` is unavailable until set; everything else falls back safely. |
+| BUG-007 | open | Durable rate limiting (Vercel WAF / Upstash) still needed; two in-memory guard helpers still exist. |
+| BUG-008 | fixed | `/api/lenders` redacts BDM contacts unless `x-api-key` = `LENDERS_API_KEY`. |
+| BUG-009 | blocked (BUG-006) | Make the Thinkrr webhook fail closed once `THINKR_WEBHOOK_SECRET` is set on both sides. |
+| BUG-010 | fixed | Vercel installs with `pnpm install --frozen-lockfile`; `package-lock.json`, `apps/web/vercel.json`, `apps/web/.npmrc` removed. **Owner: set apex `kraftmortgages.ca` redirect to Permanent (308) in Vercel → Domains.** |
+| BUG-011 | in-progress | CSP shipped as **Report-Only** (`next.config.mjs`) + `/api/csp-report`. Review logs 1–2 weeks, then enforce. |
+| BUG-012 | fixed | jsPDF 4.2.1; every generator produces valid PDFs (r2-sp). |
+| BUG-013 | fixed | `lib/ai/llm.ts` on plain fetch with current models (`LLM_*_MODEL` overrides); dead v2 chat stack deleted. Pipeline LLM calls are now real paid spend when keys are set. |
+| BUG-014 | open (owner) | Marketing claims to verify. |
+| BUG-015 | fixed — legal review required | Privacy policy lists all 15 processors + cross-border processing (dated 2026-10-13). |
+| BUG-016 | fixed | `lib/security/sanitizeHtml.ts` on ingest, publish, save, read, and last at render. |
+| BUG-017 | fixed | Footer on /qualify and /mli. |
+| BUG-018 | fixed | AI posts are drafts unless `AI_AUTO_PUBLISH=true`; admin Publish button + `/api/posts`. |
+| BUG-019 | fixed | 21 residential + all specialty calculators default to live rates (touched-guard); stale named-lender tables removed; landing-page rates live or non-numeric. |
+| BUG-020 | fixed | Decision: `/calculators/stress-test` is canonical; `/residential/calculators/stress-test` 308s to it (page deleted). Debt-consolidation/refinance redirects fixed. |
+| BUG-021 | open (owner) | Add the hard-coded UID to Firestore `admins`, then delete the bypass in `lib/db/firestore.ts`. |
+| BUG-022 | fixed | Webhook URLs via `lib/crm/webhooks.ts` (env, old URLs as defaults) + optional `X-Webhook-Secret` (`CRM_WEBHOOK_SECRET`) on every CRM call incl. chat + Thinkrr. Owner: set secret, deploy, then enforce in n8n/GHL. |
+| BUG-023 | partially fixed | Dead dashboard buttons removed; republish updates instead of duplicating; posts list + publish. Run list/polling still to do (FEAT-016). |
+| BUG-024 | fixed | Facebook leads deduped on `leadgen_id` (Firestore `fbLeads`). |
+| BUG-025 | fixed | PdfLeadModal shows failure + retry; /qualify "calling" state from the server's `callDispatched`. |
+| BUG-026 | partially fixed | Clear-chat button + 30-day history TTL. Chat still scrapes contact details without a consent record (FEAT-001 for chat). |
+| BUG-027 | fixed in code | CTBC corrected via `CHANNEL_CORRECTIONS` in `lenderIntelligence.ts`. Owner: fix upstream in the lender generator. |
+| BUG-028 | root cause found | `Hermes Agent/enrich_appraisal_legal_all_lenders.py` rewrites the TS interface from a template: template now includes `isDormant` (backup `.bak-2026-10-13` beside it). It also overwrites appraisal/legal policies and the scheduled sync never runs `build_approved_directories.py`, so directory attachments drop out of `canadianLendersData.ts` (the site reads them from `approvedDirectoriesData.ts`, so no visible impact). Owner decision: add that script to `run_scheduled_sync.bat`? |
+| BUG-029 | fixed — needs live test | Hindi agent hidden without its key; hard-coded rate removed; close now clicks Thinkrr's own toggle (internal class names — **test a real call**). |
+| BUG-030 | fixed | Voicemail province from area code; leads unscored. |
+| BUG-031 | open (owner) | Vapi (contact form) vs Thinkrr (Facebook) — pick one. |
+| BUG-032 | fixed | MLI microsite retired (workspace, build, `public/mli-select` except `guide.pdf`, `apps/public`, `mli-proxy`). |
+| BUG-033 | open | 10 MB lender data module (FEAT-048). |
+| BUG-034 | fixed | `isPrismaEnabled()` everywhere; no crash when `DATABASE_URL` is set without a generated client. |
+| BUG-035 | fixed | Unused deps + old AI SDKs removed; phantom deps moved into `apps/web`. Remaining majors (firebase-admin 14, Next 15, zod 4) are planned upgrades, not defects. |
+| BUG-036 | open (owner) | Business facts (hours, head office, licence numbers, emails). |
+| BUG-037 | open (owner) | APR disclosure on advertised rates. |
+| BUG-038 | partially fixed | Contrast fixed in frontend-owned files (31 replacements); calculator/specialty pages still use gray-500 small text. |
+| BUG-039 | fixed | Province selector in header + city pages set their province. |
+| BUG-040 | fixed | Blog images WebP (10.6 MB → 1.0 MB); blog ISR every 5 min. |
+| BUG-041 | open | Tool calling not wired into live chat (FEAT-009). |
+| BUG-042 | fixed | Chat timeouts/budget, max_tokens, Gemini key header, JSON-only bodies. |
+| BUG-043 | open (owner) | A-vs-B "tax trap" default years. |
+| BUG-044 | fixed | Constants verified against primary sources with dated comments (Quebec premium tax 9.975% from 2027; FTHB GST rebate from 2025-03-20). |
+| BUG-045 | fixed | A-vs-B PDF uses netted totals + tax years; long labels wrap. |
+| BUG-046 | fixed | Sitemap (96 URLs, all real routes). |
+| BUG-047 | fixed | ~60 dead files deleted (import-graph verified): old-design, v2 chat stack, dead voice libs, unused components, LeadCapture, lib/reports, googleSheets, rbac, firebase.ts, analytics, meta/conversions, calc/mli, minimax + user/prefs + ai/models routes, `[city]` route, privacy-policy/terms-of-service re-exports. |
+| BUG-048 | mostly fixed | Strays removed, drafts → `docs/drafts/`, logos → `design-reference/logos/`, infra/ + packages/ui + root next.config.js removed, local files untracked, `engines.node` 22.x. `social-graphics/` (27 MB) left in place. |
+| BUG-049 | fixed | `embedText()` never fabricates vectors. |
+| BUG-050 | fixed | Crew base URL split; Firebase "not configured" state; machine paths removed; deep healthz (`/api/healthz?deep=1`). |
+| BUG-051 | fixed | Skip link, focus trap/scroll lock, Escape returns focus, one shared `/api/rates` request. |
+| BUG-052 | fixed | `/api/criteria` dynamic warning gone; lint 0 errors / 0 warnings. |
+| BUG-053 | fixed | All listed calculator gaps (r2-calc §3). |
+| BUG-054 | fixed (new, high) | 13 hub calculators inherited their hub's title/canonical from `{hub}/layout.tsx` → each now has its own leaf `layout.tsx`. |
+| BUG-055 | fixed in code (new, high) | Live feed defects: "Private 2nd" contained A-lender products at Prime + 0.50% (4.95%) and dates were spreadsheet serials ("46301"); median/fee fields were dropped. `lib/rates.ts` now filters private seconds below prime + 2%, converts serial dates, keeps median/fees (tests with a feed snapshot). **Owner: fix the Spotlight/Hermes feed generator too.** |
+| BUG-056 | fixed (new) | Calling window was Pacific-only (Ontario numbers callable until 22:30 ET). Now also requires the CRTC window (weekdays 9:00–21:30, weekends 10:00–18:00) in every time zone of the recipient's area code (`isRecipientCallable`). |
+| BUG-057 | open (new, low) | Possible blank band under the header on some pages (Navigation spacer + page `mt-16`) — homepage and calculators looked fine in a browser check; check city/contact/rates/learn. |
+| BUG-058 | open (new, low) | JSON-LD `<script>` blocks use bare `JSON.stringify`; escape `<` in a shared serializer (hardening). |
+| BUG-059 | open (new, low) | `/api/chat` Gemini fallback is `gemini-2.5-flash`; Google limits 2.5 access to existing projects — move to a 3.x flash model if the key's project never used 2.5. |
+| BUG-060 | open (new, low) | Pipeline stages parse LLM JSON: fence-tolerant parser added (`lib/pipeline/json.ts`), but a supervised end-to-end pipeline run has never happened. |
 
 ---
 

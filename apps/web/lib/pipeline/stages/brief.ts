@@ -1,6 +1,7 @@
 import type { Run } from '@/lib/db/firestore';
 import { llm } from '@/lib/ai/llm';
 import { log } from '@/lib/runlog';
+import { parseLlmJson } from '../json';
 
 interface BriefData {
   title: string;
@@ -60,7 +61,7 @@ Return JSON format:
 
     let briefData: any;
     try {
-      briefData = JSON.parse(response.content);
+      briefData = parseLlmJson(response.content);
     } catch (parseError) {
       await log(run.id, 'Brief: Failed to parse LLM response, using fallback');
       

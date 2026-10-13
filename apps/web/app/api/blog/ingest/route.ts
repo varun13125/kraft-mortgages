@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { savePost } from '@/lib/db/firestore';
 import { safeEqual } from '@/lib/auth';
+import { sanitizeBlogHtml } from '@/lib/security/sanitizeHtml';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -203,11 +204,13 @@ export async function POST(req: NextRequest) {
     keywords = keywords.map((k) => String(k).slice(0, 100)).slice(0, 50);
 
     // Auto-categorize based on content if no categories provided
-    const categories: string[] = (Array.isArray(body.categories) && body.categories.length > 0)
+    const categories: string[] = ((Array.isArray(body.categories) && body.categories.length > 0)
       ? body.categories
       : (typeof body.categories === 'string' && body.categories.trim()
         ? [body.categories]
-        : autoCategories(title, markdown));
+        : autoCategories(title, markdown)))
+      .map((c: unknown) => String(c).slice(0, 100))
+      .slice(0, 10);
     const parsedDate = body.publishedAt ? new Date(body.publishedAt) : new Date();
     const publishedAt = isNaN(parsedDate.getTime()) ? new Date() : parsedDate;
     const status: 'published' | 'draft' = body.status === 'draft' ? 'draft' : 'published';
@@ -216,15 +219,17 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Missing slug/title' }, { status: 400 });
     }
 
+    // BUG-016: the body is rendered with dangerouslySetInnerHTML on the main
+    // domain - sanitize before storing (savePost and the read path sanitize too).
     await savePost({
       slug,
       title,
-      markdown: finalMarkdown,
-      html,
+      markdown: sanitizeBlogHtml(finalMarkdown),
+      html: sanitizeBlogHtml(html),
       status,
       publishedAt,
       author: {
-        name: body.author || 'Varun Chaudhry',
+        name: typeof body.author === 'string' && body.author.trim() ? body.author.slice(0, 120) : 'Varun Chaudhry',
         title: 'Licensed Mortgage Broker',
         license: 'BCFSA #SR220230 | RECA LIC-00655428 | FSRA #12918',
       },

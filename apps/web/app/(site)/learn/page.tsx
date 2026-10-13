@@ -16,7 +16,7 @@ export default function Learn() {
   return (
     <>
       <Navigation />
-      <div className="min-h-screen bg-gray-900 text-white px-6 pt-32 pb-16">
+      <main id="main-content" className="min-h-screen bg-gray-900 text-white px-6 pt-32 pb-16">
         <div className="max-w-4xl mx-auto">
           <h1 className="text-4xl font-bold mb-8">Learn About Mortgages</h1>
           <div className="space-y-6 text-gray-300">
@@ -32,7 +32,7 @@ export default function Learn() {
             </p>
           </div>
         </div>
-      </div>
+      </main>
       <Footer />
     </>
   );

@@ -21,7 +21,7 @@ export default function LearnPage({ params }: { params: { slug: string } }) {
   return (
     <>
       <Navigation />
-      <div className="prose prose-invert max-w-3xl mx-auto px-6 pt-32 pb-16"><Mdx /></div>
+      <main id="main-content" className="prose prose-invert max-w-3xl mx-auto px-6 pt-32 pb-16"><Mdx /></main>
       <Footer />
     </>
   );

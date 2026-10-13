@@ -5,6 +5,8 @@ import Card from "@/components/mli/Card";
 import TierBadge from "@/components/mli/TierBadge";
 import { tierFromPoints, maxLoanFromValueOrCost, leverageFor } from "@/lib/mli/calcs";
 import { DollarSign, Building2, TrendingUp, PiggyBank, Calculator, Target } from "lucide-react";
+import CalculatorPdfButton from "@/components/calculator-report/CalculatorPdfButton";
+import { money, pct } from "@/components/calculator-report/reportFormat";
 
 export default function MaxLoanPage() {
   const [valueOrCost, setValueOrCost] = useState(20000000);
@@ -17,6 +19,9 @@ export default function MaxLoanPage() {
   const maxLoan = maxLoanFromValueOrCost(projectType === "new", tier, safeValue);
   const equityRequired = safeValue - maxLoan;
   const equityPercent = (equityRequired / safeValue) * 100;
+  // New construction is sized on cost (LTC); existing properties on value (LTV)
+  const ratioLabel = projectType === "new" ? "Loan-to-Cost" : "Loan-to-Value";
+  const baseLabel = projectType === "new" ? "project cost" : "property value";
 
   return (
     <div className="min-h-screen">
@@ -238,7 +243,7 @@ export default function MaxLoanPage() {
                   {/* Visual Leverage Indicator */}
                   <div className="p-4 bg-gradient-to-br from-gray-800/50 to-gray-800/30 rounded-xl border border-gray-700/50">
                     <div className="flex justify-between text-xs text-gray-400 mb-2">
-                      <span>Loan-to-Value Ratio</span>
+                      <span>{ratioLabel} Ratio</span>
                       <span className="text-emerald-400 font-semibold">{(leverage * 100).toFixed(0)}%</span>
                     </div>
                     <div className="w-full bg-gray-700 rounded-full h-3 overflow-hidden">
@@ -280,7 +285,7 @@ export default function MaxLoanPage() {
                         <div className="text-3xl font-bold text-emerald-400">
                           ${(maxLoan / 1000000).toFixed(2)}M
                         </div>
-                        <div className="text-xs text-gray-500 mt-1">{(leverage * 100).toFixed(0)}% of project value</div>
+                        <div className="text-xs text-gray-500 mt-1">{(leverage * 100).toFixed(0)}% of {baseLabel}</div>
                       </div>
                       <div className="w-16 h-16 bg-emerald-500/10 rounded-full flex items-center justify-center">
                         <DollarSign className="w-8 h-8 text-emerald-400" />
@@ -300,7 +305,7 @@ export default function MaxLoanPage() {
                         <div className="text-3xl font-bold text-cyan-400">
                           ${(equityRequired / 1000000).toFixed(2)}M
                         </div>
-                        <div className="text-xs text-gray-500 mt-1">{equityPercent.toFixed(0)}% of project value</div>
+                        <div className="text-xs text-gray-500 mt-1">{equityPercent.toFixed(0)}% of {baseLabel}</div>
                       </div>
                       <div className="w-16 h-16 bg-cyan-500/10 rounded-full flex items-center justify-center">
                         <PiggyBank className="w-8 h-8 text-cyan-400" />
@@ -338,6 +343,34 @@ export default function MaxLoanPage() {
               </Card>
             </motion.div>
           </div>
+          <CalculatorPdfButton
+            source="calculator-pdf-mli-max-loan"
+            title="Your MLI Select Max Loan Report"
+            subtitle="Get a personalized PDF with your MLI Select leverage and equity requirement"
+            calculatorName="MLI Select Max Loan Calculator"
+            mortgageType="MLI Select (Multi-Unit)"
+            amount={maxLoan}
+            getSections={() => [
+              {
+                title: "Your Inputs",
+                rows: [
+                  { label: projectType === "new" ? "Project Cost" : "Property Value", value: money(safeValue) },
+                  { label: "Project Type", value: projectType === "new" ? "New construction" : "Existing property" },
+                  { label: "Total MLI Select Points", value: String(points) },
+                ],
+              },
+              {
+                title: "Your Results",
+                rows: [
+                  { label: "Tier", value: tier > 0 ? `${tier} points` : "Below 50 points (conventional baseline)" },
+                  { label: `Max ${ratioLabel}`, value: pct(leverage * 100, 0) },
+                  { label: "Maximum Loan (leverage cap)", value: money(maxLoan), highlight: true },
+                  { label: "Required Equity", value: `${money(equityRequired)} (${pct(equityPercent, 0)})`, highlight: true },
+                ],
+              },
+            ]}
+            educationalContent="MLI Select is CMHC's multi-unit (5+ units) insurance program. Points from affordability, energy efficiency and accessibility commitments unlock higher leverage (up to 95%), longer amortization (40/45/50 years at 50/70/100 points) and premium discounts (10%/20%/30%). The insured loan is the lesser of the leverage cap and the loan supported by a 1.10 debt coverage ratio (standard rental). Figures are estimates based on CMHC's published criteria and premium grid (effective July 14, 2025); CMHC changes these periodically. Not a commitment to insure or lend. This calculator applies the leverage cap only; check the DSCR calculator for the income-supported loan."
+          />
           <p className="mt-8 text-xs text-gray-500 max-w-4xl mx-auto text-center">
             Leverage caps per CMHC MLI Select (residential component): new construction up to 95% LTC at 50/70/100 points;
             existing properties up to 85% LTV at 50 points and 95% at 70+ points. The insured loan is the lesser of this

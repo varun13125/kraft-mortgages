@@ -5,6 +5,8 @@ import Card from "@/components/mli/Card";
 import { dscrMaxLoan, amortByTier, tierFromPoints, pmt } from "@/lib/mli/calcs";
 import { TrendingUp, Percent, DollarSign, Clock, Activity, Shield } from "lucide-react";
 import TierBadge from "@/components/mli/TierBadge";
+import CalculatorPdfButton from "@/components/calculator-report/CalculatorPdfButton";
+import { money, pct } from "@/components/calculator-report/reportFormat";
 
 export default function DSCRPage() {
   const [noi, setNoi] = useState(1200000);
@@ -370,6 +372,42 @@ export default function DSCRPage() {
               </Card>
             </motion.div>
           </div>
+          <CalculatorPdfButton
+            source="calculator-pdf-mli-dscr"
+            title="Your MLI Select DSCR Loan Report"
+            subtitle="Get a personalized PDF with your income-supported MLI Select loan"
+            calculatorName="MLI Select DSCR Calculator"
+            mortgageType="MLI Select (Multi-Unit)"
+            amount={loan}
+            getSections={() => [
+              {
+                title: "Your Inputs",
+                rows: [
+                  { label: "Net Operating Income (annual)", value: money(safeNoi) },
+                  { label: "Interest Rate", value: pct(rate) },
+                  { label: "MLI Select Points", value: `${points} (tier ${tier || "below 50"})` },
+                  { label: "Amortization", value: `${years} years${customYears === "" ? " (tier maximum)" : ""}` },
+                  { label: "Minimum Debt Coverage Ratio", value: "1.10x (standard rental)" },
+                ],
+              },
+              {
+                title: "Your Results",
+                rows: [
+                  { label: "Maximum Loan at 1.10x DCR", value: money(loan), highlight: true },
+                  { label: "Monthly Payment", value: money(monthlyPayment) },
+                  { label: "Annual Debt Service", value: money(annualDebtService) },
+                  { label: "Debt Coverage Ratio", value: annualDebtService > 0 ? `${coverage}x` : "N/A", highlight: true },
+                  { label: "Net Cash Flow After Debt Service (annual)", value: money(safeNoi - annualDebtService) },
+                ],
+              },
+            ]}
+            educationalContent="MLI Select is CMHC's multi-unit (5+ units) insurance program. Points from affordability, energy efficiency and accessibility commitments unlock higher leverage (up to 95%), longer amortization (40/45/50 years at 50/70/100 points) and premium discounts (10%/20%/30%). The insured loan is the lesser of the leverage cap and the loan supported by a 1.10 debt coverage ratio (standard rental). Figures are estimates based on CMHC's published criteria and premium grid (effective July 14, 2025); CMHC changes these periodically. Not a commitment to insure or lend. Payments use Canadian semi-annual compounding; the rate is an example - insured multi-unit rates are quoted per deal."
+          />
+          <p className="mt-8 text-xs text-gray-500 max-w-4xl mx-auto text-center">
+            Estimates only. The loan is sized so NOI covers annual debt service 1.10 times (CMHC standard rental minimum; other
+            shelter models 1.20x, non-residential 1.40x). The rate is an example — insured multi-unit rates are quoted per deal.
+            The insured loan is also capped by the MLI Select leverage limit (see the Max Loan calculator).
+          </p>
         </div>
       </section>
     </div>

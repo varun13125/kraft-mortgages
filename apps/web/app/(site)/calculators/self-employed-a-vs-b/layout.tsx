@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { OG_DEFAULTS } from "@/lib/seo/og";
 
 export const metadata: Metadata = {
   title: "Self-Employed A-Lender vs B-Lender Calculator | Kraft Mortgages",
@@ -6,11 +7,11 @@ export const metadata: Metadata = {
     "Compare A-lender (bank) vs B-lender (alternative) mortgage costs for self-employed borrowers. See the hidden tax trap and find the mathematically better path.",
   alternates: { canonical: "https://www.kraftmortgages.ca/calculators/self-employed-a-vs-b" },
   openGraph: {
+    ...OG_DEFAULTS,
     title: "Self-Employed A-Lender vs B-Lender Calculator | Kraft Mortgages",
     description:
       "Compare A-lender (bank) vs B-lender (alternative) mortgage costs for self-employed borrowers. See the hidden tax trap and find the mathematically better path.",
     url: "https://www.kraftmortgages.ca/calculators/self-employed-a-vs-b",
-    type: "website",
   },
 };
 

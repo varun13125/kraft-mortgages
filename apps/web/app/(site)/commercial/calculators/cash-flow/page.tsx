@@ -5,10 +5,14 @@ import Navigation from "@/components/Navigation";
 import { Building, TrendingUp, Calculator, DollarSign, AlertTriangle, CheckCircle, PieChart } from "lucide-react";
 import Link from "next/link";
 import { payment } from "@/lib/calc/payment";
+import CalculatorPdfButton from "@/components/calculator-report/CalculatorPdfButton";
+import { money, pct, num } from "@/components/calculator-report/reportFormat";
 
 export default function CommercialCashFlowCalculator() {
   const [purchasePrice, setPurchasePrice] = useState(2500000);
   const [downPayment, setDownPayment] = useState(625000); // 25%
+  // Example rate: there is no public commercial rate benchmark in our live feed — commercial pricing
+  // is deal-specific (property type, DSCR, LTV, sponsor), so the default is a labelled example.
   const [interestRate, setInterestRate] = useState(6.25);
   const [amortization, setAmortization] = useState(25);
   const [grossRent, setGrossRent] = useState(300000);
@@ -135,6 +139,9 @@ export default function CommercialCashFlowCalculator() {
                     onChange={(e) => setInterestRate(Number(e.target.value))}
                     className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-white"
                   />
+                  <div className="text-xs text-gray-500 mt-1">
+                    Example rate — commercial pricing is quoted per deal (property type, DSCR, LTV, borrower). Enter your quoted rate.
+                  </div>
                 </div>
 
                 <div>
@@ -369,6 +376,47 @@ export default function CommercialCashFlowCalculator() {
                   expenditures. Lender DSCR/LTV thresholds vary (CMHC-insured multi-unit residential uses 1.10x). Not a commitment to lend.
                 </div>
               </div>
+
+              <CalculatorPdfButton
+                className="mb-8 max-w-xl mx-auto"
+                source="calculator-pdf-commercial-cash-flow"
+                title="Your Commercial Cash Flow Analysis"
+                subtitle="Get a personalized PDF with your cash flow, DSCR and return analysis"
+                calculatorName="Commercial Cash Flow Calculator"
+                mortgageType="Commercial"
+                amount={loanAmount}
+                getSections={() => [
+                  {
+                    title: "Your Inputs",
+                    rows: [
+                      { label: "Purchase Price", value: money(purchasePrice) },
+                      { label: "Down Payment", value: `${money(downPayment)} (${pct(downPaymentPercent, 1)})` },
+                      { label: "Interest Rate", value: pct(interestRate) },
+                      { label: "Amortization", value: `${amortization} years` },
+                      { label: "Annual Gross Rent", value: money(grossRent) },
+                      { label: "Vacancy Rate", value: pct(vacancy, 1) },
+                      { label: "Operating Expenses + Taxes + Insurance + Maintenance", value: money(totalOperatingExpenses) },
+                    ],
+                  },
+                  {
+                    title: "Your Results",
+                    rows: [
+                      { label: "Loan Amount", value: money(loanAmount) },
+                      { label: "Monthly Mortgage Payment", value: money(monthlyPayment) },
+                      { label: "Effective Gross Income", value: money(effectiveGrossIncome) },
+                      { label: "Net Operating Income (NOI)", value: money(netOperatingIncome), highlight: true },
+                      { label: "Annual Debt Service", value: money(annualDebtService) },
+                      { label: "Before-Tax Cash Flow (annual)", value: money(beforeTaxCashFlow), highlight: true },
+                      { label: "Before-Tax Cash Flow (monthly)", value: money(monthlyBeforeTaxCashFlow) },
+                      { label: "Debt Service Coverage Ratio (DSCR)", value: `${num(dscr)}x (typical minimum 1.25x)`, highlight: true },
+                      { label: "Cap Rate", value: pct(capRate) },
+                      { label: "Cash-on-Cash Return", value: pct(cashOnCashReturn) },
+                      { label: "Loan-to-Value", value: pct(loanToValue, 1) },
+                    ],
+                  },
+                ]}
+                educationalContent="Lenders size commercial loans on the debt service coverage ratio (NOI divided by annual debt service, commonly 1.20x-1.30x for conventional commercial; 1.10x for CMHC-insured multi-unit residential) and on loan-to-value (often 65-75%). Payments here assume Canadian semi-annual compounding; NOI excludes debt service, depreciation and capital expenditures. Estimates only; not a commitment to lend."
+              />
 
               {/* Related Calculators */}
               <div className="flex flex-wrap gap-4 justify-center">

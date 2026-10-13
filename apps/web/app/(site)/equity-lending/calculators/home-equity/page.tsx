@@ -7,6 +7,10 @@ import Link from "next/link";
 import { useLiveRates } from "@/lib/useLiveRates";
 import { payment } from "@/lib/calc/payment";
 import { stressTestRate } from "@/lib/calc/affordability";
+import { liveConventional5yr, ratesAsOf } from "@/components/calculators/liveRateDefaults";
+
+// Static conventional 5-yr fixed used when the live feed is unavailable (Oct 2026 snapshot)
+const FALLBACK_CONVENTIONAL_5YR = 4.39;
 
 export default function HomeEquityCalculator() {
   const [homeValue, setHomeValue] = useState(800000);
@@ -15,7 +19,11 @@ export default function HomeEquityCalculator() {
   const [income, setIncome] = useState(150000);
   const [monthlyDebts, setMonthlyDebts] = useState(500);
   const [taxAndHeat, setTaxAndHeat] = useState(450);
-  const { best5YrFixed } = useLiveRates();
+  // Refinances can't be insured, so price off the lowest CONVENTIONAL 5-yr fixed
+  // (useLiveRates().best5YrFixed is the insured rate).
+  const { data: liveRates, loading: ratesLoading } = useLiveRates();
+  const liveConv = liveConventional5yr(liveRates);
+  const baseRate = liveConv ?? FALLBACK_CONVENTIONAL_5YR;
 
   // Calculate available equity (LTV room): 80% max for a conventional refinance
   const availableEquity = useMemo(() => {
@@ -24,13 +32,9 @@ export default function HomeEquityCalculator() {
     return Math.max(0, maxLoanAmount - currentMortgage);
   }, [homeValue, currentMortgage, creditScore]);
 
-  // Rate estimation: current best 5-yr fixed + credit-based spread (estimates; refinances are uninsured)
-  const estimatedRate = useMemo(() => {
-    if (creditScore >= 750) return best5YrFixed + 0.30;
-    if (creditScore >= 700) return best5YrFixed + 0.60;
-    if (creditScore >= 650) return best5YrFixed + 1.60; // typically alternative (B) lender
-    return best5YrFixed + 3.00;
-  }, [creditScore, best5YrFixed]);
+  // Rate estimation: today's lowest conventional 5-yr fixed + credit-based spread (estimates)
+  const creditSpread = creditScore >= 750 ? 0.30 : creditScore >= 700 ? 0.60 : creditScore >= 650 ? 1.60 : 3.00; // 650-699: typically alternative (B) lender
+  const estimatedRate = useMemo(() => baseRate + creditSpread, [baseRate, creditSpread]);
 
   // Qualification (refinance): the whole new mortgage is stress-tested at max(rate + 2%, 5.25%)
   // over 25 years; TDS = mortgage + property tax/heat + other debts ≤ 44% of gross income.
@@ -201,7 +205,14 @@ export default function HomeEquityCalculator() {
                   <div className="bg-gray-800/50 rounded-lg p-4">
                     <div className="text-sm text-gray-400 mb-1">Estimated Rate</div>
                     <div className="text-2xl font-bold text-emerald-400">{estimatedRate.toFixed(2)}%</div>
-                    <div className="text-xs text-gray-500">Based on credit score</div>
+                    <div className="text-xs text-gray-500">
+                      {liveConv !== undefined
+                        ? `Lowest conventional 5-yr fixed ${baseRate.toFixed(2)}%${ratesAsOf(liveRates) ? ` (as of ${ratesAsOf(liveRates)})` : ""}`
+                        : ratesLoading
+                          ? `Conventional 5-yr fixed ${baseRate.toFixed(2)}% (loading today's rate)`
+                          : `Example conventional 5-yr fixed ${baseRate.toFixed(2)}% (live rates unavailable)`}
+                      {` + ${creditSpread.toFixed(2)}% credit-based spread`}
+                    </div>
                   </div>
 
                   <div className="bg-gray-800/50 rounded-lg p-4">
@@ -254,7 +265,7 @@ export default function HomeEquityCalculator() {
                 </div>
                 <div className="text-xs text-gray-500 mt-2">
                   Estimates only. Assumes a refinance of the whole mortgage, qualified at the federal stress-test rate with a 44% TDS limit.
-                  Rates are estimated from current best 5-year fixed rates plus a credit-based spread; refinance penalties, legal and
+                  Rates are estimated from today&apos;s lowest conventional (uninsured) 5-year fixed rate plus a credit-based spread; refinance penalties, legal and
                   appraisal costs are not included.
                 </div>
               </div>

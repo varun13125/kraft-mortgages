@@ -5,6 +5,7 @@ import { Analytics as VercelAnalytics } from "@vercel/analytics/react";
 import { PrefSync } from "@/components/PrefSync";
 import { PWA } from "@/components/PWA";
 import { MotionProvider } from "@/components/MotionProvider";
+import { SkipToContent } from "@/components/SkipToContent";
 import { JsonLd } from "@/components/SEO/JsonLd";
 import { orgJsonLd } from "@/lib/seo/jsonld";
 import { BUSINESS } from "@/lib/seo/business-config";
@@ -69,6 +70,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <JsonLd data={orgJsonLd()} />
       </head>
       <body className="min-h-screen overflow-x-hidden w-full max-w-full">
+        {/* First focusable element on every page (WCAG 2.4.1 Bypass Blocks).
+            Targets #main-content, falling back to the first <main>/<h1>. */}
+        <SkipToContent />
         <MotionProvider>
         <div className="relative min-h-screen overflow-x-hidden w-full max-w-full bg-slate-950 text-gray-100 antialiased selection:bg-gold-500/30 selection:text-gold-200">
           {/* Unified Site-wide Animated Background */}

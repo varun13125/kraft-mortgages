@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { prisma } from "@/lib/db";
+import { prisma, isPrismaEnabled } from "@/lib/db";
 import { firestore } from "@/lib/firebaseAdmin";
 import { limitByIp } from "@/lib/compliance/requestGuards";
+import { crmWebhookHeaders, ghlWebhookUrl } from "@/lib/crm/webhooks";
+import { buildConsentRecord, consentInputShape, consentRecordToStrings } from "@/lib/compliance/consentRecord";
 
 export const dynamic = "force-dynamic";
 
@@ -24,6 +26,8 @@ const BusinessFundingSchema = z
     other_purpose: s(300).optional(),
     when_are_funds_needed: s(100).optional().default(""),
     notes: s(5000).optional(),
+    // CASL consent evidence (lib/compliance/consent.ts consentFields()); no calls are placed here.
+    ...consentInputShape,
   })
   .strip();
 
@@ -43,28 +47,33 @@ interface BusinessFundingData {
   other_purpose?: string;
   when_are_funds_needed: string;
   notes?: string;
+  consentToContact?: boolean;
+  consentToCall?: boolean;
+  consentToMarketing?: boolean;
+  consentVersion?: string;
 }
 
-// Forward to GoHighLevel (LeadConnector) Webhook
-async function sendToGoHighLevel(data: BusinessFundingData) {
-  const ghlWebhookUrl = "https://services.leadconnectorhq.com/hooks/H8IiiebU1Da0epvedovb/webhook-trigger/faa24cae-1c75-43c4-b2e1-409f775d9d32";
-  
+// Forward to GoHighLevel (LeadConnector) Webhook.
+// URL: GHL_WEBHOOK_URL (default = the previously hard-coded MPower webhook);
+// optional X-Webhook-Secret from CRM_WEBHOOK_SECRET (BUG-022).
+async function sendToGoHighLevel(data: BusinessFundingData & Record<string, unknown>) {
   try {
-    const response = await fetch(ghlWebhookUrl, {
+    const response = await fetch(ghlWebhookUrl(), {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: crmWebhookHeaders(),
       body: JSON.stringify(data),
+      signal: AbortSignal.timeout(15_000),
     });
 
     if (!response.ok) {
-      const text = await response.text();
-      console.error("GHL Webhook error:", response.status, text);
+      const text = await response.text().catch(() => "");
+      console.error("GHL Webhook error:", response.status, text.slice(0, 200));
       return false;
     }
 
     return true;
   } catch (error) {
-    console.error("GHL Webhook fetch failed:", error);
+    console.error("GHL Webhook fetch failed:", error instanceof Error ? error.message : error);
     return false;
   }
 }
@@ -129,11 +138,14 @@ export async function POST(req: NextRequest) {
     }
     const body: BusinessFundingData = parsed.data;
 
+    // CASL evidence stored with the lead: flags, wording version, server time, client IP (BUG-005).
+    const consent = buildConsentRecord(body, req, "website-business-funding");
+
     // Save lead to local database / firestore for redundancy
     const leadData = {
       province: "BC" as const, // Default to BC for Prisma enum compatibility
       intent: "BUSINESS_LOAN",
-      details: body as any,
+      details: { ...body, consent } as any,
       score: 100, // Pre-qualified complete application
       status: "NEW" as const,
       createdAt: new Date(),
@@ -141,7 +153,7 @@ export async function POST(req: NextRequest) {
 
     let dbSaved = false;
     try {
-      if (process.env.DATABASE_URL) {
+      if (isPrismaEnabled()) {
         await prisma.lead.create({
           data: {
             province: leadData.province,
@@ -162,7 +174,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Submit to GoHighLevel (LeadConnector Webhook)
-    const ghlSuccess = await sendToGoHighLevel(body);
+    const ghlSuccess = await sendToGoHighLevel({ ...body, ...consentRecordToStrings(consent) });
 
     // Send Discord Real-Time Alert
     const discordSent = await sendDiscordNotification(body);

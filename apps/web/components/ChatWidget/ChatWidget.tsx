@@ -2,7 +2,7 @@
 import { useState, useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { MessageCircle, X, Send, Calculator, TrendingUp, DollarSign, Volume2, Languages, Globe } from "lucide-react";
+import { MessageCircle, X, Send, Calculator, TrendingUp, DollarSign, Volume2, Languages, Globe, Trash2 } from "lucide-react";
 import { useAppStore } from "@/store/useAppStore";
 import { VoiceInput } from "./VoiceInput";
 import { CleanVoiceControls } from "./CleanVoiceControls";
@@ -43,6 +43,9 @@ interface QuickAction {
 
 const STORAGE_KEY = "kraft-chat-messages";
 const MAX_MESSAGES = 50; // Increased from default to 50
+// Saved conversations can contain contact details; on shared devices they must not live forever.
+const HISTORY_TTL_MS = 30 * 24 * 60 * 60 * 1000; // 30 days since the last message
+const STORAGE_VERSION = 2;
 const MAX_INPUT_CHARS = 2000; // keep in sync with /api/chat
 // No hard-coded rates here: this text is persisted in localStorage and would go stale.
 const WELCOME_CONTENT =
@@ -55,6 +58,38 @@ function toStorable(messages: Message[]) {
       ? { ...m, metadata: { ...m.metadata, voice: { ...m.metadata.voice, audioUrl: undefined } } }
       : m
   );
+}
+
+/**
+ * Reads saved history. Format v2 is { v, savedAt, messages }; the legacy format was a bare array,
+ * aged by its newest message timestamp. Returns null (and deletes the entry) when it is missing,
+ * unreadable, or older than HISTORY_TTL_MS.
+ */
+function loadStoredMessages(): Message[] | null {
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if (!raw) return null;
+  let parsed: any;
+  try {
+    parsed = JSON.parse(raw);
+  } catch {
+    localStorage.removeItem(STORAGE_KEY);
+    return null;
+  }
+  const list: any[] | null = Array.isArray(parsed) ? parsed : Array.isArray(parsed?.messages) ? parsed.messages : null;
+  if (!list || list.length === 0) return null;
+
+  let savedAt = typeof parsed?.savedAt === "number" ? parsed.savedAt : NaN;
+  if (!Number.isFinite(savedAt)) {
+    savedAt = Math.max(...list.map((m) => new Date(m?.timestamp).getTime()).filter((t) => Number.isFinite(t)));
+  }
+  if (!Number.isFinite(savedAt) || Date.now() - savedAt > HISTORY_TTL_MS) {
+    localStorage.removeItem(STORAGE_KEY);
+    return null;
+  }
+
+  return list
+    .filter((m) => m && typeof m.content === "string" && (m.sender === "user" || m.sender === "assistant"))
+    .map((m) => ({ ...m, id: String(m.id), timestamp: new Date(m.timestamp) }));
 }
 
 export function ChatWidget() {
@@ -88,15 +123,9 @@ export function ChatWidget() {
       timestamp: new Date(),
     };
     try {
-      const savedMessages = localStorage.getItem(STORAGE_KEY);
-      const parsed = savedMessages ? JSON.parse(savedMessages) : null;
-      if (Array.isArray(parsed) && parsed.length > 0) {
-        // Convert timestamp strings back to Date objects
-        const messagesWithDates = parsed.map((msg: any) => ({
-          ...msg,
-          timestamp: new Date(msg.timestamp)
-        }));
-        setMessages(messagesWithDates);
+      const saved = loadStoredMessages();
+      if (saved && saved.length > 0) {
+        setMessages(saved);
       } else {
         // Initialize with welcome message if no saved messages
         setMessages([welcomeMessage]);
@@ -112,7 +141,13 @@ export function ChatWidget() {
   useEffect(() => {
     if (messages.length > 0) {
       try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(toStorable(messages)));
+        // savedAt = time of the newest message, so merely reopening the page doesn't extend the TTL.
+        const times = messages.map((m) => new Date(m.timestamp).getTime()).filter((t) => Number.isFinite(t));
+        const savedAt = times.length ? Math.max(...times) : Date.now();
+        localStorage.setItem(
+          STORAGE_KEY,
+          JSON.stringify({ v: STORAGE_VERSION, savedAt, messages: toStorable(messages) })
+        );
       } catch (error) {
         console.error("Error saving chat messages:", error);
       }
@@ -167,7 +202,7 @@ export function ChatWidget() {
     }
   ];
 
-  // Clear chat history
+  // Clear chat history (on screen and on this device)
   const clearChat = () => {
     const welcomeMessage = {
       id: "welcome",
@@ -175,8 +210,20 @@ export function ChatWidget() {
       sender: "assistant" as const,
       timestamp: new Date(),
     };
+    Object.values(audioRefs.current).forEach((audio) => audio.pause());
+    setIsPlayingVoice(null);
     setMessages([welcomeMessage]);
-    localStorage.removeItem(STORAGE_KEY);
+    try {
+      localStorage.removeItem(STORAGE_KEY);
+    } catch {
+      // storage unavailable (private mode); nothing persisted to remove
+    }
+  };
+
+  const handleClearChat = () => {
+    if (isLoading) return;
+    if (messages.length <= 1 && messages[0]?.id === "welcome") return;
+    if (window.confirm("Clear this conversation? It will be deleted from this device.")) clearChat();
   };
 
   const sendMessage = async (content: string) => {
@@ -478,6 +525,18 @@ export function ChatWidget() {
                     <WhatsAppIcon className="w-3.5 h-3.5 fill-current" />
                     <span>WhatsApp</span>
                   </a>
+
+                  {/* Clear conversation (also removes the copy saved on this device) */}
+                  <button
+                    type="button"
+                    onClick={handleClearChat}
+                    disabled={isLoading}
+                    className="p-1.5 rounded-lg bg-white/10 text-white/80 hover:bg-white/20 hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    title="Clear chat"
+                    aria-label="Clear chat history"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" aria-hidden="true" />
+                  </button>
 
                   {/* Voice Toggle */}
                   <button

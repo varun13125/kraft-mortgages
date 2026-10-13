@@ -9,12 +9,18 @@ import Link from "next/link";
 import PdfLeadModal from "@/components/PdfLeadModal";
 import { CalculatorSchema } from "@/components/SEO/CalculatorSchema";
 import { RelatedCalculators } from "@/components/calculators/RelatedCalculators";
+import { useLiveRates } from "@/lib/useLiveRates";
+import { liveRate, useLiveDefault } from "../_lib/liveRateDefaults";
+import { LiveRateNote } from "../_lib/LiveRateNote";
 
 export default function Investment() {
   const [showPdfModal, setShowPdfModal] = useState(false);
   const [price, setPrice] = useState(800000);
   const [down, setDown] = useState(200000);
-  const [rate, setRate] = useState(5.45);
+  // Rentals are uninsured (20%+ down) → conventional 5-yr fixed from the live feed. Rental pricing is often
+  // a little higher than owner-occupied, so the note asks for the actual quote.
+  const { data: liveRates } = useLiveRates();
+  const [rate, setRate, rateSource] = useLiveDefault(5.45, liveRate(liveRates, "fixed5Conventional"));
   const [years, setYears] = useState(25);
   const [rent, setRent] = useState(4200);
   const [vacancy, setVacancy] = useState(3);
@@ -179,6 +185,7 @@ export default function Investment() {
                     min="0"
                     className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent text-white placeholder-gray-400"
                   />
+                  <LiveRateNote data={liveRates} product="fixed5Conventional" source={rateSource} suffix=" (rental rates are often slightly higher)" />
                 </div>
 
                 <div>

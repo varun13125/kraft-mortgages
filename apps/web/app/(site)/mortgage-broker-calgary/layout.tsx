@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import { CityServiceJsonLd } from '@/components/SEO/CityServiceJsonLd';
+import { SetProvince } from '@/components/SetProvince';
 import Footer from '@/components/Footer';
 import { OG_DEFAULTS } from '@/lib/seo/og';
 
@@ -23,6 +24,8 @@ export default function CalgaryLayout({ children }: { children: React.ReactNode 
   return (
     <>
       <CityServiceJsonLd cityName="Calgary" provinceName="AB" description="Licensed mortgage broker serving Calgary, AB. Residential, construction, self-employed, MLI Select, and private lending solutions." />
+      {/* Province-specific disclosures follow the city's province (BUG-039). */}
+      <SetProvince province="AB" />
       {children}
       <Footer />
     </>

@@ -6,6 +6,10 @@ import { TrendingDown, CreditCard, Calculator, DollarSign, AlertTriangle, CheckC
 import Link from "next/link";
 import { useLiveRates } from "@/lib/useLiveRates";
 import { payment } from "@/lib/calc/payment";
+import { liveConventional5yr, ratesAsOf } from "@/components/calculators/liveRateDefaults";
+
+// Static conventional 5-yr fixed used when the live feed is unavailable (Oct 2026 snapshot)
+const FALLBACK_CONVENTIONAL_5YR = 4.39;
 
 export default function DebtConsolidationCalculator() {
   const [homeValue, setHomeValue] = useState(750000);
@@ -17,7 +21,11 @@ export default function DebtConsolidationCalculator() {
 
   const [avgDebtRate, setAvgDebtRate] = useState(15); // blended rate on the debts being consolidated
   const [refinanceCosts, setRefinanceCosts] = useState(3000); // legal, appraisal, discharge, any prepayment penalty
-  const { best5YrFixed } = useLiveRates();
+  // Consolidating into the mortgage is a refinance (uninsured): price off the lowest CONVENTIONAL
+  // 5-yr fixed (useLiveRates().best5YrFixed is the insured rate).
+  const { data: liveRates, loading: ratesLoading } = useLiveRates();
+  const liveConv = liveConventional5yr(liveRates);
+  const baseRate = liveConv ?? FALLBACK_CONVENTIONAL_5YR;
 
   // Calculate available equity for debt consolidation
   const availableEquity = useMemo(() => {
@@ -29,13 +37,9 @@ export default function DebtConsolidationCalculator() {
 
   // Calculate new mortgage payment if debt is consolidated
   const newMortgageAmount = currentMortgage + availableEquity;
-  // Estimated rate: current best 5-yr fixed + credit-based spread (same basis as the Home Equity calculator)
-  const newRate = useMemo(() => {
-    if (creditScore >= 750) return best5YrFixed + 0.30;
-    if (creditScore >= 700) return best5YrFixed + 0.60;
-    if (creditScore >= 650) return best5YrFixed + 1.60;
-    return best5YrFixed + 3.00;
-  }, [creditScore, best5YrFixed]);
+  // Estimated rate: today's lowest conventional 5-yr fixed + credit-based spread (same basis as the Home Equity calculator)
+  const creditSpread = creditScore >= 750 ? 0.30 : creditScore >= 700 ? 0.60 : creditScore >= 650 ? 1.60 : 3.00;
+  const newRate = useMemo(() => baseRate + creditSpread, [baseRate, creditSpread]);
 
   // Monthly payments, 25-year amortization, Canadian semi-annual compounding
   const newMortgagePayment = newMortgageAmount > 0
@@ -260,7 +264,14 @@ export default function DebtConsolidationCalculator() {
                   <div className="bg-gray-800/50 rounded-lg p-4">
                     <div className="text-sm text-gray-400 mb-1">New Mortgage Rate</div>
                     <div className="text-2xl font-bold text-emerald-400">{newRate.toFixed(2)}%</div>
-                    <div className="text-xs text-gray-500">Estimated (best 5-yr fixed + credit spread)</div>
+                    <div className="text-xs text-gray-500">
+                      {liveConv !== undefined
+                        ? `Lowest conventional 5-yr fixed ${baseRate.toFixed(2)}%${ratesAsOf(liveRates) ? ` (as of ${ratesAsOf(liveRates)})` : ""}`
+                        : ratesLoading
+                          ? `Conventional 5-yr fixed ${baseRate.toFixed(2)}% (loading today's rate)`
+                          : `Example conventional 5-yr fixed ${baseRate.toFixed(2)}% (live rates unavailable)`}
+                      {` + ${creditSpread.toFixed(2)}% credit spread (est.)`}
+                    </div>
                   </div>
                 </div>
 

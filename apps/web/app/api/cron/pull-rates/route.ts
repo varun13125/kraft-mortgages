@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { prisma } from "@/lib/db";
+import { prisma, isPrismaEnabled } from "@/lib/db";
 import { firestore } from "@/lib/firebaseAdmin";
 import { requireAdmin, verifyCronRequest } from "@/lib/auth";
 
@@ -36,7 +36,7 @@ async function handler(req: NextRequest) {
       province: ["BC", "AB", "ON"].includes(x.province) ? x.province : null
     })).filter(x => Number.isFinite(x.rateAPR) && x.rateAPR > 0 && x.rateAPR < 30);
     if (!data.length) return Response.json({ inserted: 0 });
-    if (process.env.DATABASE_URL) {
+    if (isPrismaEnabled()) {
       await prisma.rateSnapshot.createMany({ data, skipDuplicates: false });
       return Response.json({ inserted: data.length });
     }

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { OG_DEFAULTS } from "@/lib/seo/og";
 
 export const metadata: Metadata = {
   title: "Self-Employed Mortgage Income Calculator Canada | Kraft Mortgages",
@@ -6,11 +7,11 @@ export const metadata: Metadata = {
     "Estimate your qualifying income as a self-employed borrower using your Notices of Assessment (line 15000), the lender 2-year averaging rule and add-backs.",
   alternates: { canonical: "https://www.kraftmortgages.ca/calculators/self-employed" },
   openGraph: {
+    ...OG_DEFAULTS,
     title: "Self-Employed Mortgage Income Calculator Canada | Kraft Mortgages",
     description:
       "Estimate your qualifying income as a self-employed borrower using your Notices of Assessment (line 15000), the lender 2-year averaging rule and add-backs.",
     url: "https://www.kraftmortgages.ca/calculators/self-employed",
-    type: "website",
   },
 };
 

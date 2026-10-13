@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
-import {
+import type {
+  RateOffer,
   RawRatesFeed,
   RateBenchmark,
   RateCardItem,
@@ -140,15 +141,14 @@ const VERIFIED_SNAPSHOT: RawRatesFeed = {
  * Attempt to load rates JSON from various physical paths or fallbacks.
  */
 export function readRawRatesFeed(): { feed: RawRatesFeed; source: string } {
+  // BUG-050: only the explicit override and repo-relative paths. The old list
+  // also probed a developer's Windows path, sibling "Hermes Agent" folders and
+  // /root/kraft-ops on whatever machine ran the code. For local development
+  // against the Hermes Agent output, set RATES_DATA_PATH to that file.
   const candidatePaths = [
     process.env.RATES_DATA_PATH,
-    'c:\\Users\\User\\Documents\\App development\\Hermes Agent\\data\\current_rates.json',
-    path.resolve(process.cwd(), '../Hermes Agent/data/current_rates.json'),
-    path.resolve(process.cwd(), '../../Hermes Agent/data/current_rates.json'),
-    path.resolve(process.cwd(), '../../../Hermes Agent/data/current_rates.json'),
-    path.resolve(process.cwd(), 'data/current_rates.json'),
-    path.resolve(process.cwd(), 'apps/web/data/current_rates.json'),
-    '/root/kraft-ops/current_rates.json',
+    path.resolve(process.cwd(), 'data/current_rates.json'), // cwd = apps/web (next dev/start, Vercel)
+    path.resolve(process.cwd(), 'apps/web/data/current_rates.json'), // cwd = repo root
   ].filter(Boolean) as string[];
 
   for (const candidate of candidatePaths) {
@@ -169,22 +169,59 @@ export function readRawRatesFeed(): { feed: RawRatesFeed; source: string } {
 }
 
 /**
+ * The Spotlight feed sometimes carries spreadsheet serial dates ("46301") instead of
+ * ISO dates. Convert those (days since 1899-12-30) to YYYY-MM-DD; pass anything else through.
+ */
+export function normalizeEffectiveDate(value: unknown): string {
+  const s = value === undefined || value === null ? '' : String(value).trim();
+  if (/^\d{5}(\.\d+)?$/.test(s)) {
+    const serial = Number(s);
+    if (serial > 20000 && serial < 80000) {
+      const ms = Date.UTC(1899, 11, 30) + Math.floor(serial) * 86400000;
+      return new Date(ms).toISOString().slice(0, 10);
+    }
+  }
+  return s;
+}
+
+/**
  * Format raw rate benchmark safely with a fallback.
+ * `minPlausibleRate` drops offers below a sanity floor (e.g. A-lender products mislabelled
+ * as private seconds at Prime + 0.50%) and recomputes the lowest rate from what remains.
  */
 function normalizeBenchmark(
   raw: RateBenchmark | undefined,
-  fallback: RateBenchmark
+  fallback: RateBenchmark,
+  minPlausibleRate?: number
 ): RateBenchmark {
   if (!raw || typeof raw.lowest_rate !== 'number') {
     return fallback;
   }
+  let offers = (raw.top_offers || []).map((o) => ({ ...o, effective_date: normalizeEffectiveDate(o.effective_date) }));
+  let lowestRate = Number(raw.lowest_rate);
+  let leadingLender = raw.leading_lender;
+  let lowestSpread = raw.lowest_spread;
+  if (minPlausibleRate !== undefined) {
+    offers = offers.filter((o) => typeof o.rate === 'number' && o.rate >= minPlausibleRate);
+    if (lowestRate < minPlausibleRate) {
+      const best = [...offers].sort((a, b) => a.rate - b.rate)[0];
+      if (!best) return fallback;
+      lowestRate = best.rate;
+      leadingLender = best.lender;
+      lowestSpread = best.spread || '';
+    }
+  }
   return {
-    lowest_rate: Number(raw.lowest_rate),
-    lowest_spread: raw.lowest_spread || fallback.lowest_spread || 'Fixed',
-    leading_lender: raw.leading_lender || fallback.leading_lender,
+    lowest_rate: lowestRate,
+    lowest_spread: lowestSpread || fallback.lowest_spread || 'Fixed',
+    leading_lender: leadingLender || fallback.leading_lender,
     product_family: raw.product_family || fallback.product_family,
-    effective_date: raw.effective_date || fallback.effective_date,
-    top_offers: raw.top_offers || fallback.top_offers,
+    effective_date: normalizeEffectiveDate(raw.effective_date) || fallback.effective_date,
+    top_offers: offers.length ? offers : fallback.top_offers,
+    ...(typeof raw.median_rate === 'number' ? { median_rate: raw.median_rate } : {}),
+    ...(typeof raw.lender_count === 'number' ? { lender_count: raw.lender_count } : {}),
+    ...(typeof raw.product_count === 'number' ? { product_count: raw.product_count } : {}),
+    ...(raw.typical_lender_fee_pct !== undefined ? { typical_lender_fee_pct: raw.typical_lender_fee_pct } : {}),
   };
 }
 
@@ -226,7 +263,8 @@ export function formatLiveRatesData(feed: RawRatesFeed, source: string): RatesAp
   const v5Conventional = normalizeBenchmark(rb['5_year_variable_conventional'], fb['5_year_variable_conventional']!);
 
   const heloc = normalizeBenchmark(rb['heloc'], fb['heloc']!);
-  const privateSecond = normalizeBenchmark(rb['private_second'], fb['private_second']!);
+  // Private seconds price well above prime; anything under Prime + 2% is a mislabelled A-lender product.
+  const privateSecond = normalizeBenchmark(rb['private_second'], fb['private_second']!, prime + 2);
   const f2 = normalizeBenchmark(rb['2_year_fixed'], fb['2_year_fixed']!);
   const f1 = normalizeBenchmark(rb['1_year_fixed'], fb['1_year_fixed']!);
   const v3 = normalizeBenchmark(rb['3_year_variable'], fb['3_year_variable']!);
@@ -465,7 +503,21 @@ export function formatLiveRatesData(feed: RawRatesFeed, source: string): RatesAp
     },
     featured_rates: featuredRates,
     all_rates: allRates,
-    raw_benchmarks: rb,
+    // Same benchmarks, with spreadsheet-serial dates converted to ISO.
+    raw_benchmarks: Object.fromEntries(
+      Object.entries(rb).map(([key, b]) => [
+        key,
+        b && typeof b === 'object'
+          ? {
+              ...b,
+              effective_date: normalizeEffectiveDate(b.effective_date),
+              ...(Array.isArray(b.top_offers)
+                ? { top_offers: b.top_offers.map((o: RateOffer) => ({ ...o, effective_date: normalizeEffectiveDate(o.effective_date) })) }
+                : {}),
+            }
+          : b,
+      ])
+    ) as typeof rb,
   };
 }
 

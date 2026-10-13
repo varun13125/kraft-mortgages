@@ -4,6 +4,11 @@ import { motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
 import { TrendingUp, Calculator, DollarSign, AlertTriangle, CheckCircle, FileText, Users } from "lucide-react";
 import Link from "next/link";
+import { useLiveRates } from "@/lib/useLiveRates";
+import { useLiveDefault, livePrivateSecond, ratesAsOf } from "@/components/calculators/liveRateDefaults";
+import { LiveRateNote } from "@/components/calculators/LiveRateNote";
+import CalculatorPdfButton from "@/components/calculator-report/CalculatorPdfButton";
+import { money, pct } from "@/components/calculator-report/reportFormat";
 
 export default function AlternativeIncomeCalculator() {
   // Property Details
@@ -25,6 +30,12 @@ export default function AlternativeIncomeCalculator() {
   // Credit Profile
   const [creditScore, setCreditScore] = useState(650);
   const [incomeDocumentation, setIncomeDocumentation] = useState("stated"); // stated, bank-statements, tax-returns
+
+  // Starting private rate: seeded from today's lowest advertised private mortgage rate (live feed)
+  // until the user edits it; 8.5% is the static fallback when the feed is unavailable.
+  const { data: liveRates, loading: ratesLoading } = useLiveRates();
+  const liveStartRate = livePrivateSecond(liveRates);
+  const startRate = useLiveDefault(8.5, liveStartRate);
   
   // Private Lending Parameters
   const loanAmount = Math.max(0, purchasePrice - downPayment);
@@ -32,7 +43,7 @@ export default function AlternativeIncomeCalculator() {
   
   // Interest rate based on risk profile
   const interestRate = useMemo(() => {
-    let baseRate = 8.5; // Private lending base rate
+    let baseRate = Math.max(0, startRate.value || 0); // starting private rate (live-seeded)
     
     // Credit score adjustment
     if (creditScore >= 700) baseRate -= 0.5;
@@ -47,7 +58,7 @@ export default function AlternativeIncomeCalculator() {
     else if (incomeDocumentation === "stated") baseRate += 0.75;
     
     return Math.max(baseRate, 7.5); // Minimum 7.5%
-  }, [creditScore, ltvRatio, incomeDocumentation]);
+  }, [creditScore, ltvRatio, incomeDocumentation, startRate.value]);
 
   // Income calculations
   const totalGrossIncome = employmentIncome + selfEmployedIncome + rentalIncome + investmentIncome + otherIncome;
@@ -163,7 +174,7 @@ export default function AlternativeIncomeCalculator() {
                           className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent text-white"
                         />
                         <div className="text-xs text-gray-400 mt-1">
-                          {((downPayment / purchasePrice) * 100).toFixed(1)}% down payment
+                          {(purchasePrice > 0 ? (downPayment / purchasePrice) * 100 : 0).toFixed(1)}% down payment
                         </div>
                       </div>
                     </div>
@@ -306,6 +317,27 @@ export default function AlternativeIncomeCalculator() {
                           <option value="stated">Stated Income</option>
                         </select>
                       </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-200 mb-2">
+                          Starting Private Rate (%)
+                        </label>
+                        <input
+                          type="number"
+                          step="0.01"
+                          value={startRate.value}
+                          onChange={(e) => startRate.set(Number(e.target.value))}
+                          className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent text-white"
+                        />
+                        <LiveRateNote
+                          label="advertised private mortgage rate (2nd mortgage, low LTV)"
+                          liveRate={liveStartRate}
+                          asOf={ratesAsOf(liveRates)}
+                          touched={startRate.touched}
+                          loading={ratesLoading}
+                          onReset={startRate.reset}
+                          extra="— credit, LTV and documentation adjustments are added below (min. 7.5%)"
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -327,7 +359,7 @@ export default function AlternativeIncomeCalculator() {
                       <div className="bg-gray-800/50 rounded-lg p-4">
                         <div className="text-sm text-gray-400 mb-1">Interest Rate</div>
                         <div className="text-xl font-bold text-rose-400">{interestRate.toFixed(2)}%</div>
-                        <div className="text-xs text-gray-500">Private lending rate</div>
+                        <div className="text-xs text-gray-500">Starting rate {startRate.value.toFixed(2)}% + risk adjustments (est.)</div>
                       </div>
 
                       <div className="bg-gray-800/50 rounded-lg p-4">
@@ -502,6 +534,46 @@ export default function AlternativeIncomeCalculator() {
                   </div>
                 </div>
               </div>
+
+              <CalculatorPdfButton
+                source="calculator-pdf-private-alternative-income"
+                title="Your Alternative Income Analysis"
+                subtitle="Get a personalized PDF with your private-lending qualification estimate"
+                calculatorName="Alternative Income Calculator"
+                mortgageType="Private / Alternative"
+                amount={loanAmount}
+                getSections={() => [
+                  {
+                    title: "Your Inputs",
+                    rows: [
+                      { label: "Purchase Price", value: money(purchasePrice) },
+                      { label: "Down Payment", value: money(downPayment) },
+                      { label: "Total Gross Income (annual)", value: money(totalGrossIncome) },
+                      { label: "Debt Balances (cards, car, other)", value: money(creditCardDebt + carLoans + otherDebts) },
+                      { label: "Credit Score", value: String(creditScore) },
+                      { label: "Income Documentation", value: incomeDocumentation === "tax-returns" ? "Tax returns" : incomeDocumentation === "bank-statements" ? "Bank statements" : "Stated income" },
+                      { label: "Starting Private Rate", value: pct(startRate.value) },
+                    ],
+                  },
+                  {
+                    title: "Your Results",
+                    rows: [
+                      { label: "Loan Amount", value: money(loanAmount), highlight: true },
+                      { label: "Loan-to-Value", value: pct(ltvRatio, 1) },
+                      { label: "Estimated Interest Rate", value: pct(interestRate) },
+                      { label: "Monthly Payment (interest-only)", value: money(monthlyPayment), highlight: true },
+                      { label: "Qualifying Income (annual)", value: money(totalQualifyingIncome) },
+                      { label: "Est. Monthly Debt Payments (3% of balances)", value: money(monthlyDebts) },
+                      { label: "GDS (payment only; private max ~50%)", value: pct(gdsRatio, 1) },
+                      { label: "TDS (private max ~60%)", value: pct(tdsRatio, 1) },
+                      { label: "Lender + Broker Fees (est. 2% + 1%)", value: money(totalFees) },
+                      { label: "Effective First-Year Cost", value: pct(effectiveAnnualCost), highlight: true },
+                      { label: "Qualifies for Private Lending (estimate)", value: qualifiesForPrivate ? "Likely" : "May require adjustment" },
+                    ],
+                  },
+                ]}
+                educationalContent="Private mortgages are usually interest-only on a 1-year renewable term, with lender and broker fees of about 1-3% each. Rates depend on credit, loan-to-value and how income is documented. Plan your exit (refinance to a B or A lender, or sale) before the term ends. Estimates only; not a commitment to lend."
+              />
 
               {/* Related Calculators */}
               <div className="flex flex-wrap gap-4 justify-center mt-8">

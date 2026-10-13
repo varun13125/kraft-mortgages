@@ -2,6 +2,8 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import Navigation from "@/components/Navigation";
+import { useLiveRates } from "@/lib/useLiveRates";
+import { livePrime, ratesAsOf } from "@/components/calculators/liveRateDefaults";
 import {
   Hammer,
   Calculator,
@@ -19,13 +21,19 @@ import {
 } from "lucide-react";
 
 export default function ConstructionFinancing() {
+  // Construction loans float at prime + a project-specific spread; show today's prime with an
+  // "as of" date instead of a hard-coded "from" rate.
+  const { data: liveRates } = useLiveRates();
+  const prime = livePrime(liveRates);
+  const asOf = ratesAsOf(liveRates);
+
   const services = [
     {
       title: "Progressive Draw Construction",
       description: "Construction financing with scheduled draw releases",
       features: ["Progress-based funding", "Hold back management", "Site inspection coordination", "Completion guarantees"],
       icon: Layers,
-      typical: "Prime + 1.00%"
+      typical: "Prime + spread"
     },
     {
       title: "Construction-to-Permanent",
@@ -159,8 +167,12 @@ export default function ConstructionFinancing() {
               </p>
 
               <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-orange-500/20 p-4 max-w-2xl mx-auto mb-8">
-                <div className="text-lg font-semibold text-orange-400 mb-2">Starting from Prime + 1.00%</div>
-                <div className="text-sm text-gray-400">Progressive draws • Professional inspections • Completion guarantees</div>
+                <div className="text-lg font-semibold text-orange-400 mb-2">Priced at prime + a project-specific spread</div>
+                <div className="text-sm text-gray-400">
+                  {prime !== undefined ? `Prime today: ${prime.toFixed(2)}%${asOf ? ` (as of ${asOf})` : ""} • ` : ""}
+                  Progressive draws • Professional inspections • Completion guarantees •{" "}
+                  <Link href="/rates" className="underline hover:text-orange-300">See today&apos;s rates</Link>
+                </div>
               </div>
 
               <div className="flex flex-wrap gap-4 justify-center">

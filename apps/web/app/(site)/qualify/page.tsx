@@ -2,11 +2,16 @@
 import { useState, type FormEvent, useEffect } from "react";
 import Link from "next/link";
 import Navigation from "@/components/Navigation";
+import Footer from "@/components/Footer";
 import { useLiveRates } from "@/lib/useLiveRates";
 import { ShieldCheck, Sparkles, CheckCircle2, Moon, Clock, PhoneCall, ArrowLeft } from "lucide-react";
 import { getCallingHoursStatus, type CallingHoursStatus } from "@/lib/businessHours";
+import { ConsentCheckboxes } from "@/components/ConsentCheckboxes";
+import { consentFields } from "@/lib/compliance/consent";
 
-export const dynamic = "force-dynamic";
+// (Removed `export const dynamic = "force-dynamic"`: route segment config is
+// meaningless on a client page, and nothing here needs per-request rendering —
+// query params are read in useEffect.)
 
 const API_URL = "/api/contact";
 
@@ -80,7 +85,14 @@ export default function QualifyPage() {
     _hp: "",
   });
 
-  const [status, setStatus] = useState<"idle" | "submitting" | "calling" | "completed" | "error">("idle");
+  // "received" = submitted during calling hours but the server did not place the
+  // AI call (repeat number within 24h, dialer unavailable, etc.). Previously the
+  // page showed "Julia is calling your phone" regardless.
+  const [status, setStatus] = useState<"idle" | "submitting" | "calling" | "completed" | "received" | "error">("idle");
+  // Consent (BUG-005, owner decision 2026-10-13): Julia (automated AI call) calls ONLY
+  // if the visitor ticks the call box. Both boxes are optional and start unticked.
+  const [callConsent, setCallConsent] = useState(false);
+  const [marketingConsent, setMarketingConsent] = useState(false);
   const [seconds, setSeconds] = useState(0);
   const [callCheckpoint, setCallCheckpoint] = useState(0);
 
@@ -146,6 +158,7 @@ export default function QualifyPage() {
 • Self-Reported Credit: ${form.creditScore}
 • Employment Profile: ${form.employmentType}
 • Calling Timing: ${isAfterHours ? `🌙 After-Hours Queue (Scheduled: ${scheduledTime})` : `⚡ Live Dial Allowed (${callingStatus?.currentPtTime || "PT"})`}
+• Automated AI Call Consent: ${callConsent ? "YES (box ticked)" : "NO — human follow-up only"}
 • Source Attribution: ${utmParams.utm_source} / Campaign: ${utmParams.utm_campaign}
     `.trim();
 
@@ -160,7 +173,8 @@ export default function QualifyPage() {
       source: utmParams.utm_source,
       afterHours: isAfterHours,
       preferredCallTime: scheduledTime,
-      ...utmParams
+      ...utmParams,
+      ...consentFields(callConsent, marketingConsent),
     };
 
     try {
@@ -173,6 +187,18 @@ export default function QualifyPage() {
 
       if (!res.ok) throw new Error("HTTP " + res.status);
 
+      // The server is authoritative on calling hours and on whether the AI call
+      // was actually dispatched (it enforces quiet hours and 1 auto-dial/24h).
+      let serverAfterHours: boolean | undefined;
+      let callDispatched: boolean | undefined;
+      try {
+        const json = await res.json();
+        if (typeof json?.isAfterHours === "boolean") serverAfterHours = json.isAfterHours;
+        if (typeof json?.callDispatched === "boolean") callDispatched = json.callDispatched;
+      } catch {
+        // Non-JSON success body: fall back to the client-side calling-hours check.
+      }
+
       // Trigger client-side Meta Pixel tracking if available
       if (typeof window !== "undefined" && (window as any).fbq) {
         (window as any).fbq("track", "Lead", {
@@ -183,11 +209,14 @@ export default function QualifyPage() {
         });
       }
 
-      // Transition based on calling hours guardrail
-      if (isAfterHours) {
-        setStatus("completed");
-      } else {
+      // Transition on what the server actually did (it enforces consent, calling
+      // hours and 1 auto-dial/24h). Only claim "Julia is calling" when it says so.
+      if (callDispatched === true) {
         setStatus("calling");
+      } else if (callConsent && (serverAfterHours ?? isAfterHours)) {
+        setStatus("completed"); // automated callback queued for the next calling window
+      } else {
+        setStatus("received"); // no automated call: a broker follows up
       }
     } catch (err) {
       console.error("Lead submission error:", err);
@@ -202,7 +231,7 @@ export default function QualifyPage() {
   return (
     <>
       <Navigation />
-      <main className="min-h-screen bg-[#070e1a] text-slate-100 font-sans text-sm leading-relaxed relative overflow-hidden pt-20 sm:pt-24">
+      <main id="main-content" className="min-h-screen bg-[#070e1a] text-slate-100 font-sans text-sm leading-relaxed relative overflow-hidden pt-20 sm:pt-24">
         <div className="absolute inset-0 term-grid-bg opacity-10 pointer-events-none" />
 
         {/* Decorative Golden Ambient Aura */}
@@ -253,13 +282,13 @@ export default function QualifyPage() {
           {requestedTerm && (
             <div className="inline-flex items-center gap-2 mb-4 px-4 py-2 rounded-full bg-[#0c1626] border border-[#d4af37]/40 text-[#f3d275] text-xs font-mono shadow-md">
               <Sparkles className="w-3.5 h-3.5 text-[#f3d275]" />
-              <span className="text-slate-300">Locking Rate For:</span>
+              {/* Submitting this form does not lock or hold a rate (see Terms). */}
+              <span className="text-slate-300">Rate Inquiry For:</span>
               <strong className="text-white font-bold">{requestedTerm}</strong>
-              <span className="text-emerald-400 font-semibold">• Live Verified Feed</span>
             </div>
           )}
           <p className="text-base text-slate-200 max-w-[620px] mx-auto leading-relaxed">
-            Get instant credit mapping, lock in BC&apos;s lowest rate options, and speak with Julia (our automated voice specialist) to finalize your priority file.
+            Map your credit profile, compare competitive rate options, and, if you choose, get a call from Julia (our automated voice assistant) to start your file.
           </p>
           <p className="text-xs text-slate-400 max-w-[580px] mx-auto mt-2 leading-relaxed">
             ⚡ <em>Beta Notice: Voice calling is currently experimental AI beta. Speech recognition may occasionally mishear phrases; every file is independently validated by our licensed human mortgage team.</em>
@@ -309,7 +338,7 @@ export default function QualifyPage() {
                 Julia is calling your phone <em className="text-[#f3d275] italic font-normal">{form.phone}</em>
               </h2>
               <p className="text-base text-slate-200 max-w-[560px] mx-auto mb-10">
-                Please answer when your phone rings. Julia is assigned to your profile to verify your mortgage details and secure your priority rates.
+                Please answer when your phone rings. Julia will confirm your mortgage details so a licensed broker can review your options.
               </p>
 
               {/* Console steps tracker */}
@@ -363,11 +392,11 @@ export default function QualifyPage() {
 
               <div className="inline-flex items-center gap-2 mb-3 px-3.5 py-1.5 rounded-full bg-[#d4af37]/15 border border-[#d4af37]/40 text-[#f3d275] text-xs font-mono font-semibold">
                 <Moon className="w-3.5 h-3.5 text-[#f3d275]" />
-                <span>AFTER-HOURS PRIORITY FILE LOCKED</span>
+                <span>AFTER-HOURS REQUEST RECEIVED</span>
               </div>
 
               <h2 className="font-serif text-3xl sm:text-4xl mb-3 text-white">
-                Your Rate & File Are <em className="text-[#f3d275] italic font-normal">Reserved.</em>
+                Your Callback Is <em className="text-[#f3d275] italic font-normal">Queued.</em>
               </h2>
 
               <p className="text-base text-slate-200 mb-8 leading-relaxed">
@@ -431,6 +460,35 @@ export default function QualifyPage() {
             </div>
           )}
 
+          {/* STATUS: RECEIVED (no automated call placed: call box not ticked, repeat
+              number within 24h, dialer unavailable, or after hours without call consent) */}
+          {status === "received" && (
+            <div className="text-center py-10 max-w-[640px] mx-auto" role="status">
+              <div className="w-20 h-20 rounded-full bg-emerald-500/20 border-2 border-emerald-400 flex items-center justify-center mx-auto mb-6 shadow-[0_0_30px_rgba(52,211,153,0.3)]">
+                <CheckCircle2 className="w-10 h-10 text-emerald-400" />
+              </div>
+              <h2 className="font-serif text-3xl sm:text-4xl mb-3 text-white">
+                Thank you, <em className="text-[#f3d275] italic font-normal">{form.firstName || "there"}.</em>
+              </h2>
+              <p className="text-base text-slate-200 mb-8 leading-relaxed">
+                Your details have been received. We&apos;ll be in touch shortly.
+              </p>
+              <div className="p-4 rounded-lg bg-slate-800/80 border border-slate-700 mb-6 text-xs text-slate-300 leading-relaxed font-sans text-left">
+                💡 <strong>Need help right away?</strong> Call or text senior broker <strong className="text-white">Varun Chaudhry</strong> at{" "}
+                <a href="tel:+16045931550" className="text-[#f3d275] font-bold underline">604-593-1550</a>.
+              </div>
+              <button
+                onClick={() => {
+                  setStatus("idle");
+                  setStep(1);
+                }}
+                className="text-xs font-mono text-slate-400 hover:text-white underline transition-colors"
+              >
+                ← Start Another Qualification Scenario
+              </button>
+            </div>
+          )}
+
           {/* ACTIVE MULTI-STEP FORM */}
           {status === "idle" || status === "submitting" ? (
             <div>
@@ -479,8 +537,9 @@ export default function QualifyPage() {
                   </h2>
                   <div className="space-y-6 max-w-[540px] mx-auto py-4">
                     <div>
-                      <label className={labelClass}>Estimated Property Value ($) *</label>
+                      <label htmlFor="q-property-value" className={labelClass}>Estimated Property Value ($) *</label>
                       <input
+                        id="q-property-value" inputMode="numeric"
                         type="text"
                         required
                         value={form.propertyValue}
@@ -490,8 +549,9 @@ export default function QualifyPage() {
                       />
                     </div>
                     <div>
-                      <label className={labelClass}>Desired Mortgage Loan Amount ($) *</label>
+                      <label htmlFor="q-loan-amount" className={labelClass}>Desired Mortgage Loan Amount ($) *</label>
                       <input
+                        id="q-loan-amount" inputMode="numeric"
                         type="text"
                         required
                         value={form.loanAmount}
@@ -575,8 +635,8 @@ export default function QualifyPage() {
                   </h2>
                   <p className="text-sm text-slate-300 mb-6">
                     {callingStatus && !callingStatus.isOpen
-                      ? `Lock in your priority rate file. Julia will place your qualification call on ${callingStatus.nextAvailableTime}.`
-                      : "Julia is standing by to place your priority qualification call right now."}
+                      ? `Want an automated call from Julia? Tick “Yes, call me now” below and she will call on ${callingStatus.nextAvailableTime}. Otherwise a licensed broker will follow up.`
+                      : "Want a call right away? Tick “Yes, call me now” below and Julia, our AI assistant, will call you. Otherwise a licensed broker will follow up."}
                   </p>
 
                   {/* Calling Hours Guardrail Status Banner */}
@@ -587,7 +647,7 @@ export default function QualifyPage() {
                         <span>AFTER-HOURS GUARDRAIL ACTIVE • {callingStatus.currentPtTime}</span>
                       </div>
                       <p className="text-xs text-slate-300 leading-relaxed">
-                        To respect Canadian telecommunications quiet hours, automated phone calls are paused overnight. Your priority rate is locked immediately upon submitting, and Julia will place your call on <strong>{callingStatus.nextAvailableTime}</strong>.
+                        To respect Canadian telecommunications quiet hours, automated phone calls are paused overnight. Your request is recorded as soon as you submit{callConsent ? <>, and Julia will place your call on <strong>{callingStatus.nextAvailableTime}</strong></> : null}.
                       </p>
                     </div>
                   ) : callingStatus?.isOpen ? (
@@ -597,7 +657,10 @@ export default function QualifyPage() {
                         <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
                       </span>
                       <span className="text-xs text-emerald-300 font-mono font-medium">
-                        <strong>LIVE DIAL ACTIVE ({callingStatus.currentPtTime}):</strong> Julia will call your phone immediately upon submission.
+                        <strong>LIVE DIAL AVAILABLE ({callingStatus.currentPtTime}):</strong>{" "}
+                        {callConsent
+                          ? "Julia will call your phone right after you submit."
+                          : "Tick “Yes, call me now” below if you’d like Julia to call you right after you submit."}
                       </span>
                     </div>
                   ) : null}
@@ -609,7 +672,7 @@ export default function QualifyPage() {
                       <strong className="text-amber-300 block mb-0.5 font-mono uppercase tracking-wider text-[11px]">
                         AI Voice Qualification (Beta Version)
                       </strong>
-                      You will receive a brief 90-second automated verification call from Julia (<span className="text-[#f3d275] font-mono">+1 604-359-5993</span>). Voice calling is currently in beta and AI speech recognition may occasionally make mistakes. Rest assured, your file is always reviewed by our human senior mortgage brokers before underwriting.
+                      If you tick &ldquo;Yes, call me now&rdquo;, you will receive a brief 90-second automated verification call from Julia (<span className="text-[#f3d275] font-mono">+1 604-359-5993</span>). Voice calling is currently in beta and AI speech recognition may occasionally make mistakes. Rest assured, your file is always reviewed by our human senior mortgage brokers before underwriting.
                     </div>
                   </div>
 
@@ -622,16 +685,18 @@ export default function QualifyPage() {
 
                     <div className="grid gap-4 sm:grid-cols-2">
                       <div>
-                        <label className={labelClass}>First Name *</label>
+                        <label htmlFor="q-first-name" className={labelClass}>First Name *</label>
                         <input
+                          id="q-first-name" autoComplete="given-name"
                           type="text" required value={form.firstName}
                           onChange={(e) => setForm((f) => ({ ...f, firstName: e.target.value }))}
                           className={inputClass} placeholder="John"
                         />
                       </div>
                       <div>
-                        <label className={labelClass}>Last Name</label>
+                        <label htmlFor="q-last-name" className={labelClass}>Last Name</label>
                         <input
+                          id="q-last-name" autoComplete="family-name"
                           type="text" value={form.lastName}
                           onChange={(e) => setForm((f) => ({ ...f, lastName: e.target.value }))}
                           className={inputClass} placeholder="Doe"
@@ -640,8 +705,9 @@ export default function QualifyPage() {
                     </div>
 
                     <div>
-                      <label className={labelClass}>Email Address *</label>
+                      <label htmlFor="q-email" className={labelClass}>Email Address *</label>
                       <input
+                        id="q-email" autoComplete="email"
                         type="email" required value={form.email}
                         onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
                         className={inputClass} placeholder="john@example.com"
@@ -649,22 +715,34 @@ export default function QualifyPage() {
                     </div>
 
                     <div>
-                      <label className={labelClass}>Phone Number *</label>
+                      <label htmlFor="q-phone" className={labelClass}>Phone Number *</label>
                       <input
+                        id="q-phone" autoComplete="tel" aria-describedby="q-phone-hint"
                         type="tel" required value={form.phone}
                         onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))}
                         className={inputClass} placeholder="e.g. +1 604-123-4567"
                       />
-                      <span className="text-xs text-slate-400 font-mono block mt-1.5 font-medium">
+                      <span id="q-phone-hint" className="text-xs text-slate-400 font-mono block mt-1.5 font-medium">
                         Must be a valid, ringable number (E.164 or 10-digit).
                       </span>
                     </div>
 
+                    {/* Optional consent (BUG-005): unticked by default. Julia calls ONLY if
+                        the call box is ticked; the server enforces this too. */}
+                    <ConsentCheckboxes
+                      idPrefix="qualify"
+                      call={{ checked: callConsent, onChange: setCallConsent }}
+                      marketing={{ checked: marketingConsent, onChange: setMarketingConsent }}
+                    >
+                      See our <Link href="/privacy" className="underline hover:text-[#f3d275]">Privacy Policy</Link>.
+                    </ConsentCheckboxes>
+
                     {/* Preferred Callback Time (Active when after-hours) */}
                     {callingStatus && !callingStatus.isOpen && (
                       <div>
-                        <label className={labelClass}>Preferred Callback Time</label>
+                        <label htmlFor="q-callback-time" className={labelClass}>Preferred Callback Time</label>
                         <select
+                          id="q-callback-time"
                           value={preferredCallback}
                           onChange={(e) => setPreferredCallback(e.target.value)}
                           className="w-full bg-[#0d1829] border-2 border-slate-700/80 px-4 py-3.5 text-white focus:outline-none focus:border-[#d4af37] focus:ring-2 focus:ring-[#d4af37]/25 transition-all font-sans text-sm font-medium rounded-md shadow-inner"
@@ -686,7 +764,9 @@ export default function QualifyPage() {
                           </option>
                         </select>
                         <span className="text-xs text-slate-400 font-mono block mt-1.5 font-medium">
-                          Julia will dial you during this window from +1 (604) 359-5993.
+                          {callConsent
+                            ? "Julia will dial you during this window from +1 (604) 359-5993."
+                            : "A member of our team will call you during this window."}
                         </span>
                       </div>
                     )}
@@ -705,10 +785,12 @@ export default function QualifyPage() {
                         className="w-2/3 bg-[#d4af37] hover:bg-[#f3d275] text-[#070e1a] font-mono text-xs font-bold py-4 px-6 tracking-widest transition-colors disabled:bg-slate-800 disabled:text-slate-500 disabled:cursor-not-allowed rounded-md shadow-lg shadow-[#d4af37]/25"
                       >
                         {status === "submitting"
-                          ? "DISPATCHING..."
+                          ? "SUBMITTING..."
+                          : !callConsent
+                          ? "SUBMIT MY DETAILS →"
                           : callingStatus && !callingStatus.isOpen
-                          ? "LOCK PRIORITY RATE & QUEUE CALLBACK →"
-                          : "DISPATCH QUALIFICATION CALL →"}
+                          ? "SUBMIT & QUEUE CALLBACK →"
+                          : "SUBMIT & CALL ME NOW →"}
                       </button>
                     </div>
                   </form>
@@ -774,6 +856,9 @@ export default function QualifyPage() {
 
       </div>
     </main>
+    {/* Brokerage licence/legal footer (BUG-017). Sits below the whole funnel
+        (form + rate cards), so it never interrupts the multi-step flow. */}
+    <Footer />
     </>
   );
 }

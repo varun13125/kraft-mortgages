@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { signInWithEmailAndPassword, getAuth } from "firebase/auth";
-import { app } from "@/lib/firebase.client";
+import { app, firebaseConfigured } from "@/lib/firebase.client";
 import { useRouter } from "next/navigation";
 
 export default function Login() {
@@ -10,11 +10,16 @@ export default function Login() {
   const [err,setErr]=useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const auth = getAuth(app);
+  // null when NEXT_PUBLIC_FIREBASE_* is missing (no more silent dummy config - BUG-050)
+  const auth = app ? getAuth(app) : null;
 
   async function onSubmit(e: React.FormEvent) {
-    e.preventDefault(); 
+    e.preventDefault();
     setErr("");
+    if (!auth) {
+      setErr("Sign-in is unavailable: Firebase is not configured for this deployment.");
+      return;
+    }
     setLoading(true);
     try {
       await signInWithEmailAndPassword(auth, email, password);
@@ -60,6 +65,12 @@ export default function Login() {
           </div>
         </div>
         
+        {!firebaseConfigured && !err && (
+          <div className="bg-yellow-50 border border-yellow-200 text-yellow-800 px-4 py-3 rounded-lg text-sm">
+            Sign-in is unavailable: Firebase is not configured for this deployment.
+          </div>
+        )}
+
         {err && (
           <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
             {err}

@@ -1,12 +1,31 @@
 import createMDX from '@next/mdx';
 const withMDX = createMDX({ extension: /\.mdx?$/ });
 
+// Content-Security-Policy in REPORT-ONLY mode (BUG-011): nothing is blocked; violations
+// are POSTed to /api/csp-report. Review the logs for 1–2 weeks (Thinkrr/LiveKit runtime
+// origins are not documented), extend the allowlists, then switch the header name to
+// `Content-Security-Policy` to enforce. 'unsafe-inline'/'unsafe-eval' stay until nonces
+// are added via middleware.
+const cspReportOnly = [
+  "default-src 'self'",
+  "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://cdn.segment.com https://vercel.live https://d2cqc7yqzf8c8f.cloudfront.net https://*.cloudfront.net https://link.msgsndr.com https://connect.facebook.net",
+  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+  "font-src 'self' data: https://fonts.gstatic.com",
+  "img-src 'self' data: blob: https:",
+  "media-src 'self' data: blob: https:",
+  "connect-src 'self' https://*.googleapis.com https://*.firebaseio.com wss://*.firebaseio.com https://*.google-analytics.com https://api.segment.io https://cdn.segment.com https://vercel.live wss://*.pusher.com https://*.cloudfront.net https://*.livekit.cloud wss://*.livekit.cloud wss:",
+  "frame-src 'self' https://api.leadconnectorhq.com https://link.msgsndr.com https://vercel.live https://www.google.com",
+  "worker-src 'self' blob:",
+  "frame-ancestors 'self'",
+  "base-uri 'self'",
+  "object-src 'none'",
+  "form-action 'self' https://api.leadconnectorhq.com",
+  "upgrade-insecure-requests",
+  'report-uri /api/csp-report',
+].join('; ');
+
 // Baseline security headers (applied to every route, incl. /api and public/).
 // Deliberately NOT included here:
-//  - Content-Security-Policy: a strict CSP would break the Thinkrr widget
-//    (cloudfront), SalesCloser iframe, GA/Segment, Vercel Analytics, Firebase,
-//    LeadConnector forms. Roll one out in Report-Only mode first — see
-//    DEVLOG/audit-2026-10/platform-build-deps.md for the proposed policy.
 //  - microphone in Permissions-Policy: voice features (Thinkrr, SalesCloser
 //    iframe, ChatWidget VoiceInput) need it, so it keeps the browser default
 //    (self + iframes that declare allow="microphone").
@@ -22,6 +41,7 @@ const securityHeaders = [
     value: 'camera=(), geolocation=(), payment=(), usb=(), browsing-topics=()',
   },
   { key: 'Strict-Transport-Security', value: 'max-age=63072000' },
+  { key: 'Content-Security-Policy-Report-Only', value: cspReportOnly },
 ];
 
 /** @type {import('next').NextConfig} */
@@ -34,9 +54,9 @@ const nextConfig = {
   poweredByHeader: false,
   pageExtensions: ['ts','tsx','mdx'],
   eslint: {
-    // Warning: This allows production builds to successfully complete even if
-    // your project has ESLint errors. (~172 react/no-unescaped-entities errors
-    // remain as of 2026-10 — fix those before turning this off.)
+    // Lint is enforced in CI (.github/workflows/ci.yml, blocking; 0 errors since
+    // 2026-10-12). Kept off during Vercel builds so a lint-only issue can't block
+    // a production deploy; type errors still fail the build.
     ignoreDuringBuilds: true,
   },
   async headers() {
@@ -106,7 +126,7 @@ const nextConfig = {
       // Misc calculator redirects from blog posts
       {
         source: '/calculators/debt-consolidation',
-        destination: '/calculators/payment',
+        destination: '/equity-lending/calculators/debt-consolidation',
         permanent: true,
       },
       {
@@ -116,12 +136,12 @@ const nextConfig = {
       },
       {
         source: '/calculators/refinance-calculator',
-        destination: '/calculators/payment',
+        destination: '/calculators/refinance-break-even',
         permanent: true,
       },
       {
-        source: '/calculators/stress-test',
-        destination: '/residential/calculators/stress-test',
+        source: '/residential/calculators/stress-test',
+        destination: '/calculators/stress-test',
         permanent: true,
       },
       {
@@ -136,7 +156,7 @@ const nextConfig = {
       },
       {
         source: '/refinance-calculator',
-        destination: '/calculators/payment',
+        destination: '/calculators/refinance-break-even',
         permanent: true,
       },
       {

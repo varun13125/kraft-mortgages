@@ -1,11 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "crypto";
 import { maskPhone } from "@/lib/ai/request-guards";
+import { twentyWebhookUrl, crmWebhookHeaders } from "@/lib/crm/webhooks";
 
 const THINKR_API_KEY = process.env.THINKR_WEBHOOK_SECRET || "";
-const TWENTY_WEBHOOK =
-  process.env.TWENTY_WEBHOOK_URL ||
-  "https://webhook.srv848694.hstgr.cloud/webhook/contact-form";
 const DISCORD_WEBHOOK = process.env.DISCORD_LEAD_WEBHOOK_URL || "";
 
 interface ThinkrCallData {
@@ -33,9 +31,9 @@ const str = (v: unknown, max: number): string | undefined =>
 
 async function sendToTwenty(data: Record<string, string>) {
   try {
-    await fetch(TWENTY_WEBHOOK, {
+    await fetch(twentyWebhookUrl(), {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: crmWebhookHeaders(),
       body: JSON.stringify(data),
       signal: AbortSignal.timeout(5000),
     });

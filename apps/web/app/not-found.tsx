@@ -20,7 +20,7 @@ export default function NotFound() {
   return (
     <>
       <Navigation />
-      <main className="min-h-[70vh] flex items-center justify-center px-6 pt-32 pb-20">
+      <main id="main-content" className="min-h-[70vh] flex items-center justify-center px-6 pt-32 pb-20">
         <div className="max-w-xl text-center">
           <p className="text-gold-400 font-mono text-sm tracking-widest mb-4">404</p>
           <h1 className="text-3xl sm:text-4xl font-bold text-gray-100 mb-4">We couldn&apos;t find that page</h1>

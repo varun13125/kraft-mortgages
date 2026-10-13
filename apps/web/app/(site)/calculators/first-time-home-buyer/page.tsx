@@ -12,6 +12,15 @@ import { landTransferTax } from "@/lib/calc/landTransferTax";
 import PdfLeadModal from "@/components/PdfLeadModal";
 import { CalculatorSchema } from "@/components/SEO/CalculatorSchema";
 import { RelatedCalculators } from "@/components/calculators/RelatedCalculators";
+import { useLiveRates } from "@/lib/useLiveRates";
+import { maxQualifyingLoan, maxPurchasePrice, stressTestRate } from "@/lib/calc/affordability";
+import { liveRate } from "../_lib/liveRateDefaults";
+
+// Assumptions for the "estimated max purchase price" hint (this page has no tax/heat/debt inputs)
+const HINT_PROPERTY_TAX_MONTHLY = 300;
+const HINT_HEAT_MONTHLY = 150;
+const HINT_AMORT_YEARS = 25;
+const HINT_FALLBACK_RATE = 4.39;
 
 const PROVINCES = ["BC", "Alberta", "Ontario"] as const;
 type Province = (typeof PROVINCES)[number];
@@ -35,8 +44,11 @@ function calcGSTRebate(price: number, isNewBuild: boolean): number {
   let newHousingRebate = 0;
   if (price <= 350000) newHousingRebate = price * 0.05 * 0.36;
   else if (price < 450000) newHousingRebate = 6300 * (450000 - price) / 100000;
-  // First-Time Home Buyers' GST rebate (law since Mar 12, 2026): full GST (max $50,000) on new
-  // homes up to $1M, phased out linearly to $0 at $1.5M. It tops up the new housing rebate.
+  // First-Time Home Buyers' GST rebate (Bill C-4, Royal Assent Mar 12, 2026): full GST (max $50,000) on new
+  // homes up to $1M, phased out linearly to $0 at $1.5M. It tops up the new housing rebate. Agreements of
+  // purchase and sale on or after Mar 20, 2025 and before 2031; construction started before 2031 and
+  // substantially complete before 2036. Sources (checked 2026-10-13): Finance Canada news release
+  // 2025-05-27; CRA Excise and GST/HST News No. 122 (2026-04-24); LEGISinfo Bill C-4 (45-1).
   const fullGst = Math.min(price * 0.05, 50000);
   let firstTimeRebate = 0;
   if (price <= 1000000) firstTimeRebate = fullGst;
@@ -53,6 +65,9 @@ export default function FirstTimeHomeBuyer() {
   const [isNewBuild, setIsNewBuild] = useState(false);
   const [isCouple, setIsCouple] = useState(false);
   const [marginalRate, setMarginalRate] = useState(28);
+  const { data: liveRates } = useLiveRates();
+  // Insured 5-yr fixed (first-time buyers with < 20% down); falls back to an illustrative rate
+  const hintRate = liveRate(liveRates, "fixed5Insured") ?? HINT_FALLBACK_RATE;
 
   const results = useMemo(() => {
     // FHSA: tax savings based on ANNUAL contribution cap ($8K/yr), not lifetime limit
@@ -87,6 +102,14 @@ export default function FirstTimeHomeBuyer() {
     const minDown = minimumDownPayment(purchasePrice);
     const belowMinimumDown = downPaymentPct < 20 && !isInsurable(purchasePrice, savings);
 
+    // Rough max purchase price from income + savings at 39% GDS / 44% TDS (stress-tested, premium financed)
+    const hintMaxLoan = maxQualifyingLoan({
+      incomeAnnual: annualIncome, otherDebtsMonthly: 0,
+      nonMortgageHousingMonthly: HINT_PROPERTY_TAX_MONTHLY + HINT_HEAT_MONTHLY,
+      contractRatePct: hintRate, amortYears: HINT_AMORT_YEARS,
+    });
+    const maxPriceHint = maxPurchasePrice({ down: savings, maxLoan: hintMaxLoan, amortYears: HINT_AMORT_YEARS });
+
     // Total
     const totalIncentiveValue = fhsaTaxSavings + lttSavings + gstRebate;
 
@@ -99,9 +122,9 @@ export default function FirstTimeHomeBuyer() {
       lttSavings, ltt: ltt.tax - ltt.rebate,
       gstRebate,
       cmhcPremium, cmhcPremiumRate, minDown, belowMinimumDown, downPaymentPct,
-      totalIncentiveValue, effectiveDown, mortgageAmount,
+      totalIncentiveValue, effectiveDown, mortgageAmount, maxPriceHint,
     };
-  }, [purchasePrice, annualIncome, savings, province, isNewBuild, isCouple, marginalRate]);
+  }, [purchasePrice, annualIncome, savings, province, isNewBuild, isCouple, marginalRate, hintRate]);
 
   return (
     <>
@@ -152,7 +175,16 @@ export default function FirstTimeHomeBuyer() {
                 </h2>
                 <div className="space-y-6">
                   <ValidatedInput label="Purchase Price" value={purchasePrice} onChange={setPurchasePrice} validation={{ min: 100000, max: 5000000 }} type="currency" />
-                  <ValidatedInput label="Annual Household Income" value={annualIncome} onChange={setAnnualIncome} validation={{ min: 30000, max: 1000000 }} type="currency" />
+                  <ValidatedInput
+                    label="Annual Household Income"
+                    value={annualIncome}
+                    onChange={setAnnualIncome}
+                    validation={{ min: 30000, max: 1000000 }}
+                    type="currency"
+                    help={results.maxPriceHint.price > 0
+                      ? `Rough max purchase price with this income and your savings: ${formatCurrency(results.maxPriceHint.price, 0)}${results.maxPriceHint.limitedBy === "downPayment" ? " (capped by the minimum down payment)" : ""}. Assumes 39% GDS / 44% TDS at the ${stressTestRate(hintRate).toFixed(2)}% qualifying rate, 25-year amortization, $${HINT_PROPERTY_TAX_MONTHLY}/mo property tax, $${HINT_HEAT_MONTHLY}/mo heat and no other debts. Use the Mortgage Qualifier for a full check.`
+                      : undefined}
+                  />
                   <ValidatedInput label="Total Savings for Down Payment" value={savings} onChange={setSavings} validation={{ min: 5000, max: 2000000 }} type="currency" />
                 </div>
               </div>
@@ -226,7 +258,7 @@ export default function FirstTimeHomeBuyer() {
 
                 {isNewBuild && (
                   <div className="flex justify-between items-center py-3 border-b border-white/10">
-                    <div><div className="font-medium">GST Rebate</div><div className="text-xs text-gray-400">First-time buyer GST rebate on a new home (agreements signed 2025–2030; confirm eligibility with CRA)</div></div>
+                    <div><div className="font-medium">GST Rebate</div><div className="text-xs text-gray-400">First-time buyer GST rebate on a new home (agreements signed Mar 20, 2025 – Dec 31, 2030; confirm eligibility with CRA)</div></div>
                     <span className="font-semibold text-green-400">+{formatCurrency(results.gstRebate, 0)}</span>
                   </div>
                 )}
@@ -294,7 +326,7 @@ export default function FirstTimeHomeBuyer() {
 
             <h3 className="text-2xl font-semibold text-gold-400 mt-8 mb-4">GST/HST Rebate on New Homes</h3>
             <p className="text-gray-300 leading-relaxed mb-4">
-              First-time buyers of a newly built home can now recover the full 5% GST (up to $50,000) on homes priced up to $1 million, with the rebate phasing out between $1 million and $1.5 million (First-Time Home Buyers&apos; GST Rebate, law since March 2026, for qualifying agreements signed from 2025 and before 2031). It tops up the older new housing rebate (36% of the GST, max $6,300, for homes under $450,000). Ontario also offers a rebate of up to $80,000 of the provincial portion of HST for first-time buyers of new homes. Confirm eligibility with your builder or the CRA.
+              First-time buyers of a newly built home can now recover the full 5% GST (up to $50,000) on homes priced up to $1 million, with the rebate phasing out between $1 million and $1.5 million (First-Time Home Buyers&apos; GST Rebate, law since March 2026, for agreements of purchase and sale signed on or after March 20, 2025 and before 2031). It tops up the older new housing rebate (36% of the GST, max $6,300, for homes under $450,000). Ontario also offers a rebate of up to $80,000 of the provincial portion of HST for first-time buyers of new homes. Confirm eligibility with your builder or the CRA.
             </p>
 
             <h3 className="text-2xl font-semibold text-gold-400 mt-8 mb-4">CMHC Mortgage Loan Insurance</h3>

@@ -6,8 +6,11 @@ import { BorderRotate } from "@/components/ui/animated-gradient-border";
 import { Phone, Mail, Clock, MapPin, Award, DollarSign, Zap, Loader2, CheckCircle, AlertCircle } from "lucide-react";
 import { useState, type FormEvent } from "react";
 import { WhatsAppIcon, WHATSAPP_LINK, WHATSAPP_PHONE_DISPLAY } from "@/components/icons/WhatsAppIcon";
+import { ConsentCheckboxes } from "@/components/ConsentCheckboxes";
+import { consentFields } from "@/lib/compliance/consent";
 
-export const dynamic = "force-dynamic";
+// (Removed `export const dynamic = "force-dynamic"`: route segment config is
+// ignored/needless on a client page; this form needs no per-request rendering.)
 
 const API_URL = "/api/contact";
 
@@ -25,6 +28,16 @@ export default function ContactPage() {
     _hp: "", // honeypot
   });
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  // Consent (BUG-005): both optional and unticked by default. /api/contact places the
+  // automated AI call only when consentToCall is true.
+  const [callConsent, setCallConsent] = useState(false);
+  const [marketingConsent, setMarketingConsent] = useState(false);
+  // What the server actually did, so the success message never claims a call that
+  // was not placed.
+  const [outcome, setOutcome] = useState<{ callDispatched: boolean; isAfterHours: boolean; scheduledTime?: string }>({
+    callDispatched: false,
+    isAfterHours: false,
+  });
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -35,9 +48,24 @@ export default function ContactPage() {
       const res = await fetch(API_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, source: "website-contact" }),
+        body: JSON.stringify({
+          ...form,
+          source: "website-contact",
+          ...consentFields(callConsent, marketingConsent),
+        }),
       });
       if (!res.ok) throw new Error("HTTP " + res.status);
+      let json: { callDispatched?: unknown; isAfterHours?: unknown; scheduledTime?: unknown } = {};
+      try {
+        json = await res.json();
+      } catch {
+        // Non-JSON success body: treat as "received", no call claimed.
+      }
+      setOutcome({
+        callDispatched: json.callDispatched === true,
+        isAfterHours: json.isAfterHours === true,
+        scheduledTime: typeof json.scheduledTime === "string" ? json.scheduledTime : undefined,
+      });
       setStatus("success");
     } catch {
       setStatus("error");
@@ -51,7 +79,7 @@ export default function ContactPage() {
   return (
     <>
       <Navigation />
-      <main className="min-h-screen mt-16 relative overflow-hidden bg-transparent">
+      <main id="main-content" className="min-h-screen mt-16 relative overflow-hidden bg-transparent">
 
         {/* Compact Hero Section */}
         <section className="py-10 px-4 relative z-10">
@@ -107,7 +135,18 @@ export default function ContactPage() {
                       >
                         <CheckCircle className="w-16 h-16 text-green-400 mb-4" />
                         <h3 className="text-xl font-semibold text-gray-100 mb-2">Thank you!</h3>
-                        <p className="text-gray-400">We&apos;ll be in touch within 24 hours.</p>
+                        {outcome.callDispatched ? (
+                          <p className="text-gray-300 max-w-sm">
+                            Our AI assistant is calling you now at <strong className="text-gray-100">{form.phone}</strong>. A licensed broker reviews every enquiry.
+                          </p>
+                        ) : callConsent && outcome.isAfterHours ? (
+                          <p className="text-gray-300 max-w-sm">
+                            We&apos;ll be in touch shortly. It&apos;s outside our calling hours, so we&apos;ll call you
+                            {outcome.scheduledTime ? <> {outcome.scheduledTime}</> : " during business hours"}.
+                          </p>
+                        ) : (
+                          <p className="text-gray-300">We&apos;ll be in touch shortly.</p>
+                        )}
                       </motion.div>
                     ) : status === "error" ? (
                       <motion.div
@@ -143,8 +182,9 @@ export default function ContactPage() {
                         </div>
 
                         <div>
-                          <label htmlFor="phone" className={labelClass}>Phone</label>
-                          <input id="phone" type="tel" value={form.phone} onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))} className={inputClass} placeholder="604-123-4567" />
+                          <label htmlFor="phone" className={labelClass}>Phone{callConsent ? " *" : ""}</label>
+                          {/* Required only when the visitor asks for the automated call. */}
+                          <input id="phone" type="tel" autoComplete="tel" required={callConsent} value={form.phone} onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))} className={inputClass} placeholder="604-123-4567" />
                         </div>
 
                         <div className="grid gap-4 sm:grid-cols-2">
@@ -167,6 +207,13 @@ export default function ContactPage() {
                           <label htmlFor="message" className={labelClass}>Message</label>
                           <textarea id="message" rows={4} value={form.message} onChange={(e) => setForm((f) => ({ ...f, message: e.target.value }))} className={inputClass + " resize-none"} placeholder="Tell us about your situation..." />
                         </div>
+
+                        {/* Optional consent (BUG-005): unticked by default; the AI call is placed only if ticked. */}
+                        <ConsentCheckboxes
+                          idPrefix="contact"
+                          call={{ checked: callConsent, onChange: setCallConsent }}
+                          marketing={{ checked: marketingConsent, onChange: setMarketingConsent }}
+                        />
 
                         <button
                           type="submit"
@@ -277,7 +324,7 @@ export default function ContactPage() {
                       <a href="https://maps.google.com/?q=%23301+1688+152nd+Street+Surrey+BC+V4A+4N2" target="_blank" rel="noopener noreferrer" className="text-gold-400 hover:text-gold-300 transition-colors">
                         #301 - 1688 152nd Street<br />Surrey, BC V4A 4N2
                       </a>
-                      <p className="text-gray-500 text-sm mt-2">Serving BC, AB &amp; ON</p>
+                      <p className="text-gray-400 text-sm mt-2">Serving BC, AB &amp; ON</p>
                     </div>
                   </div>
                 </div>

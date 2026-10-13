@@ -52,7 +52,6 @@ const faqs = [
 export default function DownPaymentPage() {
   const [showPdfModal, setShowPdfModal] = useState(false);
   const [homePrice, setHomePrice] = useState(700000);
-  const [downPaymentOverride, setDownPaymentOverride] = useState<number | null>(null);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [customDown, setCustomDown] = useState<number | null>(null);
 
@@ -369,7 +368,7 @@ export default function DownPaymentPage() {
                 Your down payment is the upfront cash portion you pay toward purchasing a home. The remaining balance is financed through a mortgage. In Canada, the minimum down payment you need depends on the purchase price of the property, with tiered rules that change at the $500,000 and $1,500,000 thresholds.
               </p>
 
-              <h3 className="text-2xl font-semibold text-gray-100 mt-8">Canada&apos;s Down Payment Rules (2024–2025)</h3>
+              <h3 className="text-2xl font-semibold text-gray-100 mt-8">Canada&apos;s Down Payment Rules (since December 15, 2024)</h3>
               <p>
                 For homes priced at $500,000 or below, the minimum down payment is 5% of the purchase price. For homes from $500,000 up to $1,500,000, you need 5% on the first $500,000 and 10% on the amount above $500,000. Homes priced at $1,500,000 or more cannot be insured, so they require at least 20% of the full price. This means a $1,200,000 home requires at least $95,000 down (5% on the first $500K + 10% on the remaining $700K).
               </p>

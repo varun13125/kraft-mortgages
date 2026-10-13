@@ -9,11 +9,17 @@ import Link from "next/link";
 import { ValidatedInput, ValidatedSlider } from "@/components/ui/ValidatedInput";
 import { formatCurrency } from "@/lib/utils/validation";
 import { payment } from "@/lib/calc/payment";
-import { cmhcPremiumRate, isInsurable, minimumDownPayment, INSURED_PRICE_CAP } from "@/lib/calc/cmhc";
+import { cmhcPremiumRate, isInsurable, minimumDownPayment, premiumPst, premiumPstRate, INSURED_PRICE_CAP } from "@/lib/calc/cmhc";
 import PdfLeadModal from "@/components/PdfLeadModal";
 import { RelatedCalculators } from "@/components/calculators/RelatedCalculators";
+import { useLiveRates } from "@/lib/useLiveRates";
+import { liveRate, purchaseRateProduct, useLiveDefault } from "../_lib/liveRateDefaults";
+import { LiveRateNote } from "../_lib/LiveRateNote";
 
-/* ── CMHC Premium Rates (2025) ─────────────────────── */
+type Province = "BC" | "AB" | "ON";
+const PROVINCE_NAMES: Record<Province, string> = { BC: "British Columbia", AB: "Alberta", ON: "Ontario" };
+
+/* ── CMHC premium rates (current schedule; verified 2026-10-13, see lib/calc/cmhc.ts) ── */
 
 function cmhcCalc(downPaymentPct: number, mortgageAmount: number, amortYears = 25): { rate: number; premium: number; tier: string } {
   if (downPaymentPct >= 20) return { rate: 0, premium: 0, tier: "No insurance required" };
@@ -40,7 +46,7 @@ const faqs = [
     a: "CMHC (Canada Mortgage and Housing Corporation) mortgage default insurance protects lenders if a borrower defaults on their mortgage. It's required when your down payment is less than 20% of the home's purchase price. The premium is paid by the borrower (you), not the lender, and is typically added to your mortgage balance."
   },
   {
-    q: "What are the current CMHC premium rates in 2025?",
+    q: "What are the current CMHC premium rates?",
     a: "CMHC purchase premiums are: 4.00% for 5-9.99% down (4.50% with a non-traditional down payment), 3.10% for 10-14.99% down, 2.80% for 15-19.99% down, and $0 (no insurance) for 20% or more down. Amortizations over 25 years add 0.20%. These rates apply to the mortgage amount, not the home price. Ontario, Quebec and Saskatchewan also charge PST on the premium, payable at closing."
   },
   {
@@ -65,8 +71,12 @@ export default function CMHCInsurancePage() {
   const [showPdfModal, setShowPdfModal] = useState(false);
   const [homePrice, setHomePrice] = useState(700000);
   const [downPaymentPct, setDownPaymentPct] = useState(10);
-  const [mortgageRate, setMortgageRate] = useState(4.79);
   const [amortization, setAmortization] = useState(25);
+  const [province, setProvince] = useState<Province>("BC");
+  // Rate follows today's 5-yr fixed for this purchase (insured below 20% down) until edited
+  const { data: liveRates } = useLiveRates();
+  const rateProduct = purchaseRateProduct(downPaymentPct, homePrice, amortization);
+  const [mortgageRate, setMortgageRate, mortgageRateSource] = useLiveDefault(4.79, liveRate(liveRates, rateProduct));
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
   const downPayment = homePrice * downPaymentPct / 100;
@@ -86,6 +96,8 @@ export default function CMHCInsurancePage() {
   const interestCostOfCMHC = totalInterestWithCMHC - totalInterestBase;
 
   const premiumPctOfHome = homePrice > 0 ? (premium / homePrice) * 100 : 0;
+  // PST on the premium (ON 8%) is payable in cash at closing and can't be added to the mortgage
+  const pstOnPremium = premiumPst(premium, province);
 
   return (
     <>
@@ -176,6 +188,7 @@ export default function CMHCInsurancePage() {
                           { label: "Premium Tier", value: tier },
                           { label: "Total Mortgage (with CMHC)", value: "$" + Math.round(totalMortgage).toLocaleString("en-CA"), highlight: true },
                           { label: "Insurance Required?", value: needsInsurance ? "Yes" : "No" },
+                          { label: `PST on Premium (${province}, cash at closing)`, value: "$" + Math.round(pstOnPremium).toLocaleString("en-CA") },
                         ]
                       },
                       {
@@ -218,13 +231,36 @@ export default function CMHCInsurancePage() {
                           : `Below the minimum down payment of ${formatCurrency(minDown, 0)} (${(minDown / homePrice * 100).toFixed(2)}%) for this price.`}
                       </p>
                     )}
-                    <ValidatedInput
-                      label="Mortgage Rate (%)"
-                      value={mortgageRate}
-                      onChange={setMortgageRate}
-                      validation={{ min: 0.5, max: 15 }}
-                      type="percentage"
-                    />
+                    <div>
+                      <ValidatedInput
+                        label="Mortgage Rate (%)"
+                        value={mortgageRate}
+                        onChange={setMortgageRate}
+                        validation={{ min: 0.5, max: 15 }}
+                        type="percentage"
+                      />
+                      <LiveRateNote data={liveRates} product={rateProduct} source={mortgageRateSource} />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-300 mb-2">Province</label>
+                      <div className="flex gap-2">
+                        {(["BC", "AB", "ON"] as const).map((p) => (
+                          <button
+                            key={p}
+                            type="button"
+                            onClick={() => setProvince(p)}
+                            aria-pressed={province === p}
+                            className={`flex-1 py-3 px-2 sm:px-4 rounded-xl font-semibold text-sm transition-all border ${
+                              province === p
+                                ? "bg-gold-500 text-black border-gold-500"
+                                : "bg-white/5 text-gray-300 border-white/10 hover:bg-white/10"
+                            }`}
+                          >
+                            {p}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-300 mb-2">Amortization</label>
                       <div className="flex gap-2">
@@ -265,7 +301,9 @@ export default function CMHCInsurancePage() {
                   </p>
                   {needsInsurance && (
                     <p className="text-xs text-gray-400 mt-2">
-                      Ontario buyers also pay 8% PST on the premium ({formatCurrency(premium * 0.08, 0)}) in cash at closing; BC and Alberta charge no PST on premiums.
+                      {pstOnPremium > 0
+                        ? <>{PROVINCE_NAMES[province]} charges {(premiumPstRate(province) * 100).toFixed(0)}% PST on the premium: <strong className="text-gray-200">{formatCurrency(pstOnPremium, 0)}</strong>, payable in cash at closing (it can&apos;t be added to the mortgage).</>
+                        : <>No provincial sales tax on mortgage insurance premiums in {PROVINCE_NAMES[province]} (Ontario, Quebec and Saskatchewan charge it).</>}
                     </p>
                   )}
                 </div>
@@ -365,7 +403,7 @@ export default function CMHCInsurancePage() {
                 CMHC mortgage default insurance is a requirement for any home purchase in Canada where the down payment is less than 20% of the purchase price. Also known as mortgage loan insurance, it protects the lender — not you — in case you default on your mortgage payments. While you pay the premium, the coverage benefits the lender by reducing their risk, which in turn allows Canadians to buy homes with as little as 5% down.
               </p>
 
-              <h3 className="text-2xl font-semibold text-gray-100 mt-8">How CMHC Premiums Are Calculated (2025 Rates)</h3>
+              <h3 className="text-2xl font-semibold text-gray-100 mt-8">How CMHC Premiums Are Calculated (Current Rates)</h3>
               <p>
                 CMHC premiums are calculated as a percentage of your mortgage amount (not the home price). The rate depends on your down payment percentage: 5.00–9.99% down carries a 4.0% premium, 10.00–14.99% down is 3.1%, 15.00–19.99% down is 2.8%, and 20% or more requires no insurance. For example, on a $700,000 home with 10% down ($70,000), your mortgage is $630,000 and the CMHC premium is $19,530 (3.1% of $630,000).
               </p>

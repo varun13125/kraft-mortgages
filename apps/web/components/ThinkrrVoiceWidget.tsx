@@ -28,6 +28,67 @@ interface AgentConfig {
 }
 
 const THINKRR_SCRIPT_URL = "https://d2cqc7yqzf8c8f.cloudfront.net/web-widget-v1.js";
+// Registered key of the English agent (Julia), used when NEXT_PUBLIC_THINKRR_ENGLISH_WIDGET_KEY is unset.
+const DEFAULT_ENGLISH_WIDGET_KEY = "56a39d47-f865-4cfc-805a-c746dbdb2672";
+
+// ---------------------------------------------------------------------------------------------
+// Thinkrr widget lifecycle (BUG-029). Behaviour of web-widget-v1.js, checked 2026-10-13:
+// - window.widgetLib exposes only scanWidgets(). There is no stop/destroy/disconnect API.
+// - scanWidgets() renders into [data-widget-key] elements only for keys it has not seen before in
+//   this page load, so a fresh element for an already-used key would stay empty.
+// - Removing the element does NOT end a call. A call only stops when the widget's own
+//   .wcw-widget-container toggle is clicked while the call is live.
+// So each key gets one mount node for the whole page: it is moved into the modal when used and
+// parked in a hidden host when closed, and closing clicks the widget's toggle to end a live call.
+// ---------------------------------------------------------------------------------------------
+const widgetMounts = new Map<string, HTMLDivElement>();
+let parkingHost: HTMLDivElement | null = null;
+
+function getWidgetMount(key: string): HTMLDivElement {
+  let node = widgetMounts.get(key);
+  if (!node) {
+    node = document.createElement("div");
+    node.setAttribute("data-widget-key", key);
+    node.className = "w-full flex justify-center";
+    widgetMounts.set(key, node);
+  }
+  return node;
+}
+
+function parkWidgetMount(node: HTMLDivElement) {
+  if (!parkingHost) {
+    parkingHost = document.createElement("div");
+    parkingHost.setAttribute("aria-hidden", "true");
+    parkingHost.style.display = "none";
+    document.body.appendChild(parkingHost);
+  }
+  parkingHost.appendChild(node);
+}
+
+/** Ends a live (or still-connecting) Thinkrr call by clicking the widget's own toggle. */
+function stopThinkrrCall(node: HTMLElement) {
+  const toggle = node.querySelector<HTMLElement>(".wcw-widget-container");
+  const idleIcon = node.querySelector(".wcw-quiet") as (Element & ElementCSSInlineStyle) | null;
+  if (!toggle || !idleIcon) return; // widget never rendered, so no call
+  let attempts = 0;
+  const tick = () => {
+    // The idle icon is hidden only while a call is connecting or live; the widget shows it again
+    // when the call ends. A click while connecting is ignored by the widget, so keep retrying
+    // (for up to ~20 s) until the call is live and can be stopped.
+    if (idleIcon.style.display !== "none" || attempts++ >= 20) return;
+    toggle.click();
+    window.setTimeout(tick, 1000);
+  };
+  tick();
+}
+
+/** Stops any Thinkrr call and moves every widget mount out of the modal. */
+function endAllThinkrrSessions() {
+  widgetMounts.forEach((node) => {
+    stopThinkrrCall(node);
+    parkWidgetMount(node);
+  });
+}
 
 export function ThinkrrVoiceWidget() {
   const [isOpen, setIsOpen] = useState(false);
@@ -38,11 +99,13 @@ export function ThinkrrVoiceWidget() {
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const widgetContainerRef = useRef<HTMLDivElement>(null);
 
-  // Retrieve environment-configured keys with fallback to registered Thinkrr key
-  const englishKey = process.env.NEXT_PUBLIC_THINKRR_ENGLISH_WIDGET_KEY || "56a39d47-f865-4cfc-805a-c746dbdb2672";
-  const hindiKey = process.env.NEXT_PUBLIC_THINKRR_HINDI_WIDGET_KEY || "56a39d47-f865-4cfc-805a-c746dbdb2672";
+  // Each agent needs its own widget key. The Hindi agent is hidden when its key is missing (it used to
+  // fall back to the English key, so "Aarav" silently connected callers to the English agent).
+  const englishKey = (process.env.NEXT_PUBLIC_THINKRR_ENGLISH_WIDGET_KEY || "").trim() || DEFAULT_ENGLISH_WIDGET_KEY;
+  const hindiKeyRaw = (process.env.NEXT_PUBLIC_THINKRR_HINDI_WIDGET_KEY || "").trim();
+  const hindiKey = hindiKeyRaw && hindiKeyRaw !== englishKey ? hindiKeyRaw : "";
 
-  const agents: AgentConfig[] = [
+  const allAgents: AgentConfig[] = [
     {
       id: "en",
       name: "Julia",
@@ -66,7 +129,7 @@ export function ThinkrrVoiceWidget() {
       accent: "from-amber-600 to-orange-700",
       description: "कनाडा में मॉर्गेज पात्रता, वर्तमान ब्याज दरें, अल्टरनेटिव बी लेंडिंग, और डाउन पेमेंट पर सीधे हिंदी में बात करें।",
       capabilities: [
-        "लाइव ब्याज दरें (Prime 4.45%)",
+        "वर्तमान ब्याज दरें और योग्यता",
         "कमर्शियल और कंस्ट्रक्शन लोन",
         "प्राइवेट लेंडिंग और इक्विटी लोन",
         "पहली बार घर खरीदने वालों के नियम"
@@ -74,6 +137,8 @@ export function ThinkrrVoiceWidget() {
       widgetKey: hindiKey
     }
   ];
+  const agents = allAgents.filter((agent) => !!agent.widgetKey);
+  const hasHindi = agents.some((agent) => agent.id === "hi");
 
   // Dynamic script loader for Thinkrr WebRTC widget
   useEffect(() => {
@@ -120,9 +185,9 @@ export function ThinkrrVoiceWidget() {
     if (!isOpen) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
+        endAllThinkrrSessions();
         setIsCalling(false);
         setActiveAgent(null);
-        if (widgetContainerRef.current) widgetContainerRef.current.innerHTML = "";
         setIsOpen(false);
       }
     };
@@ -136,35 +201,34 @@ export function ThinkrrVoiceWidget() {
     return `${mins}:${remaining < 10 ? "0" : ""}${remaining}`;
   };
 
+  // Mount the selected agent's widget into the call view (see the lifecycle notes at the top).
+  useEffect(() => {
+    if (!isCalling || !activeAgent) return;
+    const container = widgetContainerRef.current;
+    if (!container) return;
+    container.appendChild(getWidgetMount(activeAgent.widgetKey));
+    const win = window as any;
+    if (typeof win.widgetLib?.scanWidgets === "function") {
+      try {
+        win.widgetLib.scanWidgets();
+      } catch (e) {
+        console.log("[ThinkrrVoiceWidget] scanWidgets error:", e);
+      }
+    }
+  }, [isCalling, activeAgent]);
+
+  // End any live call if this component ever unmounts.
+  useEffect(() => () => endAllThinkrrSessions(), []);
+
   const handleStartCall = (agent: AgentConfig) => {
     setActiveAgent(agent);
     setIsCalling(true);
-
-    // If widget container is present, inject the data-widget-key child element
-    // and re-trigger Thinkrr widgetLib.scanWidgets()
-    setTimeout(() => {
-      if (widgetContainerRef.current) {
-        const key = agent.widgetKey || "56a39d47-f865-4cfc-805a-c746dbdb2672";
-        widgetContainerRef.current.innerHTML = `<div data-widget-key="${key}" class="w-full flex justify-center"></div>`;
-        
-        const win = window as any;
-        if (typeof win.widgetLib?.scanWidgets === "function") {
-          try {
-            win.widgetLib.scanWidgets();
-          } catch (e) {
-            console.log("[ThinkrrVoiceWidget] scanWidgets error:", e);
-          }
-        }
-      }
-    }, 100);
   };
 
   const handleEndCall = () => {
+    endAllThinkrrSessions();
     setIsCalling(false);
     setActiveAgent(null);
-    if (widgetContainerRef.current) {
-      widgetContainerRef.current.innerHTML = "";
-    }
   };
 
   return (
@@ -194,7 +258,7 @@ export function ThinkrrVoiceWidget() {
               </span>
             </span>
             <span className="text-[10px] text-gray-400 font-medium">
-              English 🇬🇧 &nbsp;•&nbsp; हिंदी 🇮🇳
+              {hasHindi ? <>English 🇬🇧 &nbsp;•&nbsp; हिंदी 🇮🇳</> : <>English 🇬🇧</>}
             </span>
           </div>
         </motion.button>
@@ -236,7 +300,7 @@ export function ThinkrrVoiceWidget() {
                       Kraft Mortgages Voice AI Deal Desk
                     </h3>
                     <p className="text-xs text-gray-400">
-                      AI voice assistant • English &amp; Hindi
+                      AI voice assistant • {hasHindi ? "English & Hindi" : "English"}
                     </p>
                   </div>
                 </div>

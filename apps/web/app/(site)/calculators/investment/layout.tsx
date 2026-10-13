@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { OG_DEFAULTS } from "@/lib/seo/og";
 
 export const metadata: Metadata = {
   title: "Rental Property Investment Calculator Canada | Cap Rate, DSCR & Cash Flow | Kraft Mortgages",
@@ -6,11 +7,11 @@ export const metadata: Metadata = {
     "Analyze a rental property: monthly cash flow, cap rate, cash-on-cash return and debt service coverage ratio (DSCR) using Canadian mortgage math.",
   alternates: { canonical: "https://www.kraftmortgages.ca/calculators/investment" },
   openGraph: {
+    ...OG_DEFAULTS,
     title: "Rental Property Investment Calculator Canada | Cap Rate, DSCR & Cash Flow | Kraft Mortgages",
     description:
       "Analyze a rental property: monthly cash flow, cap rate, cash-on-cash return and debt service coverage ratio (DSCR) using Canadian mortgage math.",
     url: "https://www.kraftmortgages.ca/calculators/investment",
-    type: "website",
   },
 };
 

@@ -10,7 +10,7 @@ export default function AboutUs() {
   return (
     <>
       <Navigation />
-      <main className="min-h-screen">
+      <main id="main-content" className="min-h-screen">
         {/* Hero Section */}
         <section className="py-20 px-4 mt-16">
           <div className="max-w-6xl mx-auto">
@@ -90,7 +90,7 @@ export default function AboutUs() {
                       }}
                     >
                       <div className="text-3xl font-bold text-gold-400 mb-2">{stat.number}</div>
-                      <div className="text-sm text-gray-500">{stat.label}</div>
+                      <div className="text-sm text-gray-400">{stat.label}</div>
                     </BorderRotate>
                   </motion.div>
                 ))}
@@ -176,7 +176,7 @@ export default function AboutUs() {
                     </p>
 
                     <div className="pt-4 border-t border-gray-700/50">
-                      <p className="text-sm text-gray-500">
+                      <p className="text-sm text-gray-400">
                         <strong>Licenses:</strong> BCFSA #X303985 | RECA #M22001447 | FSRAO #M22001447
                       </p>
                     </div>
@@ -242,7 +242,7 @@ export default function AboutUs() {
                     </p>
 
                     <div className="pt-4 border-t border-gray-700/50">
-                      <p className="text-sm text-gray-500">
+                      <p className="text-sm text-gray-400">
                         <strong>Specialties:</strong> Commercial lending, Investment properties, New immigrant programs
                       </p>
                     </div>

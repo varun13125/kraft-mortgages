@@ -13,6 +13,9 @@ import { formatCurrency } from "@/lib/utils/validation";
 import PdfLeadModal from "@/components/PdfLeadModal";
 import { CalculatorSchema } from "@/components/SEO/CalculatorSchema";
 import { RelatedCalculators } from "@/components/calculators/RelatedCalculators";
+import { useLiveRates } from "@/lib/useLiveRates";
+import { liveRate, useLiveDefault } from "../_lib/liveRateDefaults";
+import { LiveRateNote } from "../_lib/LiveRateNote";
 
 type Province = "BC" | "AB" | "ON";
 
@@ -42,8 +45,14 @@ function interestOverMonths(principal: number, annualRate: number, payment: numb
 }
 
 /* ── Marginal tax rates by province ─────────────── */
-// Approximate combined federal + provincial marginal rates for roughly $115K–$137K of income
-// (2025 brackets; ON includes surtax). Users can override.
+// Combined federal + provincial marginal rates on ordinary income for 2026 (verified 2026-10-13):
+//   federal 26% band $117,045–$181,440 (CRA 2026 rates) +
+//   BC 12.29% ($115,648–$140,430) = 38.29% · AB 10% ($61,200–$154,259) = 36.00% ·
+//   ON 11.16% × 1.56 surtax ($111,814–$150,000) = 43.41%
+// i.e. these apply to taxable income of about $117K up to $140K (BC) / $154K (AB) / $150K (ON).
+// Sources: https://www.canada.ca/en/revenue-agency/services/tax/individuals/tax-rates-brackets/current-year.html ,
+// https://www2.gov.bc.ca/gov/content/taxes/income-taxes/personal/tax-rates , https://www.taxtips.ca/taxrates/on.htm
+// Refresh every January (FEAT-006 tests don't cover these). Users can override.
 const marginalTaxRates: Record<Province, number> = {
   BC: 38.29,
   AB: 36.0,
@@ -61,7 +70,7 @@ const faqs = [
   },
   {
     q: "Do B-lenders report to credit bureaus?",
-    a: "Yes, major B-lenders like HomeTrust, Equitable Bank, and ICICI report to both Equifax and TransUnion. Your payment history is tracked the same way as with any bank. This means on-time payments help build your credit, and missed payments have the same negative impact."
+    a: "Yes, major B-lenders like Home Trust, Equitable Bank, and ICICI Bank Canada report to both Equifax and TransUnion. Your payment history is tracked the same way as with any bank. This means on-time payments help build your credit, and missed payments have the same negative impact."
   },
   {
     q: "What's the maximum LTV for B-lenders?",
@@ -76,8 +85,11 @@ const faqs = [
 export default function SelfEmployedAVsBPage() {
   const [mortgageAmount, setMortgageAmount] = useState(500000);
   const [propertyValue, setPropertyValue] = useState(750000);
-  const [aRate, setARate] = useState(4.99);
-  const [bRate, setBRate] = useState(5.49);
+  // Defaults follow the live feed until edited: A = conventional 5-yr fixed (≥20% equity, uninsured),
+  // B = alternative-lender 5-yr fixed (raw_benchmarks.alt_5_year_fixed).
+  const { data: liveRates } = useLiveRates();
+  const [aRate, setARate, aRateSource] = useLiveDefault(4.99, liveRate(liveRates, "fixed5Conventional"));
+  const [bRate, setBRate, bRateSource] = useLiveDefault(5.49, liveRate(liveRates, "alt5Fixed"));
   const [term, setTerm] = useState(5);
   const [amortization, setAmortization] = useState(25);
   const [province, setProvince] = useState<Province>("BC");
@@ -223,8 +235,14 @@ export default function SelfEmployedAVsBPage() {
                   </div>
                 </div>
                 <ValidatedInput label={`Additional Income to Qualify ($/year)`} value={additionalIncome} onChange={setAdditionalIncome} validation={{ min: 0, max: 500000 }} type="currency" />
-                <ValidatedInput label="A-Lender Rate (%)" value={aRate} onChange={setARate} validation={{ min: 1, max: 15 }} type="percentage" />
-                <ValidatedInput label="B-Lender Rate (%)" value={bRate} onChange={setBRate} validation={{ min: 1, max: 15 }} type="percentage" />
+                <div>
+                  <ValidatedInput label="A-Lender Rate (%)" value={aRate} onChange={setARate} validation={{ min: 1, max: 15 }} type="percentage" />
+                  <LiveRateNote data={liveRates} product="fixed5Conventional" source={aRateSource} />
+                </div>
+                <div>
+                  <ValidatedInput label="B-Lender Rate (%)" value={bRate} onChange={setBRate} validation={{ min: 1, max: 15 }} type="percentage" />
+                  <LiveRateNote data={liveRates} product="alt5Fixed" source={bRateSource} />
+                </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-2">Marginal Tax Rate ({effectiveTaxRate.toFixed(2)}%)</label>
                   <div className="flex items-center gap-3 mb-2">
@@ -447,9 +465,9 @@ export default function SelfEmployedAVsBPage() {
                 const { generateCalculatorReport } = await import("@/components/calculator-report/generateAvsBReport");
                 await generateCalculatorReport({
                   userName,
-                  // Report shows aTotalCost as the A-lender total; pass it net of the investment deduction so it
-                  // matches the page (B side is already netted inside the report)
-                  results: { ...results, aTotalCost: results.aNetCost },
+                  // aNetCost/bNetCost (already in results) make the report totals match the page, including
+                  // A's investment deduction; taxYears labels the extra-declared-income tax row (BUG-045).
+                  results: { ...results, taxYears: effectiveTaxYears },
                   inputs: { mortgageAmount, propertyValue, aRate, bRate, term, amortization, province, additionalIncome, effectiveTaxRate, isInvestment, bFee },
                 });
               }}
@@ -464,7 +482,7 @@ export default function SelfEmployedAVsBPage() {
             <div className="text-gray-300 space-y-4 leading-relaxed">
               <h3 className="text-2xl font-semibold text-gray-100 mt-8">What is a B-Lender?</h3>
               <p>
-                In Canada&apos;s mortgage market, lenders are categorized into tiers based on their risk appetite and qualification requirements. <strong>A-lenders</strong> include major banks (RBC, TD, Scotiabank), credit unions, and trust companies that follow strict lending guidelines. <strong>B-lenders</strong> — such as HomeTrust, Equitable Bank, National Bank Optimum Mortgage, and dozens of others — operate in the alternative lending space. They serve borrowers who don&apos;t fit the conventional bank mold but are still creditworthy. There is also a <strong>C-lender</strong> (private lending) tier for higher-risk scenarios, but B-lenders occupy a sweet spot: institutional-quality lending with more flexible qualification criteria.
+                In Canada&apos;s mortgage market, lenders are categorized into tiers based on their risk appetite and qualification requirements. <strong>A-lenders</strong> include major banks (RBC, TD, Scotiabank), credit unions, and trust companies that follow strict lending guidelines. <strong>B-lenders</strong> — such as Home Trust, Equitable Bank, National Bank Optimum Mortgage, and dozens of others — operate in the alternative lending space. They serve borrowers who don&apos;t fit the conventional bank mold but are still creditworthy. There is also a <strong>C-lender</strong> (private lending) tier for higher-risk scenarios, but B-lenders occupy a sweet spot: institutional-quality lending with more flexible qualification criteria.
               </p>
               <p>
                 B-lenders are regulated, professional institutions. They fund mortgages through investor pools or their own balance sheets, charge higher rates to compensate for the additional risk, and typically charge a lender fee (0.5% to 2% of the mortgage amount) at closing. These fees are disclosed upfront and are a standard part of alternative lending.

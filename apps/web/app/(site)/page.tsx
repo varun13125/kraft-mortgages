@@ -89,6 +89,7 @@ export default function ModernHomepage() {
         <RatesTicker />
       </div>
       <div className="min-h-screen relative overflow-hidden bg-transparent">
+        <main id="main-content">
         {/* Hero Section with floating geometry background */}
         <HeroGeometric className="py-20 px-4 mt-4 z-10">
           <div className="max-w-6xl mx-auto">
@@ -232,7 +233,7 @@ export default function ModernHomepage() {
                       <div className="flex items-center gap-2 mb-2">
                         <MapPin className="w-4 h-4 text-gold-400" />
                         <h3 className="text-lg font-semibold text-gray-100 group-hover:text-gold-400 transition-colors">{item.city}</h3>
-                        <span className="text-xs text-gray-500 font-medium">{item.province}</span>
+                        <span className="text-xs text-gray-400 font-medium">{item.province}</span>
                       </div>
                       <p className="text-gray-400 text-sm leading-relaxed">{item.desc}</p>
                     </div>
@@ -354,6 +355,7 @@ export default function ModernHomepage() {
             </div>
           </div>
         </section>
+        </main>
 
         {/* Footer */}
         <footer className="py-16 px-4 bg-gray-900/95 border-t border-gray-700/50">

@@ -1,4 +1,6 @@
-import jsPDF from "jspdf";
+// Named export: resolves to the constructor in both the browser ES build and the Node CJS build
+// (a default import is the CJS module object under plain Node ESM).
+import { jsPDF } from "jspdf";
 
 const NAVY = "#142341";
 const GOLD = "#C8A962";
@@ -21,6 +23,51 @@ export interface GenericReportConfig {
   educationalContent?: string;
 }
 
+/**
+ * jsPDF's built-in Helvetica only covers WinAnsi (Latin-1 + a few typographic marks).
+ * A single character outside that set (e.g. "≤" or "−") makes jsPDF switch the WHOLE
+ * string to a 2-byte encoding, which prints as spaced-out garbage. Map the common ones
+ * to ASCII and drop anything else that can't be rendered.
+ */
+const PDF_CHAR_MAP: Record<string, string> = {
+  "≤": "<=",
+  "≥": ">=",
+  "−": "-",
+  "‐": "-",
+  "‑": "-",
+  "→": "->",
+  "←": "<-",
+  "≈": "~",
+  "≠": "!=",
+  "✓": "",
+  "✔": "",
+  "✗": "x",
+  "✕": "x",
+  " ": " ", // thin space
+  " ": " ", // narrow no-break space (fr-CA number formatting)
+  "​": "", // zero-width space
+};
+// WinAnsi code points above Latin-1 that Helvetica can render
+const WINANSI_EXTRA = new Set("€‚ƒ„…†‡ˆ‰Š‹ŒŽ‘’“”•–—˜™š›œžŸ");
+
+export function pdfSafe(input: string | number | null | undefined): string {
+  const s = input == null ? "" : String(input);
+  let out = "";
+  for (const ch of s) {
+    const mapped = PDF_CHAR_MAP[ch];
+    if (mapped !== undefined) {
+      out += mapped;
+      continue;
+    }
+    const cp = ch.codePointAt(0) ?? 0;
+    if (cp === 0x0a || (cp >= 0x20 && cp <= 0x7e) || (cp >= 0xa0 && cp <= 0xff) || WINANSI_EXTRA.has(ch)) {
+      out += ch;
+    }
+    // anything else (emoji, CJK, Gurmukhi, symbols) is dropped: it cannot be drawn with the core fonts
+  }
+  return out.replace(/ {2,}/g, " ");
+}
+
 function addHeader(doc: jsPDF) {
   doc.setFillColor(NAVY);
   doc.rect(0, 0, 210, 12, "F");
@@ -30,6 +77,7 @@ function addHeader(doc: jsPDF) {
 
 function addFooter(doc: jsPDF, pageNum: number, totalPages: number) {
   const h = doc.internal.pageSize.height;
+  doc.setFont("helvetica", "normal");
   doc.setFontSize(8);
   doc.setTextColor(TEXT_GRAY);
   doc.text(
@@ -67,7 +115,15 @@ function addCoverPage(doc: jsPDF, config: GenericReportConfig) {
   doc.setTextColor(NAVY);
   doc.text("Your Personalized", 105, 130, { align: "center" });
   doc.setFont("helvetica", "bold");
-  doc.text(config.title, 105, 140, { align: "center" });
+  // The cover already says "Your Personalized", so drop a leading "Your" from the title
+  // ("Your Personalized / Your Cap Rate Analysis" read twice). Shrink long titles to fit.
+  const title = pdfSafe(config.title).replace(/^your\s+/i, "");
+  let titleSize = 22;
+  while (titleSize > 14 && doc.getTextWidth(title) > contentW) {
+    titleSize -= 1;
+    doc.setFontSize(titleSize);
+  }
+  doc.text(title, 105, 140, { align: "center" });
 
   doc.setDrawColor(GOLD);
   doc.setLineWidth(1);
@@ -76,15 +132,15 @@ function addCoverPage(doc: jsPDF, config: GenericReportConfig) {
   doc.setFont("helvetica", "normal");
   doc.setFontSize(12);
   doc.setTextColor(TEXT_DARK);
-  doc.text(`Prepared for: ${config.userName}`, 105, 160, { align: "center" });
+  doc.text(`Prepared for: ${pdfSafe(config.userName)}`, 105, 160, { align: "center", maxWidth: contentW });
 
   const today = config.date || new Date().toLocaleDateString("en-CA", {
     year: "numeric", month: "long", day: "numeric",
   });
   doc.setFontSize(10);
   doc.setTextColor(TEXT_GRAY);
-  doc.text(today, 105, 168, { align: "center" });
-  doc.text(config.calculatorName, 105, 178, { align: "center" });
+  doc.text(pdfSafe(today), 105, 168, { align: "center" });
+  doc.text(pdfSafe(config.calculatorName), 105, 178, { align: "center" });
 
   doc.setFillColor(LIGHT_BG);
   doc.roundedRect(margin, 200, contentW, 25, 3, 3, "F");
@@ -185,7 +241,50 @@ function addContactPage(doc: jsPDF, pageNum: number, totalPages: number) {
   addFooter(doc, pageNum, totalPages);
 }
 
-export function generateGenericReport(config: GenericReportConfig) {
+// Row layout (mm). Labels wrap within the space the right-aligned value leaves free.
+const ROW_FONT_SIZE = 9;
+const ROW_MIN_H = 8;
+const ROW_LINE_H = 4;
+const ROW_PAD_X = 5;
+const ROW_GAP = 6;
+const PAGE_BOTTOM = 272; // keep clear of the footer rule at h - 18 (279mm on A4)
+
+interface RowLayout {
+  labelLines: string[];
+  valueLines: string[];
+  height: number;
+  highlight: boolean;
+}
+
+function layoutRow(doc: jsPDF, row: ReportSection["rows"][number], contentW: number): RowLayout {
+  const inner = contentW - ROW_PAD_X * 2;
+  const label = pdfSafe(row.label);
+  const value = pdfSafe(row.value);
+
+  doc.setFontSize(ROW_FONT_SIZE);
+  doc.setFont("helvetica", row.highlight ? "bold" : "normal");
+  // Values keep their natural width up to 45% of the row, then wrap too.
+  const valueMax = inner * 0.45;
+  const valueLines: string[] = doc.getTextWidth(value) > valueMax
+    ? doc.splitTextToSize(value, valueMax)
+    : [value];
+  const valueW = Math.max(...valueLines.map((l) => doc.getTextWidth(l)), 0);
+
+  doc.setFont("helvetica", "normal");
+  const labelW = Math.max(inner * 0.3, inner - valueW - ROW_GAP);
+  const labelLines: string[] = doc.splitTextToSize(label, labelW);
+
+  const lines = Math.max(labelLines.length, valueLines.length, 1);
+  return {
+    labelLines,
+    valueLines,
+    height: Math.max(ROW_MIN_H, ROW_MIN_H + (lines - 1) * ROW_LINE_H),
+    highlight: !!row.highlight,
+  };
+}
+
+/** Builds the report document (no download). Safe to call outside the browser. */
+export function buildGenericReport(config: GenericReportConfig): jsPDF {
   const doc = new jsPDF("p", "mm", "a4");
   const margin = 20;
   const contentW = 170;
@@ -198,50 +297,56 @@ export function generateGenericReport(config: GenericReportConfig) {
   doc.addPage();
   addHeader(doc);
 
-  for (const section of config.sections) {
-    const sectionHeight = 15 + section.rows.length * 8;
+  const newPage = () => {
+    doc.addPage();
+    addHeader(doc);
+    y = 22;
+  };
 
-    if (y + sectionHeight > 270) {
-      doc.addPage();
-      addHeader(doc);
-      y = 22;
+  for (const section of config.sections) {
+    const rows = section.rows.map((row) => layoutRow(doc, row, contentW));
+    const sectionHeight = 11 + rows.reduce((sum, r) => sum + r.height, 0);
+    const firstRowH = rows[0]?.height ?? ROW_MIN_H;
+    // Keep a section together when it fits on one page; otherwise at least keep the title with its first row.
+    if (y + sectionHeight > PAGE_BOTTOM && (sectionHeight <= PAGE_BOTTOM - 22 || y + 11 + firstRowH > PAGE_BOTTOM)) {
+      newPage();
     }
 
     doc.setFont("helvetica", "bold");
     doc.setFontSize(13);
     doc.setTextColor(NAVY);
-    doc.text(section.title, margin, y);
+    doc.text(pdfSafe(section.title), margin, y);
     y += 3;
     doc.setDrawColor(GOLD);
     doc.setLineWidth(0.6);
     doc.line(margin, y, margin + 45, y);
     y += 8;
 
-    section.rows.forEach((row, i) => {
-      if (y > 268) {
-        doc.addPage();
-        addHeader(doc);
-        y = 22;
-      }
+    rows.forEach((row, i) => {
+      if (y - 3 + row.height > PAGE_BOTTOM) newPage();
+      const top = y - 3;
 
       if (row.highlight) {
         doc.setFillColor("#FFFBEB");
-        doc.roundedRect(margin, y - 3, contentW, 8, 2, 2, "F");
+        doc.roundedRect(margin, top, contentW, row.height, 2, 2, "F");
         doc.setDrawColor(GOLD);
         doc.setLineWidth(0.3);
-        doc.roundedRect(margin, y - 3, contentW, 8, 2, 2, "S");
+        doc.roundedRect(margin, top, contentW, row.height, 2, 2, "S");
       } else if (i % 2 === 0) {
         doc.setFillColor(LIGHT_BG);
-        doc.rect(margin, y - 3, contentW, 8, "F");
+        doc.rect(margin, top, contentW, row.height, "F");
       }
 
-      doc.setFontSize(9);
-      doc.setFont("helvetica", "normal");
+      doc.setFontSize(ROW_FONT_SIZE);
       doc.setTextColor(TEXT_DARK);
-      doc.text(row.label, margin + 5, y + 2);
+      doc.setFont("helvetica", "normal");
+      doc.text(row.labelLines, margin + ROW_PAD_X, top + 5, { lineHeightFactor: ROW_LINE_H / (ROW_FONT_SIZE * 0.3528) });
       doc.setFont("helvetica", row.highlight ? "bold" : "normal");
-      doc.text(row.value, margin + contentW - 5, y + 2, { align: "right" });
-      y += 8;
+      doc.text(row.valueLines, margin + contentW - ROW_PAD_X, top + 5, {
+        align: "right",
+        lineHeightFactor: ROW_LINE_H / (ROW_FONT_SIZE * 0.3528),
+      });
+      y += row.height;
     });
 
     y += 5;
@@ -249,11 +354,7 @@ export function generateGenericReport(config: GenericReportConfig) {
 
   // Educational content
   if (config.educationalContent) {
-    if (y > 200) {
-      doc.addPage();
-      addHeader(doc);
-      y = 22;
-    }
+    if (y > 200) newPage();
 
     doc.setFont("helvetica", "bold");
     doc.setFontSize(13);
@@ -269,12 +370,13 @@ export function generateGenericReport(config: GenericReportConfig) {
     doc.setFontSize(9);
     doc.setTextColor(TEXT_DARK);
 
-    const lines = doc.splitTextToSize(config.educationalContent, contentW - 10);
+    const lines: string[] = doc.splitTextToSize(pdfSafe(config.educationalContent), contentW - 10);
     for (const line of lines) {
       if (y > 268) {
-        doc.addPage();
-        addHeader(doc);
-        y = 22;
+        newPage();
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(9);
+        doc.setTextColor(TEXT_DARK);
       }
       doc.text(line, margin + 5, y);
       y += 5;
@@ -284,24 +386,27 @@ export function generateGenericReport(config: GenericReportConfig) {
   // Contact page
   doc.addPage();
   const totalPages = doc.getNumberOfPages();
-
   addContactPage(doc, totalPages, totalPages);
 
-  // Now go back and add footers to all pages (except the last which already has it)
-  // We need to add footers to pages 1 through totalPages-1
-  // Problem: jsPDF renders pages sequentially. The cover page doesn't have a footer yet.
-  // We'll need to handle this differently — add footers as we go, or accept the cover has no footer.
-
-  // For now, let's add footers to all pages using the set approach
-  // Actually, the simplest way: iterate pages and add footer overlay
+  // Footers on every other page (the contact page already has one)
   for (let p = 1; p < totalPages; p++) {
     doc.setPage(p);
     addFooter(doc, p, totalPages);
   }
+  doc.setPage(totalPages);
 
-  doc.save(
-    `kraft-mortgages-${config.calculatorName.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${config.userName.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "report"}.pdf`
-  );
+  return doc;
+}
+
+/** Download file name: no path separators or other characters browsers reject. */
+export function genericReportFileName(config: Pick<GenericReportConfig, "calculatorName" | "userName">): string {
+  const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+  return `kraft-mortgages-${slug(config.calculatorName) || "calculator"}-${slug(config.userName) || "report"}.pdf`;
+}
+
+export function generateGenericReport(config: GenericReportConfig) {
+  const doc = buildGenericReport(config);
+  doc.save(genericReportFileName(config));
 }
 
 export function fmt(n: number): string {

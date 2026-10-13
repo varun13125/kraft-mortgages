@@ -12,6 +12,9 @@ import PdfLeadModal from "@/components/PdfLeadModal";
 import { CalculatorSchema } from "@/components/SEO/CalculatorSchema";
 import { RelatedCalculators } from "@/components/calculators/RelatedCalculators";
 import { cmhcPremium } from "@/lib/calc/cmhc";
+import { useLiveRates } from "@/lib/useLiveRates";
+import { liveRate, purchaseRateProduct, useLiveDefault } from "../_lib/liveRateDefaults";
+import { LiveRateNote } from "../_lib/LiveRateNote";
 
 const faqs = [
   {
@@ -63,8 +66,11 @@ export default function RentVsBuyPage() {
   const [showPdfModal, setShowPdfModal] = useState(false);
   const [homePrice, setHomePrice] = useState(700000);
   const [downPaymentPct, setDownPaymentPct] = useState(20);
-  const [mortgageRate, setMortgageRate] = useState(5.0);
   const [amortization, setAmortization] = useState(25);
+  // Follows today's 5-yr fixed for this purchase (insured / insurable / conventional) until edited (was 5.00%)
+  const { data: liveRates } = useLiveRates();
+  const rateProduct = purchaseRateProduct(downPaymentPct, homePrice, amortization);
+  const [mortgageRate, setMortgageRate, mortgageRateSource] = useLiveDefault(5.0, liveRate(liveRates, rateProduct));
   const [monthlyRent, setMonthlyRent] = useState(2500);
   const [appreciation, setAppreciation] = useState(3.0);
   const [investmentReturn, setInvestmentReturn] = useState(6.0);
@@ -251,7 +257,10 @@ export default function RentVsBuyPage() {
                   <div className="space-y-6">
                     <ValidatedInput label="Home Purchase Price" value={homePrice} onChange={setHomePrice} validation={{ min: 100000, max: 5000000 }} type="currency" />
                     <ValidatedSlider label={`Down Payment (${downPaymentPct}%)`} value={downPaymentPct} onChange={setDownPaymentPct} min={5} max={50} step={1} formatValue={(v) => `${v}% (${formatCurrency(homePrice * v / 100, 0)})`} />
-                    <ValidatedSlider label={`Mortgage Rate (${mortgageRate}%)`} value={mortgageRate} onChange={setMortgageRate} min={0.5} max={12} step={0.1} formatValue={(v) => `${v}%`} />
+                    <div>
+                      <ValidatedSlider label="Mortgage Rate" value={mortgageRate} onChange={setMortgageRate} min={0.5} max={12} step={0.01} formatValue={(v) => `${v.toFixed(2)}%`} />
+                      <LiveRateNote data={liveRates} product={rateProduct} source={mortgageRateSource} />
+                    </div>
                     <ValidatedSlider label={`Amortization (${amortization} years)`} value={amortization} onChange={setAmortization} min={5} max={30} step={5} formatValue={(v) => `${v} years`} />
                     <ValidatedSlider label={`Annual Appreciation (${appreciation}%)`} value={appreciation} onChange={setAppreciation} min={0} max={10} step={0.5} formatValue={(v) => `${v}%`} />
                     <ValidatedSlider label="Purchase Closing Costs" value={closingCostPct} onChange={setClosingCostPct} min={0} max={5} step={0.25} formatValue={(v) => `${v}% (${formatCurrency(homePrice * v / 100, 0)})`} />

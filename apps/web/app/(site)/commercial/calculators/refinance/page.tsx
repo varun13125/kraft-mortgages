@@ -4,7 +4,9 @@ import { motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
 import { Building, DollarSign, TrendingDown, AlertTriangle, CheckCircle, RefreshCw, Calculator } from "lucide-react";
 import Link from "next/link";
-import { payment } from "@/lib/calc/payment";
+import { refinanceBreakEven } from "./refinanceMath";
+import CalculatorPdfButton from "@/components/calculator-report/CalculatorPdfButton";
+import { money, pct } from "@/components/calculator-report/reportFormat";
 
 export default function RefinanceCalculator() {
     // Current Mortgage
@@ -13,7 +15,7 @@ export default function RefinanceCalculator() {
     const [remainingTerm, setRemainingTerm] = useState(36); // months left in the current TERM (drives penalty)
     const [remainingAmortization, setRemainingAmortization] = useState(22); // years left to pay off the loan
 
-    // New Mortgage
+    // New Mortgage — example rate (no public commercial benchmark in the live feed; pricing is deal-specific)
     const [newRate, setNewRate] = useState(4.79);
     const [newAmortization, setNewAmortization] = useState(25);
 
@@ -25,37 +27,31 @@ export default function RefinanceCalculator() {
     const [appraisalFee, setAppraisalFee] = useState(500);
     const [dischargeFee, setDischargeFee] = useState(350);
 
-    // Calculate 3-month interest penalty
-    const threeMonthPenalty = currentBalance * (currentRate / 100 / 12) * 3;
-
-    // Calculate IRD penalty (approximation: uses the new rate as the lender's comparison rate;
-    // lenders actually use their own posted/comparison rate for the remaining term, often higher penalties)
-    const rateDifferential = Math.max(0, currentRate - newRate);
-    const irdPenalty = currentBalance * (rateDifferential / 100 / 12) * remainingTerm;
-
-    // Use higher penalty (typical lender approach)
-    const penalty = Math.max(threeMonthPenalty, irdPenalty);
-    const selectedPenalty = penaltyType === '3month' ? threeMonthPenalty : penaltyType === 'ird' ? irdPenalty : penalty;
-
-    // Total refinance costs
-    const totalCosts = selectedPenalty + legalFees + appraisalFee + dischargeFee;
-
-    // Monthly payment calculations — Canadian semi-annual compounding.
-    // The current payment amortizes the balance over the REMAINING AMORTIZATION (not the remaining
-    // term — amortizing over the term would imply paying the loan off at maturity and overstate savings).
-    const currentMonthlyPayment = currentBalance > 0
-        ? payment({ principal: currentBalance, annualRatePct: currentRate, amortYears: Math.max(1, remainingAmortization), paymentsPerYear: 12 })
-        : 0;
-
-    const newMonthlyPayment = currentBalance > 0
-        ? payment({ principal: currentBalance, annualRatePct: newRate, amortYears: newAmortization, paymentsPerYear: 12 })
-        : 0;
-
-    const monthlySavings = currentMonthlyPayment - newMonthlyPayment;
-    const breakEvenMonths = monthlySavings > 0 ? Math.ceil(totalCosts / monthlySavings) : Infinity;
-    const fiveYearSavings = (monthlySavings * 60) - totalCosts;
-
-    const isWorthRefinancing = breakEvenMonths < remainingTerm && monthlySavings > 0;
+    // Penalty (3-month interest / IRD approximation), costs, payments (semi-annual compounding) and
+    // break-even — shared helper, same rules as the AI refinance break-even tool.
+    const {
+        threeMonthPenalty,
+        irdPenalty,
+        penalty: selectedPenalty,
+        totalCosts,
+        currentMonthlyPayment,
+        newMonthlyPayment,
+        monthlySavings,
+        breakEvenMonths,
+        fiveYearSavings,
+        isWorthRefinancing,
+    } = refinanceBreakEven({
+        currentBalance,
+        currentRate,
+        remainingTermMonths: remainingTerm,
+        remainingAmortizationYears: remainingAmortization,
+        newRate,
+        newAmortizationYears: newAmortization,
+        penaltyType,
+        legalFees,
+        appraisalFee,
+        dischargeFee,
+    });
 
     return (
         <>
@@ -174,6 +170,9 @@ export default function RefinanceCalculator() {
                                             step="0.01"
                                             inputMode="decimal"
                                         />
+                                        <p className="text-xs text-gray-500 mt-1">
+                                            Example rate — commercial pricing is quoted per deal. Enter the rate you&apos;ve been offered.
+                                        </p>
                                     </div>
                                     <div>
                                         <label className="block text-sm text-gray-400 mb-1">Amortization (years)</label>
@@ -206,6 +205,29 @@ export default function RefinanceCalculator() {
                                             </button>
                                         ))}
                                     </div>
+                                </div>
+
+                                {/* Refinance fees (previously fixed, no inputs) */}
+                                <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                    {([
+                                        ['Legal Fees', legalFees, setLegalFees],
+                                        ['Appraisal', appraisalFee, setAppraisalFee],
+                                        ['Discharge Fee', dischargeFee, setDischargeFee],
+                                    ] as const).map(([label, value, setter]) => (
+                                        <div key={label}>
+                                            <label className="block text-sm text-gray-400 mb-1">{label}</label>
+                                            <div className="relative">
+                                                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">$</span>
+                                                <input
+                                                    type="number"
+                                                    value={value}
+                                                    onChange={(e) => setter(Math.max(0, Number(e.target.value)))}
+                                                    className="w-full pl-7 pr-3 py-3 min-h-[48px] bg-white/5 border border-white/20 rounded-lg focus:border-purple-400 transition-colors"
+                                                    inputMode="decimal"
+                                                />
+                                            </div>
+                                        </div>
+                                    ))}
                                 </div>
                             </motion.div>
 
@@ -313,6 +335,45 @@ export default function RefinanceCalculator() {
                             extending the payoff period. The IRD shown uses the new rate as the comparison rate — get a written penalty quote
                             from your lender. Legal, appraisal and discharge fees are typical estimates.
                         </p>
+
+                        <CalculatorPdfButton
+                            source="calculator-pdf-commercial-refinance"
+                            title="Your Commercial Refinance Analysis"
+                            subtitle="Get a personalized PDF with your penalty, savings and break-even analysis"
+                            calculatorName="Commercial Refinance Calculator"
+                            mortgageType="Commercial Refinance"
+                            amount={currentBalance}
+                            getSections={() => [
+                                {
+                                    title: "Your Inputs",
+                                    rows: [
+                                        { label: "Outstanding Balance", value: money(currentBalance) },
+                                        { label: "Current Interest Rate", value: pct(currentRate) },
+                                        { label: "Remaining Term", value: `${remainingTerm} months` },
+                                        { label: "Remaining Amortization", value: `${remainingAmortization} years` },
+                                        { label: "New Interest Rate", value: pct(newRate) },
+                                        { label: "New Amortization", value: `${newAmortization} years` },
+                                        { label: "Penalty Method", value: penaltyType === '3month' ? "3 months' interest" : penaltyType === 'ird' ? "IRD (approximation)" : "Higher of 3-month / IRD" },
+                                        { label: "Legal + Appraisal + Discharge Fees", value: money(legalFees + appraisalFee + dischargeFee) },
+                                    ],
+                                },
+                                {
+                                    title: "Your Results",
+                                    rows: [
+                                        { label: "3 Months' Interest", value: money(threeMonthPenalty) },
+                                        { label: "IRD (approximation)", value: money(irdPenalty) },
+                                        { label: "Penalty Used", value: money(selectedPenalty) },
+                                        { label: "Total Refinance Costs", value: money(totalCosts), highlight: true },
+                                        { label: "Current Monthly Payment", value: money(currentMonthlyPayment) },
+                                        { label: "New Monthly Payment", value: money(newMonthlyPayment) },
+                                        { label: "Monthly Savings", value: money(monthlySavings), highlight: true },
+                                        { label: "Break-Even", value: breakEvenMonths === Infinity ? "N/A (no monthly savings)" : `${breakEvenMonths} months`, highlight: true },
+                                        { label: "5-Year Net Savings", value: money(fiveYearSavings) },
+                                    ],
+                                },
+                            ]}
+                            educationalContent="A refinance pays off when the monthly savings recover the penalty and fees before your current term would have ended. Payments use Canadian semi-annual compounding. The IRD shown uses the new rate as the comparison rate; lenders use their own comparison rate, so get a written penalty quote. A longer new amortization lowers the payment partly by extending the payoff period. Estimates only; not a commitment to lend."
+                        />
 
                         {/* CTA */}
                         <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">

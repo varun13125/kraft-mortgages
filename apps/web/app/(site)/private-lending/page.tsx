@@ -2,6 +2,8 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import Navigation from "@/components/Navigation";
+import { useLiveRates } from "@/lib/useLiveRates";
+import { liveHeloc, liveInsured5yr, livePrivateSecond, ratesAsOf } from "@/components/calculators/liveRateDefaults";
 import { 
   Shield, 
   Calculator, 
@@ -19,34 +21,41 @@ import {
 } from "lucide-react";
 
 export default function PrivateLending() {
+  // Rates come from the live feed with an "as of" date; until it answers the copy is non-numeric.
+  const { data: liveRates } = useLiveRates();
+  const privateRate = livePrivateSecond(liveRates);
+  const bankRate = liveInsured5yr(liveRates);
+  const helocRate = liveHeloc(liveRates);
+  const asOf = ratesAsOf(liveRates);
+
   const scenarios = [
     {
       title: "Credit Challenges",
       description: "Previous bankruptcy, consumer proposals, or credit issues",
       features: ["Recent credit events", "Self-employed income", "Non-traditional employment", "Asset-based approval"],
       icon: CreditCard,
-      typical: "8% - 12%"
+      typical: "Priced per deal"
     },
     {
       title: "Speed Requirements",
       description: "Time-sensitive transactions requiring fast approvals",
       features: ["Same-day approvals", "Quick closings", "Bridge financing", "Minimal documentation"],
       icon: Zap,
-      typical: "9% - 15%"
+      typical: "Priced per deal"
     },
     {
       title: "Unique Properties", 
       description: "Properties that don't fit traditional lending criteria",
       features: ["Rural properties", "Unique constructions", "Mixed-use buildings", "Special purpose properties"],
       icon: Target,
-      typical: "10% - 14%"
+      typical: "Priced per deal"
     },
     {
       title: "Alternative Income",
       description: "Non-traditional income sources and documentation",
       features: ["Cash businesses", "Foreign income", "Investment income", "Bank statement programs"],
       icon: Users,
-      typical: "8% - 13%"
+      typical: "Priced per deal"
     }
   ];
 
@@ -84,7 +93,7 @@ export default function PrivateLending() {
   const comparison = {
     traditional: {
       title: "Traditional Lending",
-      rates: "3.5% - 6.5%",
+      rates: bankRate !== undefined ? `From ${bankRate.toFixed(2)}%` : "Lowest rates",
       timeline: "30-45 days",
       docs: "Extensive",
       credit: "Excellent required",
@@ -93,7 +102,7 @@ export default function PrivateLending() {
     },
     equity: {
       title: "Equity Lending", 
-      rates: "Prime + 0.50-2.00%",
+      rates: helocRate !== undefined ? `HELOC from ${helocRate.toFixed(2)}%` : "Near-prime rates",
       timeline: "1-2 weeks",
       docs: "Standard",
       credit: "Good required",
@@ -102,7 +111,7 @@ export default function PrivateLending() {
     },
     private: {
       title: "Private Lending",
-      rates: "8% - 15%+",
+      rates: privateRate !== undefined ? `From ${privateRate.toFixed(2)}% + fees` : "Higher, plus fees",
       timeline: "24-48 hours",
       docs: "Minimal",
       credit: "Flexible",
@@ -168,7 +177,15 @@ export default function PrivateLending() {
                   <AlertTriangle className="w-5 h-5 text-rose-400" />
                   <div className="text-lg font-semibold text-rose-400">Higher Cost • Higher Approval</div>
                 </div>
-                <div className="text-sm text-gray-400">8-15%+ rates • 24-48 hour approvals • 95%+ approval rates</div>
+                <div className="text-sm text-gray-400">
+                  {privateRate !== undefined ? `Private rates from ${privateRate.toFixed(2)}% + lender fees` : "Higher rates + lender fees"} • 24-48 hour approvals • 95%+ approval rates
+                </div>
+                {asOf && (
+                  <div className="text-xs text-gray-500 mt-1">
+                    Lowest advertised rate as of {asOf}; deal pricing depends on equity, credit and exit plan.{" "}
+                    <Link href="/rates" className="underline hover:text-gray-300">See today&apos;s rates</Link>
+                  </div>
+                )}
               </div>
               
               <div className="flex flex-wrap gap-4 justify-center">
@@ -205,6 +222,12 @@ export default function PrivateLending() {
               </h2>
               <p className="text-lg text-gray-400">
                 Understanding your options across the lending spectrum
+              </p>
+              <p className="text-xs text-gray-500 mt-2">
+                {asOf
+                  ? `Lowest advertised rates in our live feed as of ${asOf} (bank: insured 5-year fixed; equity: HELOC; private: 2nd mortgage). `
+                  : ""}
+                <Link href="/rates" className="underline hover:text-gray-300">All current rates</Link>
               </p>
             </motion.div>
 

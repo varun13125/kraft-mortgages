@@ -1,4 +1,7 @@
-import jsPDF from "jspdf";
+// Named export: resolves to the constructor in both the browser ES build and the Node CJS build
+// (a default import is the CJS module object under plain Node ESM).
+import { jsPDF } from "jspdf";
+import { pdfSafe } from "./generateGenericReport";
 
 const NAVY = "#142341";
 const GOLD = "#C8A962";
@@ -7,22 +10,31 @@ const LIGHT_BG = "#F8F9FC";
 const TEXT_DARK = "#2D3748";
 const TEXT_GRAY = "#718096";
 
-interface Results {
+export interface AvsBReportResults {
   aMonthly: number;
   bMonthly: number;
   aInterest: number;
   bInterest: number;
+  /** A-lender interest + extra tax on declared income (before any investment deduction). */
   aTotalCost: number;
+  /** B-lender interest + lender fee (before any investment deduction). */
   bTotalCost: number;
   bFeeAmount: number;
   additionalTax: number;
   netSavings: number;
   bWins: boolean;
+  /** B-lender interest deduction (investment property). */
   investmentTaxSavings: number;
   monthlyDiff: number;
+  /** Optional: A total net of A's own investment-interest deduction. When present it is the A total shown. */
+  aNetCost?: number;
+  /** Optional: B total net of B's investment-interest deduction. When present it is the B total shown. */
+  bNetCost?: number;
+  /** Optional: years of extra declared income the tax figure covers (defaults to the term). */
+  taxYears?: number;
 }
 
-interface Inputs {
+export interface AvsBReportInputs {
   mortgageAmount: number;
   propertyValue: number;
   aRate: number;
@@ -34,6 +46,22 @@ interface Inputs {
   effectiveTaxRate: number;
   isInvestment: boolean;
   bFee: number;
+}
+
+/**
+ * Totals the report shows. Backward compatible: callers that only pass aTotalCost/bTotalCost get the
+ * old behaviour (B netted by its deduction inside the report); callers that pass aNetCost/bNetCost get
+ * exactly the page's netted totals, including A's investment deduction.
+ */
+export function avsBTotals(results: AvsBReportResults, inputs: Pick<AvsBReportInputs, "isInvestment" | "term">) {
+  const aTotal = results.aNetCost ?? results.aTotalCost;
+  const bTotal = results.bNetCost ?? (results.bTotalCost - (inputs.isInvestment ? results.investmentTaxSavings : 0));
+  const aDeduction = results.aNetCost !== undefined ? Math.max(0, results.aTotalCost - results.aNetCost) : 0;
+  const bDeduction = results.bNetCost !== undefined
+    ? Math.max(0, results.bTotalCost - results.bNetCost)
+    : inputs.isInvestment ? Math.max(0, results.investmentTaxSavings) : 0;
+  const taxYears = results.taxYears && results.taxYears > 0 ? results.taxYears : inputs.term;
+  return { aTotal, bTotal, aDeduction, bDeduction, taxYears };
 }
 
 function fmt(n: number): string {
@@ -65,15 +93,17 @@ function addHeader(doc: jsPDF) {
   doc.rect(0, 12, 210, 1.5, "F");
 }
 
-export async function generateCalculatorReport({
+/** Builds the A-vs-B report document (no download). Safe to call outside the browser. */
+export function buildCalculatorReport({
   userName,
   results,
   inputs,
 }: {
   userName: string;
-  results: Results;
-  inputs: Inputs;
-}) {
+  results: AvsBReportResults;
+  inputs: AvsBReportInputs;
+}): jsPDF {
+  const totals = avsBTotals(results, inputs);
   const doc = new jsPDF("p", "mm", "a4");
   const pageW = 210;
   const margin = 20;
@@ -125,7 +155,7 @@ export async function generateCalculatorReport({
   doc.setFont("helvetica", "normal");
   doc.setFontSize(12);
   doc.setTextColor(TEXT_DARK);
-  doc.text(`Prepared for: ${userName}`, 105, 160, { align: "center" });
+  doc.text(`Prepared for: ${pdfSafe(userName)}`, 105, 160, { align: "center", maxWidth: contentW });
 
   const today = new Date().toLocaleDateString("en-CA", {
     year: "numeric",
@@ -200,6 +230,7 @@ export async function generateCalculatorReport({
     `Term: ${inputs.term} years`,
     `Amortization: ${inputs.amortization} years`,
     `Additional Income: ${fmt(inputs.additionalIncome)}/yr`,
+    `Years of Extra Income Taxed: ${totals.taxYears}`,
     `Tax Rate: ${inputs.effectiveTaxRate.toFixed(1)}%`,
     `B-Lender Fee: ${inputs.bFee}%`,
     inputs.isInvestment ? "Investment Property: Yes" : "Investment Property: No",
@@ -208,7 +239,7 @@ export async function generateCalculatorReport({
   inputItems.forEach((item, i) => {
     const col = i < 6 ? 0 : 1;
     const row = col === 0 ? i : i - 6;
-    doc.text(item, margin + 5 + col * 85, y + 14 + row * 4);
+    doc.text(pdfSafe(item), margin + 5 + col * 85, y + 14 + row * 4);
   });
   y += 44;
 
@@ -232,15 +263,16 @@ export async function generateCalculatorReport({
   const rows = [
     { label: "Monthly Payment", a: fmt(results.aMonthly), b: fmt(results.bMonthly) },
     { label: `Total Interest (${inputs.term}yr)`, a: fmt(results.aInterest), b: fmt(results.bInterest) },
-    { label: "Extra Tax on Declared Income", a: fmt(results.additionalTax), b: "—" },
+    { label: `Extra Tax on Declared Income (${totals.taxYears} yr${totals.taxYears === 1 ? "" : "s"})`, a: fmt(results.additionalTax), b: "—" },
     { label: `B-Lender Fee (${inputs.bFee}%)`, a: "N/A", b: fmt(results.bFeeAmount) },
   ];
 
-  if (inputs.isInvestment && results.investmentTaxSavings > 0) {
+  if (inputs.isInvestment && (totals.aDeduction > 0 || totals.bDeduction > 0)) {
+    // Investment-property interest is deductible with either lender
     rows.push({
-      label: "Investment Tax Savings",
-      a: "N/A",
-      b: `-${fmt(results.investmentTaxSavings)}`,
+      label: "Investment Interest Tax Savings",
+      a: totals.aDeduction > 0 ? `-${fmt(totals.aDeduction)}` : "N/A",
+      b: totals.bDeduction > 0 ? `-${fmt(totals.bDeduction)}` : "N/A",
     });
   }
 
@@ -270,14 +302,9 @@ export async function generateCalculatorReport({
   doc.setTextColor(NAVY);
   doc.text("Total Cost Over Term", margin + 5, y + 8);
   doc.setTextColor("#1E40AF");
-  doc.text(fmt(results.aTotalCost), margin + 80, y + 8, { align: "center" });
+  doc.text(fmt(totals.aTotal), margin + 80, y + 8, { align: "center" });
   doc.setTextColor("#B45309");
-  doc.text(
-    fmt(results.bTotalCost - (inputs.isInvestment ? results.investmentTaxSavings : 0)),
-    margin + 140,
-    y + 8,
-    { align: "center" }
-  );
+  doc.text(fmt(totals.bTotal), margin + 140, y + 8, { align: "center" });
   y += 18;
 
   // Winner callout
@@ -357,7 +384,7 @@ export async function generateCalculatorReport({
   const bDocs = [
     "12 months business bank statements",
     "Beacon score 500+ (some accept lower)",
-    "No GDS/TDS limits (most lenders)",
+    "Higher GDS/TDS limits (often up to ~50%)",
     "Property appraisal",
     "No tax returns or NOAs required",
     "Lender fee (0.5–2% of mortgage)",
@@ -530,8 +557,19 @@ export async function generateCalculatorReport({
 
   addFooter(doc, 4, totalPages);
 
-  // Save
-  doc.save(
-    `kraft-mortgages-report-${userName.replace(/\s+/g, "-").toLowerCase()}.pdf`
-  );
+  return doc;
+}
+
+export function avsBReportFileName(userName: string): string {
+  const slug = userName.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+  return `kraft-mortgages-report-${slug || "self-employed-a-vs-b"}.pdf`;
+}
+
+export async function generateCalculatorReport(args: {
+  userName: string;
+  results: AvsBReportResults;
+  inputs: AvsBReportInputs;
+}) {
+  const doc = buildCalculatorReport(args);
+  doc.save(avsBReportFileName(args.userName));
 }

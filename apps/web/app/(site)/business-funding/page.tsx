@@ -4,6 +4,8 @@ import React, { useState, FormEvent } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Navigation from "@/components/Navigation";
 import { BorderRotate } from "@/components/ui/animated-gradient-border";
+import { ConsentCheckboxes } from "@/components/ConsentCheckboxes";
+import { consentFields } from "@/lib/compliance/consent";
 import { 
   Briefcase, 
   TrendingUp, 
@@ -89,6 +91,9 @@ export default function BusinessFundingPage() {
 
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
+  // CASL marketing opt-in (BUG-005): optional, unticked by default. No call box:
+  // /api/business-funding never places an automated call.
+  const [marketingConsent, setMarketingConsent] = useState(false);
 
   const handleInputChange = (field: keyof FormState, value: string) => {
     setForm(prev => ({ ...prev, [field]: value }));
@@ -103,7 +108,7 @@ export default function BusinessFundingPage() {
       const response = await fetch("/api/business-funding", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form)
+        body: JSON.stringify({ ...form, ...consentFields(false, marketingConsent) })
       });
 
       const result = await response.json();
@@ -130,7 +135,7 @@ export default function BusinessFundingPage() {
   return (
     <>
       <Navigation />
-      <main className="min-h-screen mt-16 text-gray-100 bg-transparent">
+      <main id="main-content" className="min-h-screen mt-16 text-gray-100 bg-transparent">
         {/* Hero Header */}
         <section className="py-20 px-4 relative z-10">
           <div className="max-w-6xl mx-auto text-center">
@@ -484,6 +489,12 @@ export default function BusinessFundingPage() {
                             <div className="text-sm text-red-200">{errorMessage}</div>
                           </div>
                         )}
+
+                        {/* Optional marketing consent (BUG-005) */}
+                        <ConsentCheckboxes
+                          idPrefix="business-funding"
+                          marketing={{ checked: marketingConsent, onChange: setMarketingConsent }}
+                        />
 
                         {/* Submit Button */}
                         <div className="pt-2">

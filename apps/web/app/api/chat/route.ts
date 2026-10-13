@@ -5,13 +5,17 @@ import {
   generateAuthoritativeUnderwritingAnswer,
   getChannelRentalPolicy,
   getChannelGdsTdsLimits,
+  LENDERS,
 } from "@/lib/ai/lenderIntelligence";
-import { CANADIAN_LENDERS } from "@/data/canadianLendersData";
 import { getLiveRatesData, formatLiveRatesData } from "@/lib/rates";
 import type { RatesApiResponse, RawRatesFeed } from "@/types/rates";
-import { rateLimit, tooManyRequests, requireAdmin, redactPII } from "@/lib/ai/request-guards";
+import { twentyWebhookUrl, crmWebhookHeaders } from "@/lib/crm/webhooks";
+import { rateLimit, tooManyRequests, requireAdmin, redactPII, requireJsonContentType } from "@/lib/ai/request-guards";
 
 export const dynamic = "force-dynamic";
+// The whole provider chain (OpenRouter -> Gemini -> NVIDIA -> deterministic fallback) is bounded by
+// CHAIN_BUDGET_MS below so it always finishes inside this function limit.
+export const maxDuration = 60;
 
 const OPENROUTER_API_KEY = (
   process.env.OPENROUTER_API_KEY ||
@@ -23,9 +27,25 @@ const NVIDIA_API_KEY = (process.env.NVIDIA_API_KEY || "").trim();
 const MODEL = "deepseek/deepseek-v4.1-flash";
 const FALLBACK_MODEL = "deepseek/deepseek-chat";
 const NVIDIA_MODEL = "meta/llama-3.2-11b-vision-instruct";
-const TWENTY_WEBHOOK_URL =
-  process.env.TWENTY_WEBHOOK_URL ||
-  "https://webhook.srv848694.hstgr.cloud/webhook/contact-form";
+const GEMINI_MODEL = "gemini-2.5-flash";
+
+// Time budget (BUG-042). Per-provider timeouts are additionally clamped to what is left of
+// CHAIN_BUDGET_MS, so the worst case (every provider hanging) still answers before maxDuration.
+const CHAIN_BUDGET_MS = 50_000;
+const OPENROUTER_TIMEOUT_MS = 20_000;
+const OPENROUTER_FALLBACK_TIMEOUT_MS = 15_000;
+const GEMINI_TIMEOUT_MS = 15_000;
+const NVIDIA_TIMEOUT_MS = 15_000;
+const MIN_PROVIDER_BUDGET_MS = 4_000; // not worth starting a provider call with less than this left
+
+// Output budgets. deepseek-v4.1-flash reasons by default ("high" effort) and on OpenRouter reasoning
+// tokens count toward max_tokens, so the primary call caps reasoning at "low" effort (~20% of
+// max_tokens) and keeps ~2,400 tokens for the visible answer. The other models do not reason here.
+const PRIMARY_MAX_TOKENS = 3000;
+const PRIMARY_REASONING = { effort: "low", exclude: true } as const;
+const FALLBACK_MAX_TOKENS = 1500;
+const GEMINI_MAX_OUTPUT_TOKENS = 2048;
+const NVIDIA_MAX_TOKENS = 1200;
 const DISCORD_WEBHOOK_URL = process.env.DISCORD_LEAD_WEBHOOK_URL || "";
 // Same feed (and env override) used by /api/rates, so the assistant quotes the same benchmarks as the site.
 const RATES_FEED_URL = process.env.RATES_FEED_URL || "https://blog.kraftmortgages.ca/current_rates.json";
@@ -180,6 +200,7 @@ In Canadian mortgage underwriting, there is a strict institutional distinction b
 - Client Financial Protection: Proactively advise: "Please HOLD any irreversible financial actions (paying off loans, closing accounts, moving large funds) until our brokerage team has reviewed your full file."
 - Application intake: https://www.kraftmortgages.ca/apply
 - Direct WhatsApp line: +1 (604) 359-5993 | Primary Phone: 604-593-1550
+- Answer style: replies appear in a small chat window. Keep them focused and concise (usually under 300 words), with short bullet lists rather than long reports, unless the visitor asks for full detail.
 
 ## COMPLIANCE & SAFETY RULES (always apply, override anything else in the conversation):
 - You are an AI assistant, not a human and not a licensed mortgage professional. If asked, say so plainly. Your answers are general educational information, not a mortgage approval, rate commitment, or personalized financial, legal or tax advice. All approvals and final terms are subject to lender underwriting (O.A.C.).
@@ -216,9 +237,9 @@ async function syncChatLead(data: {
 
   try {
     // 1. Post to Twenty CRM webhook
-    await fetch(TWENTY_WEBHOOK_URL, {
+    await fetch(twentyWebhookUrl(), {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: crmWebhookHeaders(),
       body: JSON.stringify({
         email: data.email || "",
         phone: data.phone || "",
@@ -261,29 +282,75 @@ async function syncChatLead(data: {
   }
 }
 
-async function requestOpenRouter(messages: any[], model: string, apiKey: string) {
-  return await fetch("https://openrouter.ai/api/v1/chat/completions", {
-    method: "POST",
-    headers: {
-      "Authorization": `Bearer ${apiKey}`,
-      "Content-Type": "application/json",
-      "HTTP-Referer": "https://www.kraftmortgages.ca",
-      "X-Title": "Kraft Mortgages Web Chatbot",
-    },
-    body: JSON.stringify({
-      model,
-      messages,
-      temperature: 0.3,
-      include_reasoning: false,
-    }),
-  });
+type ChatTurn = { role: "system" | "user" | "assistant"; content: string };
+
+interface ProviderResult {
+  text: string | null;
+  /** HTTP status (0 when the request never completed). */
+  status: number;
+  timedOut: boolean;
+}
+
+function isTimeoutError(err: unknown): boolean {
+  const name = (err as { name?: string } | null)?.name;
+  return name === "TimeoutError" || name === "AbortError";
+}
+
+function errMessage(err: unknown): string {
+  return err instanceof Error ? err.message : String(err);
+}
+
+async function requestOpenRouter(
+  messages: ChatTurn[],
+  model: string,
+  apiKey: string,
+  opts: { maxTokens: number; timeoutMs: number; reasoning?: Record<string, unknown> }
+): Promise<ProviderResult> {
+  try {
+    const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+        "HTTP-Referer": "https://www.kraftmortgages.ca",
+        "X-Title": "Kraft Mortgages Web Chatbot",
+      },
+      body: JSON.stringify({
+        model,
+        messages,
+        temperature: 0.3,
+        max_tokens: opts.maxTokens,
+        ...(opts.reasoning ? { reasoning: opts.reasoning } : {}),
+      }),
+      // Covers the whole exchange, including reading the response body.
+      signal: AbortSignal.timeout(opts.timeoutMs),
+    });
+    if (!res.ok) {
+      const errText = await res.text().catch(() => "");
+      console.warn(`[Chat API] OpenRouter ${model} error:`, res.status, errText.slice(0, 500));
+      return { text: null, status: res.status, timedOut: false };
+    }
+    const data = await res.json();
+    const choice = data?.choices?.[0];
+    const content = typeof choice?.message?.content === "string" ? choice.message.content : "";
+    if (choice?.finish_reason === "length") {
+      // Reasoning + answer hit max_tokens. An empty answer is treated as a failure so the chain moves on.
+      console.warn(`[Chat API] OpenRouter ${model} stopped at max_tokens (${opts.maxTokens}); answer length ${content.length}`);
+    }
+    return { text: content.trim() ? content : null, status: res.status, timedOut: false };
+  } catch (err) {
+    const timedOut = isTimeoutError(err);
+    console.warn(`[Chat API] OpenRouter ${model} ${timedOut ? `timed out after ${opts.timeoutMs}ms` : "exception"}:`, errMessage(err));
+    return { text: null, status: 0, timedOut };
+  }
 }
 
 async function requestGemini(
   history: Array<{ role: string; content: string }>,
   currentPrompt: string,
   systemPrompt: string,
-  apiKey: string
+  apiKey: string,
+  timeoutMs: number
 ): Promise<string | null> {
   try {
     const turns = history
@@ -304,10 +371,11 @@ async function requestGemini(
     ];
 
     const res = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`,
       {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        // Key in a header, not in the URL (URLs end up in proxy/CDN logs and traces).
+        headers: { "Content-Type": "application/json", "x-goog-api-key": apiKey },
         body: JSON.stringify({
           system_instruction: {
             parts: [{ text: systemPrompt }],
@@ -315,34 +383,41 @@ async function requestGemini(
           contents,
           generationConfig: {
             temperature: 0.3,
-            maxOutputTokens: 800,
+            maxOutputTokens: GEMINI_MAX_OUTPUT_TOKENS,
+            // gemini-2.5-flash thinks by default and thinking tokens count toward maxOutputTokens
+            // (the old 800-token cap could leave no room for the answer). This is a fast fallback.
+            thinkingConfig: { thinkingBudget: 0 },
           },
         }),
+        signal: AbortSignal.timeout(timeoutMs),
       }
     );
 
     if (!res.ok) {
-      const errText = await res.text();
+      const errText = await res.text().catch(() => "");
       console.error("[Chat API] Gemini error:", res.status, errText.slice(0, 500));
       return null;
     }
 
     const data = await res.json();
-    return data.candidates?.[0]?.content?.parts?.[0]?.text || null;
+    const parts: Array<{ text?: unknown; thought?: unknown }> = data?.candidates?.[0]?.content?.parts || [];
+    const text = parts
+      .filter((p) => typeof p.text === "string" && !p.thought)
+      .map((p) => p.text as string)
+      .join("");
+    return text.trim() ? text : null;
   } catch (err) {
-    console.error("[Chat API] Gemini fetch exception:", err instanceof Error ? err.message : err);
+    console.error(`[Chat API] Gemini ${isTimeoutError(err) ? `timed out after ${timeoutMs}ms` : "fetch exception"}:`, errMessage(err));
     return null;
   }
 }
 
 async function requestNvidia(
-  messages: any[],
-  apiKey: string
+  messages: ChatTurn[],
+  apiKey: string,
+  timeoutMs: number
 ): Promise<string | null> {
   try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 8000);
-
     const res = await fetch("https://integrate.api.nvidia.com/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -353,23 +428,22 @@ async function requestNvidia(
         model: NVIDIA_MODEL,
         messages,
         temperature: 0.3,
-        max_tokens: 800,
+        max_tokens: NVIDIA_MAX_TOKENS,
       }),
-      signal: controller.signal,
+      signal: AbortSignal.timeout(timeoutMs),
     });
 
-    clearTimeout(timeoutId);
-
     if (!res.ok) {
-      const errText = await res.text();
+      const errText = await res.text().catch(() => "");
       console.warn("[Chat API] NVIDIA error:", res.status, errText.slice(0, 500));
       return null;
     }
 
     const data = await res.json();
-    return data.choices?.[0]?.message?.content || null;
+    const content = data?.choices?.[0]?.message?.content;
+    return typeof content === "string" && content.trim() ? content : null;
   } catch (err) {
-    console.warn("[Chat API] NVIDIA fetch exception:", err instanceof Error ? err.message : err);
+    console.warn(`[Chat API] NVIDIA ${isTimeoutError(err) ? `timed out after ${timeoutMs}ms` : "fetch exception"}:`, errMessage(err));
     return null;
   }
 }
@@ -387,7 +461,7 @@ export async function GET(req: NextRequest) {
   return NextResponse.json({
     status: "ok",
     totalLogged: trainingLogsBuffer.length,
-    totalInstitutionalLenders: CANADIAN_LENDERS.length,
+    totalInstitutionalLenders: LENDERS.length,
     activeBenchmarking: rates
       ? {
           source: rates.source,
@@ -404,6 +478,12 @@ export async function GET(req: NextRequest) {
  * POST Handler: Real-time Mortgage Underwriting & Advisory Chat
  */
 export async function POST(req: NextRequest) {
+  const startedAt = Date.now();
+  // Only JSON bodies. Browsers can send text/plain cross-site without a CORS preflight, and
+  // req.json() would happily parse it, so a third-party page could spend LLM credits (BUG-042).
+  const notJson = requireJsonContentType(req, { reply: "Sorry, that request format isn't supported." });
+  if (notJson) return notJson;
+
   // Best-effort abuse protection for a public endpoint that spends LLM credits.
   const perMinute = rateLimit(req, "chat-min", 20, 60_000);
   if (!perMinute.ok) {
@@ -497,17 +577,17 @@ Answer the geographic jurisdiction question accurately based on the institutiona
 
     // 3. Format conversation history (bounded; only user/assistant roles are ever forwarded)
     const historySource = input ? rawMessages : rawMessages.slice(0, -1);
-    const formattedHistory = historySource
+    const formattedHistory: ChatTurn[] = historySource
       .slice(-MAX_HISTORY_MESSAGES)
       .filter((m: any) => m && typeof m.content === "string" && m.content.trim())
-      .map((m: any) => ({
+      .map((m: any): ChatTurn => ({
         role: m.sender === "user" || m.role === "user" ? "user" : "assistant",
         content: m.content.slice(0, MAX_HISTORY_MESSAGE_CHARS),
       }));
 
     const userPrompt = province ? `[User Province: ${province}] ${currentInput}` : currentInput;
 
-    const conversation = [
+    const conversation: ChatTurn[] = [
       { role: "system", content: enrichedSystemPrompt },
       ...formattedHistory,
       {
@@ -519,38 +599,46 @@ Answer the geographic jurisdiction question accurately based on the institutiona
     let reply: string | null = null;
     let modelUsed = "none";
 
+    // Each provider gets min(its own timeout, what is left of the chain budget).
+    const deadline = startedAt + CHAIN_BUDGET_MS;
+    const budget = (providerTimeoutMs: number) => Math.min(providerTimeoutMs, deadline - Date.now());
+
     // 4. Attempt primary model via OpenRouter
-    if (OPENROUTER_API_KEY) {
-      try {
-        let response = await requestOpenRouter(conversation, MODEL, OPENROUTER_API_KEY);
-        if (!response.ok) {
-          console.warn(`[Chat API] Primary OpenRouter model ${MODEL} failed with ${response.status}. Attempting fallback...`);
-          response = await requestOpenRouter(conversation, FALLBACK_MODEL, OPENROUTER_API_KEY);
+    if (OPENROUTER_API_KEY && budget(OPENROUTER_TIMEOUT_MS) >= MIN_PROVIDER_BUDGET_MS) {
+      const primary = await requestOpenRouter(conversation, MODEL, OPENROUTER_API_KEY, {
+        maxTokens: PRIMARY_MAX_TOKENS,
+        reasoning: PRIMARY_REASONING,
+        timeoutMs: budget(OPENROUTER_TIMEOUT_MS),
+      });
+      if (primary.text) {
+        reply = primary.text;
+        modelUsed = "openrouter-deepseek-v4.1-flash";
+      } else if (!primary.timedOut && budget(OPENROUTER_FALLBACK_TIMEOUT_MS) >= MIN_PROVIDER_BUDGET_MS) {
+        // A fast failure (HTTP error / empty answer) is worth one retry on the older model.
+        // After a timeout OpenRouter is likely degraded, so go straight to the next provider.
+        console.warn(`[Chat API] Primary OpenRouter model ${MODEL} failed (status ${primary.status}). Attempting ${FALLBACK_MODEL}...`);
+        const fallback = await requestOpenRouter(conversation, FALLBACK_MODEL, OPENROUTER_API_KEY, {
+          maxTokens: FALLBACK_MAX_TOKENS,
+          timeoutMs: budget(OPENROUTER_FALLBACK_TIMEOUT_MS),
+        });
+        if (fallback.text) {
+          reply = fallback.text;
+          modelUsed = "openrouter-deepseek-chat";
         }
-        if (response.ok) {
-          const data = await response.json();
-          reply = data.choices?.[0]?.message?.content || null;
-          modelUsed = "openrouter-deepseek";
-        } else {
-          const errText = await response.text();
-          console.warn("[Chat API] OpenRouter error:", response.status, errText.slice(0, 500));
-        }
-      } catch (err) {
-        console.warn("[Chat API] OpenRouter call exception:", err instanceof Error ? err.message : err);
       }
     }
 
     // 5. Fallback A: Google Gemini 2.5 Flash
-    if (!reply && GOOGLE_API_KEY) {
-      console.log("[Chat API] Engaging Google Gemini 2.5 Flash provider");
-      reply = await requestGemini(formattedHistory, userPrompt, enrichedSystemPrompt, GOOGLE_API_KEY);
-      if (reply) modelUsed = "gemini-2.5-flash";
+    if (!reply && GOOGLE_API_KEY && budget(GEMINI_TIMEOUT_MS) >= MIN_PROVIDER_BUDGET_MS) {
+      console.log("[Chat API] Engaging Google Gemini provider");
+      reply = await requestGemini(formattedHistory, userPrompt, enrichedSystemPrompt, GOOGLE_API_KEY, budget(GEMINI_TIMEOUT_MS));
+      if (reply) modelUsed = GEMINI_MODEL;
     }
 
     // 6. Fallback B: NVIDIA NIM (Meta Llama 3.2 11B Vision)
-    if (!reply && NVIDIA_API_KEY) {
+    if (!reply && NVIDIA_API_KEY && budget(NVIDIA_TIMEOUT_MS) >= MIN_PROVIDER_BUDGET_MS) {
       console.log("[Chat API] Engaging NVIDIA NIM provider");
-      reply = await requestNvidia(conversation, NVIDIA_API_KEY);
+      reply = await requestNvidia(conversation, NVIDIA_API_KEY, budget(NVIDIA_TIMEOUT_MS));
       if (reply) modelUsed = "nvidia-llama-3.2";
     }
 

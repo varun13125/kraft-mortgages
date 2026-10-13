@@ -11,6 +11,9 @@ import { formatCurrency, formatPercentage } from "@/lib/utils/validation";
 import PdfLeadModal from "@/components/PdfLeadModal";
 import { CalculatorSchema } from "@/components/SEO/CalculatorSchema";
 import { RelatedCalculators } from "@/components/calculators/RelatedCalculators";
+import { useLiveRates } from "@/lib/useLiveRates";
+import { liveRate, useLiveDefault } from "../_lib/liveRateDefaults";
+import { LiveRateNote } from "../_lib/LiveRateNote";
 
 function ThreeMonthsInterest(balance: number, annualRate: number): number {
   return (balance * annualRate) / 12 * 3;
@@ -82,11 +85,14 @@ export default function MortgagePenaltyPage() {
   const [contractRate, setContractRate] = useState(5.49);
   const [remainingMonths, setRemainingMonths] = useState(24);
   const [mortgageType, setMortgageType] = useState<"fixed" | "variable">("fixed");
+  // Lender-specific posted rate: not in the live feed, so it stays an illustrative default.
   const [currentPostedRate, setCurrentPostedRate] = useState(4.49);
   // Big-bank IRD: comparison rate = posted rate for remaining term − discount received at signing
   const [originalDiscount, setOriginalDiscount] = useState(0);
-  // Rate available if you break and re-finance (for the break-even estimate)
-  const [newRate, setNewRate] = useState(4.39);
+  // Rate available if you break and re-finance (for the break-even estimate): breaking mid-term means a
+  // refinance, which is uninsured → today's conventional 5-yr fixed from the live feed.
+  const { data: liveRates } = useLiveRates();
+  const [newRate, setNewRate, newRateSource] = useLiveDefault(4.39, liveRate(liveRates, "fixed5Conventional"));
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
   const comparisonRate = Math.max(0, currentPostedRate - originalDiscount);
@@ -272,15 +278,18 @@ export default function MortgagePenaltyPage() {
                         </div>
                       </motion.div>
                     )}
-                    <ValidatedSlider
-                      label="New Rate Available to You (for break-even)"
-                      value={newRate}
-                      onChange={setNewRate}
-                      min={1.0}
-                      max={12.0}
-                      step={0.01}
-                      formatValue={(v) => `${v.toFixed(2)}%`}
-                    />
+                    <div>
+                      <ValidatedSlider
+                        label="New Rate Available to You (for break-even)"
+                        value={newRate}
+                        onChange={setNewRate}
+                        min={1.0}
+                        max={12.0}
+                        step={0.01}
+                        formatValue={(v) => `${v.toFixed(2)}%`}
+                      />
+                      <LiveRateNote data={liveRates} product="fixed5Conventional" source={newRateSource} />
+                    </div>
                   </div>
                 </div>
               </motion.div>

@@ -3,7 +3,7 @@
  * Allows AI to execute calculations directly in the chat
  */
 
-import { MortgageTool } from './types';
+import type { MortgageTool } from './types';
 import { payment, principalFromPayment } from '@/lib/calc/payment';
 import { stressTestRate } from '@/lib/calc/affordability';
 import { cmhcPremiumRate, minimumDownPayment, INSURED_PRICE_CAP } from '@/lib/calc/cmhc';

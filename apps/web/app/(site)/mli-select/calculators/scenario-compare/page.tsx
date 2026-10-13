@@ -2,6 +2,8 @@
 import { useState } from "react";
 import Card from "@/components/mli/Card";
 import TierBadge from "@/components/mli/TierBadge";
+import CalculatorPdfButton from "@/components/calculator-report/CalculatorPdfButton";
+import { money, pct } from "@/components/calculator-report/reportFormat";
 import {
   affordabilityPoints,
   energyPoints,
@@ -52,11 +54,15 @@ export default function ScenarioComparePage() {
     { id: "2", name: "Scenario B", ...defaultScenario, affUnits: 40, energyPct: 40 },
   ]);
 
+  // Monotonic id: (length + 1) collided after a removal (e.g. remove "1", add -> second "2"),
+  // which broke React keys and made edits/removals hit two cards.
+  const [nextId, setNextId] = useState(3);
   const addScenario = () => {
-    const newId = (scenarios.length + 1).toString();
+    const newId = String(nextId);
+    setNextId(n => n + 1);
     setScenarios(prev => [...prev, {
       id: newId,
-      name: `Scenario ${String.fromCharCode(64 + scenarios.length + 1)}`,
+      name: `Scenario ${String.fromCharCode(64 + Math.min(26, prev.length + 1))}`,
       ...defaultScenario
     }]);
   };
@@ -282,6 +288,34 @@ export default function ScenarioComparePage() {
               );
             })}
           </div>
+
+          <CalculatorPdfButton
+            source="calculator-pdf-mli-scenario-compare"
+            title="Your MLI Select Scenario Comparison"
+            subtitle="Get a personalized PDF comparing your MLI Select scenarios"
+            calculatorName="MLI Select Scenario Compare"
+            mortgageType="MLI Select (Multi-Unit)"
+            amount={Math.max(0, ...scenarios.map(s => calculateResults(s).maxLoan))}
+            getSections={() => scenarios.map(s => {
+              const r = calculateResults(s);
+              return {
+                title: s.name || "Scenario",
+                rows: [
+                  { label: "Project Type", value: s.projectType === "new" ? "New construction" : "Existing property" },
+                  { label: s.projectType === "new" ? "Project Cost" : "Property Value", value: money(s.valueOrCost) },
+                  { label: "Units / Affordable Units", value: `${s.units} / ${s.affUnits}` },
+                  { label: "Points (affordability / energy / accessibility)", value: `${r.aPts} / ${r.ePts} / ${r.accPts}` },
+                  { label: "Total Points / Tier", value: `${r.total} / ${r.tier || "below 50"}`, highlight: true },
+                  { label: "Max Amortization", value: `${r.amort} years` },
+                  { label: s.projectType === "new" ? "Max Loan-to-Cost" : "Max Loan-to-Value", value: pct(r.leverage * 100, 0) },
+                  { label: "Max Loan (leverage cap)", value: money(r.maxLoan), highlight: true },
+                  { label: "Est. Premium Rate After Discount", value: pct(r.finalPremium) },
+                  { label: "Premium Savings vs. No Discount", value: money(r.premiumSavings) },
+                ],
+              };
+            })}
+            educationalContent="MLI Select is CMHC's multi-unit (5+ units) insurance program. Points from affordability, energy efficiency and accessibility commitments unlock higher leverage (up to 95%), longer amortization (40/45/50 years at 50/70/100 points) and premium discounts (10%/20%/30%). The insured loan is the lesser of the leverage cap and the loan supported by a 1.10 debt coverage ratio (standard rental). Figures are estimates based on CMHC's published criteria and premium grid (effective July 14, 2025); CMHC changes these periodically. Not a commitment to insure or lend."
+          />
 
           {/* Comparison Table */}
           {scenarios.length > 1 && (

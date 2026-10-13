@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/db";
+import { prisma, isPrismaEnabled } from "@/lib/db";
 import { firestore } from "@/lib/firebaseAdmin";
 export const dynamic = "force-dynamic";
 import { TimeSeries } from "@/components/charts/TimeSeries";
@@ -11,7 +11,7 @@ function toDateStr(d: Date) {
 export default async function Analytics() {
   let leads: Array<{ createdAt: Date; status: string }> = [] as any;
   try {
-    if (process.env.DATABASE_URL) {
+    if (isPrismaEnabled()) {
       leads = await prisma.lead.findMany({ select: { createdAt: true, status: true }, orderBy: { createdAt: 'asc' } }) as any;
     } else {
       const db = firestore();

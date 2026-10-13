@@ -10,7 +10,16 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
   }
 
-  const configuredBase = process.env.NEXT_PUBLIC_CREWAPI_BASE_URL || "/crewapi";
+  // BUG-050: the external crew host has its own SERVER-ONLY variable now.
+  // NEXT_PUBLIC_CREWAPI_BASE_URL is still honoured for compatibility, except when
+  // it points at this site's own /api (that value was meant for the dashboard,
+  // and /api/run would reject the x-api-key with 401).
+  const legacyBase = process.env.NEXT_PUBLIC_CREWAPI_BASE_URL?.trim();
+  const legacyIsDashboardBase = !!legacyBase && /^\/api(?:\/|$)/.test(legacyBase);
+  const configuredBase =
+    process.env.CREWAPI_BASE_URL?.trim() ||
+    (legacyBase && !legacyIsDashboardBase ? legacyBase : "") ||
+    "/crewapi";
   const secret = process.env.CREWAPI_SECRET;
 
   // Server-side fetch() cannot use a relative URL ("/crewapi/run" threw
@@ -21,7 +30,7 @@ export async function GET(request: NextRequest) {
   try {
     base = new URL(configuredBase, getTrustedOrigin(request)).toString().replace(/\/+$/, "");
   } catch {
-    console.error("[cron/daily] Invalid NEXT_PUBLIC_CREWAPI_BASE_URL");
+    console.error("[cron/daily] Invalid CREWAPI_BASE_URL / NEXT_PUBLIC_CREWAPI_BASE_URL");
     return NextResponse.json({ ok: false, error: "Crew API base URL misconfigured" }, { status: 500 });
   }
   if (!secret) {

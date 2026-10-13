@@ -1,8 +1,9 @@
 import { NextRequest } from "next/server";
 import { z } from "zod";
-import { prisma } from "@/lib/db";
+import { prisma, isPrismaEnabled } from "@/lib/db";
 import { firestore } from "@/lib/firebaseAdmin";
 import { limitByIp, maskEmail, maskPhone } from "@/lib/compliance/requestGuards";
+import { buildConsentRecord, consentInputShape } from "@/lib/compliance/consentRecord";
 
 export const dynamic = "force-dynamic";
 
@@ -26,8 +27,8 @@ const LeadSchema = z
     income: optNum,
     downPayment: optNum,
     source: optStr(200),
-    consentToContact: z.boolean().optional(),
-    consentToMarketing: z.boolean().optional(),
+    // CASL consent evidence (lib/compliance/consent.ts consentFields()); no calls are placed here.
+    ...consentInputShape,
   })
   .strip(); // unknown fields are dropped (prevents arbitrary/oversized documents)
 
@@ -110,10 +111,14 @@ export async function POST(req: NextRequest) {
     ));
   }
 
+  // CASL evidence stored with the lead: flags, wording version, server time, client IP (BUG-005).
+  const consent = buildConsentRecord(body, req, body.source || "website-lead");
+
   const leadData = {
     province,
     intent,
-    details: body,
+    details: { ...body, consent },
+    consent,
     score,
     status: (score >= 70 ? "QUALIFIED" : "NEW") as any,
     createdAt: new Date()
@@ -124,7 +129,7 @@ export async function POST(req: NextRequest) {
   const notified = await notifyDiscord(body, score);
 
   try {
-    if (process.env.DATABASE_URL) {
+    if (isPrismaEnabled()) {
       const lead = await prisma.lead.create({
         data: {
           province: leadData.province,

@@ -15,9 +15,12 @@ import { RelatedCalculators } from "@/components/calculators/RelatedCalculators"
 type Ownership = "citizen" | "pr" | "other";
 type Occupancy = "principal" | "rental" | "vacant" | "shortterm";
 
-// SVT rates by tax year (gov.bc.ca "Tax rates", verified Oct 2026). "high" applies to foreign
-// owners and untaxed worldwide earners (incl. satellite families); "low" to other Canadian
-// citizens / permanent residents. The tax year is the calendar year of use; it's paid the next July.
+// SVT rates by tax year. Source: gov.bc.ca "Tax rates" (page updated 2026-07-03, verified 2026-10-13)
+// https://www2.gov.bc.ca/gov/content/taxes/speculation-vacancy-tax/how-tax-works/tax-rates
+// 2019–2025: 2% / 0.5%; 2026: 3% / 1%; "Effective January 1, 2027": 4% / 1%. No 2028 rate announced yet —
+// add one here when it is (unknown years fall back to 2026). "high" applies to foreign owners and untaxed
+// worldwide earners (the term gov.bc.ca now uses for what used to be called "satellite families"); "low" to
+// other Canadian citizens / permanent residents. The tax year is the calendar year of use; it's paid the next July.
 const SVT_RATES: Record<number, { high: number; low: number }> = {
   2025: { high: 2, low: 0.5 },
   2026: { high: 3, low: 1 },
@@ -45,7 +48,7 @@ function isExempt(ownership: Ownership, occupancy: Occupancy, region: string, un
 const faqs = [
   { q: "What is the BC Speculation and Vacancy Tax (SVT)?", a: "The SVT is an annual tax on residential properties in designated areas of BC, aimed at addressing housing affordability. It targets vacant or underused homes, foreign owners, and untaxed worldwide earners (including satellite families). Rates are rising: for the 2026 tax year it is 3% of assessed value for foreign owners and untaxed worldwide earners and 1% for other Canadian citizens and permanent residents (2% / 0.5% for 2025; 4% / 1% from 2027)." },
   { q: "Who has to pay the SVT?", a: "Owners in a taxable area who don't qualify for an exemption. Most BC residents who live in their home as a principal residence, or rent it to qualifying tenants for at least 6 months of the year, are exempt. The tax applies in Metro Vancouver, the Capital Regional District, and designated municipalities including Abbotsford, Chilliwack, Mission, Kelowna, West Kelowna, Kamloops, Nanaimo, Squamish, Vernon, Penticton and several Vancouver Island communities." },
-  { q: "Am I a satellite family?", a: "A satellite family is generally a household that declares less than 50% of its total combined income on Canadian tax returns. Satellite families fall under the 'untaxed worldwide earner' category, which pays the highest rate and cannot claim the principal residence exemption — even if the owner is a Canadian citizen or permanent resident." },
+  { q: "Am I an untaxed worldwide earner (a \"satellite family\")?", a: "Generally, yes if you and your spouse report less than 50% of your combined worldwide income on Canadian tax returns. The BC government now calls this an 'untaxed worldwide earner' (the older term was 'satellite family'). Untaxed worldwide earners pay the highest rate and cannot claim the principal residence exemption — even if the owner is a Canadian citizen or permanent resident." },
   { q: "How do I declare for SVT?", a: "Every residential property owner in a designated SVT area must complete an annual declaration. The BC government sends declaration letters in January/February. You can also declare online through the SVT self-service portal. If you don't declare, the property is taxed at the highest rate until you do." },
   { q: "What is the deadline for SVT declarations?", a: "The annual SVT declaration deadline is typically March 31. Late declarations may still be accepted but you risk being assessed at the highest rate. Check the BC government SVT website for current year deadlines." }
 ];
@@ -181,7 +184,7 @@ export default function BCSpeculationTaxPage() {
                       </div>
                       <label className="flex items-start gap-3 mt-3 cursor-pointer">
                         <input type="checkbox" checked={untaxedWorldwideEarner} onChange={(e) => setUntaxedWorldwideEarner(e.target.checked)} className="mt-1 w-4 h-4 rounded border-gray-600 bg-gray-700 text-gold-500" />
-                        <span className="text-sm text-gray-300">Untaxed worldwide earner / satellite family <span className="block text-xs text-gray-500">Less than 50% of household income reported on Canadian tax returns</span></span>
+                        <span className="text-sm text-gray-300">Untaxed worldwide earner (formerly &quot;satellite family&quot;) <span className="block text-xs text-gray-500">Less than 50% of household income reported on Canadian tax returns</span></span>
                       </label>
                     </div>
 
@@ -285,7 +288,7 @@ export default function BCSpeculationTaxPage() {
                         <p>• This calculator provides estimates only. Final SVT amounts are determined by the BC government.</p>
                         <p>• All property owners in SVT zones must file an annual declaration regardless of exemption status.</p>
                         <p>• The Empty Homes Tax in Vancouver is separate from the provincial SVT.</p>
-                        <p>• Satellite family determination depends on income sources — consult a tax professional.</p>
+                        <p>• Untaxed worldwide earner status depends on where your household income is reported — consult a tax professional.</p>
                       </div>
                     </div>
                   </div>

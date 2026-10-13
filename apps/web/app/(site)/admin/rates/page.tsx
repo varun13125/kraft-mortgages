@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/db";
+import { prisma, isPrismaEnabled } from "@/lib/db";
 import { firestore } from "@/lib/firebaseAdmin";
 export const dynamic = "force-dynamic";
 
@@ -9,7 +9,7 @@ const toDate = (v: any) => (v?.toDate ? v.toDate() : new Date(v));
 export default async function AdminRates() {
   let rows: any[] = [];
   try {
-    if (process.env.DATABASE_URL) {
+    if (isPrismaEnabled()) {
       rows = await prisma.rateSnapshot.findMany({ orderBy: { capturedAt: 'desc' }, take: 200 }) as any[];
     } else {
       const db = firestore();

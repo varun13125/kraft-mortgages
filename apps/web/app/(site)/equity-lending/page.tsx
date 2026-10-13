@@ -2,6 +2,8 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import Navigation from "@/components/Navigation";
+import { useLiveRates } from "@/lib/useLiveRates";
+import { liveConventional5yr, liveHeloc, livePrivateSecond, ratesAsOf } from "@/components/calculators/liveRateDefaults";
 import { 
   TrendingUp, 
   Calculator, 
@@ -19,34 +21,44 @@ import {
 } from "lucide-react";
 
 export default function EquityLending() {
+  // Rates come from the live feed (with an "as of" date) — never hard-coded marketing numbers.
+  // Until the feed answers (and in the server-rendered HTML) the copy is non-numeric.
+  const { data: liveRates } = useLiveRates();
+  const helocRate = liveHeloc(liveRates);
+  const refiRate = liveConventional5yr(liveRates); // refinances / take-outs are uninsured
+  const privateRate = livePrivateSecond(liveRates);
+  const asOf = ratesAsOf(liveRates);
+  const from = (r?: number) => (r !== undefined ? `From ${r.toFixed(2)}%` : "See today's rates");
+  const equityFrom = helocRate !== undefined && refiRate !== undefined ? Math.min(helocRate, refiRate) : helocRate ?? refiRate;
+
   const services = [
     {
       title: "Home Equity Lines of Credit",
       description: "Borrow up to 80% of your home's value, less your mortgage, at competitive rates",
       features: ["Institutional rates", "Flexible access", "Interest-only payments", "Reusable credit line"],
       icon: Home,
-      rate: "Starting from 4.99%"
+      rate: from(helocRate)
     },
     {
       title: "Debt Consolidation",
       description: "Consolidate high-interest debt into one manageable payment",
       features: ["Lower monthly payments", "Single payment", "Improved credit score", "Tax-deductible options"],
       icon: CreditCard,
-      rate: "4.99% - 7.95%"
+      rate: from(refiRate)
     },
     {
       title: "Investment Opportunities", 
       description: "Leverage your home equity for investment properties",
       features: ["Investment property down payments", "Portfolio expansion", "Tax advantages", "Professional guidance"],
       icon: Building2,
-      rate: "5.25% - 7.95%"
+      rate: from(refiRate)
     },
     {
       title: "Cash-Out Refinancing",
       description: "Refinance and access cash for major expenses",
       features: ["Home renovations", "Business investments", "Education funding", "Emergency reserves"],
       icon: TrendingUp,
-      rate: "5.50% - 7.95%"
+      rate: from(refiRate)
     }
   ];
 
@@ -105,7 +117,12 @@ export default function EquityLending() {
   ];
 
   const comparisonData = [
-    { feature: "Interest Rates", equity: "4.99% - 7.95%", private: "8% - 15%+", winner: "equity" },
+    {
+      feature: "Interest Rates",
+      equity: equityFrom !== undefined ? `From ${equityFrom.toFixed(2)}%` : "Institutional rates",
+      private: privateRate !== undefined ? `From ${privateRate.toFixed(2)}% + fees` : "Higher, plus lender fees",
+      winner: "equity"
+    },
     { feature: "Approval Time", equity: "24-48 hours", private: "Same day", winner: "private" },
     { feature: "Documentation", equity: "Standard verification", private: "Minimal docs", winner: "private" },
     { feature: "Professional Service", equity: "Full-service support", private: "Basic service", winner: "equity" },
@@ -138,8 +155,15 @@ export default function EquityLending() {
               </p>
               
               <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-emerald-500/20 p-4 max-w-2xl mx-auto mb-8">
-                <div className="text-lg font-semibold text-emerald-400 mb-2">Starting from Prime + 0.50%</div>
-                <div className="text-sm text-gray-400">Institutional rates • Professional service • Proven track record</div>
+                <div className="text-lg font-semibold text-emerald-400 mb-2">
+                  {helocRate !== undefined && refiRate !== undefined
+                    ? `HELOCs from ${helocRate.toFixed(2)}% • Refinances from ${refiRate.toFixed(2)}%`
+                    : "Institutional rates for home equity"}
+                </div>
+                <div className="text-sm text-gray-400">
+                  {asOf ? `Lowest advertised rates as of ${asOf}; your rate depends on credit, equity and income. ` : "Institutional rates • Professional service • Proven track record. "}
+                  <Link href="/rates" className="underline hover:text-emerald-300">See today&apos;s rates</Link>
+                </div>
               </div>
               
               <div className="flex flex-wrap gap-4 justify-center">
@@ -226,6 +250,12 @@ export default function EquityLending() {
               </h2>
               <p className="text-lg text-gray-400">
                 Institutional-grade equity lending with competitive rates
+              </p>
+              <p className="text-xs text-gray-500 mt-2">
+                {asOf
+                  ? `"From" rates are the lowest advertised HELOC / conventional 5-year fixed rates in our live feed as of ${asOf}. `
+                  : ""}
+                <Link href="/rates" className="underline hover:text-gray-300">All current rates</Link>
               </p>
             </motion.div>
 

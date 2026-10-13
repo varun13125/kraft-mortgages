@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import { CityServiceJsonLd } from '@/components/SEO/CityServiceJsonLd';
+import { SetProvince } from '@/components/SetProvince';
 import Footer from '@/components/Footer';
 import { OG_DEFAULTS } from '@/lib/seo/og';
 
@@ -23,6 +24,8 @@ export default function RedDeerLayout({ children }: { children: React.ReactNode 
     return (
     <>
       <CityServiceJsonLd cityName="Red Deer" provinceName="AB" description="Licensed mortgage broker serving Red Deer, AB. Residential, construction, self-employed, MLI Select, and private lending solutions." />
+      {/* Province-specific disclosures follow the city's province (BUG-039). */}
+      <SetProvince province="AB" />
       {children}
       <Footer />
     </>

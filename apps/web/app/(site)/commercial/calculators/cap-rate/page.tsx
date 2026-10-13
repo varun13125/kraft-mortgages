@@ -4,6 +4,8 @@ import { motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
 import { Building, DollarSign, TrendingUp, AlertTriangle, CheckCircle, Target } from "lucide-react";
 import Link from "next/link";
+import CalculatorPdfButton from "@/components/calculator-report/CalculatorPdfButton";
+import { money, pct } from "@/components/calculator-report/reportFormat";
 
 export default function CapRateCalculator() {
     const [netOperatingIncome, setNetOperatingIncome] = useState(150000);
@@ -23,6 +25,11 @@ export default function CapRateCalculator() {
     const isBelowMarket = capRate < 3;
     const isAboveMarket = capRate > 10;
     const isInRange = capRate >= 4 && capRate <= 8;
+    // 3-4% and 8-10% are plausible but outside the typical band: show them neutrally (was a green box
+    // with a warning icon)
+    const isBorderline = !isBelowMarket && !isAboveMarket && !isInRange;
+    const valueGap = impliedValue - marketValue;
+    const valueGapLabel = Math.abs(valueGap) < 1 ? " (at target)" : valueGap > 0 ? " undervalued" : " overvalued";
 
     // Regional benchmarks
     const benchmarks = [
@@ -143,11 +150,14 @@ export default function CapRateCalculator() {
                                 {/* Cap Rate Result */}
                                 <div className={`rounded-2xl p-6 border ${isBelowMarket ? 'bg-yellow-500/20 border-yellow-500/30' :
                                         isAboveMarket ? 'bg-orange-500/20 border-orange-500/30' :
+                                            isBorderline ? 'bg-white/10 border-white/20' :
                                             'bg-green-500/20 border-green-500/30'
                                     }`}>
                                     <div className="flex items-center gap-3 mb-4">
                                         {isInRange ? (
                                             <CheckCircle className="w-6 h-6 text-green-400" />
+                                        ) : isBorderline ? (
+                                            <Target className="w-6 h-6 text-purple-300" />
                                         ) : (
                                             <AlertTriangle className={`w-6 h-6 ${isBelowMarket ? 'text-yellow-400' : 'text-orange-400'}`} />
                                         )}
@@ -155,6 +165,7 @@ export default function CapRateCalculator() {
                                     </div>
                                     <div className={`text-5xl font-bold mb-2 ${isBelowMarket ? 'text-yellow-400' :
                                             isAboveMarket ? 'text-orange-400' :
+                                                isBorderline ? 'text-purple-300' :
                                                 'text-green-400'
                                         }`}>
                                         {capRate.toFixed(2)}%
@@ -193,9 +204,9 @@ export default function CapRateCalculator() {
                                         </div>
                                         <div className="flex justify-between py-2">
                                             <span className="text-gray-400">Value Gap</span>
-                                            <span className={`font-bold ${impliedValue > marketValue ? 'text-green-400' : 'text-red-400'}`}>
-                                                ${Math.round(Math.abs(impliedValue - marketValue)).toLocaleString()}
-                                                {impliedValue > marketValue ? ' undervalued' : ' overvalued'}
+                                            <span className={`font-bold ${Math.abs(valueGap) < 1 ? 'text-gray-300' : valueGap > 0 ? 'text-green-400' : 'text-red-400'}`}>
+                                                ${Math.round(Math.abs(valueGap)).toLocaleString()}
+                                                {valueGapLabel}
                                             </span>
                                         </div>
                                     </div>
@@ -222,6 +233,34 @@ export default function CapRateCalculator() {
                             Estimates only. Use stabilized NOI (gross rent less vacancy and operating expenses; excludes debt service,
                             depreciation and capital expenditures). Cap rates vary by asset class, location and lease profile.
                         </p>
+                        <CalculatorPdfButton
+                            source="calculator-pdf-commercial-cap-rate"
+                            title="Your Cap Rate Analysis"
+                            subtitle="Get a personalized PDF with your cap rate and valuation analysis"
+                            calculatorName="Commercial Cap Rate Calculator"
+                            mortgageType="Commercial"
+                            amount={marketValue}
+                            getSections={() => [
+                                {
+                                    title: "Your Inputs",
+                                    rows: [
+                                        { label: "Net Operating Income (annual)", value: money(netOperatingIncome) },
+                                        { label: "Current Market Value", value: money(marketValue) },
+                                        { label: "Target Cap Rate", value: pct(targetCapRate) },
+                                    ],
+                                },
+                                {
+                                    title: "Your Results",
+                                    rows: [
+                                        { label: "Current Cap Rate", value: pct(capRate), highlight: true },
+                                        { label: `Implied Value at ${targetCapRate}% Cap Rate`, value: money(impliedValue), highlight: true },
+                                        { label: "Required NOI for Target Cap Rate", value: money(requiredNOI) },
+                                        { label: "Value Gap vs. Market Value", value: `${money(Math.abs(valueGap))}${valueGapLabel}` },
+                                    ],
+                                },
+                            ]}
+                            educationalContent="Cap rate = stabilized NOI / value. Use stabilized NOI: gross rent less vacancy and operating expenses, excluding debt service, depreciation and capital expenditures. A lower cap rate means a higher price per dollar of income. Cap rates vary by asset class, location, lease profile and interest rates; regional ranges on the calculator page are estimates. Estimates only; not an appraisal."
+                        />
                         <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
                             <Link
                                 href="/contact"

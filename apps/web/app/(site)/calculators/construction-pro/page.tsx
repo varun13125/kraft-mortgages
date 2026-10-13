@@ -10,10 +10,19 @@ import Link from "next/link";
 import PdfLeadModal from "@/components/PdfLeadModal";
 import { CalculatorSchema } from "@/components/SEO/CalculatorSchema";
 import { RelatedCalculators } from "@/components/calculators/RelatedCalculators";
+import { useLiveRates } from "@/lib/useLiveRates";
+import { liveRate, useLiveDefault } from "../_lib/liveRateDefaults";
+import { LiveRateNote } from "../_lib/LiveRateNote";
+
+// Construction / progress-draw loans are usually priced off prime. The illustrative spread keeps the previous
+// 7.25% default at prime 4.45% (Oct 2026) but now moves with prime. Not a quote.
+const CONSTRUCTION_SPREAD_OVER_PRIME = 2.8;
 
 export default function ConstructionPro() {
   const [showPdfModal, setShowPdfModal] = useState(false);
-  const [rate, setRate] = useState(7.25);
+  const { data: liveRates } = useLiveRates();
+  const livePrime = liveRate(liveRates, "prime");
+  const [rate, setRate, rateSource] = useLiveDefault(7.25, livePrime !== undefined ? livePrime + CONSTRUCTION_SPREAD_OVER_PRIME : undefined);
   const [periodMonths, setPeriodMonths] = useState(12);
   const [draws, setDraws] = useState([
     { month: 1, amount: 200000 }, 
@@ -99,17 +108,18 @@ export default function ConstructionPro() {
               {/* Construction Rate */}
               <div className="mb-8">
                 <label className="block text-sm font-medium text-gray-200 mb-2">
-                  Construction Interest Rate (% APR)
+                  Construction Interest Rate (annual %)
                 </label>
                 <input
                   type="number"
                   step="0.01"
                   value={rate}
-                  onChange={(e) => setRate(Number(e.target.value))}
+                  onChange={(e) => setRate(Math.max(0, Number(e.target.value)))}
                   className="w-full max-w-xs px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-gold-500 focus:border-transparent text-white placeholder-gray-400"
                   placeholder="7.25"
                   min="0"
                 />
+                <LiveRateNote data={liveRates} product="prime" source={rateSource} suffix={` + ${CONSTRUCTION_SPREAD_OVER_PRIME.toFixed(2)}% (illustrative construction-loan spread; bank draw mortgages are often lower, private construction loans higher)`} />
               </div>
 
               {/* Construction Period */}

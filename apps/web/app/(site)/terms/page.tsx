@@ -42,7 +42,7 @@ export default function TermsOfServicePage() {
   return (
     <>
       <Navigation />
-      <main className="min-h-screen bg-slate-950 text-slate-100 pt-24 pb-16">
+      <main id="main-content" className="min-h-screen bg-slate-950 text-slate-100 pt-24 pb-16">
         {/* Breadcrumb Header */}
         <div className="border-b border-slate-800/80 bg-slate-900/40">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">

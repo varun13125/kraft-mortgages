@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/db";
+import { prisma, isPrismaEnabled } from "@/lib/db";
 import { firestore } from "@/lib/firebaseAdmin";
 export const dynamic = "force-dynamic";
 
@@ -10,7 +10,7 @@ export default async function Admin() {
   let leads: any[] = [];
   let loadError: string | null = null;
   try {
-    if (process.env.DATABASE_URL) {
+    if (isPrismaEnabled()) {
       leads = await prisma.lead.findMany({ orderBy: { createdAt: 'desc' }, take: 100 }) as any[];
     } else {
       const db = firestore();

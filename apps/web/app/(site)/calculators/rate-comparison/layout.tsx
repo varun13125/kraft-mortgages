@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { OG_DEFAULTS } from "@/lib/seo/og";
 
 export const metadata: Metadata = {
   title: "Mortgage Rate Comparison Calculator Canada | Compare Rates Side by Side | Kraft Mortgages",
@@ -6,11 +7,11 @@ export const metadata: Metadata = {
     "Compare up to 4 mortgage rates side by side. See monthly payments, total interest over term and amortization, and payment differences.",
   alternates: { canonical: "https://www.kraftmortgages.ca/calculators/rate-comparison" },
   openGraph: {
+    ...OG_DEFAULTS,
     title: "Mortgage Rate Comparison Calculator Canada | Compare Rates Side by Side | Kraft Mortgages",
     description:
       "Compare up to 4 mortgage rates side by side. See monthly payments, total interest over term and amortization, and payment differences.",
     url: "https://www.kraftmortgages.ca/calculators/rate-comparison",
-    type: "website",
   },
 };
 

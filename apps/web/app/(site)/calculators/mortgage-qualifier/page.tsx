@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import Navigation from "@/components/Navigation";
 import { useLiveRates } from "@/lib/useLiveRates";
@@ -7,11 +7,13 @@ import { CalculatorSchema } from "@/components/SEO/CalculatorSchema";
 import { RelatedCalculators } from "@/components/calculators/RelatedCalculators";
 import { ValidatedInput, ValidatedSlider } from "@/components/ui/ValidatedInput";
 import { ComplianceBanner } from "@/components/ComplianceBanner";
-import { payment, principalFromPayment } from "@/lib/calc/payment";
+import { payment } from "@/lib/calc/payment";
 import { cmhcPremium, cmhcPremiumRate, stressTestRate, QUALIFYING_RATIOS, minimumDownPayment, isInsurable, premiumPst, INSURED_PRICE_CAP } from "@/lib/calc/cmhc";
+import { maxQualifyingLoan, maxPurchasePrice } from "@/lib/calc/affordability";
 import { landTransferTax as calcLandTransferTax } from "@/lib/calc/landTransferTax";
 import { CheckCircle, XCircle, DollarSign, TrendingDown, Info } from "lucide-react";
-import { BUSINESS } from "@/lib/seo/business-config";
+import { liveRate, purchaseRateProduct, useLiveDefault } from "../_lib/liveRateDefaults";
+import { LiveRateNote } from "../_lib/LiveRateNote";
 
 // Land transfer tax / Alberta land titles fees via the shared helper (BC FTHB exemption
 // capped at the first $500k, Ontario FTHB refund max $4,000, AB has no first-time exemption)
@@ -23,33 +25,23 @@ function landTransferTax(price: number, province: string, isFirstTime: boolean, 
 // Minimum down payment per Canadian rules (tiered to $1.5M since Dec 15, 2024)
 const minDownPayment = minimumDownPayment;
 
-/** Insured (or conventional) loan needed to buy `price` with `down` dollars down. */
-function loanForPrice(price: number, down: number, amortYears: number): number {
-  const base = Math.max(0, price - down);
-  return down < price * 0.2 ? base + cmhcPremium(price, down, amortYears) : base;
-}
-
 export default function MortgageQualifierPage() {
-  const { best5YrFixed } = useLiveRates();
+  const { data: liveRates } = useLiveRates();
   const [annualIncome, setAnnualIncome] = useState(120000);
   const [partnerIncome, setPartnerIncome] = useState(0);
   const [monthlyDebts, setMonthlyDebts] = useState(400);
   const [homePrice, setHomePrice] = useState(750000);
   const [downPayment, setDownPayment] = useState(150000);
-  const [interestRate, setInterestRate] = useState(4.39);
-  const [hasUserEditedRate, setHasUserEditedRate] = useState(false);
   const [amortization, setAmortization] = useState(25);
   const [propertyTaxAnnual, setPropertyTaxAnnual] = useState(3600);
   const [heatingMonthly, setHeatingMonthly] = useState(150);
   const [condoFeesMonthly, setCondoFeesMonthly] = useState(0);
   const [province, setProvince] = useState("BC");
   const [isFirstTime, setIsFirstTime] = useState(true);
-
-  useEffect(() => {
-    if (!hasUserEditedRate && best5YrFixed) {
-      setInterestRate(best5YrFixed);
-    }
-  }, [best5YrFixed, hasUserEditedRate]);
+  // Rate follows today's 5-yr fixed for this purchase (insured < 20% down; insurable; conventional) until edited.
+  // Was always the insured rate.
+  const rateProduct = purchaseRateProduct(homePrice > 0 ? (downPayment / homePrice) * 100 : 0, homePrice, amortization);
+  const [interestRate, setInterestRate, rateSource] = useLiveDefault(4.39, liveRate(liveRates, rateProduct));
 
   const totalIncome = annualIncome + partnerIncome;
   const safeIncome = Math.max(1, totalIncome);
@@ -82,26 +74,15 @@ export default function MortgageQualifierPage() {
   const totalCashNeeded = downPayment + ltt + closingCostsEst + premiumTax;
 
   // Max purchase price: largest price whose loan (incl. any premium) keeps BOTH GDS ≤ 39%
-  // and TDS ≤ 44% at the qualifying rate, and for which this down payment is still legal.
+  // and TDS ≤ 44% at the qualifying rate, and for which this down payment is still legal
+  // (shared bisection in lib/calc/affordability.ts, also used by the Required Income calculator).
   const nonMortgageHousing = monthlyPropertyTax + heatingMonthly + (condoFeesMonthly * 0.5);
-  const maxPaymentMonthly = Math.max(0, Math.min(
-    (safeIncome / 12) * (QUALIFYING_RATIOS.GDS_MAX / 100) - nonMortgageHousing,
-    (safeIncome / 12) * (QUALIFYING_RATIOS.TDS_MAX / 100) - monthlyDebts - nonMortgageHousing,
-  ));
-  const maxLoan = principalFromPayment({ monthlyPayment: maxPaymentMonthly, annualRatePct: qualRate, amortYears: amortization });
-  const priceIsFeasible = (p: number) =>
-    loanForPrice(p, downPayment, amortization) <= maxLoan &&
-    (downPayment >= p * 0.2 || isInsurable(p, downPayment));
-  let maxPurchaseRough = 0;
-  if (maxLoan > 0 && downPayment > 0 && priceIsFeasible(downPayment)) {
-    // Feasibility is monotonic in price, so bisect between the down payment and down + max loan
-    let lo = downPayment, hi = downPayment + maxLoan;
-    for (let i = 0; i < 60; i++) {
-      const mid = (lo + hi) / 2;
-      if (priceIsFeasible(mid)) lo = mid; else hi = mid;
-    }
-    maxPurchaseRough = lo;
-  }
+  const maxLoan = maxQualifyingLoan({
+    incomeAnnual: safeIncome, otherDebtsMonthly: monthlyDebts, nonMortgageHousingMonthly: nonMortgageHousing,
+    contractRatePct: interestRate, amortYears: amortization,
+  });
+  const maxPrice = maxPurchasePrice({ down: downPayment, maxLoan, amortYears: amortization });
+  const maxPurchaseRough = maxPrice.price;
 
   return (
     <>
@@ -157,7 +138,10 @@ export default function MortgageQualifierPage() {
                   </p>
                 )}
 
-                <ValidatedSlider label="Interest Rate" value={interestRate} onChange={(v) => { setInterestRate(v); setHasUserEditedRate(true); }} min={0.5} max={10} step={0.01} formatValue={(v) => v.toFixed(2) + "%"} />
+                <div>
+                  <ValidatedSlider label="Interest Rate" value={interestRate} onChange={setInterestRate} min={0.5} max={10} step={0.01} formatValue={(v) => v.toFixed(2) + "%"} />
+                  <LiveRateNote data={liveRates} product={rateProduct} source={rateSource} />
+                </div>
                 <ValidatedSlider label="Amortization Period" value={amortization} onChange={(v) => setAmortization(Math.round(v))} min={5} max={30} step={1} formatValue={(v) => Math.round(v) + " years"} />
               </div>
 
@@ -291,7 +275,10 @@ export default function MortgageQualifierPage() {
                     <span className="text-sm text-gold-400 font-medium uppercase tracking-wider">Your Max Purchase Price</span>
                   </div>
                   <div className="text-2xl font-bold text-gold-400">${Math.round(maxPurchaseRough).toLocaleString()}</div>
-                  <div className="text-xs text-gray-500 mt-1">Estimated max home price at your income, debts, and down payment</div>
+                  <div className="text-xs text-gray-500 mt-1">
+                    Estimated max home price at your income, debts, and down payment
+                    {maxPrice.limitedBy === "downPayment" ? " — limited by the minimum down payment rules, not your income" : maxPrice.limitedBy === "income" ? " — limited by the 39% GDS / 44% TDS limits" : ""}
+                  </div>
                 </div>
               )}
 

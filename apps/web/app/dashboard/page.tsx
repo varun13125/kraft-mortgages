@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { apiPost, apiGet } from "@/lib/api";
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
-import { app } from "@/lib/firebase.client";
+import { app, firebaseConfigured } from "@/lib/firebase.client";
 import Link from "next/link";
 import { 
   Play, 
@@ -23,7 +23,7 @@ type Run = {
   mode: string; 
   manualQuery?: string; 
   steps: any[]; 
-  published?: { url?: string };
+  published?: { url?: string; status?: "published" | "draft" };
   startedAt: string;
   createdBy: string;
 };
@@ -49,10 +49,12 @@ export default function Dashboard() {
   const [activeTab, setActiveTab] = useState<"runs"|"posts"|"strategy">("runs");
   const [strategy, setStrategy] = useState<any>(null);
   
-  const auth = getAuth(app);
+  // null when the NEXT_PUBLIC_FIREBASE_* web config is missing (lib/firebase.client.ts)
+  const auth = app ? getAuth(app) : null;
 
   useEffect(() => {
-    const unsub = onAuthStateChanged(auth, (u) => { 
+    if (!auth) return;
+    const unsub = onAuthStateChanged(auth, (u) => {
       if (!u) {
         window.location.href="/login"; 
       } else {
@@ -76,8 +78,9 @@ export default function Dashboard() {
 
   async function loadPosts() {
     try {
-      // This would need a /posts endpoint - for now using placeholder
-      setPosts([]);
+      // Firestore posts incl. AI drafts awaiting review (BUG-018)
+      const data = await apiGet<{ posts: Post[] }>("/posts");
+      setPosts(Array.isArray(data?.posts) ? data.posts : []);
     } catch (e) {
       console.error("Failed to load posts:", e);
     }
@@ -85,34 +88,18 @@ export default function Dashboard() {
 
   async function loadStrategy() {
     try {
-      const data = await apiGet("/strategy/latest");
-      setStrategy(data);
+      // The latest strategy saved by "Generate Strategy" (GET /strategy/weekly).
+      // /strategy/latest only returns static sample data.
+      const data = await apiGet<any>("/strategy/weekly");
+      setStrategy(data && data.available !== false ? data : null);
     } catch (e) {
       console.error("Failed to load strategy:", e);
     }
   }
 
-  async function makeAdmin() {
-    try {
-      const token = await auth.currentUser?.getIdToken();
-      const response = await fetch('/api/make-admin', {
-        method: 'POST',
-        headers: {
-          'Authorization': 'Bearer ' + token
-        }
-      });
-      const result = await response.json();
-      if (result.success) {
-        alert('Success! You are now an admin. Please refresh the page.');
-      } else {
-        alert('Error: ' + (result.error || result.message || 'Unknown error'));
-      }
-      console.log(result);
-    } catch (e) {
-      console.error('Make admin error:', e);
-      alert('Failed to make admin. Check console.');
-    }
-  }
+  // (The "Make Admin" and "Debug Run" buttons called /api/make-admin and
+  // /api/test-run-creation, which do not exist - removed. Admins are added as
+  // documents in the Firestore `admins` collection.)
 
   async function triggerRun() {
     setLoading(true);
@@ -147,11 +134,16 @@ export default function Dashboard() {
   async function startPoll(runId: string) {
     console.log("Starting SSE connection for run:", runId);
     
-    const token = await auth.currentUser?.getIdToken();
-    const baseUrl = process.env.NEXT_PUBLIC_CREWAPI_BASE_URL || '/api';
-    const sseUrl = `${baseUrl}/runs/${runId}/stream?token=${token}`;
-    
-    console.log("Connecting to SSE:", sseUrl);
+    const token = await auth?.currentUser?.getIdToken();
+    if (!token) {
+      console.error("Not signed in - cannot open the run progress stream");
+      return;
+    }
+    // Always same-origin: NEXT_PUBLIC_CREWAPI_BASE_URL may point at the external
+    // crew host, and this URL carries the admin's Firebase ID token (BUG-050).
+    const sseUrl = `/api/runs/${encodeURIComponent(runId)}/stream?token=${encodeURIComponent(token)}`;
+
+    console.log("Connecting to SSE for run:", runId);
     
     const sse = new EventSource(sseUrl, { 
       withCredentials: false 
@@ -218,8 +210,8 @@ export default function Dashboard() {
 
   async function republishPost(slug: string) {
     try {
-      await apiPost("/publish/republish", { slug });
-      alert("Post republished successfully");
+      const result = await apiPost<{ message?: string }>("/publish/republish", { slug });
+      alert(result?.message || "Post republished successfully");
       loadPosts();
     } catch (e) {
       console.error("Republish failed:", e);
@@ -262,6 +254,18 @@ export default function Dashboard() {
     );
   }
 
+  if (!firebaseConfigured) {
+    return (
+      <div className="min-h-screen grid place-items-center p-6 bg-gray-50">
+        <div className="max-w-md bg-white p-6 rounded-lg shadow text-center text-gray-700">
+          <AlertCircle className="w-10 h-10 mx-auto mb-3 text-red-500" />
+          <p className="font-semibold">Dashboard unavailable</p>
+          <p className="text-sm mt-2">Firebase is not configured for this deployment (NEXT_PUBLIC_FIREBASE_* env vars are missing).</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -275,18 +279,11 @@ export default function Dashboard() {
             
             <div className="flex items-center gap-4">
               <span className="text-sm text-gray-600">{user?.email}</span>
-              {/* Temporary admin button - remove after setup */}
-              <button
-                onClick={makeAdmin}
-                className="px-3 py-1 text-xs bg-yellow-500 text-white rounded hover:bg-yellow-600"
-              >
-                Make Admin
-              </button>
               {/* Check admin status button */}
               <button
                 onClick={async () => {
                   try {
-                    const token = await auth.currentUser?.getIdToken();
+                    const token = await auth?.currentUser?.getIdToken();
                     const response = await fetch('/api/check-admin', {
                       method: 'GET',
                       headers: {
@@ -305,42 +302,14 @@ export default function Dashboard() {
               >
                 Check Admin
               </button>
-              {/* Debug button */}
-              <button
-                onClick={async () => {
-                  try {
-                    const token = await auth.currentUser?.getIdToken();
-                    const response = await fetch('/api/test-run-creation', {
-                      method: 'POST',
-                      headers: {
-                        'Authorization': 'Bearer ' + token,
-                        'Content-Type': 'application/json'
-                      },
-                      body: JSON.stringify({
-                        mode: 'auto',
-                        targetProvinces: ['BC', 'AB', 'ON']
-                      })
-                    });
-                    const result = await response.json();
-                    console.log('Debug result:', result);
-                    alert('Check console for debug output');
-                  } catch (e) {
-                    console.error('Debug error:', e);
-                    alert('Debug failed - check console');
-                  }
-                }}
-                className="px-3 py-1 text-xs bg-red-500 text-white rounded hover:bg-red-600"
-              >
-                Debug Run
-              </button>
               {/* Manual orchestration trigger */}
               <button
                 onClick={async () => {
                   try {
                     const runId = prompt('Enter Run ID (e.g., L3AK6bSZN0Qj1ZuugJYD):');
                     if (!runId) return;
-                    
-                    const token = await auth.currentUser?.getIdToken();
+
+                    const token = await auth?.currentUser?.getIdToken();
                     const response = await fetch('/api/orchestrate-all', {
                       method: 'POST',
                       headers: {
@@ -362,7 +331,7 @@ export default function Dashboard() {
                 Manual Orchestrate
               </button>
               <button
-                onClick={() => signOut(auth)}
+                onClick={() => { if (auth) signOut(auth); }}
                 className="flex items-center gap-2 text-gray-600 hover:text-gray-900"
               >
                 <LogOut className="w-4 h-4" />
@@ -511,7 +480,9 @@ export default function Dashboard() {
                   <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
                     <div className="flex items-center gap-2 text-green-700">
                       <CheckCircle className="w-5 h-5" />
-                      <span className="font-medium">Published:</span>
+                      <span className="font-medium">
+                        {activeRun.published.status === "draft" ? "Draft saved for review (publish it from the Posts tab):" : "Published:"}
+                      </span>
                       <a 
                         href={activeRun.published.url} 
                         className="text-blue-600 underline hover:text-blue-800"
@@ -558,7 +529,7 @@ export default function Dashboard() {
         {activeTab === "posts" && (
           <div className="bg-white rounded-lg shadow">
             <div className="px-6 py-4 border-b">
-              <h2 className="text-lg font-semibold">Published Content</h2>
+              <h2 className="text-lg font-semibold">Content (drafts need review before they go live)</h2>
             </div>
             {posts.length === 0 ? (
               <div className="px-6 py-12 text-center text-gray-500">
@@ -586,7 +557,7 @@ export default function Dashboard() {
                           onClick={() => republishPost(post.slug)}
                           className="text-blue-600 hover:text-blue-800 text-sm"
                         >
-                          Republish
+                          {post.status === "draft" ? "Publish" : "Republish"}
                         </button>
                       </div>
                     </div>

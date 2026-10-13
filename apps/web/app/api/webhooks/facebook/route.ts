@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createHmac, timingSafeEqual } from "crypto";
 import { triggerThinkrOutboundCall } from "@/lib/voice/thinkr";
+import { getCallingHoursStatus, isRecipientCallable } from "@/lib/businessHours";
 import { maskEmail } from "@/lib/compliance/requestGuards";
+import { crmWebhookHeaders, twentyWebhookUrl } from "@/lib/crm/webhooks";
+import { firestore } from "@/lib/firebaseAdmin";
 
 export const dynamic = "force-dynamic";
 
@@ -9,11 +12,59 @@ const VERIFY_TOKEN = process.env.FACEBOOK_WEBHOOK_VERIFY_TOKEN || "";
 const APP_SECRET = process.env.FACEBOOK_APP_SECRET || "";
 const PAGE_ACCESS_TOKEN = process.env.FACEBOOK_PAGE_ACCESS_TOKEN || "";
 
-const TWENTY_WEBHOOK =
-  process.env.TWENTY_WEBHOOK_URL ||
-  "https://webhook.srv848694.hstgr.cloud/webhook/contact-form";
-
 const DISCORD_WEBHOOK = process.env.DISCORD_LEAD_WEBHOOK_URL || "";
+
+/**
+ * BUG-024: Facebook retries deliveries (and can send the same lead twice), and
+ * each delivery used to create another CRM lead, Discord alert and paid AI call.
+ * Claim the leadgen_id with an atomic Firestore create() before any side effect:
+ *  - "claimed"   -> first delivery, process it
+ *  - "duplicate" -> already processed, skip (still ACK 200)
+ *  - "unavailable" -> Firestore not reachable/configured: process anyway (log it),
+ *                     because losing a lead is worse than a duplicate.
+ * The marker holds no PII.
+ */
+type ClaimResult = "claimed" | "duplicate" | "unavailable";
+
+const FB_LEADS_COLLECTION = "fbLeads";
+
+function isAlreadyExists(err: unknown): boolean {
+  const e = err as { code?: unknown; message?: unknown } | null;
+  return e?.code === 6 || e?.code === "already-exists" || /ALREADY_EXISTS/i.test(String(e?.message || ""));
+}
+
+async function claimLead(leadgenId: string, meta: Record<string, string | boolean>): Promise<ClaimResult> {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  try {
+    const create = firestore()
+      .collection(FB_LEADS_COLLECTION)
+      .doc(leadgenId)
+      .create({ ...meta, receivedAt: new Date() });
+    // Never let a hanging credential lookup block the webhook for long.
+    const timeout = new Promise<never>((_, reject) => {
+      timer = setTimeout(() => reject(new Error("fbLeads claim timed out")), 5000);
+    });
+    await Promise.race([create, timeout]);
+    return "claimed";
+  } catch (err) {
+    if (isAlreadyExists(err)) return "duplicate";
+    console.error(
+      "[facebook] Dedupe store unavailable - processing lead without dedupe:",
+      err instanceof Error ? err.message.split("\n")[0] : err
+    );
+    return "unavailable";
+  } finally {
+    if (timer) clearTimeout(timer);
+  }
+}
+
+async function markLeadProcessed(leadgenId: string, result: Record<string, boolean>) {
+  try {
+    await firestore().collection(FB_LEADS_COLLECTION).doc(leadgenId).update({ ...result, processedAt: new Date() });
+  } catch {
+    // best effort only
+  }
+}
 
 function verifySignature(payload: string, signature: string): boolean {
   if (!APP_SECRET) return false;
@@ -25,7 +76,40 @@ function verifySignature(payload: string, signature: string): boolean {
   return given.length === expected.length && timingSafeEqual(given, expected);
 }
 
-async function fetchLeadData(leadgenId: string): Promise<Record<string, string> | null> {
+/**
+ * BUG-005 (owner decision 2026-10-13): an automated AI call needs express consent.
+ * Facebook leads have no site checkbox, so consent must come from the Lead Ad form:
+ *  - a custom question whose field name contains "consent", "call" or "agree"
+ *    (case-insensitive) answered yes / true / "I agree"; or
+ *  - a custom-disclaimer checkbox whose key contains "call", ticked.
+ * Anything else = no call (the lead is still forwarded to the CRM and Discord).
+ */
+const CONSENT_FIELD_NAME = /consent|call|agree/i;
+const AFFIRMATIVE_ANSWER = /^(?:yes|true|i agree)\b/i;
+
+function detectCallConsent(fieldData: unknown, disclaimers: unknown): { callConsent: boolean; evidence: string } {
+  for (const field of Array.isArray(fieldData) ? fieldData : []) {
+    const name = String((field as any)?.name || "");
+    if (!CONSENT_FIELD_NAME.test(name)) continue;
+    const raw = (field as any)?.values;
+    const values: unknown[] = Array.isArray(raw) ? raw : [raw];
+    if (values.some((v) => AFFIRMATIVE_ANSWER.test(String(v ?? "").trim()))) {
+      return { callConsent: true, evidence: `field:${name.slice(0, 80)}` };
+    }
+  }
+  for (const d of Array.isArray(disclaimers) ? disclaimers : []) {
+    const key = String((d as any)?.checkbox_key || "");
+    const checked = (d as any)?.is_checked;
+    if (/call/i.test(key) && (checked === true || checked === 1 || checked === "1" || checked === "true")) {
+      return { callConsent: true, evidence: `disclaimer:${key.slice(0, 80)}` };
+    }
+  }
+  return { callConsent: false, evidence: "" };
+}
+
+type FacebookLead = { fields: Record<string, string>; callConsent: boolean; consentEvidence: string };
+
+async function fetchLeadData(leadgenId: string): Promise<FacebookLead | null> {
   // leadgen IDs are numeric; reject anything else so a forged payload cannot
   // inject extra Graph API path/query segments into a page-token request.
   if (!/^\d{1,32}$/.test(String(leadgenId))) {
@@ -37,8 +121,11 @@ async function fetchLeadData(leadgenId: string): Promise<Record<string, string> 
     return null;
   }
   try {
-    const url = `https://graph.facebook.com/v19.0/${leadgenId}?access_token=${encodeURIComponent(PAGE_ACCESS_TOKEN)}`;
-    const res = await fetch(url);
+    const base = `https://graph.facebook.com/v19.0/${leadgenId}?access_token=${encodeURIComponent(PAGE_ACCESS_TOKEN)}`;
+    // Ask for the custom-disclaimer (checkbox) answers too; if Graph rejects the
+    // field list for any reason, fall back to the default fields so the lead is not lost.
+    let res = await fetch(`${base}&fields=id,created_time,field_data,custom_disclaimer_responses`);
+    if (res.status === 400) res = await fetch(base);
     if (!res.ok) {
       console.error("Graph API error:", res.status);
       return null;
@@ -50,32 +137,39 @@ async function fetchLeadData(leadgenId: string): Promise<Record<string, string> 
         ? field.values.join(", ")
         : String(field.values);
     }
-    return fields;
+    const { callConsent, evidence } = detectCallConsent(data.field_data, data.custom_disclaimer_responses);
+    return { fields, callConsent, consentEvidence: evidence };
   } catch (error) {
-    console.error("Failed to fetch lead data:", error);
+    console.error("Failed to fetch lead data:", error instanceof Error ? error.message : error);
     return null;
   }
 }
 
-async function sendToTwenty(data: Record<string, string>) {
+// URL: TWENTY_WEBHOOK_URL (default = n8n contact-form webhook); optional
+// X-Webhook-Secret from CRM_WEBHOOK_SECRET (BUG-022).
+async function sendToTwenty(data: Record<string, string>): Promise<boolean> {
   try {
-    await fetch(TWENTY_WEBHOOK, {
+    const res = await fetch(twentyWebhookUrl(), {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: crmWebhookHeaders(),
       body: JSON.stringify({
         ...data,
         source: "facebook-lead-ad",
       }),
+      signal: AbortSignal.timeout(15_000),
     });
+    if (!res.ok) console.error("Twenty CRM forward failed:", res.status);
+    return res.ok;
   } catch (error) {
-    console.error("Twenty CRM forward failed:", error);
+    console.error("Twenty CRM forward failed:", error instanceof Error ? error.message : error);
+    return false;
   }
 }
 
-async function sendDiscordNotification(data: Record<string, string>) {
-  if (!DISCORD_WEBHOOK) return;
+async function sendDiscordNotification(data: Record<string, string>): Promise<boolean> {
+  if (!DISCORD_WEBHOOK) return false;
   try {
-    await fetch(DISCORD_WEBHOOK, {
+    const res = await fetch(DISCORD_WEBHOOK, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -94,8 +188,10 @@ async function sendDiscordNotification(data: Record<string, string>) {
         ],
       }),
     });
+    return res.ok;
   } catch (error) {
-    console.error("Discord notification failed:", error);
+    console.error("Discord notification failed:", error instanceof Error ? error.message : error);
+    return false;
   }
 }
 
@@ -144,11 +240,30 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Invalid object" }, { status: 400 });
   }
 
+  // CRTC calling-hours gate (lib/businessHours.ts, fails closed), evaluated once per delivery.
+  const callingStatus = getCallingHoursStatus();
+
+  let duplicates = 0;
   for (const entry of body.entry || []) {
     for (const change of entry.changes || []) {
       if (change.value?.leadgen_id) {
-        const leadData = await fetchLeadData(change.value.leadgen_id);
-        if (leadData) {
+        const leadgenId = String(change.value.leadgen_id);
+        const lead = await fetchLeadData(leadgenId); // validates the id is numeric
+        if (lead) {
+          const leadData = lead.fields;
+          // BUG-024: dedupe BEFORE any CRM write / Discord alert / outbound call.
+          const numericOrEmpty = (v: unknown) => (/^\d{1,32}$/.test(String(v ?? "")) ? String(v) : "");
+          const claim = await claimLead(leadgenId, {
+            formId: numericOrEmpty(change.value.form_id),
+            pageId: numericOrEmpty(change.value.page_id),
+            signatureVerified,
+          });
+          if (claim === "duplicate") {
+            duplicates++;
+            console.log("Facebook lead already processed - skipping duplicate delivery");
+            continue;
+          }
+
           const crmData: Record<string, string> = {
             firstName: leadData.full_name?.split(" ")[0] || leadData.first_name || "",
             lastName:
@@ -157,15 +272,38 @@ export async function POST(req: NextRequest) {
             email: leadData.email || "",
             phone: leadData.phone_number || leadData.phone || "",
             source: "facebook-lead-ad",
+            // CASL/CRTC evidence (BUG-005): what the Lead Ad form recorded.
+            consentToContact: "true", // the person submitted the lead form
+            consentToCall: lead.callConsent ? "true" : "false",
+            consentEvidence: lead.consentEvidence,
+            consentCapturedAt: new Date().toISOString(),
+            consentSource: "facebook-lead-form",
           };
+          // "none" tells n8n not to queue an AI call for this lead. (Consented leads
+          // keep the previous payload shape - this route places the Thinkrr call itself.)
+          if (!lead.callConsent) crmData.dispatchMode = "none";
 
-          await sendToTwenty(crmData);
-          await sendDiscordNotification(leadData);
+          const crmForwarded = await sendToTwenty(crmData);
+          const discordSent = await sendDiscordNotification(leadData);
 
-          // Real-time speed-to-lead qualification call via Thinkrr AI
-          // (only for signature-verified payloads)
-          if (crmData.phone && signatureVerified) {
-            await triggerThinkrOutboundCall({
+          // Real-time speed-to-lead qualification call via Thinkrr AI - only for
+          // signature-verified payloads, an affirmative consent answer in the form
+          // (BUG-005) AND inside the server-side calling-hours window (same
+          // fail-closed gate as /api/contact). Otherwise the lead is only forwarded.
+          let callTriggered = false;
+          const callSkip = !crmData.phone
+            ? "no_phone"
+            : !signatureVerified
+              ? "unverified_payload"
+              : !lead.callConsent
+                ? "no_consent"
+                : !callingStatus.isOpen || !isRecipientCallable(crmData.phone)
+                  ? "after_hours"
+                  : null;
+          if (callSkip) {
+            console.log(`Facebook lead: call_skipped: ${callSkip}`);
+          } else {
+            callTriggered = await triggerThinkrOutboundCall({
               name: `${crmData.firstName} ${crmData.lastName}`.trim() || "Facebook Lead",
               phone: crmData.phone,
               email: crmData.email,
@@ -173,14 +311,22 @@ export async function POST(req: NextRequest) {
             });
           }
 
+          if (claim === "claimed") {
+            await markLeadProcessed(leadgenId, { crmForwarded, discordSent, callTriggered, callConsent: lead.callConsent });
+          }
+
           console.log("Facebook lead processed:", {
             email: maskEmail(crmData.email),
             verified: signatureVerified,
+            crm: crmForwarded,
+            dedupe: claim,
+            call: callTriggered ? "dispatched" : callSkip ? `call_skipped: ${callSkip}` : "not_placed",
           });
         }
       }
     }
   }
 
-  return NextResponse.json({ success: true });
+  // Always ACK duplicates with 200 so Facebook stops retrying them.
+  return NextResponse.json({ success: true, ...(duplicates ? { duplicates } : {}) });
 }

@@ -23,7 +23,7 @@ function landTransferTax(price: number, province: Province, firstTime: boolean, 
 
 /* ── CMHC Premium ───────────────────────────────────── */
 
-// CMHC premium via the shared helper (correct 2025 schedule)
+// CMHC premium via the shared helper (current schedule, verified 2026-10-13)
 import { cmhcPremium as calcCMHC, premiumPst } from "@/lib/calc/cmhc";
 import { landTransferTax as sharedLandTransferTax } from "@/lib/calc/landTransferTax";
 import { CalculatorSchema } from "@/components/SEO/CalculatorSchema";

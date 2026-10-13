@@ -5,6 +5,7 @@ import { llm } from '@/lib/ai/llm';
 import { requireAdmin } from '@/lib/auth';
 
 export const dynamic = 'force-dynamic';
+export const maxDuration = 300;
 
 // (Previously used admin.auth() directly, which throws "default Firebase app does
 // not exist" unless another module had initialised Firebase in the same lambda.)

@@ -11,6 +11,8 @@ import { RelatedCalculators } from "@/components/calculators/RelatedCalculators"
 import { useLiveRates } from "@/lib/useLiveRates";
 import { payment, principalFromPayment } from "@/lib/calc/payment";
 import { cmhcPremiumRate as sharedCmhcPremiumRate, INSURED_PRICE_CAP } from "@/lib/calc/cmhc";
+import { liveRate, purchaseRateProduct } from "../_lib/liveRateDefaults";
+import { LiveRateNote } from "../_lib/LiveRateNote";
 
 // Pre-approval calculation logic
 function calculatePreApproval({
@@ -22,6 +24,7 @@ function calculatePreApproval({
   propertyTax = 300,
   condoFees = 0,
   baseRate = 4.39,
+  amortYears = 25,
 }: {
   grossIncome: number;
   monthlyDebts: number;
@@ -32,6 +35,8 @@ function calculatePreApproval({
   condoFees?: number;
   /** Best live 5-year fixed rate; credit tiers are priced as spreads above it */
   baseRate?: number;
+  /** 25 or 30. Insured 30-year amortization adds the 0.20% premium surcharge. */
+  amortYears?: number;
 }) {
   // Estimated contract rate by credit tier. Previously hardcoded at 5.49–6.89% (stale);
   // now the same spreads are applied on top of the live best 5-year fixed rate.
@@ -83,13 +88,14 @@ function calculatePreApproval({
   }
   
   // Maximum TOTAL loan (including any insurance premium) the qualifying payment supports
-  // at the stress-test rate — Canadian semi-annual compounding, 25-year amortization.
-  const AMORT_YEARS = 25;
+  // at the stress-test rate — Canadian semi-annual compounding, over the chosen amortization (was fixed at 25).
+  const AMORT_YEARS = amortYears;
   const maxLoanAtStress = principalFromPayment({ monthlyPayment: maxMortgagePayment, annualRatePct: stressTestRate, amortYears: AMORT_YEARS });
 
   // The premium is part of the loan you qualify for (previously it was added ON TOP of the
   // qualifying maximum, so the real ratios exceeded 39/44 while the page said "qualifies").
-  const cmhcPremiumRate = isHighRatio ? sharedCmhcPremiumRate(minDownPayment * 100) : 0;
+  // > 25-year insured amortization adds the 0.20% surcharge (CMHC / Sagen / Canada Guaranty)
+  const cmhcPremiumRate = isHighRatio ? sharedCmhcPremiumRate(minDownPayment * 100, AMORT_YEARS) : 0;
   let baseLoan = maxLoanAtStress / (1 + cmhcPremiumRate);
   let maxPurchasePrice = baseLoan / (1 - minDownPayment);
 
@@ -156,7 +162,12 @@ export default function PreApprovalCalculator() {
   const [heatingCosts, setHeatingCosts] = useState(150);
   const [propertyTax, setPropertyTax] = useState(300);
   const [condoFees, setCondoFees] = useState(0);
-  const { best5YrFixed } = useLiveRates();
+  const [amortYears, setAmortYears] = useState(25);
+  const { data: liveRates, best5YrFixed } = useLiveRates();
+  // Base rate for the credit tiers: insured 5-yr fixed below 20% down; with 20%+ down the insurable rate
+  // (25-yr) or conventional rate (30-yr). Was always the insured rate.
+  const rateProduct = purchaseRateProduct(downPayment * 100, 0, amortYears);
+  const baseRate = liveRate(liveRates, rateProduct) ?? best5YrFixed;
 
   const results = calculatePreApproval({
     grossIncome,
@@ -166,7 +177,8 @@ export default function PreApprovalCalculator() {
     heatingCosts,
     propertyTax,
     condoFees,
-    baseRate: best5YrFixed,
+    baseRate,
+    amortYears,
   });
   const fmt0 = (v: number) => (Number.isFinite(v) ? Math.round(v).toLocaleString("en-CA") : "—");
 
@@ -293,6 +305,35 @@ export default function PreApprovalCalculator() {
                       </div>
                     </div>
 
+                    {/* Amortization */}
+                    <div>
+                      <label className="block text-sm font-medium mb-2 flex items-center gap-2">
+                        <Clock className="w-4 h-4 text-gold-400" />
+                        Amortization
+                      </label>
+                      <div className="flex gap-2">
+                        {[25, 30].map((y) => (
+                          <button
+                            key={y}
+                            type="button"
+                            onClick={() => setAmortYears(y)}
+                            aria-pressed={amortYears === y}
+                            className={`flex-1 py-2.5 px-4 rounded-xl font-semibold text-sm transition-all border ${amortYears === y ? "bg-gold-500 text-black border-gold-500" : "bg-white/5 text-gray-300 border-white/10 hover:bg-white/10"}`}
+                          >
+                            {y} Years
+                          </button>
+                        ))}
+                      </div>
+                      {amortYears > 25 && downPayment < 0.2 && (
+                        <p className="text-xs text-amber-300 mt-2">
+                          With less than 20% down, a 30-year amortization is only available to first-time buyers and buyers of new builds, and adds 0.20% to the insurance premium rate.
+                        </p>
+                      )}
+                      {amortYears > 25 && downPayment >= 0.2 && (
+                        <p className="text-xs text-gray-400 mt-2">30-year amortization with 20%+ down is a conventional (uninsured) mortgage, usually priced slightly higher.</p>
+                      )}
+                    </div>
+
                     {/* Credit Score */}
                     <div>
                       <label className="block text-sm font-medium mb-2 flex items-center gap-2">
@@ -409,6 +450,9 @@ export default function PreApprovalCalculator() {
                       <span className="text-gray-300 block">Est. Rate (by credit tier)</span>
                       <span className="font-semibold text-lg">{results.mortgageRate.toFixed(2)}%</span>
                     </div>
+                    <div className="col-span-2 -mt-2">
+                      <LiveRateNote data={liveRates} product={rateProduct} source={liveRate(liveRates, rateProduct) !== undefined ? "live" : "fallback"} suffix={results.mortgageRate > baseRate ? ` + ${(results.mortgageRate - baseRate).toFixed(2)}% illustrative credit-tier spread` : ""} />
+                    </div>
                     <div>
                       <span className="text-gray-300 block">Stress Test Rate</span>
                       <span className="font-semibold text-lg">{results.stressTestRate.toFixed(2)}%</span>
@@ -496,7 +540,7 @@ export default function PreApprovalCalculator() {
                 <div>
                   <h3 className="text-lg font-semibold text-blue-300 mb-3">About Pre-Approval</h3>
                   <div className="space-y-2 text-sm text-blue-200">
-                    <p>• Qualifies you at the stress test rate of {results.stressTestRate.toFixed(2)}% (estimated rate + 2%, minimum 5.25%) over a 25-year amortization</p>
+                    <p>• Qualifies you at the stress test rate of {results.stressTestRate.toFixed(2)}% (estimated rate + 2%, minimum 5.25%) over a {amortYears}-year amortization</p>
                     <p>• Estimated rates are based on today&apos;s best 5-year fixed rate plus an illustrative credit-score adjustment</p>
                     <p>• Pre-approval is valid for 90-120 days depending on the lender</p>
                     <p>• Actual rates and approval are subject to credit and income verification</p>
@@ -541,6 +585,7 @@ export default function PreApprovalCalculator() {
                           { label: "Down Payment", value: (downPayment * 100).toFixed(0) + "% ($" + fmt0(results.maxPurchasePrice * downPayment) + " at max price)" },
                           { label: "Monthly Debts", value: "$" + Math.round(monthlyDebts).toLocaleString("en-CA") },
                           { label: "Credit Score", value: String(creditScore) },
+                          { label: "Amortization", value: amortYears + " years" },
                         ]
                       },
                       {

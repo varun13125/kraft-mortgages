@@ -14,6 +14,8 @@ import {
   pmt,
 } from "@/lib/mli/calcs";
 import { downloadCSV, downloadJSON } from "@/lib/mli/export";
+import CalculatorPdfButton from "@/components/calculator-report/CalculatorPdfButton";
+import { money, pct } from "@/components/calculator-report/reportFormat";
 
 export default function PointsPage() {
   const [name, setName] = useState("Scenario A");
@@ -304,7 +306,7 @@ export default function PointsPage() {
 
                 <div className="flex flex-wrap gap-3 pt-4">
                   <button className="px-4 py-2 bg-gray-700 text-gray-100 rounded-lg hover:bg-gray-600 transition-colors border border-gray-600" onClick={saveScenario}>Save</button>
-                  <button className="px-4 py-2 bg-gold-500 text-gray-900 rounded-lg hover:bg-gold-400 transition-colors font-semibold" onClick={printPDF}>Print / PDF</button>
+                  <button className="px-4 py-2 bg-gold-500 text-gray-900 rounded-lg hover:bg-gold-400 transition-colors font-semibold" onClick={printPDF}>Print</button>
                   <button className="px-4 py-2 bg-gray-700 text-gray-100 rounded-lg hover:bg-gray-600 transition-colors border border-gray-600" onClick={exportCSV}>Export CSV</button>
                   <button className="px-4 py-2 bg-gray-700 text-gray-100 rounded-lg hover:bg-gray-600 transition-colors border border-gray-600" onClick={exportJSON}>Export JSON</button>
                 </div>
@@ -345,9 +347,48 @@ export default function PointsPage() {
                   Example: If project cost/value = <b>$20,000,000</b>, leverage {Math.round(leverage*100)}% → max loan ≈{" "}
                   <b>${(maxLoanFromValueOrCost(projectType==="new", tier, 20_000_000)).toLocaleString()}</b>.
                   At 4.5% / {amort}y, monthly ≈{" "}
-                  <b>${Math.round(pmt(4.5, amort, maxLoanFromValueOrCost(projectType==="new", tier, 20_000_000))).toLocaleString()}</b>.
+                  <b>${Math.round(pmt(4.5, amort, maxLoanFromValueOrCost(projectType==="new", tier, 20_000_000))).toLocaleString()}</b>{" "}
+                  (example rate; semi-annual compounding).
                 </div>
               </Card>
+
+              <CalculatorPdfButton
+                className=""
+                source="calculator-pdf-mli-points"
+                title="Your MLI Select Points Report"
+                subtitle="Get a personalized PDF with your MLI Select points, tier and financing terms"
+                calculatorName="MLI Select Points & Tier Calculator"
+                mortgageType="MLI Select (Multi-Unit)"
+                getSections={() => [
+                  {
+                    title: "Your Project",
+                    rows: [
+                      { label: "Scenario", value: name || "Scenario" },
+                      { label: "Project Type", value: projectType === "new" ? "New construction" : "Existing property" },
+                      { label: "Total Units", value: String(units) },
+                      { label: "Affordable Units", value: `${affUnits} (${pct(pctAff, 1)})` },
+                      { label: "Affordability Commitment", value: `${affYears} years` },
+                      { label: projectType === "new" ? "Energy: % better than NECB Tier 1" : "Energy: % reduction vs baseline", value: pct(energyPct, 0) },
+                      { label: "All Units Visitable / Barrier-Free Commons", value: `${visitAll ? "Yes" : "No"} / ${commons ? "Yes" : "No"}` },
+                      { label: "Accessible Units / Universal Design Units", value: `${pct(accPct, 0)} / ${pct(udPct, 0)}` },
+                      { label: "RHF Accessibility Score", value: String(rhf) },
+                    ],
+                  },
+                  {
+                    title: "Your MLI Select Results",
+                    rows: [
+                      { label: "Affordability Points", value: String(aPts) },
+                      { label: "Energy Efficiency Points", value: String(ePts) },
+                      { label: "Accessibility Points", value: String(accPts) },
+                      { label: "Total Points (max 100)", value: String(total), highlight: true },
+                      { label: "Tier", value: tier > 0 ? `${tier} points` : "Below 50 points (not eligible)", highlight: true },
+                      { label: "Max Amortization", value: `${amort} years` },
+                      { label: projectType === "new" ? "Max Loan-to-Cost" : "Max Loan-to-Value", value: pct(leverage * 100, 0) },
+                    ],
+                  },
+                ]}
+                educationalContent="MLI Select is CMHC's multi-unit (5+ units) insurance program. Points from affordability, energy efficiency and accessibility commitments unlock higher leverage (up to 95%), longer amortization (40/45/50 years at 50/70/100 points) and premium discounts (10%/20%/30%). The insured loan is the lesser of the leverage cap and the loan supported by a 1.10 debt coverage ratio (standard rental). Figures are estimates based on CMHC's published criteria and premium grid (effective July 14, 2025); CMHC changes these periodically. Not a commitment to insure or lend."
+              />
             </div>
           </div>
         </div>

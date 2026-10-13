@@ -61,7 +61,7 @@ export default function ResidentialLending() {
     {
       title: "Stress Test Calculator",
       description: "Test your mortgage qualification at higher rates",
-      href: "/residential/calculators/stress-test",
+      href: "/calculators/stress-test", // canonical stress-test page (BUG-020)
       icon: Shield,
       popular: false
     },

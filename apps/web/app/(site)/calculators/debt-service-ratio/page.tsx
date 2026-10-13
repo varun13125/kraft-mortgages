@@ -13,6 +13,9 @@ import { cmhcPremium as sharedCmhcPremium, QUALIFYING_RATIOS } from "@/lib/calc/
 import PdfLeadModal from "@/components/PdfLeadModal";
 import { CalculatorSchema } from "@/components/SEO/CalculatorSchema";
 import { RelatedCalculators } from "@/components/calculators/RelatedCalculators";
+import { useLiveRates } from "@/lib/useLiveRates";
+import { liveRate, purchaseRateProduct, useLiveDefault } from "../_lib/liveRateDefaults";
+import { LiveRateNote } from "../_lib/LiveRateNote";
 
 const faqs = [
   {
@@ -55,8 +58,15 @@ export default function DebtServiceRatioPage() {
   const [manualMortgage, setManualMortgage] = useState(2500);
   const [homePrice, setHomePrice] = useState(700000);
   const [downPaymentPct, setDownPaymentPct] = useState(20);
-  const [mortgageRate, setMortgageRate] = useState(5.0);
   const [amortization, setAmortization] = useState(25);
+  // Contract rate follows today's 5-yr fixed for this purchase until edited (was a static 5.00%)
+  const { data: liveRates } = useLiveRates();
+  const rateProduct = purchaseRateProduct(downPaymentPct, homePrice, amortization);
+  const [mortgageRate, setMortgageRate, mortgageRateSource] = useLiveDefault(5.0, liveRate(liveRates, rateProduct));
+  // Manual mode helper: qualifying-rate payment from a balance, rate and amortization
+  const [helperBalance, setHelperBalance] = useState(500000);
+  const helperQualRate = Math.max(mortgageRate + 2, 5.25);
+  const helperPayment = payment({ principal: helperBalance, annualRatePct: helperQualRate, amortYears: amortization });
   const [monthlyPropertyTax, setMonthlyPropertyTax] = useState(350);
   const [monthlyHeating, setMonthlyHeating] = useState(100);
   const [condoFees, setCondoFees] = useState(0);
@@ -244,12 +254,34 @@ export default function DebtServiceRatioPage() {
                       ))}
                     </div>
                     {calcMethod === "manual" ? (
-                      <ValidatedInput label="Monthly Mortgage Payment" value={manualMortgage} onChange={setManualMortgage} validation={{ min: 0, max: 15000 }} type="currency" help="For a lender-style result, enter the payment at the stress-test rate (contract rate + 2% or 5.25%)." />
+                      <div className="space-y-4">
+                        <ValidatedInput label="Monthly Mortgage Payment" value={manualMortgage} onChange={setManualMortgage} validation={{ min: 0, max: 15000 }} type="currency" help="For a lender-style result, enter the payment at the stress-test rate (contract rate + 2% or 5.25%), not your actual payment." />
+                        <div className="bg-white/5 rounded-xl p-4 border border-white/10 space-y-4">
+                          <p className="text-sm font-medium text-gray-300">Work out the qualifying payment</p>
+                          <ValidatedInput label="Mortgage Balance" value={helperBalance} onChange={setHelperBalance} validation={{ min: 0, max: 10000000 }} type="currency" />
+                          <div>
+                            <ValidatedSlider label="Contract Rate" value={mortgageRate} onChange={setMortgageRate} min={1} max={12} step={0.01} formatValue={(v) => `${v.toFixed(2)}%`} />
+                            <LiveRateNote data={liveRates} product={rateProduct} source={mortgageRateSource} />
+                          </div>
+                          <ValidatedSlider label={`Amortization (${amortization} years)`} value={amortization} onChange={setAmortization} min={5} max={30} step={5} formatValue={(v) => `${v} years`} />
+                          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                            <p className="text-sm text-gray-300">
+                              Payment at the {helperQualRate.toFixed(2)}% qualifying rate: <span className="font-semibold text-gold-400">{formatCurrency(helperPayment, 0)}/mo</span>
+                            </p>
+                            <button type="button" onClick={() => setManualMortgage(Math.round(helperPayment))} className="py-2 px-4 rounded-lg text-sm font-semibold bg-gold-500 text-black hover:bg-gold-400 transition-colors">
+                              Use this payment
+                            </button>
+                          </div>
+                        </div>
+                      </div>
                     ) : (
                       <div className="space-y-4">
                         <ValidatedInput label="Home Purchase Price" value={homePrice} onChange={setHomePrice} validation={{ min: 100000, max: 5000000 }} type="currency" />
                         <ValidatedSlider label={`Down Payment (${downPaymentPct}%)`} value={downPaymentPct} onChange={setDownPaymentPct} min={5} max={50} step={1} formatValue={(v) => `${v}%`} />
-                        <ValidatedSlider label={`Mortgage Rate (${mortgageRate}%)`} value={mortgageRate} onChange={setMortgageRate} min={1} max={12} step={0.1} formatValue={(v) => `${v}%`} />
+                        <div>
+                          <ValidatedSlider label="Mortgage Rate" value={mortgageRate} onChange={setMortgageRate} min={1} max={12} step={0.01} formatValue={(v) => `${v.toFixed(2)}%`} />
+                          <LiveRateNote data={liveRates} product={rateProduct} source={mortgageRateSource} />
+                        </div>
                         <ValidatedSlider label={`Amortization (${amortization} years)`} value={amortization} onChange={setAmortization} min={5} max={30} step={5} formatValue={(v) => `${v} years`} />
                       </div>
                     )}

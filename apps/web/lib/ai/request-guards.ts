@@ -11,7 +11,19 @@
  * - redactPII(): masks emails / phone numbers before text is written to logs or
  *   in-memory audit buffers.
  */
+import { createHash, timingSafeEqual } from "crypto";
 import { NextRequest, NextResponse } from "next/server";
+
+/**
+ * Constant-time comparison for shared secrets / API keys. Both values are hashed first so
+ * the comparison never leaks the expected length. Empty values never match.
+ */
+export function safeEqualSecret(provided: string | null | undefined, expected: string | null | undefined): boolean {
+  if (!provided || !expected) return false;
+  const a = createHash("sha256").update(provided, "utf8").digest();
+  const b = createHash("sha256").update(expected, "utf8").digest();
+  return timingSafeEqual(a, b);
+}
 
 type Bucket = { hits: number[] };
 const buckets = new Map<string, Bucket>();
@@ -57,6 +69,18 @@ export function rateLimit(
   entry.hits.push(now);
   buckets.set(key, entry);
   return { ok: true };
+}
+
+/**
+ * Rejects bodies that aren't declared as JSON (415). Browsers can send `text/plain` POSTs
+ * cross-site without a CORS preflight and `req.json()` still parses them, so without this a
+ * third-party page could make visitors' browsers spend our paid AI/TTS credits.
+ * Returns null when the request is acceptable.
+ */
+export function requireJsonContentType(req: NextRequest, extra: Record<string, unknown> = {}): NextResponse | null {
+  const contentType = (req.headers.get("content-type") || "").trim().toLowerCase();
+  if (contentType.startsWith("application/json")) return null;
+  return NextResponse.json({ error: "Content-Type must be application/json", ...extra }, { status: 415 });
 }
 
 export function tooManyRequests(retryAfterSec: number, extra: Record<string, unknown> = {}) {

@@ -15,12 +15,18 @@ export const metadata: Metadata = {
 };
 
 import Link from "next/link";
+import Navigation from "@/components/Navigation";
+import Footer from "@/components/Footer";
 
-export const dynamic = "force-dynamic";
+// (Removed `export const dynamic = "force-dynamic"`: this page is fully static, so
+// it was being server-rendered on every request for no reason.)
 
 export default function MLILanding() {
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
+    <>
+    {/* Previously this page had no header or footer (dead end, no licence numbers). */}
+    <Navigation />
+    <main id="main-content" className="min-h-screen bg-gray-900 text-white">
       {/* Hero Section */}
       <section className="relative overflow-hidden py-20">
         <div className="max-w-7xl mx-auto px-6 text-center">
@@ -35,14 +41,14 @@ export default function MLILanding() {
             Save hundreds of thousands in CMHC premiums with our expertise.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a
+            <Link
               href="/mli-select"
               className="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors"
             >
               Access MLI Select Portal
-            </a>
+            </Link>
             <Link
-              href={"/contact" as any}
+              href="/contact"
               className="px-8 py-4 border border-blue-600 text-blue-400 hover:bg-blue-600 hover:text-white rounded-lg transition-colors"
             >
               Get Free Assessment
@@ -88,14 +94,16 @@ export default function MLILanding() {
           <p className="text-lg text-gray-300 mb-8">
             Our MLI Select specialists are here to help you maximize your savings and streamline your application.
           </p>
-          <a
+          <Link
             href="/mli-select"
             className="px-8 py-4 bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-700 hover:to-green-700 text-white font-semibold rounded-lg transition-colors inline-block"
           >
             Access Full MLI Select Portal →
-          </a>
+          </Link>
         </div>
       </section>
-    </div>
+    </main>
+    <Footer />
+    </>
   );
 }

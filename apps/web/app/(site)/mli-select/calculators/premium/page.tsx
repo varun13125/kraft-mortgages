@@ -5,6 +5,8 @@ import Card from "@/components/mli/Card";
 import TierBadge from "@/components/mli/TierBadge";
 import { tierFromPoints, premiumDiscountFor, mliBasePremiumPct, mliAmortizationSurchargePct, type MliLoanPurpose } from "@/lib/mli/calcs";
 import { DollarSign, Percent, TrendingDown, PiggyBank, Award, Calculator } from "lucide-react";
+import CalculatorPdfButton from "@/components/calculator-report/CalculatorPdfButton";
+import { money, pct } from "@/components/calculator-report/reportFormat";
 
 export default function PremiumPage() {
   const [loan, setLoan] = useState(15000000);
@@ -407,6 +409,38 @@ export default function PremiumPage() {
               </Card>
             </motion.div>
           </div>
+          <CalculatorPdfButton
+            source="calculator-pdf-mli-premium"
+            title="Your MLI Select Premium Report"
+            subtitle="Get a personalized PDF with your CMHC premium and MLI Select discount"
+            calculatorName="MLI Select Premium Calculator"
+            mortgageType="MLI Select (Multi-Unit)"
+            amount={safeLoan}
+            getSections={() => [
+              {
+                title: "Your Inputs",
+                rows: [
+                  { label: "Loan Amount", value: money(safeLoan) },
+                  { label: "Loan-to-Value / Loan-to-Cost", value: pct(ltv, 0) },
+                  { label: "Loan Purpose", value: purpose === "construction" ? "Construction financing" : "Purchase / refinance" },
+                  { label: "Amortization", value: `${amortYears} years` },
+                  { label: "MLI Select Points", value: `${points} (tier ${tier || "below 50"})` },
+                ],
+              },
+              {
+                title: "Your Results",
+                rows: [
+                  { label: baseOverride === null ? "Base Premium (CMHC grid)" : "Base Premium (your override)", value: pct(base) },
+                  { label: "Amortization Surcharge", value: pct(amortSurcharge) },
+                  { label: "Premium Before Discount", value: `${pct(basePremium)} = ${money(baseCost)}` },
+                  { label: "MLI Select Discount", value: pct(discount * 100, 0) },
+                  { label: "Premium After Discount", value: `${pct(finalPremium)} = ${money(finalCost)}`, highlight: true },
+                  { label: "Premium Savings", value: money(savings), highlight: true },
+                ],
+              },
+            ]}
+            educationalContent="MLI Select is CMHC's multi-unit (5+ units) insurance program. Points from affordability, energy efficiency and accessibility commitments unlock higher leverage (up to 95%), longer amortization (40/45/50 years at 50/70/100 points) and premium discounts (10%/20%/30%). The insured loan is the lesser of the leverage cap and the loan supported by a 1.10 debt coverage ratio (standard rental). Figures are estimates based on CMHC's published criteria and premium grid (effective July 14, 2025); CMHC changes these periodically. Not a commitment to insure or lend. The premium is usually added to the loan. EGI, non-residential, second-mortgage and other-shelter-model surcharges are not included; provincial sales tax may apply to the premium in some provinces."
+          />
           <p className="mt-8 text-xs text-gray-500 max-w-4xl mx-auto text-center">
             Estimates only. Base rates follow CMHC&apos;s multi-unit premium grid for standard rental housing (effective July 14, 2025);
             LTV bands above 85% are available under MLI Select only. The amortization surcharge (0.25% per 5 years beyond 25) and

@@ -4,26 +4,39 @@
  * SINGLE SOURCE OF TRUTH for CMHC premium / minimum down payment rules across
  * the residential calculators.
  *
- * Sources (verified Oct 2026):
- *  - CMHC premium table: cmhc-schl.gc.ca "Mortgage loan insurance cost"
- *    (≤65% 0.60%, ≤75% 1.70%, ≤80% 2.40%, ≤85% 2.80%, ≤90% 3.10%, ≤95% 4.00%,
- *    4.50% for 90.01–95% with a non-traditional down payment). PST applies in
- *    ON, QC and SK and cannot be added to the loan.
- *  - Dec 15, 2024 federal mortgage reforms (canada.ca, Dept. of Finance): insured
- *    price cap raised to $1.5M; 30-year insured amortization for all first-time
- *    buyers and buyers of new builds. Insurers apply a 0.20% premium surcharge
- *    for amortizations over 25 years.
+ * Sources (re-verified 2026-10-13 against primary sources, BUG-044):
+ *  - Premium table (≤65% 0.60%, ≤75% 1.70%, ≤80% 2.40%, ≤85% 2.80%, ≤90% 3.10%, ≤95% 4.00%,
+ *    4.50% for 90.01–95% with a non-traditional down payment): CMHC "Premium information for
+ *    homeowner and small rental loans" https://www.cmhc-schl.gc.ca/professionals/project-funding-and-mortgage-financing/mortgage-loan-insurance/mortgage-loan-insurance-homeownership-programs/premium-information-for-homeowner-and-small-rental-loans
+ *    and Sagen https://www.sagen.ca/mortgage-insurance/premium-rates/ (same table).
+ *  - 0.20% surcharge for amortizations over 25 years: CMHC notice 2024-06-05 ("premium surcharge of
+ *    20 basis points", effective 2024-08-01) https://www.cmhc-schl.gc.ca/media-newsroom/notices/2024/cmhc-revises-homeowner-mortgage-loan-insurance-premiums ;
+ *    Sagen ("an additional premium of 0.20% will apply"); Canada Guaranty over-25-yr columns
+ *    3.00/3.30/4.20% (updated 03/2026) https://www.canadaguaranty.ca/portable-advantage/ .
+ *    Insured 30-year purchases exist only above 80% LTV, which is the only case cmhcPremiumRate()
+ *    charges a premium, so the surcharge never applies with 20%+ down.
+ *  - Dec 15, 2024 federal reforms (still current Oct 2026): insured price cap $1.5M; 30-year insured
+ *    amortization for all first-time buyers and buyers of new builds
+ *    https://www.canada.ca/en/department-finance/news/2024/12/boldest-mortgage-reforms-in-decades-come-into-force-today.html ;
+ *    minimum down payment tiers: FCAC https://www.canada.ca/en/financial-consumer-agency/services/mortgages/down-payment.html
+ *  - Sales tax on the premium (cash at closing, can't be financed): ON 8% RST (ontario.ca "Retail sales
+ *    tax: insurance and benefits plans", updated 2026-09-18); SK 6% (PST bulletin PST-73); QC 9%, rising
+ *    to 9.975% for premiums paid after 2026-12-31 (Revenu Québec tax news 2026-04-09).
  * Not financial advice.
  */
 
-/** Purchase price at/above which mortgage default insurance is unavailable. */
+/** Purchase price at/above which mortgage default insurance is unavailable (Finance Canada, Dec 15, 2024). */
 export const INSURED_PRICE_CAP = 1_500_000;
 
-/** Premium surcharge (decimal) added for insured amortizations longer than 25 years. */
+/** Premium surcharge (decimal) added for insured amortizations longer than 25 years (CMHC 2024-08-01; verified 2026-10-13). */
 export const LONG_AMORTIZATION_SURCHARGE = 0.002;
 
-/** Provincial sales tax charged on the premium (payable in cash at closing). */
+/** Provincial sales tax charged on the premium (payable in cash at closing). Verified 2026-10-13. */
 export const PREMIUM_PST_RATES: Record<string, number> = { ON: 0.08, QC: 0.09, SK: 0.06 };
+
+/** Quebec's tax on insurance premiums is harmonised with the QST (9.975%) for premiums paid after 2026-12-31. */
+export const QC_PREMIUM_TAX_FROM_2027 = 0.09975;
+const QC_PREMIUM_TAX_CHANGE = Date.parse("2027-01-01T05:00:00Z"); // midnight Jan 1, 2027 Eastern
 
 // Small tolerance so e.g. 15% computed as 14.999999999 doesn't fall into the 10–15% tier.
 const EPS = 1e-9;
@@ -91,9 +104,15 @@ export function cmhcPremium(purchasePrice: number, downPayment: number, amortYea
   return loanAmount * rate;
 }
 
-/** PST on the premium for the given province code (ON 8%, QC 9%, SK 6%; 0 elsewhere). Paid in cash at closing. */
-export function premiumPst(premium: number, provinceCode: string): number {
-  return premium * (PREMIUM_PST_RATES[provinceCode] ?? 0);
+/** Sales-tax rate on the premium for a province code, as of `asOf` (default: now). 0 where none applies. */
+export function premiumPstRate(provinceCode: string, asOf: Date = new Date()): number {
+  if (provinceCode === "QC" && asOf.getTime() >= QC_PREMIUM_TAX_CHANGE) return QC_PREMIUM_TAX_FROM_2027;
+  return PREMIUM_PST_RATES[provinceCode] ?? 0;
+}
+
+/** PST on the premium for the given province code (ON 8%, QC 9% → 9.975% from 2027, SK 6%; 0 elsewhere). Paid in cash at closing. */
+export function premiumPst(premium: number, provinceCode: string, asOf?: Date): number {
+  return premium * premiumPstRate(provinceCode, asOf);
 }
 
 /**
@@ -112,7 +131,7 @@ export function insuredMortgageAmount(purchasePrice: number, downPayment: number
 /**
  * Canadian mortgage stress test qualifying rate.
  *
- * Per OSFI B-20 guideline (unchanged as of 2026):
+ * Per OSFI B-20 guideline (unchanged as of 2026; OSFI MQR page modified 2026-01-29, checked 2026-10-13):
  *   qualifying rate = max(contract rate + 2%, 5.25%)
  *
  * The 5.25% floor replaced the BoC 5-year benchmark in 2021.

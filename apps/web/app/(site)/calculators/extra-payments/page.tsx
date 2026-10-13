@@ -12,6 +12,9 @@ import { payment, periodicRate } from "@/lib/calc/payment";
 import PdfLeadModal from "@/components/PdfLeadModal";
 import { CalculatorSchema } from "@/components/SEO/CalculatorSchema";
 import { RelatedCalculators } from "@/components/calculators/RelatedCalculators";
+import { useLiveRates } from "@/lib/useLiveRates";
+import { liveRate, useLiveDefault } from "../_lib/liveRateDefaults";
+import { LiveRateNote } from "../_lib/LiveRateNote";
 
 /* ── Amortization helpers ───────────────────────────── */
 interface YearRow {
@@ -96,7 +99,9 @@ const faqs = [
 export default function ExtraPaymentsPage() {
   const [showPdfModal, setShowPdfModal] = useState(false);
   const [mortgage, setMortgage] = useState(500000);
-  const [rate, setRate] = useState(5.0);
+  // Follows today's insured 5-yr fixed until edited (was a static 5.00%), same default as the amortization page
+  const { data: liveRates } = useLiveRates();
+  const [rate, setRate, rateSource] = useLiveDefault(5.0, liveRate(liveRates, "fixed5Insured"));
   const [amortYears, setAmortYears] = useState(25);
   const [extraMonthly, setExtraMonthly] = useState(200);
   const [lumpSum, setLumpSum] = useState(5000);
@@ -209,7 +214,10 @@ export default function ExtraPaymentsPage() {
                                     <ComplianceBanner feature="LEAD_FORM" />
                   <div className="space-y-6">
                     <ValidatedInput label="Mortgage Amount" value={mortgage} onChange={setMortgage} validation={{ min: 50000, max: 5000000 }} type="currency" />
-                    <ValidatedInput label="Interest Rate" value={rate} onChange={setRate} validation={{ min: 0.5, max: 15 }} type="percentage" />
+                    <div>
+                      <ValidatedInput label="Interest Rate" value={rate} onChange={setRate} validation={{ min: 0.5, max: 15 }} type="percentage" />
+                      <LiveRateNote data={liveRates} product="fixed5Insured" source={rateSource} />
+                    </div>
                     <ValidatedSlider label={`Amortization (${amortYears} years)`} value={amortYears} onChange={setAmortYears} min={5} max={30} step={1} formatValue={(v) => `${v} years`} />
                   </div>
                 </div>

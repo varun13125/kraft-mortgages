@@ -3,6 +3,7 @@ import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
 import { useLiveRates } from "@/lib/useLiveRates";
+import { liveBenchmark, liveRate, ratesAsOf, type BenchmarkRow } from "../_lib/liveRateDefaults";
 import { ComplianceBanner } from "@/components/ComplianceBanner";
 import { Calculator, ArrowRight, Info, ChevronDown, ChevronUp, FileText,
   AlertTriangle, Home, CreditCard, Layers, CheckCircle2, TrendingDown,
@@ -78,6 +79,15 @@ const HORIZON_MONTHS = 60;
 const MAX_LTV_INSTITUTIONAL = 80;
 const MAX_LTV_PRIVATE = 85;
 const MAX_HELOC_LTV = 65;
+// No live benchmark exists for private/equity FIRST mortgages, so the equity-lender refinance rate is illustrative.
+const EQUITY_REFI_ILLUSTRATIVE_RATE = 6.95;
+// Fallback when the live B-lender HELOC benchmark (raw_benchmarks.alt_heloc) is unavailable.
+const ALT_HELOC_FALLBACK_RATE = 8.49;
+
+function fmtRange(b: BenchmarkRow | undefined): string {
+  if (!b || b.lowest === undefined) return "—";
+  return b.median !== undefined && b.median > b.lowest ? `${b.lowest.toFixed(2)}% (median ${b.median.toFixed(2)}%)` : `from ${b.lowest.toFixed(2)}%`;
+}
 
 export default function RefinanceVsHelocVsSecondPage() {
   const { data: liveRates, bestHeloc, bestPrivateSecond } = useLiveRates();
@@ -109,7 +119,7 @@ export default function RefinanceVsHelocVsSecondPage() {
     let refiRate: number;
     if (firstType === "a-lender") refiRate = typeof liveConv5 === "number" ? liveConv5 : 4.39; // live conventional 5-yr benchmark
     else if (firstType === "b-lender") refiRate = typeof liveAlt5 === "number" ? liveAlt5 : 6.04; // live alternative 5-yr benchmark
-    else refiRate = 6.95;
+    else refiRate = EQUITY_REFI_ILLUSTRATIVE_RATE;
 
     // Lender fees: B-lender ~1%; private/equity lenders typically 1–3% (2% used; broker fees extra)
     const refiFee = firstType === "b-lender" ? refiTotal * 0.01 : firstType === "equity" ? refiTotal * 0.02 : 0;
@@ -125,7 +135,8 @@ export default function RefinanceVsHelocVsSecondPage() {
     const refiFeasible = newLtv <= (firstType === "equity" ? MAX_LTV_PRIVATE : MAX_LTV_INSTITUTIONAL);
 
     // Option 2: HELOC (interest-only, variable)
-    const helocRate = firstType === "a-lender" ? (bestHeloc || 4.95) : 8.49;
+    const liveAltHeloc = liveRate(liveRates, "altHeloc");
+    const helocRate = firstType === "a-lender" ? (bestHeloc || 4.95) : (liveAltHeloc ?? ALT_HELOC_FALLBACK_RATE);
     const helocMonthly = cashNeeded * (helocRate / 100) / 12; // interest-only
     // Most A-lender HELOCs have no setup fee; alternative-lender HELOCs often charge ~1–2%
     const helocFee = firstType === "a-lender" ? 0 : cashNeeded * 0.015;
@@ -473,7 +484,7 @@ export default function RefinanceVsHelocVsSecondPage() {
                   <h3 className="text-lg font-semibold text-blue-300 mb-3">Understanding These Estimates</h3>
                   <div className="space-y-2 text-sm text-blue-200">
                     <p>• Refinance rates shown are blended estimates based on current market conditions for each lender type.</p>
-                    <p>• A-lender refinance uses the live conventional 5-year benchmark (insured refinancing isn&apos;t available); A-lender HELOC uses the live HELOC benchmark. B-lender/private HELOC rate (8.49%) is illustrative.</p>
+                    <p>• A-lender refinance uses the live conventional 5-year benchmark (insured refinancing isn&apos;t available); A-lender HELOC uses the live HELOC benchmark. B-lender HELOC uses the live B-lender HELOC benchmark when available ({liveRate(liveRates, "altHeloc") !== undefined ? "live" : `${ALT_HELOC_FALLBACK_RATE}% fallback`}); the equity-lender refinance rate ({EQUITY_REFI_ILLUSTRATIVE_RATE}%) is illustrative because there is no live benchmark for private first mortgages.</p>
                     <p>• Second mortgage rate is the live private-second benchmark, modelled as interest-only. Private seconds usually renew yearly with renewal fees, and broker fees may apply — not included.</p>
                     <p>• Prepayment penalty estimate uses 3 months&apos; interest — actual penalty could be higher with IRD calculation.</p>
                     <p>• 5-year cost = interest on all mortgage debt plus fees and penalty, assuming rates stay constant (HELOCs are variable). Excludes property tax and insurance.</p>
@@ -502,7 +513,7 @@ export default function RefinanceVsHelocVsSecondPage() {
                 <strong>A HELOC (Home Equity Line of Credit)</strong> is a revolving credit facility secured against your home. You only pay interest on what you actually use, and many HELOCs offer interest-only payments. This makes it ideal for situations where you need flexibility — you can draw funds, repay them, and draw again. The trade-off is higher rates than a refinance and the variable rate risk.
               </p>
               <p>
-                <strong>A second mortgage</strong> is a separate loan registered behind your first mortgage. It doesn&apos;t touch your existing mortgage at all — no penalty, no rate change, no amortization reset. This makes it the fastest option to arrange, sometimes closing in days. However, second mortgage rates are significantly higher (8.95–10.95%+ with equity lenders) and fees are steeper (1.5–4% of the loan amount).
+                <strong>A second mortgage</strong> is a separate loan registered behind your first mortgage. It doesn&apos;t touch your existing mortgage at all — no penalty, no rate change, no amortization reset. This makes it the fastest option to arrange, sometimes closing in days. However, second mortgage rates are significantly higher{ratesAsOf(liveRates) && liveRate(liveRates, "privateSecond") !== undefined ? ` (private seconds in our live feed start at ${liveRate(liveRates, "privateSecond")!.toFixed(2)}% as of ${ratesAsOf(liveRates)}, and most files price above that)` : ""} and fees are steeper (commonly 1.5–4% of the loan amount).
               </p>
 
               <h3 className="text-2xl font-semibold text-gray-100 mt-8">When Refinancing Is the Right Choice</h3>
@@ -551,35 +562,35 @@ export default function RefinanceVsHelocVsSecondPage() {
         {/* Rate Reference */}
         <section className="py-16 px-4 bg-gray-800/30">
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-3xl font-bold text-gray-100 mb-8 text-center">Current Rates by Option</h2>
+            <h2 className="text-3xl font-bold text-gray-100 mb-8 text-center">Today&apos;s Rate Benchmarks by Option</h2>
             <div className="grid md:grid-cols-3 gap-6">
               <div className="bg-white/5 rounded-xl p-5 border border-white/10">
-                <h3 className="text-lg font-bold text-blue-400 mb-3">Refinance Rates</h3>
+                <h3 className="text-lg font-bold text-blue-400 mb-3">Refinance (5-yr fixed)</h3>
                 <div className="space-y-2 text-sm">
-                  <div className="flex justify-between"><span className="text-gray-400">A-Lender</span><span className="text-gray-200">3.74–5.09%</span></div>
-                  <div className="flex justify-between"><span className="text-gray-400">B-Lender</span><span className="text-gray-200">5.25–8.14%</span></div>
-                  <div className="flex justify-between"><span className="text-gray-400">Typical Fee</span><span className="text-gray-200">0–1%</span></div>
+                  <div className="flex justify-between gap-3"><span className="text-gray-400">A-Lender (conventional)</span><span className="text-gray-200 text-right">{fmtRange(liveBenchmark(liveRates, "5_year_fixed_conventional"))}</span></div>
+                  <div className="flex justify-between gap-3"><span className="text-gray-400">B-Lender</span><span className="text-gray-200 text-right">{fmtRange(liveBenchmark(liveRates, "alt_5_year_fixed"))}</span></div>
+                  <div className="flex justify-between gap-3"><span className="text-gray-400">Equity lender</span><span className="text-gray-200 text-right">Quote-based</span></div>
                 </div>
               </div>
               <div className="bg-white/5 rounded-xl p-5 border border-white/10">
-                <h3 className="text-lg font-bold text-emerald-400 mb-3">HELOC Rates</h3>
+                <h3 className="text-lg font-bold text-emerald-400 mb-3">HELOC (variable)</h3>
                 <div className="space-y-2 text-sm">
-                  <div className="flex justify-between"><span className="text-gray-400">Home Trust</span><span className="text-gray-200">7.49–14.49%</span></div>
-                  <div className="flex justify-between"><span className="text-gray-400">Typical</span><span className="text-gray-200">Prime + 0.5–2%</span></div>
-                  <div className="flex justify-between"><span className="text-gray-400">Typical Fee</span><span className="text-gray-200">1–2%</span></div>
+                  <div className="flex justify-between gap-3"><span className="text-gray-400">A-Lender</span><span className="text-gray-200 text-right">{fmtRange(liveBenchmark(liveRates, "heloc"))}</span></div>
+                  <div className="flex justify-between gap-3"><span className="text-gray-400">B-Lender</span><span className="text-gray-200 text-right">{fmtRange(liveBenchmark(liveRates, "alt_heloc"))}</span></div>
+                  <div className="flex justify-between gap-3"><span className="text-gray-400">Prime rate</span><span className="text-gray-200 text-right">{liveRate(liveRates, "prime") !== undefined ? `${liveRate(liveRates, "prime")!.toFixed(2)}%` : "—"}</span></div>
                 </div>
               </div>
               <div className="bg-white/5 rounded-xl p-5 border border-white/10">
-                <h3 className="text-lg font-bold text-amber-400 mb-3">Second Mortgage Rates</h3>
+                <h3 className="text-lg font-bold text-amber-400 mb-3">Second Mortgage</h3>
                 <div className="space-y-2 text-sm">
-                  <div className="flex justify-between"><span className="text-gray-400">Capital Direct 2nd</span><span className="text-gray-200">7.49–8.59%</span></div>
-                  <div className="flex justify-between"><span className="text-gray-400">Antrim 2nd</span><span className="text-gray-200">8.95–10.95%</span></div>
-                  <div className="flex justify-between"><span className="text-gray-400">First Circle 2nd</span><span className="text-gray-200">1.5–2% fee</span></div>
-                  <div className="flex justify-between"><span className="text-gray-400">Secure Capital 2nd</span><span className="text-gray-200">3–4% fee</span></div>
+                  <div className="flex justify-between gap-3"><span className="text-gray-400">Private 2nd</span><span className="text-gray-200 text-right">{fmtRange(liveBenchmark(liveRates, "private_second"))}</span></div>
+                  <div className="flex justify-between gap-3"><span className="text-gray-400">Typical lender fee</span><span className="text-gray-200 text-right">1.5–4%</span></div>
                 </div>
               </div>
             </div>
-            <p className="text-xs text-gray-500 text-center mt-4">Rates current as of April 2025. Subject to change. Contact us for current pricing.</p>
+            <p className="text-xs text-gray-400 text-center mt-4">
+              {ratesAsOf(liveRates) ? `From our live rate feed, as of ${ratesAsOf(liveRates)}: lowest advertised rate (and the median across lenders where available). ` : "Live benchmarks are loading or unavailable. "}Your rate depends on credit, LTV, property and fees. <Link href="/rates" className="text-gold-400 hover:text-gold-300 underline">See today&apos;s rates</Link> or contact us for current pricing.
+            </p>
           </div>
         </section>
 

@@ -73,6 +73,19 @@
     position: relative;
     z-index: 2;
   }
+
+  /* Skip-link target (components/SkipToContent.tsx): keep it clear of the fixed
+     64px header, and don't draw a focus ring on the programmatically focused
+     (tabindex="-1") landmark/heading. */
+  #main-content,
+  main {
+    scroll-margin-top: 5rem;
+  }
+  #main-content:focus,
+  main[tabindex="-1"]:focus,
+  h1[tabindex="-1"]:focus {
+    outline: none;
+  }
 }
 
 /* Scrollbar suppression utilities */

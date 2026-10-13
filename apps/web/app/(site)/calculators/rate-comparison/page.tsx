@@ -11,6 +11,8 @@ import { formatCurrency } from "@/lib/utils/validation";
 import PdfLeadModal from "@/components/PdfLeadModal";
 import { CalculatorSchema } from "@/components/SEO/CalculatorSchema";
 import { RelatedCalculators } from "@/components/calculators/RelatedCalculators";
+import { useLiveRates } from "@/lib/useLiveRates";
+import { liveRate, liveMedianRate, ratesAsOf, useLiveDefault } from "../_lib/liveRateDefaults";
 
 const faqs = [
   {
@@ -67,10 +69,13 @@ export default function RateComparisonPage() {
   const [loanAmount, setLoanAmount] = useState(500000);
   const [amortization, setAmortization] = useState(25);
   const [term, setTerm] = useState(5);
-  const [rate1, setRate1] = useState(4.79);
-  const [rate2, setRate2] = useState(4.99);
-  const [rate3, setRate3] = useState(5.29);
-  const [rate4, setRate4] = useState(5.49);
+  // Defaults follow the live feed until edited: lowest vs median ("typical lender") 5-yr fixed, insured and conventional
+  const { data: liveRates } = useLiveRates();
+  const [rate1, setRate1, rate1Source] = useLiveDefault(4.79, liveRate(liveRates, "fixed5Insured"));
+  const [rate2, setRate2, rate2Source] = useLiveDefault(4.99, liveMedianRate(liveRates, "5_year_fixed_insured"));
+  const [rate3, setRate3] = useLiveDefault(5.29, liveRate(liveRates, "fixed5Conventional"));
+  const [rate4, setRate4] = useLiveDefault(5.49, liveMedianRate(liveRates, "5_year_fixed_conventional"));
+  const ratesDate = ratesAsOf(liveRates);
   const [showRate3, setShowRate3] = useState(false);
   const [showRate4, setShowRate4] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(null)
@@ -221,8 +226,14 @@ export default function RateComparisonPage() {
                   <div className="space-y-5">
                     <ValidatedSlider label="Rate 1" value={rate1} onChange={setRate1} min={1} max={12} step={0.01} formatValue={(v) => `${v.toFixed(2)}%`} />
                     <ValidatedSlider label="Rate 2" value={rate2} onChange={setRate2} min={1} max={12} step={0.01} formatValue={(v) => `${v.toFixed(2)}%`} />
+                    <p className="text-xs text-gray-400 -mt-2">
+                      {ratesDate && (rate1Source === "live" || rate2Source === "live")
+                        ? <>Defaults from our live rate feed (as of {ratesDate}): Rate 1 = lowest insured 5-yr fixed, Rate 2 = median insured 5-yr fixed across lenders, Rate 3 = lowest conventional 5-yr fixed, Rate 4 = median conventional 5-yr fixed.{" "}</>
+                        : <>Illustrative default rates.{" "}</>}
+                      Enter the quotes you actually have, or <Link href="/rates" className="text-gold-400 hover:underline">see today&apos;s rates</Link>.
+                    </p>
                     <div className="flex items-center gap-3">
-                      <button onClick={() => setShowRate3(!showRate3)} className={`w-12 h-6 rounded-full transition-all ${showRate3 ? "bg-gold-500" : "bg-gray-600"} relative`}>
+                      <button onClick={() => setShowRate3(!showRate3)} aria-label="Compare a third rate" aria-pressed={showRate3} className={`w-12 h-6 rounded-full transition-all ${showRate3 ? "bg-gold-500" : "bg-gray-600"} relative`}>
                         <span className={`absolute top-0.5 w-5 h-5 bg-white rounded-full transition-all ${showRate3 ? "left-6" : "left-0.5"}`} />
                       </button>
                       <span className="text-sm text-gray-300">Rate 3</span>
@@ -233,7 +244,7 @@ export default function RateComparisonPage() {
                       </motion.div>
                     )}
                     <div className="flex items-center gap-3">
-                      <button onClick={() => setShowRate4(!showRate4)} className={`w-12 h-6 rounded-full transition-all ${showRate4 ? "bg-gold-500" : "bg-gray-600"} relative`}>
+                      <button onClick={() => setShowRate4(!showRate4)} aria-label="Compare a fourth rate" aria-pressed={showRate4} className={`w-12 h-6 rounded-full transition-all ${showRate4 ? "bg-gold-500" : "bg-gray-600"} relative`}>
                         <span className={`absolute top-0.5 w-5 h-5 bg-white rounded-full transition-all ${showRate4 ? "left-6" : "left-0.5"}`} />
                       </button>
                       <span className="text-sm text-gray-300">Rate 4</span>

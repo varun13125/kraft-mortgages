@@ -13,6 +13,11 @@ export interface RateBenchmark {
   product_family: string;
   effective_date: string;
   top_offers?: RateOffer[];
+  /** Optional market-depth fields the Spotlight feed includes for some benchmarks. */
+  median_rate?: number;
+  lender_count?: number;
+  product_count?: number;
+  typical_lender_fee_pct?: number | null;
 }
 
 export interface RawRatesFeed {

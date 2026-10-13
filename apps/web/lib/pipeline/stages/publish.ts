@@ -2,11 +2,24 @@ import type { Run } from '@/lib/db/firestore';
 import { savePost } from '@/lib/db/firestore';
 import { log } from '@/lib/runlog';
 import { buildArticleJsonLd } from '@/lib/seo/schema';
+import { sanitizeBlogHtml } from '@/lib/security/sanitizeHtml';
 
 interface PublishData {
   url: string;
   method: 'wordpress' | 'firestore';
+  /** 'draft' unless AI_AUTO_PUBLISH=true (BUG-018: human review before going live). */
+  status: 'published' | 'draft';
   publishedAt: string;
+}
+
+/**
+ * BUG-018: AI-written posts are mortgage advertising (BCFSA/FSRA/RECA rules), so
+ * they are saved as DRAFTS for human review unless AI_AUTO_PUBLISH === 'true'.
+ * Drafts are hidden from the public blog; an admin publishes them with
+ * POST /api/publish/republish (dashboard "Posts" tab).
+ */
+function aiAutoPublishEnabled(): boolean {
+  return process.env.AI_AUTO_PUBLISH === 'true';
 }
 
 export async function publishStage(run: Run): Promise<{ success: boolean; data?: PublishData; error?: string }> {
@@ -36,8 +49,12 @@ export async function publishStage(run: Run): Promise<{ success: boolean; data?:
       );
     });
 
-    // Convert markdown to HTML (basic conversion)
-    const htmlContent = markdownToHtml(processedMarkdown);
+    // Convert markdown to HTML (basic conversion). The LLM output (which is fed
+    // scraped web content) is untrusted: sanitize before it reaches WordPress or
+    // Firestore (BUG-016).
+    const htmlContent = sanitizeBlogHtml(markdownToHtml(processedMarkdown));
+    const autoPublish = aiAutoPublishEnabled();
+    const postStatus: 'published' | 'draft' = autoPublish ? 'published' : 'draft';
 
     // Generate schema.org JSON-LD
     const jsonLd = buildArticleJsonLd({
@@ -65,10 +82,11 @@ export async function publishStage(run: Run): Promise<{ success: boolean; data?:
           content: htmlContent,
           metaDescription,
           categories: [], // Configure as needed
-          tags: brief.keywords || []
+          tags: brief.keywords || [],
+          status: autoPublish ? 'publish' : 'draft',
         });
         publishMethod = 'wordpress';
-        await log(run.id, `Publisher: WordPress published - ${publishUrl}`);
+        await log(run.id, `Publisher: WordPress ${autoPublish ? 'published' : 'draft saved'} - ${publishUrl}`);
       } catch (wpError) {
         await log(run.id, `Publisher: WordPress failed, falling back to Firestore - ${wpError}`);
         publishUrl = await publishToFirestore();
@@ -85,9 +103,9 @@ export async function publishStage(run: Run): Promise<{ success: boolean; data?:
       const post = {
         slug,
         title,
-        markdown: processedMarkdown,
+        markdown: processedMarkdown, // sanitized by savePost()
         html: htmlContent,
-        status: 'published' as const,
+        status: postStatus,
         publishedAt: new Date(),
         author: {
           name: 'Varun Chaudhry',
@@ -107,10 +125,16 @@ export async function publishStage(run: Run): Promise<{ success: boolean; data?:
     const publishData: PublishData = {
       url: publishUrl,
       method: publishMethod,
+      status: postStatus,
       publishedAt: new Date().toISOString(),
     };
 
-    await log(run.id, `Publisher: Successfully published via ${publishMethod} - ${publishUrl}`);
+    await log(
+      run.id,
+      autoPublish
+        ? `Publisher: Successfully published via ${publishMethod} - ${publishUrl}`
+        : `Publisher: Saved as DRAFT via ${publishMethod} for human review (set AI_AUTO_PUBLISH=true to publish automatically) - ${publishUrl}`
+    );
 
     return {
       success: true,
@@ -134,14 +158,15 @@ async function publishToWordPress(data: {
   metaDescription?: string;
   categories?: number[];
   tags?: string[];
+  status: 'publish' | 'draft';
 }): Promise<string> {
-  const { title, slug, content, metaDescription, categories = [], tags = [] } = data;
+  const { title, slug, content, metaDescription, categories = [], tags = [], status } = data;
 
   const wpData = {
     title,
     slug,
     content,
-    status: 'publish',
+    status,
     excerpt: metaDescription || '',
     categories,
     meta: {

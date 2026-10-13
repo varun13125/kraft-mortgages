@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { rateLimit, tooManyRequests } from '@/lib/ai/request-guards';
+import { rateLimit, tooManyRequests, requireJsonContentType } from '@/lib/ai/request-guards';
 
 // Public text-to-speech proxy for the chat widget. ElevenLabs bills per character,
 // so text length and request rate are bounded.
@@ -42,6 +42,10 @@ function clampText(text: string): string {
 }
 
 export async function POST(request: NextRequest) {
+  // JSON only: a cross-site text/plain "simple" POST would otherwise spend ElevenLabs credits.
+  const notJson = requireJsonContentType(request);
+  if (notJson) return notJson;
+
   const perMinute = rateLimit(request, 'tts-min', 10, 60_000);
   if (!perMinute.ok) return tooManyRequests(perMinute.retryAfterSec);
   const perHour = rateLimit(request, 'tts-hour', 60, 60 * 60_000);
@@ -90,7 +94,8 @@ export async function POST(request: NextRequest) {
           style: config.settings.style,
           use_speaker_boost: true
         }
-      })
+      }),
+      signal: AbortSignal.timeout(30_000),
     });
 
     if (!response.ok) {

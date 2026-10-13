@@ -1,9 +1,17 @@
 import { getAuth } from "firebase/auth";
 import { app } from "./firebase.client";
 
-const BASE = process.env.NEXT_PUBLIC_CREWAPI_BASE_URL || "/api";
+// BUG-050: dashboard API calls carry the admin's Firebase ID token, so they must
+// stay same-origin. NEXT_PUBLIC_CREWAPI_BASE_URL used to be used here as well as
+// for the EXTERNAL crew host (app/api/cron/daily), which risked sending admin
+// tokens off-site. The crew host now has its own server-only CREWAPI_BASE_URL.
+const BASE = "/api";
 
 async function authHeader(): Promise<Record<string, string>> {
+  if (!app) {
+    console.warn("Firebase is not configured; API request sent without auth");
+    return {};
+  }
   const user = getAuth(app).currentUser;
   if (!user) {
     console.warn("No Firebase user logged in when making API request");

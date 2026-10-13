@@ -13,6 +13,9 @@ import { cmhcPremium, minimumDownPayment, isInsurable } from "@/lib/calc/cmhc";
 import PdfLeadModal from "@/components/PdfLeadModal";
 import { CalculatorSchema } from "@/components/SEO/CalculatorSchema";
 import { RelatedCalculators } from "@/components/calculators/RelatedCalculators";
+import { useLiveRates } from "@/lib/useLiveRates";
+import { liveRate, purchaseRateProduct, useLiveDefault } from "../_lib/liveRateDefaults";
+import { LiveRateNote } from "../_lib/LiveRateNote";
 
 /* ── Math ───────────────────────────────────────────── */
 // Canadian semi-annual compounding via the shared helper (was US-style monthly compounding)
@@ -50,8 +53,11 @@ export default function StressTestPage() {
   const [showPdfModal, setShowPdfModal] = useState(false);
   const [purchasePrice, setPurchasePrice] = useState(700000);
   const [downPaymentPct, setDownPaymentPct] = useState(20);
-  const [contractRate, setContractRate] = useState(4.79);
   const [amortYears, setAmortYears] = useState(25);
+  // Contract rate follows today's 5-yr fixed for this purchase (insured / insurable / conventional) until edited
+  const { data: liveRates } = useLiveRates();
+  const rateProduct = purchaseRateProduct(downPaymentPct, purchasePrice, amortYears);
+  const [contractRate, setContractRate, contractRateSource] = useLiveDefault(4.79, liveRate(liveRates, rateProduct));
   const [propertyTax, setPropertyTax] = useState(3600);
   const [heat, setHeat] = useState(1200);
   const [condoFees, setCondoFees] = useState(0);
@@ -181,7 +187,10 @@ export default function StressTestPage() {
                         30-year insured mortgages are limited to first-time buyers and new builds (premium includes the 0.20% surcharge).
                       </p>
                     )}
-                    <ValidatedInput label="Mortgage Rate" value={contractRate} onChange={setContractRate} validation={{ min: 1, max: 15 }} type="percentage" />
+                    <div>
+                      <ValidatedInput label="Mortgage Rate" value={contractRate} onChange={setContractRate} validation={{ min: 1, max: 15 }} type="percentage" />
+                      <LiveRateNote data={liveRates} product={rateProduct} source={contractRateSource} />
+                    </div>
                     <ValidatedSlider label={`Amortization (${amortYears} years)`} value={amortYears} onChange={setAmortYears} min={5} max={30} step={5} formatValue={(v) => `${v} years`} />
                   </div>
                 </div>

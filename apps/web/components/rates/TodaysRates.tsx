@@ -170,7 +170,7 @@ export const TodaysRates: React.FC<{ headingLevel?: 'h1' | 'h2' }> = ({ headingL
                   {/* Leading Program & Date */}
                   <div className="space-y-1.5 text-xs text-slate-400 mb-4">
                     <div className="flex items-center justify-between">
-                      <span className="flex items-center gap-1 text-slate-500">
+                      <span className="flex items-center gap-1 text-slate-400">
                         <Building2 className="w-3 h-3 text-slate-400" />
                         Sample Lender:
                       </span>
@@ -179,7 +179,7 @@ export const TodaysRates: React.FC<{ headingLevel?: 'h1' | 'h2' }> = ({ headingL
                       </span>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="flex items-center gap-1 text-slate-500">
+                      <span className="flex items-center gap-1 text-slate-400">
                         <Calendar className="w-3 h-3 text-slate-400" />
                         Rate Sheet Date:
                       </span>
@@ -282,7 +282,7 @@ export const TodaysRates: React.FC<{ headingLevel?: 'h1' | 'h2' }> = ({ headingL
             </table>
           </div>
 
-          <div className="mt-6 pt-4 border-t border-slate-800/80 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+          <div className="mt-6 pt-4 border-t border-slate-800/80 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
             <div className="flex items-center gap-1.5">
               <Info className="w-4 h-4 text-slate-400" />
               <span>

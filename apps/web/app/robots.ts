@@ -36,6 +36,18 @@ const PRIVATE_PATHS = [
   '/settings',
   '/mli-proxy/',
   '/crewapi/',
+  // Stale static export of the old MLI microsite left in public/mli-select/
+  // (served verbatim at e.g. /mli-select/index.html, /mli-select/mli-select/faq/index.html).
+  // Duplicate, outdated copies of the live /mli-select/* routes — keep them out of
+  // crawlers until the folder is deleted (BUG-032). These prefixes don't match any
+  // live route (live pages have no file extension and no nested /mli-select/mli-select).
+  '/mli-select/index.',
+  '/mli-select/404',
+  '/mli-select/_next/',
+  '/mli-select/mli-select/',
+  '/mli-select/contact/index.',
+  // Internal voice-agent test page in public/.
+  '/test-voice-agent.html',
 ];
 
 export default function robots(): MetadataRoute.Robots {

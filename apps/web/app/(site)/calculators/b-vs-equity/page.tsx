@@ -10,6 +10,9 @@ import { ValidatedInput, ValidatedSlider } from "@/components/ui/ValidatedInput"
 import { formatCurrency } from "@/lib/utils/validation";
 import PdfLeadModal from "@/components/PdfLeadModal";
 import { RelatedCalculators } from "@/components/calculators/RelatedCalculators";
+import { useLiveRates } from "@/lib/useLiveRates";
+import { liveBenchmark, liveRate, ratesAsOf, useLiveDefault, type LiveRateProduct } from "../_lib/liveRateDefaults";
+import { LiveRateNote } from "../_lib/LiveRateNote";
 
 type LoanPosition = "1st" | "2nd";
 type CreditRange = "excellent" | "good" | "fair" | "poor";
@@ -22,31 +25,33 @@ const creditMap: Record<CreditRange, { label: string; min: number; max: number }
   poor: { label: "Poor (below 500)", min: 300, max: 499 },
 };
 
-const bLenderData = [
-  { name: "National Bank Optimum Mortgage", rate: "from 4.89%", fee: "1%", ltv: "80%", beacon: "500+" },
-  { name: "Bridgewater Bank", rate: "from 4.99%", fee: "1%", ltv: "80%", beacon: "550+" },
-  { name: "Equitable Bank", rate: "from 5.14%", fee: "1%", ltv: "80%", beacon: "550+" },
-  { name: "Home Trust", rate: "from 5.14%", fee: "1%", ltv: "80%", beacon: "680+" },
-  { name: "CMLS AVEO", rate: "Contact for rate", fee: "$350-450", ltv: "80%", beacon: "—" },
-  { name: "B2B Bank", rate: "Contact for rate", fee: "varies", ltv: "50–75%", beacon: "—" },
-];
+// The April 2025 named-lender rate tables were removed (18 months stale, unsourced). The page now shows live
+// benchmarks from /api/rates with an "as of" date. Equity-lender FIRST mortgages have no live benchmark, so the
+// 1st-position default stays illustrative; 2nd position follows the live private-second benchmark.
+const EQUITY_FIRST_ILLUSTRATIVE_RATE = 6.95;
 
-const equityLenderData = [
-  { name: "Capital Direct", first: "from 4.89%", second: "from 7.49%", fee: "1% / 2.5%" },
-  { name: "Vault Capital", first: "from 5.25%", second: "N/S", fee: "1–2%" },
-  { name: "Neighbourhood Holdings", first: "from 5.80%", second: "N/S", fee: "0–1%" },
-  { name: "Sequence Capital", first: "from 5.99%", second: "N/S", fee: "1%" },
-  { name: "Antrim Investments", first: "from 6.95%", second: "from 8.95%", fee: "1% / 2%" },
-  { name: "VWR Capital", first: "Contact for rate", second: "Contact for rate", fee: "$750–$5,750" },
-  { name: "Secure Capital MIC", first: "6.99–9.99%", second: "N/S", fee: "2–3% / 3–4%" },
-  { name: "LCM Capital", first: "7.45%+", second: "10.45%+", fee: "1% / 1.5%" },
-  { name: "First Circle Financial", first: "N/S", second: "N/S", fee: "1% / 1.5–2%" },
+/** B-lender fixed-rate benchmark closest to the chosen term. */
+function altProductForTerm(term: number): LiveRateProduct {
+  if (term <= 1) return "alt1Fixed";
+  if (term === 2) return "alt2Fixed";
+  if (term === 3) return "alt3Fixed";
+  return "alt5Fixed";
+}
+
+const BENCHMARK_ROWS: { key: string; label: string }[] = [
+  { key: "alt_1_year_fixed", label: "B-lender 1-year fixed" },
+  { key: "alt_2_year_fixed", label: "B-lender 2-year fixed" },
+  { key: "alt_3_year_fixed", label: "B-lender 3-year fixed" },
+  { key: "alt_5_year_fixed", label: "B-lender 5-year fixed" },
+  { key: "alt_bfs_stated_income", label: "B-lender stated income (self-employed)" },
+  { key: "alt_heloc", label: "B-lender HELOC" },
+  { key: "private_second", label: "Private 2nd mortgage" },
 ];
 
 const faqs = [
   {
     q: "What is the main difference between B-lenders and equity lenders?",
-    a: "B-lenders are licensed financial institutions that offer alternative lending with relaxed income requirements — they accept bank statements instead of tax returns but still verify your ability to make payments. Equity lenders (also called private lenders) lend primarily based on the property's equity, with minimal or no income verification. B-lender rates are typically 5–9%, while equity lender rates range from 4.89–11%+."
+    a: "B-lenders are licensed financial institutions that offer alternative lending with relaxed income requirements — they accept bank statements instead of tax returns but still verify your ability to make payments. Equity lenders (also called private lenders) lend primarily based on the property's equity, with minimal or no income verification. B-lender rates usually sit somewhat above bank rates, and equity-lender rates above B-lender rates; see the live benchmarks on this page for today's levels."
   },
   {
     q: "When should I choose equity lending over a B-lender?",
@@ -54,7 +59,7 @@ const faqs = [
   },
   {
     q: "Why do equity lenders charge more for second mortgages?",
-    a: "A second mortgage is subordinate to the first — if the property goes into foreclosure, the first lender gets paid first. This means the second lender takes on significantly more risk. For example, Antrim charges 7.49–7.95% on first mortgages but 8.95–10.95% on seconds, and their fee doubles from 1% to 2%."
+    a: "A second mortgage is subordinate to the first — if the property goes into foreclosure, the first lender gets paid first. This means the second lender takes on significantly more risk, so the same lender typically charges a noticeably higher rate on a second than on a first, and a higher fee as well."
   },
   {
     q: "How do lender fees affect the total cost?",
@@ -99,8 +104,16 @@ export default function BvsEquityPage() {
   const [position, setPosition] = useState<LoanPosition>("1st");
   const [term, setTerm] = useState(5);
   const [amortization, setAmortization] = useState(25);
-  const [bRate, setBRate] = useState(5.49);
-  const [eRate, setERate] = useState(6.95);
+  const { data: liveRates } = useLiveRates();
+  const ratesDate = ratesAsOf(liveRates);
+  const bProduct = altProductForTerm(term);
+  const [bRate, setBRate, bRateSource] = useLiveDefault(5.49, liveRate(liveRates, bProduct));
+  const livePrivateSecond = liveRate(liveRates, "privateSecond");
+  const [eRate, setERate, eRateSource] = useLiveDefault(
+    EQUITY_FIRST_ILLUSTRATIVE_RATE,
+    position === "2nd" ? livePrivateSecond : EQUITY_FIRST_ILLUSTRATIVE_RATE,
+  );
+  const benchmarkRows = BENCHMARK_ROWS.map((r) => ({ ...r, b: liveBenchmark(liveRates, r.key) })).filter((r) => r.b);
   const [bFee, setBFee] = useState(1.0);
   const [eFee, setEFee] = useState(1.0);
   const [creditRange, setCreditRange] = useState<CreditRange>("good");
@@ -163,7 +176,7 @@ export default function BvsEquityPage() {
                 <span className="bg-gradient-to-r from-gold-400 to-amber-500 bg-clip-text text-transparent">B-Lender vs Equity</span> Lending Calculator
               </h1>
               <p className="text-xl text-gray-400 max-w-3xl mx-auto">
-                Compare B-lender and private equity lending side by side with real Canadian lender rates. See which option costs less — and why.
+                Compare B-lender and private equity lending side by side, starting from live Canadian rate benchmarks. See which option costs less — and why.
               </p>
             </motion.div>
           </div>
@@ -268,8 +281,16 @@ export default function BvsEquityPage() {
                     <ValidatedSlider label={`Term (${term} years)`} value={term} onChange={setTerm} min={1} max={5} step={1} formatValue={(v) => `${v} year${v > 1 ? "s" : ""}`} />
                     <ValidatedSlider label={`Amortization (${amortization} years)`} value={amortization} onChange={setAmortization} min={5} max={30} step={5} formatValue={(v) => `${v} years`} />
                     <div className="grid grid-cols-2 gap-4">
-                      <ValidatedInput label="B-Lender Rate (%)" value={bRate} onChange={setBRate} validation={{ min: 3, max: 15 }} type="percentage" />
-                      <ValidatedInput label="Equity Lender Rate (%)" value={eRate} onChange={setERate} validation={{ min: 5, max: 18 }} type="percentage" />
+                      <div>
+                        <ValidatedInput label="B-Lender Rate (%)" value={bRate} onChange={setBRate} validation={{ min: 3, max: 15 }} type="percentage" />
+                        <LiveRateNote data={liveRates} product={bProduct} source={bRateSource} />
+                      </div>
+                      <div>
+                        <ValidatedInput label="Equity Lender Rate (%)" value={eRate} onChange={setERate} validation={{ min: 5, max: 18 }} type="percentage" />
+                        {position === "2nd" && livePrivateSecond !== undefined
+                          ? <LiveRateNote data={liveRates} product="privateSecond" source={eRateSource} />
+                          : <p className="text-xs text-gray-400 mt-1.5">{eRateSource === "user" ? "" : "Illustrative (no live benchmark for private first mortgages). "}Enter the quote you received.</p>}
+                      </div>
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                       <ValidatedInput label="B-Lender Fee (%)" value={bFee} onChange={setBFee} validation={{ min: 0, max: 5 }} type="percentage" />
@@ -390,11 +411,13 @@ export default function BvsEquityPage() {
                       {incomeVerification === "none" && <p>• No income documentation — equity lenders lend on property value, not income</p>}
                     </div>
                     <div className="mt-4 bg-white/5 rounded-xl p-4">
-                      <p className="text-xs text-gray-400 mb-2">Estimated equity lender rates for your situation ({position} mortgage):</p>
-                      <div className="space-y-1 text-sm">
-                        <p>• Antrim: {position === "1st" ? "7.49–7.95%" : "8.95–10.95%"} ({position === "1st" ? "1%" : "2%"} fee)</p>
-                        <p>• LCM Capital: {position === "1st" ? "7.45%+" : "10.45%+"} ({position === "1st" ? "1%" : "1.5%"} fee)</p>
-                        <p>• Secure Capital MIC: 6.99–9.99% ({position === "1st" ? "2–3%" : "3–4%"} fee)</p>
+                      <p className="text-xs text-gray-400 mb-2">What to expect ({position} mortgage):</p>
+                      <div className="space-y-1 text-sm text-gray-300">
+                        {position === "2nd" && livePrivateSecond !== undefined && ratesDate
+                          ? <p>• Private second mortgages in our live feed start at {livePrivateSecond.toFixed(2)}% (as of {ratesDate}); most files price above that.</p>
+                          : <p>• Equity-lender rates depend mainly on LTV, location and property type. Lower LTV gets better pricing.</p>}
+                        <p>• Lender fees are commonly 1–3% on a first mortgage and higher on a second; some lenders charge a flat fee instead.</p>
+                        <p>• Terms are usually 1–2 years, often interest-only. Plan your exit (refinance or sale) from day one.</p>
                       </div>
                     </div>
                   </div>
@@ -447,7 +470,7 @@ export default function BvsEquityPage() {
                 <strong>B-lenders</strong> (also called alternative lenders) are licensed financial institutions that bridge the gap between banks and private lenders. Companies like Bridgewater Bank, Home Trust, and Equitable Bank offer rates typically about 0.5–2% above bank rates (more for weaker credit) but with significantly more flexible qualification criteria. Most B-lenders accept bank statements instead of tax returns to verify income, and some accept stated income. They typically require a minimum Beacon score of 500 and loan-to-value ratios at or below 80%.
               </p>
               <p>
-                <strong>Equity lenders</strong> (private lenders and mortgage investment corporations) operate at the bottom of the hierarchy. They lend primarily based on the property&apos;s value and the equity cushion — not your income or credit score. This makes them the most accessible option but also the most expensive, with rates ranging from 7% to over 14% depending on the lender, position, and risk profile.
+                <strong>Equity lenders</strong> (private lenders and mortgage investment corporations) operate at the bottom of the hierarchy. They lend primarily based on the property&apos;s value and the equity cushion — not your income or credit score. This makes them the most accessible option but also the most expensive, with rates that vary widely by lender, position (1st or 2nd) and risk profile.
               </p>
 
               <h3 className="text-2xl font-semibold text-gray-100 mt-8">When Does Equity Lending Make Sense Over B-Lending?</h3>
@@ -463,7 +486,7 @@ export default function BvsEquityPage() {
                 One of the biggest factors affecting your cost is whether the mortgage is in first or second position. A first mortgage has priority — if the property is sold or foreclosed, the first lender gets paid first. A second mortgage is subordinate, meaning the second lender takes on significantly more risk.
               </p>
               <p>
-                This risk difference shows up clearly in the rates. Antrim Investments charges 7.49–7.95% for first mortgages but 8.95–10.95% for seconds — a 1.5–3% premium. Their fee doubles from 1% to 2%. LCM Capital charges 7.45%+ for firsts but 10.45%+ for seconds. The pattern is consistent across all equity lenders: expect to pay 2–4% more for a second mortgage.
+                This risk difference shows up clearly in the pricing. The same equity lender will usually quote a noticeably higher rate for a second mortgage than for a first, and a higher lender fee as well. Always compare the all-in cost (interest plus fees) over the time you expect to keep the loan.
               </p>
 
               <h3 className="text-2xl font-semibold text-gray-100 mt-8">How Lender Fees Affect Your Total Cost</h3>
@@ -493,36 +516,33 @@ export default function BvsEquityPage() {
         {/* Lender Rate Tables */}
         <section className="py-16 px-4 bg-gray-800/30">
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-3xl font-bold text-gray-100 mb-8 text-center">Current B-Lender & Equity Lender Rates</h2>
-            <div className="grid md:grid-cols-2 gap-8">
-              <div>
-                <h3 className="text-lg font-bold text-blue-400 mb-4">B-Lenders</h3>
-                <div className="bg-white/5 rounded-xl border border-white/10 overflow-hidden">
-                  <table className="w-full text-sm">
-                    <thead><tr className="bg-white/5 text-gray-400"><th className="text-left p-3">Lender</th><th className="text-right p-3">Rate</th><th className="text-right p-3">Fee</th><th className="text-right p-3">LTV</th></tr></thead>
-                    <tbody>
-                      {bLenderData.map((l, i) => (
-                        <tr key={i} className="border-t border-white/5"><td className="p-3 text-gray-200">{l.name}</td><td className="text-right p-3 text-gray-300">{l.rate}</td><td className="text-right p-3 text-gray-300">{l.fee}</td><td className="text-right p-3 text-gray-300">{l.ltv}</td></tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+            <h2 className="text-3xl font-bold text-gray-100 mb-8 text-center">Today&apos;s B-Lender &amp; Private Rate Benchmarks</h2>
+            {benchmarkRows.length > 0 ? (
+              <div className="bg-white/5 rounded-xl border border-white/10 overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead><tr className="bg-white/5 text-gray-400"><th className="text-left p-3">Product</th><th className="text-right p-3">Lowest</th><th className="text-right p-3">Median</th><th className="text-right p-3 hidden sm:table-cell">Lenders</th></tr></thead>
+                  <tbody>
+                    {benchmarkRows.map((r) => (
+                      <tr key={r.key} className="border-t border-white/5">
+                        <td className="p-3 text-gray-200">{r.label}</td>
+                        <td className="text-right p-3 text-gray-300">{r.b!.lowest!.toFixed(2)}%</td>
+                        <td className="text-right p-3 text-gray-300">{r.b!.median !== undefined ? `${r.b!.median.toFixed(2)}%` : "—"}</td>
+                        <td className="text-right p-3 text-gray-400 hidden sm:table-cell">{r.b!.lenderCount ?? "—"}</td>
+                      </tr>
+                    ))}
+                    <tr className="border-t border-white/5">
+                      <td className="p-3 text-gray-200">Equity-lender 1st mortgage</td>
+                      <td colSpan={3} className="text-right p-3 text-gray-400">Quote-based (no live benchmark)</td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
-              <div>
-                <h3 className="text-lg font-bold text-amber-400 mb-4">Equity Lenders</h3>
-                <div className="bg-white/5 rounded-xl border border-white/10 overflow-hidden">
-                  <table className="w-full text-sm">
-                    <thead><tr className="bg-white/5 text-gray-400"><th className="text-left p-3">Lender</th><th className="text-right p-3">1st Rate</th><th className="text-right p-3">2nd Rate</th><th className="text-right p-3">Fee</th></tr></thead>
-                    <tbody>
-                      {equityLenderData.map((l, i) => (
-                        <tr key={i} className="border-t border-white/5"><td className="p-3 text-gray-200">{l.name}</td><td className="text-right p-3 text-gray-300">{l.first}</td><td className="text-right p-3 text-gray-300">{l.second}</td><td className="text-right p-3 text-gray-300">{l.fee}</td></tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-            <p className="text-xs text-gray-500 text-center mt-4">Rates current as of April 2025. Subject to change. Contact us for current pricing.</p>
+            ) : (
+              <p className="text-center text-gray-400">Live benchmarks are loading or unavailable. <Link href="/rates" className="text-gold-400 hover:text-gold-300 underline">See today&apos;s rates</Link> or contact us for current pricing.</p>
+            )}
+            <p className="text-xs text-gray-400 text-center mt-4">
+              {ratesDate ? `From our live rate feed, as of ${ratesDate}. ` : ""}Lowest and median advertised rates across the lenders in our feed. Your rate depends on credit, LTV, property type, location and fees. Contact us for current pricing.
+            </p>
           </div>
         </section>
 
@@ -561,7 +581,7 @@ export default function BvsEquityPage() {
         "@context": "https://schema.org",
         "@type": "WebApplication",
         "name": "B-Lender vs Equity Lending Calculator",
-        "description": "Compare B-lender and private equity lending costs side by side with real Canadian lender rates.",
+        "description": "Compare B-lender and private equity lending costs side by side, with live Canadian rate benchmarks.",
         "url": "https://www.kraftmortgages.ca/calculators/b-vs-equity",
         "applicationCategory": "FinanceApplication",
         "operatingSystem": "Web",

@@ -2,6 +2,8 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import Navigation from "@/components/Navigation";
+import { useLiveRates } from "@/lib/useLiveRates";
+import { livePrime, ratesAsOf } from "@/components/calculators/liveRateDefaults";
 import { 
   Building, 
   Calculator, 
@@ -19,13 +21,19 @@ import {
 } from "lucide-react";
 
 export default function CommercialLending() {
+  // There is no public commercial rate benchmark in our feed — commercial pricing is deal-specific,
+  // so cards show non-numeric copy; the hero shows today's prime (what floating loans price from).
+  const { data: liveRates } = useLiveRates();
+  const prime = livePrime(liveRates);
+  const asOf = ratesAsOf(liveRates);
+
   const services = [
     {
       title: "Multi-Unit Residential",
       description: "Apartment buildings, condos, and rental properties",
       features: ["5+ unit buildings", "Investment analysis", "Cash flow optimization", "Refinancing options"],
       icon: Building,
-      typical: "Prime + 1.50%+"
+      typical: "Priced per deal"
     },
     {
       title: "Office & Retail",
@@ -46,7 +54,7 @@ export default function CommercialLending() {
       description: "Refinance existing commercial mortgages",
       features: ["Rate improvements", "Cash-out refinancing", "Debt consolidation", "Term optimization"],
       icon: TrendingUp,
-      typical: "Prime + 1.25%+"
+      typical: "Priced per deal"
     }
   ];
 
@@ -168,8 +176,13 @@ export default function CommercialLending() {
               </p>
               
               <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl border border-purple-500/20 p-4 max-w-2xl mx-auto mb-8">
-                <div className="text-lg font-semibold text-purple-400 mb-2">From Prime + 1.25%</div>
-                <div className="text-sm text-gray-400">Competitive rates • Expert analysis • Fast approvals</div>
+                <div className="text-lg font-semibold text-purple-400 mb-2">Rates quoted per deal</div>
+                <div className="text-sm text-gray-400">
+                  {prime !== undefined
+                    ? `Floating commercial loans are priced at prime plus a deal-specific spread. Prime today: ${prime.toFixed(2)}%${asOf ? ` (as of ${asOf})` : ""}. `
+                    : "Pricing depends on property type, DSCR, loan-to-value and borrower strength. "}
+                  <Link href="/rates" className="underline hover:text-purple-300">See today&apos;s rates</Link>
+                </div>
               </div>
               
               <div className="flex flex-wrap gap-4 justify-center">

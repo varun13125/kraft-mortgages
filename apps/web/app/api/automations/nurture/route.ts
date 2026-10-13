@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { prisma } from "@/lib/db";
+import { prisma, isPrismaEnabled } from "@/lib/db";
 import { runNurtureSequence } from "@/lib/automations";
 import { firestore } from "@/lib/firebaseAdmin";
 import { requireAdmin, verifyCronRequest } from "@/lib/auth";
@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
 
   try {
     let leads: any[] = [];
-    if (process.env.DATABASE_URL) {
+    if (isPrismaEnabled()) {
       leads = await prisma.lead.findMany({ orderBy: { createdAt: 'desc' }, take: 10 }) as any[];
     } else {
       const db = firestore();

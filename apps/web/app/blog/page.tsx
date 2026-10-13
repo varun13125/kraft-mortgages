@@ -1,5 +1,9 @@
 import { Metadata } from 'next';
-export const dynamic = 'force-dynamic';
+// ISR: re-render at most every 5 minutes instead of hitting Firestore on every
+// view (was force-dynamic). getRecentPosts() needs no request data (no cookies/
+// headers) and falls back to the built-in posts when Firestore is unavailable, so
+// prerendering at build is safe. Newly published posts appear within ~5 minutes.
+export const revalidate = 300;
 import Link from 'next/link';
 import { Calendar, User, ArrowRight, Clock, Tag, Star, Mail, Phone, FileText } from 'lucide-react';
 import { getRecentPosts } from '@/lib/db/firestore';
@@ -118,8 +122,10 @@ export default async function BlogPage() {
     .filter((p: any) => p && p.status !== 'draft')
     .map(transformPost)
     .filter(Boolean); // Filter out null posts
-  const featuredPosts = posts.filter(post => post?.featured);
-  const regularPosts = posts.filter(post => !post?.featured);
+  // Only the first two featured posts get the large cards; any further featured
+  // posts used to disappear entirely (excluded from both lists).
+  const featuredPosts = posts.filter(post => post?.featured).slice(0, 2);
+  const regularPosts = posts.filter(post => !featuredPosts.includes(post));
 
   return (
     <>
@@ -148,7 +154,7 @@ export default async function BlogPage() {
         }}
       />
 
-      <div className="min-h-screen bg-gray-900">
+      <main id="main-content" className="min-h-screen bg-gray-900">
         {/* Hero Section */}
         <section className="py-20 px-4 mt-16">
           <div className="max-w-6xl mx-auto">
@@ -183,7 +189,7 @@ export default async function BlogPage() {
                 <h2 className="text-3xl font-bold text-gray-100">Featured Articles</h2>
               </div>
               <div className="grid md:grid-cols-2 gap-8">
-                {featuredPosts.slice(0, 2).map((post) => post && (
+                {featuredPosts.map((post) => post && (
                   <article
                     key={post?.slug || 'featured-' + Math.random()}
                     className="bg-gray-800/50 backdrop-blur-sm border border-gray-700/50 rounded-xl overflow-hidden hover:shadow-2xl hover:shadow-gold-500/10 transition-all duration-300 hover:-translate-y-1"
@@ -215,7 +221,7 @@ export default async function BlogPage() {
                         {post?.excerpt}
                       </p>
 
-                      <div className="flex items-center justify-between text-sm text-gray-500 mb-6">
+                      <div className="flex items-center justify-between text-sm text-gray-400 mb-6">
                         <div className="flex items-center gap-4">
                           <div className="flex items-center gap-1">
                             <Calendar className="w-4 h-4" />
@@ -289,7 +295,7 @@ export default async function BlogPage() {
                 </div>
 
                 <div className="text-center">
-                  <p className="text-gray-500 text-sm mb-4">First blog post coming soon!</p>
+                  <p className="text-gray-400 text-sm mb-4">First blog post coming soon!</p>
                   <div className="inline-flex items-center gap-2 text-gold-400">
                     <div className="w-2 h-2 bg-gold-400 rounded-full animate-pulse"></div>
                     <span className="text-sm">Setting up content...</span>
@@ -413,7 +419,7 @@ export default async function BlogPage() {
             </div>
           </div>
         </section>
-      </div>
+      </main>
       <Footer />
     </>
   );

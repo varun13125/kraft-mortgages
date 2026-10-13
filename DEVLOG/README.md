@@ -71,8 +71,12 @@ cd apps/web && ./node_modules/.bin/tsc --noEmit --incremental false -p .
 cd apps/web && ./node_modules/.bin/next lint
 ```
 `npx tsc` does **not** work here because it resolves the wrong package. Use the local binary above.
-There's no test runner yet (see `FEAT` items for the proposed Vitest/Playwright setup). Calculator math
-was verified with throwaway Node scripts during the audit. The approach is described in the audit reports.
+
+```bash
+# Tests (Node >= 22.18; no extra dependencies). Must stay green.
+pnpm test        # = cd apps/web && node --test "tests/**/*.test.mjs"
+```
+Any change to calculator, rates or calling-hours logic needs a test in `apps/web/tests/`.
 
 ## Ground rules
 - Don't commit, push, or deploy unless the user asks.

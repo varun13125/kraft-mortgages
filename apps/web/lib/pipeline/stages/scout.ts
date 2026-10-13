@@ -2,6 +2,7 @@ import type { Run } from '@/lib/db/firestore';
 import { tavilySearch } from '@/lib/ai/tools';
 import { llm } from '@/lib/ai/llm';
 import { log } from '@/lib/runlog';
+import { parseLlmJson } from '../json';
 
 interface ScoutData {
   topic: string;
@@ -78,7 +79,7 @@ Return JSON format:
         { role: 'user', content: analysisPrompt }
       ]);
 
-      analysis = JSON.parse(response.content);
+      analysis = parseLlmJson(response.content);
     } catch (parseError) {
       await log(run.id, 'Scout: LLM analysis failed, using fallback data');
       analysis = {

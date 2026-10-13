@@ -1,0 +1,31 @@
+rules_version = '2';
+
+// Kraft Mortgages - Firestore security rules (BUG-004).
+//
+// DENY ALL client (browser / mobile SDK / REST-with-API-key) access.
+//
+// Every read and write in this project goes through the Firebase Admin SDK on
+// the server (Next.js API routes, server components, cron jobs - see
+// apps/web/lib/firebaseAdmin.ts and apps/web/lib/db/firestore.ts). The Admin SDK
+// uses a service account and bypasses these rules, so denying all client access
+// does not affect the website.
+//
+// Audit (2026-10-13): the only client-side Firebase code is the admin login and
+// the /dashboard page, which use Firebase AUTH only (apps/web/lib/firebase.client.ts
+// no longer even initialises the Firestore client SDK). No browser code reads or
+// writes Firestore, so no collection needs a client rule. Collections in use
+// (server-side only): leads, posts, runs, admins, strategy, users, rateSnapshots,
+// kpiDaily, fbLeads, _healthz.
+//
+// Anything outside this repo that talks to Firestore with the public web API key
+// (instead of a service account) would be blocked by these rules - n8n / Hermes /
+// crew services must use a service account.
+//
+// Deploy (owner):  firebase deploy --only firestore:rules --project <project-id>
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

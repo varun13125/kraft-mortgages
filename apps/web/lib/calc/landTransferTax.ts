@@ -3,20 +3,31 @@
  * SINGLE SOURCE OF TRUTH for the land-transfer-tax, closing-costs,
  * first-time-home-buyer and mortgage-qualifier calculators.
  *
- * Sources (verified Oct 2026):
+ * Sources (all re-verified against primary sources on 2026-10-13, BUG-044):
  *  - BC Property Transfer Tax: 1% first $200k, 2% to $2M, 3% above $2M, plus a
- *    further 2% on the residential portion above $3M (gov.bc.ca).
+ *    further 2% on the residential portion above $3M. gov.bc.ca (updated 2025-12-03)
+ *    https://www2.gov.bc.ca/gov/content/taxes/property-taxes/property-transfer-tax
  *  - BC First Time Home Buyers' exemption (from Apr 1, 2024): no PTT on the first
  *    $500,000 (max $8,000) when FMV ≤ $835,000; reduced proportionally to $0 at
- *    $860,000 — matches gov.bc.ca "current exemption amounts" table
- *    (e.g. $852,000 → $2,560 exemption).
+ *    $860,000. gov.bc.ca "current exemption amounts" table: $852,000 → $15,040 tax,
+ *    $2,560 exemption, $12,480 payable (updated 2025-12-03)
+ *    https://www2.gov.bc.ca/gov/content/taxes/property-taxes/property-transfer-tax/exemptions/first-time-home-buyers/current-amount
  *  - Ontario LTT (1–2 single-family residences): 0.5% to $55k, 1% to $250k,
- *    1.5% to $400k, 2% to $2M, 2.5% above. First-time buyer refund max $4,000.
- *  - Toronto MLTT (toronto.ca, rates as of Apr 1, 2026): provincial brackets to
- *    $3M, then 4.40% / 5.45% / 6.50% / 7.55% / 8.60% at $3M/$4M/$5M/$10M/$20M.
- *    First-time purchaser rebate max $4,475.
- *  - Alberta: no land transfer tax. Land Titles fees since Oct 20, 2024:
- *    $50 + $5 per $5,000 (or part) of value, for both the transfer and the mortgage.
+ *    1.5% to $400k, 2% to $2M, 2.5% above (ontario.ca, updated 2026-04-22)
+ *    https://www.ontario.ca/document/land-transfer-tax/calculating-land-transfer-tax
+ *    First-time buyer refund max $4,000 (conveyances from Jan 1, 2017)
+ *    https://www.ontario.ca/document/land-transfer-tax/land-transfer-tax-refunds-first-time-homebuyers
+ *  - Toronto MLTT: provincial brackets to $3M, then 4.40% / 5.45% / 6.50% / 7.55% / 8.60%
+ *    at $3M/$4M/$5M/$10M/$20M for properties with 1–2 single-family residences, "take effect
+ *    on April 1, 2026" (toronto.ca, modified 2026-04-07)
+ *    https://www.toronto.ca/services-payments/property-taxes-utilities/municipal-land-transfer-tax-mltt/municipal-land-transfer-tax-mltt-rates-and-fees
+ *    First-time purchaser rebate "up to $4,475.00" (modified 2025-12-18).
+ *  - Alberta: no land transfer tax. Land Titles Act s.64.1(2) (transfers) and s.102.1(2)
+ *    (mortgages, on the principal amount secured): "$50 plus $5 for each $5000 or portion
+ *    thereof" → rounds UP ($500,001 → $555). Levy in force Oct 20, 2024 (OIC 2024/266);
+ *    the mortgage land-value option s.102.1(3) is repealed (2024 c15 s9).
+ *    Act (current as of 2026-09-01): https://kings-printer.alberta.ca/documents/Acts/L04.pdf
+ *    Fee schedule (effective 2026-10-01): https://www.alberta.ca/system/files/sartr-land-titles-and-surveys-common-documents-fee-schedule.pdf
  * Not tax or legal advice.
  */
 
@@ -51,11 +62,13 @@ function progressive(price: number, tiers: Tier[]): TaxResult {
 
 /* ── British Columbia ─────────────────────────────── */
 
+// gov.bc.ca first-time home buyers exemption, effective Apr 1, 2024 (verified 2026-10-13)
 export const BC_FTHB_FULL_EXEMPTION_FMV = 835_000;
 export const BC_FTHB_PHASE_OUT_END_FMV = 860_000;
 /** PTT on the first $500,000 = 1% × 200k + 2% × 300k */
 export const BC_FTHB_MAX_EXEMPTION = 8_000;
 
+// gov.bc.ca Property Transfer Tax rates (verified 2026-10-13)
 const BC_TIERS: Tier[] = [
   { upTo: 200_000, rate: 0.01, label: "First $200,000" },
   { upTo: 2_000_000, rate: 0.02, label: "$200K – $2M" },
@@ -79,6 +92,7 @@ export function bcFirstTimeBuyerExemption(price: number): number {
 
 /* ── Ontario ──────────────────────────────────────── */
 
+// ontario.ca first-time homebuyer refund; toronto.ca MLTT rebate (both verified 2026-10-13)
 export const ON_FTHB_MAX_REFUND = 4_000;
 export const TORONTO_FTHB_MAX_REBATE = 4_475;
 
@@ -90,6 +104,7 @@ const ON_TIERS: Tier[] = [
   { upTo: Infinity, rate: 0.025, label: "Over $2M" },
 ];
 
+// toronto.ca MLTT residential rates in effect from Apr 1, 2026 (verified 2026-10-13)
 const TORONTO_TIERS: Tier[] = [
   { upTo: 55_000, rate: 0.005, label: "First $55,000" },
   { upTo: 250_000, rate: 0.01, label: "$55K – $250K" },
@@ -115,7 +130,10 @@ export function torontoMunicipalLandTransferTax(price: number): TaxResult {
 
 /* ── Alberta ──────────────────────────────────────── */
 
-/** Alberta Land Titles registration fee for a transfer or a mortgage of the given value. */
+/**
+ * Alberta Land Titles registration fee for a transfer (value of land) or a mortgage (principal secured):
+ * $50 + $5 for each $5,000 "or portion thereof" — Land Titles Act s.64.1(2) / s.102.1(2), verified 2026-10-13.
+ */
 export function albertaRegistrationFee(value: number): number {
   if (!(value > 0)) return 0;
   return 50 + 5 * Math.ceil(value / 5_000);

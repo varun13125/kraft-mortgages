@@ -18,7 +18,8 @@ export default function ProvincesLayout({ children }: { children: React.ReactNod
   return (
     <>
       <Navigation />
-      <div className="pt-16">{children}</div>
+      {/* id target for the skip link; the BC page renders its own <main> inside. */}
+      <div id="main-content" className="pt-16">{children}</div>
       <Footer />
     </>
   );

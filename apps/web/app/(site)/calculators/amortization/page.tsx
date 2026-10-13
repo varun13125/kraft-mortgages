@@ -1,5 +1,5 @@
 "use client";
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
 import { useLiveRates } from "@/lib/useLiveRates";
@@ -13,6 +13,8 @@ import { payment, periodicRate } from "@/lib/calc/payment";
 import PdfLeadModal from "@/components/PdfLeadModal";
 import { CalculatorSchema } from "@/components/SEO/CalculatorSchema";
 import { RelatedCalculators } from "@/components/calculators/RelatedCalculators";
+import { liveRate, useLiveDefault } from "../_lib/liveRateDefaults";
+import { LiveRateNote } from "../_lib/LiveRateNote";
 
 interface ScheduleRow {
   month: number;
@@ -68,16 +70,11 @@ const faqs = [
 export default function AmortizationPage() {
   const [showPdfModal, setShowPdfModal] = useState(false);
   const [mortgage, setMortgage] = useState(500000);
-  const { best5YrFixed } = useLiveRates();
-  const [rate, setRate] = useState(4.39);
-  const [hasUserEdited, setHasUserEdited] = useState(false);
+  const { data: liveRates } = useLiveRates();
+  // Follows the live insured 5-yr fixed until the visitor edits it (the old version never recorded an edit,
+  // so a value typed before the rates loaded was overwritten)
+  const [rate, setRate, rateSource] = useLiveDefault(4.39, liveRate(liveRates, "fixed5Insured"));
   const [amortYears, setAmortYears] = useState(25);
-
-  useEffect(() => {
-    if (!hasUserEdited && best5YrFixed) {
-      setRate(best5YrFixed);
-    }
-  }, [best5YrFixed, hasUserEdited]);
   const [extraMonthly, setExtraMonthly] = useState(0);
   const [showAll, setShowAll] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
@@ -180,7 +177,10 @@ export default function AmortizationPage() {
                                     <ComplianceBanner feature="LEAD_FORM" />
                   <div className="space-y-6">
                     <ValidatedInput label="Mortgage Amount" value={mortgage} onChange={setMortgage} validation={{ min: 50000, max: 5000000 }} type="currency" />
-                    <ValidatedInput label="Interest Rate" value={rate} onChange={setRate} validation={{ min: 0.5, max: 15 }} type="percentage" />
+                    <div>
+                      <ValidatedInput label="Interest Rate" value={rate} onChange={setRate} validation={{ min: 0.5, max: 15 }} type="percentage" />
+                      <LiveRateNote data={liveRates} product="fixed5Insured" source={rateSource} />
+                    </div>
                     <ValidatedSlider label={`Amortization (${amortYears} years)`} value={amortYears} onChange={setAmortYears} min={5} max={30} step={1} formatValue={(v) => `${v} years`} />
                     <ValidatedInput label="Extra Monthly Payment (optional)" value={extraMonthly} onChange={setExtraMonthly} validation={{ min: 0, max: 5000 }} type="currency" />
                   </div>

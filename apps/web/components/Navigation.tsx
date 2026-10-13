@@ -1,9 +1,10 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, type KeyboardEvent as ReactKeyboardEvent, type RefObject } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { track } from "@vercel/analytics/react";
+import { ProvinceSelect } from "@/components/ProvinceSelect";
 import {
   Menu,
   X,
@@ -24,6 +25,36 @@ import {
 } from "lucide-react";
 import { usePathname } from "next/navigation";
 
+// Elements that can take keyboard focus inside the mobile menu (focus trap).
+const FOCUSABLE =
+  'a[href], button:not([disabled]), select:not([disabled]), input:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+// Service hubs that host their own /<hub>/calculators/* tools (quick-nav breadcrumb).
+const CALCULATOR_SECTIONS: Record<string, string> = {
+  residential: "Residential",
+  "equity-lending": "Equity Lending",
+  construction: "Construction",
+  commercial: "Commercial",
+  "private-lending": "Private Lending",
+};
+
+/**
+ * Escape inside a desktop dropdown closes it and returns focus to its toggle
+ * button (otherwise focus could be left on a link that is about to unmount).
+ */
+function dropdownKeyDown(
+  open: boolean,
+  close: () => void,
+  buttonRef: RefObject<HTMLButtonElement>
+) {
+  return (e: ReactKeyboardEvent<HTMLDivElement>) => {
+    if (e.key !== "Escape" || !open) return;
+    e.stopPropagation();
+    close();
+    buttonRef.current?.focus();
+  };
+}
+
 export default function Navigation() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -33,6 +64,13 @@ export default function Navigation() {
   const [aboutDropdown, setAboutDropdown] = useState(false);
   const pathname = usePathname();
 
+  const mobileToggleRef = useRef<HTMLButtonElement>(null);
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
+  const servicesBtnRef = useRef<HTMLButtonElement>(null);
+  const calculatorsBtnRef = useRef<HTMLButtonElement>(null);
+  const mliBtnRef = useRef<HTMLButtonElement>(null);
+  const aboutBtnRef = useRef<HTMLButtonElement>(null);
+
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
@@ -41,14 +79,73 @@ export default function Navigation() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Mobile menu a11y: lock body scroll, move focus into the menu, trap Tab within
+  // [toggle button + menu], Escape closes and returns focus to the toggle.
+  // Also closes if the viewport grows to the desktop layout (menu is lg:hidden,
+  // which would otherwise leave the page scroll-locked behind an invisible menu).
+  useEffect(() => {
+    if (!mobileMenuOpen) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    const getFocusable = (): HTMLElement[] => {
+      const inMenu = mobileMenuRef.current
+        ? Array.from(mobileMenuRef.current.querySelectorAll<HTMLElement>(FOCUSABLE))
+        : [];
+      return [mobileToggleRef.current, ...inMenu].filter((el): el is HTMLElement => !!el);
+    };
+
+    // First focusable item inside the menu (index 0 is the toggle itself).
+    getFocusable()[1]?.focus({ preventScroll: true });
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        setMobileMenuOpen(false);
+        mobileToggleRef.current?.focus();
+        return;
+      }
+      if (e.key !== "Tab") return;
+      const items = getFocusable();
+      if (items.length === 0) return;
+      const first = items[0];
+      const last = items[items.length - 1];
+      const active = document.activeElement as HTMLElement | null;
+      const inside = !!active && items.includes(active);
+      if (e.shiftKey && (active === first || !inside)) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && (active === last || !inside)) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+    document.addEventListener("keydown", onKeyDown);
+
+    const desktopQuery = window.matchMedia("(min-width: 1024px)");
+    const onViewportChange = (ev: MediaQueryListEvent) => {
+      if (ev.matches) setMobileMenuOpen(false);
+    };
+    desktopQuery.addEventListener?.("change", onViewportChange);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener("keydown", onKeyDown);
+      desktopQuery.removeEventListener?.("change", onViewportChange);
+    };
+  }, [mobileMenuOpen]);
+
   const isMLISection = pathname?.includes('/mli-select');
   const isCalculator = pathname?.includes('/calculators');
   const isQualify = pathname?.includes('/qualify');
+  const calculatorSection = pathname?.split('/')[1] ?? '';
+  const calculatorSectionLabel = CALCULATOR_SECTIONS[calculatorSection];
 
   return (
     <>
       {/* Main Navigation Bar */}
-      <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled
+      <nav aria-label="Main" className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled
         ? 'bg-gray-900/95 backdrop-blur-xl shadow-xl border-b border-gray-800'
         : 'bg-gray-900/80 backdrop-blur-md'
         }`}>
@@ -118,9 +215,10 @@ export default function Navigation() {
               <div
                 className="relative"
                 onBlur={(e) => { if (!e.currentTarget.contains(e.relatedTarget as Node)) setServicesDropdown(false); }}
-                onKeyDown={(e) => { if (e.key === 'Escape') setServicesDropdown(false); }}
+                onKeyDown={dropdownKeyDown(servicesDropdown, () => setServicesDropdown(false), servicesBtnRef)}
               >
                 <button
+                  ref={servicesBtnRef}
                   type="button"
                   aria-haspopup="true"
                   aria-expanded={servicesDropdown}
@@ -154,7 +252,7 @@ export default function Navigation() {
                           <Home className="w-5 h-5 text-blue-400" />
                           <div>
                             <div className="font-semibold">Residential Lending</div>
-                            <div className="text-xs text-gray-500">First-time buyers, refinancing, renewals</div>
+                            <div className="text-xs text-gray-400">First-time buyers, refinancing, renewals</div>
                           </div>
                         </Link>
                         <Link
@@ -164,7 +262,7 @@ export default function Navigation() {
                           <TrendingUp className="w-5 h-5 text-emerald-400" />
                           <div>
                             <div className="font-semibold">Equity Lending</div>
-                            <div className="text-xs text-gray-500">Professional rates, institutional service</div>
+                            <div className="text-xs text-gray-400">Professional rates, institutional service</div>
                           </div>
                         </Link>
                         <Link
@@ -174,7 +272,7 @@ export default function Navigation() {
                           <Hammer className="w-5 h-5 text-orange-400" />
                           <div>
                             <div className="font-semibold">Construction Financing</div>
-                            <div className="text-xs text-gray-500">Progressive draws, builder programs</div>
+                            <div className="text-xs text-gray-400">Progressive draws, builder programs</div>
                           </div>
                         </Link>
                         <Link
@@ -184,7 +282,7 @@ export default function Navigation() {
                           <Building className="w-5 h-5 text-purple-400" />
                           <div>
                             <div className="font-semibold">Commercial Lending</div>
-                            <div className="text-xs text-gray-500">Multi-unit, office, retail, industrial</div>
+                            <div className="text-xs text-gray-400">Multi-unit, office, retail, industrial</div>
                           </div>
                         </Link>
                         <Link
@@ -194,7 +292,7 @@ export default function Navigation() {
                           <Briefcase className="w-5 h-5 text-gold-400" />
                           <div>
                             <div className="font-semibold">Business Funding</div>
-                            <div className="text-xs text-gray-500">Working capital, lines of credit, business loans</div>
+                            <div className="text-xs text-gray-400">Working capital, lines of credit, business loans</div>
                           </div>
                         </Link>
                         <Link
@@ -204,7 +302,7 @@ export default function Navigation() {
                           <Shield className="w-5 h-5 text-rose-400" />
                           <div>
                             <div className="font-semibold">Private Lending</div>
-                            <div className="text-xs text-gray-500">Alternative solutions, fast approvals</div>
+                            <div className="text-xs text-gray-400">Alternative solutions, fast approvals</div>
                           </div>
                         </Link>
                         <Link
@@ -214,7 +312,7 @@ export default function Navigation() {
                           <Users className="w-5 h-5 text-teal-400" />
                           <div>
                             <div className="font-semibold">Surrey Mortgages</div>
-                            <div className="text-xs text-gray-500">Local experts for Surrey, BC</div>
+                            <div className="text-xs text-gray-400">Local experts for Surrey, BC</div>
                           </div>
                         </Link>
                         <Link
@@ -224,7 +322,7 @@ export default function Navigation() {
                           <Users className="w-5 h-5 text-teal-400" />
                           <div>
                             <div className="font-semibold">Kelowna Mortgages</div>
-                            <div className="text-xs text-gray-500">Local experts for Kelowna, BC</div>
+                            <div className="text-xs text-gray-400">Local experts for Kelowna, BC</div>
                           </div>
                         </Link>
                         <Link
@@ -234,7 +332,7 @@ export default function Navigation() {
                           <Users className="w-5 h-5 text-teal-400" />
                           <div>
                             <div className="font-semibold">Kamloops Mortgages</div>
-                            <div className="text-xs text-gray-500">Local experts for Kamloops, BC</div>
+                            <div className="text-xs text-gray-400">Local experts for Kamloops, BC</div>
                           </div>
                         </Link>
                         <Link
@@ -244,7 +342,7 @@ export default function Navigation() {
                           <Users className="w-5 h-5 text-teal-400" />
                           <div>
                             <div className="font-semibold">Abbotsford Mortgages</div>
-                            <div className="text-xs text-gray-500">Local experts for Abbotsford, BC</div>
+                            <div className="text-xs text-gray-400">Local experts for Abbotsford, BC</div>
                           </div>
                         </Link>
                       </div>
@@ -257,9 +355,10 @@ export default function Navigation() {
               <div
                 className="relative"
                 onBlur={(e) => { if (!e.currentTarget.contains(e.relatedTarget as Node)) setCalculatorsDropdown(false); }}
-                onKeyDown={(e) => { if (e.key === 'Escape') setCalculatorsDropdown(false); }}
+                onKeyDown={dropdownKeyDown(calculatorsDropdown, () => setCalculatorsDropdown(false), calculatorsBtnRef)}
               >
                 <button
+                  ref={calculatorsBtnRef}
                   type="button"
                   aria-haspopup="true"
                   aria-expanded={calculatorsDropdown}
@@ -290,7 +389,7 @@ export default function Navigation() {
                         className="block px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-gold-400 transition-all border-b border-gray-800"
                       >
                         <div className="font-semibold text-sm">All Calculators</div>
-                        <div className="text-xs text-gray-500">Complete calculator suite</div>
+                        <div className="text-xs text-gray-400">Complete calculator suite</div>
                       </Link>
                       <div className="p-2 space-y-1">
                         <Link
@@ -351,9 +450,10 @@ export default function Navigation() {
               <div
                 className="relative"
                 onBlur={(e) => { if (!e.currentTarget.contains(e.relatedTarget as Node)) setMliDropdown(false); }}
-                onKeyDown={(e) => { if (e.key === 'Escape') setMliDropdown(false); }}
+                onKeyDown={dropdownKeyDown(mliDropdown, () => setMliDropdown(false), mliBtnRef)}
               >
                 <button
+                  ref={mliBtnRef}
                   type="button"
                   aria-haspopup="true"
                   aria-expanded={mliDropdown}
@@ -384,14 +484,14 @@ export default function Navigation() {
                         className="block px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-gold-400 transition-all border-b border-gray-800"
                       >
                         <div className="font-semibold text-sm">MLI Portal Home</div>
-                        <div className="text-xs text-gray-500">Overview and resources</div>
+                        <div className="text-xs text-gray-400">Overview and resources</div>
                       </Link>
                       <Link
                         href="/mli-select/calculators"
                         className="block px-4 py-3 text-gray-300 hover:bg-gray-800 hover:text-gold-400 transition-all border-b border-gray-800"
                       >
                         <div className="font-semibold text-sm">All MLI Calculators</div>
-                        <div className="text-xs text-gray-500">9 specialized tools</div>
+                        <div className="text-xs text-gray-400">9 specialized tools</div>
                       </Link>
                       <div className="p-2 space-y-1">
                         <Link
@@ -431,9 +531,10 @@ export default function Navigation() {
               <div
                 className="relative"
                 onBlur={(e) => { if (!e.currentTarget.contains(e.relatedTarget as Node)) setAboutDropdown(false); }}
-                onKeyDown={(e) => { if (e.key === 'Escape') setAboutDropdown(false); }}
+                onKeyDown={dropdownKeyDown(aboutDropdown, () => setAboutDropdown(false), aboutBtnRef)}
               >
                 <button
+                  ref={aboutBtnRef}
                   type="button"
                   aria-haspopup="true"
                   aria-expanded={aboutDropdown}
@@ -467,7 +568,7 @@ export default function Navigation() {
                           <Users className="w-5 h-5 text-gold-400" />
                           <div>
                             <div className="font-semibold text-sm">About Us</div>
-                            <div className="text-xs text-gray-500">Our team, mission, and story</div>
+                            <div className="text-xs text-gray-400">Our team, mission, and story</div>
                           </div>
                         </Link>
                         <Link
@@ -477,7 +578,7 @@ export default function Navigation() {
                           <Lock className="w-5 h-5 text-blue-400" />
                           <div>
                             <div className="font-semibold text-sm">Compliance &amp; Security</div>
-                            <div className="text-xs text-gray-500">FINTRAC, licensing &amp; consumer protection</div>
+                            <div className="text-xs text-gray-400">FINTRAC, licensing &amp; consumer protection</div>
                           </div>
                         </Link>
                         <Link
@@ -487,7 +588,7 @@ export default function Navigation() {
                           <FileText className="w-5 h-5 text-gold-400" />
                           <div>
                             <div className="font-semibold text-sm">Market Insights &amp; Blog</div>
-                            <div className="text-xs text-gray-500">Mortgage rates, guides, and trends</div>
+                            <div className="text-xs text-gray-400">Mortgage rates, guides, and trends</div>
                           </div>
                         </Link>
                       </div>
@@ -514,8 +615,9 @@ export default function Navigation() {
               </Link>
             </div>
 
-            {/* Desktop CTA */}
-            <div className="hidden lg:flex items-center shrink-0 pl-2 xl:pl-4">
+            {/* Desktop CTA (+ province selector: drives province-specific disclosures) */}
+            <div className="hidden lg:flex items-center gap-2 xl:gap-3 shrink-0 pl-2 xl:pl-4">
+              <ProvinceSelect className="text-xs xl:text-sm" />
               <motion.a
                 href="https://r.mtg-app.com/varun-chaudhry"
                 target="_blank"
@@ -531,6 +633,8 @@ export default function Navigation() {
 
             {/* Mobile / Tablet Menu Button */}
             <button
+              ref={mobileToggleRef}
+              type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
               aria-expanded={mobileMenuOpen}
@@ -555,10 +659,19 @@ export default function Navigation() {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: "100%" }}
             id="mobile-menu"
+            ref={mobileMenuRef}
             className="fixed inset-0 z-40 bg-gray-900/95 backdrop-blur-xl lg:hidden"
             style={{ top: '64px' }}
           >
-            <div className="p-6 space-y-6 overflow-y-auto h-full">
+            <nav aria-label="Mobile" className="p-6 space-y-6 overflow-y-auto h-full overscroll-contain">
+              {/* Province selector: sets the province-specific disclosures site-wide */}
+              <div className="flex items-center justify-between gap-3 px-4 py-2 rounded-lg bg-gray-800/60 border border-gray-700">
+                <label htmlFor="mobile-province" className="text-sm text-gray-300">
+                  Your province
+                </label>
+                <ProvinceSelect id="mobile-province" label="Your province" />
+              </div>
+
               <Link
                 href="/"
                 className="flex items-center gap-3 px-4 py-3 text-lg text-gray-300 hover:text-gold-400 transition-colors"
@@ -783,12 +896,15 @@ export default function Navigation() {
               >
                 Apply Now
               </a>
-            </div>
+            </nav>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Quick Navigation Bar for Calculator Pages */}
+      {/* Quick Navigation Bar for Calculator Pages.
+          MLI calculators get the MLI portal breadcrumb + MLI quick actions; every
+          other calculator previously showed those same MLI links too (e.g. the
+          payment calculator's "All Calculators" went to the MLI suite). */}
       {isCalculator && (
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -797,43 +913,85 @@ export default function Navigation() {
         >
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between py-2">
-              <div className="flex items-center gap-4 overflow-x-auto">
-                <Link
-                  href="/mli-select"
-                  className="text-sm text-gray-400 hover:text-gold-400 transition-colors whitespace-nowrap"
-                >
-                  MLI Portal
-                </Link>
-                <span className="text-gray-600">›</span>
-                <Link
-                  href="/mli-select/calculators"
-                  className="text-sm text-gray-400 hover:text-gold-400 transition-colors whitespace-nowrap"
-                >
-                  All Calculators
-                </Link>
-                {pathname?.includes('/points') && (
-                  <>
-                    <span className="text-gray-600">›</span>
-                    <span className="text-sm text-gold-400 whitespace-nowrap">Points & Tier</span>
-                  </>
-                )}
-              </div>
+              {isMLISection ? (
+                <>
+                  <nav aria-label="Calculator breadcrumb" className="flex items-center gap-4 overflow-x-auto">
+                    <Link
+                      href="/mli-select"
+                      className="text-sm text-gray-400 hover:text-gold-400 transition-colors whitespace-nowrap"
+                    >
+                      MLI Portal
+                    </Link>
+                    <span className="text-gray-600" aria-hidden="true">›</span>
+                    <Link
+                      href="/mli-select/calculators"
+                      className="text-sm text-gray-400 hover:text-gold-400 transition-colors whitespace-nowrap"
+                    >
+                      All MLI Calculators
+                    </Link>
+                    {pathname?.includes('/points') && (
+                      <>
+                        <span className="text-gray-600" aria-hidden="true">›</span>
+                        <span className="text-sm text-gold-400 whitespace-nowrap" aria-current="page">Points & Tier</span>
+                      </>
+                    )}
+                  </nav>
 
-              {/* Quick Actions */}
-              <div className="hidden sm:flex items-center gap-2">
-                <Link
-                  href="/mli-select/calculators/scenario-compare"
-                  className="text-xs px-3 py-1 bg-gray-700/50 text-gray-300 rounded-lg hover:bg-gray-700 hover:text-gold-400 transition-all"
-                >
-                  Compare
-                </Link>
-                <Link
-                  href="/mli-select/calculators/eligibility-checklist"
-                  className="text-xs px-3 py-1 bg-gray-700/50 text-gray-300 rounded-lg hover:bg-gray-700 hover:text-gold-400 transition-all"
-                >
-                  Checklist
-                </Link>
-              </div>
+                  {/* Quick Actions */}
+                  <div className="hidden sm:flex items-center gap-2">
+                    <Link
+                      href="/mli-select/calculators/scenario-compare"
+                      className="text-xs px-3 py-1 bg-gray-700/50 text-gray-300 rounded-lg hover:bg-gray-700 hover:text-gold-400 transition-all"
+                    >
+                      Compare
+                    </Link>
+                    <Link
+                      href="/mli-select/calculators/eligibility-checklist"
+                      className="text-xs px-3 py-1 bg-gray-700/50 text-gray-300 rounded-lg hover:bg-gray-700 hover:text-gold-400 transition-all"
+                    >
+                      Checklist
+                    </Link>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <nav aria-label="Calculator breadcrumb" className="flex items-center gap-4 overflow-x-auto">
+                    {calculatorSectionLabel && (
+                      <>
+                        <Link
+                          href={`/${calculatorSection}`}
+                          className="text-sm text-gray-400 hover:text-gold-400 transition-colors whitespace-nowrap"
+                        >
+                          {calculatorSectionLabel}
+                        </Link>
+                        <span className="text-gray-600" aria-hidden="true">›</span>
+                      </>
+                    )}
+                    <Link
+                      href="/calculators"
+                      className="text-sm text-gray-400 hover:text-gold-400 transition-colors whitespace-nowrap"
+                    >
+                      All Calculators
+                    </Link>
+                  </nav>
+
+                  {/* Quick Actions */}
+                  <div className="hidden sm:flex items-center gap-2">
+                    <Link
+                      href="/rates"
+                      className="text-xs px-3 py-1 bg-gray-700/50 text-gray-300 rounded-lg hover:bg-gray-700 hover:text-gold-400 transition-all"
+                    >
+                      Today&apos;s Rates
+                    </Link>
+                    <Link
+                      href="/contact"
+                      className="text-xs px-3 py-1 bg-gray-700/50 text-gray-300 rounded-lg hover:bg-gray-700 hover:text-gold-400 transition-all"
+                    >
+                      Talk to a Broker
+                    </Link>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </motion.div>

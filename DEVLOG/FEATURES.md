@@ -5,6 +5,20 @@ New capabilities and enhancements, each with a permanent `FEAT-###` ID. Priority
 
 Pick from the top. P0 items also close open `BUG`s, noted in the **Closes** column.
 
+### Status changes (2026-10-14, round 2 — supersede the Status column below)
+
+| ID | Status | Note |
+| --- | --- | --- |
+| FEAT-001 | done for forms | Consent boxes + ledger fields on every site form; consent-gated AI calls. Chat consent form still to do. Wording pending legal review. |
+| FEAT-004 | partly done | Secret files untracked/ignored. Gitleaks NOT added yet: it would fail on the keys still in history — add after the history purge (BUG-001). |
+| FEAT-005 | done | pnpm-only Vercel install/build, single `vercel.json`. |
+| FEAT-006 | done | 98 Node built-in tests (`pnpm test` → `node --test "tests/**/*.test.mjs"`), CI `test` job on Node 24. Playwright smoke tests still to do. |
+| FEAT-007 | done | Live-rate defaults across calculators and landing pages. |
+| FEAT-016 | partly done | Drafts by default + admin publish; run list/polling remain. |
+| FEAT-018 | partly done | PDF report + lead capture added to 4 commercial, 5 MLI calculators and alt-income. Construction, equity and remaining MLI pages still to do. |
+| FEAT-027 | partly done | One shared, cached `/api/rates` request per page (`useLiveRates` dedupe). |
+| FEAT-028 | done | Blog images WebP + lazy loading. |
+
 ---
 
 ## P0: do next (foundations, compliance, and money already being lost)

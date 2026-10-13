@@ -8,7 +8,7 @@ export default function KelownaPage() {
     return (
         <>
             <Navigation />
-            <main className="min-h-screen mt-16">
+            <main id="main-content" className="min-h-screen mt-16">
                 {/* Hero */}
                 <section className="py-20 px-4 bg-gradient-to-b from-gray-900 to-gray-800">
                     <div className="max-w-5xl mx-auto text-center">

@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { prisma } from "@/lib/db";
+import { prisma, isPrismaEnabled } from "@/lib/db";
 import { firestore } from "@/lib/firebaseAdmin";
 import { requireAdmin, verifyCronRequest } from "@/lib/auth";
 
@@ -22,7 +22,7 @@ async function handler(req: NextRequest) {
     const y = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate()-1));
     const yEnd = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate()));
     let leads: any[] = [];
-    if (process.env.DATABASE_URL) {
+    if (isPrismaEnabled()) {
       leads = await prisma.lead.findMany({ where: { createdAt: { gte: y, lt: yEnd } } });
     } else {
       const db = firestore();
@@ -32,7 +32,7 @@ async function handler(req: NextRequest) {
     const leadsNew = leads.length;
     const leadsQualified = leads.filter((l: any) => l.status === 'QUALIFIED').length;
     const conversionRate = leadsNew ? (leadsQualified / leadsNew) : 0;
-    if (process.env.DATABASE_URL) {
+    if (isPrismaEnabled()) {
       await prisma.kpiDaily.upsert({
         where: { date: y },
         update: { leadsNew, leadsQualified, conversionRate },

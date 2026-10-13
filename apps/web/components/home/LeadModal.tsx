@@ -5,6 +5,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 import { BorderRotate } from '@/components/ui/animated-gradient-border';
 import { BUSINESS } from '@/lib/seo/business-config';
+import { ConsentCheckboxes } from '@/components/ConsentCheckboxes';
+import { consentFields } from '@/lib/compliance/consent';
 
 interface LeadModalProps {
   open: boolean;
@@ -27,6 +29,9 @@ export function LeadModal({ open, selectedCalculator, onClose }: LeadModalProps)
     name: '', email: '', phone: '', loanAmount: '', message: '',
   });
   const [submitting, setSubmitting] = useState(false);
+  // CASL marketing opt-in (BUG-005): optional, unticked by default. No call box here:
+  // this form posts to /api/lead, which never places an automated call.
+  const [marketingConsent, setMarketingConsent] = useState(false);
 
   // Close on Escape while open.
   useEffect(() => {
@@ -43,7 +48,11 @@ export function LeadModal({ open, selectedCalculator, onClose }: LeadModalProps)
       const res = await fetch('/api/lead', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...leadData, calculatorType: selectedCalculator || '' }),
+        body: JSON.stringify({
+          ...leadData,
+          calculatorType: selectedCalculator || '',
+          ...consentFields(false, marketingConsent),
+        }),
       });
       if (!res.ok) throw new Error(`Lead submit failed: HTTP ${res.status}`);
       if (selectedCalculator) {
@@ -53,12 +62,15 @@ export function LeadModal({ open, selectedCalculator, onClose }: LeadModalProps)
           body: JSON.stringify({ ...leadData, calculatorType: selectedCalculator }),
         });
       }
+      // (No email provider is wired up for reports yet — see app/api/calculator-report —
+      // so don't tell people to check their inbox.)
       alert(
         selectedCalculator
-          ? 'Thank you! We\'ll be in touch shortly. Check your email for your personalized report.'
+          ? 'Thank you! We\'ll be in touch shortly with your personalized report.'
           : 'Thank you! A licensed mortgage broker will be in touch shortly.'
       );
       setLeadData({ name: '', email: '', phone: '', loanAmount: '', message: '' });
+      setMarketingConsent(false);
       onClose();
     } catch (error) {
       console.error('Error submitting lead:', error);
@@ -117,6 +129,10 @@ export function LeadModal({ open, selectedCalculator, onClose }: LeadModalProps)
                 <textarea placeholder="Tell us about your mortgage needs..." rows={3} aria-label="Message"
                   className={`${inputClass} resize-none`}
                   value={leadData.message} onChange={(e) => setLeadData({ ...leadData, message: e.target.value })} />
+                <ConsentCheckboxes
+                  idPrefix="lead-modal"
+                  marketing={{ checked: marketingConsent, onChange: setMarketingConsent }}
+                />
                 <button type="submit" disabled={submitting}
                   className="w-full py-3 px-6 bg-gradient-to-r from-gold-500 to-gold-600 text-gray-900 font-semibold rounded-lg hover:from-gold-400 hover:to-gold-500 transition-all transform hover:scale-105 shadow-lg disabled:opacity-60 disabled:cursor-not-allowed">
                   {submitting ? 'Sending…' : selectedCalculator ? 'Get Calculator Report' : 'Get Free Analysis'}

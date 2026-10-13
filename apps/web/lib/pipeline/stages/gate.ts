@@ -3,6 +3,7 @@ import { embedText, isDuplicate } from '@/lib/ai/tools';
 import { getRecentPosts } from '@/lib/db/firestore';
 import { llm } from '@/lib/ai/llm';
 import { log } from '@/lib/runlog';
+import { parseLlmJson } from '../json';
 
 interface GateData {
   status: 'APPROVE' | 'REJECT' | 'REVISE';
@@ -111,7 +112,7 @@ Standards:
         }
       ], { temperature: 0.2 });
 
-      factCheckResult = JSON.parse(response.content);
+      factCheckResult = parseLlmJson(response.content);
     } catch (factCheckError) {
       await log(run.id, 'Gate: Fact-check failed, using fallback approval');
       factCheckResult = {

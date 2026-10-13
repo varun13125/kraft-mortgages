@@ -35,9 +35,13 @@ export class WebSearchTools {
         }
 
         try {
-            const response = await fetch(
-                `https://www.googleapis.com/customsearch/v1?key=${apiKey}&cx=${searchEngineId}&q=${encodeURIComponent(query)}&num=${limit}`
-            );
+            // API key goes in the x-goog-api-key header (supported by all googleapis.com REST APIs)
+            // so it never appears in URLs, logs or traces.
+            const params = new URLSearchParams({ cx: searchEngineId, q: query, num: String(limit) });
+            const response = await fetch(`https://www.googleapis.com/customsearch/v1?${params.toString()}`, {
+                headers: { 'x-goog-api-key': apiKey },
+                signal: AbortSignal.timeout(10_000),
+            });
 
             if (!response.ok) {
                 console.error('[WebSearch] API error:', response.status);

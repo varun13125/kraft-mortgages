@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { getCallingHoursStatus } from "@/lib/businessHours";
+import { getCallingHoursStatus, isRecipientCallable } from "@/lib/businessHours";
 import { triggerVapiOutboundCall } from "@/lib/voice/vapi";
 import { limitByIp, rateLimit, maskEmail, maskPhone, phoneKey } from "@/lib/compliance/requestGuards";
 import { firestore } from "@/lib/firebaseAdmin";
+import { crmWebhookHeaders, twentyWebhookUrl } from "@/lib/crm/webhooks";
+import { buildConsentRecord, consentInputShape, consentRecordToStrings, type ConsentRecord } from "@/lib/compliance/consentRecord";
 
 export const dynamic = "force-dynamic";
 
@@ -25,10 +27,9 @@ const ContactSchema = z
     _hp: z.string().optional(),
     afterHours: z.boolean().optional(),
     preferredCallTime: optStr(120),
-    // CASL / CRTC consent flags (optional until the forms send them)
-    consentToContact: z.boolean().optional(),
-    consentToCall: z.boolean().optional(), // express consent to an automated (AI) call
-    consentToMarketing: z.boolean().optional(),
+    // CASL / CRTC consent (lib/compliance/consent.ts consentFields()). Only
+    // consentToCall === true permits the automated AI call (BUG-005).
+    ...consentInputShape,
   })
   .passthrough();
 
@@ -49,42 +50,44 @@ interface ContactFormData {
   consentToContact?: boolean;
   consentToCall?: boolean;
   consentToMarketing?: boolean;
+  consentVersion?: string;
 }
 
-// Forward to Twenty CRM webhook — single source of truth for leads
+// Forward to Twenty CRM webhook — single source of truth for leads.
+// URL: TWENTY_WEBHOOK_URL (default = the n8n contact-form webhook); optional
+// X-Webhook-Secret from CRM_WEBHOOK_SECRET (BUG-022).
 async function sendToTwenty(data: Record<string, string>) {
   try {
-    const response = await fetch(
-      "https://webhook.srv848694.hstgr.cloud/webhook/contact-form",
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      }
-    );
+    const response = await fetch(twentyWebhookUrl(), {
+      method: "POST",
+      headers: crmWebhookHeaders(),
+      body: JSON.stringify(data),
+      signal: AbortSignal.timeout(15_000),
+    });
 
     if (!response.ok) {
-      const text = await response.text();
-      console.error("Twenty CRM error:", response.status, text);
+      const text = await response.text().catch(() => "");
+      console.error("Twenty CRM error:", response.status, text.slice(0, 200));
       return false;
     }
 
     const result = await response.json();
     return result.success === true;
   } catch (error) {
-    console.error("Twenty CRM fetch failed:", error);
+    console.error("Twenty CRM fetch failed:", error instanceof Error ? error.message : error);
     return false;
   }
 }
 
 // Discord notification for real-time alerts
 // Backup store so a lead is never lost when the CRM webhook is down.
-async function persistLeadBackup(data: Record<string, string>): Promise<boolean> {
+async function persistLeadBackup(data: Record<string, string>, consent: ConsentRecord): Promise<boolean> {
   try {
     await firestore().collection("leads").add({
       province: "BC",
       intent: data.mortgageType || "CONTACT_FORM",
       details: data,
+      consent, // CASL evidence (wording version, server time, IP)
       score: data.phone ? 60 : 30,
       status: "NEW",
       crmForwarded: false,
@@ -98,7 +101,7 @@ async function persistLeadBackup(data: Record<string, string>): Promise<boolean>
   }
 }
 
-async function sendDiscordNotification(data: ContactFormData, isAfterHours: boolean, scheduledTime: string): Promise<boolean> {
+async function sendDiscordNotification(data: ContactFormData, isAfterHours: boolean, scheduledTime: string, callConsent: boolean): Promise<boolean> {
   const webhookUrl = process.env.DISCORD_LEAD_WEBHOOK_URL;
   if (!webhookUrl) return false;
 
@@ -106,9 +109,11 @@ async function sendDiscordNotification(data: ContactFormData, isAfterHours: bool
     ? `${data.firstName} ${data.lastName || ""}`.trim()
     : data.name || "Unknown";
 
-  const dispatchStatus = isAfterHours
-    ? `🌙 After-Hours Queue (${scheduledTime})`
-    : "⚡ Live Dial (Julia +1 604-359-5993)";
+  const dispatchStatus = !callConsent
+    ? "🙋 No AI-call consent — manual follow-up"
+    : isAfterHours
+      ? `🌙 After-Hours Queue (${scheduledTime})`
+      : "⚡ Live Dial (Julia +1 604-359-5993)";
 
   try {
     const res = await fetch(webhookUrl, {
@@ -178,8 +183,14 @@ export async function POST(req: NextRequest) {
     // Calling-hours gate is server-authoritative (CRTC): the client may only make
     // it MORE conservative (afterHours: true), never force a live dial outside hours.
     const callingStatus = getCallingHoursStatus();
-    const isAfterHours = !callingStatus.isOpen || body.afterHours === true;
+    // Office window (Pacific) AND the CRTC window in the recipient's own time zone.
+    const isAfterHours = !callingStatus.isOpen || !isRecipientCallable(body.phone) || body.afterHours === true;
     const scheduledTime = body.preferredCallTime || callingStatus.nextAvailableTime;
+
+    // BUG-005 (owner decision 2026-10-13): automated AI calls ONLY with express
+    // consent - the call box was ticked (consentToCall === true). Missing/false = no call.
+    const consent = buildConsentRecord(body, req, body.source || "website-contact");
+    const callConsent = consent.consentToCall;
 
     const twentyData: Record<string, string> = {
       firstName: body.firstName || body.name?.split(" ")[0] || "",
@@ -192,35 +203,22 @@ export async function POST(req: NextRequest) {
       source: body.source || "website-contact",
       isAfterHours: isAfterHours ? "true" : "false",
       scheduledCallback: scheduledTime,
-      dispatchMode: isAfterHours ? "queue" : "live_dial",
+      // "none" = the person did NOT consent to an automated call: n8n must not
+      // queue or place an AI call for this lead (BUG-005).
+      dispatchMode: !callConsent ? "none" : isAfterHours ? "queue" : "live_dial",
       _hp: "",
+      // CASL evidence: consent flags, wording version, server time, client IP.
+      ...consentRecordToStrings(consent),
     };
-
-    // Record consent evidence when the form provides it (CASL requires proof of consent).
-    const consentFlags = {
-      consentToContact: body.consentToContact,
-      consentToCall: body.consentToCall,
-      consentToMarketing: body.consentToMarketing,
-    };
-    let consentRecorded = false;
-    for (const [key, value] of Object.entries(consentFlags)) {
-      if (typeof value === "boolean") {
-        twentyData[key] = value ? "true" : "false";
-        consentRecorded = true;
-      }
-    }
-    if (consentRecorded) {
-      twentyData.consentCapturedAt = new Date().toISOString();
-    }
 
     // Send to Twenty CRM (lead creation — primary)
     const crmSuccess = await sendToTwenty(twentyData);
 
     // If the CRM is down, keep a copy in Firestore so the lead is not lost
-    const backupSaved = crmSuccess ? false : await persistLeadBackup(twentyData);
+    const backupSaved = crmSuccess ? false : await persistLeadBackup(twentyData, consent);
 
     // Discord notification (real-time alert)
-    const discordSent = await sendDiscordNotification(body, isAfterHours, scheduledTime);
+    const discordSent = await sendDiscordNotification(body, isAfterHours, scheduledTime, callConsent);
 
     if (!crmSuccess && !backupSaved && !discordSent) {
       // Nothing recorded the lead anywhere — tell the client so the user can retry/call.
@@ -239,11 +237,10 @@ export async function POST(req: NextRequest) {
     // prevents the form being used to repeatedly call a victim's phone.
     let callDispatched = false;
     const canDialNumber =
+      callConsent &&
       !!body.phone && phoneKey(body.phone).length >= 10 &&
       rateLimit(`contact-dial:${phoneKey(body.phone)}`, 1, 24 * 60 * 60 * 1000).ok;
-    // Respect an explicit opt-out of automated calls (field absent = legacy forms).
-    const callConsentDenied = body.consentToCall === false;
-    if (!isAfterHours && body.phone && canDialNumber && !callConsentDenied) {
+    if (callConsent && !isAfterHours && body.phone && canDialNumber) {
       callDispatched = await triggerVapiOutboundCall({
         name: `${twentyData.firstName} ${twentyData.lastName}`.trim() || "Valued Client",
         phone: body.phone,
@@ -259,7 +256,7 @@ export async function POST(req: NextRequest) {
       afterHours: isAfterHours,
       scheduledTime,
       crm: crmSuccess ? "✅" : "❌",
-      voiceCall: callDispatched ? "📞 Dispatched" : isAfterHours ? "🌙 Queued" : "⚠️ Skipped",
+      voiceCall: !callConsent ? "call_skipped: no_consent" : callDispatched ? "📞 Dispatched" : isAfterHours ? "🌙 Queued" : "⚠️ Skipped",
     });
 
     return NextResponse.json({
@@ -267,11 +264,15 @@ export async function POST(req: NextRequest) {
       isAfterHours,
       scheduledTime,
       callDispatched,
-      message: isAfterHours
-        ? `Priority rate locked! Julia is scheduled to place your priority call ${scheduledTime}.`
-        : callDispatched
-          ? "Thank you! Julia is dialing your number right now."
-          : "Thank you! A mortgage specialist will contact you shortly.",
+      // false = no automated call will be placed (no consent), so the UI must not promise one
+      callConsent,
+      message: !callConsent
+        ? "Thank you! A mortgage specialist will contact you shortly."
+        : isAfterHours
+          ? `Priority rate locked! Julia is scheduled to place your priority call ${scheduledTime}.`
+          : callDispatched
+            ? "Thank you! Julia is dialing your number right now."
+            : "Thank you! A mortgage specialist will contact you shortly.",
     });
   } catch (error) {
     console.error("Contact form error:", error instanceof Error ? error.message : error);

@@ -11,6 +11,9 @@ import { formatCurrency } from "@/lib/utils/validation";
 import PdfLeadModal from "@/components/PdfLeadModal";
 import { CalculatorSchema } from "@/components/SEO/CalculatorSchema";
 import { RelatedCalculators } from "@/components/calculators/RelatedCalculators";
+import { useLiveRates } from "@/lib/useLiveRates";
+import { liveRate, useLiveDefault } from "../_lib/liveRateDefaults";
+import { LiveRateNote } from "../_lib/LiveRateNote";
 
 /* ── Mortgage Math ──────────────────────────────────── */
 // Canadian fixed-rate convention: semi-annual compounding, monthly rate = (1 + r/2)^(1/6) - 1
@@ -67,7 +70,9 @@ export default function RefinanceBreakEvenPage() {
   const [currentRate, setCurrentRate] = useState(5.89);
   const [currentPayment, setCurrentPayment] = useState(3177); // consistent with $450K at 5.89% over 240 months
   const [remainingMonths, setRemainingMonths] = useState(240);
-  const [newRate, setNewRate] = useState(4.49);
+  const { data: liveRates } = useLiveRates();
+  // A refinance is uninsured → conventional 5-yr fixed from the live feed (best5YrFixed is the insured rate)
+  const [newRate, setNewRate, newRateSource] = useLiveDefault(4.49, liveRate(liveRates, "fixed5Conventional"));
   const [newTermYears, setNewTermYears] = useState(5);
   const [legalFees, setLegalFees] = useState(1500);
   const [appraisalFees, setAppraisalFees] = useState(500);
@@ -221,7 +226,10 @@ export default function RefinanceBreakEvenPage() {
                     New Mortgage & Costs
                   </h2>
                   <div className="space-y-6">
-                    <ValidatedInput label="New Interest Rate" value={newRate} onChange={setNewRate} validation={{ min: 0.5, max: 15 }} type="percentage" />
+                    <div>
+                      <ValidatedInput label="New Interest Rate" value={newRate} onChange={setNewRate} validation={{ min: 0.5, max: 15 }} type="percentage" />
+                      <LiveRateNote data={liveRates} product="fixed5Conventional" source={newRateSource} />
+                    </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-300 mb-2">New Term</label>
                       <div className="flex gap-2">

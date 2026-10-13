@@ -4,6 +4,8 @@ import { motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
 import { Building, DollarSign, TrendingUp, AlertTriangle, CheckCircle, PieChart } from "lucide-react";
 import Link from "next/link";
+import CalculatorPdfButton from "@/components/calculator-report/CalculatorPdfButton";
+import { money, pct, num } from "@/components/calculator-report/reportFormat";
 
 export default function NOIAnalysisCalculator() {
     // Income
@@ -335,6 +337,49 @@ export default function NOIAnalysisCalculator() {
                             Estimates only. Vacancy is applied to gross rent plus other income. Lenders and appraisers may normalize
                             vacancy, management fees and reserves differently.
                         </p>
+                        <CalculatorPdfButton
+                            source="calculator-pdf-commercial-noi-analysis"
+                            title="Your NOI Analysis"
+                            subtitle="Get a personalized PDF with your income, expense and NOI breakdown"
+                            calculatorName="Commercial NOI Analysis Calculator"
+                            mortgageType="Commercial"
+                            amount={propertyValue}
+                            getSections={() => [
+                                {
+                                    title: "Income",
+                                    rows: [
+                                        { label: "Gross Potential Rent", value: money(grossPotentialRent) },
+                                        { label: "Other Income", value: money(otherIncome) },
+                                        { label: "Gross Potential Income", value: money(grossPotentialIncome) },
+                                        { label: `Less Vacancy & Credit Loss (${vacancyRate}%)`, value: `-${money(vacancyLoss)}` },
+                                        { label: "Effective Gross Income", value: money(effectiveGrossIncome), highlight: true },
+                                    ],
+                                },
+                                {
+                                    title: "Operating Expenses",
+                                    rows: [
+                                        { label: "Property Management", value: money(propertyManagement) },
+                                        { label: "Utilities", value: money(utilities) },
+                                        { label: "Insurance", value: money(insurance) },
+                                        { label: "Property Taxes", value: money(propertyTaxes) },
+                                        { label: "Maintenance & Repairs", value: money(maintenance) },
+                                        { label: "Reserves", value: money(reserves) },
+                                        { label: "Total Operating Expenses", value: money(totalOperatingExpenses), highlight: true },
+                                    ],
+                                },
+                                {
+                                    title: "Results",
+                                    rows: [
+                                        { label: "Net Operating Income (NOI)", value: money(netOperatingIncome), highlight: true },
+                                        { label: "Property Value", value: money(propertyValue) },
+                                        { label: "Cap Rate", value: pct(capRate) },
+                                        { label: "Expense Ratio (of EGI)", value: pct(expenseRatio, 1) },
+                                        { label: "Gross Rent Multiplier", value: `${num(grossRentMultiplier)}x` },
+                                    ],
+                                },
+                            ]}
+                            educationalContent="NOI is effective gross income (rent plus other income, less vacancy) minus operating expenses. It excludes mortgage payments, depreciation and capital expenditures. Lenders and appraisers may normalize vacancy, management fees and reserves differently, so their NOI can be lower than yours. Estimates only; not an appraisal."
+                        />
                         <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
                             <Link
                                 href="/contact"

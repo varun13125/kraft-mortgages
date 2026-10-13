@@ -5,17 +5,23 @@ import Navigation from "@/components/Navigation";
 import { ComplianceBanner } from "@/components/ComplianceBanner";
 import { Building, CheckCircle, AlertTriangle, TrendingUp, Star } from "lucide-react";
 import Link from "next/link";
+import { useLiveRates } from "@/lib/useLiveRates";
+import { livePrime, ratesAsOf } from "@/components/calculators/liveRateDefaults";
 
 interface BuilderProgram {
     name: string;
     lender: string;
-    maxLTV: number;
+    maxLTV: number; // max loan-to-cost
     minDownPayment: number;
-    interestRate: number;
+    /** Illustrative spread over prime (construction loans are typically floating). */
+    primeSpread: number;
     maxLoanAmount: number;
     features: string[];
     requirements: string[];
 }
+
+// Static prime used when the live rate feed is unavailable (Bank of Canada-linked prime, Oct 2026).
+const FALLBACK_PRIME = 4.45;
 
 const builderPrograms: BuilderProgram[] = [
     {
@@ -23,7 +29,7 @@ const builderPrograms: BuilderProgram[] = [
         lender: "Major Bank A",
         maxLTV: 75,
         minDownPayment: 25,
-        interestRate: 6.75,
+        primeSpread: 2.30, // 6.75% at prime 4.45%
         maxLoanAmount: 2000000,
         features: ["Fast approval (5-7 days)", "Flexible draw schedule", "Streamlined documentation"],
         requirements: ["2+ years experience", "3+ completed projects", "Strong credit (680+)"]
@@ -33,7 +39,7 @@ const builderPrograms: BuilderProgram[] = [
         lender: "Credit Union B",
         maxLTV: 65,
         minDownPayment: 35,
-        interestRate: 7.25,
+        primeSpread: 2.80, // 7.25% at prime 4.45%
         maxLoanAmount: 1000000,
         features: ["New builder friendly", "Project mentorship", "Competitive rates"],
         requirements: ["1+ completed project", "Licensed contractor", "Detailed business plan"]
@@ -43,7 +49,7 @@ const builderPrograms: BuilderProgram[] = [
         lender: "Private Lender C",
         maxLTV: 80,
         minDownPayment: 20,
-        interestRate: 8.50,
+        primeSpread: 4.05, // 8.50% at prime 4.45%
         maxLoanAmount: 3000000,
         features: ["Higher LTV available", "Luxury home specialist", "Fast funding"],
         requirements: ["5+ years experience", "Portfolio of work", "Strong reserves"]
@@ -53,7 +59,7 @@ const builderPrograms: BuilderProgram[] = [
         lender: "Regional Bank D",
         maxLTV: 70,
         minDownPayment: 30,
-        interestRate: 7.00,
+        primeSpread: 2.55, // 7.00% at prime 4.45%
         maxLoanAmount: 1500000,
         features: ["Pre-approved lots", "Bulk pricing available", "Marketing support"],
         requirements: ["3+ spec homes completed", "Pre-sale agreements", "Market analysis"]
@@ -65,10 +71,15 @@ export default function BuilderProgramCalculator() {
     const [downPayment, setDownPayment] = useState(200000);
     const [constructionMonths, setConstructionMonths] = useState(12);
     const [selectedProgram, setSelectedProgram] = useState<number | null>(null);
+    const { data: liveRates, loading: ratesLoading } = useLiveRates();
+    const prime = livePrime(liveRates) ?? FALLBACK_PRIME;
+    const primeIsLive = livePrime(liveRates) !== undefined;
+    const rateFor = (program: BuilderProgram) => Math.round((prime + program.primeSpread) * 100) / 100;
 
-    const downPaymentPercent = (downPayment / projectCost) * 100;
-    const loanAmount = projectCost - downPayment;
-    const ltv = (loanAmount / projectCost) * 100;
+    const downPaymentPercent = projectCost > 0 ? (downPayment / projectCost) * 100 : 0;
+    const loanAmount = Math.max(0, projectCost - downPayment);
+    // Loan-to-cost (construction lenders lend against total project cost)
+    const ltv = projectCost > 0 ? (loanAmount / projectCost) * 100 : 0;
 
     // Filter eligible programs
     const eligiblePrograms = builderPrograms.filter(
@@ -77,11 +88,11 @@ export default function BuilderProgramCalculator() {
 
     // Calculate costs for each program
     const calculateProgramCosts = (program: BuilderProgram) => {
-        const monthlyRate = program.interestRate / 100 / 12;
+        const rate = rateFor(program);
         const avgBalance = loanAmount / 2; // Progressive draw average
-        const totalInterest = avgBalance * (program.interestRate / 100) * (constructionMonths / 12);
-        const monthlyInterest = totalInterest / constructionMonths;
-        return { totalInterest, monthlyInterest };
+        const totalInterest = avgBalance * (rate / 100) * (constructionMonths / 12);
+        const monthlyInterest = constructionMonths > 0 ? totalInterest / constructionMonths : 0;
+        return { rate, totalInterest, monthlyInterest };
     };
 
     return (
@@ -184,7 +195,7 @@ export default function BuilderProgramCalculator() {
                                     <div className="text-2xl font-bold text-gold-400">${loanAmount.toLocaleString()}</div>
                                 </div>
                                 <div className="bg-white/5 rounded-xl p-4">
-                                    <div className="text-sm text-gray-400">Loan-to-Value</div>
+                                    <div className="text-sm text-gray-400">Loan-to-Cost</div>
                                     <div className={`text-2xl font-bold ${ltv <= 75 ? 'text-green-400' : 'text-orange-400'}`}>
                                         {ltv.toFixed(1)}%
                                     </div>
@@ -233,12 +244,13 @@ export default function BuilderProgramCalculator() {
 
                                         <div className="grid grid-cols-2 gap-4 mb-4">
                                             <div>
-                                                <div className="text-xs text-gray-500">Max LTV</div>
+                                                <div className="text-xs text-gray-500">Max Loan-to-Cost</div>
                                                 <div className="font-semibold">{program.maxLTV}%</div>
                                             </div>
                                             <div>
-                                                <div className="text-xs text-gray-500">Interest Rate</div>
-                                                <div className="font-semibold">{program.interestRate}%</div>
+                                                <div className="text-xs text-gray-500">Interest Rate (est.)</div>
+                                                <div className="font-semibold">{costs.rate.toFixed(2)}%</div>
+                                                <div className="text-[11px] text-gray-500">Prime + {program.primeSpread.toFixed(2)}%</div>
                                             </div>
                                             <div>
                                                 <div className="text-xs text-gray-500">Max Loan</div>
@@ -277,7 +289,7 @@ export default function BuilderProgramCalculator() {
 
                                         {!isEligible && (
                                             <div className="text-sm text-gray-500">
-                                                {ltv > program.maxLTV && `LTV too high (max ${program.maxLTV}%)`}
+                                                {ltv > program.maxLTV && `Loan-to-cost too high (max ${program.maxLTV}%)`}
                                                 {loanAmount > program.maxLoanAmount && ` • Loan exceeds maximum`}
                                             </div>
                                         )}
@@ -287,7 +299,8 @@ export default function BuilderProgramCalculator() {
                         </div>
 
                         <p className="mt-8 text-xs text-gray-500 text-center max-w-3xl mx-auto">
-                            Illustrative program profiles only — lender names, rates and limits are examples, not current offers.
+                            Illustrative program profiles only — lender names, spreads and limits are examples, not current offers.
+                            Rates are shown as prime + an illustrative spread, using {primeIsLive ? `today's prime of ${prime.toFixed(2)}%${ratesAsOf(liveRates) ? ` (as of ${ratesAsOf(liveRates)})` : ""}` : ratesLoading ? `a ${prime.toFixed(2)}% prime (loading today's rate)` : `an example prime of ${prime.toFixed(2)}% (live rates unavailable)`}.
                             Interest assumes a 50% average advance. New homes built for sale require third-party home warranty
                             coverage and builder licensing (BC Housing, Tarion in Ontario, Alberta New Home Buyer Protection).
                         </p>

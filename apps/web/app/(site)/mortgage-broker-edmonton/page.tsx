@@ -8,7 +8,7 @@ export default function EdmontonPage() {
   return (
     <>
       <Navigation />
-      <main className="min-h-screen mt-16 text-gray-100 bg-transparent">
+      <main id="main-content" className="min-h-screen mt-16 text-gray-100 bg-transparent">
         {/* Hero */}
         <section className="py-20 px-4 bg-transparent">
           <div className="max-w-5xl mx-auto text-center">

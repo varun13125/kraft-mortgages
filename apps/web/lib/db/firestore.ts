@@ -1,3 +1,6 @@
+import { createHash } from 'crypto';
+import { sanitizeBlogHtml } from '@/lib/security/sanitizeHtml';
+
 // Lazy imports and initialization to prevent build-time issues
 let admin: any = null;
 let getFirestore: any = null;
@@ -287,16 +290,113 @@ export function decodeEmbeddings(raw: any): number[][] | undefined {
     .filter((v: any): v is number[] => Array.isArray(v));
 }
 
+// ---------------------------------------------------------------------------
+// Stored-XSS defence (BUG-016). Post bodies are rendered with
+// dangerouslySetInnerHTML and plain-text fields end up inside JSON-LD <script>
+// blocks, so Firestore post data is sanitized on write (savePost) AND on read
+// (getPost / getRecentPosts / listFirestorePosts) - documents written before
+// this change, or by other tools straight into Firestore, are covered too.
+// The hard-coded seed posts below are source code (trusted) and are not touched.
+// ---------------------------------------------------------------------------
+const HTML_FIELDS = ['html', 'markdown', 'content'] as const;
+const sanitizedHtmlCache = new Map<string, string>();
+
+function sanitizeHtmlCached(value: string): string {
+  // Sanitizing costs ~0.2 ms/KB; /blog lists every Firestore post on each request.
+  const key = createHash('sha1').update(value).digest('base64');
+  const hit = sanitizedHtmlCache.get(key);
+  if (hit !== undefined) return hit;
+  const clean = sanitizeBlogHtml(value);
+  if (sanitizedHtmlCache.size >= 500) sanitizedHtmlCache.clear();
+  sanitizedHtmlCache.set(key, clean);
+  return clean;
+}
+
+/** Plain-text fields must never carry markup ("</script>" would escape a JSON-LD block). */
+function sanitizePlainText(value: string): string {
+  return value
+    .replace(/<\/?[a-z!?][^>]*>/gi, '')
+    .replace(/</g, '‹') // single left-pointing angle quotation mark
+    .replace(/>/g, '›');
+}
+
+function sanitizeTextDeep(value: any, depth = 0): any {
+  if (typeof value === 'string') return sanitizePlainText(value);
+  if (depth > 3 || value === null || typeof value !== 'object') return value;
+  if (Array.isArray(value)) return value.map((v) => sanitizeTextDeep(v, depth + 1));
+  if (Object.getPrototypeOf(value) !== Object.prototype) return value; // Timestamp, Date, ...
+  const out: any = {};
+  for (const [k, v] of Object.entries(value)) out[k] = sanitizeTextDeep(v, depth + 1);
+  return out;
+}
+
+/**
+ * Returns a copy of a post document that is safe to render: HTML fields go
+ * through the blog HTML sanitizer, every other string field (title, excerpt,
+ * metaDescription, seo*, author, keywords, categories, ...) is stripped of
+ * markup. Timestamps/Dates and embeddings are kept as-is.
+ */
+export function sanitizePostData<T extends Record<string, any>>(data: T): T {
+  const out: any = {};
+  for (const [key, value] of Object.entries(data || {})) {
+    if ((HTML_FIELDS as readonly string[]).includes(key)) {
+      out[key] = typeof value === 'string' ? sanitizeHtmlCached(value) : value;
+    } else if (key === 'embeddings' || key === 'publishedAt') {
+      out[key] = value;
+    } else {
+      out[key] = sanitizeTextDeep(value);
+    }
+  }
+  return out as T;
+}
+
 export async function savePost(post: Post): Promise<void> {
   await initializeFirebase();
   const publishedAt = post.publishedAt instanceof Date && !isNaN(post.publishedAt.getTime()) ? post.publishedAt : new Date();
   const timestampData = admin ? admin.firestore.Timestamp.fromDate(publishedAt) : publishedAt;
+  // Every writer (ingest API, AI pipeline, scripts/) goes through here.
+  const clean = sanitizePostData(post as Post & Record<string, any>);
 
   await (await postsCol()).doc(post.slug).set(stripUndefined({
-    ...post,
+    ...clean,
+    slug: post.slug,
     embeddings: encodeEmbeddings(post.embeddings),
     publishedAt: timestampData,
   }));
+}
+
+/**
+ * Patch metadata on an EXISTING Firestore post (no-op if the post only exists as
+ * a hard-coded seed post: creating a stub doc would shadow the seed post).
+ * Returns false when the document does not exist or the write failed.
+ */
+export async function updatePostMeta(slug: string, patch: Record<string, unknown>): Promise<boolean> {
+  try {
+    const ref = (await postsCol()).doc(slug);
+    const snap = await ref.get();
+    if (!snap.exists) return false;
+    await ref.update(stripUndefined(patch));
+    return true;
+  } catch (error) {
+    console.error('[updatePostMeta] failed:', error instanceof Error ? error.message : error);
+    return false;
+  }
+}
+
+/** Firestore posts only (no seed posts), drafts included - for the admin dashboard. */
+export async function listFirestorePosts(limit: number = 50): Promise<Array<Pick<Post, 'slug' | 'title' | 'status'> & { publishedAt: Date | null; republishedAt?: Date | null; wpPostId?: number }>> {
+  const snapshot = await (await postsCol()).orderBy('publishedAt', 'desc').limit(Math.min(Math.max(limit, 1), 200)).get();
+  return (snapshot.docs || []).map((doc: any) => {
+    const data = doc.data() || {};
+    return {
+      slug: sanitizePlainText(String(data.slug || doc.id || '')),
+      title: sanitizePlainText(String(data.title || '')),
+      status: data.status === 'draft' ? 'draft' : 'published',
+      publishedAt: toDateSafe(data.publishedAt) ?? null,
+      republishedAt: toDateSafe(data.republishedAt) ?? null,
+      wpPostId: typeof data.wpPostId === 'number' ? data.wpPostId : undefined,
+    };
+  });
 }
 
 export async function getPost(slug: string, opts: { includeDrafts?: boolean } = {}): Promise<Post | null> {
@@ -311,8 +411,10 @@ export async function getPost(slug: string, opts: { includeDrafts?: boolean } = 
       }
       console.log(`[getPost] Found post in Firestore: ${slug}`);
       return {
-        ...data,
-        publishedAt: data.publishedAt?.toDate(),
+        ...sanitizePostData(data),
+        // (was data.publishedAt?.toDate(): a string/Date publishedAt threw, and the
+        // catch below then 404'd a valid post)
+        publishedAt: toDateSafe(data.publishedAt),
         embeddings: decodeEmbeddings(data.embeddings),
       } as Post;
     }
@@ -3150,7 +3252,7 @@ export async function getRecentPosts(limit: number = 20, opts: { includeDrafts?:
       .get();
 
     const allFirestorePosts = snapshot.docs.map((doc: any) => ({
-      ...doc.data(),
+      ...sanitizePostData(doc.data() || {}),
       publishedAt: (() => { const p = doc.data().publishedAt; return p?.toDate ? p.toDate() : (p ? new Date(p) : null); })(),
       embeddings: decodeEmbeddings(doc.data().embeddings),
     })) as Post[];

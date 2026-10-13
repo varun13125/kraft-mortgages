@@ -446,12 +446,13 @@ export class RateTools {
 
   async getLenderIntelligence(params: { lenderName?: string; channel?: string; limit?: number } = {}): Promise<ToolResult> {
     try {
-      const { CANADIAN_LENDERS } = await import("@/data/canadianLendersData");
+      // LENDERS = the lender data with code-side corrections applied (e.g. CTBC's channel, BUG-027).
+      const { LENDERS } = await import("@/lib/ai/lenderIntelligence");
       const name = (params.lenderName || "").toLowerCase().trim();
       const channel = (params.channel || "").toLowerCase().trim();
       const limit = params.limit || 5;
 
-      let matched = CANADIAN_LENDERS;
+      let matched = LENDERS;
       if (name) {
         matched = matched.filter((l) => l.name.toLowerCase().includes(name));
       }

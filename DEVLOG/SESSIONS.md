@@ -18,6 +18,26 @@ Older history (2025-08 → 2026-10-04) lives in `/AI_CONTEXT_LOG.md`.
 
 ---
 
+## 2026-10-13/14: Round 2 — fix everything fixable, clean-up, ship to production
+
+- **Who:** Claude Code (Opus 5.5) as orchestrator + 5 parallel agents (ai-voice, backend, frontend-seo, calc-res, calc-specialty).
+- **Commit(s):** `a2030ab` (round-1 checkpoint), then the round-2 commit and data-refresh commit on branch `audit/2026-10-fixes`, fast-forwarded to `main` and pushed (production deploy). See `git log`.
+- **Owner decisions this session:** ship straight to production; AI auto-call ONLY when the person ticks the consent box; delete unused code, retire the MLI microsite, untrack secret files. The owner offered a Vercel token in chat — it was **not used** (credentials pasted into chat aren't used; owner told to revoke it). The Vercel connector lacks env-var permission (403), so env vars remain an owner task.
+- **Done:** see FINDINGS §0 (statuses for BUG-001…060) and FEATURES status table. Highlights:
+  - Dependencies: Next 14.2.35, jsPDF 4.2.1, sanitize-html; removed 13 unused deps + 3 old AI SDKs; pnpm-only deploy; `package-lock.json` removed.
+  - Compliance: consent boxes on all forms, consent-gated AI calls with stored evidence, recipient-local CRTC calling window, privacy policy disclosures (legal review pending).
+  - Security: blog HTML sanitized end-to-end, BDM contacts redacted, CSP Report-Only, CRM webhook secret header, Facebook dedupe, Firestore rules file.
+  - Data: live feed fixes (mislabelled private seconds, serial dates); found the root cause of the `isDormant` build break in `Hermes Agent/enrich_appraisal_legal_all_lenders.py` and fixed its template (backup kept).
+  - Calculators: live-rate defaults everywhere, BUG-053 gaps, constants verified against primary sources, PDF/lead capture on commercial + MLI tools.
+  - SEO: 13 hub calculators + MLI pages get their own canonicals; sitemap complete; WebP blog images.
+  - Clean-up: ~60 dead files deleted (import-graph verified), microsite retired, strays removed/moved.
+- **Verified:** `tsc` 0 errors; `next lint` 0 errors / 0 warnings; `pnpm test` 98/98; `next build` OK (125 pages); local `next start` smoke test of 31 routes (all expected codes: 200s, 308 redirects, 404 for removed pages, `/admin` 503 until its env vars are set); browser check of homepage, payment calculator (correct $3,793/mo on $700k @ 4.29% / 25y), footer licences. Live deploy verification: see STATUS.md.
+- **New items logged:** BUG-054…060; FEATURES status table.
+- **Left in progress / handoff notes:**
+  - Owner checklist in STATUS.md (env vars, key rotation, Firestore rules, FB consent question, apex redirect, legal review).
+  - Test a real Thinkrr call (close button relies on Thinkrr internals).
+  - Next engineering: FEAT-003 (durable rate limits), FEAT-002 (unified lead ingestion), FEAT-009 (tool calling), FEAT-018 remainder, BUG-038 remainder, Playwright smoke tests.
+
 ## 2026-10-12: Full codebase audit, fixes, and developer log
 
 - **Who:** Claude Code (Opus 5.5), acting as orchestrator, plus 7 parallel area agents: calc-res-a, calc-res-b, calc-specialty, ai-voice, backend, frontend-seo, platform.
