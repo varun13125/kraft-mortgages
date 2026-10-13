@@ -46,7 +46,7 @@ Stack: Next.js 14.2.35 App Router, TypeScript strict, Tailwind, Firebase/Firesto
 
 ## Next up for agents (in order)
 
-1. Verify the latest production deployment (Vercel MCP `list_deployments` / build events) and spot-check the live site (homepage, a calculator, `/api/rates`, `/sitemap.xml`).
+1. ✅ Done 2026-10-14: production deployment `dpl_3FZQxeb6DyPsUXmz2fLjUFtTEbYo` (commit `6fa4639`) live ~150 s after push; 20 live routes verified (200/308/404 as expected, `/admin` 503 until env vars), CSP Report-Only + security headers present, `/api/rates` private second 7.99% with no serial dates.
 2. **FEAT-003** durable rate limiting (Vercel WAF/Upstash) + merge the two guard helpers (BUG-007).
 3. **FEAT-002** unified lead ingestion (`lib/leads/ingest.ts`).
 4. **FEAT-009** tool calling in the live chat + chat consent form (BUG-026/041).

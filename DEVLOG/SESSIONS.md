@@ -31,7 +31,7 @@ Older history (2025-08 → 2026-10-04) lives in `/AI_CONTEXT_LOG.md`.
   - Calculators: live-rate defaults everywhere, BUG-053 gaps, constants verified against primary sources, PDF/lead capture on commercial + MLI tools.
   - SEO: 13 hub calculators + MLI pages get their own canonicals; sitemap complete; WebP blog images.
   - Clean-up: ~60 dead files deleted (import-graph verified), microsite retired, strays removed/moved.
-- **Verified:** `tsc` 0 errors; `next lint` 0 errors / 0 warnings; `pnpm test` 98/98; `next build` OK (125 pages); local `next start` smoke test of 31 routes (all expected codes: 200s, 308 redirects, 404 for removed pages, `/admin` 503 until its env vars are set); browser check of homepage, payment calculator (correct $3,793/mo on $700k @ 4.29% / 25y), footer licences. Live deploy verification: see STATUS.md.
+- **Verified:** `tsc` 0 errors; `next lint` 0 errors / 0 warnings; `pnpm test` 98/98; `next build` OK (125 pages); local `next start` smoke test of 31 routes (all expected codes: 200s, 308 redirects, 404 for removed pages, `/admin` 503 until its env vars are set); browser check of homepage, payment calculator (correct $3,793/mo on $700k @ 4.29% / 25y), footer licences. Production deploy `dpl_3FZQxeb6DyPsUXmz2fLjUFtTEbYo` (commit `6fa4639`) live ~150 s after push and verified on www.kraftmortgages.ca (routes, headers, rates API). Apex redirect still 307 (owner, Vercel Domains).
 - **New items logged:** BUG-054…060; FEATURES status table.
 - **Left in progress / handoff notes:**
   - Owner checklist in STATUS.md (env vars, key rotation, Firestore rules, FB consent question, apex redirect, legal review).
