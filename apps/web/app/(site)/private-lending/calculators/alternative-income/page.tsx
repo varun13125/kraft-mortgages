@@ -1,4 +1,5 @@
 "use client";
+import CalculatorNumberInput from "@/components/ui/CalculatorNumberInput";
 import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
@@ -14,19 +15,19 @@ export default function AlternativeIncomeCalculator() {
   // Property Details
   const [purchasePrice, setPurchasePrice] = useState(850000);
   const [downPayment, setDownPayment] = useState(170000); // 20%
-  
+
   // Income Sources
   const [employmentIncome, setEmploymentIncome] = useState(60000);
   const [selfEmployedIncome, setSelfEmployedIncome] = useState(80000);
   const [rentalIncome, setRentalIncome] = useState(36000);
   const [investmentIncome, setInvestmentIncome] = useState(24000);
   const [otherIncome, setOtherIncome] = useState(15000);
-  
+
   // Debts
   const [creditCardDebt, setCreditCardDebt] = useState(15000);
   const [carLoans, setCarLoans] = useState(25000);
   const [otherDebts, setOtherDebts] = useState(10000);
-  
+
   // Credit Profile
   const [creditScore, setCreditScore] = useState(650);
   const [incomeDocumentation, setIncomeDocumentation] = useState("stated"); // stated, bank-statements, tax-returns
@@ -36,27 +37,27 @@ export default function AlternativeIncomeCalculator() {
   const { data: liveRates, loading: ratesLoading } = useLiveRates();
   const liveStartRate = livePrivateSecond(liveRates);
   const startRate = useLiveDefault(8.5, liveStartRate);
-  
+
   // Private Lending Parameters
   const loanAmount = Math.max(0, purchasePrice - downPayment);
   const ltvRatio = purchasePrice > 0 ? (loanAmount / purchasePrice) * 100 : 0;
-  
+
   // Interest rate based on risk profile
   const interestRate = useMemo(() => {
     let baseRate = Math.max(0, startRate.value || 0); // starting private rate (live-seeded)
-    
+
     // Credit score adjustment
     if (creditScore >= 700) baseRate -= 0.5;
     else if (creditScore < 600) baseRate += 1.0;
-    
+
     // LTV adjustment
     if (ltvRatio > 80) baseRate += 0.75;
     else if (ltvRatio < 70) baseRate -= 0.25;
-    
+
     // Documentation adjustment
     if (incomeDocumentation === "tax-returns") baseRate -= 0.5;
     else if (incomeDocumentation === "stated") baseRate += 0.75;
-    
+
     return Math.max(baseRate, 7.5); // Minimum 7.5%
   }, [creditScore, ltvRatio, incomeDocumentation, startRate.value]);
 
@@ -68,7 +69,7 @@ export default function AlternativeIncomeCalculator() {
   const selfEmployedFactor = incomeDocumentation === "tax-returns" ? 1.15 : 1.0;
   const adjustedSelfEmployedIncome = selfEmployedIncome * selfEmployedFactor;
   const totalQualifyingIncome = employmentIncome + adjustedSelfEmployedIncome + adjustedRentalIncome + investmentIncome + otherIncome;
-  
+
   // Monthly calculations
   const monthlyQualifyingIncome = totalQualifyingIncome / 12;
   // Inputs are outstanding BALANCES; lenders use ~3% of the balance per month when the actual
@@ -88,12 +89,13 @@ export default function AlternativeIncomeCalculator() {
   // Ratios (payment only — property tax and heat not included)
   const gdsRatio = monthlyQualifyingIncome > 0 ? (monthlyPayment / monthlyQualifyingIncome) * 100 : 0;
   const tdsRatio = monthlyQualifyingIncome > 0 ? ((monthlyPayment + monthlyDebts) / monthlyQualifyingIncome) * 100 : 0;
-  
+
   // Private lending qualification (more flexible than traditional)
   const privateLendingGDS = gdsRatio <= 50; // More flexible than traditional 39%
   const privateLendingTDS = tdsRatio <= 60; // More flexible than traditional 44%
-  const qualifiesForPrivate = privateLendingGDS && privateLendingTDS && ltvRatio <= 85;
-  
+  const qualifiesForPrivate = totalQualifyingIncome > 0 && loanAmount > 0 &&
+    privateLendingGDS && privateLendingTDS && ltvRatio <= 85;
+
   // Risk assessment
   const isLowRisk = creditScore >= 650 && ltvRatio <= 75 && totalQualifyingIncome >= 100000;
   const isMediumRisk = creditScore >= 600 && ltvRatio <= 80;
@@ -102,7 +104,7 @@ export default function AlternativeIncomeCalculator() {
   return (
     <>
       <Navigation />
-      <main className="min-h-screen mt-16">
+      <main className="min-h-screen">
         {/* Breadcrumb */}
         <section className="py-6 px-4 bg-gray-800/30">
           <div className="max-w-6xl mx-auto">
@@ -119,7 +121,7 @@ export default function AlternativeIncomeCalculator() {
         {/* Hero Section */}
         <section className="py-20 px-4">
           <div className="max-w-6xl mx-auto">
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
@@ -144,7 +146,7 @@ export default function AlternativeIncomeCalculator() {
           <div className="max-w-5xl mx-auto">
             <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl shadow-2xl border border-gray-700/50 p-8">
               <h2 className="text-2xl font-semibold text-gray-100 mb-6">Alternative Income Analysis</h2>
-              
+
               <div className="grid gap-8 lg:grid-cols-2">
                 {/* Left Column - Inputs */}
                 <div className="space-y-6">
@@ -156,7 +158,7 @@ export default function AlternativeIncomeCalculator() {
                         <label className="block text-sm font-medium text-gray-200 mb-2">
                           Purchase Price
                         </label>
-                        <input
+                        <CalculatorNumberInput aria-label="Purchase Price" min={1}
                           type="number"
                           value={purchasePrice}
                           onChange={(e) => setPurchasePrice(Number(e.target.value))}
@@ -167,7 +169,7 @@ export default function AlternativeIncomeCalculator() {
                         <label className="block text-sm font-medium text-gray-200 mb-2">
                           Down Payment
                         </label>
-                        <input
+                        <CalculatorNumberInput aria-label="Down Payment"
                           type="number"
                           value={downPayment}
                           onChange={(e) => setDownPayment(Number(e.target.value))}
@@ -188,7 +190,7 @@ export default function AlternativeIncomeCalculator() {
                         <label className="block text-sm font-medium text-gray-200 mb-2">
                           Employment Income (T4)
                         </label>
-                        <input
+                        <CalculatorNumberInput aria-label="Employment Income (T4)"
                           type="number"
                           value={employmentIncome}
                           onChange={(e) => setEmploymentIncome(Number(e.target.value))}
@@ -199,7 +201,7 @@ export default function AlternativeIncomeCalculator() {
                         <label className="block text-sm font-medium text-gray-200 mb-2">
                           Self-Employed Income
                         </label>
-                        <input
+                        <CalculatorNumberInput aria-label="Self-Employed Income"
                           type="number"
                           value={selfEmployedIncome}
                           onChange={(e) => setSelfEmployedIncome(Number(e.target.value))}
@@ -210,7 +212,7 @@ export default function AlternativeIncomeCalculator() {
                         <label className="block text-sm font-medium text-gray-200 mb-2">
                           Rental Income
                         </label>
-                        <input
+                        <CalculatorNumberInput aria-label="Rental Income"
                           type="number"
                           value={rentalIncome}
                           onChange={(e) => setRentalIncome(Number(e.target.value))}
@@ -221,7 +223,7 @@ export default function AlternativeIncomeCalculator() {
                         <label className="block text-sm font-medium text-gray-200 mb-2">
                           Investment Income
                         </label>
-                        <input
+                        <CalculatorNumberInput aria-label="Investment Income"
                           type="number"
                           value={investmentIncome}
                           onChange={(e) => setInvestmentIncome(Number(e.target.value))}
@@ -232,7 +234,7 @@ export default function AlternativeIncomeCalculator() {
                         <label className="block text-sm font-medium text-gray-200 mb-2">
                           Other Income
                         </label>
-                        <input
+                        <CalculatorNumberInput aria-label="Other Income"
                           type="number"
                           value={otherIncome}
                           onChange={(e) => setOtherIncome(Number(e.target.value))}
@@ -250,7 +252,7 @@ export default function AlternativeIncomeCalculator() {
                         <label className="block text-sm font-medium text-gray-200 mb-2">
                           Credit Card Balance
                         </label>
-                        <input
+                        <CalculatorNumberInput aria-label="Credit Card Balance"
                           type="number"
                           value={creditCardDebt}
                           onChange={(e) => setCreditCardDebt(Number(e.target.value))}
@@ -261,7 +263,7 @@ export default function AlternativeIncomeCalculator() {
                         <label className="block text-sm font-medium text-gray-200 mb-2">
                           Car Loan Balance
                         </label>
-                        <input
+                        <CalculatorNumberInput aria-label="Car Loan Balance"
                           type="number"
                           value={carLoans}
                           onChange={(e) => setCarLoans(Number(e.target.value))}
@@ -272,7 +274,7 @@ export default function AlternativeIncomeCalculator() {
                         <label className="block text-sm font-medium text-gray-200 mb-2">
                           Other Debt Balances
                         </label>
-                        <input
+                        <CalculatorNumberInput aria-label="Other Debt Balances"
                           type="number"
                           value={otherDebts}
                           onChange={(e) => setOtherDebts(Number(e.target.value))}
@@ -290,7 +292,7 @@ export default function AlternativeIncomeCalculator() {
                         <label className="block text-sm font-medium text-gray-200 mb-2">
                           Credit Score
                         </label>
-                        <select
+                        <select aria-label="Credit Score"
                           value={creditScore}
                           onChange={(e) => setCreditScore(Number(e.target.value))}
                           className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent text-white"
@@ -307,7 +309,7 @@ export default function AlternativeIncomeCalculator() {
                         <label className="block text-sm font-medium text-gray-200 mb-2">
                           Income Documentation
                         </label>
-                        <select
+                        <select aria-label="Income Documentation"
                           value={incomeDocumentation}
                           onChange={(e) => setIncomeDocumentation(e.target.value)}
                           className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-rose-500 focus:border-transparent text-white"
@@ -321,7 +323,7 @@ export default function AlternativeIncomeCalculator() {
                         <label className="block text-sm font-medium text-gray-200 mb-2">
                           Starting Private Rate (%)
                         </label>
-                        <input
+                        <CalculatorNumberInput aria-label="Starting Private Rate (%)" max={100}
                           type="number"
                           step="0.01"
                           value={startRate.value}
@@ -353,13 +355,13 @@ export default function AlternativeIncomeCalculator() {
                         <div className="text-xl font-bold text-rose-400">
                           ${loanAmount.toLocaleString()}
                         </div>
-                        <div className="text-xs text-gray-500">{ltvRatio.toFixed(1)}% LTV</div>
+                        <div className="text-xs text-gray-400">{ltvRatio.toFixed(1)}% LTV</div>
                       </div>
 
                       <div className="bg-gray-800/50 rounded-lg p-4">
                         <div className="text-sm text-gray-400 mb-1">Interest Rate</div>
                         <div className="text-xl font-bold text-rose-400">{interestRate.toFixed(2)}%</div>
-                        <div className="text-xs text-gray-500">Starting rate {startRate.value.toFixed(2)}% + risk adjustments (est.)</div>
+                        <div className="text-xs text-gray-400">Starting rate {startRate.value.toFixed(2)}% + risk adjustments (est.)</div>
                       </div>
 
                       <div className="bg-gray-800/50 rounded-lg p-4">
@@ -367,13 +369,13 @@ export default function AlternativeIncomeCalculator() {
                         <div className="text-xl font-bold text-rose-400">
                           ${monthlyPayment.toLocaleString(undefined, {maximumFractionDigits: 0})}
                         </div>
-                        <div className="text-xs text-gray-500">Interest-only</div>
+                        <div className="text-xs text-gray-400">Interest-only</div>
                       </div>
 
                       <div className="bg-gray-800/50 rounded-lg p-4">
                         <div className="text-sm text-gray-400 mb-1">Term</div>
                         <div className="text-xl font-bold text-rose-400">1 Year</div>
-                        <div className="text-xs text-gray-500">Typical private term (renewable)</div>
+                        <div className="text-xs text-gray-400">Typical private term (renewable)</div>
                       </div>
                     </div>
                   </div>
@@ -425,7 +427,7 @@ export default function AlternativeIncomeCalculator() {
                         <span className="text-gray-300">Effective First-Year Cost:</span>
                         <span className="text-rose-400 font-bold">{effectiveAnnualCost.toFixed(2)}%</span>
                       </div>
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-gray-400">
                         Fees vary by lender and deal (lender fees typically 1–3%); legal and appraisal costs are extra.
                         Plan an exit (refinance to a B or A lender, or sale) before the term ends.
                       </p>
@@ -441,7 +443,7 @@ export default function AlternativeIncomeCalculator() {
                         <div className={`text-xl font-bold ${privateLendingGDS ? 'text-green-400' : 'text-red-400'}`}>
                           {gdsRatio.toFixed(1)}%
                         </div>
-                        <div className="text-xs text-gray-500">Max: 50% (private) • P&amp;I only</div>
+                        <div className="text-xs text-gray-400">Max: 50% (private) • P&amp;I only</div>
                       </div>
 
                       <div className="bg-gray-800/50 rounded-lg p-4">
@@ -449,7 +451,7 @@ export default function AlternativeIncomeCalculator() {
                         <div className={`text-xl font-bold ${privateLendingTDS ? 'text-green-400' : 'text-red-400'}`}>
                           {tdsRatio.toFixed(1)}%
                         </div>
-                        <div className="text-xs text-gray-500">Max: 60% (private)</div>
+                        <div className="text-xs text-gray-400">Max: 60% (private)</div>
                       </div>
                     </div>
                   </div>
@@ -458,20 +460,20 @@ export default function AlternativeIncomeCalculator() {
                   <div className="bg-gray-700/50 rounded-xl p-6">
                     <h3 className="text-lg font-semibold text-gray-100 mb-4">Risk Profile</h3>
                     <div className={`p-4 rounded-lg border ${
-                      isLowRisk ? 'bg-green-500/10 border-green-500/30' : 
-                      isMediumRisk ? 'bg-yellow-500/10 border-yellow-500/30' : 
+                      isLowRisk ? 'bg-green-500/10 border-green-500/30' :
+                      isMediumRisk ? 'bg-yellow-500/10 border-yellow-500/30' :
                       'bg-red-500/10 border-red-500/30'
                     }`}>
                       <div className="flex items-center gap-3">
                         <div className={`w-3 h-3 rounded-full ${
-                          isLowRisk ? 'bg-green-400' : 
-                          isMediumRisk ? 'bg-yellow-400' : 
+                          isLowRisk ? 'bg-green-400' :
+                          isMediumRisk ? 'bg-yellow-400' :
                           'bg-red-400'
                         }`}></div>
                         <div>
                           <div className={`font-semibold ${
-                            isLowRisk ? 'text-green-400' : 
-                            isMediumRisk ? 'text-yellow-400' : 
+                            isLowRisk ? 'text-green-400' :
+                            isMediumRisk ? 'text-yellow-400' :
                             'text-red-400'
                           }`}>
                             {isLowRisk ? 'Low Risk Profile' : isMediumRisk ? 'Medium Risk Profile' : 'High Risk Profile'}
@@ -497,7 +499,7 @@ export default function AlternativeIncomeCalculator() {
                           {qualifiesForPrivate ? 'Qualifies for Private Lending' : 'May Require Adjustment'}
                         </div>
                         <div className="text-sm text-gray-400">
-                          {qualifiesForPrivate 
+                          {qualifiesForPrivate
                             ? 'Alternative income documentation accepted with flexible qualification criteria'
                             : 'Consider increasing down payment or improving debt-to-income ratios'
                           }
@@ -577,21 +579,21 @@ export default function AlternativeIncomeCalculator() {
 
               {/* Related Calculators */}
               <div className="flex flex-wrap gap-4 justify-center mt-8">
-                <Link 
+                <Link
                   href={"/equity-lending/calculators/debt-consolidation" as any}
                   className="inline-flex items-center gap-2 px-4 py-2 bg-rose-500/20 text-rose-400 rounded-lg hover:bg-rose-500/30 transition-colors"
                 >
                   <Calculator className="w-4 h-4" />
                   Debt Consolidation
                 </Link>
-                <Link 
+                <Link
                   href={"/calculators/affordability" as any}
                   className="inline-flex items-center gap-2 px-4 py-2 bg-rose-500/20 text-rose-400 rounded-lg hover:bg-rose-500/30 transition-colors"
                 >
                   <DollarSign className="w-4 h-4" />
                   Affordability Calculator
                 </Link>
-                <Link 
+                <Link
                   href={"/private-lending" as any}
                   className="inline-flex items-center gap-2 px-4 py-2 bg-gray-700/50 text-gray-300 rounded-lg hover:bg-gray-700 transition-colors"
                 >

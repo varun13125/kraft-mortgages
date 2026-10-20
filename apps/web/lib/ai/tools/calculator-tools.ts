@@ -5,6 +5,7 @@
 
 import type { MortgageTool } from './types';
 import { payment, principalFromPayment } from '@/lib/calc/payment';
+import { compareRefinance } from '@/lib/calc/refinance';
 import { stressTestRate } from '@/lib/calc/affordability';
 import { cmhcPremiumRate, minimumDownPayment, INSURED_PRICE_CAP } from '@/lib/calc/cmhc';
 
@@ -238,27 +239,18 @@ Expense Ratio: ${expenseRatio.toFixed(1)}%`,
 
         const totalCosts = penalty + closingCosts;
 
-        // Monthly savings: payment difference (semi-annual compounding) when amortizations are
-        // known; otherwise the first-month interest difference on the balance.
-        let currentMonthly: number;
-        let newMonthly: number;
-        if (extra.remainingAmortizationYears && extra.remainingAmortizationYears > 0) {
-            currentMonthly = payment({ principal: currentBalance, annualRatePct: currentRate, amortYears: extra.remainingAmortizationYears, paymentsPerYear: 12 });
-            newMonthly = payment({ principal: currentBalance, annualRatePct: newRate, amortYears: extra.newAmortizationYears || extra.remainingAmortizationYears, paymentsPerYear: 12 });
-        } else {
-            currentMonthly = currentBalance * (currentRate / 100 / 12);
-            newMonthly = currentBalance * (newRate / 100 / 12);
-        }
-        const monthlySavings = currentMonthly - newMonthly;
-
-        const breakEvenMonths = monthlySavings > 0 ? Math.ceil(totalCosts / monthlySavings) : Infinity;
-        const fiveYearSavings = (monthlySavings * 60) - totalCosts;
-
-        const recommendation = breakEvenMonths < remainingTermMonths && breakEvenMonths < 24
-            ? '✅ Refinancing makes financial sense'
-            : breakEvenMonths < remainingTermMonths
-                ? '⚠️ Consider carefully - break-even period is long'
-                : '❌ May not be worth refinancing at this time';
+        const currentAmortYears = extra.remainingAmortizationYears || 25;
+        const comparison = {
+            principal: currentBalance, currentRate, newRate, currentAmortYears,
+            newAmortYears: extra.newAmortizationYears || currentAmortYears, upfrontCosts: totalCosts,
+        };
+        const fiveYear = compareRefinance({ ...comparison, horizonMonths: 60 });
+        const term = compareRefinance({ ...comparison, horizonMonths: remainingTermMonths });
+        const { monthlySavings, breakEvenMonths } = fiveYear;
+        const fiveYearSavings = fiveYear.netSavings;
+        const recommendation = term.worthwhile
+            ? 'Estimated interest savings exceed costs within the remaining term.'
+            : 'Costs are not recovered through interest savings within the remaining term.';
 
         return {
             monthlySavings: Math.round(monthlySavings),
@@ -270,13 +262,15 @@ Expense Ratio: ${expenseRatio.toFixed(1)}%`,
 |--------|-------|
 | Current Rate | ${currentRate}% |
 | New Rate | ${newRate}% |
-| Monthly Savings | $${Math.round(monthlySavings).toLocaleString()} |
+| Monthly Payment Reduction | $${Math.round(monthlySavings).toLocaleString()} |
 | Penalty${penaltyAmount === undefined ? ' (est., higher of 3-month interest / IRD)' : ''} | $${Math.round(penalty).toLocaleString()} |
 | Total Costs | $${Math.round(totalCosts).toLocaleString()} |
 | Break-Even | ${breakEvenMonths === Infinity ? 'N/A' : breakEvenMonths + ' months'} |
 | 5-Year Net Savings | $${Math.round(fiveYearSavings).toLocaleString()} |
 
-${recommendation}`,
+${recommendation}
+
+*Interest savings include remaining-balance differences; payment relief alone is not a saving. Assumes constant rates, fees paid in cash, and ${currentAmortYears} years remaining amortization.*`,
             recommendation,
         };
     }

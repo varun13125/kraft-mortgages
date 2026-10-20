@@ -940,10 +940,10 @@ export default function Navigation() {
                   {/* Quick Actions */}
                   <div className="hidden sm:flex items-center gap-2">
                     <Link
-                      href="/mli-select/calculators/scenario-compare"
+                      href="/mli-select/calculators/deal-sizer"
                       className="text-xs px-3 py-1 bg-gray-700/50 text-gray-300 rounded-lg hover:bg-gray-700 hover:text-gold-400 transition-all"
                     >
-                      Compare
+                      Deal Sizer
                     </Link>
                     <Link
                       href="/mli-select/calculators/eligibility-checklist"

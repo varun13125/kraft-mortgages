@@ -1,12 +1,12 @@
 # Project Status
 
-**Last updated:** 2026-10-14, end of round 2 (fix-everything pass + clean-up + production deploy)
-**Branch:** `main` (round-1 and round-2 work merged from `audit/2026-10-fixes`) · see `git log` for hashes
+**Last updated:** 2026-10-20 — calculator audit + premium implementation verified locally; authorized release pending
+**Branch:** `main`, base `006c93a`; calculator release prepared for commit/push. Four owner data-file changes remain excluded and untouched.
 
 ## What this project is
 
 Kraft Mortgages (kraftmortgages.ca) is the website of a licensed mortgage brokerage serving BC, Alberta and Ontario. It includes:
-- ~50 Canadian mortgage calculators (residential, commercial, construction, equity, private, CMHC MLI Select), all defaulting to live market rates
+- 53 Canadian mortgage calculators (residential, commercial, construction, equity, private, CMHC MLI Select), with live product benchmarks where appropriate and explicit commercial quote assumptions
 - an AI chat assistant with lender intelligence over a ~147-lender database
 - voice AI (Thinkrr WebRTC widget; consent-gated Vapi/Thinkrr outbound calls on new leads; Twilio voicemail)
 - lead capture with CASL consent evidence → Twenty CRM (via n8n), GoHighLevel and Discord
@@ -15,16 +15,23 @@ Kraft Mortgages (kraftmortgages.ca) is the website of a licensed mortgage broker
 
 Stack: Next.js 14.2.35 App Router, TypeScript strict, Tailwind, Firebase/Firestore, pnpm monorepo (`apps/web` is the site), Vercel (pnpm install, root `vercel.json`).
 
-## Health (2026-10-14)
+## Current calculator release (2026-10-20)
+
+- [Complete calculator/premium report](audit-2026-10/calculator-premium-audit-2026-10-20.md), [interactive design concept](audit-2026-10/premium-calculator-concept.html), [run evidence](audit-2026-10/calculator-audit-evidence/summary.json).
+- BUG-061…071 repaired; Toronto Closing Costs portion of FEAT-021 delivered. FEAT-019/060/062 implemented; FEAT-061 contract applied to three shared-shell tools. Other roadmap items remain open. Required [developer/design guide](DEVELOPER_GUIDE.md).
+- 53/53 routes returned 200 with unique matching canonicals; final merged axe scan zero violations, no page errors/390px overflow. 119/119 tests, 2,160 ledger combinations + 75 MLI sizing combinations; 136 additional numeric UI stress cases. Original 24/24 and new built-app 12/12 browser checks pass. [Premium release evidence](audit-2026-10/premium-release-evidence/verification.md).
+- Restrained calculator theme and searchable 53-tool directory; single guidance launcher; Payment, Renewal and MLI Deal Sizer use the full ivory/ink shell, mobile result summaries and ungated scenario PDF. Remaining legacy body migrations: FEAT-069; cash-out/capitalized-fee renewal extension: FEAT-070. Deployment verification is pending; real integrations and production field performance remain unverified.
+
+## Health (local 2026-10-20)
 
 | Check | Result |
 | --- | --- |
 | Type check: `cd apps/web && ./node_modules/.bin/tsc --noEmit --incremental false -p .` | ✅ 0 errors (delete `apps/web/.next` first if it has stale route types) |
 | Lint: `cd apps/web && ./node_modules/.bin/next lint` | ✅ 0 errors, 0 warnings |
-| Tests: `pnpm test` (→ `node --test "tests/**/*.test.mjs"`, Node ≥ 22.18) | ✅ 98/98 (calculators, MLI, AI tool math, reports, rates feed, calling hours) |
-| Production build: `cd apps/web && ./node_modules/.bin/next build` | ✅ 125 pages |
-| Local smoke test (`next start`) | ✅ 31 routes: expected 200 / 308 / 404; `/admin` 503 until its env vars exist |
-| Browser check | ✅ homepage, payment calculator (math verified), footer licences. Not yet: city pages, chat on mobile, real Thinkrr call |
+| Tests: `pnpm test` (→ `node --test "tests/**/*.test.mjs"`, Node ≥ 22.18) | ✅ 119/119 (includes integrated renewal/MLI, registry, stress, eligibility and input regressions) |
+| Production build: `cd apps/web && ./node_modules/.bin/next build` | ✅ Final isolated build passed, 126/126 pages, committed data baseline; runtime source matched to release files |
+| Local smoke test (`next start`) | ✅ Built app: 53/53 calculator routes 200, matching unique canonicals/H1s; 12/12 premium regressions. External integrations not exercised |
+| Browser check | ✅ All 52 calculator routes; 1,146 initial numeric/range + 43 select cases; 38 follow-up toggle cases; 24 targeted assertions/captures; final automated axe scan 0 violations. Real Thinkrr/CRM/email and full manual accessibility not certified |
 | CI (`.github/workflows/ci.yml`) | typecheck, lint, test, build — all blocking |
 
 ## Owner checklist (nothing below can be done by an agent)
@@ -46,12 +53,12 @@ Stack: Next.js 14.2.35 App Router, TypeScript strict, Tailwind, Firebase/Firesto
 
 ## Next up for agents (in order)
 
-1. ✅ Done 2026-10-14: production deployment `dpl_3FZQxeb6DyPsUXmz2fLjUFtTEbYo` (commit `6fa4639`) live ~150 s after push; 20 live routes verified (200/308/404 as expected, `/admin` 503 until env vars), CSP Report-Only + security headers present, `/api/rates` private second 7.99% with no serial dates.
+1. Read DEVELOPER_GUIDE.md and the latest session. Verify the pending authorized production release against its exact Git SHA; then continue FEAT-069 (remaining body/result-contract migrations) and FEAT-070 only if prioritised by the owner. Do not mistake remaining roadmap ideas for delivered features.
 2. **FEAT-003** durable rate limiting (Vercel WAF/Upstash) + merge the two guard helpers (BUG-007).
 3. **FEAT-002** unified lead ingestion (`lib/leads/ingest.ts`).
 4. **FEAT-009** tool calling in the live chat + chat consent form (BUG-026/041).
 5. **FEAT-018** remaining PDF/lead-capture pages; **BUG-038** contrast on calculator pages; **BUG-057/058**.
-6. Playwright smoke tests (FEAT-006 part 2); Next 15.5 upgrade plan (platform report §2.4).
+6. Browser CI integration for the reusable local audit scripts (FEAT-006); remaining manual accessibility and production performance checks (FEAT-057); Next upgrade plan.
 
 ## Behaviour changes now live (rounds 1 + 2)
 
@@ -71,7 +78,7 @@ Stack: Next.js 14.2.35 App Router, TypeScript strict, Tailwind, Firebase/Firesto
 | Live chat | `components/ChatWidget/ChatWidget.tsx` → `app/api/chat/route.ts` (OpenRouter deepseek → Gemini → NVIDIA → lender dossier; 50 s budget) |
 | Lender intelligence | `lib/ai/lenderIntelligence.ts` (+ `CHANNEL_CORRECTIONS`) over `data/canadianLendersData.ts` (generated by `Hermes Agent` scripts — don't hand-edit) |
 | Content pipeline LLMs | `lib/ai/llm.ts` (fetch-based; `LLM_*_MODEL` overrides), stages in `lib/pipeline/stages/*`, JSON parsing via `lib/pipeline/json.ts` |
-| Calculator math | `lib/calc/{payment,cmhc,affordability,landTransferTax,investment,selfEmployed,construction}.ts`, `lib/mli/calcs.ts`; live-rate defaults helper in `app/(site)/calculators/_lib/` |
+| Calculator math | `lib/calc/{payment,cmhc,affordability,landTransferTax,investment,selfEmployed,construction,refinance,purchaseEligibility}.ts`, `lib/mli/calcs.ts`; live-rate defaults helper in `app/(site)/calculators/_lib/` |
 | Live rates | `app/api/rates` → `lib/rates.ts` (feed sanity: private-second floor, serial dates) → `lib/useLiveRates.ts` (deduped, 5-min cache) |
 | Consent | `lib/compliance/consent.ts` (text + version) — every lead form uses it |
 | Calling hours | `lib/businessHours.ts` (`getCallingHoursStatus` office window + `isRecipientCallable` CRTC window) |

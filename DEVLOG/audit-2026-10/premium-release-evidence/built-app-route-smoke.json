@@ -1,0 +1,320 @@
+[
+  {
+    "route": "/calculators/a-vs-equity",
+    "status": 200,
+    "canonical": "https://www.kraftmortgages.ca/calculators/a-vs-equity",
+    "h1": "A-Lender vs Equity Lending"
+  },
+  {
+    "route": "/calculators/affordability",
+    "status": 200,
+    "canonical": "https://www.kraftmortgages.ca/calculators/affordability",
+    "h1": "Affordability Calculator"
+  },
+  {
+    "route": "/calculators/amortization",
+    "status": 200,
+    "canonical": "https://www.kraftmortgages.ca/calculators/amortization",
+    "h1": "Amortization Calculator"
+  },
+  {
+    "route": "/calculators/b-vs-equity",
+    "status": 200,
+    "canonical": "https://www.kraftmortgages.ca/calculators/b-vs-equity",
+    "h1": "B-Lender vs Equity Lending Calculator"
+  },
+  {
+    "route": "/calculators/bc-speculation-tax",
+    "status": 200,
+    "canonical": "https://www.kraftmortgages.ca/calculators/bc-speculation-tax",
+    "h1": "BC Speculation & Vacancy Tax Calculator"
+  },
+  {
+    "route": "/calculators/closing-costs",
+    "status": 200,
+    "canonical": "https://www.kraftmortgages.ca/calculators/closing-costs",
+    "h1": "Closing Costs Calculator"
+  },
+  {
+    "route": "/calculators/cmhc-insurance",
+    "status": 200,
+    "canonical": "https://www.kraftmortgages.ca/calculators/cmhc-insurance",
+    "h1": "CMHC Insurance Calculator"
+  },
+  {
+    "route": "/calculators/construction-pro",
+    "status": 200,
+    "canonical": "https://www.kraftmortgages.ca/calculators/construction-pro",
+    "h1": "Construction Pro Calculator"
+  },
+  {
+    "route": "/calculators/debt-service-ratio",
+    "status": 200,
+    "canonical": "https://www.kraftmortgages.ca/calculators/debt-service-ratio",
+    "h1": "Debt Service Ratio Calculator"
+  },
+  {
+    "route": "/calculators/down-payment",
+    "status": 200,
+    "canonical": "https://www.kraftmortgages.ca/calculators/down-payment",
+    "h1": "Down Payment Calculator"
+  },
+  {
+    "route": "/calculators/extra-payments",
+    "status": 200,
+    "canonical": "https://www.kraftmortgages.ca/calculators/extra-payments",
+    "h1": "Extra Payment Savings Calculator"
+  },
+  {
+    "route": "/calculators/first-time-home-buyer",
+    "status": 200,
+    "canonical": "https://www.kraftmortgages.ca/calculators/first-time-home-buyer",
+    "h1": "First-Time Home Buyer Calculator"
+  },
+  {
+    "route": "/calculators/investment",
+    "status": 200,
+    "canonical": "https://www.kraftmortgages.ca/calculators/investment",
+    "h1": "Investment Calculator"
+  },
+  {
+    "route": "/calculators/land-transfer-tax",
+    "status": 200,
+    "canonical": "https://www.kraftmortgages.ca/calculators/land-transfer-tax",
+    "h1": "Land Transfer Tax Calculator"
+  },
+  {
+    "route": "/calculators/mortgage-penalty",
+    "status": 200,
+    "canonical": "https://www.kraftmortgages.ca/calculators/mortgage-penalty",
+    "h1": "Mortgage Penalty Calculator"
+  },
+  {
+    "route": "/calculators/mortgage-qualifier",
+    "status": 200,
+    "canonical": "https://www.kraftmortgages.ca/calculators/mortgage-qualifier",
+    "h1": "Can I afford this home?"
+  },
+  {
+    "route": "/calculators/payment",
+    "status": 200,
+    "canonical": "https://www.kraftmortgages.ca/calculators/payment",
+    "h1": "A payment you can plan around."
+  },
+  {
+    "route": "/calculators/port-vs-break",
+    "status": 200,
+    "canonical": "https://www.kraftmortgages.ca/calculators/port-vs-break",
+    "h1": "Port vs Break"
+  },
+  {
+    "route": "/calculators/pre-approval",
+    "status": 200,
+    "canonical": "https://www.kraftmortgages.ca/calculators/pre-approval",
+    "h1": "Mortgage Pre-Approval"
+  },
+  {
+    "route": "/calculators/rate-comparison",
+    "status": 200,
+    "canonical": "https://www.kraftmortgages.ca/calculators/rate-comparison",
+    "h1": "Mortgage Rate Comparison"
+  },
+  {
+    "route": "/calculators/refinance-break-even",
+    "status": 200,
+    "canonical": "https://www.kraftmortgages.ca/calculators/refinance-break-even",
+    "h1": "Refinance Break-Even Calculator"
+  },
+  {
+    "route": "/calculators/refinance-cashout",
+    "status": 200,
+    "canonical": "https://www.kraftmortgages.ca/calculators/refinance-cashout",
+    "h1": "Refinance Cash-Out Calculator"
+  },
+  {
+    "route": "/calculators/refinance-vs-heloc-vs-second",
+    "status": 200,
+    "canonical": "https://www.kraftmortgages.ca/calculators/refinance-vs-heloc-vs-second",
+    "h1": "Refinance vs HELOC vs Second Mortgage Calculator"
+  },
+  {
+    "route": "/calculators/renewal",
+    "status": 200,
+    "canonical": "https://www.kraftmortgages.ca/calculators/renewal",
+    "h1": "Put your renewal offers side by side."
+  },
+  {
+    "route": "/calculators/rent-vs-buy",
+    "status": 200,
+    "canonical": "https://www.kraftmortgages.ca/calculators/rent-vs-buy",
+    "h1": "Rent vs Buy Calculator"
+  },
+  {
+    "route": "/calculators/required-income",
+    "status": 200,
+    "canonical": "https://www.kraftmortgages.ca/calculators/required-income",
+    "h1": "Required Income Calculator"
+  },
+  {
+    "route": "/calculators/reverse-mortgage",
+    "status": 200,
+    "canonical": "https://www.kraftmortgages.ca/calculators/reverse-mortgage",
+    "h1": "Reverse Mortgage Calculator"
+  },
+  {
+    "route": "/calculators/self-employed",
+    "status": 200,
+    "canonical": "https://www.kraftmortgages.ca/calculators/self-employed",
+    "h1": "Self-Employed Calculator"
+  },
+  {
+    "route": "/calculators/self-employed-a-vs-b",
+    "status": 200,
+    "canonical": "https://www.kraftmortgages.ca/calculators/self-employed-a-vs-b",
+    "h1": "A-Lender vs B-Lender"
+  },
+  {
+    "route": "/calculators/stress-test",
+    "status": 200,
+    "canonical": "https://www.kraftmortgages.ca/calculators/stress-test",
+    "h1": "Stress Test Calculator"
+  },
+  {
+    "route": "/commercial/calculators/cap-rate",
+    "status": 200,
+    "canonical": "https://www.kraftmortgages.ca/commercial/calculators/cap-rate",
+    "h1": "Capitalization Rate"
+  },
+  {
+    "route": "/commercial/calculators/cash-flow",
+    "status": 200,
+    "canonical": "https://www.kraftmortgages.ca/commercial/calculators/cash-flow",
+    "h1": "Cash Flow Calculator"
+  },
+  {
+    "route": "/commercial/calculators/noi-analysis",
+    "status": 200,
+    "canonical": "https://www.kraftmortgages.ca/commercial/calculators/noi-analysis",
+    "h1": "Net Operating Income"
+  },
+  {
+    "route": "/commercial/calculators/refinance",
+    "status": 200,
+    "canonical": "https://www.kraftmortgages.ca/commercial/calculators/refinance",
+    "h1": "Break-Even Analysis"
+  },
+  {
+    "route": "/construction/calculators/budget",
+    "status": 200,
+    "canonical": "https://www.kraftmortgages.ca/construction/calculators/budget",
+    "h1": "Construction Budget Calculator"
+  },
+  {
+    "route": "/construction/calculators/builder-program",
+    "status": 200,
+    "canonical": "https://www.kraftmortgages.ca/construction/calculators/builder-program",
+    "h1": "Find Your Builder Program"
+  },
+  {
+    "route": "/construction/calculators/construction-draw",
+    "status": 200,
+    "canonical": "https://www.kraftmortgages.ca/construction/calculators/construction-draw",
+    "h1": "Construction-to-Permanent Financing"
+  },
+  {
+    "route": "/construction/calculators/cost-to-complete",
+    "status": 200,
+    "canonical": "https://www.kraftmortgages.ca/construction/calculators/cost-to-complete",
+    "h1": "Project Funding Gap Analysis"
+  },
+  {
+    "route": "/construction/calculators/progressive-draw",
+    "status": 200,
+    "canonical": "https://www.kraftmortgages.ca/construction/calculators/progressive-draw",
+    "h1": "Interest on Partial Draws"
+  },
+  {
+    "route": "/equity-lending/calculators/debt-consolidation",
+    "status": 200,
+    "canonical": "https://www.kraftmortgages.ca/equity-lending/calculators/debt-consolidation",
+    "h1": "Debt Consolidation Calculator"
+  },
+  {
+    "route": "/equity-lending/calculators/heloc",
+    "status": 200,
+    "canonical": "https://www.kraftmortgages.ca/equity-lending/calculators/heloc",
+    "h1": "Home Equity Line of Credit"
+  },
+  {
+    "route": "/equity-lending/calculators/home-equity",
+    "status": 200,
+    "canonical": "https://www.kraftmortgages.ca/equity-lending/calculators/home-equity",
+    "h1": "Home Equity Calculator"
+  },
+  {
+    "route": "/mli-select/calculators/amortization",
+    "status": 200,
+    "canonical": "https://www.kraftmortgages.ca/mli-select/calculators/amortization",
+    "h1": "AmortizationComparison"
+  },
+  {
+    "route": "/mli-select/calculators/break-even",
+    "status": 200,
+    "canonical": "https://www.kraftmortgages.ca/mli-select/calculators/break-even",
+    "h1": "Break-EvenRent Calculator"
+  },
+  {
+    "route": "/mli-select/calculators/deal-sizer",
+    "status": 200,
+    "canonical": "https://www.kraftmortgages.ca/mli-select/calculators/deal-sizer",
+    "h1": "See how your rental project sizes up."
+  },
+  {
+    "route": "/mli-select/calculators/dscr",
+    "status": 200,
+    "canonical": "https://www.kraftmortgages.ca/mli-select/calculators/dscr",
+    "h1": "DSCR Max LoanCalculator"
+  },
+  {
+    "route": "/mli-select/calculators/eligibility-checklist",
+    "status": 200,
+    "canonical": "https://www.kraftmortgages.ca/mli-select/calculators/eligibility-checklist",
+    "h1": "Eligibility Checklist"
+  },
+  {
+    "route": "/mli-select/calculators/max-loan",
+    "status": 200,
+    "canonical": "https://www.kraftmortgages.ca/mli-select/calculators/max-loan",
+    "h1": "Maximum Loan& Equity Calculator"
+  },
+  {
+    "route": "/mli-select/calculators/points",
+    "status": 200,
+    "canonical": "https://www.kraftmortgages.ca/mli-select/calculators/points",
+    "h1": "Points & TierCalculator"
+  },
+  {
+    "route": "/mli-select/calculators/premium",
+    "status": 200,
+    "canonical": "https://www.kraftmortgages.ca/mli-select/calculators/premium",
+    "h1": "PremiumCalculator"
+  },
+  {
+    "route": "/mli-select/calculators/rent-cap",
+    "status": 200,
+    "canonical": "https://www.kraftmortgages.ca/mli-select/calculators/rent-cap",
+    "h1": "Rent Cap Calculator"
+  },
+  {
+    "route": "/mli-select/calculators/scenario-compare",
+    "status": 200,
+    "canonical": "https://www.kraftmortgages.ca/mli-select/calculators/scenario-compare",
+    "h1": "Scenario Compare"
+  },
+  {
+    "route": "/private-lending/calculators/alternative-income",
+    "status": 200,
+    "canonical": "https://www.kraftmortgages.ca/private-lending/calculators/alternative-income",
+    "h1": "Alternative Income Calculator"
+  }
+]

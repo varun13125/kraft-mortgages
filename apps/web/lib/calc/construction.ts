@@ -1,5 +1,18 @@
 export type Draw = { month: number; amount: number };
 
+/** Budget coverage, not physical completion. Loan commitments are not cash already advanced. */
+export function constructionFunding({ totalCost, equityInvested, loanFunded, loanCommitment }: {
+  totalCost: number; equityInvested: number; loanFunded: number; loanCommitment: number;
+}) {
+  const funded = Math.max(0, equityInvested) + Math.max(0, loanFunded);
+  const remainingCost = Math.max(0, totalCost - funded);
+  const budgetSurplus = Math.max(0, funded - totalCost);
+  const undisbursedLoan = Math.max(0, loanCommitment - loanFunded);
+  return { remainingCost, budgetSurplus, undisbursedLoan,
+    fundedPct: totalCost > 0 ? Math.min(100, funded / totalCost * 100) : 0,
+    fundingGap: remainingCost - undisbursedLoan };
+}
+
 // Interest-only cost of a progressive-draw construction loan (simple monthly interest on drawn balance).
 // Not financial advice.
 export function interestOnlyCost({ draws, annualRatePct, periodMonths }: { draws: Draw[]; annualRatePct: number; periodMonths?: number }) {

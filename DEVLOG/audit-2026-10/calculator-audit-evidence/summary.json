@@ -1,0 +1,14 @@
+{
+  "routes": 52,
+  "status200": 52,
+  "initialInputs": 314,
+  "initialNumericScenarios": 1146,
+  "initialSelectScenarios": 43,
+  "finalAxeViolationNodes": 0,
+  "finalPageErrors": [],
+  "finalFailures": [],
+  "mobileOverflow": [],
+  "targetedPass": 24,
+  "targetedTotal": 24,
+  "finalToggleScenarios": 38
+}

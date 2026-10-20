@@ -76,15 +76,15 @@ export default function LandTransferTax() {
     <>
       <CalculatorSchema name="Land Transfer Tax Calculator" description="Calculate provincial land transfer tax for BC, Alberta, and Ontario including first-time rebates." url="/calculators/land-transfer-tax" />
       <Navigation />
-      <main className="min-h-screen mt-16">
+      <main className="min-h-screen">
         <section className="py-6 px-4 bg-gray-800/30">
           <div className="max-w-6xl mx-auto">
             <div className="flex items-center gap-2 text-sm">
-              <Link href="/" className="text-gray-400 hover:text-gold-400 transition-colors">Home</Link>
+              <Link href="/" className="text-gray-400 hover:text-gold-300 transition-colors">Home</Link>
               <span className="text-gray-600">›</span>
-              <Link href="/calculators" className="text-gray-400 hover:text-gold-400 transition-colors">Calculators</Link>
+              <Link href="/calculators" className="text-gray-400 hover:text-gold-300 transition-colors">Calculators</Link>
               <span className="text-gray-600">›</span>
-              <span className="text-gold-400">Land Transfer Tax Calculator</span>
+              <span className="text-gold-300">Land Transfer Tax Calculator</span>
             </div>
           </div>
         </section>
@@ -93,7 +93,7 @@ export default function LandTransferTax() {
         <section className="py-20 px-4">
           <div className="max-w-6xl mx-auto text-center">
             <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
-              <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold bg-gold-500/20 text-gold-400 border border-gold-500/30 mb-6">
+              <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold bg-gold-500/20 text-gold-300 border border-gold-500/30 mb-6">
                 <Receipt className="w-4 h-4" />
                 Closing Cost Estimation
               </div>
@@ -114,7 +114,7 @@ export default function LandTransferTax() {
             <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }} className="space-y-8">
               <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-white/20">
                 <h2 className="text-xl sm:text-2xl font-bold mb-6 flex items-center gap-3">
-                  <Calculator className="w-6 h-6 text-gold-400" />
+                  <Calculator className="w-6 h-6 text-gold-300" />
                   Property Details
                 </h2>
                 <div className="space-y-6">
@@ -137,7 +137,7 @@ export default function LandTransferTax() {
                       <div className="font-medium text-gray-200">First-Time Home Buyer</div>
                       <div className="text-xs text-gray-400">Qualify for rebate programs</div>
                     </div>
-                    <button onClick={() => setIsFirstTime(!isFirstTime)}
+                    <button aria-label="First-time home buyer" aria-pressed={isFirstTime} onClick={() => setIsFirstTime(!isFirstTime)}
                       className={`w-12 h-6 rounded-full transition-colors ${isFirstTime ? "bg-gold-500" : "bg-gray-600"} relative`}>
                       <span className={`absolute top-0.5 w-5 h-5 rounded-full bg-white transition-transform ${isFirstTime ? "left-6" : "left-0.5"}`} />
                     </button>
@@ -149,7 +149,7 @@ export default function LandTransferTax() {
                         <div className="font-medium text-gray-200">Toronto (Additional MLTT)</div>
                         <div className="text-xs text-gray-400">Municipal Land Transfer Tax</div>
                       </div>
-                      <button onClick={() => setIsToronto(!isToronto)}
+                      <button aria-label="Property in Toronto" aria-pressed={isToronto} onClick={() => setIsToronto(!isToronto)}
                         className={`w-12 h-6 rounded-full transition-colors ${isToronto ? "bg-gold-500" : "bg-gray-600"} relative`}>
                         <span className={`absolute top-0.5 w-5 h-5 rounded-full bg-white transition-transform ${isToronto ? "left-6" : "left-0.5"}`} />
                       </button>
@@ -164,12 +164,12 @@ export default function LandTransferTax() {
               {/* Main result */}
               <div className="bg-gradient-to-br from-gold-500/20 to-amber-500/10 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-gold-500/30">
                 <div className="flex items-center gap-3 mb-2">
-                  <Receipt className="w-6 h-6 text-gold-400" />
+                  <Receipt className="w-6 h-6 text-gold-300" />
                   <span className="text-sm text-gold-300 font-medium">
                     {province === "Alberta" ? "Registration Fee" : "Land Transfer Tax"}
                   </span>
                 </div>
-                <div className="text-4xl sm:text-5xl font-bold text-gold-400 mb-1">
+                <div className="text-4xl sm:text-5xl font-bold text-gold-300 mb-1">
                   {formatCurrency(results.totalOwing, 0)}
                 </div>
                 {province === "Alberta" && (
@@ -200,14 +200,14 @@ export default function LandTransferTax() {
                       <div key={i} className="flex justify-between items-center py-2 border-b border-white/10 last:border-0">
                         <div>
                           <div className="text-sm text-gray-300">{b.label}</div>
-                          <div className="text-xs text-gray-500">{b.rate}%</div>
+                          <div className="text-xs text-gray-400">{b.rate}%</div>
                         </div>
                         <span className="font-semibold">{formatCurrency(b.amount, 0)}</span>
                       </div>
                     ))}
                     <div className="flex justify-between items-center pt-3 font-bold border-t border-gold-500/30">
-                      <span className="text-gold-400">Subtotal</span>
-                      <span className="text-gold-400">{formatCurrency(results.tax, 0)}</span>
+                      <span className="text-gold-300">Subtotal</span>
+                      <span className="text-gold-300">{formatCurrency(results.tax, 0)}</span>
                     </div>
                     {isFirstTime && results.rebate > 0 && (
                       <div className="flex justify-between items-center pt-1 text-green-400">
@@ -223,7 +223,7 @@ export default function LandTransferTax() {
               {results.mltt && (
                 <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-white/20">
                   <h4 className="font-semibold mb-4">Toronto Municipal Land Transfer Tax</h4>
-                  <div className="text-2xl font-bold text-gold-400 mb-3">{formatCurrency(results.mltt.total, 0)}</div>
+                  <div className="text-2xl font-bold text-gold-300 mb-3">{formatCurrency(results.mltt.total, 0)}</div>
                   {results.mltt.brackets.map((b, i) => (
                     <div key={i} className="flex justify-between py-1 text-sm text-gray-400">
                       <span>{b.label} ({b.rate}%)</span>
@@ -267,7 +267,7 @@ export default function LandTransferTax() {
               Land transfer tax (also called property transfer tax in BC or land registration fee in Alberta) is one of the largest closing costs you&apos;ll face when purchasing a home. It&apos;s a one-time tax or fee paid to the provincial government when you register the transfer of property. Understanding how much you&apos;ll owe helps you budget accurately and avoid surprises at closing.
             </p>
 
-            <h3 className="text-2xl font-semibold text-gold-400 mt-8 mb-4">British Columbia Property Transfer Tax</h3>
+            <h3 className="text-2xl font-semibold text-gold-300 mt-8 mb-4">British Columbia Property Transfer Tax</h3>
             <p className="text-gray-300 leading-relaxed mb-4">
               BC charges a Property Transfer Tax (PTT) based on tiered brackets: 1% on the first $200,000, 2% between $200,000 and $2,000,000, and 3% on the portion over $2,000,000. A further 2% applies to the residential portion of a property above $3,000,000 for all buyers. Foreign nationals and foreign entities also pay an additional 20% foreign buyers tax on residential property in specified areas.
             </p>
@@ -275,12 +275,12 @@ export default function LandTransferTax() {
               <strong>First-Time Home Buyers&apos; Program:</strong> First-time buyers in BC pay no PTT on the first $500,000 (a saving of up to $8,000) for homes valued up to $835,000; tax on any portion above $500,000 is still payable. A partial exemption applies for homes between $835,000 and $860,000. To qualify, you must be a Canadian citizen or permanent resident, have lived in BC for at least 12 months, have never owned an interest in a principal residence anywhere, and the home must be your principal residence.
             </p>
 
-            <h3 className="text-2xl font-semibold text-gold-400 mt-8 mb-4">Alberta Land Registration</h3>
+            <h3 className="text-2xl font-semibold text-gold-300 mt-8 mb-4">Alberta Land Registration</h3>
             <p className="text-gray-300 leading-relaxed mb-4">
               Alberta is one of the few provinces that does not charge a land transfer tax. Instead, you pay Land Titles registration fees. Since October 2024 these are $50 plus $5 for every $5,000 of value — about $550 to register the transfer of a $500,000 home — with the same formula charged on the mortgage amount. This still makes Alberta an attractive option for buyers looking to minimize closing costs.
             </p>
 
-            <h3 className="text-2xl font-semibold text-gold-400 mt-8 mb-4">Ontario Land Transfer Tax</h3>
+            <h3 className="text-2xl font-semibold text-gold-300 mt-8 mb-4">Ontario Land Transfer Tax</h3>
             <p className="text-gray-300 leading-relaxed mb-4">
               Ontario&apos;s Land Transfer Tax uses five progressive brackets: 0.5% on the first $55,000, 1.0% from $55,000 to $250,000, 1.5% from $250,000 to $400,000, 2.0% from $400,000 to $2,000,000, and 2.5% on amounts over $2,000,000.
             </p>
@@ -291,12 +291,12 @@ export default function LandTransferTax() {
               <strong>Toronto MLTT:</strong> If you&apos;re buying in Toronto, you pay an additional Municipal Land Transfer Tax that mirrors the provincial brackets up to $3,000,000, then rises in steps from 4.40% to 8.60% on the portion above $3,000,000 (rates as of April 1, 2026). First-time buyers in Toronto may be eligible for a separate municipal rebate of up to $4,475.
             </p>
 
-            <h3 className="text-2xl font-semibold text-gold-400 mt-8 mb-4">When Is Land Transfer Tax Due?</h3>
+            <h3 className="text-2xl font-semibold text-gold-300 mt-8 mb-4">When Is Land Transfer Tax Due?</h3>
             <p className="text-gray-300 leading-relaxed mb-4">
               Land transfer tax must be paid on or before your closing date. Your lawyer or notary public will typically arrange payment from the mortgage proceeds or your available funds. Failure to pay on time can result in penalties and interest charges. It&apos;s important to include this cost in your closing budget, as it typically ranges from a few hundred dollars (Alberta) to tens of thousands of dollars (BC or Ontario on expensive properties).
             </p>
 
-            <h3 className="text-2xl font-semibold text-gold-400 mt-8 mb-4">Frequently Asked Questions</h3>
+            <h3 className="text-2xl font-semibold text-gold-300 mt-8 mb-4">Frequently Asked Questions</h3>
             <div className="space-y-6 mb-8">
               <div>
                 <h4 className="font-semibold text-gray-200">Can land transfer tax be added to my mortgage?</h4>
@@ -321,9 +321,9 @@ export default function LandTransferTax() {
             </div>
 
             <div className="flex flex-wrap gap-4 text-sm">
-              <Link href="/calculators/closing-costs" className="text-gold-400 hover:text-gold-300 underline">Closing Costs Calculator</Link>
-              <Link href="/calculators/affordability" className="text-gold-400 hover:text-gold-300 underline">Affordability Calculator</Link>
-              <Link href="/calculators/first-time-home-buyer" className="text-gold-400 hover:text-gold-300 underline">First-Time Home Buyer Calculator</Link>
+              <Link href="/calculators/closing-costs" className="text-gold-300 hover:text-gold-300 underline">Closing Costs Calculator</Link>
+              <Link href="/calculators/affordability" className="text-gold-300 hover:text-gold-300 underline">Affordability Calculator</Link>
+              <Link href="/calculators/first-time-home-buyer" className="text-gold-300 hover:text-gold-300 underline">First-Time Home Buyer Calculator</Link>
             </div>
           </div>
         </section>

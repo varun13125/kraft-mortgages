@@ -5,14 +5,19 @@ New capabilities and enhancements, each with a permanent `FEAT-###` ID. Priority
 
 Pick from the top. P0 items also close open `BUG`s, noted in the **Closes** column.
 
-### Status changes (2026-10-14, round 2 — supersede the Status column below)
+### Status changes (updated 2026-10-20 — supersede the Status column below)
 
 | ID | Status | Note |
 | --- | --- | --- |
 | FEAT-001 | done for forms | Consent boxes + ledger fields on every site form; consent-gated AI calls. Chat consent form still to do. Wording pending legal review. |
 | FEAT-004 | partly done | Secret files untracked/ignored. Gitleaks NOT added yet: it would fail on the keys still in history — add after the history purge (BUG-001). |
 | FEAT-005 | done | pnpm-only Vercel install/build, single `vercel.json`. |
-| FEAT-006 | done | 98 Node built-in tests (`pnpm test` → `node --test "tests/**/*.test.mjs"`), CI `test` job on Node 24. Playwright smoke tests still to do. |
+| FEAT-006 | partly done (2026-10-20) | 119 tests pass; 2,160 ledger stress combinations plus 75 integrated MLI sizing cases; reusable browser harnesses cover 53 calculators. Browser CI integration remains. |
+| FEAT-021 | partly done (2026-10-20) | Toronto toggle and municipal rebates added to Closing Costs; remaining new-build/non-resident/mixed-owner extensions are open. |
+| FEAT-060 | done (2026-10-20; release verification pending) | Scoped restrained theme across calculator routes, complete searchable directory, single help dock, mobile summaries and full shared shell for Payment/Renewal/MLI sizing. Mandatory design/developer guide. Remaining component migrations are FEAT-069. |
+| FEAT-061 | partly done (2026-10-20) | Contract implemented in the three shared-shell tools and documented for future work; apply to remaining legacy tools through FEAT-069. |
+| FEAT-019 | done (2026-10-20; release verification pending) | Standard rental MLI sizer connects points, leverage, DCR including financed premiums, cash and sensitivities; ungated scenario PDF. |
+| FEAT-062 | done for renewal / early break (2026-10-20; release verification pending) | Three offers; common locked horizon; interest, cash fees, retained cashback/clawbacks, actual payout penalty, ending balances and PDF. Cash-out/capitalized fees extension is FEAT-070. |
 | FEAT-007 | done | Live-rate defaults across calculators and landing pages. |
 | FEAT-016 | partly done | Drafts by default + admin publish; run list/polling remain. |
 | FEAT-018 | partly done | PDF report + lead capture added to 4 commercial, 5 MLI calculators and alt-income. Construction, equity and remaining MLI pages still to do. |
@@ -48,7 +53,7 @@ Pick from the top. P0 items also close open `BUG`s, noted in the **Closes** colu
 | FEAT-016 | **Human-in-the-loop AI publishing + working content dashboard**: the pipeline writes drafts, an admin reviews/approves/republishes; run/post list endpoints; client polling instead of 10-min SSE; WP update-not-duplicate | Compliance for regulated advertising; makes the (now working) pipeline usable | fixed `lib/pipeline/*`, draft filtering, `app/dashboard`, `/api/publish/republish` | M | be §3, §4 | open |
 | FEAT-017 | **One purchase scenario across calculators** (price, down, rate, province, first-time) carried via Zustand + URL params; shareable scenario links (no personal data in the URL) | No retyping; smooth path from qualifier → closing costs → lead form; brokers can send pre-filled scenarios | Zustand store (`store/useAppStore.ts`), payment page already reads `?rate=` | M | calc-a, calc-b F11 | open |
 | FEAT-018 | **PDF report + lead capture on the remaining calculators**: commercial, MLI, construction, equity, cash-out, port-vs-break, reverse mortgage | High-value commercial/MLI visitors currently have no capture | `generateGenericReport` + `PdfLeadModal` (on 26 residential pages already) | S each | calc-sp 3, calc-b F9 | open |
-| FEAT-019 | **MLI Select deal sizer**: points → tier → LTC/LTV cap, 1.10 DCR loan, insured loan = lesser of the two, grid premium financed, payment, cash flow | One screen answers "how much can I borrow and what will CMHC charge?" | `lib/mli/calcs.ts` (`leverageFor`, `dscrMaxLoan`, `mliBasePremiumPct`, `mliAmortizationSurchargePct`, `pmt`) | M | calc-sp 1 | open |
+| FEAT-019 | **MLI Select deal sizer**: points → tier → LTC/LTV cap, 1.10 DCR loan, insured loan = lesser of the two, grid premium financed, payment, cash flow | One screen answers "how much can I borrow and what will CMHC charge?" | `lib/mli/calcs.ts` (`leverageFor`, `dscrMaxLoan`, `mliBasePremiumPct`, `mliAmortizationSurchargePct`, `pmt`) | M | calc-sp 1 | done (2026-10-20; standard rental) |
 | FEAT-020 | **CMHC median renter income lookup** for rent-cap and affordability scoring | Correct affordable-rent caps per market without manual lookup | CMHC XLSX by market; shape in `mli-select-complete/src/lib/data/medianIncome.ts` | M | calc-sp 2 | open |
 | FEAT-021 | **Province-complete closing costs**: BC newly-built exemption (≤ $1.1M, phase-out to $1.15M), BC 20% foreign buyer tax, ON 25% NRST, Toronto toggle on closing costs, AB mortgage registration fee, ON new-home HST rebate for first-time buyers | Accurate cash-to-close across all three provinces | `lib/calc/landTransferTax.ts` | S–M | calc-a O6/O7 | open |
 | FEAT-022 | **Rate-drop alerts**: subscribers are notified when the 5-yr fixed falls below their target | Re-engagement and lead nurturing | `/api/rates` feed, rate-alert logic in `lib/ai/tools/rate-tools.ts`, cron, FEAT-015 | M | be | open |
@@ -94,3 +99,20 @@ Pick from the top. P0 items also close open `BUG`s, noted in the **Closes** colu
 | FEAT-057 | Speed Insights, preview-environment parity (+ Playwright on every preview), on-demand bundle analysis | Real-user CWV; catch breakage before prod | `@vercel/analytics` already installed | S | plat P-F8/F9/F12 | open |
 | FEAT-058 | MLI tools: "Standard MLI" baseline option and other-shelter/surcharge toggles in premium & scenario tools | Fair comparisons; covers student/seniors/SRO | `lib/mli/calcs.ts` | S–M | calc-sp §3 | open |
 | FEAT-059 | Ontario/Alberta cap-rate benchmarks with dated sources | Commercial tool credibility in all served provinces | `commercial/calculators/cap-rate` | S | calc-sp 9 | open |
+
+
+## 2026-10-20 audit additions
+
+| ID | Feature | Priority | Effort | Status |
+| --- | --- | --- | --- | --- |
+| FEAT-060 | Premium design system and common calculator shell; one help control; job-based searchable hub. Visual concept and acceptance criteria in the calculator premium audit. | P1 | M–L | done (2026-10-20; FEAT-069 tracks remaining body migrations) |
+| FEAT-061 | Common result/assumptions contract: units, sources/dates, purpose, horizon, eligibility, cash/financed fees and rules version; explain binding constraint and sensitivity. | P1 | M | partly done (three tools; FEAT-069 remaining) |
+| FEAT-062 | Integrated renewal offer / straight switch / refinance comparator with fees, cashback/clawbacks, actual payout quote and ending balances. | P1 | M | done for renewal / early break (FEAT-070 extension open) |
+| FEAT-063 | Comfortable household budget and payment/income shock tool, separate from underwriting capacity. | P1 | M | open |
+| FEAT-064 | Move-up / buy-before-sell / bridge planner: net proceeds, deposit timing, bridge/overlap costs and new purchase cash. | P1 | M | open |
+| FEAT-065 | Suite/laneway/renovation investment planner: draw costs, reserves, rent and takeout sensitivity. | P2 | M | open |
+| FEAT-066 | Variable-payment / trigger-rate model using actual product terms, prime paths, negative amortization and renewal shock. | P2 | M | open |
+| FEAT-067 | Secure rental portfolio cash-flow, maturity, DCR/LTV and reserve-risk dashboard. | P2 | L | open |
+| FEAT-068 | Per-person FHSA/HBP/down-payment timeline with room, dates, repayments, liquid cash vs later refunds and closing reserve. | P1 | M | open |
+| FEAT-069 | Migrate the remaining 50 legacy calculator bodies to CalculatorShell and the complete shared result/assumptions contract, preserving each existing model and controls. All already receive the scoped restrained theme. | P2 | L | open |
+| FEAT-070 | Extend the renewal decision workflow to different opening balances, cash-out and financed transaction costs with explicit use-of-funds reconciliation; retain the same-horizon economic comparison. | P2 | M | open |

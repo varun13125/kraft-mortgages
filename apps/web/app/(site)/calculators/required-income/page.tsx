@@ -130,16 +130,16 @@ export default function RequiredIncomePage() {
   return (
     <>
       <Navigation />
-      <main className="min-h-screen mt-16">
+      <main className="min-h-screen">
         {/* Breadcrumb */}
         <section className="py-6 px-4 bg-gray-800/30">
           <div className="max-w-6xl mx-auto">
             <div className="flex items-center gap-2 text-sm">
-              <Link href="/" className="text-gray-400 hover:text-gold-400 transition-colors">Home</Link>
+              <Link href="/" className="text-gray-400 hover:text-gold-300 transition-colors">Home</Link>
               <span className="text-gray-600">›</span>
-              <Link href="/calculators" className="text-gray-400 hover:text-gold-400 transition-colors">Calculators</Link>
+              <Link href="/calculators" className="text-gray-400 hover:text-gold-300 transition-colors">Calculators</Link>
               <span className="text-gray-600">›</span>
-              <span className="text-gold-400">Required Income Calculator</span>
+              <span className="text-gold-300">Required Income Calculator</span>
             </div>
           </div>
         </section>
@@ -148,7 +148,7 @@ export default function RequiredIncomePage() {
         <section className="py-20 px-4">
           <div className="max-w-6xl mx-auto">
             <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="text-center">
-              <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold bg-gold-500/20 text-gold-400 border border-gold-500/30 mb-6">
+              <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold bg-gold-500/20 text-gold-300 border border-gold-500/30 mb-6">
                 <TrendingUp className="w-4 h-4" />
                 Mortgage Qualification
               </div>
@@ -196,7 +196,7 @@ export default function RequiredIncomePage() {
               <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }} className="space-y-8">
                 <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-white/20">
                   <h2 className="text-xl sm:text-2xl font-bold mb-6 flex items-center gap-3">
-                    <Calculator className="w-6 h-6 text-gold-400" />
+                    <Calculator className="w-6 h-6 text-gold-300" />
                     {tab === "income" ? "Property & Financing Details" : "Your Financial Details"}
                   </h2>
             {/* PDF Report Download */}
@@ -363,7 +363,7 @@ export default function RequiredIncomePage() {
                     {/* Required Income */}
                     <div className="bg-gradient-to-br from-gold-500/20 to-amber-500/10 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-gold-500/30">
                       <p className="text-sm text-gold-300 font-medium mb-1">Minimum Gross Annual Income</p>
-                      <p className="text-4xl sm:text-5xl font-bold text-gold-400 mb-2">
+                      <p className="text-4xl sm:text-5xl font-bold text-gold-300 mb-2">
                         {formatCurrency(requiredAnnualIncome, 0)}
                       </p>
                       <p className="text-sm text-gray-300">
@@ -374,7 +374,7 @@ export default function RequiredIncomePage() {
                     {/* Ratio Breakdown */}
                     <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-white/20">
                       <h4 className="font-semibold mb-4 flex items-center gap-2">
-                        <Shield className="w-5 h-5 text-gold-400" />
+                        <Shield className="w-5 h-5 text-gold-300" />
                         GDS / TDS Breakdown
                       </h4>
                       <div className="space-y-4">
@@ -471,7 +471,7 @@ export default function RequiredIncomePage() {
                     {/* Max Mortgage */}
                     <div className="bg-gradient-to-br from-gold-500/20 to-amber-500/10 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-gold-500/30">
                       <p className="text-sm text-gold-300 font-medium mb-1">Maximum Qualifying Mortgage</p>
-                      <p className="text-4xl sm:text-5xl font-bold text-gold-400 mb-2">
+                      <p className="text-4xl sm:text-5xl font-bold text-gold-300 mb-2">
                         {formatCurrency(maxQualifyingMortgage, 0)}
                       </p>
                       <p className="text-sm text-gray-300">
@@ -481,7 +481,7 @@ export default function RequiredIncomePage() {
 
                     <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-white/20">
                       <h4 className="font-semibold mb-4 flex items-center gap-2">
-                        <Home className="w-5 h-5 text-gold-400" />
+                        <Home className="w-5 h-5 text-gold-300" />
                         What You Can Afford
                       </h4>
                       <div className="space-y-3">
@@ -489,7 +489,7 @@ export default function RequiredIncomePage() {
                           <>
                             <div className="flex justify-between text-sm">
                               <span className="text-gray-300">Mortgage at that price{maxPriceInsured ? " (incl. insurance)" : ""}</span>
-                              <span className="font-semibold text-gold-400">{formatCurrency(maxPrice.loan, 0)}</span>
+                              <span className="font-semibold text-gold-300">{formatCurrency(maxPrice.loan, 0)}</span>
                             </div>
                             {maxPriceInsured && (
                               <div className="flex justify-between text-sm">
@@ -503,7 +503,7 @@ export default function RequiredIncomePage() {
                             </div>
                             <div className="border-t border-white/10 pt-3 flex justify-between">
                               <span className="font-semibold text-gray-200">Max home price</span>
-                              <span className="font-bold text-gold-400 text-lg">{formatCurrency(maxHomePrice, 0)}</span>
+                              <span className="font-bold text-gold-300 text-lg">{formatCurrency(maxHomePrice, 0)}</span>
                             </div>
                             <p className="text-xs text-gray-400">
                               {maxPrice.limitedBy === "downPayment"
@@ -608,15 +608,15 @@ export default function RequiredIncomePage() {
               </p>
 
               <p>
-                Kraft Mortgages has helped thousands of Canadian homebuyers understand their qualification. With 18+ years of combined experience and over $2 billion in funded mortgages, we know how to structure your application for success. Call <a href="tel:604-593-1550" className="text-gold-400 hover:text-gold-300">604-593-1550</a> or visit us at #301 - 1688 152nd Street, Surrey, BC.
+                Kraft Mortgages has helped thousands of Canadian homebuyers understand their qualification. With 18+ years of combined experience and over $2 billion in funded mortgages, we know how to structure your application for success. Call <a href="tel:604-593-1550" className="text-gold-300 hover:text-gold-300 underline underline-offset-4">604-593-1550</a> or visit us at #301 - 1688 152nd Street, Surrey, BC.
               </p>
 
               <div className="mt-8">
-                <Link href="/calculators/debt-service-ratio" className="text-gold-400 hover:text-gold-300 underline">Debt Service Ratio Calculator</Link>
+                <Link href="/calculators/debt-service-ratio" className="text-gold-300 hover:text-gold-300 underline">Debt Service Ratio Calculator</Link>
                 {" · "}
-                <Link href="/calculators/stress-test" className="text-gold-400 hover:text-gold-300 underline">Stress Test Calculator</Link>
+                <Link href="/calculators/stress-test" className="text-gold-300 hover:text-gold-300 underline">Stress Test Calculator</Link>
                 {" · "}
-                <Link href="/calculators/affordability" className="text-gold-400 hover:text-gold-300 underline">Affordability Calculator</Link>
+                <Link href="/calculators/affordability" className="text-gold-300 hover:text-gold-300 underline">Affordability Calculator</Link>
               </div>
             </div>
           </div>
@@ -635,7 +635,7 @@ export default function RequiredIncomePage() {
                   >
                     <span className="font-semibold text-gray-200 pr-4">{faq.q}</span>
                     {openFaq === i ? (
-                      <ChevronUp className="w-5 h-5 text-gold-400 flex-shrink-0" />
+                      <ChevronUp className="w-5 h-5 text-gold-300 flex-shrink-0" />
                     ) : (
                       <ChevronDown className="w-5 h-5 text-gray-400 flex-shrink-0" />
                     )}

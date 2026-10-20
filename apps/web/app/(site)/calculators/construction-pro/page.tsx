@@ -1,4 +1,5 @@
 "use client";
+import CalculatorNumberInput from "@/components/ui/CalculatorNumberInput";
 import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
@@ -25,11 +26,11 @@ export default function ConstructionPro() {
   const [rate, setRate, rateSource] = useLiveDefault(7.25, livePrime !== undefined ? livePrime + CONSTRUCTION_SPREAD_OVER_PRIME : undefined);
   const [periodMonths, setPeriodMonths] = useState(12);
   const [draws, setDraws] = useState([
-    { month: 1, amount: 200000 }, 
-    { month: 4, amount: 250000 }, 
+    { month: 1, amount: 200000 },
+    { month: 4, amount: 250000 },
     { month: 7, amount: 300000 }
   ] as {month: number, amount: number}[]);
-  
+
   const result = useMemo(() => interestOnlyCost({ draws, annualRatePct: rate, periodMonths }), [draws, rate, periodMonths]);
 
   // Negative draw amounts are ignored by the interest calc, so ignore them in the total too
@@ -48,7 +49,7 @@ export default function ConstructionPro() {
   };
 
   const updateDraw = (index: number, field: 'month' | 'amount', value: number) => {
-    setDraws(prev => prev.map((draw, i) => 
+    setDraws(prev => prev.map((draw, i) =>
       i === index ? { ...draw, [field]: value } : draw
     ));
   };
@@ -58,16 +59,16 @@ export default function ConstructionPro() {
       <Navigation />
       <CalculatorSchema name="Construction Loan Calculator" description="Calculate interest-only costs on progressive draw schedules for construction financing." url="/calculators/construction-pro" />
 
-      <main className="min-h-screen mt-16">
+      <main className="min-h-screen">
         {/* Breadcrumb */}
         <section className="py-6 px-4 bg-gray-800/30">
           <div className="max-w-6xl mx-auto">
             <div className="flex items-center gap-2 text-sm">
-              <Link href="/" className="text-gray-400 hover:text-gold-400 transition-colors">Home</Link>
+              <Link href="/" className="text-gray-400 hover:text-gold-300 transition-colors">Home</Link>
               <span className="text-gray-600">›</span>
-              <Link href="/calculators" className="text-gray-400 hover:text-gold-400 transition-colors">Calculators</Link>
+              <Link href="/calculators" className="text-gray-400 hover:text-gold-300 transition-colors">Calculators</Link>
               <span className="text-gray-600">›</span>
-              <span className="text-gold-400">Construction Pro Calculator</span>
+              <span className="text-gold-300">Construction Pro Calculator</span>
             </div>
           </div>
         </section>
@@ -75,13 +76,13 @@ export default function ConstructionPro() {
         {/* Hero Section */}
         <section className="py-20 px-4">
           <div className="max-w-6xl mx-auto">
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
               className="text-center"
             >
-              <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold bg-gold-500/20 text-gold-400 border border-gold-500/30 mb-6">
+              <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold bg-gold-500/20 text-gold-300 border border-gold-500/30 mb-6">
                 <Hammer className="w-4 h-4" />
                 Construction Financing
               </div>
@@ -100,7 +101,7 @@ export default function ConstructionPro() {
           <div className="max-w-4xl mx-auto">
             <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl shadow-2xl border border-gray-700/50 p-5 sm:p-8">
               <h2 className="text-2xl font-semibold text-gray-100 mb-6">Construction Cost Analysis</h2>
-              
+
               <div className="mb-6">
                 <ComplianceBanner feature="CALC_CONSTRUCTION" />
               </div>
@@ -110,7 +111,7 @@ export default function ConstructionPro() {
                 <label className="block text-sm font-medium text-gray-200 mb-2">
                   Construction Interest Rate (annual %)
                 </label>
-                <input
+                <CalculatorNumberInput aria-label="Construction Interest Rate (annual %)" max={100}
                   type="number"
                   step="0.01"
                   value={rate}
@@ -127,7 +128,7 @@ export default function ConstructionPro() {
                 <label className="block text-sm font-medium text-gray-200 mb-2">
                   Construction Period (months until completion)
                 </label>
-                <input
+                <CalculatorNumberInput aria-label="Construction Period (months until completion)"
                   type="number"
                   value={periodMonths}
                   onChange={(e) => setPeriodMonths(Math.min(60, Math.max(1, Math.round(Number(e.target.value) || 1))))}
@@ -135,7 +136,7 @@ export default function ConstructionPro() {
                   min="1"
                   max="60"
                 />
-                <p className="text-xs text-gray-500 mt-1">Interest is charged on drawn funds until completion (never shorter than your last draw; max 60 months).</p>
+                <p className="text-xs text-gray-400 mt-1">Interest is charged on drawn funds until completion (never shorter than your last draw; max 60 months).</p>
               </div>
 
               {/* Draw Schedule */}
@@ -144,7 +145,7 @@ export default function ConstructionPro() {
                   <h3 className="text-lg font-semibold text-gray-100">Progressive Draw Schedule</h3>
                   <button
                     onClick={addDraw}
-                    className="inline-flex items-center gap-2 px-3 py-2 bg-gold-500/20 text-gold-400 rounded-lg hover:bg-gold-500/30 transition-colors text-sm"
+                    className="inline-flex items-center gap-2 px-3 py-2 bg-gold-500/20 text-gold-300 rounded-lg hover:bg-gold-500/30 transition-colors text-sm"
                   >
                     <Plus className="w-4 h-4" />
                     Add Draw
@@ -157,7 +158,7 @@ export default function ConstructionPro() {
                     <div>Draw Amount</div>
                     <div>Action</div>
                   </div>
-                  
+
                   {draws.map((draw, index) => (
                     <motion.div
                       key={index}
@@ -165,7 +166,7 @@ export default function ConstructionPro() {
                       animate={{ opacity: 1, scale: 1 }}
                       className="grid grid-cols-3 gap-2 sm:gap-4 items-center bg-gray-700/30 rounded-lg p-2 sm:p-3"
                     >
-                      <input
+                      <CalculatorNumberInput aria-label={`Draw ${index + 1} month`} max={60}
                         type="number"
                         value={draw.month}
                         onChange={(e) => updateDraw(index, 'month', Number(e.target.value))}
@@ -173,7 +174,7 @@ export default function ConstructionPro() {
                         placeholder="Month"
                         min="1"
                       />
-                      <input
+                      <CalculatorNumberInput aria-label={`Draw ${index + 1} amount`}
                         type="number"
                         value={draw.amount}
                         onChange={(e) => updateDraw(index, 'amount', Number(e.target.value))}
@@ -182,7 +183,7 @@ export default function ConstructionPro() {
                         min="0"
                       />
                       <button
-                        onClick={() => removeDraw(index)}
+                        aria-label={`Remove draw ${index + 1}`} onClick={() => removeDraw(index)}
                         disabled={draws.length <= 1}
                         className="inline-flex items-center justify-center p-2 text-red-400 hover:bg-red-500/20 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                       >
@@ -196,14 +197,14 @@ export default function ConstructionPro() {
               {/* Results */}
               <div className="bg-gray-700/50 rounded-xl p-6 mb-6">
                 <h3 className="text-lg font-semibold text-gray-100 mb-4">Construction Cost Analysis</h3>
-                
+
                 <div className="grid gap-4 md:grid-cols-3 mb-6">
                   <div className="bg-gray-800/50 rounded-lg p-4">
                     <div className="text-sm text-gray-400 mb-1">Total Draws (Loan Advanced)</div>
-                    <div className="text-2xl font-bold text-gold-400">
+                    <div className="text-2xl font-bold text-gold-300">
                       ${totalProjectCost.toLocaleString()}
                     </div>
-                    <div className="text-xs text-gray-500">All draws combined</div>
+                    <div className="text-xs text-gray-400">All draws combined</div>
                   </div>
 
                   <div className="bg-gray-800/50 rounded-lg p-4">
@@ -211,15 +212,15 @@ export default function ConstructionPro() {
                     <div className="text-2xl font-bold text-red-400">
                       ${result.totalInterest.toLocaleString(undefined, {maximumFractionDigits: 0})}
                     </div>
-                    <div className="text-xs text-gray-500">Peak monthly interest: ${Math.round(peakMonthlyInterest).toLocaleString()}</div>
+                    <div className="text-xs text-gray-400">Peak monthly interest: ${Math.round(peakMonthlyInterest).toLocaleString()}</div>
                   </div>
 
                   <div className="bg-gray-800/50 rounded-lg p-4">
                     <div className="text-sm text-gray-400 mb-1">Construction Period</div>
-                    <div className="text-2xl font-bold text-gold-400">
+                    <div className="text-2xl font-bold text-gold-300">
                       {result.constructionPeriodMonths} months
                     </div>
-                    <div className="text-xs text-gray-500">Interest calculated over full period</div>
+                    <div className="text-xs text-gray-400">Interest calculated over full period</div>
                   </div>
                 </div>
 
@@ -242,7 +243,7 @@ export default function ConstructionPro() {
 
               {/* Educational Content */}
               <div className="bg-gold-500/10 rounded-xl p-6 mb-6 border border-gold-500/20">
-                <h4 className="text-lg font-semibold text-gold-400 mb-3">Construction Financing Essentials</h4>
+                <h4 className="text-lg font-semibold text-gold-300 mb-3">Construction Financing Essentials</h4>
                 <div className="grid gap-4 md:grid-cols-2 text-sm text-gray-400">
                   <div>
                     <div className="font-semibold text-gray-200 mb-2">Progressive Draws</div>
@@ -304,21 +305,21 @@ export default function ConstructionPro() {
 
               {/* Related Calculators */}
               <div className="flex flex-wrap gap-4 justify-center">
-                <Link 
+                <Link
                   href={"/calculators/payment" as any}
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-gold-500/20 text-gold-400 rounded-lg hover:bg-gold-500/30 transition-colors"
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-gold-500/20 text-gold-300 rounded-lg hover:bg-gold-500/30 transition-colors"
                 >
                   <Calculator className="w-4 h-4" />
                   Payment Calculator
                 </Link>
-                <Link 
+                <Link
                   href={"/construction/calculators/progressive-draw" as any}
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-gold-500/20 text-gold-400 rounded-lg hover:bg-gold-500/30 transition-colors"
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-gold-500/20 text-gold-300 rounded-lg hover:bg-gold-500/30 transition-colors"
                 >
                   <Clock className="w-4 h-4" />
                   Progressive Draw Calculator
                 </Link>
-                <Link 
+                <Link
                   href={"/calculators" as any}
                   className="inline-flex items-center gap-2 px-4 py-2 bg-gray-700/50 text-gray-300 rounded-lg hover:bg-gray-700 transition-colors"
                 >

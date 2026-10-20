@@ -1,4 +1,5 @@
 import { payment } from "@/lib/calc/payment";
+import { compareRefinance } from "@/lib/calc/refinance";
 
 /**
  * Commercial refinance break-even math (shared by the /commercial/calculators/refinance page and
@@ -56,9 +57,16 @@ export function refinanceBreakEven(i: RefinanceInputs) {
     : 0;
 
   const monthlySavings = currentMonthlyPayment - newMonthlyPayment;
-  const breakEvenMonths = monthlySavings > 0 ? Math.ceil(totalCosts / monthlySavings) : Infinity;
-  const fiveYearSavings = monthlySavings * 60 - totalCosts;
-  const isWorthRefinancing = monthlySavings > 0 && breakEvenMonths < termMonths;
+  const comparison = {
+    principal: balance, currentRate, newRate,
+    currentAmortYears: Math.max(1, i.remainingAmortizationYears || 1),
+    newAmortYears: Math.max(1, i.newAmortizationYears || 1), upfrontCosts: totalCosts,
+  };
+  const fiveYear = compareRefinance({ ...comparison, horizonMonths: 60 });
+  const remainingTerm = compareRefinance({ ...comparison, horizonMonths: termMonths });
+  const breakEvenMonths = fiveYear.breakEvenMonths;
+  const fiveYearSavings = fiveYear.netSavings;
+  const isWorthRefinancing = remainingTerm.worthwhile;
 
   return {
     threeMonthPenalty,

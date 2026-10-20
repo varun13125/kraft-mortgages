@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
+import "./calculator-experience.css";
 import { Analytics } from "@/components/Analytics";
 import { Analytics as VercelAnalytics } from "@vercel/analytics/react";
 import { PrefSync } from "@/components/PrefSync";
@@ -10,6 +11,8 @@ import { JsonLd } from "@/components/SEO/JsonLd";
 import { orgJsonLd } from "@/lib/seo/jsonld";
 import { BUSINESS } from "@/lib/seo/business-config";
 import dynamic from "next/dynamic";
+import { AdvisorHelpProvider, AdvisorHelpDock } from "@/components/AdvisorHelp";
+import { CalculatorExperience } from "@/components/calculators/CalculatorExperience";
 
 // Dynamically import ChatWidget to avoid hydration issues
 const ChatWidget = dynamic(() => import("@/components/ChatWidget/ChatWidget").then(mod => ({ default: mod.ChatWidget })), {
@@ -74,6 +77,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             Targets #main-content, falling back to the first <main>/<h1>. */}
         <SkipToContent />
         <MotionProvider>
+        <AdvisorHelpProvider>
         <div className="relative min-h-screen overflow-x-hidden w-full max-w-full bg-slate-950 text-gray-100 antialiased selection:bg-gold-500/30 selection:text-gold-200">
           {/* Unified Site-wide Animated Background */}
           <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
@@ -98,7 +102,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
           <div className="relative z-10">
             <PrefSync />
-            {children}
+            <CalculatorExperience>{children}</CalculatorExperience>
           </div>
         </div>
 
@@ -107,6 +111,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
         {/* Global Thinkrr Voice AI Dual-Agent (English & Hindi) WebRTC Widget */}
         <ThinkrrVoiceWidget />
+        <AdvisorHelpDock />
+        </AdvisorHelpProvider>
         </MotionProvider>
 
         <Analytics />

@@ -1,4 +1,5 @@
 "use client";
+import CalculatorNumberInput from "@/components/ui/CalculatorNumberInput";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
@@ -58,16 +59,16 @@ export default function ProgressiveDrawCalculator() {
     return (
         <>
             <Navigation />
-            <main className="min-h-screen mt-16">
+            <main className="min-h-screen">
                 {/* Breadcrumb */}
                 <section className="py-6 px-4 bg-gray-800/30">
                     <div className="max-w-6xl mx-auto">
                         <div className="flex items-center gap-2 text-sm">
-                            <Link href="/" className="text-gray-400 hover:text-gold-400 transition-colors">Home</Link>
+                            <Link href="/" className="text-gray-400 hover:text-gold-300 transition-colors">Home</Link>
                             <span className="text-gray-600">›</span>
-                            <Link href="/construction" className="text-gray-400 hover:text-gold-400 transition-colors">Construction</Link>
+                            <Link href="/construction" className="text-gray-400 hover:text-gold-300 transition-colors">Construction</Link>
                             <span className="text-gray-600">›</span>
-                            <span className="text-gold-400">Progressive Draw Calculator</span>
+                            <span className="text-gold-300">Progressive Draw Calculator</span>
                         </div>
                     </div>
                 </section>
@@ -108,19 +109,19 @@ export default function ProgressiveDrawCalculator() {
                             >
                                 <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
                                     <h2 className="text-2xl font-bold mb-8 flex items-center gap-3">
-                                        <Calculator className="w-6 h-6 text-gold-400" />
+                                        <Calculator className="w-6 h-6 text-gold-300" />
                                         Loan Details
                                     </h2>
 
                                     <div className="space-y-6">
                                         <div>
                                             <label className="block text-sm font-medium mb-2 flex items-center gap-2">
-                                                <DollarSign className="w-4 h-4 text-gold-400" />
+                                                <DollarSign className="w-4 h-4 text-gold-300" />
                                                 Total Loan Amount
                                             </label>
                                             <div className="relative">
                                                 <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">$</span>
-                                                <input
+                                                <CalculatorNumberInput aria-label="Total Loan Amount"
                                                     type="number"
                                                     value={totalLoanAmount}
                                                     onChange={(e) => setTotalLoanAmount(Math.max(0, Number(e.target.value)))}
@@ -133,10 +134,10 @@ export default function ProgressiveDrawCalculator() {
 
                                         <div>
                                             <label className="block text-sm font-medium mb-2 flex items-center gap-2">
-                                                <Percent className="w-4 h-4 text-gold-400" />
+                                                <Percent className="w-4 h-4 text-gold-300" />
                                                 Interest Rate (%)
                                             </label>
-                                            <input
+                                            <CalculatorNumberInput aria-label="Interest Rate (%)"
                                                 type="number"
                                                 value={interestRate}
                                                 onChange={(e) => setInterestRate(Math.max(0, Math.min(15, Number(e.target.value))))}
@@ -220,7 +221,7 @@ export default function ProgressiveDrawCalculator() {
                                                 <td className="py-4 px-2 font-semibold">{draw.month}</td>
                                                 <td className="py-4 px-2">{draw.description}</td>
                                                 <td className="py-4 px-2 text-right">{draws[index].percentage}%</td>
-                                                <td className="py-4 px-2 text-right text-gold-400">${Math.round(draw.drawnAmount).toLocaleString()}</td>
+                                                <td className="py-4 px-2 text-right text-gold-300">${Math.round(draw.drawnAmount).toLocaleString()}</td>
                                                 <td className="py-4 px-2 text-right font-semibold">${Math.round(draw.cumulativeBalance).toLocaleString()}</td>
                                                 <td className="py-4 px-2 text-right text-red-300">${draw.monthlyInterest.toLocaleString(undefined, { maximumFractionDigits: 0 })}</td>
                                             </tr>
@@ -230,7 +231,7 @@ export default function ProgressiveDrawCalculator() {
                             </div>
                         </motion.div>
 
-                        <p className="mt-8 text-xs text-gray-500 text-center max-w-3xl mx-auto">
+                        <p className="mt-8 text-xs text-gray-400 text-center max-w-3xl mx-auto">
                             Estimates only. Interest is simple monthly interest on the cumulative advanced balance; each draw accrues interest
                             from its draw month to the end of the project. A statutory 10% lien holdback (BC Builders Lien Act, Ontario
                             Construction Act, Alberta Prompt Payment and Construction Lien Act) is usually retained from each advance, which can shift timing.

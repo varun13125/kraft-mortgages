@@ -1,4 +1,5 @@
 "use client";
+import CalculatorNumberInput from "@/components/ui/CalculatorNumberInput";
 import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
@@ -80,12 +81,12 @@ export default function DebtConsolidationCalculator() {
   const newDTI = monthlyIncome > 0 ? (totalNewPayments / monthlyIncome) * 100 : 0;
   const originalDTI = monthlyIncome > 0 ? (totalOriginalPayments / monthlyIncome) * 100 : 0;
 
-  const isGoodCandidate = availableEquity > 50000 && monthlySavings > 500 && newDTI < 40 && lifetimeSavings > 0;
+  const isGoodCandidate = income > 0 && availableEquity > 50000 && monthlySavings > 500 && newDTI < 40 && lifetimeSavings > 0;
 
   return (
     <>
       <Navigation />
-      <main className="min-h-screen mt-16">
+      <main className="min-h-screen">
         {/* Breadcrumb */}
         <section className="py-6 px-4 bg-gray-800/30">
           <div className="max-w-6xl mx-auto">
@@ -102,7 +103,7 @@ export default function DebtConsolidationCalculator() {
         {/* Hero Section */}
         <section className="py-20 px-4">
           <div className="max-w-6xl mx-auto">
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
@@ -127,13 +128,13 @@ export default function DebtConsolidationCalculator() {
           <div className="max-w-4xl mx-auto">
             <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl shadow-2xl border border-gray-700/50 p-8">
               <h2 className="text-2xl font-semibold text-gray-100 mb-6">Debt Consolidation Analysis</h2>
-              
+
               <div className="grid gap-6 md:grid-cols-2 mb-8">
                 <div>
                   <label className="block text-sm font-medium text-gray-200 mb-2">
                     Current Home Value
                   </label>
-                  <input
+                  <CalculatorNumberInput aria-label="Current Home Value" min={1}
                     type="number"
                     value={homeValue}
                     onChange={(e) => setHomeValue(Number(e.target.value))}
@@ -145,7 +146,7 @@ export default function DebtConsolidationCalculator() {
                   <label className="block text-sm font-medium text-gray-200 mb-2">
                     Current Mortgage Balance
                   </label>
-                  <input
+                  <CalculatorNumberInput aria-label="Current Mortgage Balance"
                     type="number"
                     value={currentMortgage}
                     onChange={(e) => setCurrentMortgage(Number(e.target.value))}
@@ -157,7 +158,7 @@ export default function DebtConsolidationCalculator() {
                   <label className="block text-sm font-medium text-gray-200 mb-2">
                     Total Debt to Consolidate
                   </label>
-                  <input
+                  <CalculatorNumberInput aria-label="Total Debt to Consolidate"
                     type="number"
                     value={totalDebts}
                     onChange={(e) => setTotalDebts(Number(e.target.value))}
@@ -169,7 +170,7 @@ export default function DebtConsolidationCalculator() {
                   <label className="block text-sm font-medium text-gray-200 mb-2">
                     Monthly Debt Payments
                   </label>
-                  <input
+                  <CalculatorNumberInput aria-label="Monthly Debt Payments" max={1000000}
                     type="number"
                     value={monthlyDebtPayments}
                     onChange={(e) => setMonthlyDebtPayments(Number(e.target.value))}
@@ -181,7 +182,7 @@ export default function DebtConsolidationCalculator() {
                   <label className="block text-sm font-medium text-gray-200 mb-2">
                     Credit Score
                   </label>
-                  <select
+                  <select aria-label="Credit Score"
                     value={creditScore}
                     onChange={(e) => setCreditScore(Number(e.target.value))}
                     className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-white"
@@ -198,7 +199,7 @@ export default function DebtConsolidationCalculator() {
                   <label className="block text-sm font-medium text-gray-200 mb-2">
                     Annual Income
                   </label>
-                  <input
+                  <CalculatorNumberInput aria-label="Annual Income"
                     type="number"
                     value={income}
                     onChange={(e) => setIncome(Number(e.target.value))}
@@ -210,7 +211,7 @@ export default function DebtConsolidationCalculator() {
                   <label className="block text-sm font-medium text-gray-200 mb-2">
                     Average Interest Rate on Debts (%)
                   </label>
-                  <input
+                  <CalculatorNumberInput aria-label="Average Interest Rate on Debts (%)" max={100}
                     type="number"
                     step="0.1"
                     value={avgDebtRate}
@@ -223,7 +224,7 @@ export default function DebtConsolidationCalculator() {
                   <label className="block text-sm font-medium text-gray-200 mb-2">
                     Refinance Costs (legal, appraisal, penalty)
                   </label>
-                  <input
+                  <CalculatorNumberInput aria-label="Refinance Costs (legal, appraisal, penalty)"
                     type="number"
                     value={refinanceCosts}
                     onChange={(e) => setRefinanceCosts(Math.max(0, Number(e.target.value)))}
@@ -235,14 +236,14 @@ export default function DebtConsolidationCalculator() {
               {/* Results */}
               <div className="bg-gray-700/50 rounded-xl p-6 mb-6">
                 <h3 className="text-lg font-semibold text-gray-100 mb-4">Consolidation Results</h3>
-                
+
                 <div className="grid gap-4 md:grid-cols-2 mb-6">
                   <div className="bg-gray-800/50 rounded-lg p-4">
                     <div className="text-sm text-gray-400 mb-1">Available for Consolidation</div>
                     <div className="text-2xl font-bold text-emerald-400">
                       ${Math.round(availableEquity).toLocaleString()}
                     </div>
-                    <div className="text-xs text-gray-500">Based on home equity</div>
+                    <div className="text-xs text-gray-400">Based on home equity</div>
                   </div>
 
                   <div className="bg-gray-800/50 rounded-lg p-4">
@@ -250,7 +251,7 @@ export default function DebtConsolidationCalculator() {
                     <div className="text-2xl font-bold text-emerald-400">
                       ${monthlySavings.toLocaleString(undefined, {maximumFractionDigits: 0})}
                     </div>
-                    <div className="text-xs text-gray-500">Per month</div>
+                    <div className="text-xs text-gray-400">Per month</div>
                   </div>
 
                   <div className="bg-gray-800/50 rounded-lg p-4">
@@ -258,13 +259,13 @@ export default function DebtConsolidationCalculator() {
                     <div className="text-2xl font-bold text-emerald-400">
                       ${annualSavings.toLocaleString(undefined, {maximumFractionDigits: 0})}
                     </div>
-                    <div className="text-xs text-gray-500">Per year</div>
+                    <div className="text-xs text-gray-400">Per year</div>
                   </div>
 
                   <div className="bg-gray-800/50 rounded-lg p-4">
                     <div className="text-sm text-gray-400 mb-1">New Mortgage Rate</div>
                     <div className="text-2xl font-bold text-emerald-400">{newRate.toFixed(2)}%</div>
-                    <div className="text-xs text-gray-500">
+                    <div className="text-xs text-gray-400">
                       {liveConv !== undefined
                         ? `Lowest conventional 5-yr fixed ${baseRate.toFixed(2)}%${ratesAsOf(liveRates) ? ` (as of ${ratesAsOf(liveRates)})` : ""}`
                         : ratesLoading
@@ -347,7 +348,7 @@ export default function DebtConsolidationCalculator() {
                       </span>
                     </div>
                   </div>
-                  <p className="text-xs text-gray-500 mt-3">
+                  <p className="text-xs text-gray-400 mt-3">
                     Tip: keep paying close to your old total each month after consolidating to clear the added balance years sooner.
                   </p>
                 </div>
@@ -364,7 +365,7 @@ export default function DebtConsolidationCalculator() {
                         {isGoodCandidate ? 'Excellent Consolidation Candidate' : 'Limited Consolidation Benefits'}
                       </div>
                       <div className="text-sm text-gray-400">
-                        {isGoodCandidate 
+                        {isGoodCandidate
                           ? `Save $${Math.round(annualSavings).toLocaleString()} a year in payments and less total interest after costs`
                           : 'Consider other debt reduction strategies or improve credit score for better rates'
                         }
@@ -387,7 +388,7 @@ export default function DebtConsolidationCalculator() {
                     <div className="text-xl font-bold text-red-400">19.99%</div>
                   </div>
                 </div>
-                <div className="text-xs text-gray-500 mt-3">
+                <div className="text-xs text-gray-400 mt-3">
                   Estimates only. Assumes a refinance to a single mortgage at an estimated rate with a 25-year amortization and
                   that consolidated debts are fully paid out. Consumer-debt payoff uses your average rate with monthly compounding.
                   Qualification (stress test, TDS) is not assessed here.
@@ -399,21 +400,21 @@ export default function DebtConsolidationCalculator() {
 
               {/* Related Calculators */}
               <div className="flex flex-wrap gap-4 justify-center">
-                <Link 
+                <Link
                   href={"/equity-lending/calculators/home-equity" as any}
                   className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-500/20 text-emerald-400 rounded-lg hover:bg-emerald-500/30 transition-colors"
                 >
                   <Calculator className="w-4 h-4" />
                   Home Equity Calculator
                 </Link>
-                <Link 
+                <Link
                   href={"/calculators/affordability" as any}
                   className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-500/20 text-emerald-400 rounded-lg hover:bg-emerald-500/30 transition-colors"
                 >
                   <DollarSign className="w-4 h-4" />
                   Affordability Calculator
                 </Link>
-                <Link 
+                <Link
                   href={"/equity-lending" as any}
                   className="inline-flex items-center gap-2 px-4 py-2 bg-gray-700/50 text-gray-300 rounded-lg hover:bg-gray-700 transition-colors"
                 >

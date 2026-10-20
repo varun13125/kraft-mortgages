@@ -64,7 +64,7 @@ export default function ReverseMortgagePage() {
       <main className="min-h-screen bg-slate-950 pb-16">
         <section className="pt-12 pb-8 px-4">
           <div className="max-w-4xl mx-auto text-center">
-            <div className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-semibold bg-gradient-to-r from-gold-500/20 to-transparent text-gold-400 border border-gold-500/30 mb-5">
+            <div className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-semibold bg-gradient-to-r from-gold-500/20 to-transparent text-gold-300 border border-gold-500/30 mb-5">
               Equity Release Tool
             </div>
             <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-gray-100 mb-4">
@@ -91,7 +91,7 @@ export default function ReverseMortgagePage() {
               <ValidatedInput label="Existing Mortgage / HELOC Balance" type="currency" value={existingDebt} onChange={setExistingDebt} validation={{ min: 0, max: 10000000, message: "Must be paid off from the reverse mortgage" }} />
 
               <div className="flex items-start gap-2 p-3 bg-gray-800/40 rounded-lg text-xs text-gray-400">
-                <Info className="w-3.5 h-3.5 flex-shrink-0 mt-0.5 text-gold-400" />
+                <Info className="w-3.5 h-3.5 flex-shrink-0 mt-0.5 text-gold-300" />
                 <span>Canadian reverse mortgages (like CHIP) are available to homeowners aged 55+. The loan is repaid when you sell or move out. No monthly payments required — interest compounds on the balance.</span>
               </div>
             </div>
@@ -102,8 +102,8 @@ export default function ReverseMortgagePage() {
               <div className="relative">
                 <div className="mb-6 pb-6 border-b border-gray-700/50">
                   <div className="text-xs text-gray-400 uppercase tracking-wider mb-2">Estimated Tax-Free Cash Available</div>
-                  <div className="text-4xl sm:text-5xl font-bold text-gold-400 leading-none">${Math.round(netCash).toLocaleString()}</div>
-                  <div className="text-sm text-gray-500 mt-2">
+                  <div className="text-4xl sm:text-5xl font-bold text-gold-300 leading-none">${Math.round(netCash).toLocaleString()}</div>
+                  <div className="text-sm text-gray-400 mt-2">
                     ~{(maxLtv * 100).toFixed(0)}% of home value at age {borrowerAge} (${Math.round(maxLoan).toLocaleString()})
                     {safeDebt > 0 ? ` less $${Math.round(safeDebt).toLocaleString()} existing debt` : ""}
                   </div>
@@ -120,7 +120,7 @@ export default function ReverseMortgagePage() {
                   <div className="bg-gray-800/40 rounded-lg p-4">
                     <div className="text-xs text-gray-400 uppercase tracking-wider mb-1">As Monthly Income</div>
                     <div className="text-xl font-bold text-gray-200">${Math.round(maxMonthly).toLocaleString()}<span className="text-xs text-gray-400">/mo</span></div>
-                    <div className="text-[10px] text-gray-500 mt-1">spread over {yearsProjected} yrs, before interest</div>
+                    <div className="text-[10px] text-gray-400 mt-1">spread over {yearsProjected} yrs, before interest</div>
                   </div>
                 </div>
 
@@ -128,13 +128,13 @@ export default function ReverseMortgagePage() {
                 <div className="rounded-xl border border-gray-700/50 p-4 mb-6">
                   <div className="text-sm text-gray-400 uppercase tracking-wider mb-3">Equity After {yearsProjected} Years</div>
                   <div className="flex items-baseline gap-2 mb-3">
-                    <span className="text-2xl font-bold text-gold-400">${finalEquity.toLocaleString()}</span>
+                    <span className="text-2xl font-bold text-gold-300">${finalEquity.toLocaleString()}</span>
                     <span className="text-sm text-gray-400">({equityPct.toFixed(0)}% of home value)</span>
                   </div>
                   <div className="space-y-1.5">
                     {yearlyBalance.filter((_, i) => i % 5 === 4 || i === yearlyBalance.length - 1).map((row) => (
                       <div key={row.year} className="flex items-center gap-2 text-xs">
-                        <Clock className="w-3 h-3 text-gray-500" />
+                        <Clock className="w-3 h-3 text-gray-400" />
                         <span className="text-gray-400 w-12">Yr {row.year}</span>
                         <div className="flex-1 h-2 rounded-full bg-gray-700 overflow-hidden">
                           <div className="h-full rounded-full bg-gradient-to-r from-gold-600 to-gold-400" style={{ width: `${Math.max(0, (row.equity / safeValue) * 100)}%` }} />

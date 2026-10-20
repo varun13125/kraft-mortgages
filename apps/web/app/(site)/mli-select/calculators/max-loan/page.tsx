@@ -1,4 +1,5 @@
 "use client";
+import CalculatorNumberInput from "@/components/ui/CalculatorNumberInput";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import Card from "@/components/mli/Card";
@@ -24,7 +25,7 @@ export default function MaxLoanPage() {
   const baseLabel = projectType === "new" ? "project cost" : "property value";
 
   return (
-    <div className="min-h-screen">
+    <main className="min-h-screen">
       {/* Hero Section with Animated Background */}
       <section className="relative overflow-hidden">
         {/* Animated Background */}
@@ -70,10 +71,10 @@ export default function MaxLoanPage() {
           </svg>
         </div>
 
-        <div className="relative z-10 py-20 px-4 mt-16">
+        <div className="relative z-10 py-20 px-4">
           <div className="max-w-6xl mx-auto text-center">
             {/* Animated Badge */}
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5, type: "spring" }}
@@ -85,7 +86,7 @@ export default function MaxLoanPage() {
             </motion.div>
 
             {/* Title with Gradient */}
-            <motion.h1 
+            <motion.h1
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
@@ -101,7 +102,7 @@ export default function MaxLoanPage() {
             </motion.h1>
 
             {/* Enhanced Description */}
-            <motion.p 
+            <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
@@ -113,7 +114,7 @@ export default function MaxLoanPage() {
             </motion.p>
 
             {/* Interactive Leverage Display */}
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.3 }}
@@ -124,7 +125,7 @@ export default function MaxLoanPage() {
                 { tier: 70, leverage: leverageFor(projectType === "new", 70) * 100, color: "from-emerald-600 to-teal-600" },
                 { tier: 100, leverage: leverageFor(projectType === "new", 100) * 100, color: "from-cyan-600 to-blue-600" },
               ].map((item) => (
-                <motion.div 
+                <motion.div
                   key={item.tier}
                   className="group relative"
                   whileHover={{ scale: 1.05 }}
@@ -133,7 +134,7 @@ export default function MaxLoanPage() {
                   <div className={`absolute -inset-1 bg-gradient-to-r ${item.color} rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-300`}></div>
                   <div className="relative bg-gray-900/90 backdrop-blur-xl px-8 py-6 rounded-2xl border border-gray-700/50">
                     <div className="text-center">
-                      <div className="text-xs text-gray-500 uppercase tracking-wider mb-1">{item.tier}+ Points</div>
+                      <div className="text-xs text-gray-400 uppercase tracking-wider mb-1">{item.tier}+ Points</div>
                       <div className="text-4xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">{item.leverage}%</div>
                       <div className="text-xs text-gray-400 mt-1">{projectType === "new" ? "Max LTC" : "Max LTV"}</div>
                     </div>
@@ -192,23 +193,23 @@ export default function MaxLoanPage() {
                     <label className="block text-sm font-medium text-gray-300 mb-2">Project Value/Cost ($)</label>
                     <div className="relative">
                       <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <DollarSign className="h-5 w-5 text-gray-500" />
+                        <DollarSign className="h-5 w-5 text-gray-400" />
                       </div>
-                      <input 
+                      <CalculatorNumberInput aria-label="Project Value/Cost ($)" min={1}
                         className="w-full pl-10 rounded-lg border border-gray-600 bg-gray-700/50 text-gray-100 px-3 py-3 text-sm focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 placeholder-gray-500 transition-all duration-200"
-                        type="number" 
-                        value={valueOrCost} 
-                        onChange={e=>setValueOrCost(+e.target.value)} 
+                        type="number"
+                        value={valueOrCost}
+                        onChange={e=>setValueOrCost(+e.target.value)}
                       />
                     </div>
                   </div>
-                  
+
                   <div className="relative">
                     <label className="block text-sm font-medium text-gray-300 mb-2">Project Type</label>
                     <div className="relative">
-                      <select 
+                      <select aria-label="Project Type"
                         className="w-full rounded-lg border border-gray-600 bg-gray-700/50 text-gray-100 px-3 py-3 text-sm focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500 transition-all duration-200 appearance-none cursor-pointer"
-                        value={projectType} 
+                        value={projectType}
                         onChange={e=>setProjectType(e.target.value as any)}
                       >
                         <option value="new">New Construction</option>
@@ -226,13 +227,13 @@ export default function MaxLoanPage() {
                     <label className="block text-sm font-medium text-gray-300 mb-2">Total Points</label>
                     <div className="relative">
                       <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <Target className="h-5 w-5 text-gray-500" />
+                        <Target className="h-5 w-5 text-gray-400" />
                       </div>
-                      <input 
+                      <CalculatorNumberInput aria-label="Total Points" max={200}
                         className="w-full pl-10 rounded-lg border border-gray-600 bg-gray-700/50 text-gray-100 px-3 py-3 text-sm focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500 placeholder-gray-500 transition-all duration-200"
-                        type="number" 
-                        value={points} 
-                        onChange={e=>setPoints(+e.target.value)} 
+                        type="number"
+                        value={points}
+                        onChange={e=>setPoints(+e.target.value)}
                       />
                     </div>
                     <div className="mt-2">
@@ -247,7 +248,7 @@ export default function MaxLoanPage() {
                       <span className="text-emerald-400 font-semibold">{(leverage * 100).toFixed(0)}%</span>
                     </div>
                     <div className="w-full bg-gray-700 rounded-full h-3 overflow-hidden">
-                      <motion.div 
+                      <motion.div
                         className="h-full rounded-full bg-gradient-to-r from-emerald-500 to-teal-500"
                         initial={{ width: 0 }}
                         animate={{ width: `${leverage * 100}%` }}
@@ -274,7 +275,7 @@ export default function MaxLoanPage() {
               }>
                 <div className="space-y-6">
                   {/* Max Loan Amount */}
-                  <motion.div 
+                  <motion.div
                     className="p-5 bg-gradient-to-br from-emerald-900/20 to-teal-900/20 rounded-xl border border-emerald-500/20"
                     whileHover={{ scale: 1.02 }}
                     transition={{ type: "spring", stiffness: 300 }}
@@ -285,7 +286,7 @@ export default function MaxLoanPage() {
                         <div className="text-3xl font-bold text-emerald-400">
                           ${(maxLoan / 1000000).toFixed(2)}M
                         </div>
-                        <div className="text-xs text-gray-500 mt-1">{(leverage * 100).toFixed(0)}% of {baseLabel}</div>
+                        <div className="text-xs text-gray-400 mt-1">{(leverage * 100).toFixed(0)}% of {baseLabel}</div>
                       </div>
                       <div className="w-16 h-16 bg-emerald-500/10 rounded-full flex items-center justify-center">
                         <DollarSign className="w-8 h-8 text-emerald-400" />
@@ -294,7 +295,7 @@ export default function MaxLoanPage() {
                   </motion.div>
 
                   {/* Required Equity */}
-                  <motion.div 
+                  <motion.div
                     className="p-5 bg-gradient-to-br from-cyan-900/20 to-blue-900/20 rounded-xl border border-cyan-500/20"
                     whileHover={{ scale: 1.02 }}
                     transition={{ type: "spring", stiffness: 300 }}
@@ -305,7 +306,7 @@ export default function MaxLoanPage() {
                         <div className="text-3xl font-bold text-cyan-400">
                           ${(equityRequired / 1000000).toFixed(2)}M
                         </div>
-                        <div className="text-xs text-gray-500 mt-1">{equityPercent.toFixed(0)}% of {baseLabel}</div>
+                        <div className="text-xs text-gray-400 mt-1">{equityPercent.toFixed(0)}% of {baseLabel}</div>
                       </div>
                       <div className="w-16 h-16 bg-cyan-500/10 rounded-full flex items-center justify-center">
                         <PiggyBank className="w-8 h-8 text-cyan-400" />
@@ -317,7 +318,7 @@ export default function MaxLoanPage() {
                   <div className="p-4 bg-gray-800/30 rounded-xl border border-gray-700/30">
                     <div className="text-sm font-medium text-gray-300 mb-3">Financing Structure</div>
                     <div className="flex h-8 rounded-lg overflow-hidden">
-                      <motion.div 
+                      <motion.div
                         className="bg-gradient-to-r from-emerald-500 to-teal-500 flex items-center justify-center text-xs font-semibold text-gray-900"
                         initial={{ width: 0 }}
                         animate={{ width: `${leverage * 100}%` }}
@@ -325,7 +326,7 @@ export default function MaxLoanPage() {
                       >
                         {leverage * 100 >= 20 && `Loan ${(leverage * 100).toFixed(0)}%`}
                       </motion.div>
-                      <motion.div 
+                      <motion.div
                         className="bg-gradient-to-r from-cyan-600 to-blue-600 flex items-center justify-center text-xs font-semibold text-white"
                         initial={{ width: 0 }}
                         animate={{ width: `${equityPercent}%` }}
@@ -334,7 +335,7 @@ export default function MaxLoanPage() {
                         {equityPercent >= 20 && `Equity ${equityPercent.toFixed(0)}%`}
                       </motion.div>
                     </div>
-                    <div className="flex justify-between mt-3 text-xs text-gray-500">
+                    <div className="flex justify-between mt-3 text-xs text-gray-400">
                       <span>Total Project Value:</span>
                       <span className="text-gray-400 font-semibold">${(valueOrCost / 1000000).toFixed(2)}M</span>
                     </div>
@@ -371,13 +372,13 @@ export default function MaxLoanPage() {
             ]}
             educationalContent="MLI Select is CMHC's multi-unit (5+ units) insurance program. Points from affordability, energy efficiency and accessibility commitments unlock higher leverage (up to 95%), longer amortization (40/45/50 years at 50/70/100 points) and premium discounts (10%/20%/30%). The insured loan is the lesser of the leverage cap and the loan supported by a 1.10 debt coverage ratio (standard rental). Figures are estimates based on CMHC's published criteria and premium grid (effective July 14, 2025); CMHC changes these periodically. Not a commitment to insure or lend. This calculator applies the leverage cap only; check the DSCR calculator for the income-supported loan."
           />
-          <p className="mt-8 text-xs text-gray-500 max-w-4xl mx-auto text-center">
+          <p className="mt-8 text-xs text-gray-400 max-w-4xl mx-auto text-center">
             Leverage caps per CMHC MLI Select (residential component): new construction up to 95% LTC at 50/70/100 points;
             existing properties up to 85% LTV at 50 points and 95% at 70+ points. The insured loan is the lesser of this
             leverage cap and the loan supported by a 1.10 DCR (standard rental) — see the DSCR calculator. Estimates only.
           </p>
         </div>
       </section>
-    </div>
+    </main>
   );
 }

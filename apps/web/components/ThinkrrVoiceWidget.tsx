@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+import { useAdvisorHelp } from "@/components/AdvisorHelp";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   Mic, 
@@ -91,7 +92,9 @@ function endAllThinkrrSessions() {
 }
 
 export function ThinkrrVoiceWidget() {
-  const [isOpen, setIsOpen] = useState(false);
+  const { panel, setPanel } = useAdvisorHelp();
+  const isOpen = panel === "voice";
+  const setIsOpen = (open: boolean) => setPanel(open ? "voice" : null);
   const [activeAgent, setActiveAgent] = useState<AgentConfig | null>(null);
   const [isCalling, setIsCalling] = useState(false);
   const [callDuration, setCallDuration] = useState(0);
@@ -188,12 +191,12 @@ export function ThinkrrVoiceWidget() {
         endAllThinkrrSessions();
         setIsCalling(false);
         setActiveAgent(null);
-        setIsOpen(false);
+        setPanel(null);
       }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [isOpen]);
+  }, [isOpen, setPanel]);
 
   const formatDuration = (secs: number) => {
     const mins = Math.floor(secs / 60);
@@ -233,49 +236,6 @@ export function ThinkrrVoiceWidget() {
 
   return (
     <>
-      {/* FLOATING ACTION PILL TRIGGER (placed left of the WhatsApp + AI chat dock, which spans
-          right-6 .. ~148px; the old right-24 position sat underneath the WhatsApp button) */}
-      <div className="fixed bottom-6 right-40 z-40 hidden sm:block">
-        <motion.button
-          onClick={() => setIsOpen(true)}
-          aria-label="Talk to the Kraft Mortgages voice AI assistant"
-          whileHover={{ scale: 1.04 }}
-          whileTap={{ scale: 0.96 }}
-          className="group relative flex items-center gap-2.5 px-4 py-3 rounded-full bg-slate-900/95 hover:bg-slate-900 border border-gold-500/40 hover:border-gold-500 shadow-xl shadow-black/40 backdrop-blur-md transition-all text-white font-sans"
-        >
-          {/* Subtle Ambient Pulse Ring */}
-          <span className="absolute -inset-0.5 rounded-full bg-gradient-to-r from-gold-500 to-amber-600 opacity-20 group-hover:opacity-40 blur-sm transition-opacity" />
-
-          <div className="relative flex items-center justify-center w-6 h-6 rounded-full bg-gradient-to-tr from-gold-500 to-amber-500 text-slate-950 font-bold shadow-sm">
-            <Mic className="w-3.5 h-3.5" />
-          </div>
-
-          <div className="relative flex flex-col text-left">
-            <span className="text-xs font-bold tracking-wide text-gray-100 flex items-center gap-1.5">
-              Talk to Voice AI
-              <span className="text-[10px] px-1.5 py-0.2 rounded bg-gold-500/20 text-gold-400 font-mono border border-gold-500/30">
-                Live
-              </span>
-            </span>
-            <span className="text-[10px] text-gray-400 font-medium">
-              {hasHindi ? <>English 🇬🇧 &nbsp;•&nbsp; हिंदी 🇮🇳</> : <>English 🇬🇧</>}
-            </span>
-          </div>
-        </motion.button>
-      </div>
-
-      {/* MOBILE FLOATING TRIGGER BUTTON (left of the chat dock; the old bottom-20 right-6
-          position covered the chat window's send button when the chat was open) */}
-      <div className="fixed bottom-7 right-40 z-40 sm:hidden">
-        <button
-          onClick={() => setIsOpen(true)}
-          aria-label="Talk to the Kraft Mortgages voice AI assistant"
-          className="w-12 h-12 rounded-full bg-slate-900 border border-gold-500/50 flex items-center justify-center text-gold-400 shadow-xl"
-        >
-          <Mic className="w-5 h-5" />
-        </button>
-      </div>
-
       {/* DUAL-AGENT LANGUAGE SELECTION & LIVE WEBRTC CALL MODAL */}
       <AnimatePresence>
         {isOpen && (

@@ -90,15 +90,15 @@ export default function AmortizationPage() {
       <Navigation />
       <CalculatorSchema name="Amortization Schedule Calculator" description="Generate a full mortgage amortization schedule with optional extra payments." url="/calculators/amortization" />
 
-      <main className="min-h-screen mt-16">
+      <main className="min-h-screen">
         <section className="py-6 px-4 bg-gray-800/30">
           <div className="max-w-6xl mx-auto">
             <div className="flex items-center gap-2 text-sm">
-              <Link href="/" className="text-gray-400 hover:text-gold-400 transition-colors">Home</Link>
+              <Link href="/" className="text-gray-400 hover:text-gold-300 transition-colors">Home</Link>
               <span className="text-gray-600">›</span>
-              <Link href="/calculators" className="text-gray-400 hover:text-gold-400 transition-colors">Calculators</Link>
+              <Link href="/calculators" className="text-gray-400 hover:text-gold-300 transition-colors">Calculators</Link>
               <span className="text-gray-600">›</span>
-              <span className="text-gold-400">Amortization Calculator</span>
+              <span className="text-gold-300">Amortization Calculator</span>
             </div>
           </div>
         </section>
@@ -106,7 +106,7 @@ export default function AmortizationPage() {
         <section className="py-20 px-4">
           <div className="max-w-6xl mx-auto">
             <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="text-center">
-              <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold bg-gold-500/20 text-gold-400 border border-gold-500/30 mb-6">
+              <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold bg-gold-500/20 text-gold-300 border border-gold-500/30 mb-6">
                 <Table className="w-4 h-4" />
                 Full Schedule
               </div>
@@ -124,7 +124,7 @@ export default function AmortizationPage() {
               {/* Inputs - narrow */}
               <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }} className="lg:col-span-2 space-y-6">
                 <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-white/20">
-                  <h2 className="text-xl font-bold mb-6 flex items-center gap-3"><Calculator className="w-6 h-6 text-gold-400" /> Mortgage Details</h2>
+                  <h2 className="text-xl font-bold mb-6 flex items-center gap-3"><Calculator className="w-6 h-6 text-gold-300" /> Mortgage Details</h2>
             {/* PDF Report Download */}
             <div className="mt-4">
               <motion.button
@@ -188,7 +188,7 @@ export default function AmortizationPage() {
 
                 {/* Summary */}
                 <div className="bg-gradient-to-br from-gold-500/20 to-amber-500/10 backdrop-blur-sm rounded-2xl p-6 border border-gold-500/30">
-                  <h4 className="font-semibold mb-3 flex items-center gap-2"><BarChart3 className="w-5 h-5 text-gold-400" /> Summary</h4>
+                  <h4 className="font-semibold mb-3 flex items-center gap-2"><BarChart3 className="w-5 h-5 text-gold-300" /> Summary</h4>
                   <div className="space-y-3">
                     <div className="flex justify-between text-sm">
                       <span className="text-gray-400">Monthly Payment</span>
@@ -196,7 +196,7 @@ export default function AmortizationPage() {
                     </div>
                     <div className="flex justify-between text-sm">
                       <span className="text-gray-400">Total Interest</span>
-                      <span className="font-semibold text-gold-400">{formatCurrency(totalInterest, 0)}</span>
+                      <span className="font-semibold text-gold-300">{formatCurrency(totalInterest, 0)}</span>
                     </div>
                     <div className="flex justify-between text-sm">
                       <span className="text-gray-400">Total Cost</span>
@@ -208,21 +208,21 @@ export default function AmortizationPage() {
                     </div>
                     <div className="flex justify-between text-sm">
                       <span className="text-gray-400">Interest as % of Principal</span>
-                      <span className="font-semibold text-gold-400">{((totalInterest / mortgage) * 100).toFixed(1)}%</span>
+                      <span className="font-semibold text-gold-300">{((totalInterest / mortgage) * 100).toFixed(1)}%</span>
                     </div>
                   </div>
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-4">
                   <a href="https://r.mtg-app.com/varun-chaudhry" target="_blank" rel="noopener noreferrer" className="flex-1 bg-gold-500 text-black font-semibold py-4 px-6 rounded-xl hover:bg-gold-400 transition-colors text-center">Get Pre-Approved</a>
-                  <a href="tel:604-593-1550" className="flex-1 bg-white/10 border border-white/20 font-semibold py-4 px-6 rounded-xl hover:bg-white/20 transition-colors text-center">Call 604-593-1550</a>
+                  <a href="tel:604-593-1550" className="flex-1 bg-white/10 border border-white/20 font-semibold py-4 px-6 rounded-xl hover:bg-white/20 transition-colors text-center underline underline-offset-4">Call 604-593-1550</a>
                 </div>
               </motion.div>
 
               {/* Schedule Table - wider */}
               <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6, delay: 0.2 }} className="lg:col-span-3">
                 <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 max-h-[700px] overflow-y-auto">
-                  <h4 className="font-semibold mb-4 flex items-center gap-2"><Info className="w-5 h-5 text-gold-400" /> Amortization Schedule</h4>
+                  <h4 className="font-semibold mb-4 flex items-center gap-2"><Info className="w-5 h-5 text-gold-300" /> Amortization Schedule</h4>
                   <table className="w-full text-sm">
                     <thead className="sticky top-0 bg-gray-900/95">
                       <tr className="text-gray-400 text-xs">
@@ -246,7 +246,7 @@ export default function AmortizationPage() {
                     </tbody>
                   </table>
                   {!showAll && schedule.length > 60 && (
-                    <button onClick={() => setShowAll(true)} className="w-full mt-4 py-2 text-sm text-gold-400 hover:text-gold-300 border border-gold-500/30 rounded-lg">
+                    <button onClick={() => setShowAll(true)} className="w-full mt-4 py-2 text-sm text-gold-300 hover:text-gold-300 border border-gold-500/30 rounded-lg">
                       Show all {schedule.length} payments
                     </button>
                   )}
@@ -273,11 +273,11 @@ export default function AmortizationPage() {
               <p>Start with the longest amortization that qualifies you, then use prepayment privileges to pay it down faster. This gives you the safety net of a lower required payment while still benefitting from aggressive repayment when your budget allows. For insured mortgages, 25 years is the maximum unless you are a first-time buyer or buying a newly built home (30 years allowed, with a small extra insurance premium). If you have 20% or more down, the 30-year option gives flexibility — but always run the numbers to see the true cost of that extra 5 years.</p>
 
               <div className="mt-8">
-                <Link href="/calculators/payment" className="text-gold-400 hover:text-gold-300 underline">Payment Calculator</Link>
+                <Link href="/calculators/payment" className="text-gold-300 hover:text-gold-300 underline">Payment Calculator</Link>
                 {" · "}
-                <Link href="/calculators/extra-payments" className="text-gold-400 hover:text-gold-300 underline">Extra Payment Savings Calculator</Link>
+                <Link href="/calculators/extra-payments" className="text-gold-300 hover:text-gold-300 underline">Extra Payment Savings Calculator</Link>
                 {" · "}
-                <Link href="/calculators/refinance-break-even" className="text-gold-400 hover:text-gold-300 underline">Refinance Break-Even Calculator</Link>
+                <Link href="/calculators/refinance-break-even" className="text-gold-300 hover:text-gold-300 underline">Refinance Break-Even Calculator</Link>
               </div>
             </div>
           </div>
@@ -292,7 +292,7 @@ export default function AmortizationPage() {
                 <div key={i} className="bg-white/5 rounded-xl border border-white/10 overflow-hidden">
                   <button onClick={() => setOpenFaq(openFaq === i ? null : i)} className="w-full flex items-center justify-between p-5 text-left">
                     <span className="font-semibold text-gray-200 pr-4">{faq.q}</span>
-                    {openFaq === i ? <ChevronUp className="w-5 h-5 text-gold-400 flex-shrink-0" /> : <ChevronDown className="w-5 h-5 text-gray-400 flex-shrink-0" />}
+                    {openFaq === i ? <ChevronUp className="w-5 h-5 text-gold-300 flex-shrink-0" /> : <ChevronDown className="w-5 h-5 text-gray-400 flex-shrink-0" />}
                   </button>
                   {openFaq === i && (
                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="px-5 pb-5 text-sm text-gray-300 leading-relaxed">{faq.a}</motion.div>

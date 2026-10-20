@@ -1,4 +1,5 @@
 "use client";
+import CalculatorNumberInput from "@/components/ui/CalculatorNumberInput";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
@@ -38,7 +39,7 @@ function calculateConstructionDraw({
   // advanced by % completion. Stage percentages below are CUMULATIVE % complete.
   const landAdvance = Math.min(Math.max(0, landValue) * (1 - downPayment), loanAmount);
   const constructionPortion = loanAmount - landAdvance;
-  
+
   // Standard construction draw schedule
   const standardSchedule: Omit<DrawSchedule, 'amount' | 'completed' | 'cumulative'>[] = [
     { stage: "Land Purchase", percentage: 0, description: "Initial land acquisition" },
@@ -51,7 +52,7 @@ function calculateConstructionDraw({
     { stage: "Final", percentage: 95, description: "Final inspections and occupancy permit" },
     { stage: "Completion", percentage: 100, description: "Project complete, convert to permanent" }
   ];
-  
+
   // Calculate draw amounts: incremental advance per stage + cumulative advanced
   let prevPct = 0;
   const drawSchedule: DrawSchedule[] = standardSchedule.map((draw, index) => {
@@ -66,24 +67,24 @@ function calculateConstructionDraw({
       completed: false
     };
   });
-  
+
   // Simple interest, interest-only during construction:
   // land advance outstanding for the full period; construction advances assumed
   // evenly spread, so their average outstanding balance is ~50%.
   const avgOutstandingBalance = landAdvance + constructionPortion / 2;
   const totalInterestCost = avgOutstandingBalance * (interestRate / 100) * (constructionPeriod / 12);
-  
+
   // Calculate fees
   const appraisalFee = 750;
   const legalFees = 1200;
   const inspectionFees = constructionPeriod * 150; // Per month
   const lenderFees = loanAmount * 0.005; // 0.5% of loan amount
   const totalFees = appraisalFee + legalFees + inspectionFees + lenderFees;
-  
+
   // Calculate LTV ratios
   // Loan-to-cost (land + construction). True LTV would use the as-complete appraised value.
   const loanToValue = totalCost > 0 ? (loanAmount / totalCost) * 100 : 0;
-  
+
   return {
     totalCost,
     loanAmount,
@@ -118,16 +119,16 @@ export default function ConstructionDrawCalculator() {
   return (
     <>
       <Navigation />
-      <main className="min-h-screen mt-16">
+      <main className="min-h-screen">
         {/* Breadcrumb */}
         <section className="py-6 px-4 bg-gray-800/30">
           <div className="max-w-6xl mx-auto">
             <div className="flex items-center gap-2 text-sm">
-              <Link href="/" className="text-gray-400 hover:text-gold-400 transition-colors">Home</Link>
+              <Link href="/" className="text-gray-400 hover:text-gold-300 transition-colors">Home</Link>
               <span className="text-gray-600">›</span>
-              <Link href="/construction" className="text-gray-400 hover:text-gold-400 transition-colors">Construction</Link>
+              <Link href="/construction" className="text-gray-400 hover:text-gold-300 transition-colors">Construction</Link>
               <span className="text-gray-600">›</span>
-              <span className="text-gold-400">Construction Draw Calculator</span>
+              <span className="text-gold-300">Construction Draw Calculator</span>
             </div>
           </div>
         </section>
@@ -135,7 +136,7 @@ export default function ConstructionDrawCalculator() {
         {/* Hero Section */}
         <section className="py-20 px-4">
           <div className="max-w-6xl mx-auto">
-            <motion.div 
+            <motion.div
               className="text-center mb-12"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -168,7 +169,7 @@ export default function ConstructionDrawCalculator() {
               >
                 <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
                   <h2 className="text-2xl font-bold mb-8 flex items-center gap-3">
-                    <Calculator className="w-6 h-6 text-gold-400" />
+                    <Calculator className="w-6 h-6 text-gold-300" />
                     Construction Project Details
                   </h2>
 
@@ -176,12 +177,12 @@ export default function ConstructionDrawCalculator() {
                     {/* Total Project Cost */}
                     <div>
                       <label className="block text-sm font-medium mb-2 flex items-center gap-2">
-                        <Building className="w-4 h-4 text-gold-400" />
+                        <Building className="w-4 h-4 text-gold-300" />
                         Construction Cost (excluding land)
                       </label>
                       <div className="relative">
                         <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">$</span>
-                        <input
+                        <CalculatorNumberInput aria-label="Construction Cost (excluding land)"
                           type="number"
                           value={totalProjectCost}
                           onChange={(e) => setTotalProjectCost(Number(e.target.value))}
@@ -196,12 +197,12 @@ export default function ConstructionDrawCalculator() {
                     {/* Land Value */}
                     <div>
                       <label className="block text-sm font-medium mb-2 flex items-center gap-2">
-                        <DollarSign className="w-4 h-4 text-gold-400" />
+                        <DollarSign className="w-4 h-4 text-gold-300" />
                         Land Value
                       </label>
                       <div className="relative">
                         <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">$</span>
-                        <input
+                        <CalculatorNumberInput aria-label="Land Value"
                           type="number"
                           value={landValue}
                           onChange={(e) => setLandValue(Number(e.target.value))}
@@ -216,10 +217,10 @@ export default function ConstructionDrawCalculator() {
                     {/* Down Payment */}
                     <div>
                       <label className="block text-sm font-medium mb-2 flex items-center gap-2">
-                        <Percent className="w-4 h-4 text-gold-400" />
+                        <Percent className="w-4 h-4 text-gold-300" />
                         Down Payment ({(downPayment * 100).toFixed(0)}%)
                       </label>
-                      <input
+                      <input aria-label="Down Payment ( %)"
                         type="range"
                         min="0.20"
                         max="0.50"
@@ -230,7 +231,7 @@ export default function ConstructionDrawCalculator() {
                       />
                       <div className="flex justify-between text-sm text-gray-400 mt-2">
                         <span>20%</span>
-                        <span className="font-semibold text-gold-400">{(downPayment * 100).toFixed(0)}%</span>
+                        <span className="font-semibold text-gold-300">{(downPayment * 100).toFixed(0)}%</span>
                         <span>50%</span>
                       </div>
                     </div>
@@ -238,11 +239,11 @@ export default function ConstructionDrawCalculator() {
                     {/* Interest Rate */}
                     <div>
                       <label className="block text-sm font-medium mb-2 flex items-center gap-2">
-                        <Percent className="w-4 h-4 text-gold-400" />
+                        <Percent className="w-4 h-4 text-gold-300" />
                         Construction Interest Rate
                       </label>
                       <div className="relative">
-                        <input
+                        <CalculatorNumberInput aria-label="Construction Interest Rate"
                           type="number"
                           value={interestRate}
                           onChange={(e) => setInterestRate(Number(e.target.value))}
@@ -258,10 +259,10 @@ export default function ConstructionDrawCalculator() {
                     {/* Construction Period */}
                     <div>
                       <label className="block text-sm font-medium mb-2 flex items-center gap-2">
-                        <Clock className="w-4 h-4 text-gold-400" />
+                        <Clock className="w-4 h-4 text-gold-300" />
                         Construction Period ({constructionPeriod} months)
                       </label>
-                      <input
+                      <input aria-label="Construction Period ( months)"
                         type="range"
                         min="6"
                         max="24"
@@ -271,7 +272,7 @@ export default function ConstructionDrawCalculator() {
                       />
                       <div className="flex justify-between text-sm text-gray-400 mt-2">
                         <span>6 months</span>
-                        <span className="font-semibold text-gold-400">{constructionPeriod} months</span>
+                        <span className="font-semibold text-gold-300">{constructionPeriod} months</span>
                         <span>24 months</span>
                       </div>
                     </div>
@@ -345,7 +346,7 @@ export default function ConstructionDrawCalculator() {
                     </div>
                     <div className="border-t border-white/20 pt-3 flex justify-between">
                       <span className="text-gray-300">All-in Cost (incl. interest &amp; fees)</span>
-                      <span className="font-semibold text-gold-400">
+                      <span className="font-semibold text-gold-300">
                         ${Math.round(results.totalCost + results.totalInterestCost + results.totalFees).toLocaleString()}
                       </span>
                     </div>
@@ -354,13 +355,13 @@ export default function ConstructionDrawCalculator() {
 
                 {/* Next Steps */}
                 <div className="flex gap-4">
-                  <Link 
+                  <Link
                     href="/contact"
                     className="flex-1 bg-gold-500 text-black font-semibold py-4 px-6 rounded-xl hover:bg-gold-400 transition-colors text-center"
                   >
                     Get Pre-Approved
                   </Link>
-                  <Link 
+                  <Link
                     href="/construction"
                     className="flex-1 bg-white/10 border border-white/20 font-semibold py-4 px-6 rounded-xl hover:bg-white/20 transition-colors text-center"
                   >
@@ -410,7 +411,7 @@ export default function ConstructionDrawCalculator() {
                         <td className="py-4 px-2 text-right font-semibold">
                           {draw.percentage}%
                         </td>
-                        <td className="py-4 px-2 text-right font-semibold text-gold-400">
+                        <td className="py-4 px-2 text-right font-semibold text-gold-300">
                           ${Math.round(draw.amount).toLocaleString()}
                         </td>
                         <td className="py-4 px-2 text-right">

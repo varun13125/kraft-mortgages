@@ -142,7 +142,7 @@ export default function BvsEquityPage() {
   const difference = eTotalCost - bTotalCost;
 
   const pyramidTiers = [
-    { label: "A-Lenders", desc: "Banks & credit unions — best rates, strictest rules", color: canQualifyB ? "text-gray-500" : "text-gray-500", bgColor: "bg-gray-600/30", borderColor: "border-gray-600/50", highlight: false },
+    { label: "A-Lenders", desc: "Banks & credit unions — best rates, strictest rules", color: canQualifyB ? "text-gray-400" : "text-gray-400", bgColor: "bg-gray-600/30", borderColor: "border-gray-600/50", highlight: false },
     { label: "B-Lenders", desc: "Alternative lenders — bank statements OK, credit 500+", color: "text-blue-400", bgColor: "bg-blue-500/20", borderColor: "border-blue-500/40", highlight: canQualifyB },
     { label: "Equity Lenders", desc: "Private lenders — equity-based, minimal docs", color: "text-amber-400", bgColor: "bg-amber-500/20", borderColor: "border-amber-500/40", highlight: !canQualifyB },
   ];
@@ -150,16 +150,16 @@ export default function BvsEquityPage() {
   return (
     <>
       <Navigation />
-      <main className="min-h-screen mt-16">
+      <main className="min-h-screen">
         {/* Breadcrumb */}
         <section className="py-6 px-4 bg-gray-800/30">
           <div className="max-w-6xl mx-auto">
             <div className="flex items-center gap-2 text-sm">
-              <Link href="/" className="text-gray-400 hover:text-gold-400 transition-colors">Home</Link>
+              <Link href="/" className="text-gray-400 hover:text-gold-300 transition-colors">Home</Link>
               <span className="text-gray-600">›</span>
-              <Link href="/calculators" className="text-gray-400 hover:text-gold-400 transition-colors">Calculators</Link>
+              <Link href="/calculators" className="text-gray-400 hover:text-gold-300 transition-colors">Calculators</Link>
               <span className="text-gray-600">›</span>
-              <span className="text-gold-400">B-Lender vs Equity Calculator</span>
+              <span className="text-gold-300">B-Lender vs Equity Calculator</span>
             </div>
           </div>
         </section>
@@ -168,7 +168,7 @@ export default function BvsEquityPage() {
         <section className="py-20 px-4">
           <div className="max-w-6xl mx-auto">
             <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="text-center">
-              <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold bg-gold-500/20 text-gold-400 border border-gold-500/30 mb-6">
+              <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold bg-gold-500/20 text-gold-300 border border-gold-500/30 mb-6">
                 <Landmark className="w-4 h-4" />
                 Lender Comparison Tool
               </div>
@@ -190,7 +190,7 @@ export default function BvsEquityPage() {
               <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }} className="space-y-8">
                 <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-white/20">
                   <h2 className="text-xl sm:text-2xl font-bold mb-6 flex items-center gap-3">
-                    <Calculator className="w-6 h-6 text-gold-400" />
+                    <Calculator className="w-6 h-6 text-gold-300" />
                     Mortgage Details
                   </h2>
             {/* PDF Report Download */}
@@ -289,7 +289,7 @@ export default function BvsEquityPage() {
                         <ValidatedInput label="Equity Lender Rate (%)" value={eRate} onChange={setERate} validation={{ min: 5, max: 18 }} type="percentage" />
                         {position === "2nd" && livePrivateSecond !== undefined
                           ? <LiveRateNote data={liveRates} product="privateSecond" source={eRateSource} />
-                          : <p className="text-xs text-gray-400 mt-1.5">{eRateSource === "user" ? "" : "Illustrative (no live benchmark for private first mortgages). "}Enter the quote you received.</p>}
+                          : <p className="text-xs text-gray-300 mt-1.5">{eRateSource === "user" ? "" : "Illustrative (no live benchmark for private first mortgages). "}Enter the quote you received.</p>}
                       </div>
                     </div>
                     <div className="grid grid-cols-2 gap-4">
@@ -329,7 +329,7 @@ export default function BvsEquityPage() {
                   <div className="flex items-center gap-3 mb-4">
                     {canQualifyB ? <CheckCircle2 className="w-6 h-6 text-green-400" /> : <AlertTriangle className="w-6 h-6 text-amber-400" />}
                     <h3 className="text-lg font-bold text-gray-100">
-                      {canQualifyB ? "You May Qualify for a B-Lender" : "Equity Lending Is Your Best Option"}
+                      {canQualifyB ? "You May Qualify for a B-Lender" : "Explore Other Financing Options"}
                     </h3>
                   </div>
                   <div className="text-sm text-gray-300 space-y-1">
@@ -350,7 +350,7 @@ export default function BvsEquityPage() {
                           <span className={`font-bold ${tier.color}`}>{tier.label}</span>
                           {tier.highlight && <span className="text-[10px] bg-gold-500 text-black px-2 py-0.5 rounded-full font-bold">YOUR FIT</span>}
                         </div>
-                        <p className="text-xs text-gray-400">{tier.desc}</p>
+                        <p className="text-xs text-gray-300">{tier.desc}</p>
                       </motion.div>
                     ))}
                   </div>
@@ -383,7 +383,7 @@ export default function BvsEquityPage() {
                     {/* Difference */}
                     <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
                       <div className="flex items-center gap-3 mb-3">
-                        <TrendingDown className="w-5 h-5 text-gold-400" />
+                        <TrendingDown className="w-5 h-5 text-gold-300" />
                         <span className="font-semibold text-gray-200">Cost Comparison</span>
                       </div>
                       <p className="text-lg text-gray-300">
@@ -503,11 +503,11 @@ export default function BvsEquityPage() {
               </p>
 
               <div className="mt-8">
-                <Link href="/calculators" className="text-gold-400 hover:text-gold-300 underline">All Calculators</Link>
+                <Link href="/calculators" className="text-gold-300 hover:text-gold-300 underline">All Calculators</Link>
                 {" · "}
-                <Link href="/calculators/refinance-vs-heloc-vs-second" className="text-gold-400 hover:text-gold-300 underline">Refinance vs HELOC vs Second Mortgage Calculator</Link>
+                <Link href="/calculators/refinance-vs-heloc-vs-second" className="text-gold-300 hover:text-gold-300 underline">Refinance vs HELOC vs Second Mortgage Calculator</Link>
                 {" · "}
-                <Link href="/calculators/self-employed-a-vs-b" className="text-gold-400 hover:text-gold-300 underline">Self-Employed A vs B Lender Calculator</Link>
+                <Link href="/calculators/self-employed-a-vs-b" className="text-gold-300 hover:text-gold-300 underline">Self-Employed A vs B Lender Calculator</Link>
               </div>
             </div>
           </div>
@@ -538,7 +538,7 @@ export default function BvsEquityPage() {
                 </table>
               </div>
             ) : (
-              <p className="text-center text-gray-400">Live benchmarks are loading or unavailable. <Link href="/rates" className="text-gold-400 hover:text-gold-300 underline">See today&apos;s rates</Link> or contact us for current pricing.</p>
+              <p className="text-center text-gray-400">Live benchmarks are loading or unavailable. <Link href="/rates" className="text-gold-300 hover:text-gold-300 underline">See today&apos;s rates</Link> or contact us for current pricing.</p>
             )}
             <p className="text-xs text-gray-400 text-center mt-4">
               {ratesDate ? `From our live rate feed, as of ${ratesDate}. ` : ""}Lowest and median advertised rates across the lenders in our feed. Your rate depends on credit, LTV, property type, location and fees. Contact us for current pricing.
@@ -546,7 +546,7 @@ export default function BvsEquityPage() {
           </div>
         </section>
 
-        <p className="text-center text-xs text-gray-500 mb-8">
+        <p className="text-center text-xs text-gray-400 mb-8">
           Rates shown are estimated starting rates for comparison purposes. Actual rates vary based on credit, LTV, property type, and location. Contact a broker to confirm rates for your specific situation.
         </p>
 
@@ -559,7 +559,7 @@ export default function BvsEquityPage() {
                 <div key={i} className="bg-white/5 rounded-xl border border-white/10 overflow-hidden">
                   <button onClick={() => setOpenFaq(openFaq === i ? null : i)} className="w-full flex items-center justify-between p-5 text-left">
                     <span className="font-semibold text-gray-200 pr-4">{faq.q}</span>
-                    {openFaq === i ? <ChevronUp className="w-5 h-5 text-gold-400 flex-shrink-0" /> : <ChevronDown className="w-5 h-5 text-gray-400 flex-shrink-0" />}
+                    {openFaq === i ? <ChevronUp className="w-5 h-5 text-gold-300 flex-shrink-0" /> : <ChevronDown className="w-5 h-5 text-gray-400 flex-shrink-0" />}
                   </button>
                   {openFaq === i && (
                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="px-5 pb-5 text-sm text-gray-300 leading-relaxed">

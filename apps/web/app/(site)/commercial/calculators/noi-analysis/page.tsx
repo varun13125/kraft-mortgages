@@ -1,4 +1,5 @@
 "use client";
+import CalculatorNumberInput from "@/components/ui/CalculatorNumberInput";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
@@ -46,7 +47,7 @@ export default function NOIAnalysisCalculator() {
     return (
         <>
             <Navigation />
-            <main className="min-h-screen mt-16">
+            <main className="min-h-screen">
                 {/* Breadcrumb */}
                 <section className="py-6 px-4 bg-gray-800/30">
                     <div className="max-w-6xl mx-auto">
@@ -103,7 +104,7 @@ export default function NOIAnalysisCalculator() {
                                         <label className="block text-sm text-gray-400 mb-1">Annual Gross Rent</label>
                                         <div className="relative">
                                             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">$</span>
-                                            <input
+                                            <CalculatorNumberInput aria-label="Annual Gross Rent"
                                                 type="number"
                                                 value={grossPotentialRent}
                                                 onChange={(e) => setGrossPotentialRent(Math.max(0, Number(e.target.value)))}
@@ -116,7 +117,7 @@ export default function NOIAnalysisCalculator() {
                                         <label className="block text-sm text-gray-400 mb-1">Other Income (parking, laundry, etc.)</label>
                                         <div className="relative">
                                             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">$</span>
-                                            <input
+                                            <CalculatorNumberInput aria-label="Other Income (parking, laundry, etc.)"
                                                 type="number"
                                                 value={otherIncome}
                                                 onChange={(e) => setOtherIncome(Math.max(0, Number(e.target.value)))}
@@ -127,7 +128,7 @@ export default function NOIAnalysisCalculator() {
                                     </div>
                                     <div>
                                         <label className="block text-sm text-gray-400 mb-1">Vacancy Rate (%)</label>
-                                        <input
+                                        <CalculatorNumberInput aria-label="Vacancy Rate (%)"
                                             type="number"
                                             value={vacancyRate}
                                             onChange={(e) => setVacancyRate(Math.max(0, Math.min(100, Number(e.target.value))))}
@@ -170,7 +171,7 @@ export default function NOIAnalysisCalculator() {
                                         <label className="block text-sm text-gray-400 mb-1">Property Management</label>
                                         <div className="relative">
                                             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">$</span>
-                                            <input
+                                            <CalculatorNumberInput aria-label="Property Management"
                                                 type="number"
                                                 value={propertyManagement}
                                                 onChange={(e) => setPropertyManagement(Math.max(0, Number(e.target.value)))}
@@ -183,7 +184,7 @@ export default function NOIAnalysisCalculator() {
                                         <label className="block text-sm text-gray-400 mb-1">Utilities</label>
                                         <div className="relative">
                                             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">$</span>
-                                            <input
+                                            <CalculatorNumberInput aria-label="Utilities"
                                                 type="number"
                                                 value={utilities}
                                                 onChange={(e) => setUtilities(Math.max(0, Number(e.target.value)))}
@@ -196,7 +197,7 @@ export default function NOIAnalysisCalculator() {
                                         <label className="block text-sm text-gray-400 mb-1">Insurance</label>
                                         <div className="relative">
                                             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">$</span>
-                                            <input
+                                            <CalculatorNumberInput aria-label="Insurance"
                                                 type="number"
                                                 value={insurance}
                                                 onChange={(e) => setInsurance(Math.max(0, Number(e.target.value)))}
@@ -209,7 +210,7 @@ export default function NOIAnalysisCalculator() {
                                         <label className="block text-sm text-gray-400 mb-1">Property Taxes</label>
                                         <div className="relative">
                                             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">$</span>
-                                            <input
+                                            <CalculatorNumberInput aria-label="Property Taxes"
                                                 type="number"
                                                 value={propertyTaxes}
                                                 onChange={(e) => setPropertyTaxes(Math.max(0, Number(e.target.value)))}
@@ -222,7 +223,7 @@ export default function NOIAnalysisCalculator() {
                                         <label className="block text-sm text-gray-400 mb-1">Maintenance & Repairs</label>
                                         <div className="relative">
                                             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">$</span>
-                                            <input
+                                            <CalculatorNumberInput aria-label="Maintenance & Repairs"
                                                 type="number"
                                                 value={maintenance}
                                                 onChange={(e) => setMaintenance(Math.max(0, Number(e.target.value)))}
@@ -235,7 +236,7 @@ export default function NOIAnalysisCalculator() {
                                         <label className="block text-sm text-gray-400 mb-1">Reserves</label>
                                         <div className="relative">
                                             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">$</span>
-                                            <input
+                                            <CalculatorNumberInput aria-label="Reserves"
                                                 type="number"
                                                 value={reserves}
                                                 onChange={(e) => setReserves(Math.max(0, Number(e.target.value)))}
@@ -281,7 +282,7 @@ export default function NOIAnalysisCalculator() {
                                     <label className="block text-sm text-gray-400 mb-2">Property Value (for ratios)</label>
                                     <div className="relative">
                                         <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">$</span>
-                                        <input
+                                        <CalculatorNumberInput aria-label="Property Value (for ratios)" min={1}
                                             type="number"
                                             value={propertyValue}
                                             onChange={(e) => setPropertyValue(Math.max(1, Number(e.target.value)))}
@@ -333,7 +334,7 @@ export default function NOIAnalysisCalculator() {
                         </div>
 
                         {/* CTA */}
-                        <p className="mt-8 text-xs text-gray-500 text-center max-w-3xl mx-auto">
+                        <p className="mt-8 text-xs text-gray-400 text-center max-w-3xl mx-auto">
                             Estimates only. Vacancy is applied to gross rent plus other income. Lenders and appraisers may normalize
                             vacancy, management fees and reserves differently.
                         </p>
@@ -383,7 +384,7 @@ export default function NOIAnalysisCalculator() {
                         <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
                             <Link
                                 href="/contact"
-                                className="bg-purple-500 text-white font-semibold py-4 px-8 rounded-xl hover:bg-purple-400 transition-colors"
+                                className="bg-purple-600 text-white font-semibold py-4 px-8 rounded-xl hover:bg-purple-700 transition-colors"
                             >
                                 Get Commercial Financing
                             </Link>

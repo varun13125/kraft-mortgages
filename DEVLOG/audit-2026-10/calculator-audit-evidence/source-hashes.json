@@ -1,0 +1,246 @@
+[
+  {
+    "file": "apps/web/lib/calc/payment.ts",
+    "sha256": "e930e8a6b9282fad5f4acc99d953ac674ca3c086db69fa24691b3a1899434f26"
+  },
+  {
+    "file": "apps/web/lib/calc/refinance.ts",
+    "sha256": "1fd7ccf052e865165edfaeade824d40040fd8d568cae960fb31f350d277de849"
+  },
+  {
+    "file": "apps/web/lib/calc/purchaseEligibility.ts",
+    "sha256": "81f8a4437d8865cdbc06a425ea7558606f1cf1b4af6973c3aa4b8793e16a34c9"
+  },
+  {
+    "file": "apps/web/lib/calc/construction.ts",
+    "sha256": "997314b5dd9cede2db1d5233d77bbc04fb4b709f7e3bd9f16bb091e7aa20f909"
+  },
+  {
+    "file": "apps/web/lib/mli/calcs.ts",
+    "sha256": "d0b6dfa57e9a3dd2d64321e9b3c669ee1ac8c85518c11f388ec1e732c52ec7a1"
+  },
+  {
+    "file": "apps/web/components/ui/ValidatedInput.tsx",
+    "sha256": "7adaebb0a23fd89ac2eab4381e8becb150a2ae1d8102e41d11e9de51a8d0efe0"
+  },
+  {
+    "file": "apps/web/components/ui/CalculatorNumberInput.tsx",
+    "sha256": "5cf45c276ff7a19ac7ed9ec23ac614b7e40a8f2125611f4edfefbfe59a110d9c"
+  },
+  {
+    "file": "apps/web/scripts/audit-calculators.cjs",
+    "sha256": "58cb200c02a8ec0edc8e21bc3c7c7159184f26c75badd622c375fb61723d8f8e"
+  },
+  {
+    "file": "apps/web/scripts/audit-calculator-regressions.cjs",
+    "sha256": "6ae937c569b4517f29fa189de665a4e503ce728dbd164a075c329cae16d7b173"
+  },
+  {
+    "file": "apps/web/app/(site)/calculators/a-vs-equity/page.tsx",
+    "sha256": "171bedc0001fa0672ca6c5e0895e041e22b6d8c8990285835a619b7f2c1225f9"
+  },
+  {
+    "file": "apps/web/app/(site)/calculators/affordability/page.tsx",
+    "sha256": "4350c67b92d6f715017e353425e5bc8b424ee9d1dcf6b8984bf7a75ff084dba4"
+  },
+  {
+    "file": "apps/web/app/(site)/calculators/amortization/page.tsx",
+    "sha256": "a1fe3b382abff837168d82a3c15a378b615b07efe87fc7010cfee50e9e29180e"
+  },
+  {
+    "file": "apps/web/app/(site)/calculators/b-vs-equity/page.tsx",
+    "sha256": "700066f99d3ceb33e70b90a4fb29af0d6ccf596f00e34fb2c8a35f40023456d1"
+  },
+  {
+    "file": "apps/web/app/(site)/calculators/bc-speculation-tax/page.tsx",
+    "sha256": "19491e6f893535843d41861a7bc4c92cf5832dc393117ff76a58ee0e0ac0dede"
+  },
+  {
+    "file": "apps/web/app/(site)/calculators/closing-costs/page.tsx",
+    "sha256": "09c8c6e279a13be59c02f571e1ca2e845756dc35924d45f1485a65b6defae1c4"
+  },
+  {
+    "file": "apps/web/app/(site)/calculators/cmhc-insurance/page.tsx",
+    "sha256": "1879bd6c09ca0cace5b111aa3e9b782cafb1ec19e86dea7043cb45673ab4d488"
+  },
+  {
+    "file": "apps/web/app/(site)/calculators/construction-pro/page.tsx",
+    "sha256": "fe95a039c993175cae619d40cf274ffdfab4de5af77c3d0ffabbc755dc5caea6"
+  },
+  {
+    "file": "apps/web/app/(site)/calculators/debt-service-ratio/page.tsx",
+    "sha256": "534dc0f3cc15d6dc9aca6aa809bd2adfe302cbded81af4f7298d3fb1a94b7b97"
+  },
+  {
+    "file": "apps/web/app/(site)/calculators/down-payment/page.tsx",
+    "sha256": "835e9af17b2c9e391594811e99e1e9ac673668a49a50c84acbfa033f75da7d0c"
+  },
+  {
+    "file": "apps/web/app/(site)/calculators/extra-payments/page.tsx",
+    "sha256": "a372e28a9029fdabba454a104cb74b013e342b4ea4e3102bfc0281fab0264b49"
+  },
+  {
+    "file": "apps/web/app/(site)/calculators/first-time-home-buyer/page.tsx",
+    "sha256": "85d15af1b9dc1857fa9a07b17f9ba0cd1fc1157bda256ff728a443f69d786e7e"
+  },
+  {
+    "file": "apps/web/app/(site)/calculators/investment/page.tsx",
+    "sha256": "f3083054f2187f8f745abeeb76f4492438005b30ea980ad32278251494ceeafa"
+  },
+  {
+    "file": "apps/web/app/(site)/calculators/land-transfer-tax/page.tsx",
+    "sha256": "5eb11b124264f9c38b0f95af179a08d1c52c6031977f9be57911fbe35acc2d71"
+  },
+  {
+    "file": "apps/web/app/(site)/calculators/mortgage-penalty/page.tsx",
+    "sha256": "2c2831395973253178db7efc119327b3e39ad5fdadd7b9bb7044e1e2353174cc"
+  },
+  {
+    "file": "apps/web/app/(site)/calculators/mortgage-qualifier/page.tsx",
+    "sha256": "37b2d282d628af35ef92a1dfd9b56890e02cb362c985f1b6bb913ebcaa8dd2f2"
+  },
+  {
+    "file": "apps/web/app/(site)/calculators/payment/page.tsx",
+    "sha256": "e67e950da2de5933e5537a98ee2a60362640879d897213fe1974e449b807d106"
+  },
+  {
+    "file": "apps/web/app/(site)/calculators/port-vs-break/page.tsx",
+    "sha256": "e15b1e1610e1d289930ec74f829fa5fea58ca1fb0eb6a56a42eabe825bd1d1c5"
+  },
+  {
+    "file": "apps/web/app/(site)/calculators/pre-approval/page.tsx",
+    "sha256": "cff38091ddece250e91756c1adb12f04e2bbceb9ca326e3a8bc119cd2436fd68"
+  },
+  {
+    "file": "apps/web/app/(site)/calculators/rate-comparison/page.tsx",
+    "sha256": "beb05fe47d30e91946b9ed361bbef4d71ea68b2d8f49fe0d1906e26b58033456"
+  },
+  {
+    "file": "apps/web/app/(site)/calculators/refinance-break-even/page.tsx",
+    "sha256": "4a84f5f708e95d8e604657e1b0f6cf39fa2dc1a49ab27d5ff6d39d5e16cf2765"
+  },
+  {
+    "file": "apps/web/app/(site)/calculators/refinance-cashout/page.tsx",
+    "sha256": "f6716a3c0f663a6d1eebc421e0c525a3a8430819e1d30263065f88c3208b6414"
+  },
+  {
+    "file": "apps/web/app/(site)/calculators/refinance-vs-heloc-vs-second/page.tsx",
+    "sha256": "6a6c9446e4815fef9b762c8ce6d554ad97f7c3871b23dc866b4880edfa08d61b"
+  },
+  {
+    "file": "apps/web/app/(site)/calculators/renewal/page.tsx",
+    "sha256": "c78391b834ba319b9ed2bbe8ba7cfd86510a820e892dd83019051c9c60841aea"
+  },
+  {
+    "file": "apps/web/app/(site)/calculators/rent-vs-buy/page.tsx",
+    "sha256": "9b05d3ad6558c830c58d2901e57d9970b5fe10d56006ebf4608ae557c836e22a"
+  },
+  {
+    "file": "apps/web/app/(site)/calculators/required-income/page.tsx",
+    "sha256": "e45e59512542b79bf672114ef917e2a56efd0cde7c729b936e3f5ad810c58c64"
+  },
+  {
+    "file": "apps/web/app/(site)/calculators/reverse-mortgage/page.tsx",
+    "sha256": "cf56eb9523500edd62180adc5de8a6baaa25b484eccdecc4b480eebca2d685e0"
+  },
+  {
+    "file": "apps/web/app/(site)/calculators/self-employed/page.tsx",
+    "sha256": "9134e78d0a3339b518655dd988c3de4c68d1bd3250a49209231fd8a5056babf9"
+  },
+  {
+    "file": "apps/web/app/(site)/calculators/self-employed-a-vs-b/page.tsx",
+    "sha256": "8ea98126b45697168efe8f73f47a6c1e01275fd1b2b6b1e0029dde9b231b1817"
+  },
+  {
+    "file": "apps/web/app/(site)/calculators/stress-test/page.tsx",
+    "sha256": "f0c8b8c1d488568464198cab20d7f7ecdbdbba7534beab860f7eaae492874e05"
+  },
+  {
+    "file": "apps/web/app/(site)/commercial/calculators/cap-rate/page.tsx",
+    "sha256": "30b157fa11eae62a25d642644281352d371684b99992d434a69444930f06dc8f"
+  },
+  {
+    "file": "apps/web/app/(site)/commercial/calculators/cash-flow/page.tsx",
+    "sha256": "4e5b6be41a19f2a38e4083badee8ef8d954d4e0ab8c80b28ccbdadeef230cb17"
+  },
+  {
+    "file": "apps/web/app/(site)/commercial/calculators/noi-analysis/page.tsx",
+    "sha256": "0249ed37c8a3cb598496f6ee1f330b3c9409c7a96fba66d720a349caaddf66e4"
+  },
+  {
+    "file": "apps/web/app/(site)/commercial/calculators/refinance/page.tsx",
+    "sha256": "00f661c3bd3034eacd633e03155a18a63f0d564c6262b38288439ea988f306e7"
+  },
+  {
+    "file": "apps/web/app/(site)/construction/calculators/budget/page.tsx",
+    "sha256": "5568e79ac3f770e2291303f01c8fac4da3f1601a2de0689975561c4644220bb7"
+  },
+  {
+    "file": "apps/web/app/(site)/construction/calculators/builder-program/page.tsx",
+    "sha256": "595e442b38bf201aa9679289cf338e7131e5676510ee7311976094bef58c295c"
+  },
+  {
+    "file": "apps/web/app/(site)/construction/calculators/construction-draw/page.tsx",
+    "sha256": "d3bf96977e4673d7d430ad33029a9aa8564b7a0f92486c4b9b3f3fc6939b8e81"
+  },
+  {
+    "file": "apps/web/app/(site)/construction/calculators/cost-to-complete/page.tsx",
+    "sha256": "1a8d381d99cc4755a987a41d84e0d58cca32602b6955979db17fb3ca8f2711a5"
+  },
+  {
+    "file": "apps/web/app/(site)/construction/calculators/progressive-draw/page.tsx",
+    "sha256": "8c660339f0d082e03cb203b02a3f7953120d0518f9e74b69d3ba1d672e6fec95"
+  },
+  {
+    "file": "apps/web/app/(site)/equity-lending/calculators/debt-consolidation/page.tsx",
+    "sha256": "8dda12d20b55f863ded15c923a8ec6e8fe22de70f3078048ed15df49ea05d4f9"
+  },
+  {
+    "file": "apps/web/app/(site)/equity-lending/calculators/heloc/page.tsx",
+    "sha256": "09e0440bef29ac72e57290f2a195abf6a6af4debed70a51d6f067f10e2178c4f"
+  },
+  {
+    "file": "apps/web/app/(site)/equity-lending/calculators/home-equity/page.tsx",
+    "sha256": "1c5030c2ac24fb6a09b74de6165e91040404ce36f33f073ca5e94f3acb809cad"
+  },
+  {
+    "file": "apps/web/app/(site)/mli-select/calculators/amortization/page.tsx",
+    "sha256": "427c60182c522d01d5f4cca95531a3c8608ca3b54006e6e98c786bfb8a56d1ee"
+  },
+  {
+    "file": "apps/web/app/(site)/mli-select/calculators/break-even/page.tsx",
+    "sha256": "8ec9cae2fc884d847da3c6460a61b630ebfc707fed7245434540a1db272df104"
+  },
+  {
+    "file": "apps/web/app/(site)/mli-select/calculators/dscr/page.tsx",
+    "sha256": "4fe11479bb19aebebe5622f05c2c06889e678686b1be122bc6300d66d63f3b6e"
+  },
+  {
+    "file": "apps/web/app/(site)/mli-select/calculators/eligibility-checklist/page.tsx",
+    "sha256": "a10f21846e49e62cb14fb520ced50db11b883e90b2ceafa7e488b16ebfc6eeb3"
+  },
+  {
+    "file": "apps/web/app/(site)/mli-select/calculators/max-loan/page.tsx",
+    "sha256": "de25f59f9aa6ad2574704adf76ff418e2e3b47672679a7fa8dd0eaef6a92fd58"
+  },
+  {
+    "file": "apps/web/app/(site)/mli-select/calculators/points/page.tsx",
+    "sha256": "d4e6e43440cfd304ee56d59c9284337cc86afa56b37f88c73729e2e477be8f95"
+  },
+  {
+    "file": "apps/web/app/(site)/mli-select/calculators/premium/page.tsx",
+    "sha256": "6eff2e09c23ecea35a684689a1cfedeee8aae8e62c012c7dc571a6dfb7283f8e"
+  },
+  {
+    "file": "apps/web/app/(site)/mli-select/calculators/rent-cap/page.tsx",
+    "sha256": "3269dd7c5332ba009a399e5e65bd7d7b5d5bd35c72fc7b55f22ce950fc8768c7"
+  },
+  {
+    "file": "apps/web/app/(site)/mli-select/calculators/scenario-compare/page.tsx",
+    "sha256": "42ebaba6f9f2fe5ba233274d7ac12186d3f8b867feb1365cfd600a6993188b9e"
+  },
+  {
+    "file": "apps/web/app/(site)/private-lending/calculators/alternative-income/page.tsx",
+    "sha256": "260a4d7dff0b54c352ae1a4e33c14db1c3ea7102035d419af0fc0ca77597db00"
+  }
+]

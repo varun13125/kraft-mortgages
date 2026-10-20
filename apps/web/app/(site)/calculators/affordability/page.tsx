@@ -32,7 +32,7 @@ export default function Affordability() {
       setRate(best5YrFixed);
     }
   }, [best5YrFixed, hasUserEdited]);
-  
+
   const qualRate = useMemo(() => stressTestRate(rate), [rate]);
   const monthlyPI = payment({ principal, annualRatePct: qualRate, amortYears, paymentsPerYear: 12 });
   // GDS counts 50% of condo fees (CMHC guideline)
@@ -53,16 +53,16 @@ export default function Affordability() {
       <Navigation />
       <CalculatorSchema name="Mortgage Affordability Calculator" description="Calculate how much house you can afford with GDS/TDS ratios and the Canadian stress test." url="/calculators/affordability" />
 
-      <main className="min-h-screen mt-16">
+      <main className="min-h-screen">
         {/* Breadcrumb */}
         <section className="py-6 px-4 bg-gray-800/30">
           <div className="max-w-6xl mx-auto">
             <div className="flex items-center gap-2 text-sm">
-              <Link href="/" className="text-gray-400 hover:text-gold-400 transition-colors">Home</Link>
+              <Link href="/" className="text-gray-400 hover:text-gold-300 transition-colors">Home</Link>
               <span className="text-gray-600">›</span>
-              <Link href="/calculators" className="text-gray-400 hover:text-gold-400 transition-colors">Calculators</Link>
+              <Link href="/calculators" className="text-gray-400 hover:text-gold-300 transition-colors">Calculators</Link>
               <span className="text-gray-600">›</span>
-              <span className="text-gold-400">Affordability Calculator</span>
+              <span className="text-gold-300">Affordability Calculator</span>
             </div>
           </div>
         </section>
@@ -70,13 +70,13 @@ export default function Affordability() {
         {/* Hero Section */}
         <section className="py-20 px-4">
           <div className="max-w-6xl mx-auto">
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
               className="text-center"
             >
-              <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold bg-gold-500/20 text-gold-400 border border-gold-500/30 mb-6">
+              <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold bg-gold-500/20 text-gold-300 border border-gold-500/30 mb-6">
                 <DollarSign className="w-4 h-4" />
                 Affordability Analysis
               </div>
@@ -103,10 +103,10 @@ export default function Affordability() {
               >
                 <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-white/20">
                   <h2 className="text-xl sm:text-2xl font-bold mb-6 flex items-center gap-3">
-                    <Calculator className="w-6 h-6 text-gold-400" />
+                    <Calculator className="w-6 h-6 text-gold-300" />
                     Income & Debt Details
                   </h2>
-                  
+
                   <div className="mb-6">
             {/* PDF Report Download */}
             <div className="mt-4">
@@ -191,10 +191,10 @@ export default function Affordability() {
                 {/* Housing Costs */}
                 <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-white/20">
                   <h3 className="text-lg font-semibold mb-6 flex items-center gap-3">
-                    <Home className="w-5 h-5 text-gold-400" />
+                    <Home className="w-5 h-5 text-gold-300" />
                     Housing Costs
                   </h3>
-                  
+
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <ValidatedInput
                       label="Annual Property Tax"
@@ -227,10 +227,10 @@ export default function Affordability() {
                 {/* Mortgage Details */}
                 <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-white/20">
                   <h3 className="text-lg font-semibold mb-6 flex items-center gap-3">
-                    <CreditCard className="w-5 h-5 text-gold-400" />
+                    <CreditCard className="w-5 h-5 text-gold-300" />
                     Mortgage Details
                   </h3>
-                  
+
                   <div className="space-y-6">
                     <ValidatedSlider
                       label={`Interest Rate (${formatPercentage(rate)}) — Live Synced`}
@@ -293,7 +293,7 @@ export default function Affordability() {
                     {pass ? 'QUALIFIED' : 'NOT QUALIFIED'}
                   </div>
                   <p className={`text-sm ${pass ? 'text-green-200' : 'text-red-200'}`}>
-                    {pass 
+                    {pass
                       ? 'You meet the affordability requirements for this mortgage amount.'
                       : 'This mortgage amount exceeds affordability guidelines. Consider reducing the principal or improving your debt-to-income ratio.'
                     }
@@ -303,7 +303,7 @@ export default function Affordability() {
                 {/* Maximum mortgage at these inputs */}
                 <div className="bg-gradient-to-br from-gold-500/20 to-amber-500/10 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-gold-500/30">
                   <p className="text-sm text-gold-300 font-medium mb-1">Estimated Maximum Mortgage</p>
-                  <p className="text-3xl sm:text-4xl font-bold text-gold-400">{formatCurrency(maxPrincipal, 0)}</p>
+                  <p className="text-3xl sm:text-4xl font-bold text-gold-300">{formatCurrency(maxPrincipal, 0)}</p>
                   <p className="text-xs text-gray-400 mt-2">
                     Largest loan keeping GDS ≤ 39% and TDS ≤ 44% at the {formatPercentage(qualRate)} qualifying rate over {amortYears} years. If your down payment is under 20%, this includes the mortgage insurance premium.
                   </p>
@@ -315,7 +315,7 @@ export default function Affordability() {
                   <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
                     <div className="bg-white/5 rounded-lg p-4">
                       <span className="text-gray-300 block">Stress Test Rate</span>
-                      <span className="font-semibold text-lg text-gold-400">{formatPercentage(qualRate)}</span>
+                      <span className="font-semibold text-lg text-gold-300">{formatPercentage(qualRate)}</span>
                     </div>
                     <div className="bg-white/5 rounded-lg p-4">
                       <span className="text-gray-300 block">Qualifying P&I</span>
@@ -350,7 +350,7 @@ export default function Affordability() {
                         </span>
                       </div>
                       <div className="w-full bg-gray-700 rounded-full h-3">
-                        <div 
+                        <div
                           className={`h-3 rounded-full transition-all ${gds <= 39 ? 'bg-green-500' : 'bg-red-500'}`}
                           style={{ width: `${Math.min(gds / 39 * 100, 100)}%` }}
                         ></div>
@@ -364,7 +364,7 @@ export default function Affordability() {
                         </span>
                       </div>
                       <div className="w-full bg-gray-700 rounded-full h-3">
-                        <div 
+                        <div
                           className={`h-3 rounded-full transition-all ${tds <= 44 ? 'bg-green-500' : 'bg-red-500'}`}
                           style={{ width: `${Math.min(tds / 44 * 100, 100)}%` }}
                         ></div>
@@ -375,13 +375,13 @@ export default function Affordability() {
 
                 {/* Next Steps */}
                 <div className="flex flex-col sm:flex-row gap-4">
-                  <Link 
+                  <Link
                     href="/contact"
                     className="flex-1 bg-gold-500 text-black font-semibold py-4 px-6 rounded-xl hover:bg-gold-400 transition-colors text-center"
                   >
                     Get Pre-Approved
                   </Link>
-                  <Link 
+                  <Link
                     href="/calculators/pre-approval"
                     className="flex-1 bg-white/10 border border-white/20 font-semibold py-4 px-6 rounded-xl hover:bg-white/20 transition-colors text-center"
                   >

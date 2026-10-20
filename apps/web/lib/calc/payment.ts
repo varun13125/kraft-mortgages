@@ -9,7 +9,9 @@
 
 /** Effective interest rate per payment period, Canadian semi-annual compounding. */
 export function periodicRate(annualRatePct: number, paymentsPerYear = 12): number {
-  return Math.pow(1 + annualRatePct / 200, 2 / paymentsPerYear) - 1;
+  if (!Number.isFinite(annualRatePct) || annualRatePct < 0 ||
+      !Number.isFinite(paymentsPerYear) || paymentsPerYear <= 0) return 0;
+  return Math.expm1(Math.log1p(annualRatePct / 200) * 2 / paymentsPerYear);
 }
 
 /**
@@ -22,7 +24,8 @@ export function periodicRate(annualRatePct: number, paymentsPerYear = 12): numbe
 export function payment({ principal, annualRatePct, amortYears, paymentsPerYear = 12 }: {
   principal: number; annualRatePct: number; amortYears: number; paymentsPerYear?: number;
 }): number {
-  if (!(principal > 0) || !(amortYears > 0)) return 0;
+  if (![principal, annualRatePct, amortYears, paymentsPerYear].every(Number.isFinite) ||
+      !(principal > 0) || !(amortYears > 0) || annualRatePct < 0 || paymentsPerYear <= 0) return 0;
 
   if (paymentsPerYear === 26) {
     return payment({ principal, annualRatePct, amortYears, paymentsPerYear: 12 }) / 2;
@@ -31,7 +34,7 @@ export function payment({ principal, annualRatePct, amortYears, paymentsPerYear 
   const rate = periodicRate(annualRatePct, paymentsPerYear);
   const n = amortYears * paymentsPerYear;
   if (rate === 0) return principal / n;
-  return principal * rate / (1 - Math.pow(1 + rate, -n));
+  return principal * rate / -Math.expm1(-n * Math.log1p(rate));
 }
 
 /**
@@ -41,11 +44,12 @@ export function payment({ principal, annualRatePct, amortYears, paymentsPerYear 
 export function principalFromPayment({ monthlyPayment, annualRatePct, amortYears }: {
   monthlyPayment: number; annualRatePct: number; amortYears: number;
 }) {
-  if (!(monthlyPayment > 0) || !(amortYears > 0)) return 0;
+  if (![monthlyPayment, annualRatePct, amortYears].every(Number.isFinite) ||
+      !(monthlyPayment > 0) || !(amortYears > 0) || annualRatePct < 0) return 0;
   const i = periodicRate(annualRatePct, 12);
   const n = amortYears * 12;
   if (i === 0) return monthlyPayment * n;
-  return monthlyPayment * (1 - Math.pow(1 + i, -n)) / i;
+  return monthlyPayment * -Math.expm1(-n * Math.log1p(i)) / i;
 }
 
 /**
@@ -57,22 +61,38 @@ export function balanceAfter({ principal, annualRatePct, amortYears, monthsElaps
   principal: number; annualRatePct: number; amortYears: number; monthsElapsed: number; monthlyPayment?: number;
 }): { balance: number; interestPaid: number } {
   const pmt = monthlyPayment ?? payment({ principal, annualRatePct, amortYears });
+  if (![principal, annualRatePct, amortYears, monthsElapsed, pmt].every(Number.isFinite) ||
+      principal <= 0 || annualRatePct < 0 || amortYears <= 0 || pmt < 0) {
+    return { balance: 0, interestPaid: 0 };
+  }
   const i = periodicRate(annualRatePct, 12);
   // Stop counting once the loan is paid off (payoff month from the annuity formula)
   const payoffMonths = !(pmt > 0) ? Infinity
     : i === 0 ? principal / pmt
-    : pmt > principal * i ? -Math.log(1 - (principal * i) / pmt) / Math.log(1 + i) : Infinity;
-  const k = Math.min(Math.max(0, monthsElapsed), payoffMonths);
-  const growth = Math.pow(1 + i, k);
-  const raw = i === 0 ? principal - pmt * k : principal * growth - pmt * (growth - 1) / i;
+    : pmt > principal * i ? -Math.log1p(-(principal * i) / pmt) / Math.log1p(i) : Infinity;
+  // Payments occur at month end, including a smaller final payment. A fractional
+  // annuity payoff time understates interest in that last scheduled month.
+  const payoffMonth = Math.ceil(payoffMonths - 1e-9);
+  const requested = Math.max(0, Math.floor(monthsElapsed));
+  const k = Math.min(requested, Math.max(0, payoffMonth - 1));
+  const growthMinusOne = Math.expm1(k * Math.log1p(i));
+  const raw = i === 0 ? principal - pmt * k : principal * (1 + growthMinusOne) - pmt * growthMinusOne / i;
   const balance = Math.max(0, raw);
   const interestPaid = Math.max(0, pmt * k - (principal - balance));
+  if (requested >= payoffMonth) return { balance: 0, interestPaid: interestPaid + balance * i };
   return { balance, interestPaid };
 }
 
 export function biweeklySavings({ principal, annualRatePct, amortYears }: {
   principal: number; annualRatePct: number; amortYears: number;
 }) {
+  // This helper simulates each payment. Bound work even when a non-UI caller
+  // bypasses form limits (Infinity or extreme finite amortization must not loop).
+  if (![principal, annualRatePct, amortYears].every(Number.isFinite) ||
+      principal <= 0 || annualRatePct < 0 || amortYears <= 0 || amortYears > 100) {
+    return { monthly: 0, acceleratedBiweekly: 0, annualSavings: 0,
+      totalInterestSaved: 0, payoffYearsBiweekly: 0, yearsSaved: 0 };
+  }
   const monthly = payment({ principal, annualRatePct, amortYears, paymentsPerYear: 12 });
   const acceleratedBiweekly = monthly / 2;
 

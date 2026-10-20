@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useId } from "react";
 import { AlertTriangle, DollarSign, Percent } from "lucide-react";
 import { validateNumericInput, ValidationRule, formatCurrency } from "@/lib/utils/validation";
 
@@ -26,14 +26,14 @@ export function ValidatedInput({
   className = "",
   help
 }: ValidatedInputProps) {
+  const id = useId();
   const [localValue, setLocalValue] = useState(value.toString());
   const [error, setError] = useState<string | null>(null);
-  const [touched, setTouched] = useState(false);
   const [focused, setFocused] = useState(false);
 
   useEffect(() => {
-    if (!focused) setLocalValue(value.toString());
-  }, [value, focused]);
+    if (!focused && !error) setLocalValue(value.toString());
+  }, [value, focused, error]);
 
   const handleChange = (inputValue: string) => {
     setLocalValue(inputValue);
@@ -41,13 +41,12 @@ export function ValidatedInput({
     if (result.isValid) {
       setError(null);
       onChange(result.value);
-    } else if (touched) {
+    } else {
       setError(result.message || null);
     }
   };
 
   const handleBlur = () => {
-    setTouched(true);
     setFocused(false);
     const result = validateNumericInput(localValue, validation);
     if (!result.isValid) {
@@ -61,8 +60,8 @@ export function ValidatedInput({
 
   const getIcon = () => {
     if (icon) return icon;
-    if (type === 'currency') return <DollarSign className="w-4 h-4 text-gold-400" />;
-    if (type === 'percentage') return <Percent className="w-4 h-4 text-gold-400" />;
+    if (type === 'currency') return <DollarSign className="w-4 h-4 text-gold-300" />;
+    if (type === 'percentage') return <Percent className="w-4 h-4 text-gold-300" />;
     return null;
   };
 
@@ -73,15 +72,18 @@ export function ValidatedInput({
 
   return (
     <div className={className}>
-      <label className="flex items-center gap-2 text-sm font-medium mb-2 text-gray-300">
+      <label htmlFor={id} className="flex items-center gap-2 text-sm font-medium mb-2 text-gray-300">
         {getIcon()}
         <span>{label}</span>
       </label>
       <div className="relative">
         {type === 'currency' && (
-          <span className={`absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-gray-400 transition-colors pointer-events-none ${focused ? 'text-gold-400' : ''}`}>$</span>
+          <span className={`absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 text-gray-400 transition-colors pointer-events-none ${focused ? 'text-gold-300' : ''}`}>$</span>
         )}
         <input
+          id={id}
+          aria-invalid={!!error}
+          aria-describedby={error ? `${id}-error ${id}-value` : help ? `${id}-help` : undefined}
           type="number"
           inputMode="decimal"
           value={localValue}
@@ -111,25 +113,25 @@ export function ValidatedInput({
           step={validation.step}
         />
         {getSuffix() && (
-          <span className={`absolute right-3 sm:right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none transition-colors ${focused ? 'text-gold-400' : ''}`}>
+          <span className={`absolute right-3 sm:right-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none transition-colors ${focused ? 'text-gold-300' : ''}`}>
             {getSuffix()}
           </span>
         )}
       </div>
       {error && (
-        <div className="flex items-center gap-2 mt-2 text-red-400 text-sm">
+        <div id={`${id}-error`} className="flex items-center gap-2 mt-2 text-red-300 text-sm" role="status">
           <AlertTriangle className="w-3.5 h-3.5 flex-shrink-0" />
           <span>{error}</span>
         </div>
       )}
       {error && localValue !== value.toString() && (
         // Invalid entries are never passed to onChange, so make it explicit which value results use
-        <p className="text-xs text-gray-500 mt-1">
+        <p id={`${id}-value`} className="text-xs text-gray-400 mt-1">
           Results are using the last valid value ({type === 'currency' ? formatCurrency(value) : type === 'percentage' ? `${value}%` : value.toLocaleString('en-CA')}).
         </p>
       )}
       {help && !error && (
-        <p className="text-xs text-gray-500 mt-1.5 leading-relaxed">{help}</p>
+        <p id={`${id}-help`} className="text-xs text-gray-400 mt-1.5 leading-relaxed">{help}</p>
       )}
     </div>
   );
@@ -156,14 +158,15 @@ export function ValidatedSlider({
   formatValue,
   className = ""
 }: ValidatedSliderProps) {
+  const id = useId();
   const displayValue = formatValue ? formatValue(value) : value.toString();
   const pct = Math.max(0, Math.min(100, ((value - min) / (max - min)) * 100));
 
   return (
     <div className={className}>
       <div className="flex items-baseline justify-between mb-2.5">
-        <label className="text-sm font-medium text-gray-300">{label}</label>
-        <span className="text-base sm:text-lg font-semibold text-gold-400 tabular-nums">{displayValue}</span>
+        <label htmlFor={id} className="text-sm font-medium text-gray-300">{label}</label>
+        <span className="text-base sm:text-lg font-semibold text-gold-300 tabular-nums">{displayValue}</span>
       </div>
       <div className="relative pt-1 pb-1">
         {/* Track background */}
@@ -174,6 +177,8 @@ export function ValidatedSlider({
           style={{ width: `${pct}%` }}
         />
         <input
+          id={id}
+          aria-valuetext={displayValue}
           type="range"
           min={min}
           max={max}
@@ -183,7 +188,7 @@ export function ValidatedSlider({
           className="kraft-slider relative w-full appearance-none bg-transparent cursor-pointer"
         />
       </div>
-      <div className="flex justify-between text-xs text-gray-500 mt-1 tabular-nums">
+      <div className="flex justify-between text-xs text-gray-400 mt-1 tabular-nums">
         <span>{formatValue ? formatValue(min) : min}</span>
         <span>{formatValue ? formatValue(max) : max}</span>
       </div>

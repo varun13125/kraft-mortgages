@@ -1,0 +1,76 @@
+[
+  {
+    "route": "/calculators/payment",
+    "errors": [],
+    "inputs": [],
+    "scenarios": [],
+    "selects": [],
+    "mobile": {
+      "viewport": 390,
+      "documentWidth": 390,
+      "overflowing": []
+    },
+    "accessibility": [],
+    "status": 200,
+    "loadMs": 21436,
+    "title": "A payment you can plan around.",
+    "canonical": "https://www.kraftmortgages.ca/calculators/payment",
+    "baseline": "Skip to main content\nHome\nRates\nServices\nCalculators\nMLI Select\nAbout\nContact\nBC\nAB\nON\nApply Now\nAll Calculators\nToday's Rates\nTalk to a Broker\nAll calculators\n\nMORTGAGE PLANNING\n\nA payment you can plan around.\n\nUnderstand your monthly payment, the balance at renewal and what accelerated payments could change.\n\nYour mortgage\nMortgage Principal\nInterest Rate (%)\n5-year insured fixed benchmark · as of Oct 19, 2026\n5-Yr Fixed: 4.29%\n3-Yr Fixed: 4.29%\n\nPresets are insured fixed-rate benchmarks. Eligibility, term pricing and your actual offer may differ.\n\nAmortization (Years)\nTerm for balance preview (months)\n\nMONTHLY PAYMENT · PRINCIPAL & INTEREST\n\n$3,793.01\n\n12 payments each year. Build your full housing budget around taxes, insurance, utilities and a reserve as well.\n\nAccelerated biweekly\n$1,896.51\nInterest over 60 months\n$139,999\nBalance after 60 months\n$612,419\nPrincipal repaid by that date\n$87,581\nAccelerated payment illustration\n\nPay half the monthly amount every two weeks. At a constant 4.29% rate, you could save $64,523 in lifetime interest and finish about 3.2 years earlier.\n\nLifetime savings assume the same rate throughout the mortgage. Actual renewal rates, lender rounding and prepayment terms will affect the result.\n\nDownload scenario PDF\nAssumptions, sources & limitations\nA clearer decision starts with the details.\n\nHave an advisor review your quotes and the assumptions behind this estimate.\n\nDiscuss this scenario\n\n18+ Years Combined Experience in complex mortgage solutions across British Columbia, Alberta, and Ontario.\n\nQUICK LINKS\nLive Mortgage Rates\nAbout Us\nServices\nCalculators\nMLI Select\nBlog\nCONTACT\nWhatsApp: +1 (604) 359-5993\n604-593-1550\n604-727-1579\nvarun@kraftmortgages.ca\n#301 1688 152nd Street\nSurrey, BC V4A 4N2\nLEGAL & TRUST\nCompliance & FINTRAC Disclosures\nPrivacy Policy\nTerms of Service\nLICENSED IN\n✓ British Columbia\n✓ Alberta\n✓ Ontario\nBCFSA #SR220230\nRECA LIC-00655428\nFSRA #12918\n© 2026 KRAFT MORTGAGES CANADA INC. · BCFSA #SR220230 · RECA LIC-00655428 · FSRA #12918\nSERVING BC · ALBERTA · ONTARIO\nGet guidance",
+    "baselineBadNumbers": []
+  },
+  {
+    "route": "/calculators/renewal",
+    "errors": [],
+    "inputs": [],
+    "scenarios": [
+      {
+        "input": 0,
+        "type": "toggle",
+        "badNumbers": []
+      }
+    ],
+    "selects": [],
+    "mobile": {
+      "viewport": 390,
+      "documentWidth": 390,
+      "overflowing": []
+    },
+    "accessibility": [],
+    "status": 200,
+    "loadMs": 8694,
+    "title": "Put your renewal offers side by side.",
+    "canonical": "https://www.kraftmortgages.ca/calculators/renewal",
+    "baseline": "Skip to main content\nHome\nRates\nServices\nCalculators\nMLI Select\nAbout\nContact\nBC\nAB\nON\nApply Now\nAll Calculators\nToday's Rates\nTalk to a Broker\nAll calculators\n\nRENEWAL & SWITCHING\n\nPut your renewal offers side by side.\n\nCompare your lender’s quote with two alternatives. See payment relief, total interest, cash costs and the balance you will still owe.\n\nYour comparison\nI am considering breaking my mortgage before renewal\nMortgage balance ($)\nCompare over (months)\nYour lender’s renewal quote\nQuoted renewal rate (%)\nYour lender amortization (years)\nYour lender quoted term (months)\nYour lender cash-paid fees ($)\nYour lender retained cashback ($)\nAmount you keep at the comparison date.\nYour lender other clawbacks ($)\nExclude amounts already deducted from retained cashback.\nOffer A\nOffer A rate (%)\nOffer A amortization (years)\nOffer A quoted term (months)\nOffer A cash-paid fees ($)\nOffer A retained cashback ($)\nAmount you keep at the comparison date.\nOffer A other clawbacks ($)\nExclude amounts already deducted from retained cashback.\nOffer B\nOffer B rate (%)\nOffer B amortization (years)\nOffer B quoted term (months)\nOffer B cash-paid fees ($)\nOffer B retained cashback ($)\nAmount you keep at the comparison date.\nOffer B other clawbacks ($)\nExclude amounts already deducted from retained cashback.\n\nOffer A starts from a conventional 5-year fixed benchmark. Replace it with your actual quote; other rates are examples.\n\nDefault: today's lowest conventional (uninsured) 5-year fixed rate from our live rate feed (as of Oct 19, 2026). Use the rate you were actually offered, or see today's rates.\n\nLOWEST MODELLED COST · 60 MONTHS\n\nOffer A has the lowest cost\n\n$23,505\n\nEstimated saving against your lender, after the cash costs entered. Positive savings do not guarantee approval or account for product flexibility.\n\nYour lender\nMonthly payment\n$2,924\nInterest over 60 months\n$114,361\nNet cash costs\n$0\nInterest + cash costs\n$114,361\nEnding mortgage balance\n$388,939\nSaving against your lender\n$0\nOffer A · Lowest cost\nMonthly payment\n$2,651\nInterest over 60 months\n$90,856\nNet cash costs\n$0\nInterest + cash costs\n$90,856\nEnding mortgage balance\n$381,779\nSaving against your lender\n$23,505\n\nCost recovery: at the start, based on entered incentives. Same balance and no amortization increase; ask about straight-switch eligibility.\n\nOffer B\nMonthly payment\n$2,724\nInterest over 60 months\n$97,245\nNet cash costs\n-$1,500\nInterest + cash costs\n$95,745\nEnding mortgage balance\n$383,788\nSaving against your lender\n$18,616\n\nCost recovery: at the start, based on entered incentives. Same balance and no amortization increase; ask about straight-switch eligibility.\n\nA lower payment can leave more debt outstanding. Compare ending balances as well as cost. Check prepayment rights, portability, collateral charges and cashback conditions.\n\nDownload scenario PDF\nAssumptions, sources & limitations\nA clearer decision starts with the details.\n\nHave an advisor review your quotes and the assumptions behind this estimate.\n\nDiscuss this scenario\n\n18+ Years Combined Experience in complex mortgage solutions across British Columbia, Alberta, and Ontario.\n\nQUICK LINKS\nLive Mortgage Rates\nAbout Us\nServices\nCalculators\nMLI Select\nBlog\nCONTACT\nWhatsApp: +1 (604) 359-5993\n604-593-1550\n604-727-1579\nvarun@kraftmortgages.ca\n#301 1688 152nd Street\nSurrey, BC V4A 4N2\nLEGAL & TRUST\nCompliance & FINTRAC Disclosures\nPrivacy Policy\nTerms of Service\nLICENSED IN\n✓ British Columbia\n✓ Alberta\n✓ Ontario\nBCFSA #SR220230\nRECA LIC-00655428\nFSRA #12918\n© 2026 KRAFT MORTGAGES CANADA INC. · BCFSA #SR220230 · RECA LIC-00655428 · FSRA #12918\nSERVING BC · ALBERTA · ONTARIO\nGet guidance",
+    "baselineBadNumbers": []
+  },
+  {
+    "route": "/mli-select/calculators/deal-sizer",
+    "errors": [],
+    "inputs": [],
+    "scenarios": [
+      {
+        "input": 0,
+        "type": "toggle",
+        "badNumbers": []
+      },
+      {
+        "input": 3,
+        "type": "toggle",
+        "badNumbers": []
+      }
+    ],
+    "selects": [],
+    "mobile": {
+      "viewport": 390,
+      "documentWidth": 390,
+      "overflowing": []
+    },
+    "accessibility": [],
+    "status": 200,
+    "loadMs": 2870,
+    "title": "See how your rental project sizes up.",
+    "canonical": "https://www.kraftmortgages.ca/mli-select/calculators/deal-sizer",
+    "baseline": "Skip to main content\nMLI Select Portal\nHome\nRates\nServices\nCalculators\nMLI Select\nAbout\nContact\nBC\nAB\nON\nApply Now\nMLI Portal\n›\nAll MLI Calculators\nCompare\nChecklist\nAll calculators\n\nCMHC MLI SELECT · STANDARD RENTAL\n\nSee how your rental project sizes up.\n\nConnect program points, leverage and debt coverage in one place. Understand the loan, insurance premium and cash your project may need.\n\nYour rental project\nNew construction (uncheck for an existing property)\nEligible project cost ($)\nAnnual stabilized NOI ($)\nAfter operating expenses and vacancy; before debt service.\nTotal rental units\nAffordable units\nRent must meet CMHC’s market-specific threshold.\nAffordability commitment (years)\nEnergy improvement vs NECB Tier 1 (%)\nUse a qualified energy professional’s assessment.\nAccessibility commitments\nFinancing assumptions\nQuoted fixed rate (%)\n4.5% is an example, not a retail rate or commercial quote.\nRequested amortization (years)\nMinimum debt coverage (x)\nStandard rental floor 1.10x; lender requirements may be higher.\nOther closing costs / reserves ($)\nAdd the insurance premium to the mortgage\n\nESTIMATED BASE LOAN\n\n$19,000,000\n\nLeverage limits this scenario. Base loan excludes insurance; financed premiums are included in the payment and DCR below.\n\nPoints / qualifying tier\n100 / 100\nPoints: affordability / energy / access\n100 / 20 / 20\nAmortization used / tier maximum\n50 years / 50\nBase loan leverage limit (95%)\n$19,000,000\nDCR capacity, including financed premium\n$21,824,604\nInsurance premium (5.775%)\n$1,097,250\nTotal mortgage debt\n$20,097,250\nCash required\n$1,050,000\nMonthly debt service\n$83,714\nDebt coverage\n1.19x\nAnnual cash flow, before tax\n$195,433\nWhat changes the loan?\n\nAt +1 percentage point in rate: $17,736,577 base loan.\nAt 10% lower NOI: $18,569,741 base loan.\n\nPlanning estimate. Lender valuation, stabilized NOI, affordability covenants, energy/accessibility evidence and other underwriting can reduce proceeds or increase required cash.\n\nDownload scenario PDF\nAssumptions, sources & limitations\nA clearer decision starts with the details.\n\nHave an advisor review your quotes and the assumptions behind this estimate.\n\nDiscuss this scenario\n\n18+ Years Combined Experience in complex mortgage solutions across British Columbia, Alberta, and Ontario.\n\nQUICK LINKS\nLive Mortgage Rates\nAbout Us\nServices\nCalculators\nMLI Select\nBlog\nCONTACT\nWhatsApp: +1 (604) 359-5993\n604-593-1550\n604-727-1579\nvarun@kraftmortgages.ca\n#301 1688 152nd Street\nSurrey, BC V4A 4N2\nLEGAL & TRUST\nCompliance & FINTRAC Disclosures\nPrivacy Policy\nTerms of Service\nLICENSED IN\n✓ British Columbia\n✓ Alberta\n✓ Ontario\nBCFSA #SR220230\nRECA LIC-00655428\nFSRA #12918\n© 2026 KRAFT MORTGAGES CANADA INC. · BCFSA #SR220230 · RECA LIC-00655428 · FSRA #12918\nSERVING BC · ALBERTA · ONTARIO\nGet guidance",
+    "baselineBadNumbers": []
+  }
+]

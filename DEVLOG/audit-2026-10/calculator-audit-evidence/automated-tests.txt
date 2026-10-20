@@ -1,0 +1,9 @@
+✔ A-vs-B report builds a valid 4-page PDF (26.9899ms)
+ℹ tests 109
+ℹ suites 0
+ℹ pass 109
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1856.0906

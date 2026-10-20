@@ -66,7 +66,7 @@ test("refinance break-even parity: AI tool == /commercial/calculators/refinance 
   }
 });
 
-test("commercial refinance page defaults: $2,657.72 → $2,278.83, break-even 37 months", () => {
+test("commercial refinance defaults: payment relief $378.89; interest-cost recovery takes 48 months", () => {
   const web = refinanceBreakEven({
     currentBalance: 400000, currentRate: 5.75, remainingTermMonths: 36, remainingAmortizationYears: 22,
     newRate: 4.79, newAmortizationYears: 25,
@@ -76,8 +76,9 @@ test("commercial refinance page defaults: $2,657.72 → $2,278.83, break-even 37
   close(web.monthlySavings, 378.89, 0.01);
   close(web.penalty, 11520, 0.01);
   close(web.totalCosts, 11520 + 2350, 0.01);
-  assert.equal(web.breakEvenMonths, 37);
-  assert.equal(web.isWorthRefinancing, false, "37 months > 36 left in the term");
+  assert.equal(web.breakEvenMonths, 48);
+  close(web.fiveYearSavings, 3167.70, 0.01);
+  assert.equal(web.isWorthRefinancing, false, "48 months > 36 left in the term");
 });
 
 test("cap rate / NOI guards: no Infinity or NaN on zero inputs", () => {

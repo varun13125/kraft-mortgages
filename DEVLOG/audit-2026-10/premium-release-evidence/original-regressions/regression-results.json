@@ -1,0 +1,137 @@
+[
+  {
+    "name": "Payment URL rate can be edited and remains edited",
+    "pass": true
+  },
+  {
+    "name": "Payment matches independent Canadian annuity: $500k / 5% / 25y",
+    "pass": true,
+    "detail": {
+      "expectedMonthly": 2908.0249251850773
+    }
+  },
+  {
+    "name": "Invalid draft remains visible after blur and keeps the previous result",
+    "pass": true
+  },
+  {
+    "name": "Non-finite URL rate is ignored",
+    "pass": true
+  },
+  {
+    "name": "MLI margin means 15% of collected income, not markup on costs",
+    "pass": true,
+    "detail": {
+      "rentPerUnit": 1419.4503122675821,
+      "actualMargin": 0.15
+    }
+  },
+  {
+    "name": "home-equity: zero income cannot produce a positive verdict",
+    "pass": true
+  },
+  {
+    "name": "heloc: zero income cannot produce a positive verdict",
+    "pass": true
+  },
+  {
+    "name": "debt-consolidation: zero income cannot produce a positive verdict",
+    "pass": true
+  },
+  {
+    "name": "Private qualification fails when all income is zero",
+    "pass": true
+  },
+  {
+    "name": "HELOC separates housing GDS from debt TDS and accepts realistic monthly costs",
+    "pass": true
+  },
+  {
+    "name": "Mortgage qualifier requires first-time or new-build status for 30-year insured loan",
+    "pass": true
+  },
+  {
+    "name": "Toronto closing costs include municipal tax and the correct first-time rebate",
+    "pass": true
+  },
+  {
+    "name": "MLI rejects impossible affordable-unit counts",
+    "pass": true
+  },
+  {
+    "name": "Corrupt MLI storage produces a useful message and preserves stored data",
+    "pass": true
+  },
+  {
+    "name": "MLI premium warns when requested terms exceed the selected tier",
+    "pass": true
+  },
+  {
+    "name": "Construction draw add/remove remains functional",
+    "pass": true
+  },
+  {
+    "name": "Visual evidence /",
+    "pass": true,
+    "detail": {
+      "viewport": 390,
+      "documentWidth": 390
+    }
+  },
+  {
+    "name": "Visual evidence /calculators",
+    "pass": true,
+    "detail": {
+      "viewport": 390,
+      "documentWidth": 390
+    }
+  },
+  {
+    "name": "Visual evidence /commercial",
+    "pass": true,
+    "detail": {
+      "viewport": 390,
+      "documentWidth": 390
+    }
+  },
+  {
+    "name": "Visual evidence /construction",
+    "pass": true,
+    "detail": {
+      "viewport": 390,
+      "documentWidth": 390
+    }
+  },
+  {
+    "name": "Visual evidence /equity-lending",
+    "pass": true,
+    "detail": {
+      "viewport": 390,
+      "documentWidth": 390
+    }
+  },
+  {
+    "name": "Visual evidence /mli-select",
+    "pass": true,
+    "detail": {
+      "viewport": 390,
+      "documentWidth": 390
+    }
+  },
+  {
+    "name": "Visual evidence /about",
+    "pass": true,
+    "detail": {
+      "viewport": 390,
+      "documentWidth": 390
+    }
+  },
+  {
+    "name": "Visual evidence /contact",
+    "pass": true,
+    "detail": {
+      "viewport": 390,
+      "documentWidth": 390
+    }
+  }
+]

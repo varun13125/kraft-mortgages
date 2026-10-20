@@ -8,27 +8,22 @@
  */
 
 /** Effective monthly rate for a nominal annual rate compounded semi-annually (Canadian convention). */
-function monthlyRateSemiAnnual(rateAnnual: number) {
-  return Math.pow(1 + rateAnnual / 100 / 2, 2 / 12) - 1;
-}
+import { payment, periodicRate } from "../calc/payment";
 
 /** Monthly payment, Canadian semi-annual compounding (matches lib/calc/payment.ts). */
 export function pmt(rateAnnual: number, years: number, principal: number) {
-  const r = monthlyRateSemiAnnual(rateAnnual);
-  const n = years * 12;
-  if (n <= 0) return 0;
-  return r === 0 ? principal / n : (principal * r) / (1 - Math.pow(1 + r, -n));
+  return payment({ annualRatePct: rateAnnual, amortYears: years, principal });
 }
 
 export function amortizationSchedule(rateAnnual: number, years: number, principal: number) {
-  const r = monthlyRateSemiAnnual(rateAnnual);
-  const n = years * 12;
+  const r = periodicRate(rateAnnual);
+  const n = Number.isFinite(years) && years > 0 && years <= 100 ? Math.round(years * 12) : 0;
   const pay = pmt(rateAnnual, years, principal);
   let bal = principal;
   const rows: { period: number; interest: number; principal: number; balance: number }[] = [];
-  for (let i = 1; i <= n; i++) {
+  for (let i = 1; i <= n && bal > 0.005; i++) {
     const interest = r * bal;
-    const princ = pay - interest;
+    const princ = Math.min(bal, pay - interest);
     bal = Math.max(0, bal - princ);
     rows.push({ period: i, interest, principal: princ, balance: bal });
   }
@@ -198,9 +193,11 @@ export function breakEvenRentPerUnit({
   /** Decimal vacancy/credit-loss allowance, e.g. 0.03. Rent is grossed up so collected rent covers costs. */
   vacancyRate?: number;
 }) {
-  if (units <= 0) return 0;
-  const occupancy = 1 - Math.min(Math.max(vacancyRate, 0), 0.99);
-  const needed = (monthlyDebtService + otherMonthlyOpex) * (1 + targetMargin);
+  if (![units, vacancyRate, targetMargin, monthlyDebtService, otherMonthlyOpex].every(Number.isFinite) ||
+      units <= 0 || vacancyRate < 0 || vacancyRate >= 1 || targetMargin < 0 || targetMargin >= 1) return 0;
+  const occupancy = 1 - vacancyRate;
+  // Margin = profit / revenue, not profit / costs (markup).
+  const needed = (monthlyDebtService + otherMonthlyOpex) / (1 - targetMargin);
   return needed / (units * occupancy);
 }
 

@@ -1,0 +1,66 @@
+{
+  "results": [
+    {
+      "name": "directory searches every public calculator and filters by goal",
+      "pass": true
+    },
+    {
+      "name": "payment preserves URL/manual rate and matches independent Canadian payment",
+      "pass": true
+    },
+    {
+      "name": "renewal uses renewal quote, handles extension, fees, cashback and early-break horizon",
+      "pass": true
+    },
+    {
+      "name": "MLI eligibility suppresses invalid units; financed premium affects sizing and tier caps apply",
+      "pass": true
+    },
+    {
+      "name": "one help launcher, keyboard close, chat focus and voice consent without a call",
+      "pass": false,
+      "error": "Expected values to be strictly deep-equal:\n+ actual - expected\n\n+ [\n+   {\n+     id: 'target-size',\n+     nodes: [\n+       [\n+         '.text-white\\\\/70'\n+       ]\n+     ]\n+   }\n+ ]\n- []\n"
+    },
+    {
+      "name": "payment: PDF reflects current results and downloads without lead capture",
+      "pass": true,
+      "detail": {
+        "bytes": 19482,
+        "result": "$3,793.01"
+      }
+    },
+    {
+      "name": "payment: desktop/mobile accessibility, no overflow and visual capture",
+      "pass": true
+    },
+    {
+      "name": "renewal: PDF reflects current results and downloads without lead capture",
+      "pass": true,
+      "detail": {
+        "bytes": 24720,
+        "result": "$23,505"
+      }
+    },
+    {
+      "name": "renewal: desktop/mobile accessibility, no overflow and visual capture",
+      "pass": true
+    },
+    {
+      "name": "mli-deal: PDF reflects current results and downloads without lead capture",
+      "pass": true,
+      "detail": {
+        "bytes": 21759,
+        "result": "$19,000,000"
+      }
+    },
+    {
+      "name": "mli-deal: desktop/mobile accessibility, no overflow and visual capture",
+      "pass": true
+    },
+    {
+      "name": "no uncaught browser errors",
+      "pass": true
+    }
+  ],
+  "errors": []
+}

@@ -1,4 +1,5 @@
 "use client";
+import CalculatorNumberInput from "@/components/ui/CalculatorNumberInput";
 import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
@@ -10,50 +11,50 @@ export default function ConstructionBudgetCalculator() {
   const [landCost, setLandCost] = useState(500000);
   const [sitePrepCost, setSitePrepCost] = useState(75000);
   const [servicing, setServicing] = useState(50000);
-  
+
   // Construction Costs
   const [hardCosts, setHardCosts] = useState(1200000);
   const [softCosts, setSoftCosts] = useState(150000);
   const [contingency, setContingency] = useState(10); // percentage
-  
+
   // Financing
   const [constructionRate, setConstructionRate] = useState(7.5);
   const [constructionTerm, setConstructionTerm] = useState(12); // months
   const [takeOutRate, setTakeOutRate] = useState(5.75);
   const [ltv, setLtv] = useState(75);
-  
+
   // Timeline
   const [constructionPeriod, setConstructionPeriod] = useState(10); // months
-  
+
   // Calculated values
   const totalLandCosts = landCost + sitePrepCost + servicing;
   const totalConstructionCosts = hardCosts + softCosts;
   const contingencyAmount = (totalConstructionCosts * contingency) / 100;
   const totalProjectCost = totalLandCosts + totalConstructionCosts + contingencyAmount;
-  
+
   // Financing calculations
   // Loan sized as a % of total project cost (loan-to-cost)
   const maxLoanAmount = (totalProjectCost * ltv) / 100;
   const requiredEquity = totalProjectCost - maxLoanAmount;
   const equityPercentage = totalProjectCost > 0 ? (requiredEquity / totalProjectCost) * 100 : 0;
-  
+
   // Construction loan interest (simplified - assumes 50% average advance)
   const averageBalance = maxLoanAmount * 0.5; // Assumes progressive draws
   const monthlyConstructionRate = constructionRate / 100 / 12;
   const constructionInterest = averageBalance * monthlyConstructionRate * constructionPeriod;
-  
+
   // Total project cost including financing
   const totalCostWithFinancing = totalProjectCost + constructionInterest;
-  
+
   // Profitability analysis (if selling)
   const [sellingPrice, setSellingPrice] = useState(2100000);
   const grossProfit = sellingPrice - totalCostWithFinancing;
   const profitMargin = sellingPrice > 0 ? (grossProfit / sellingPrice) * 100 : 0;
-  
+
   // Cash flow timing
   const landEquityRequired = totalLandCosts;
   const constructionEquityRequired = requiredEquity - landEquityRequired;
-  
+
   // Risk assessment
   const isViableProject = profitMargin >= 15 && equityPercentage <= 30;
   const hasAdequateContingency = contingency >= 10;
@@ -62,7 +63,7 @@ export default function ConstructionBudgetCalculator() {
   return (
     <>
       <Navigation />
-      <main className="min-h-screen mt-16">
+      <main className="min-h-screen">
         {/* Breadcrumb */}
         <section className="py-6 px-4 bg-gray-800/30">
           <div className="max-w-6xl mx-auto">
@@ -79,7 +80,7 @@ export default function ConstructionBudgetCalculator() {
         {/* Hero Section */}
         <section className="py-20 px-4">
           <div className="max-w-6xl mx-auto">
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
@@ -104,7 +105,7 @@ export default function ConstructionBudgetCalculator() {
           <div className="max-w-5xl mx-auto">
             <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl shadow-2xl border border-gray-700/50 p-8">
               <h2 className="text-2xl font-semibold text-gray-100 mb-6">Construction Budget Analysis</h2>
-              
+
               <div className="grid gap-8 lg:grid-cols-2">
                 {/* Left Column - Inputs */}
                 <div className="space-y-6">
@@ -116,7 +117,7 @@ export default function ConstructionBudgetCalculator() {
                         <label className="block text-sm font-medium text-gray-200 mb-2">
                           Land Cost
                         </label>
-                        <input
+                        <CalculatorNumberInput aria-label="Land Cost"
                           type="number"
                           value={landCost}
                           onChange={(e) => setLandCost(Number(e.target.value))}
@@ -127,7 +128,7 @@ export default function ConstructionBudgetCalculator() {
                         <label className="block text-sm font-medium text-gray-200 mb-2">
                           Site Preparation
                         </label>
-                        <input
+                        <CalculatorNumberInput aria-label="Site Preparation"
                           type="number"
                           value={sitePrepCost}
                           onChange={(e) => setSitePrepCost(Number(e.target.value))}
@@ -138,7 +139,7 @@ export default function ConstructionBudgetCalculator() {
                         <label className="block text-sm font-medium text-gray-200 mb-2">
                           Servicing & Utilities
                         </label>
-                        <input
+                        <CalculatorNumberInput aria-label="Servicing & Utilities"
                           type="number"
                           value={servicing}
                           onChange={(e) => setServicing(Number(e.target.value))}
@@ -156,7 +157,7 @@ export default function ConstructionBudgetCalculator() {
                         <label className="block text-sm font-medium text-gray-200 mb-2">
                           Hard Costs (Materials & Labor)
                         </label>
-                        <input
+                        <CalculatorNumberInput aria-label="Hard Costs (Materials & Labor)"
                           type="number"
                           value={hardCosts}
                           onChange={(e) => setHardCosts(Number(e.target.value))}
@@ -167,7 +168,7 @@ export default function ConstructionBudgetCalculator() {
                         <label className="block text-sm font-medium text-gray-200 mb-2">
                           Soft Costs (Permits, Professional Fees)
                         </label>
-                        <input
+                        <CalculatorNumberInput aria-label="Soft Costs (Permits, Professional Fees)"
                           type="number"
                           value={softCosts}
                           onChange={(e) => setSoftCosts(Number(e.target.value))}
@@ -178,7 +179,7 @@ export default function ConstructionBudgetCalculator() {
                         <label className="block text-sm font-medium text-gray-200 mb-2">
                           Contingency (%)
                         </label>
-                        <input
+                        <CalculatorNumberInput aria-label="Contingency (%)" max={100}
                           type="number"
                           step="0.5"
                           value={contingency}
@@ -197,7 +198,7 @@ export default function ConstructionBudgetCalculator() {
                         <label className="block text-sm font-medium text-gray-200 mb-2">
                           Construction Rate (%)
                         </label>
-                        <input
+                        <CalculatorNumberInput aria-label="Construction Rate (%)" max={100}
                           type="number"
                           step="0.25"
                           value={constructionRate}
@@ -209,7 +210,7 @@ export default function ConstructionBudgetCalculator() {
                         <label className="block text-sm font-medium text-gray-200 mb-2">
                           Loan-to-Cost (%)
                         </label>
-                        <input
+                        <CalculatorNumberInput aria-label="Loan-to-Cost (%)" max={100}
                           type="number"
                           value={ltv}
                           onChange={(e) => setLtv(Number(e.target.value))}
@@ -220,7 +221,7 @@ export default function ConstructionBudgetCalculator() {
                         <label className="block text-sm font-medium text-gray-200 mb-2">
                           Construction Period (Months)
                         </label>
-                        <input
+                        <CalculatorNumberInput aria-label="Construction Period (Months)" max={120}
                           type="number"
                           value={constructionPeriod}
                           onChange={(e) => setConstructionPeriod(Number(e.target.value))}
@@ -237,7 +238,7 @@ export default function ConstructionBudgetCalculator() {
                       <label className="block text-sm font-medium text-gray-200 mb-2">
                         Expected Selling Price
                       </label>
-                      <input
+                      <CalculatorNumberInput aria-label="Expected Selling Price"
                         type="number"
                         value={sellingPrice}
                         onChange={(e) => setSellingPrice(Number(e.target.value))}
@@ -285,7 +286,7 @@ export default function ConstructionBudgetCalculator() {
                         <div className="text-xl font-bold text-orange-400">
                           ${Math.round(maxLoanAmount).toLocaleString()}
                         </div>
-                        <div className="text-xs text-gray-500">{ltv}% of project cost (LTC)</div>
+                        <div className="text-xs text-gray-400">{ltv}% of project cost (LTC)</div>
                       </div>
 
                       <div className="bg-gray-800/50 rounded-lg p-4">
@@ -293,7 +294,7 @@ export default function ConstructionBudgetCalculator() {
                         <div className="text-xl font-bold text-orange-400">
                           ${Math.round(requiredEquity).toLocaleString()}
                         </div>
-                        <div className="text-xs text-gray-500">{equityPercentage.toFixed(1)}% of total</div>
+                        <div className="text-xs text-gray-400">{equityPercentage.toFixed(1)}% of total</div>
                       </div>
                     </div>
                   </div>
@@ -322,7 +323,7 @@ export default function ConstructionBudgetCalculator() {
                           {profitMargin.toFixed(1)}%
                         </span>
                       </div>
-                      <p className="text-xs text-gray-500 pt-2">
+                      <p className="text-xs text-gray-400 pt-2">
                         Before selling costs (commissions, legal), GST/HST on new housing and income tax. Construction interest
                         assumes a 50% average advance over the build — land advanced up front raises it.
                       </p>
@@ -342,7 +343,7 @@ export default function ConstructionBudgetCalculator() {
                           {isViableProject ? 'Viable Construction Project' : 'Project Requires Review'}
                         </div>
                         <div className="text-sm text-gray-400">
-                          {isViableProject 
+                          {isViableProject
                             ? `Strong profit margin (${profitMargin.toFixed(1)}%) with manageable equity requirement`
                             : `Consider: ${profitMargin < 15 ? 'Low profit margin' : ''} ${equityPercentage > 30 ? 'High equity requirement' : ''}`
                           }
@@ -374,14 +375,14 @@ export default function ConstructionBudgetCalculator() {
 
               {/* Related Calculators */}
               <div className="flex flex-wrap gap-4 justify-center mt-8">
-                <Link 
+                <Link
                   href={"/calculators/payment" as any}
                   className="inline-flex items-center gap-2 px-4 py-2 bg-orange-500/20 text-orange-400 rounded-lg hover:bg-orange-500/30 transition-colors"
                 >
                   <Calculator className="w-4 h-4" />
                   Payment Calculator
                 </Link>
-                <Link 
+                <Link
                   href={"/construction" as any}
                   className="inline-flex items-center gap-2 px-4 py-2 bg-gray-700/50 text-gray-300 rounded-lg hover:bg-gray-700 transition-colors"
                 >

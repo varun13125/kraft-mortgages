@@ -110,16 +110,16 @@ export default function RateComparisonPage() {
     <>
       <CalculatorSchema name="Mortgage Rate Comparison Calculator" description="Compare up to 4 mortgage rates side-by-side and calculate total savings." url="/calculators/rate-comparison" />
       <Navigation />
-      <main className="min-h-screen mt-16">
+      <main className="min-h-screen">
         {/* Breadcrumb */}
         <section className="py-6 px-4 bg-gray-800/30">
           <div className="max-w-6xl mx-auto">
             <div className="flex items-center gap-2 text-sm">
-              <Link href="/" className="text-gray-400 hover:text-gold-400 transition-colors">Home</Link>
+              <Link href="/" className="text-gray-400 hover:text-gold-300 transition-colors">Home</Link>
               <span className="text-gray-600">›</span>
-              <Link href="/calculators" className="text-gray-400 hover:text-gold-400 transition-colors">Calculators</Link>
+              <Link href="/calculators" className="text-gray-400 hover:text-gold-300 transition-colors">Calculators</Link>
               <span className="text-gray-600">›</span>
-              <span className="text-gold-400">Rate Comparison Calculator</span>
+              <span className="text-gold-300">Rate Comparison Calculator</span>
             </div>
           </div>
         </section>
@@ -128,7 +128,7 @@ export default function RateComparisonPage() {
         <section className="py-20 px-4">
           <div className="max-w-6xl mx-auto">
             <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="text-center">
-              <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold bg-gold-500/20 text-gold-400 border border-gold-500/30 mb-6">
+              <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold bg-gold-500/20 text-gold-300 border border-gold-500/30 mb-6">
                 <Percent className="w-4 h-4" />
                 Compare Up to 4 Rates
               </div>
@@ -150,7 +150,7 @@ export default function RateComparisonPage() {
               <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }} className="space-y-8">
                 <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-white/20">
                   <h2 className="text-xl sm:text-2xl font-bold mb-6 flex items-center gap-3">
-                    <Calculator className="w-6 h-6 text-gold-400" />
+                    <Calculator className="w-6 h-6 text-gold-300" />
                     Loan Details
                   </h2>
             {/* PDF Report Download */}
@@ -220,7 +220,7 @@ export default function RateComparisonPage() {
 
                 <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-white/20">
                   <h2 className="text-xl sm:text-2xl font-bold mb-6 flex items-center gap-3">
-                    <BarChart3 className="w-6 h-6 text-gold-400" />
+                    <BarChart3 className="w-6 h-6 text-gold-300" />
                     Rate Inputs
                   </h2>
                   <div className="space-y-5">
@@ -230,7 +230,7 @@ export default function RateComparisonPage() {
                       {ratesDate && (rate1Source === "live" || rate2Source === "live")
                         ? <>Defaults from our live rate feed (as of {ratesDate}): Rate 1 = lowest insured 5-yr fixed, Rate 2 = median insured 5-yr fixed across lenders, Rate 3 = lowest conventional 5-yr fixed, Rate 4 = median conventional 5-yr fixed.{" "}</>
                         : <>Illustrative default rates.{" "}</>}
-                      Enter the quotes you actually have, or <Link href="/rates" className="text-gold-400 hover:underline">see today&apos;s rates</Link>.
+                      Enter the quotes you actually have, or <Link href="/rates" className="text-gold-300 underline underline-offset-4">see today&apos;s rates</Link>.
                     </p>
                     <div className="flex items-center gap-3">
                       <button onClick={() => setShowRate3(!showRate3)} aria-label="Compare a third rate" aria-pressed={showRate3} className={`w-12 h-6 rounded-full transition-all ${showRate3 ? "bg-gold-500" : "bg-gray-600"} relative`}>
@@ -263,7 +263,7 @@ export default function RateComparisonPage() {
                 {/* Savings highlight */}
                 <div className="bg-gradient-to-br from-gold-500/20 to-amber-500/10 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-gold-500/30">
                   <p className="text-sm text-gold-300 font-medium mb-1">Monthly Savings (Best vs Worst Rate)</p>
-                  <p className="text-4xl sm:text-5xl font-bold text-gold-400 mb-2">{formatCurrency(monthlySavings, 0)}<span className="text-xl">/mo</span></p>
+                  <p className="text-4xl sm:text-5xl font-bold text-gold-300 mb-2">{formatCurrency(monthlySavings, 0)}<span className="text-xl">/mo</span></p>
                   <p className="text-sm text-gray-300">Over your {term}-year term, that&apos;s {formatCurrency(monthlySavings * Math.min(term, amortization) * 12, 0)} in payment savings</p>
                 </div>
 
@@ -389,11 +389,11 @@ export default function RateComparisonPage() {
               </ul>
 
               <div className="mt-8">
-                <Link href="/calculators/payment" className="text-gold-400 hover:text-gold-300 underline">Mortgage Payment Calculator</Link>
+                <Link href="/calculators/payment" className="text-gold-300 hover:text-gold-300 underline">Mortgage Payment Calculator</Link>
                 {" · "}
-                <Link href="/calculators/mortgage-penalty" className="text-gold-400 hover:text-gold-300 underline">Mortgage Penalty Calculator</Link>
+                <Link href="/calculators/mortgage-penalty" className="text-gold-300 hover:text-gold-300 underline">Mortgage Penalty Calculator</Link>
                 {" · "}
-                <Link href="/calculators/renewal" className="text-gold-400 hover:text-gold-300 underline">Renewal Calculator</Link>
+                <Link href="/calculators/renewal" className="text-gold-300 hover:text-gold-300 underline">Renewal Calculator</Link>
               </div>
             </div>
           </div>
@@ -408,7 +408,7 @@ export default function RateComparisonPage() {
                 <div key={i} className="bg-white/5 rounded-xl border border-white/10 overflow-hidden">
                   <button onClick={() => setOpenFaq(openFaq === i ? null : i)} className="w-full flex items-center justify-between p-5 text-left">
                     <span className="font-semibold text-gray-200 pr-4">{faq.q}</span>
-                    {openFaq === i ? <ChevronUp className="w-5 h-5 text-gold-400 flex-shrink-0" /> : <ChevronDown className="w-5 h-5 text-gray-400 flex-shrink-0" />}
+                    {openFaq === i ? <ChevronUp className="w-5 h-5 text-gold-300 flex-shrink-0" /> : <ChevronDown className="w-5 h-5 text-gray-400 flex-shrink-0" />}
                   </button>
                   {openFaq === i && (
                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="px-5 pb-5 text-sm text-gray-300 leading-relaxed">

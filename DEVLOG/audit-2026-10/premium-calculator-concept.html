@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Kraft Mortgages · calculator design direction</title><style>
+:root{--ink:#111820;--paper:#f4f0e8;--gold:#c3a477;--muted:#b6bec7;--line:#ffffff24}*{box-sizing:border-box}body{margin:0;background:var(--ink);color:var(--paper);font-family:Arial,sans-serif}a{color:inherit}header{max-width:1280px;margin:auto;padding:30px 48px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line)}.wordmark{font-family:Georgia,serif;font-size:27px;letter-spacing:5px}.wordmark small{display:block;font:9px Arial;letter-spacing:3px;margin-top:7px;color:var(--muted)}nav{display:flex;gap:28px;font-size:13px;color:var(--muted)}.review{max-width:1184px;margin:20px auto 0;font-size:12px;line-height:1.5;color:var(--muted);padding:0 16px}.intro{max-width:1184px;margin:60px auto 36px}.eyebrow{color:var(--gold);font-size:11px;letter-spacing:2px;text-transform:uppercase}h1{font:normal 52px/1.1 Georgia,serif;margin:18px 0}p{line-height:1.7}.intro p{max-width:680px;color:var(--muted);font-size:17px}.workspace{max-width:1184px;margin:auto;display:grid;grid-template-columns:1fr 1fr;border:1px solid #ffffff35;border-radius:14px;overflow:hidden}.inputs{background:var(--paper);color:var(--ink);padding:42px}.inputs h2,.results h2{font-size:12px;letter-spacing:1.5px;text-transform:uppercase;font-weight:normal;margin:0 0 32px}.field{margin:0 0 24px}label{display:block;font-size:13px;margin-bottom:10px;font-weight:bold}.control{display:flex;align-items:center;background:white;border:1px solid #a5a5a0;border-radius:5px;padding:0 16px}.control span{color:#535d65}input,select{font:18px Arial;color:var(--ink);background:transparent;border:0;min-width:0;width:100%;padding:16px 10px;outline-offset:5px}input:focus,select:focus{outline:2px solid #735b35}input[aria-invalid=true]{outline:2px solid #a32929}.help{color:#46515b;font-size:12px;margin-top:8px;line-height:1.5}.meta{border-top:1px solid #11182022;padding-top:18px;font-size:12px;color:#46515b;line-height:1.7}.results{padding:42px;background:#18222c}.rate-source{display:inline-block;font-size:11px;padding:7px 10px;border:1px solid #c3a47770;color:#e5ceb0;border-radius:3px}.primary{padding:30px 0}.primary .label{font-size:13px;color:var(--muted)}.number{font:normal 60px/1.2 Georgia,serif;margin:10px 0;font-variant-numeric:tabular-nums}.number small{font:13px Arial;color:var(--muted)}.detail{display:grid;grid-template-columns:1fr 1fr;gap:25px;padding:24px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}.detail span{display:block;color:var(--muted);font-size:12px;margin-bottom:12px}.detail strong{font-size:21px;font-weight:normal;font-variant-numeric:tabular-nums}.interpretation{font-size:13px;color:#d2d8df;margin:24px 0}.cta{border:0;border-radius:5px;background:var(--gold);color:var(--ink);font-weight:bold;padding:17px 20px;font-size:14px;cursor:pointer;display:block;width:100%}.disclosure{font-size:11px;color:var(--muted);line-height:1.7;margin-top:16px}.status{font-size:12px;color:#922020;min-height:18px;line-height:1.5}.followup{max-width:1184px;margin:30px auto 60px;display:grid;grid-template-columns:1fr 1fr;gap:48px}.followup h3{font:normal 24px Georgia,serif}.followup p{font-size:13px;color:var(--muted)}summary{cursor:pointer;font-size:13px;color:#e5ceb0}details p{font-size:12px!important}footer{max-width:1184px;margin:auto;padding:20px 0 40px;border-top:1px solid var(--line);font-size:11px;color:var(--muted);line-height:1.8}.callout{display:none;padding:16px;background:#24323e;font-size:13px;line-height:1.7}button:focus-visible,summary:focus-visible{outline:2px solid white;outline-offset:4px}@media(max-width:800px){header{padding:22px 20px}nav{display:none}.intro{margin:34px 20px 26px}h1{font-size:36px}.intro p{font-size:15px}.workspace{margin:0 16px;grid-template-columns:1fr}.inputs,.results{padding:26px}.inputs h2,.results h2{margin-bottom:24px}.field{margin-bottom:18px}.number{font-size:49px}.followup{margin:28px 24px;grid-template-columns:1fr;gap:10px}footer{margin:0 24px}.primary{padding:18px 0}.review{padding:0 20px}}@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto}}
+</style></head><body>
+<header><div class="wordmark">KRAFT<small>MORTGAGES CANADA</small></div><nav aria-label="Concept navigation"><span>Personal mortgages</span><span>Commercial & development</span><span>Calculators</span></nav></header>
+<div class="review">LOCAL DESIGN CONCEPT · Illustrative numbers · No lead submission or live rate feed. This review artifact demonstrates hierarchy, colour and interaction; it is not an implemented site redesign.</div>
+<main><section class="intro"><div class="eyebrow">Plan with clarity</div><h1>A clearer view of your mortgage.</h1><p>Explore your payment and the balance at the end of your term, with the assumptions in plain sight.</p></section>
+<section class="workspace" aria-label="Interactive mortgage concept"><div class="inputs"><h2>Your mortgage</h2><div class="field"><label for="principal">Mortgage amount</label><div class="control"><span>$</span><input id="principal" type="number" value="500000" min="1" max="1000000000" step="1000" aria-describedby="status"></div></div><div class="field"><label for="rate">Annual interest rate</label><div class="control"><input id="rate" type="number" value="5" min="0" max="30" step="0.01" aria-describedby="rate-help status"><span>%</span></div><div id="rate-help" class="help">Your example rate. Canadian semi-annual compounding.</div></div><div class="field"><label for="years">Amortization</label><div class="control"><select id="years"><option value="15">15 years</option><option value="20">20 years</option><option value="25" selected>25 years</option><option value="30">30 years</option></select></div></div><div id="status" class="status" role="status"></div><div class="meta">Comparison horizon: 5 years<br>Regular monthly payments · No extra payments<br>Fees and insurance premium excluded from this example</div></div>
+<div class="results"><h2>Your illustration</h2><span class="rate-source">EXAMPLE RATE · EDITABLE</span><div class="primary"><div class="label">Estimated monthly payment</div><div class="number"><span id="monthly">$2,908.02</span> <small>/ month</small></div></div><div class="detail"><div><span>Interest over 5 years</span><strong id="interest">—</strong></div><div><span>Balance after 5 years</span><strong id="balance">—</strong></div></div><p class="interpretation">Your payment includes both principal and interest. The remaining balance shows what you would carry into renewal if these assumptions hold.</p><button class="cta" id="advisor">Discuss this scenario</button><div id="callout" class="callout" role="status">In the proposed site, this opens one advisor panel with phone, WhatsApp and optional AI choices. No message or call has been sent.</div><p class="disclosure">Planning estimate only. A broker would confirm product eligibility, insurance, costs and the available rate before arranging financing.</p></div></section>
+<section class="followup"><div><h3>Understand the result.</h3><p>See the number you need first. Keep rate provenance, costs, eligibility and the next decision close to it.</p></div><div><h3>Clear assumptions.</h3><details><summary>How this example is calculated</summary><p>Monthly rate = (1 + annual rate / 200)^(1/6) − 1. The regular payment amortizes the stated amount over the selected years. A separate monthly ledger calculates the balance and interest over 60 payments. The rate is held constant for that period.</p></details></div></section></main><footer>Review concept for Kraft Mortgages · Proposed design direction, October 2026<br>Real licence disclosures, product conditions and verified business information would be retained in production.</footer>
+<script type="module">
+// Generated from apps/web/lib/calc/payment.ts; the concept uses the shared engine.
+// Standard Canadian amortization formulas. Not financial advice.
+//
+// Canadian fixed-rate mortgages compound interest semi-annually, not in advance
+// (Interest Act, s.6). The effective rate per payment period is therefore
+//   (1 + r/2)^(2/paymentsPerYear) - 1
+// e.g. $500,000 at 5% over 25 years → $2,908.02/month (US-style monthly
+// compounding would give $2,922.95). Variable-rate products are often
+// compounded monthly; these helpers always use the semi-annual convention.
+/** Effective interest rate per payment period, Canadian semi-annual compounding. */
+export function periodicRate(annualRatePct, paymentsPerYear = 12) {
+    if (!Number.isFinite(annualRatePct) || annualRatePct < 0 ||
+        !Number.isFinite(paymentsPerYear) || paymentsPerYear <= 0)
+        return 0;
+    return Math.expm1(Math.log1p(annualRatePct / 200) * 2 / paymentsPerYear);
+}
+/**
+ * Level payment that fully amortizes `principal` over `amortYears`.
+ * - paymentsPerYear 12 / 24 / 52 → regular payment for that frequency.
+ * - paymentsPerYear 26 → ACCELERATED bi-weekly (monthly payment ÷ 2), which is
+ *   what Canadian lenders quote as "accelerated bi-weekly".
+ * Returns 0 for non-positive principal or amortization.
+ */
+export function payment({ principal, annualRatePct, amortYears, paymentsPerYear = 12 }) {
+    if (![principal, annualRatePct, amortYears, paymentsPerYear].every(Number.isFinite) ||
+        !(principal > 0) || !(amortYears > 0) || annualRatePct < 0 || paymentsPerYear <= 0)
+        return 0;
+    if (paymentsPerYear === 26) {
+        return payment({ principal, annualRatePct, amortYears, paymentsPerYear: 12 }) / 2;
+    }
+    const rate = periodicRate(annualRatePct, paymentsPerYear);
+    const n = amortYears * paymentsPerYear;
+    if (rate === 0)
+        return principal / n;
+    return principal * rate / -Math.expm1(-n * Math.log1p(rate));
+}
+/**
+ * Inverse of payment(): the largest principal a given monthly payment can
+ * amortize over `amortYears` (used for "maximum mortgage" calculations).
+ */
+export function principalFromPayment({ monthlyPayment, annualRatePct, amortYears }) {
+    if (![monthlyPayment, annualRatePct, amortYears].every(Number.isFinite) ||
+        !(monthlyPayment > 0) || !(amortYears > 0) || annualRatePct < 0)
+        return 0;
+    const i = periodicRate(annualRatePct, 12);
+    const n = amortYears * 12;
+    if (i === 0)
+        return monthlyPayment * n;
+    return monthlyPayment * -Math.expm1(-n * Math.log1p(i)) / i;
+}
+/**
+ * Outstanding balance after `monthsElapsed` regular monthly payments (closed form),
+ * and the interest paid over those months. Payment defaults to the level payment
+ * for the full amortization. Never returns a negative balance.
+ */
+export function balanceAfter({ principal, annualRatePct, amortYears, monthsElapsed, monthlyPayment }) {
+    const pmt = monthlyPayment ?? payment({ principal, annualRatePct, amortYears });
+    if (![principal, annualRatePct, amortYears, monthsElapsed, pmt].every(Number.isFinite) ||
+        principal <= 0 || annualRatePct < 0 || amortYears <= 0 || pmt < 0) {
+        return { balance: 0, interestPaid: 0 };
+    }
+    const i = periodicRate(annualRatePct, 12);
+    // Stop counting once the loan is paid off (payoff month from the annuity formula)
+    const payoffMonths = !(pmt > 0) ? Infinity
+        : i === 0 ? principal / pmt
+            : pmt > principal * i ? -Math.log1p(-(principal * i) / pmt) / Math.log1p(i) : Infinity;
+    // Payments occur at month end, including a smaller final payment. A fractional
+    // annuity payoff time understates interest in that last scheduled month.
+    const payoffMonth = Math.ceil(payoffMonths - 1e-9);
+    const requested = Math.max(0, Math.floor(monthsElapsed));
+    const k = Math.min(requested, Math.max(0, payoffMonth - 1));
+    const growthMinusOne = Math.expm1(k * Math.log1p(i));
+    const raw = i === 0 ? principal - pmt * k : principal * (1 + growthMinusOne) - pmt * growthMinusOne / i;
+    const balance = Math.max(0, raw);
+    const interestPaid = Math.max(0, pmt * k - (principal - balance));
+    if (requested >= payoffMonth)
+        return { balance: 0, interestPaid: interestPaid + balance * i };
+    return { balance, interestPaid };
+}
+export function biweeklySavings({ principal, annualRatePct, amortYears }) {
+    // This helper simulates each payment. Bound work even when a non-UI caller
+    // bypasses form limits (Infinity or extreme finite amortization must not loop).
+    if (![principal, annualRatePct, amortYears].every(Number.isFinite) ||
+        principal <= 0 || annualRatePct < 0 || amortYears <= 0 || amortYears > 100) {
+        return { monthly: 0, acceleratedBiweekly: 0, annualSavings: 0,
+            totalInterestSaved: 0, payoffYearsBiweekly: 0, yearsSaved: 0 };
+    }
+    const monthly = payment({ principal, annualRatePct, amortYears, paymentsPerYear: 12 });
+    const acceleratedBiweekly = monthly / 2;
+    // Total interest on the regular monthly schedule
+    const rMonthly = periodicRate(annualRatePct, 12);
+    let balanceMonthly = principal;
+    let totalInterestMonthly = 0;
+    const numMonths = amortYears * 12;
+    for (let i = 0; i < numMonths && balanceMonthly > 0.005; i++) {
+        const interest = balanceMonthly * rMonthly;
+        totalInterestMonthly += interest;
+        balanceMonthly = balanceMonthly + interest - Math.min(monthly, balanceMonthly + interest);
+    }
+    // Total interest on the accelerated bi-weekly schedule (pays off early)
+    const rBiweekly = periodicRate(annualRatePct, 26);
+    let balanceBiweekly = principal;
+    let totalInterestBiweekly = 0;
+    let biweeklyPayments = 0;
+    const maxBiweekly = amortYears * 26;
+    for (let i = 0; i < maxBiweekly && balanceBiweekly > 0.005; i++) {
+        const interest = balanceBiweekly * rBiweekly;
+        totalInterestBiweekly += interest;
+        balanceBiweekly = balanceBiweekly + interest - Math.min(acceleratedBiweekly, balanceBiweekly + interest);
+        biweeklyPayments++;
+    }
+    const totalInterestSaved = Math.max(0, totalInterestMonthly - totalInterestBiweekly);
+    // Average interest saved per year of the original amortization (kept for existing callers)
+    const annualSavings = amortYears > 0 ? totalInterestSaved / amortYears : 0;
+    const payoffYearsBiweekly = biweeklyPayments / 26;
+    const yearsSaved = Math.max(0, amortYears - payoffYearsBiweekly);
+    return { monthly, acceleratedBiweekly, annualSavings, totalInterestSaved, payoffYearsBiweekly, yearsSaved };
+}
+
+
+const cad=new Intl.NumberFormat('en-CA',{style:'currency',currency:'CAD',maximumFractionDigits:2});const whole=new Intl.NumberFormat('en-CA',{style:'currency',currency:'CAD',maximumFractionDigits:0});const fields=['principal','rate','years'].map(id=>document.getElementById(id));function update(){const [p,r,y]=fields.map(el=>el.value.trim()===''?NaN:Number(el.value));const valid=[Number.isFinite(p)&&p>0&&p<=1e9,Number.isFinite(r)&&r>=0&&r<=30,Number.isFinite(y)&&y>0&&y<=50];fields.forEach((el,i)=>el.setAttribute('aria-invalid',String(!valid[i])));if(valid.includes(false)){document.getElementById('status').textContent='Check the highlighted field. The last valid result remains visible.';return;}document.getElementById('status').textContent='';const pmt=payment({principal:p,annualRatePct:r,amortYears:y});const projected=balanceAfter({principal:p,annualRatePct:r,amortYears:y,monthsElapsed:60});const balance=projected.balance,interest=projected.interestPaid;document.getElementById('monthly').textContent=cad.format(pmt);document.getElementById('interest').textContent=whole.format(interest);document.getElementById('balance').textContent=whole.format(balance);}fields.forEach(el=>el.addEventListener('input',update));document.getElementById('advisor').addEventListener('click',()=>{document.getElementById('callout').style.display='block';});update();
+</script></body></html>

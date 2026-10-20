@@ -88,15 +88,15 @@ export default function StressTestPage() {
     <>
       <CalculatorSchema name="Mortgage Stress Test Calculator" description="Calculate your qualifying rate and income needed under the OSFI B-20 stress test." url="/calculators/stress-test" />
       <Navigation />
-      <main className="min-h-screen mt-16">
+      <main className="min-h-screen">
         <section className="py-6 px-4 bg-gray-800/30">
           <div className="max-w-6xl mx-auto">
             <div className="flex items-center gap-2 text-sm">
-              <Link href="/" className="text-gray-400 hover:text-gold-400 transition-colors">Home</Link>
+              <Link href="/" className="text-gray-400 hover:text-gold-300 transition-colors">Home</Link>
               <span className="text-gray-600">›</span>
-              <Link href="/calculators" className="text-gray-400 hover:text-gold-400 transition-colors">Calculators</Link>
+              <Link href="/calculators" className="text-gray-400 hover:text-gold-300 transition-colors">Calculators</Link>
               <span className="text-gray-600">›</span>
-              <span className="text-gold-400">Stress Test Calculator</span>
+              <span className="text-gold-300">Stress Test Calculator</span>
             </div>
           </div>
         </section>
@@ -104,7 +104,7 @@ export default function StressTestPage() {
         <section className="py-20 px-4">
           <div className="max-w-6xl mx-auto">
             <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="text-center">
-              <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold bg-gold-500/20 text-gold-400 border border-gold-500/30 mb-6">
+              <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold bg-gold-500/20 text-gold-300 border border-gold-500/30 mb-6">
                 <Shield className="w-4 h-4" />
                 OSFI Qualification
               </div>
@@ -121,7 +121,7 @@ export default function StressTestPage() {
             <div className="grid lg:grid-cols-2 gap-12">
               <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }} className="space-y-8">
                 <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-white/20">
-                  <h2 className="text-xl sm:text-2xl font-bold mb-6 flex items-center gap-3"><Calculator className="w-6 h-6 text-gold-400" /> Property & Mortgage</h2>
+                  <h2 className="text-xl sm:text-2xl font-bold mb-6 flex items-center gap-3"><Calculator className="w-6 h-6 text-gold-300" /> Property & Mortgage</h2>
             {/* PDF Report Download */}
             <div className="mt-4">
               <motion.button
@@ -196,7 +196,7 @@ export default function StressTestPage() {
                 </div>
 
                 <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-white/20">
-                  <h2 className="text-xl font-bold mb-6 flex items-center gap-3"><DollarSign className="w-6 h-6 text-gold-400" /> Monthly Obligations</h2>
+                  <h2 className="text-xl font-bold mb-6 flex items-center gap-3"><DollarSign className="w-6 h-6 text-gold-300" /> Monthly Obligations</h2>
                   <div className="space-y-6">
                     <ValidatedInput label="Annual Property Tax" value={propertyTax} onChange={setPropertyTax} validation={{ min: 0, max: 20000 }} type="currency" />
                     <ValidatedInput label="Annual Heating" value={heat} onChange={setHeat} validation={{ min: 0, max: 5000 }} type="currency" />
@@ -209,12 +209,12 @@ export default function StressTestPage() {
               <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6, delay: 0.2 }} className="space-y-6">
                 <div className="bg-gradient-to-br from-gold-500/20 to-amber-500/10 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-gold-500/30">
                   <p className="text-sm text-gold-300 font-medium mb-1">Income Needed to Qualify</p>
-                  <p className="text-4xl sm:text-5xl font-bold text-gold-400 mb-2">{formatCurrency(incomeNeeded, 0)}/yr</p>
+                  <p className="text-4xl sm:text-5xl font-bold text-gold-300 mb-2">{formatCurrency(incomeNeeded, 0)}/yr</p>
                   <p className="text-sm text-gray-300">Based on stress-tested payment at {stressRate.toFixed(2)}%</p>
                 </div>
 
                 <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-white/20">
-                  <h4 className="font-semibold mb-4 flex items-center gap-2"><TrendingUp className="w-5 h-5 text-gold-400" /> Payment Comparison</h4>
+                  <h4 className="font-semibold mb-4 flex items-center gap-2"><TrendingUp className="w-5 h-5 text-gold-300" /> Payment Comparison</h4>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="bg-white/5 rounded-lg p-4">
                       <span className="text-gray-400 block text-xs">Your Rate</span>
@@ -223,18 +223,18 @@ export default function StressTestPage() {
                     </div>
                     <div className="bg-white/5 rounded-lg p-4">
                       <span className="text-gray-400 block text-xs">Stress Test Rate</span>
-                      <span className="font-semibold text-gold-400 text-lg">{stressRate.toFixed(2)}%</span>
+                      <span className="font-semibold text-gold-300 text-lg">{stressRate.toFixed(2)}%</span>
                       <span className="block text-sm text-gold-300">{formatCurrency(stressPayment, 0)}/mo</span>
                     </div>
                   </div>
                   <div className="mt-4 bg-gold-500/10 rounded-lg p-3 border border-gold-500/20">
                     <span className="text-sm text-gold-300">Monthly budget impact: </span>
-                    <span className="font-semibold text-gold-400">{formatCurrency(stressPayment - regularPayment, 0)}/mo more</span>
+                    <span className="font-semibold text-gold-300">{formatCurrency(stressPayment - regularPayment, 0)}/mo more</span>
                   </div>
                 </div>
 
                 <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-white/20">
-                  <h4 className="font-semibold mb-4 flex items-center gap-2"><Home className="w-5 h-5 text-gold-400" /> Qualification Details</h4>
+                  <h4 className="font-semibold mb-4 flex items-center gap-2"><Home className="w-5 h-5 text-gold-300" /> Qualification Details</h4>
                   <div className="space-y-3 text-sm">
                     <div className="flex justify-between">
                       <span className="text-gray-400">Mortgage Amount{insurancePremium > 0 ? " (incl. insurance)" : ""}</span>
@@ -279,7 +279,7 @@ export default function StressTestPage() {
 
                 <div className="flex flex-col sm:flex-row gap-4">
                   <a href="https://r.mtg-app.com/varun-chaudhry" target="_blank" rel="noopener noreferrer" className="flex-1 bg-gold-500 text-black font-semibold py-4 px-6 rounded-xl hover:bg-gold-400 transition-colors text-center">Get Pre-Approved</a>
-                  <a href="tel:604-593-1550" className="flex-1 bg-white/10 border border-white/20 font-semibold py-4 px-6 rounded-xl hover:bg-white/20 transition-colors text-center">Call 604-593-1550</a>
+                  <a href="tel:604-593-1550" className="flex-1 bg-white/10 border border-white/20 font-semibold py-4 px-6 rounded-xl hover:bg-white/20 transition-colors text-center underline underline-offset-4">Call 604-593-1550</a>
                 </div>
               </motion.div>
             </div>
@@ -309,11 +309,11 @@ export default function StressTestPage() {
               </ul>
 
               <div className="mt-8">
-                <Link href="/calculators/affordability" className="text-gold-400 hover:text-gold-300 underline">Affordability Calculator</Link>
+                <Link href="/calculators/affordability" className="text-gold-300 hover:text-gold-300 underline">Affordability Calculator</Link>
                 {" · "}
-                <Link href="/calculators/payment" className="text-gold-400 hover:text-gold-300 underline">Payment Calculator</Link>
+                <Link href="/calculators/payment" className="text-gold-300 hover:text-gold-300 underline">Payment Calculator</Link>
                 {" · "}
-                <Link href="/calculators/first-time-home-buyer" className="text-gold-400 hover:text-gold-300 underline">First-Time Home Buyer Calculator</Link>
+                <Link href="/calculators/first-time-home-buyer" className="text-gold-300 hover:text-gold-300 underline">First-Time Home Buyer Calculator</Link>
               </div>
             </div>
           </div>
@@ -328,7 +328,7 @@ export default function StressTestPage() {
                 <div key={i} className="bg-white/5 rounded-xl border border-white/10 overflow-hidden">
                   <button onClick={() => setOpenFaq(openFaq === i ? null : i)} className="w-full flex items-center justify-between p-5 text-left">
                     <span className="font-semibold text-gray-200 pr-4">{faq.q}</span>
-                    {openFaq === i ? <ChevronUp className="w-5 h-5 text-gold-400 flex-shrink-0" /> : <ChevronDown className="w-5 h-5 text-gray-400 flex-shrink-0" />}
+                    {openFaq === i ? <ChevronUp className="w-5 h-5 text-gold-300 flex-shrink-0" /> : <ChevronDown className="w-5 h-5 text-gray-400 flex-shrink-0" />}
                   </button>
                   {openFaq === i && (
                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="px-5 pb-5 text-sm text-gray-300 leading-relaxed">{faq.a}</motion.div>

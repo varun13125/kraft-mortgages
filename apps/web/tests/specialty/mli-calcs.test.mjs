@@ -131,8 +131,11 @@ test("breakEvenRentPerUnit grosses rent up for vacancy and target margin", () =>
   const debt = mli.pmt(4.5, 40, 15_000_000);
   const none = mli.breakEvenRentPerUnit({ monthlyDebtService: debt, otherMonthlyOpex: 50_000, units: 100, targetMargin: 0.15 });
   const vac3 = mli.breakEvenRentPerUnit({ monthlyDebtService: debt, otherMonthlyOpex: 50_000, units: 100, targetMargin: 0.15, vacancyRate: 0.03 });
-  close(none, ((debt + 50_000) * 1.15) / 100, 1e-9);
+  close(none, ((debt + 50_000) / 0.85) / 100, 1e-9);
   close(vac3, none / 0.97, 1e-9);
+  const collected = vac3 * 100 * 0.97;
+  close((collected - debt - 50_000) / collected, 0.15, 1e-12);
+  assert.equal(mli.breakEvenRentPerUnit({ monthlyDebtService: 1, otherMonthlyOpex: 1, units: 10, targetMargin: 1 }), 0);
   assert.equal(mli.breakEvenRentPerUnit({ monthlyDebtService: 1, otherMonthlyOpex: 1, units: 0 }), 0);
 });
 

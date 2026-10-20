@@ -1,0 +1,10 @@
+{
+  "results": [
+    {
+      "name": "one help launcher, keyboard close, chat focus and voice consent without a call",
+      "pass": true,
+      "detail": "No call view mounted and all non-GET requests blocked."
+    }
+  ],
+  "errors": []
+}

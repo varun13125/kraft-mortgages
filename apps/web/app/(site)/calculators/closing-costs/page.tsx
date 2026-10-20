@@ -17,14 +17,14 @@ type Province = "BC" | "AB" | "ON";
 // Shared helper (lib/calc/landTransferTax): BC first-time exemption covers only the first
 // $500K (max $8,000) and phases out $835K–$860K; Ontario first-time refund (max $4,000) is
 // now applied; Alberta returns Land Titles fees for the transfer + mortgage registration.
-function landTransferTax(price: number, province: Province, firstTime: boolean, mortgageAmount = 0): number {
-  return sharedLandTransferTax({ price, province, firstTime, mortgageAmount }).total;
+function landTransferTax(price: number, province: Province, firstTime: boolean, mortgageAmount = 0, toronto = false): number {
+  return sharedLandTransferTax({ price, province, firstTime, mortgageAmount, toronto }).total;
 }
 
 /* ── CMHC Premium ───────────────────────────────────── */
 
 // CMHC premium via the shared helper (current schedule, verified 2026-10-13)
-import { cmhcPremium as calcCMHC, premiumPst } from "@/lib/calc/cmhc";
+import { cmhcPremium as calcCMHC, premiumPst, isInsurable } from "@/lib/calc/cmhc";
 import { landTransferTax as sharedLandTransferTax } from "@/lib/calc/landTransferTax";
 import { CalculatorSchema } from "@/components/SEO/CalculatorSchema";
 import { RelatedCalculators } from "@/components/calculators/RelatedCalculators";
@@ -76,6 +76,7 @@ export default function ClosingCostsPage() {
   const [purchasePrice, setPurchasePrice] = useState(700000);
   const [downPaymentPct, setDownPaymentPct] = useState(20);
   const [province, setProvince] = useState<Province>("BC");
+  const [toronto, setToronto] = useState(false);
   const [firstTime, setFirstTime] = useState(true);
   const [propertyType, setPropertyType] = useState<"house" | "condo" | "townhouse">("house");
   const [openFaq, setOpenFaq] = useState<number | null>(null);
@@ -88,8 +89,8 @@ export default function ClosingCostsPage() {
 
   const costs = useMemo((): CostItem[] => {
     const mortgageAmount = Math.max(0, purchasePrice - downPayment) + cmhcFinanced;
-    const ltt = landTransferTax(purchasePrice, province, firstTime, mortgageAmount);
-    const lttWithoutExemption = landTransferTax(purchasePrice, province, false, mortgageAmount);
+    const ltt = landTransferTax(purchasePrice, province, firstTime, mortgageAmount, province === "ON" && toronto);
+    const lttWithoutExemption = landTransferTax(purchasePrice, province, false, mortgageAmount, province === "ON" && toronto);
     const legal = 2000;
     const inspection = 550;
     const titleInsurance = 325;
@@ -118,7 +119,7 @@ export default function ClosingCostsPage() {
       { label: "Utility Connections", amount: utilities },
       { label: "Moving Costs", amount: moving },
     ];
-  }, [purchasePrice, province, firstTime, propertyType, downPayment, cmhcFinanced]);
+  }, [purchasePrice, province, firstTime, propertyType, downPayment, cmhcFinanced, toronto]);
 
   const totalClosing = costs.reduce((s, c) => s + c.amount, 0);
   const totalCash = downPayment + totalClosing;
@@ -128,16 +129,17 @@ export default function ClosingCostsPage() {
       <Navigation />
       <CalculatorSchema name="Closing Costs Calculator" description="Estimate all closing costs including land transfer tax, legal fees, and CMHC insurance." url="/calculators/closing-costs" />
 
-      <main className="min-h-screen mt-16">
+      <main className="min-h-screen">
+        {downPaymentPct < 20 && !isInsurable(purchasePrice, downPayment) && <p role="status" className="mx-auto max-w-6xl p-4 text-amber-200">This purchase does not meet minimum down payment or insured price rules. Closing figures are illustrative; revise the financing before relying on the cash estimate.</p>}
         {/* Breadcrumb */}
         <section className="py-6 px-4 bg-gray-800/30">
           <div className="max-w-6xl mx-auto">
             <div className="flex items-center gap-2 text-sm">
-              <Link href="/" className="text-gray-400 hover:text-gold-400 transition-colors">Home</Link>
+              <Link href="/" className="text-gray-400 hover:text-gold-300 transition-colors">Home</Link>
               <span className="text-gray-600">›</span>
-              <Link href="/calculators" className="text-gray-400 hover:text-gold-400 transition-colors">Calculators</Link>
+              <Link href="/calculators" className="text-gray-400 hover:text-gold-300 transition-colors">Calculators</Link>
               <span className="text-gray-600">›</span>
-              <span className="text-gold-400">Closing Costs Calculator</span>
+              <span className="text-gold-300">Closing Costs Calculator</span>
             </div>
           </div>
         </section>
@@ -146,7 +148,7 @@ export default function ClosingCostsPage() {
         <section className="py-20 px-4">
           <div className="max-w-6xl mx-auto">
             <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="text-center">
-              <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold bg-gold-500/20 text-gold-400 border border-gold-500/30 mb-6">
+              <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold bg-gold-500/20 text-gold-300 border border-gold-500/30 mb-6">
                 <Receipt className="w-4 h-4" />
                 Total Cost Breakdown
               </div>
@@ -168,7 +170,7 @@ export default function ClosingCostsPage() {
               <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }} className="space-y-8">
                 <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-white/20">
                   <h2 className="text-xl sm:text-2xl font-bold mb-6 flex items-center gap-3">
-                    <Calculator className="w-6 h-6 text-gold-400" />
+                    <Calculator className="w-6 h-6 text-gold-300" />
                     Purchase Details
                   </h2>
             {/* PDF Report Download */}
@@ -201,7 +203,7 @@ export default function ClosingCostsPage() {
                         rows: [
                           { label: "Purchase Price", value: "$" + Math.round(purchasePrice).toLocaleString("en-CA") },
                           { label: "Down Payment", value: downPaymentPct + "% (" + "$" + Math.round(downPayment).toLocaleString("en-CA") + ")" },
-                          { label: "Province", value: province },
+                          { label: "Province", value: province + (province === "ON" && toronto ? " — Toronto" : "") },
                           { label: "First-Time Buyer?", value: firstTime ? "Yes" : "No" },
                         ]
                       },
@@ -256,6 +258,7 @@ export default function ClosingCostsPage() {
                       </div>
                     </div>
                     <div>
+                      {province === "ON" && <label className="flex gap-3 mb-4 text-sm text-gray-300"><input type="checkbox" checked={toronto} onChange={e => setToronto(e.target.checked)} />Property is in Toronto (include municipal land transfer tax)</label>}
                       <label className="block text-sm font-medium text-gray-300 mb-2">Property Type</label>
                       <div className="flex gap-2">
                         {(["house", "condo", "townhouse"] as const).map((t) => (
@@ -275,6 +278,7 @@ export default function ClosingCostsPage() {
                     </div>
                     <div className="flex items-center gap-3">
                       <button
+                        aria-label="First-time home buyer" aria-pressed={firstTime}
                         onClick={() => setFirstTime(!firstTime)}
                         className={`w-12 h-6 rounded-full transition-all ${firstTime ? "bg-gold-500" : "bg-gray-600"} relative`}
                       >
@@ -291,7 +295,7 @@ export default function ClosingCostsPage() {
                 {/* Total Closing Costs */}
                 <div className="bg-gradient-to-br from-gold-500/20 to-amber-500/10 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-gold-500/30">
                   <p className="text-sm text-gold-300 font-medium mb-1">Total Closing Costs</p>
-                  <p className="text-4xl sm:text-5xl font-bold text-gold-400 mb-2">
+                  <p className="text-4xl sm:text-5xl font-bold text-gold-300 mb-2">
                     {formatCurrency(totalClosing, 0)}
                   </p>
                   <p className="text-sm text-gray-300">
@@ -312,7 +316,7 @@ export default function ClosingCostsPage() {
                     </div>
                     <div className="flex-1 bg-white/5 rounded-lg p-3">
                       <span className="text-gray-400 block text-xs">Closing Costs</span>
-                      <span className="font-semibold text-gold-400">{formatCurrency(totalClosing, 0)}</span>
+                      <span className="font-semibold text-gold-300">{formatCurrency(totalClosing, 0)}</span>
                     </div>
                   </div>
                 </div>
@@ -320,7 +324,7 @@ export default function ClosingCostsPage() {
                 {/* Itemized Breakdown */}
                 <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-white/20">
                   <h4 className="font-semibold mb-4 flex items-center gap-2">
-                    <FileText className="w-5 h-5 text-gold-400" />
+                    <FileText className="w-5 h-5 text-gold-300" />
                     Cost Breakdown
                   </h4>
                   <div className="space-y-3">
@@ -328,14 +332,14 @@ export default function ClosingCostsPage() {
                       <div key={i} className="flex items-center justify-between">
                         <div className="flex-1">
                           <div className="flex items-center gap-2">
-                            <span className={`text-sm ${item.highlight ? "text-gold-400 font-medium" : "text-gray-300"}`}>
+                            <span className={`text-sm ${item.highlight ? "text-gold-300 font-medium" : "text-gray-300"}`}>
                               {item.label}
                             </span>
                             {item.highlight && (
                               <span className="text-[10px] bg-green-500/20 text-green-400 px-1.5 py-0.5 rounded-full">SAVINGS</span>
                             )}
                           </div>
-                          {item.note && <p className="text-xs text-gray-500 mt-0.5">{item.note}</p>}
+                          {item.note && <p className="text-xs text-gray-400 mt-0.5">{item.note}</p>}
                         </div>
                         <span className={`text-sm font-medium ${item.highlight ? "text-green-400" : "text-gray-200"}`}>
                           {item.amount === 0 ? "Exempt" : formatCurrency(item.amount, 0)}
@@ -345,7 +349,7 @@ export default function ClosingCostsPage() {
                   </div>
                   <div className="border-t border-white/10 mt-4 pt-4 flex justify-between">
                     <span className="font-semibold text-gray-200">Total</span>
-                    <span className="font-bold text-gold-400 text-lg">{formatCurrency(totalClosing, 0)}</span>
+                    <span className="font-bold text-gold-300 text-lg">{formatCurrency(totalClosing, 0)}</span>
                   </div>
                   {cmhcFinanced > 0 && (
                     <div className="mt-3 flex justify-between gap-4 text-xs text-gray-400">
@@ -423,11 +427,11 @@ export default function ClosingCostsPage() {
               </ul>
 
               <div className="mt-8">
-                <Link href="/calculators/affordability" className="text-gold-400 hover:text-gold-300 underline">Affordability Calculator</Link>
+                <Link href="/calculators/affordability" className="text-gold-300 hover:text-gold-300 underline">Affordability Calculator</Link>
                 {" · "}
-                <Link href="/calculators/payment" className="text-gold-400 hover:text-gold-300 underline">Mortgage Payment Calculator</Link>
+                <Link href="/calculators/payment" className="text-gold-300 hover:text-gold-300 underline">Mortgage Payment Calculator</Link>
                 {" · "}
-                <Link href="/calculators/renewal" className="text-gold-400 hover:text-gold-300 underline">Renewal Calculator</Link>
+                <Link href="/calculators/renewal" className="text-gold-300 hover:text-gold-300 underline">Renewal Calculator</Link>
               </div>
             </div>
           </div>
@@ -446,7 +450,7 @@ export default function ClosingCostsPage() {
                   >
                     <span className="font-semibold text-gray-200 pr-4">{faq.q}</span>
                     {openFaq === i ? (
-                      <ChevronUp className="w-5 h-5 text-gold-400 flex-shrink-0" />
+                      <ChevronUp className="w-5 h-5 text-gold-300 flex-shrink-0" />
                     ) : (
                       <ChevronDown className="w-5 h-5 text-gray-400 flex-shrink-0" />
                     )}

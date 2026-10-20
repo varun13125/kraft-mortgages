@@ -195,16 +195,16 @@ export default function RefinanceVsHelocVsSecondPage() {
   return (
     <>
       <Navigation />
-      <main className="min-h-screen mt-16">
+      <main className="min-h-screen">
         {/* Breadcrumb */}
         <section className="py-6 px-4 bg-gray-800/30">
           <div className="max-w-6xl mx-auto">
             <div className="flex items-center gap-2 text-sm">
-              <Link href="/" className="text-gray-400 hover:text-gold-400 transition-colors">Home</Link>
+              <Link href="/" className="text-gray-400 hover:text-gold-300 transition-colors">Home</Link>
               <span className="text-gray-600">›</span>
-              <Link href="/calculators" className="text-gray-400 hover:text-gold-400 transition-colors">Calculators</Link>
+              <Link href="/calculators" className="text-gray-400 hover:text-gold-300 transition-colors">Calculators</Link>
               <span className="text-gray-600">›</span>
-              <span className="text-gold-400">Refinance vs HELOC vs Second Mortgage</span>
+              <span className="text-gold-300">Refinance vs HELOC vs Second Mortgage</span>
             </div>
           </div>
         </section>
@@ -213,7 +213,7 @@ export default function RefinanceVsHelocVsSecondPage() {
         <section className="py-20 px-4">
           <div className="max-w-6xl mx-auto">
             <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="text-center">
-              <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold bg-gold-500/20 text-gold-400 border border-gold-500/30 mb-6">
+              <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold bg-gold-500/20 text-gold-300 border border-gold-500/30 mb-6">
                 <Home className="w-4 h-4" />
                 Equity Access Comparison
               </div>
@@ -235,7 +235,7 @@ export default function RefinanceVsHelocVsSecondPage() {
               <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }} className="space-y-8">
                 <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-white/20">
                   <h2 className="text-xl sm:text-2xl font-bold mb-6 flex items-center gap-3">
-                    <Calculator className="w-6 h-6 text-gold-400" />
+                    <Calculator className="w-6 h-6 text-gold-300" />
                     Your Home Details
                   </h2>
             {/* PDF Report Download */}
@@ -436,12 +436,12 @@ export default function RefinanceVsHelocVsSecondPage() {
                   </div>
                 </div>
 
-                <p className="text-xs text-gray-500">*HELOC and second-mortgage totals include interest on your existing first mortgage, so all three options compare the same total debt. Principal repaid is not counted as a cost.</p>
+                <p className="text-xs text-gray-400">*HELOC and second-mortgage totals include interest on your existing first mortgage, so all three options compare the same total debt. Principal repaid is not counted as a cost.</p>
 
                 {/* Recommendation */}
                 <div className="bg-gold-500/10 backdrop-blur-sm rounded-2xl p-5 border border-gold-500/30">
                   <div className="flex items-center gap-2 mb-2">
-                    <Lightbulb className="w-5 h-5 text-gold-400" />
+                    <Lightbulb className="w-5 h-5 text-gold-300" />
                     <span className="font-bold text-gold-300">Recommendation for {purposeLabels[purpose]}</span>
                   </div>
                   <p className="text-sm text-gray-300">{recommendation}</p>
@@ -549,11 +549,11 @@ export default function RefinanceVsHelocVsSecondPage() {
               </p>
 
               <div className="mt-8">
-                <Link href="/calculators" className="text-gold-400 hover:text-gold-300 underline">All Calculators</Link>
+                <Link href="/calculators" className="text-gold-300 hover:text-gold-300 underline">All Calculators</Link>
                 {" · "}
-                <Link href="/calculators/b-vs-equity" className="text-gold-400 hover:text-gold-300 underline">B-Lender vs Equity Calculator</Link>
+                <Link href="/calculators/b-vs-equity" className="text-gold-300 hover:text-gold-300 underline">B-Lender vs Equity Calculator</Link>
                 {" · "}
-                <Link href="/calculators/closing-costs" className="text-gold-400 hover:text-gold-300 underline">Closing Costs Calculator</Link>
+                <Link href="/calculators/closing-costs" className="text-gold-300 hover:text-gold-300 underline">Closing Costs Calculator</Link>
               </div>
             </div>
           </div>
@@ -589,7 +589,7 @@ export default function RefinanceVsHelocVsSecondPage() {
               </div>
             </div>
             <p className="text-xs text-gray-400 text-center mt-4">
-              {ratesAsOf(liveRates) ? `From our live rate feed, as of ${ratesAsOf(liveRates)}: lowest advertised rate (and the median across lenders where available). ` : "Live benchmarks are loading or unavailable. "}Your rate depends on credit, LTV, property and fees. <Link href="/rates" className="text-gold-400 hover:text-gold-300 underline">See today&apos;s rates</Link> or contact us for current pricing.
+              {ratesAsOf(liveRates) ? `From our live rate feed, as of ${ratesAsOf(liveRates)}: lowest advertised rate (and the median across lenders where available). ` : "Live benchmarks are loading or unavailable. "}Your rate depends on credit, LTV, property and fees. <Link href="/rates" className="text-gold-300 hover:text-gold-300 underline">See today&apos;s rates</Link> or contact us for current pricing.
             </p>
           </div>
         </section>
@@ -603,7 +603,7 @@ export default function RefinanceVsHelocVsSecondPage() {
                 <div key={i} className="bg-white/5 rounded-xl border border-white/10 overflow-hidden">
                   <button onClick={() => setOpenFaq(openFaq === i ? null : i)} className="w-full flex items-center justify-between p-5 text-left">
                     <span className="font-semibold text-gray-200 pr-4">{faq.q}</span>
-                    {openFaq === i ? <ChevronUp className="w-5 h-5 text-gold-400 flex-shrink-0" /> : <ChevronDown className="w-5 h-5 text-gray-400 flex-shrink-0" />}
+                    {openFaq === i ? <ChevronUp className="w-5 h-5 text-gold-300 flex-shrink-0" /> : <ChevronDown className="w-5 h-5 text-gray-400 flex-shrink-0" />}
                   </button>
                   {openFaq === i && (
                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="px-5 pb-5 text-sm text-gray-300 leading-relaxed">

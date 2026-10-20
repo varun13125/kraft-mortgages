@@ -55,7 +55,8 @@ export default function DownPaymentPage() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [customDown, setCustomDown] = useState<number | null>(null);
 
-  const downPayment = customDown ?? minDownPayment(homePrice);
+  const excessDown = customDown !== null && customDown > homePrice;
+  const downPayment = Math.min(homePrice, customDown ?? minDownPayment(homePrice));
   const downPct = (downPayment / homePrice) * 100;
   const needsInsurance = downPayment < homePrice * 0.2;
   const cmhc = cmhcPremium(downPayment, homePrice);
@@ -71,16 +72,16 @@ export default function DownPaymentPage() {
   return (
     <>
       <Navigation />
-      <main className="min-h-screen mt-16">
+      <main className="min-h-screen">
         {/* Breadcrumb */}
         <section className="py-6 px-4 bg-gray-800/30">
           <div className="max-w-6xl mx-auto">
             <div className="flex items-center gap-2 text-sm">
-              <Link href="/" className="text-gray-400 hover:text-gold-400 transition-colors">Home</Link>
+              <Link href="/" className="text-gray-400 hover:text-gold-300 transition-colors">Home</Link>
               <span className="text-gray-600">›</span>
-              <Link href="/calculators" className="text-gray-400 hover:text-gold-400 transition-colors">Calculators</Link>
+              <Link href="/calculators" className="text-gray-400 hover:text-gold-300 transition-colors">Calculators</Link>
               <span className="text-gray-600">›</span>
-              <span className="text-gold-400">Down Payment Calculator</span>
+              <span className="text-gold-300">Down Payment Calculator</span>
             </div>
           </div>
         </section>
@@ -89,7 +90,7 @@ export default function DownPaymentPage() {
         <section className="py-20 px-4">
           <div className="max-w-6xl mx-auto">
             <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="text-center">
-              <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold bg-gold-500/20 text-gold-400 border border-gold-500/30 mb-6">
+              <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold bg-gold-500/20 text-gold-300 border border-gold-500/30 mb-6">
                 <Wallet className="w-4 h-4" />
                 Down Payment Planning
               </div>
@@ -111,7 +112,7 @@ export default function DownPaymentPage() {
               <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }} className="space-y-8">
                 <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-white/20">
                   <h2 className="text-xl sm:text-2xl font-bold mb-6 flex items-center gap-3">
-                    <Calculator className="w-6 h-6 text-gold-400" />
+                    <Calculator className="w-6 h-6 text-gold-300" />
                     Home Details
                   </h2>
             {/* PDF Report Download */}
@@ -205,6 +206,7 @@ export default function DownPaymentPage() {
                         type="currency"
                       />
                     )}
+                    {excessDown && <p role="status" className="text-amber-200">Down payment exceeds the revised price. Results cap it at the purchase price; update your custom amount.</p>}
                     {belowMinimum && (
                       <p className="text-sm text-red-300">
                         This is below the legal minimum of {formatCurrency(minDownPayment(homePrice), 0)}{homePrice >= INSURED_PRICE_CAP ? " — homes priced at $1.5M or more can't be insured and need 20% down" : ""}.
@@ -219,18 +221,18 @@ export default function DownPaymentPage() {
                 {/* Cash to Close */}
                 <div className="bg-gradient-to-br from-gold-500/20 to-amber-500/10 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-gold-500/30">
                   <p className="text-sm text-gold-300 font-medium mb-1">Down Payment Needed</p>
-                  <p className="text-4xl sm:text-5xl font-bold text-gold-400 mb-2">
+                  <p className="text-4xl sm:text-5xl font-bold text-gold-300 mb-2">
                     {formatCurrency(cashToClose, 0)}
                   </p>
                   <p className="text-sm text-gray-300">
-                    {downPct.toFixed(1)}% of {formatCurrency(homePrice, 0)} · plus closing costs (see the <Link href="/calculators/closing-costs" className="text-gold-400 underline">Closing Costs Calculator</Link>)
+                    {downPct.toFixed(1)}% of {formatCurrency(homePrice, 0)} · plus closing costs (see the <Link href="/calculators/closing-costs" className="text-gold-300 underline">Closing Costs Calculator</Link>)
                   </p>
                 </div>
 
                 {/* Visual Breakdown Bar */}
                 <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-white/20">
                   <h4 className="font-semibold mb-4 flex items-center gap-2">
-                    <Home className="w-5 h-5 text-gold-400" />
+                    <Home className="w-5 h-5 text-gold-300" />
                     How Your Home Is Financed
                   </h4>
                   <div className="flex rounded-lg overflow-hidden h-10 mb-4">
@@ -248,7 +250,7 @@ export default function DownPaymentPage() {
                         {cmhcPctOfPrice >= 3 ? `${cmhcPctOfPrice.toFixed(1)}%` : ""}
                       </div>
                     )}
-                    <div className="bg-blue-500 flex-1 flex items-center justify-center text-xs font-bold text-white">
+                    <div className="bg-blue-600 flex-1 flex items-center justify-center text-xs font-bold text-white">
                       Mortgage
                     </div>
                   </div>
@@ -394,15 +396,15 @@ export default function DownPaymentPage() {
               </ul>
 
               <p>
-                With 18+ years of combined experience and over $2 billion in funded mortgages, Kraft Mortgages helps buyers across BC, Alberta, and Ontario navigate down payment strategies and find the best mortgage solutions. Call us at <a href="tel:604-593-1550" className="text-gold-400 hover:text-gold-300">604-593-1550</a> or visit our office at #301 - 1688 152nd Street, Surrey, BC.
+                With 18+ years of combined experience and over $2 billion in funded mortgages, Kraft Mortgages helps buyers across BC, Alberta, and Ontario navigate down payment strategies and find the best mortgage solutions. Call us at <a href="tel:604-593-1550" className="text-gold-300 hover:text-gold-300 underline underline-offset-4">604-593-1550</a> or visit our office at #301 - 1688 152nd Street, Surrey, BC.
               </p>
 
               <div className="mt-8">
-                <Link href="/calculators/affordability" className="text-gold-400 hover:text-gold-300 underline">Affordability Calculator</Link>
+                <Link href="/calculators/affordability" className="text-gold-300 hover:text-gold-300 underline">Affordability Calculator</Link>
                 {" · "}
-                <Link href="/calculators/cmhc-insurance" className="text-gold-400 hover:text-gold-300 underline">CMHC Insurance Calculator</Link>
+                <Link href="/calculators/cmhc-insurance" className="text-gold-300 hover:text-gold-300 underline">CMHC Insurance Calculator</Link>
                 {" · "}
-                <Link href="/calculators/closing-costs" className="text-gold-400 hover:text-gold-300 underline">Closing Costs Calculator</Link>
+                <Link href="/calculators/closing-costs" className="text-gold-300 hover:text-gold-300 underline">Closing Costs Calculator</Link>
               </div>
             </div>
           </div>
@@ -421,7 +423,7 @@ export default function DownPaymentPage() {
                   >
                     <span className="font-semibold text-gray-200 pr-4">{faq.q}</span>
                     {openFaq === i ? (
-                      <ChevronUp className="w-5 h-5 text-gold-400 flex-shrink-0" />
+                      <ChevronUp className="w-5 h-5 text-gold-300 flex-shrink-0" />
                     ) : (
                       <ChevronDown className="w-5 h-5 text-gray-400 flex-shrink-0" />
                     )}

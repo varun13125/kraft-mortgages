@@ -14,37 +14,13 @@ import { RelatedCalculators } from "@/components/calculators/RelatedCalculators"
 import { useLiveRates } from "@/lib/useLiveRates";
 import { liveRate, useLiveDefault } from "../_lib/liveRateDefaults";
 import { LiveRateNote } from "../_lib/LiveRateNote";
-
-/* ── Mortgage Math ──────────────────────────────────── */
-// Canadian fixed-rate convention: semi-annual compounding, monthly rate = (1 + r/2)^(1/6) - 1
-function monthlyRate(annualRate: number): number {
-  return Math.pow(1 + annualRate / 100 / 2, 1 / 6) - 1;
-}
-
-function monthlyPayment(principal: number, annualRate: number, months: number): number {
-  if (principal <= 0 || months <= 0) return 0;
-  const r = monthlyRate(annualRate);
-  if (r === 0) return principal / months;
-  return (principal * r * Math.pow(1 + r, months)) / (Math.pow(1 + r, months) - 1);
-}
-
-// Interest paid over the next `months` months making `payment` each month
-function interestOverMonths(principal: number, annualRate: number, payment: number, months: number): number {
-  const r = monthlyRate(annualRate);
-  let balance = principal;
-  let interest = 0;
-  for (let i = 0; i < months && balance > 0; i++) {
-    const it = balance * r;
-    interest += it;
-    balance = Math.max(0, balance + it - payment);
-  }
-  return interest;
-}
+import { compareRefinance } from "@/lib/calc/refinance";
+import { payment } from "@/lib/calc/payment";
 
 const faqs = [
   {
     q: "What is the break-even point when refinancing?",
-    a: "The break-even point is the number of months it takes for your monthly savings to fully recover the upfront costs of refinancing. If your break-even is 18 months and you plan to stay in the home for 5+ years, refinancing likely makes sense. If you might move within a year, it probably doesn't."
+    a: "The break-even point is the number of months it takes for your interest savings to fully recover the upfront costs of refinancing. If your break-even is 18 months and you plan to stay in the home for 5+ years, refinancing likely makes sense. If you might move within a year, it probably doesn't."
   },
   {
     q: "What's the difference between IRD and 3-month interest penalty?",
@@ -60,7 +36,7 @@ const faqs = [
   },
   {
     q: "How do I minimize my break-even time?",
-    a: "Reduce upfront costs (negotiate legal/appraisal), get penalty estimates from your lender in writing before committing, choose a shorter new term to maximize monthly savings, and avoid rolling all costs into the new mortgage (this increases your balance and interest)."
+    a: "Reduce upfront costs (negotiate legal/appraisal), get penalty estimates from your lender in writing before committing, compare interest costs over the same horizon, and avoid rolling all costs into the new mortgage (this increases your balance and interest)."
   }
 ];
 
@@ -84,41 +60,41 @@ export default function RefinanceBreakEvenPage() {
     // Compare over the new term (capped at the remaining amortization)
     const horizonMonths = Math.min(newTermMonths, remainingMonths);
     // New mortgage keeps the REMAINING AMORTIZATION (the term is only the rate-lock period)
-    const newPayment = monthlyPayment(currentBalance, newRate, remainingMonths);
-    const monthlySavings = currentPayment - newPayment;
     const totalCosts = legalFees + appraisalFees + penaltyEstimate;
-    const breakEvenMonths = monthlySavings > 0 ? Math.ceil(totalCosts / monthlySavings) : Infinity;
+    const comparison = compareRefinance({
+      principal: currentBalance, currentRate, newRate, currentMonthlyPayment: currentPayment,
+      currentAmortYears: remainingMonths / 12, newAmortYears: remainingMonths / 12,
+      horizonMonths, upfrontCosts: totalCosts,
+    });
+    const breakEvenMonths = comparison.breakEvenMonths;
     const breakEvenYears = breakEvenMonths / 12;
 
     // Interest paid over the SAME horizon on each path (current rate + current payment vs new rate + new payment)
-    const currentPathInterest = interestOverMonths(currentBalance, currentRate, currentPayment, horizonMonths);
-    const newPathInterest = interestOverMonths(currentBalance, newRate, newPayment, horizonMonths);
-    const interestSaved = currentPathInterest - newPathInterest;
-    const netSavings = interestSaved - totalCosts;
+    const { newPayment, monthlySavings, interestSaved, netSavings } = comparison;
     // Sanity check on the user's payment vs balance/rate/amortization
-    const impliedCurrentPayment = monthlyPayment(currentBalance, currentRate, remainingMonths);
+    const impliedCurrentPayment = payment({ principal: currentBalance, annualRatePct: currentRate, amortYears: remainingMonths / 12 });
 
     return { newPayment, monthlySavings, totalCosts, breakEvenMonths, breakEvenYears, interestSaved, netSavings, horizonMonths, impliedCurrentPayment };
   }, [currentBalance, currentRate, currentPayment, remainingMonths, newRate, newTermYears, legalFees, appraisalFees, penaltyEstimate]);
 
   const paymentMismatch = results.impliedCurrentPayment > 0 && Math.abs(currentPayment - results.impliedCurrentPayment) / results.impliedCurrentPayment > 0.05;
 
-  const makesSense = results.monthlySavings > 0 && results.breakEvenMonths !== Infinity;
+  const makesSense = results.netSavings > 0 && results.breakEvenMonths <= results.horizonMonths;
 
   return (
     <>
-      <CalculatorSchema name="Refinance Break-Even Calculator" description="Calculate how long it takes to recoup refinance costs from monthly savings." url="/calculators/refinance-break-even" />
+      <CalculatorSchema name="Refinance Break-Even Calculator" description="Calculate how long it takes to recoup refinance costs from interest savings." url="/calculators/refinance-break-even" />
       <Navigation />
-      <main className="min-h-screen mt-16">
+      <main className="min-h-screen">
         {/* Breadcrumb */}
         <section className="py-6 px-4 bg-gray-800/30">
           <div className="max-w-6xl mx-auto">
             <div className="flex items-center gap-2 text-sm">
-              <Link href="/" className="text-gray-400 hover:text-gold-400 transition-colors">Home</Link>
+              <Link href="/" className="text-gray-400 hover:text-gold-300 transition-colors">Home</Link>
               <span className="text-gray-600">›</span>
-              <Link href="/calculators" className="text-gray-400 hover:text-gold-400 transition-colors">Calculators</Link>
+              <Link href="/calculators" className="text-gray-400 hover:text-gold-300 transition-colors">Calculators</Link>
               <span className="text-gray-600">›</span>
-              <span className="text-gold-400">Refinance Break-Even Calculator</span>
+              <span className="text-gold-300">Refinance Break-Even Calculator</span>
             </div>
           </div>
         </section>
@@ -127,7 +103,7 @@ export default function RefinanceBreakEvenPage() {
         <section className="py-20 px-4">
           <div className="max-w-6xl mx-auto">
             <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="text-center">
-              <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold bg-gold-500/20 text-gold-400 border border-gold-500/30 mb-6">
+              <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold bg-gold-500/20 text-gold-300 border border-gold-500/30 mb-6">
                 <TrendingDown className="w-4 h-4" />
                 Refinance Analysis
               </div>
@@ -149,7 +125,7 @@ export default function RefinanceBreakEvenPage() {
               <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }} className="space-y-8">
                 <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-white/20">
                   <h2 className="text-xl sm:text-2xl font-bold mb-6 flex items-center gap-3">
-                    <Calculator className="w-6 h-6 text-gold-400" />
+                    <Calculator className="w-6 h-6 text-gold-300" />
                     Current Mortgage
                   </h2>
             {/* PDF Report Download */}
@@ -194,7 +170,7 @@ export default function RefinanceBreakEvenPage() {
                         title: "Your Results",
                         rows: [
                           { label: "New Monthly Payment", value: "$" + Math.round(results.newPayment).toLocaleString("en-CA"), highlight: true },
-                          { label: "Monthly Savings", value: "$" + Math.round(results.monthlySavings).toLocaleString("en-CA") },
+                          { label: "Monthly Payment Reduction", value: "$" + Math.round(results.monthlySavings).toLocaleString("en-CA") },
                           { label: "Break-Even", value: results.breakEvenMonths === Infinity ? "Never" : results.breakEvenMonths + " months", highlight: true },
                           { label: "Interest Saved (over new term)", value: "$" + Math.round(results.interestSaved).toLocaleString("en-CA") },
                           { label: "Net Savings", value: "$" + Math.round(results.netSavings).toLocaleString("en-CA"), highlight: true },
@@ -222,7 +198,7 @@ export default function RefinanceBreakEvenPage() {
 
                 <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-white/20">
                   <h2 className="text-xl sm:text-2xl font-bold mb-6 flex items-center gap-3">
-                    <DollarSign className="w-6 h-6 text-gold-400" />
+                    <DollarSign className="w-6 h-6 text-gold-300" />
                     New Mortgage & Costs
                   </h2>
                   <div className="space-y-6">
@@ -250,8 +226,8 @@ export default function RefinanceBreakEvenPage() {
               {/* Results */}
               <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6, delay: 0.2 }} className="space-y-6">
                 <div className="bg-gradient-to-br from-gold-500/20 to-amber-500/10 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-gold-500/30">
-                  <p className="text-sm text-gold-300 font-medium mb-1">Monthly Savings</p>
-                  <p className="text-4xl sm:text-5xl font-bold text-gold-400 mb-2">
+                  <p className="text-sm text-gold-300 font-medium mb-1">Monthly Payment Reduction</p>
+                  <p className="text-4xl sm:text-5xl font-bold text-gold-300 mb-2">
                     {formatCurrency(results.monthlySavings, 0)}
                   </p>
                   <p className="text-sm text-gray-300">
@@ -262,7 +238,7 @@ export default function RefinanceBreakEvenPage() {
                 {/* Break Even */}
                 <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-white/20">
                   <h4 className="font-semibold mb-4 flex items-center gap-2">
-                    <Clock className="w-5 h-5 text-gold-400" />
+                    <Clock className="w-5 h-5 text-gold-300" />
                     Break-Even Analysis
                   </h4>
                   <div className="grid grid-cols-2 gap-4">
@@ -287,7 +263,7 @@ export default function RefinanceBreakEvenPage() {
                       </span>
                     </div>
                   </div>
-                  <p className="text-xs text-gray-500 mt-3">Estimates only. New payment keeps your remaining amortization; savings compare interest paid over the new term at each rate (semi-annual compounding). Confirm your actual penalty with your lender.</p>
+                  <p className="text-xs text-gray-400 mt-3">Estimates only. New payment keeps your remaining amortization; savings compare interest paid over the new term at each rate (semi-annual compounding). Confirm your actual penalty with your lender.</p>
                 </div>
 
                 {/* Recommendation */}
@@ -312,7 +288,7 @@ export default function RefinanceBreakEvenPage() {
                 {/* CTA */}
                 <div className="flex flex-col sm:flex-row gap-4">
                   <a href="https://r.mtg-app.com/varun-chaudhry" target="_blank" rel="noopener noreferrer" className="flex-1 bg-gold-500 text-black font-semibold py-4 px-6 rounded-xl hover:bg-gold-400 transition-colors text-center">Get Refinance Options</a>
-                  <a href="tel:604-593-1550" className="flex-1 bg-white/10 border border-white/20 font-semibold py-4 px-6 rounded-xl hover:bg-white/20 transition-colors text-center">Call 604-593-1550</a>
+                  <a href="tel:604-593-1550" className="flex-1 bg-white/10 border border-white/20 font-semibold py-4 px-6 rounded-xl hover:bg-white/20 transition-colors text-center underline underline-offset-4">Call 604-593-1550</a>
                 </div>
               </motion.div>
             </div>
@@ -344,11 +320,11 @@ export default function RefinanceBreakEvenPage() {
               <p>With 18+ years of combined experience and over $2 billion in funded mortgages, Kraft Mortgages has helped thousands of homeowners evaluate refinancing decisions. We compare offers from 40+ lenders to find the best rate and terms for your specific situation.</p>
 
               <div className="mt-8">
-                <Link href="/calculators/mortgage-penalty" className="text-gold-400 hover:text-gold-300 underline">Mortgage Penalty Calculator</Link>
+                <Link href="/calculators/mortgage-penalty" className="text-gold-300 hover:text-gold-300 underline">Mortgage Penalty Calculator</Link>
                 {" · "}
-                <Link href="/calculators/payment" className="text-gold-400 hover:text-gold-300 underline">Payment Calculator</Link>
+                <Link href="/calculators/payment" className="text-gold-300 hover:text-gold-300 underline">Payment Calculator</Link>
                 {" · "}
-                <Link href="/calculators/closing-costs" className="text-gold-400 hover:text-gold-300 underline">Closing Costs Calculator</Link>
+                <Link href="/calculators/closing-costs" className="text-gold-300 hover:text-gold-300 underline">Closing Costs Calculator</Link>
               </div>
             </div>
           </div>
@@ -363,7 +339,7 @@ export default function RefinanceBreakEvenPage() {
                 <div key={i} className="bg-white/5 rounded-xl border border-white/10 overflow-hidden">
                   <button onClick={() => setOpenFaq(openFaq === i ? null : i)} className="w-full flex items-center justify-between p-5 text-left">
                     <span className="font-semibold text-gray-200 pr-4">{faq.q}</span>
-                    {openFaq === i ? <ChevronUp className="w-5 h-5 text-gold-400 flex-shrink-0" /> : <ChevronDown className="w-5 h-5 text-gray-400 flex-shrink-0" />}
+                    {openFaq === i ? <ChevronUp className="w-5 h-5 text-gold-300 flex-shrink-0" /> : <ChevronDown className="w-5 h-5 text-gray-400 flex-shrink-0" />}
                   </button>
                   {openFaq === i && (
                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="px-5 pb-5 text-sm text-gray-300 leading-relaxed">{faq.a}</motion.div>

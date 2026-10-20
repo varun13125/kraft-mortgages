@@ -23,10 +23,10 @@ export function validateNumericInput(
   value: string | number,
   rules: ValidationRule = {}
 ): ValidationResult {
-  const numValue = typeof value === 'string' ? parseFloat(value) : value;
+  const numValue = typeof value === 'string' && value.trim() === '' ? NaN : Number(value);
   
   // Check if value is a valid number
-  if (isNaN(numValue)) {
+  if (!Number.isFinite(numValue)) {
     return {
       isValid: false,
       message: rules.message || 'Please enter a valid number',

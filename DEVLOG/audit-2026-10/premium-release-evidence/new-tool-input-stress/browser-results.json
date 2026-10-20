@@ -1,0 +1,1632 @@
+[
+  {
+    "route": "/calculators/payment",
+    "errors": [],
+    "inputs": [
+      {
+        "type": "number",
+        "value": "700000",
+        "min": "1",
+        "max": "1000000000",
+        "step": "any",
+        "name": "Mortgage Principal",
+        "nearby": "Your mortgageMortgage PrincipalInterest Rate (%)Illustrative rate5-Yr Fixed: 4.39%3-Yr Fixed: 4.34%Presets are insured fixed-rate benchmarks. Eligibility, term pricing and your act"
+      },
+      {
+        "type": "number",
+        "value": "4.39",
+        "min": "0",
+        "max": "30",
+        "step": "any",
+        "name": "Interest Rate (%)",
+        "nearby": "Your mortgageMortgage PrincipalInterest Rate (%)Illustrative rate5-Yr Fixed: 4.39%3-Yr Fixed: 4.34%Presets are insured fixed-rate benchmarks. Eligibility, term pricing and your act"
+      },
+      {
+        "type": "number",
+        "value": "25",
+        "min": "1",
+        "max": "50",
+        "step": "any",
+        "name": "Amortization (Years)",
+        "nearby": "Your mortgageMortgage PrincipalInterest Rate (%)Your rate5-Yr Fixed: 4.39%3-Yr Fixed: 4.34%Presets are insured fixed-rate benchmarks. Eligibility, term pricing and your actual offe"
+      },
+      {
+        "type": "number",
+        "value": "60",
+        "min": "1",
+        "max": "120",
+        "step": "1",
+        "name": "Term for balance preview (months)",
+        "nearby": "Your mortgageMortgage PrincipalInterest Rate (%)Your rate5-Yr Fixed: 4.29%3-Yr Fixed: 4.29%Presets are insured fixed-rate benchmarks. Eligibility, term pricing and your actual offe"
+      }
+    ],
+    "scenarios": [
+      {
+        "input": 0,
+        "value": "700001",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": []
+      },
+      {
+        "input": 0,
+        "value": "",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Please enter a valid number. Results use the last valid value (700000)."
+        ]
+      },
+      {
+        "input": 0,
+        "value": "-1",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Minimum value is 1. Results use the last valid value (700000)."
+        ]
+      },
+      {
+        "input": 0,
+        "value": "1e12",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Maximum value is 1,000,000,000. Results use the last valid value (700000)."
+        ]
+      },
+      {
+        "input": 1,
+        "value": "5.39",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": []
+      },
+      {
+        "input": 1,
+        "value": "",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Please enter a valid number. Results use the last valid value (4.39)."
+        ]
+      },
+      {
+        "input": 1,
+        "value": "-1",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Minimum value is 0. Results use the last valid value (4.39)."
+        ]
+      },
+      {
+        "input": 1,
+        "value": "1e12",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Maximum value is 30. Results use the last valid value (4.39)."
+        ]
+      },
+      {
+        "input": 2,
+        "value": "26",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": []
+      },
+      {
+        "input": 2,
+        "value": "",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Please enter a valid number. Results use the last valid value (25)."
+        ]
+      },
+      {
+        "input": 2,
+        "value": "-1",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Minimum value is 1. Results use the last valid value (25)."
+        ]
+      },
+      {
+        "input": 2,
+        "value": "1e12",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Maximum value is 50. Results use the last valid value (25)."
+        ]
+      },
+      {
+        "input": 3,
+        "value": "61",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": []
+      },
+      {
+        "input": 3,
+        "value": "",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Please enter a valid number. Results use the last valid value (60)."
+        ]
+      },
+      {
+        "input": 3,
+        "value": "-1",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Minimum value is 1. Results use the last valid value (60)."
+        ]
+      },
+      {
+        "input": 3,
+        "value": "1e12",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Maximum value is 120. Results use the last valid value (60)."
+        ]
+      }
+    ],
+    "selects": [],
+    "mobile": {
+      "viewport": 390,
+      "documentWidth": 390,
+      "overflowing": []
+    },
+    "accessibility": [],
+    "status": 200,
+    "loadMs": 20550,
+    "title": "A payment you can plan around.",
+    "canonical": "https://www.kraftmortgages.ca/calculators/payment",
+    "baseline": "Skip to main content\nHome\nRates\nServices\nCalculators\nMLI Select\nAbout\nContact\nBC\nAB\nON\nApply Now\nAll Calculators\nToday's Rates\nTalk to a Broker\nAll calculators\n\nMORTGAGE PLANNING\n\nA payment you can plan around.\n\nUnderstand your monthly payment, the balance at renewal and what accelerated payments could change.\n\nYour mortgage\nMortgage Principal\nInterest Rate (%)\nIllustrative rate\n5-Yr Fixed: 4.39%\n3-Yr Fixed: 4.34%\n\nPresets are insured fixed-rate benchmarks. Eligibility, term pricing and your actual offer may differ.\n\nAmortization (Years)\nTerm for balance preview (months)\n\nMONTHLY PAYMENT · PRINCIPAL & INTEREST\n\n$3,831.62\n\n12 payments each year. Build your full housing budget around taxes, insurance, utilities and a reserve as well.\n\nAccelerated biweekly\n$1,915.81\nInterest over 60 months\n$143,347\nBalance after 60 months\n$613,450\nPrincipal repaid by that date\n$86,550\nAccelerated payment illustration\n\nPay half the monthly amount every two weeks. At a constant 4.39% rate, you could save $67,147 in lifetime interest and finish about 3.3 years earlier.\n\nLifetime savings assume the same rate throughout the mortgage. Actual renewal rates, lender rounding and prepayment terms will affect the result.\n\nDownload scenario PDF\nAssumptions, sources & limitations\nA clearer decision starts with the details.\n\nHave an advisor review your quotes and the assumptions behind this estimate.\n\nDiscuss this scenario\n\n18+ Years Combined Experience in complex mortgage solutions across British Columbia, Alberta, and Ontario.\n\nQUICK LINKS\nLive Mortgage Rates\nAbout Us\nServices\nCalculators\nMLI Select\nBlog\nCONTACT\nWhatsApp: +1 (604) 359-5993\n604-593-1550\n604-727-1579\nvarun@kraftmortgages.ca\n#301 1688 152nd Street\nSurrey, BC V4A 4N2\nLEGAL & TRUST\nCompliance & FINTRAC Disclosures\nPrivacy Policy\nTerms of Service\nLICENSED IN\n✓ British Columbia\n✓ Alberta\n✓ Ontario\nBCFSA #SR220230\nRECA LIC-00655428\nFSRA #12918\n© 2026 KRAFT MORTGAGES CANADA INC. · BCFSA #SR220230 · RECA LIC-00655428 · FSRA #12918\nSERVING BC · ALBERTA · ONTARIO\nGet guidance",
+    "baselineBadNumbers": []
+  },
+  {
+    "route": "/calculators/renewal",
+    "errors": [],
+    "inputs": [
+      {
+        "type": "number",
+        "value": "450000",
+        "min": "1",
+        "max": "1000000000",
+        "step": "any",
+        "name": "Mortgage balance ($)",
+        "nearby": "Mortgage balance ($)Compare over (months)"
+      },
+      {
+        "type": "number",
+        "value": "60",
+        "min": "1",
+        "max": "120",
+        "step": "1",
+        "name": "Compare over (months)",
+        "nearby": "Mortgage balance ($)Compare over (months)"
+      },
+      {
+        "type": "number",
+        "value": "5.49",
+        "min": "0",
+        "max": "30",
+        "step": "any",
+        "name": "Quoted renewal rate (%)",
+        "nearby": "Quoted renewal rate (%)Your lender amortization (years)Your lender quoted term (months)Your lender cash-paid fees ($)Your lender retained cashback ($)Amount you keep at the compari"
+      },
+      {
+        "type": "number",
+        "value": "22",
+        "min": "1",
+        "max": "50",
+        "step": "any",
+        "name": "Your lender amortization (years)",
+        "nearby": "Quoted renewal rate (%)Your lender amortization (years)Your lender quoted term (months)Your lender cash-paid fees ($)Your lender retained cashback ($)Amount you keep at the compari"
+      },
+      {
+        "type": "number",
+        "value": "60",
+        "min": "1",
+        "max": "120",
+        "step": "1",
+        "name": "Your lender quoted term (months)",
+        "nearby": "Quoted renewal rate (%)Your lender amortization (years)Your lender quoted term (months)Your lender cash-paid fees ($)Your lender retained cashback ($)Amount you keep at the compari"
+      },
+      {
+        "type": "number",
+        "value": "0",
+        "min": "0",
+        "max": "1000000000",
+        "step": "any",
+        "name": "Your lender cash-paid fees ($)",
+        "nearby": "Quoted renewal rate (%)Your lender amortization (years)Your lender quoted term (months)Your lender cash-paid fees ($)Your lender retained cashback ($)Amount you keep at the compari"
+      },
+      {
+        "type": "number",
+        "value": "0",
+        "min": "0",
+        "max": "1000000000",
+        "step": "any",
+        "name": "Your lender retained cashback ($)",
+        "nearby": "Quoted renewal rate (%)Your lender amortization (years)Your lender quoted term (months)Your lender cash-paid fees ($)Your lender retained cashback ($)Amount you keep at the compari"
+      },
+      {
+        "type": "number",
+        "value": "0",
+        "min": "0",
+        "max": "1000000000",
+        "step": "any",
+        "name": "Your lender other clawbacks ($)",
+        "nearby": "Quoted renewal rate (%)Your lender amortization (years)Your lender quoted term (months)Your lender cash-paid fees ($)Your lender retained cashback ($)Amount you keep at the compari"
+      },
+      {
+        "type": "number",
+        "value": "4.39",
+        "min": "0",
+        "max": "30",
+        "step": "any",
+        "name": "Offer A rate (%)",
+        "nearby": "Offer A rate (%)Offer A amortization (years)Offer A quoted term (months)Offer A cash-paid fees ($)Offer A retained cashback ($)Amount you keep at the comparison date.Offer A other "
+      },
+      {
+        "type": "number",
+        "value": "22",
+        "min": "1",
+        "max": "50",
+        "step": "any",
+        "name": "Offer A amortization (years)",
+        "nearby": "Offer A rate (%)Offer A amortization (years)Offer A quoted term (months)Offer A cash-paid fees ($)Offer A retained cashback ($)Amount you keep at the comparison date.Offer A other "
+      },
+      {
+        "type": "number",
+        "value": "60",
+        "min": "1",
+        "max": "120",
+        "step": "1",
+        "name": "Offer A quoted term (months)",
+        "nearby": "Offer A rate (%)Offer A amortization (years)Offer A quoted term (months)Offer A cash-paid fees ($)Offer A retained cashback ($)Amount you keep at the comparison date.Offer A other "
+      },
+      {
+        "type": "number",
+        "value": "0",
+        "min": "0",
+        "max": "1000000000",
+        "step": "any",
+        "name": "Offer A cash-paid fees ($)",
+        "nearby": "Offer A rate (%)Offer A amortization (years)Offer A quoted term (months)Offer A cash-paid fees ($)Offer A retained cashback ($)Amount you keep at the comparison date.Offer A other "
+      },
+      {
+        "type": "number",
+        "value": "0",
+        "min": "0",
+        "max": "1000000000",
+        "step": "any",
+        "name": "Offer A retained cashback ($)",
+        "nearby": "Offer A rate (%)Offer A amortization (years)Offer A quoted term (months)Offer A cash-paid fees ($)Offer A retained cashback ($)Amount you keep at the comparison date.Offer A other "
+      },
+      {
+        "type": "number",
+        "value": "0",
+        "min": "0",
+        "max": "1000000000",
+        "step": "any",
+        "name": "Offer A other clawbacks ($)",
+        "nearby": "Offer A rate (%)Offer A amortization (years)Offer A quoted term (months)Offer A cash-paid fees ($)Offer A retained cashback ($)Amount you keep at the comparison date.Offer A other "
+      },
+      {
+        "type": "number",
+        "value": "4.69",
+        "min": "0",
+        "max": "30",
+        "step": "any",
+        "name": "Offer B rate (%)",
+        "nearby": "Offer B rate (%)Offer B amortization (years)Offer B quoted term (months)Offer B cash-paid fees ($)Offer B retained cashback ($)Amount you keep at the comparison date.Offer B other "
+      },
+      {
+        "type": "number",
+        "value": "22",
+        "min": "1",
+        "max": "50",
+        "step": "any",
+        "name": "Offer B amortization (years)",
+        "nearby": "Offer B rate (%)Offer B amortization (years)Offer B quoted term (months)Offer B cash-paid fees ($)Offer B retained cashback ($)Amount you keep at the comparison date.Offer B other "
+      },
+      {
+        "type": "number",
+        "value": "60",
+        "min": "1",
+        "max": "120",
+        "step": "1",
+        "name": "Offer B quoted term (months)",
+        "nearby": "Offer B rate (%)Offer B amortization (years)Offer B quoted term (months)Offer B cash-paid fees ($)Offer B retained cashback ($)Amount you keep at the comparison date.Offer B other "
+      },
+      {
+        "type": "number",
+        "value": "0",
+        "min": "0",
+        "max": "1000000000",
+        "step": "any",
+        "name": "Offer B cash-paid fees ($)",
+        "nearby": "Offer B rate (%)Offer B amortization (years)Offer B quoted term (months)Offer B cash-paid fees ($)Offer B retained cashback ($)Amount you keep at the comparison date.Offer B other "
+      },
+      {
+        "type": "number",
+        "value": "1500",
+        "min": "0",
+        "max": "1000000000",
+        "step": "any",
+        "name": "Offer B retained cashback ($)",
+        "nearby": "Offer B rate (%)Offer B amortization (years)Offer B quoted term (months)Offer B cash-paid fees ($)Offer B retained cashback ($)Amount you keep at the comparison date.Offer B other "
+      },
+      {
+        "type": "number",
+        "value": "0",
+        "min": "0",
+        "max": "1000000000",
+        "step": "any",
+        "name": "Offer B other clawbacks ($)",
+        "nearby": "Offer B rate (%)Offer B amortization (years)Offer B quoted term (months)Offer B cash-paid fees ($)Offer B retained cashback ($)Amount you keep at the comparison date.Offer B other "
+      }
+    ],
+    "scenarios": [
+      {
+        "input": 0,
+        "value": "450001",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": []
+      },
+      {
+        "input": 0,
+        "value": "",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Please enter a valid number. Results use the last valid value (450000)."
+        ]
+      },
+      {
+        "input": 0,
+        "value": "-1",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Minimum value is 1. Results use the last valid value (450000)."
+        ]
+      },
+      {
+        "input": 0,
+        "value": "1e12",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Maximum value is 1,000,000,000. Results use the last valid value (450000)."
+        ]
+      },
+      {
+        "input": 1,
+        "value": "61",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": []
+      },
+      {
+        "input": 1,
+        "value": "",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Please enter a valid number. Results use the last valid value (60)."
+        ]
+      },
+      {
+        "input": 1,
+        "value": "-1",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Minimum value is 1. Results use the last valid value (60)."
+        ]
+      },
+      {
+        "input": 1,
+        "value": "1e12",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Maximum value is 120. Results use the last valid value (60)."
+        ]
+      },
+      {
+        "input": 2,
+        "value": "6.49",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": []
+      },
+      {
+        "input": 2,
+        "value": "",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Please enter a valid number. Results use the last valid value (5.49)."
+        ]
+      },
+      {
+        "input": 2,
+        "value": "-1",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Minimum value is 0. Results use the last valid value (5.49)."
+        ]
+      },
+      {
+        "input": 2,
+        "value": "1e12",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Maximum value is 30. Results use the last valid value (5.49)."
+        ]
+      },
+      {
+        "input": 3,
+        "value": "23",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": []
+      },
+      {
+        "input": 3,
+        "value": "",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Please enter a valid number. Results use the last valid value (22)."
+        ]
+      },
+      {
+        "input": 3,
+        "value": "-1",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Minimum value is 1. Results use the last valid value (22)."
+        ]
+      },
+      {
+        "input": 3,
+        "value": "1e12",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Maximum value is 50. Results use the last valid value (22)."
+        ]
+      },
+      {
+        "input": 4,
+        "value": "61",
+        "badNumbers": [],
+        "changed": false,
+        "warnings": []
+      },
+      {
+        "input": 4,
+        "value": "",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Please enter a valid number. Results use the last valid value (60)."
+        ]
+      },
+      {
+        "input": 4,
+        "value": "-1",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Minimum value is 1. Results use the last valid value (60)."
+        ]
+      },
+      {
+        "input": 4,
+        "value": "1e12",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Maximum value is 120. Results use the last valid value (60)."
+        ]
+      },
+      {
+        "input": 5,
+        "value": "1",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": []
+      },
+      {
+        "input": 5,
+        "value": "",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Please enter a valid number. Results use the last valid value (0)."
+        ]
+      },
+      {
+        "input": 5,
+        "value": "-1",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Minimum value is 0. Results use the last valid value (0)."
+        ]
+      },
+      {
+        "input": 5,
+        "value": "1e12",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Maximum value is 1,000,000,000. Results use the last valid value (0)."
+        ]
+      },
+      {
+        "input": 6,
+        "value": "1",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": []
+      },
+      {
+        "input": 6,
+        "value": "",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Please enter a valid number. Results use the last valid value (0)."
+        ]
+      },
+      {
+        "input": 6,
+        "value": "-1",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Minimum value is 0. Results use the last valid value (0)."
+        ]
+      },
+      {
+        "input": 6,
+        "value": "1e12",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Maximum value is 1,000,000,000. Results use the last valid value (0)."
+        ]
+      },
+      {
+        "input": 7,
+        "value": "1",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": []
+      },
+      {
+        "input": 7,
+        "value": "",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Please enter a valid number. Results use the last valid value (0)."
+        ]
+      },
+      {
+        "input": 7,
+        "value": "-1",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Minimum value is 0. Results use the last valid value (0)."
+        ]
+      },
+      {
+        "input": 7,
+        "value": "1e12",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Maximum value is 1,000,000,000. Results use the last valid value (0)."
+        ]
+      },
+      {
+        "input": 8,
+        "value": "5.39",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": []
+      },
+      {
+        "input": 8,
+        "value": "",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Please enter a valid number. Results use the last valid value (4.39)."
+        ]
+      },
+      {
+        "input": 8,
+        "value": "-1",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Minimum value is 0. Results use the last valid value (4.39)."
+        ]
+      },
+      {
+        "input": 8,
+        "value": "1e12",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Maximum value is 30. Results use the last valid value (4.39)."
+        ]
+      },
+      {
+        "input": 9,
+        "value": "23",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": []
+      },
+      {
+        "input": 9,
+        "value": "",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Please enter a valid number. Results use the last valid value (22)."
+        ]
+      },
+      {
+        "input": 9,
+        "value": "-1",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Minimum value is 1. Results use the last valid value (22)."
+        ]
+      },
+      {
+        "input": 9,
+        "value": "1e12",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Maximum value is 50. Results use the last valid value (22)."
+        ]
+      },
+      {
+        "input": 10,
+        "value": "61",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": []
+      },
+      {
+        "input": 10,
+        "value": "",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Please enter a valid number. Results use the last valid value (60)."
+        ]
+      },
+      {
+        "input": 10,
+        "value": "-1",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Minimum value is 1. Results use the last valid value (60)."
+        ]
+      },
+      {
+        "input": 10,
+        "value": "1e12",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Maximum value is 120. Results use the last valid value (60)."
+        ]
+      },
+      {
+        "input": 11,
+        "value": "1",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": []
+      },
+      {
+        "input": 11,
+        "value": "",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Please enter a valid number. Results use the last valid value (0)."
+        ]
+      },
+      {
+        "input": 11,
+        "value": "-1",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Minimum value is 0. Results use the last valid value (0)."
+        ]
+      },
+      {
+        "input": 11,
+        "value": "1e12",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Maximum value is 1,000,000,000. Results use the last valid value (0)."
+        ]
+      },
+      {
+        "input": 12,
+        "value": "1",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": []
+      },
+      {
+        "input": 12,
+        "value": "",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Please enter a valid number. Results use the last valid value (0)."
+        ]
+      },
+      {
+        "input": 12,
+        "value": "-1",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Minimum value is 0. Results use the last valid value (0)."
+        ]
+      },
+      {
+        "input": 12,
+        "value": "1e12",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Maximum value is 1,000,000,000. Results use the last valid value (0)."
+        ]
+      },
+      {
+        "input": 13,
+        "value": "1",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": []
+      },
+      {
+        "input": 13,
+        "value": "",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Please enter a valid number. Results use the last valid value (0)."
+        ]
+      },
+      {
+        "input": 13,
+        "value": "-1",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Minimum value is 0. Results use the last valid value (0)."
+        ]
+      },
+      {
+        "input": 13,
+        "value": "1e12",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Maximum value is 1,000,000,000. Results use the last valid value (0)."
+        ]
+      },
+      {
+        "input": 14,
+        "value": "5.69",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": []
+      },
+      {
+        "input": 14,
+        "value": "",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Please enter a valid number. Results use the last valid value (4.69)."
+        ]
+      },
+      {
+        "input": 14,
+        "value": "-1",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Minimum value is 0. Results use the last valid value (4.69)."
+        ]
+      },
+      {
+        "input": 14,
+        "value": "1e12",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Maximum value is 30. Results use the last valid value (4.69)."
+        ]
+      },
+      {
+        "input": 15,
+        "value": "23",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": []
+      },
+      {
+        "input": 15,
+        "value": "",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Please enter a valid number. Results use the last valid value (22)."
+        ]
+      },
+      {
+        "input": 15,
+        "value": "-1",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Minimum value is 1. Results use the last valid value (22)."
+        ]
+      },
+      {
+        "input": 15,
+        "value": "1e12",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Maximum value is 50. Results use the last valid value (22)."
+        ]
+      },
+      {
+        "input": 16,
+        "value": "61",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": []
+      },
+      {
+        "input": 16,
+        "value": "",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Please enter a valid number. Results use the last valid value (60)."
+        ]
+      },
+      {
+        "input": 16,
+        "value": "-1",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Minimum value is 1. Results use the last valid value (60)."
+        ]
+      },
+      {
+        "input": 16,
+        "value": "1e12",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Maximum value is 120. Results use the last valid value (60)."
+        ]
+      },
+      {
+        "input": 17,
+        "value": "1",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": []
+      },
+      {
+        "input": 17,
+        "value": "",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Please enter a valid number. Results use the last valid value (0)."
+        ]
+      },
+      {
+        "input": 17,
+        "value": "-1",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Minimum value is 0. Results use the last valid value (0)."
+        ]
+      },
+      {
+        "input": 17,
+        "value": "1e12",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Maximum value is 1,000,000,000. Results use the last valid value (0)."
+        ]
+      },
+      {
+        "input": 18,
+        "value": "1501",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": []
+      },
+      {
+        "input": 18,
+        "value": "",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Please enter a valid number. Results use the last valid value (1500)."
+        ]
+      },
+      {
+        "input": 18,
+        "value": "-1",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Minimum value is 0. Results use the last valid value (1500)."
+        ]
+      },
+      {
+        "input": 18,
+        "value": "1e12",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Maximum value is 1,000,000,000. Results use the last valid value (1500)."
+        ]
+      },
+      {
+        "input": 19,
+        "value": "1",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": []
+      },
+      {
+        "input": 19,
+        "value": "",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Please enter a valid number. Results use the last valid value (0)."
+        ]
+      },
+      {
+        "input": 19,
+        "value": "-1",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Minimum value is 0. Results use the last valid value (0)."
+        ]
+      },
+      {
+        "input": 19,
+        "value": "1e12",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Maximum value is 1,000,000,000. Results use the last valid value (0)."
+        ]
+      },
+      {
+        "input": 0,
+        "type": "toggle",
+        "badNumbers": []
+      }
+    ],
+    "selects": [],
+    "mobile": {
+      "viewport": 390,
+      "documentWidth": 390,
+      "overflowing": []
+    },
+    "accessibility": [],
+    "status": 200,
+    "loadMs": 5571,
+    "title": "Put your renewal offers side by side.",
+    "canonical": "https://www.kraftmortgages.ca/calculators/renewal",
+    "baseline": "Skip to main content\nHome\nRates\nServices\nCalculators\nMLI Select\nAbout\nContact\nBC\nAB\nON\nApply Now\nAll Calculators\nToday's Rates\nTalk to a Broker\nAll calculators\n\nRENEWAL & SWITCHING\n\nPut your renewal offers side by side.\n\nCompare your lender’s quote with two alternatives. See payment relief, total interest, cash costs and the balance you will still owe.\n\nYour comparison\nI am considering breaking my mortgage before renewal\nMortgage balance ($)\nCompare over (months)\nYour lender’s renewal quote\nQuoted renewal rate (%)\nYour lender amortization (years)\nYour lender quoted term (months)\nYour lender cash-paid fees ($)\nYour lender retained cashback ($)\nAmount you keep at the comparison date.\nYour lender other clawbacks ($)\nExclude amounts already deducted from retained cashback.\nOffer A\nOffer A rate (%)\nOffer A amortization (years)\nOffer A quoted term (months)\nOffer A cash-paid fees ($)\nOffer A retained cashback ($)\nAmount you keep at the comparison date.\nOffer A other clawbacks ($)\nExclude amounts already deducted from retained cashback.\nOffer B\nOffer B rate (%)\nOffer B amortization (years)\nOffer B quoted term (months)\nOffer B cash-paid fees ($)\nOffer B retained cashback ($)\nAmount you keep at the comparison date.\nOffer B other clawbacks ($)\nExclude amounts already deducted from retained cashback.\n\nOffer A starts from a conventional 5-year fixed benchmark. Replace it with your actual quote; other rates are examples.\n\nDefault: today's lowest conventional (uninsured) 5-year fixed rate from our live rate feed (as of Oct 19, 2026). Use the rate you were actually offered, or see today's rates.\n\nLOWEST MODELLED COST · 60 MONTHS\n\nOffer A has the lowest cost\n\n$23,505\n\nEstimated saving against your lender, after the cash costs entered. Positive savings do not guarantee approval or account for product flexibility.\n\nYour lender\nMonthly payment\n$2,924\nInterest over 60 months\n$114,361\nNet cash costs\n$0\nInterest + cash costs\n$114,361\nEnding mortgage balance\n$388,939\nSaving against your lender\n$0\nOffer A · Lowest cost\nMonthly payment\n$2,651\nInterest over 60 months\n$90,856\nNet cash costs\n$0\nInterest + cash costs\n$90,856\nEnding mortgage balance\n$381,779\nSaving against your lender\n$23,505\n\nCost recovery: at the start, based on entered incentives. Same balance and no amortization increase; ask about straight-switch eligibility.\n\nOffer B\nMonthly payment\n$2,724\nInterest over 60 months\n$97,245\nNet cash costs\n-$1,500\nInterest + cash costs\n$95,745\nEnding mortgage balance\n$383,788\nSaving against your lender\n$18,616\n\nCost recovery: at the start, based on entered incentives. Same balance and no amortization increase; ask about straight-switch eligibility.\n\nA lower payment can leave more debt outstanding. Compare ending balances as well as cost. Check prepayment rights, portability, collateral charges and cashback conditions.\n\nDownload scenario PDF\nAssumptions, sources & limitations\nA clearer decision starts with the details.\n\nHave an advisor review your quotes and the assumptions behind this estimate.\n\nDiscuss this scenario\n\n18+ Years Combined Experience in complex mortgage solutions across British Columbia, Alberta, and Ontario.\n\nQUICK LINKS\nLive Mortgage Rates\nAbout Us\nServices\nCalculators\nMLI Select\nBlog\nCONTACT\nWhatsApp: +1 (604) 359-5993\n604-593-1550\n604-727-1579\nvarun@kraftmortgages.ca\n#301 1688 152nd Street\nSurrey, BC V4A 4N2\nLEGAL & TRUST\nCompliance & FINTRAC Disclosures\nPrivacy Policy\nTerms of Service\nLICENSED IN\n✓ British Columbia\n✓ Alberta\n✓ Ontario\nBCFSA #SR220230\nRECA LIC-00655428\nFSRA #12918\n© 2026 KRAFT MORTGAGES CANADA INC. · BCFSA #SR220230 · RECA LIC-00655428 · FSRA #12918\nSERVING BC · ALBERTA · ONTARIO\nGet guidance",
+    "baselineBadNumbers": []
+  },
+  {
+    "route": "/mli-select/calculators/deal-sizer",
+    "errors": [],
+    "inputs": [
+      {
+        "type": "number",
+        "value": "20000000",
+        "min": "1",
+        "max": "1000000000",
+        "step": "any",
+        "name": "Eligible project cost ($)",
+        "nearby": "Eligible project cost ($)Annual stabilized NOI ($)After operating expenses and vacancy; before debt service.Total rental unitsAffordable unitsRent must meet CMHC’s market-specific "
+      },
+      {
+        "type": "number",
+        "value": "1200000",
+        "min": "1",
+        "max": "1000000000",
+        "step": "any",
+        "name": "Annual stabilized NOI ($)",
+        "nearby": "Eligible project cost ($)Annual stabilized NOI ($)After operating expenses and vacancy; before debt service.Total rental unitsAffordable unitsRent must meet CMHC’s market-specific "
+      },
+      {
+        "type": "number",
+        "value": "100",
+        "min": "5",
+        "max": "100000",
+        "step": "1",
+        "name": "Total rental units",
+        "nearby": "Eligible project cost ($)Annual stabilized NOI ($)After operating expenses and vacancy; before debt service.Total rental unitsAffordable unitsRent must meet CMHC’s market-specific "
+      },
+      {
+        "type": "number",
+        "value": "25",
+        "min": "0",
+        "max": "100000",
+        "step": "1",
+        "name": "Affordable units",
+        "nearby": "Eligible project cost ($)Annual stabilized NOI ($)After operating expenses and vacancy; before debt service.Total rental unitsAffordable unitsRent must meet CMHC’s market-specific "
+      },
+      {
+        "type": "number",
+        "value": "10",
+        "min": "0",
+        "max": "100",
+        "step": "1",
+        "name": "Affordability commitment (years)",
+        "nearby": "Eligible project cost ($)Annual stabilized NOI ($)After operating expenses and vacancy; before debt service.Total rental unitsAffordable unitsRent must meet CMHC’s market-specific "
+      },
+      {
+        "type": "number",
+        "value": "25",
+        "min": "0",
+        "max": "100",
+        "step": "any",
+        "name": "Energy improvement vs NECB Tier 1 (%)",
+        "nearby": "Eligible project cost ($)Annual stabilized NOI ($)After operating expenses and vacancy; before debt service.Total rental unitsAffordable unitsRent must meet CMHC’s market-specific "
+      },
+      {
+        "type": "number",
+        "value": "4.5",
+        "min": "0",
+        "max": "30",
+        "step": "any",
+        "name": "Quoted fixed rate (%)",
+        "nearby": "Quoted fixed rate (%)4.5% is an example, not a retail rate or commercial quote.Requested amortization (years)Minimum debt coverage (x)Standard rental floor 1.10x; lender requiremen"
+      },
+      {
+        "type": "number",
+        "value": "50",
+        "min": "1",
+        "max": "50",
+        "step": "any",
+        "name": "Requested amortization (years)",
+        "nearby": "Quoted fixed rate (%)4.5% is an example, not a retail rate or commercial quote.Requested amortization (years)Minimum debt coverage (x)Standard rental floor 1.10x; lender requiremen"
+      },
+      {
+        "type": "number",
+        "value": "1.1",
+        "min": "1.1",
+        "max": "3",
+        "step": "any",
+        "name": "Minimum debt coverage (x)",
+        "nearby": "Quoted fixed rate (%)4.5% is an example, not a retail rate or commercial quote.Requested amortization (years)Minimum debt coverage (x)Standard rental floor 1.10x; lender requiremen"
+      },
+      {
+        "type": "number",
+        "value": "50000",
+        "min": "0",
+        "max": "1000000000",
+        "step": "any",
+        "name": "Other closing costs / reserves ($)",
+        "nearby": "Quoted fixed rate (%)4.5% is an example, not a retail rate or commercial quote.Requested amortization (years)Minimum debt coverage (x)Standard rental floor 1.10x; lender requiremen"
+      }
+    ],
+    "scenarios": [
+      {
+        "input": 0,
+        "value": "20000001",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Minimum debt coverage (x)",
+          "Amortization used / tier maximum"
+        ]
+      },
+      {
+        "input": 0,
+        "value": "",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Please enter a valid number. Results use the last valid value (20000000).",
+          "Minimum debt coverage (x)",
+          "Amortization used / tier maximum"
+        ]
+      },
+      {
+        "input": 0,
+        "value": "-1",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Minimum value is 1. Results use the last valid value (20000000).",
+          "Minimum debt coverage (x)",
+          "Amortization used / tier maximum"
+        ]
+      },
+      {
+        "input": 0,
+        "value": "1e12",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Maximum value is 1,000,000,000. Results use the last valid value (20000000).",
+          "Minimum debt coverage (x)",
+          "Amortization used / tier maximum"
+        ]
+      },
+      {
+        "input": 1,
+        "value": "1200001",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Minimum debt coverage (x)",
+          "Amortization used / tier maximum"
+        ]
+      },
+      {
+        "input": 1,
+        "value": "",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Please enter a valid number. Results use the last valid value (1200000).",
+          "Minimum debt coverage (x)",
+          "Amortization used / tier maximum"
+        ]
+      },
+      {
+        "input": 1,
+        "value": "-1",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Minimum value is 1. Results use the last valid value (1200000).",
+          "Minimum debt coverage (x)",
+          "Amortization used / tier maximum"
+        ]
+      },
+      {
+        "input": 1,
+        "value": "1e12",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Maximum value is 1,000,000,000. Results use the last valid value (1200000).",
+          "Minimum debt coverage (x)",
+          "Amortization used / tier maximum"
+        ]
+      },
+      {
+        "input": 2,
+        "value": "101",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Minimum debt coverage (x)",
+          "Amortization used / tier maximum"
+        ]
+      },
+      {
+        "input": 2,
+        "value": "",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Please enter a valid number. Results use the last valid value (100).",
+          "Minimum debt coverage (x)",
+          "Amortization used / tier maximum"
+        ]
+      },
+      {
+        "input": 2,
+        "value": "-1",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Minimum value is 5. Results use the last valid value (100).",
+          "Minimum debt coverage (x)",
+          "Amortization used / tier maximum"
+        ]
+      },
+      {
+        "input": 2,
+        "value": "1e12",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Maximum value is 100,000. Results use the last valid value (100).",
+          "Minimum debt coverage (x)",
+          "Amortization used / tier maximum"
+        ]
+      },
+      {
+        "input": 3,
+        "value": "26",
+        "badNumbers": [],
+        "changed": false,
+        "warnings": [
+          "Minimum debt coverage (x)",
+          "Amortization used / tier maximum"
+        ]
+      },
+      {
+        "input": 3,
+        "value": "",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Please enter a valid number. Results use the last valid value (25).",
+          "Minimum debt coverage (x)",
+          "Amortization used / tier maximum"
+        ]
+      },
+      {
+        "input": 3,
+        "value": "-1",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Minimum value is 0. Results use the last valid value (25).",
+          "Minimum debt coverage (x)",
+          "Amortization used / tier maximum"
+        ]
+      },
+      {
+        "input": 3,
+        "value": "1e12",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Maximum value is 100,000. Results use the last valid value (25).",
+          "Minimum debt coverage (x)",
+          "Amortization used / tier maximum"
+        ]
+      },
+      {
+        "input": 4,
+        "value": "11",
+        "badNumbers": [],
+        "changed": false,
+        "warnings": [
+          "Minimum debt coverage (x)",
+          "Amortization used / tier maximum"
+        ]
+      },
+      {
+        "input": 4,
+        "value": "",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Please enter a valid number. Results use the last valid value (10).",
+          "Minimum debt coverage (x)",
+          "Amortization used / tier maximum"
+        ]
+      },
+      {
+        "input": 4,
+        "value": "-1",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Minimum value is 0. Results use the last valid value (10).",
+          "Minimum debt coverage (x)",
+          "Amortization used / tier maximum"
+        ]
+      },
+      {
+        "input": 4,
+        "value": "1e12",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Maximum value is 100. Results use the last valid value (10).",
+          "Minimum debt coverage (x)",
+          "Amortization used / tier maximum"
+        ]
+      },
+      {
+        "input": 5,
+        "value": "26",
+        "badNumbers": [],
+        "changed": false,
+        "warnings": [
+          "Minimum debt coverage (x)",
+          "Amortization used / tier maximum"
+        ]
+      },
+      {
+        "input": 5,
+        "value": "",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Please enter a valid number. Results use the last valid value (25).",
+          "Minimum debt coverage (x)",
+          "Amortization used / tier maximum"
+        ]
+      },
+      {
+        "input": 5,
+        "value": "-1",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Minimum value is 0. Results use the last valid value (25).",
+          "Minimum debt coverage (x)",
+          "Amortization used / tier maximum"
+        ]
+      },
+      {
+        "input": 5,
+        "value": "1e12",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Maximum value is 100. Results use the last valid value (25).",
+          "Minimum debt coverage (x)",
+          "Amortization used / tier maximum"
+        ]
+      },
+      {
+        "input": 8,
+        "value": "5.5",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Minimum debt coverage (x)",
+          "Amortization used / tier maximum"
+        ]
+      },
+      {
+        "input": 8,
+        "value": "",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Please enter a valid number. Results use the last valid value (4.5).",
+          "Minimum debt coverage (x)",
+          "Amortization used / tier maximum"
+        ]
+      },
+      {
+        "input": 8,
+        "value": "-1",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Minimum value is 0. Results use the last valid value (4.5).",
+          "Minimum debt coverage (x)",
+          "Amortization used / tier maximum"
+        ]
+      },
+      {
+        "input": 8,
+        "value": "1e12",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Maximum value is 30. Results use the last valid value (4.5).",
+          "Minimum debt coverage (x)",
+          "Amortization used / tier maximum"
+        ]
+      },
+      {
+        "input": 9,
+        "value": "50",
+        "badNumbers": [],
+        "changed": false,
+        "warnings": [
+          "Minimum debt coverage (x)",
+          "Amortization used / tier maximum"
+        ]
+      },
+      {
+        "input": 9,
+        "value": "",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Please enter a valid number. Results use the last valid value (50).",
+          "Minimum debt coverage (x)",
+          "Amortization used / tier maximum"
+        ]
+      },
+      {
+        "input": 9,
+        "value": "-1",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Minimum value is 1. Results use the last valid value (50).",
+          "Minimum debt coverage (x)",
+          "Amortization used / tier maximum"
+        ]
+      },
+      {
+        "input": 9,
+        "value": "1e12",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Maximum value is 50. Results use the last valid value (50).",
+          "Minimum debt coverage (x)",
+          "Amortization used / tier maximum"
+        ]
+      },
+      {
+        "input": 10,
+        "value": "2.1",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Minimum debt coverage (x)",
+          "Amortization used / tier maximum"
+        ]
+      },
+      {
+        "input": 10,
+        "value": "",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Minimum debt coverage (x)",
+          "Please enter a valid number. Results use the last valid value (1.1).",
+          "Amortization used / tier maximum"
+        ]
+      },
+      {
+        "input": 10,
+        "value": "-1",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Minimum debt coverage (x)",
+          "Minimum value is 1.1. Results use the last valid value (1.1).",
+          "Amortization used / tier maximum"
+        ]
+      },
+      {
+        "input": 10,
+        "value": "1e12",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Minimum debt coverage (x)",
+          "Maximum value is 3. Results use the last valid value (1.1).",
+          "Amortization used / tier maximum"
+        ]
+      },
+      {
+        "input": 11,
+        "value": "50001",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Minimum debt coverage (x)",
+          "Amortization used / tier maximum"
+        ]
+      },
+      {
+        "input": 11,
+        "value": "",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Minimum debt coverage (x)",
+          "Please enter a valid number. Results use the last valid value (50000).",
+          "Amortization used / tier maximum"
+        ]
+      },
+      {
+        "input": 11,
+        "value": "-1",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Minimum debt coverage (x)",
+          "Minimum value is 0. Results use the last valid value (50000).",
+          "Amortization used / tier maximum"
+        ]
+      },
+      {
+        "input": 11,
+        "value": "1e12",
+        "badNumbers": [],
+        "changed": true,
+        "warnings": [
+          "Minimum debt coverage (x)",
+          "Maximum value is 1,000,000,000. Results use the last valid value (50000).",
+          "Amortization used / tier maximum"
+        ]
+      },
+      {
+        "input": 0,
+        "type": "toggle",
+        "badNumbers": []
+      },
+      {
+        "input": 3,
+        "type": "toggle",
+        "badNumbers": []
+      }
+    ],
+    "selects": [],
+    "mobile": {
+      "viewport": 390,
+      "documentWidth": 390,
+      "overflowing": []
+    },
+    "accessibility": [],
+    "status": 200,
+    "loadMs": 3805,
+    "title": "See how your rental project sizes up.",
+    "canonical": "https://www.kraftmortgages.ca/mli-select/calculators/deal-sizer",
+    "baseline": "Skip to main content\nMLI Select Portal\nHome\nRates\nServices\nCalculators\nMLI Select\nAbout\nContact\nBC\nAB\nON\nApply Now\nMLI Portal\n›\nAll MLI Calculators\nDeal Sizer\nChecklist\nAll calculators\n\nCMHC MLI SELECT · STANDARD RENTAL\n\nSee how your rental project sizes up.\n\nConnect program points, leverage and debt coverage in one place. Understand the loan, insurance premium and cash your project may need.\n\nYour rental project\nNew construction (uncheck for an existing property)\nEligible project cost ($)\nAnnual stabilized NOI ($)\nAfter operating expenses and vacancy; before debt service.\nTotal rental units\nAffordable units\nRent must meet CMHC’s market-specific threshold.\nAffordability commitment (years)\nEnergy improvement vs NECB Tier 1 (%)\nUse a qualified energy professional’s assessment.\nAccessibility commitments\nFinancing assumptions\nQuoted fixed rate (%)\n4.5% is an example, not a retail rate or commercial quote.\nRequested amortization (years)\nMinimum debt coverage (x)\nStandard rental floor 1.10x; lender requirements may be higher.\nOther closing costs / reserves ($)\nAdd the insurance premium to the mortgage\n\nESTIMATED BASE LOAN\n\n$19,000,000\n\nLeverage limits this scenario. Base loan excludes insurance; financed premiums are included in the payment and DCR below.\n\nPoints / qualifying tier\n100 / 100\nPoints: affordability / energy / access\n100 / 20 / 20\nAmortization used / tier maximum\n50 years / 50\nBase loan leverage limit (95%)\n$19,000,000\nDCR capacity, including financed premium\n$21,824,604\nInsurance premium (5.775%)\n$1,097,250\nTotal mortgage debt\n$20,097,250\nCash required\n$1,050,000\nMonthly debt service\n$83,714\nDebt coverage\n1.19x\nAnnual cash flow, before tax\n$195,433\nWhat changes the loan?\n\nAt +1 percentage point in rate: $17,736,577 base loan.\nAt 10% lower NOI: $18,569,741 base loan.\n\nPlanning estimate. Lender valuation, stabilized NOI, affordability covenants, energy/accessibility evidence and other underwriting can reduce proceeds or increase required cash.\n\nDownload scenario PDF\nAssumptions, sources & limitations\nA clearer decision starts with the details.\n\nHave an advisor review your quotes and the assumptions behind this estimate.\n\nDiscuss this scenario\n\n18+ Years Combined Experience in complex mortgage solutions across British Columbia, Alberta, and Ontario.\n\nQUICK LINKS\nLive Mortgage Rates\nAbout Us\nServices\nCalculators\nMLI Select\nBlog\nCONTACT\nWhatsApp: +1 (604) 359-5993\n604-593-1550\n604-727-1579\nvarun@kraftmortgages.ca\n#301 1688 152nd Street\nSurrey, BC V4A 4N2\nLEGAL & TRUST\nCompliance & FINTRAC Disclosures\nPrivacy Policy\nTerms of Service\nLICENSED IN\n✓ British Columbia\n✓ Alberta\n✓ Ontario\nBCFSA #SR220230\nRECA LIC-00655428\nFSRA #12918\n© 2026 KRAFT MORTGAGES CANADA INC. · BCFSA #SR220230 · RECA LIC-00655428 · FSRA #12918\nSERVING BC · ALBERTA · ONTARIO\nGet guidance",
+    "baselineBadNumbers": []
+  }
+]

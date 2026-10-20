@@ -1,0 +1,53 @@
+[
+  {
+    "route": "/calculators/b-vs-equity",
+    "status": 200,
+    "title": "B-Lender vs Equity Lending Calculator",
+    "canonical": "https://www.kraftmortgages.ca/calculators/b-vs-equity",
+    "inputCount": 8,
+    "numericOrToggleScenarios": 28,
+    "selectScenarios": 0,
+    "badNumbers": [],
+    "errors": [],
+    "accessibility": [],
+    "mobile": {
+      "viewport": 390,
+      "documentWidth": 390,
+      "overflowing": []
+    }
+  },
+  {
+    "route": "/calculators/down-payment",
+    "status": 200,
+    "title": "Down Payment Calculator",
+    "canonical": "https://www.kraftmortgages.ca/calculators/down-payment",
+    "inputCount": 1,
+    "numericOrToggleScenarios": 4,
+    "selectScenarios": 0,
+    "badNumbers": [],
+    "errors": [],
+    "accessibility": [],
+    "mobile": {
+      "viewport": 390,
+      "documentWidth": 390,
+      "overflowing": []
+    }
+  },
+  {
+    "route": "/equity-lending/calculators/heloc",
+    "status": 200,
+    "title": "Home Equity Line of Credit",
+    "canonical": "https://www.kraftmortgages.ca/equity-lending/calculators/heloc",
+    "inputCount": 7,
+    "numericOrToggleScenarios": 26,
+    "selectScenarios": 0,
+    "badNumbers": [],
+    "errors": [],
+    "accessibility": [],
+    "mobile": {
+      "viewport": 390,
+      "documentWidth": 390,
+      "overflowing": []
+    }
+  }
+]

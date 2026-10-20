@@ -1,4 +1,5 @@
 "use client";
+import CalculatorNumberInput from "@/components/ui/CalculatorNumberInput";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import Card from "@/components/mli/Card";
@@ -11,24 +12,24 @@ export default function AmortizationPage() {
   const [rate, setRate] = useState(4.5);
 
   const yearsList = [25, 40, 50] as const;
-  const payments = yearsList.map(y => ({ 
-    years: y, 
+  const payments = yearsList.map(y => ({
+    years: y,
     payment: Math.round(pmt(rate, y, loan)),
     total: Math.round(pmt(rate, y, loan) * 12 * y),
     interest: Math.round((pmt(rate, y, loan) * 12 * y) - loan)
   }));
-  
+
   const schedule50 = amortizationSchedule(rate, 50, loan).rows
     .filter(r => r.period % 12 === 0)
-    .map(r => ({ 
-      year: r.period/12, 
+    .map(r => ({
+      year: r.period/12,
       balance: Math.round(r.balance),
       principal: Math.round(loan - r.balance),
       interest: Math.round((r.period/12) * pmt(rate, 50, loan) * 12 - (loan - r.balance))
     }));
 
   return (
-    <div className="min-h-screen">
+    <main className="min-h-screen">
       {/* Hero Section with Animated Background */}
       <section className="relative overflow-hidden">
         {/* Animated Background */}
@@ -46,10 +47,10 @@ export default function AmortizationPage() {
               </defs>
               <rect width="100%" height="100%" fill="url(#timeline-pattern)" />
             </svg>
-            
+
             {/* Floating Chart Elements */}
             <div className="absolute top-20 left-10 w-80 h-80">
-              <motion.div 
+              <motion.div
                 className="absolute inset-0 bg-gradient-to-br from-orange-500 to-amber-500 rounded-lg opacity-10 transform rotate-12"
                 animate={{
                   rotate: [12, 25, 12],
@@ -63,7 +64,7 @@ export default function AmortizationPage() {
               />
             </div>
             <div className="absolute bottom-10 right-10 w-96 h-96">
-              <motion.div 
+              <motion.div
                 className="absolute inset-0 bg-gradient-to-br from-amber-500 to-yellow-500 rounded-full opacity-10"
                 animate={{
                   scale: [1, 1.2, 1],
@@ -79,10 +80,10 @@ export default function AmortizationPage() {
           </div>
         </div>
 
-        <div className="relative z-10 py-20 px-4 mt-16">
+        <div className="relative z-10 py-20 px-4">
           <div className="max-w-6xl mx-auto text-center">
             {/* Animated Badge */}
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.5, type: "spring", bounce: 0.3 }}
@@ -90,7 +91,7 @@ export default function AmortizationPage() {
             >
               <Calendar className="w-4 h-4 text-orange-400" />
               <span className="text-sm font-bold text-orange-300 tracking-wider uppercase">Payment Timeline Tool</span>
-              <motion.div 
+              <motion.div
                 className="w-2 h-2 bg-orange-400 rounded-full"
                 animate={{ scale: [1, 1.5, 1] }}
                 transition={{ duration: 2, repeat: Infinity }}
@@ -98,7 +99,7 @@ export default function AmortizationPage() {
             </motion.div>
 
             {/* Title with Gradient */}
-            <motion.h1 
+            <motion.h1
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
@@ -114,26 +115,26 @@ export default function AmortizationPage() {
             </motion.h1>
 
             {/* Enhanced Description */}
-            <motion.p 
+            <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
               className="text-xl text-gray-400 max-w-3xl mx-auto mb-8"
             >
-              Compare payment schedules across 
+              Compare payment schedules across
               <span className="text-orange-400 font-semibold"> 25, 40, and 50 years</span> with
               <span className="text-amber-400 font-semibold"> interactive balance curves</span>
             </motion.p>
 
             {/* Key Terms Display */}
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.3 }}
               className="flex flex-wrap justify-center gap-6 mt-10"
             >
               {[25, 40, 50].map((years, index) => (
-                <motion.div 
+                <motion.div
                   key={years}
                   className="group relative"
                   whileHover={{ scale: 1.05, y: -5 }}
@@ -153,7 +154,7 @@ export default function AmortizationPage() {
                       years === 40 ? 'text-orange-400' :
                       'text-amber-400'
                     }`} />
-                    <div className="text-xs text-gray-500 uppercase tracking-wider">Term</div>
+                    <div className="text-xs text-gray-400 uppercase tracking-wider">Term</div>
                     <div className={`text-3xl font-bold ${
                       years === 25 ? 'text-red-400' :
                       years === 40 ? 'text-orange-400' :
@@ -189,25 +190,25 @@ export default function AmortizationPage() {
                     <label className="block text-sm font-medium text-gray-300 mb-2">Loan Amount ($)</label>
                     <div className="relative">
                       <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <DollarSign className="h-5 w-5 text-gray-500" />
+                        <DollarSign className="h-5 w-5 text-gray-400" />
                       </div>
-                      <input 
+                      <CalculatorNumberInput aria-label="Loan Amount ($)"
                         className="w-full pl-10 rounded-lg border border-gray-600 bg-gray-700/50 text-gray-100 px-3 py-3 text-sm focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500 placeholder-gray-500 transition-all duration-200"
-                        type="number" 
-                        value={loan} 
-                        onChange={e=>setLoan(+e.target.value)} 
+                        type="number"
+                        value={loan}
+                        onChange={e=>setLoan(+e.target.value)}
                       />
                     </div>
                   </div>
 
                   <div className="relative">
                     <label className="block text-sm font-medium text-gray-300 mb-2">Interest Rate (%)</label>
-                    <input 
+                    <CalculatorNumberInput aria-label="Interest Rate (%)" max={100}
                       className="w-full rounded-lg border border-gray-600 bg-gray-700/50 text-gray-100 px-3 py-3 text-sm focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 placeholder-gray-500 transition-all duration-200"
-                      type="number" 
-                      step={0.05} 
-                      value={rate} 
-                      onChange={e=>setRate(+e.target.value)} 
+                      type="number"
+                      step={0.05}
+                      value={rate}
+                      onChange={e=>setRate(+e.target.value)}
                     />
                   </div>
 
@@ -246,7 +247,7 @@ export default function AmortizationPage() {
               }>
                 <div className="grid gap-6 md:grid-cols-3">
                   {payments.map((p, index) => (
-                    <motion.div 
+                    <motion.div
                       key={p.years}
                       className={`p-5 rounded-xl border ${
                         p.years === 25 ? 'bg-gradient-to-br from-red-900/20 to-orange-900/20 border-red-500/20' :
@@ -260,7 +261,7 @@ export default function AmortizationPage() {
                       style={{ animationDelay: `${index * 0.1 + 0.6}s` }}
                     >
                       <div className="text-center">
-                        <div className="text-xs text-gray-500 uppercase tracking-wider mb-1">{p.years}-Year Amortization</div>
+                        <div className="text-xs text-gray-400 uppercase tracking-wider mb-1">{p.years}-Year Amortization</div>
                         <div className={`text-2xl font-bold mb-2 ${
                           p.years === 25 ? 'text-red-400' :
                           p.years === 40 ? 'text-orange-400' :
@@ -269,14 +270,14 @@ export default function AmortizationPage() {
                           ${(p.payment / 1000).toFixed(0)}K
                         </div>
                         <div className="text-xs text-gray-400 mb-3">Monthly Payment</div>
-                        
+
                         <div className="space-y-2">
                           <div className="flex justify-between text-xs">
-                            <span className="text-gray-500">Total Cost:</span>
+                            <span className="text-gray-400">Total Cost:</span>
                             <span className="text-gray-300">${(p.total / 1000000).toFixed(1)}M</span>
                           </div>
                           <div className="flex justify-between text-xs">
-                            <span className="text-gray-500">Interest:</span>
+                            <span className="text-gray-400">Interest:</span>
                             <span className="text-red-400">${(p.interest / 1000000).toFixed(1)}M</span>
                           </div>
                         </div>
@@ -313,17 +314,17 @@ export default function AmortizationPage() {
                       </linearGradient>
                     </defs>
                     <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
-                    <XAxis 
-                      dataKey="year" 
+                    <XAxis
+                      dataKey="year"
                       stroke="rgba(255,255,255,0.7)"
                       tick={{ fill: 'rgba(255,255,255,0.7)', fontSize: 12 }}
                     />
-                    <YAxis 
+                    <YAxis
                       tickFormatter={(v)=>`$${(v/1e6).toFixed(1)}M`}
                       stroke="rgba(255,255,255,0.7)"
                       tick={{ fill: 'rgba(255,255,255,0.7)', fontSize: 12 }}
                     />
-                    <Tooltip 
+                    <Tooltip
                       formatter={(v)=>[`$${Number(v).toLocaleString()}`, "Remaining Balance"]}
                       labelFormatter={(label) => `Year ${label}`}
                       contentStyle={{
@@ -333,12 +334,12 @@ export default function AmortizationPage() {
                         color: 'white'
                       }}
                     />
-                    <Area 
-                      type="monotone" 
-                      dataKey="balance" 
-                      strokeWidth={3} 
-                      fill="url(#balanceGradient)" 
-                      stroke="rgb(251, 191, 36)" 
+                    <Area
+                      type="monotone"
+                      dataKey="balance"
+                      strokeWidth={3}
+                      fill="url(#balanceGradient)"
+                      stroke="rgb(251, 191, 36)"
                     />
                   </AreaChart>
                 </ResponsiveContainer>
@@ -347,6 +348,6 @@ export default function AmortizationPage() {
           </motion.div>
         </div>
       </section>
-    </div>
+    </main>
   );
 }

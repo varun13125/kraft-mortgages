@@ -1,9 +1,10 @@
 "use client";
+import CalculatorNumberInput from "@/components/ui/CalculatorNumberInput";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import Card from "@/components/mli/Card";
 import TierBadge from "@/components/mli/TierBadge";
-import { tierFromPoints, premiumDiscountFor, mliBasePremiumPct, mliAmortizationSurchargePct, type MliLoanPurpose } from "@/lib/mli/calcs";
+import { amortByTier, leverageFor, tierFromPoints, premiumDiscountFor, mliBasePremiumPct, mliAmortizationSurchargePct, type MliLoanPurpose } from "@/lib/mli/calcs";
 import { DollarSign, Percent, TrendingDown, PiggyBank, Award, Calculator } from "lucide-react";
 import CalculatorPdfButton from "@/components/calculator-report/CalculatorPdfButton";
 import { money, pct } from "@/components/calculator-report/reportFormat";
@@ -18,6 +19,7 @@ export default function PremiumPage() {
   const [points, setPoints] = useState(100);
 
   const tier = tierFromPoints(points);
+  const eligibleTerms = ltv <= leverageFor(purpose === "construction", tier) * 100 && amortYears <= amortByTier(tier);
   const discount = premiumDiscountFor(tier);
   const gridBase = mliBasePremiumPct(ltv, purpose);
   const base = baseOverride ?? gridBase;
@@ -31,7 +33,8 @@ export default function PremiumPage() {
   const finalCost = safeLoan * finalPremium / 100;
 
   return (
-    <div className="min-h-screen">
+    <main className="min-h-screen">
+      {!eligibleTerms && <p role="status" className="mx-auto max-w-5xl p-4 text-amber-200">These terms exceed the selected tier limits. Results are hypothetical: maximum leverage {leverageFor(purpose === "construction", tier) * 100}% and amortization {amortByTier(tier)} years. This is not an eligible loan quote.</p>}
       {/* Hero Section with Animated Background */}
       <section className="relative overflow-hidden">
         {/* Animated Background */}
@@ -49,10 +52,10 @@ export default function PremiumPage() {
               </defs>
               <rect width="100%" height="100%" fill="url(#money-pattern)" />
             </svg>
-            
+
             {/* Floating Discount Badges */}
             <div className="absolute top-20 left-10 w-64 h-64">
-              <motion.div 
+              <motion.div
                 className="absolute inset-0 bg-gradient-to-br from-green-500 to-emerald-500 rounded-full opacity-10"
                 animate={{
                   scale: [1, 1.3, 1],
@@ -66,7 +69,7 @@ export default function PremiumPage() {
               />
             </div>
             <div className="absolute bottom-10 right-10 w-80 h-80">
-              <motion.div 
+              <motion.div
                 className="absolute inset-0 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-lg opacity-10 transform rotate-45"
                 animate={{
                   rotate: [45, 90, 45],
@@ -82,10 +85,10 @@ export default function PremiumPage() {
           </div>
         </div>
 
-        <div className="relative z-10 py-20 px-4 mt-16">
+        <div className="relative z-10 py-20 px-4">
           <div className="max-w-6xl mx-auto text-center">
             {/* Animated Badge */}
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, scale: 0.8, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               transition={{ duration: 0.6, type: "spring", bounce: 0.4 }}
@@ -93,7 +96,7 @@ export default function PremiumPage() {
             >
               <PiggyBank className="w-4 h-4 text-green-400" />
               <span className="text-sm font-bold text-green-300 tracking-wider uppercase">Savings Calculator</span>
-              <motion.div 
+              <motion.div
                 className="flex gap-1"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -106,7 +109,7 @@ export default function PremiumPage() {
             </motion.div>
 
             {/* Title with Gradient */}
-            <motion.h1 
+            <motion.h1
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
@@ -122,7 +125,7 @@ export default function PremiumPage() {
             </motion.h1>
 
             {/* Enhanced Description */}
-            <motion.p 
+            <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
@@ -133,7 +136,7 @@ export default function PremiumPage() {
             </motion.p>
 
             {/* Discount Tiers Display */}
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.3 }}
@@ -144,7 +147,7 @@ export default function PremiumPage() {
                 { tier: 2, discount: 20, color: "from-green-600 to-emerald-600", text: "text-green-400" },
                 { tier: 3, discount: 30, color: "from-emerald-600 to-teal-600", text: "text-emerald-400" },
               ].map((item, index) => (
-                <motion.div 
+                <motion.div
                   key={item.tier}
                   className="group relative"
                   whileHover={{ scale: 1.05, rotate: item.tier === 3 ? 2 : 0 }}
@@ -156,7 +159,7 @@ export default function PremiumPage() {
                   <div className={`absolute -inset-1 bg-gradient-to-r ${item.color} rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-300`}></div>
                   <div className="relative bg-gray-900/90 backdrop-blur-xl px-8 py-6 rounded-2xl border border-gray-700/50">
                     <Award className={`w-8 h-8 mx-auto mb-2 ${item.text}`} />
-                    <div className="text-xs text-gray-500 uppercase tracking-wider">{[50, 70, 100][item.tier - 1]}+ Points</div>
+                    <div className="text-xs text-gray-400 uppercase tracking-wider">{[50, 70, 100][item.tier - 1]}+ Points</div>
                     <div className={`text-3xl font-bold ${item.text}`}>{item.discount}%</div>
                     <div className="text-xs text-gray-400 mt-1">Discount</div>
                   </div>
@@ -188,13 +191,13 @@ export default function PremiumPage() {
                     <label className="block text-sm font-medium text-gray-300 mb-2">Loan Amount ($)</label>
                     <div className="relative">
                       <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <DollarSign className="h-5 w-5 text-gray-500" />
+                        <DollarSign className="h-5 w-5 text-gray-400" />
                       </div>
-                      <input 
+                      <CalculatorNumberInput aria-label="Loan Amount ($)"
                         className="w-full pl-10 rounded-lg border border-gray-600 bg-gray-700/50 text-gray-100 px-3 py-3 text-sm focus:ring-2 focus:ring-green-500/50 focus:border-green-500 placeholder-gray-500 transition-all duration-200"
-                        type="number" 
-                        value={loan} 
-                        onChange={e=>setLoan(+e.target.value)} 
+                        type="number"
+                        value={loan}
+                        onChange={e=>setLoan(+e.target.value)}
                       />
                     </div>
                   </div>
@@ -202,7 +205,7 @@ export default function PremiumPage() {
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-300 mb-2">LTV / LTC (%)</label>
-                      <input
+                      <CalculatorNumberInput aria-label="LTV / LTC (%)"
                         className="w-full rounded-lg border border-gray-600 bg-gray-700/50 text-gray-100 px-3 py-3 text-sm focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500"
                         type="number"
                         min={0}
@@ -214,7 +217,7 @@ export default function PremiumPage() {
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-300 mb-2">Loan Purpose</label>
-                      <select
+                      <select aria-label="Loan Purpose"
                         className="w-full rounded-lg border border-gray-600 bg-gray-700/50 text-gray-100 px-3 py-3 text-sm focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500"
                         value={purpose}
                         onChange={e=>setPurpose(e.target.value as MliLoanPurpose)}
@@ -225,7 +228,7 @@ export default function PremiumPage() {
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-300 mb-2">Amortization (yrs)</label>
-                      <input
+                      <CalculatorNumberInput aria-label="Amortization (yrs)"
                         className="w-full rounded-lg border border-gray-600 bg-gray-700/50 text-gray-100 px-3 py-3 text-sm focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500"
                         type="number"
                         min={10}
@@ -240,7 +243,7 @@ export default function PremiumPage() {
                     <label className="block text-sm font-medium text-gray-300 mb-2">
                       Base Premium Rate (%)
                       {baseOverride === null ? (
-                        <span className="ml-2 text-xs text-gray-500">CMHC grid</span>
+                        <span className="ml-2 text-xs text-gray-400">CMHC grid</span>
                       ) : (
                         <button type="button" className="ml-2 text-xs text-emerald-400 underline" onClick={() => setBaseOverride(null)}>
                           Reset to CMHC grid ({gridBase.toFixed(2)}%)
@@ -249,9 +252,9 @@ export default function PremiumPage() {
                     </label>
                     <div className="relative">
                       <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <Percent className="h-5 w-5 text-gray-500" />
+                        <Percent className="h-5 w-5 text-gray-400" />
                       </div>
-                      <input
+                      <CalculatorNumberInput aria-label="Base Premium Rate (%)" max={100}
                         className="w-full pl-10 rounded-lg border border-gray-600 bg-gray-700/50 text-gray-100 px-3 py-3 text-sm focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 placeholder-gray-500 transition-all duration-200"
                         type="number"
                         step={0.05}
@@ -263,11 +266,11 @@ export default function PremiumPage() {
 
                   <div className="relative">
                     <label className="block text-sm font-medium text-gray-300 mb-2">Total Points</label>
-                    <input 
+                    <CalculatorNumberInput aria-label="Total Points" max={200}
                       className="w-full rounded-lg border border-gray-600 bg-gray-700/50 text-gray-100 px-3 py-3 text-sm focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500 placeholder-gray-500 transition-all duration-200"
-                      type="number" 
-                      value={points} 
-                      onChange={e=>setPoints(+e.target.value)} 
+                      type="number"
+                      value={points}
+                      onChange={e=>setPoints(+e.target.value)}
                     />
                     <div className="mt-2">
                       <TierBadge points={points} />
@@ -317,7 +320,7 @@ export default function PremiumPage() {
               }>
                 <div className="space-y-6">
                   {/* Total Savings */}
-                  <motion.div 
+                  <motion.div
                     className="p-5 bg-gradient-to-br from-green-900/20 to-emerald-900/20 rounded-xl border border-green-500/20"
                     whileHover={{ scale: 1.02 }}
                     transition={{ type: "spring", stiffness: 300 }}
@@ -328,7 +331,7 @@ export default function PremiumPage() {
                         <div className="text-3xl font-bold text-green-400">
                           ${(savings / 1000).toFixed(0)}K
                         </div>
-                        <div className="text-xs text-gray-500 mt-1">Tier {tier} discount applied</div>
+                        <div className="text-xs text-gray-400 mt-1">Tier {tier} discount applied</div>
                       </div>
                       <div className="w-16 h-16 bg-green-500/10 rounded-full flex items-center justify-center">
                         <PiggyBank className="w-8 h-8 text-green-400" />
@@ -338,13 +341,13 @@ export default function PremiumPage() {
 
                   {/* Premium Costs */}
                   <div className="grid grid-cols-2 gap-4">
-                    <motion.div 
+                    <motion.div
                       className="p-4 bg-gradient-to-br from-red-900/20 to-orange-900/20 rounded-xl border border-red-500/20"
                       whileHover={{ scale: 1.02 }}
                       transition={{ type: "spring", stiffness: 300 }}
                     >
                       <div className="text-center">
-                        <div className="text-xs text-gray-500 mb-1">Base Premium</div>
+                        <div className="text-xs text-gray-400 mb-1">Base Premium</div>
                         <div className="text-xl font-bold text-red-400">
                           ${(baseCost / 1000).toFixed(0)}K
                         </div>
@@ -352,13 +355,13 @@ export default function PremiumPage() {
                       </div>
                     </motion.div>
 
-                    <motion.div 
+                    <motion.div
                       className="p-4 bg-gradient-to-br from-emerald-900/20 to-teal-900/20 rounded-xl border border-emerald-500/20"
                       whileHover={{ scale: 1.02 }}
                       transition={{ type: "spring", stiffness: 300 }}
                     >
                       <div className="text-center">
-                        <div className="text-xs text-gray-500 mb-1">Final Premium</div>
+                        <div className="text-xs text-gray-400 mb-1">Final Premium</div>
                         <div className="text-xl font-bold text-emerald-400">
                           ${(finalCost / 1000).toFixed(0)}K
                         </div>
@@ -371,7 +374,7 @@ export default function PremiumPage() {
                   <div className="p-4 bg-gray-800/30 rounded-xl border border-gray-700/30">
                     <div className="text-sm font-medium text-gray-300 mb-3">Savings Visualization</div>
                     <div className="flex h-6 rounded-lg overflow-hidden">
-                      <motion.div 
+                      <motion.div
                         className="bg-gradient-to-r from-red-500 to-orange-500 flex items-center justify-center text-xs font-semibold text-white"
                         initial={{ width: 0 }}
                         animate={{ width: `${baseCost > 0 ? ((baseCost - savings) / baseCost) * 100 : 100}%` }}
@@ -379,7 +382,7 @@ export default function PremiumPage() {
                       >
                         {baseCost > 0 && ((baseCost - savings) / baseCost) * 100 >= 30 && 'Final Cost'}
                       </motion.div>
-                      <motion.div 
+                      <motion.div
                         className="bg-gradient-to-r from-green-500 to-emerald-500 flex items-center justify-center text-xs font-semibold text-gray-900"
                         initial={{ width: 0 }}
                         animate={{ width: `${baseCost > 0 ? (savings / baseCost) * 100 : 0}%` }}
@@ -388,7 +391,7 @@ export default function PremiumPage() {
                         {baseCost > 0 && (savings / baseCost) * 100 >= 15 && 'Savings'}
                       </motion.div>
                     </div>
-                    <div className="flex justify-between mt-2 text-xs text-gray-500">
+                    <div className="flex justify-between mt-2 text-xs text-gray-400">
                       <span>You Pay: ${(finalCost / 1000).toFixed(0)}K</span>
                       <span>You Save: ${(savings / 1000).toFixed(0)}K</span>
                     </div>
@@ -397,11 +400,11 @@ export default function PremiumPage() {
                   {/* Key Metrics */}
                   <div className="grid grid-cols-2 gap-3">
                     <div className="p-3 bg-gradient-to-br from-gray-800/30 to-gray-800/10 rounded-lg border border-gray-700/30">
-                      <div className="text-xs text-gray-500 mb-1">Discount</div>
+                      <div className="text-xs text-gray-400 mb-1">Discount</div>
                       <div className="text-lg font-bold text-green-400">{(discount * 100).toFixed(0)}%</div>
                     </div>
                     <div className="p-3 bg-gradient-to-br from-gray-800/30 to-gray-800/10 rounded-lg border border-gray-700/30">
-                      <div className="text-xs text-gray-500 mb-1">Tier</div>
+                      <div className="text-xs text-gray-400 mb-1">Tier</div>
                       <div className="text-lg font-bold text-emerald-400">{tier}</div>
                     </div>
                   </div>
@@ -441,7 +444,7 @@ export default function PremiumPage() {
             ]}
             educationalContent="MLI Select is CMHC's multi-unit (5+ units) insurance program. Points from affordability, energy efficiency and accessibility commitments unlock higher leverage (up to 95%), longer amortization (40/45/50 years at 50/70/100 points) and premium discounts (10%/20%/30%). The insured loan is the lesser of the leverage cap and the loan supported by a 1.10 debt coverage ratio (standard rental). Figures are estimates based on CMHC's published criteria and premium grid (effective July 14, 2025); CMHC changes these periodically. Not a commitment to insure or lend. The premium is usually added to the loan. EGI, non-residential, second-mortgage and other-shelter-model surcharges are not included; provincial sales tax may apply to the premium in some provinces."
           />
-          <p className="mt-8 text-xs text-gray-500 max-w-4xl mx-auto text-center">
+          <p className="mt-8 text-xs text-gray-400 max-w-4xl mx-auto text-center">
             Estimates only. Base rates follow CMHC&apos;s multi-unit premium grid for standard rental housing (effective July 14, 2025);
             LTV bands above 85% are available under MLI Select only. The amortization surcharge (0.25% per 5 years beyond 25) and
             the MLI Select discount (10% / 20% / 30% at 50 / 70 / 100 points) are applied as published by CMHC. EGI, non-residential,
@@ -449,6 +452,6 @@ export default function PremiumPage() {
           </p>
         </div>
       </section>
-    </div>
+    </main>
   );
 }

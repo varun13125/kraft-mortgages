@@ -6,8 +6,8 @@ export default function TierBadge({ points }: { points: number }) {
   
   const tierColor = tier >= 100 ? "bg-green-500/20 text-green-400 border-green-500/30" :
                    tier >= 70 ? "bg-blue-500/20 text-blue-400 border-blue-500/30" :
-                   tier >= 50 ? "bg-gold-500/20 text-gold-400 border-gold-500/30" :
-                   "bg-gray-500/20 text-gray-400 border-gray-500/30";
+                   tier >= 50 ? "bg-gold-500/20 text-gold-300 border-gold-500/30" :
+                   "bg-gray-500/20 text-gray-300 border-gray-500/30";
   
   return (
     <span className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold border ${tierColor}`}>

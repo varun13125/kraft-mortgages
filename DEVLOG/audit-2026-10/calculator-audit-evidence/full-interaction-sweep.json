@@ -1,0 +1,1335 @@
+[
+  {
+    "route": "/calculators/a-vs-equity",
+    "status": 200,
+    "title": "A-Lender vs Equity Lending",
+    "canonical": "https://www.kraftmortgages.ca/calculators/a-vs-equity",
+    "inputCount": 9,
+    "numericOrToggleScenarios": 32,
+    "selectScenarios": 0,
+    "badNumbers": [],
+    "errors": [],
+    "accessibility": [
+      {
+        "id": "button-name",
+        "impact": "critical",
+        "count": 1,
+        "examples": [
+          {
+            "target": [
+              ".bg-gray-600"
+            ],
+            "summary": "Fix any of the following:\n  Element does not have inner text that is visible to screen readers\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+          }
+        ]
+      },
+      {
+        "id": "link-in-text-block",
+        "impact": "serious",
+        "count": 1,
+        "examples": [
+          {
+            "target": [
+              ".hover\\:underline"
+            ],
+            "summary": "Fix any of the following:\n  The link has insufficient color contrast of 1.25:1 with the surrounding text. (Minimum contrast is 3:1, link text: #d97706, surrounding text: #9ca3af)\n  The link has no styling (such as underline) to distinguish it from the surrounding text"
+          }
+        ]
+      }
+    ],
+    "mobile": {
+      "viewport": 390,
+      "documentWidth": 390,
+      "overflowing": []
+    }
+  },
+  {
+    "route": "/calculators/affordability",
+    "status": 200,
+    "title": "Affordability Calculator",
+    "canonical": "https://www.kraftmortgages.ca/calculators/affordability",
+    "inputCount": 8,
+    "numericOrToggleScenarios": 28,
+    "selectScenarios": 0,
+    "badNumbers": [],
+    "errors": [],
+    "accessibility": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "count": 1,
+        "examples": [
+          {
+            "target": [
+              ".text-lg.text-gold-400.font-semibold"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.46 (foreground color: #d97706, background color: #272a39, font size: 13.5pt (18px), font weight: normal). Expected contrast ratio of 4.5:1"
+          }
+        ]
+      }
+    ],
+    "mobile": {
+      "viewport": 390,
+      "documentWidth": 390,
+      "overflowing": []
+    }
+  },
+  {
+    "route": "/calculators/amortization",
+    "status": 200,
+    "title": "Amortization Calculator",
+    "canonical": "https://www.kraftmortgages.ca/calculators/amortization",
+    "inputCount": 4,
+    "numericOrToggleScenarios": 14,
+    "selectScenarios": 0,
+    "badNumbers": [],
+    "errors": [],
+    "accessibility": [],
+    "mobile": {
+      "viewport": 390,
+      "documentWidth": 390,
+      "overflowing": []
+    }
+  },
+  {
+    "route": "/calculators/b-vs-equity",
+    "status": 200,
+    "title": "B-Lender vs Equity Lending Calculator",
+    "canonical": "https://www.kraftmortgages.ca/calculators/b-vs-equity",
+    "inputCount": 8,
+    "numericOrToggleScenarios": 28,
+    "selectScenarios": 0,
+    "badNumbers": [],
+    "errors": [],
+    "accessibility": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "count": 1,
+        "examples": [
+          {
+            "target": [
+              ".bg-amber-500\\/20 > p"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.44 (foreground color: #9ca3af, background color: #473827, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+          }
+        ]
+      },
+      {
+        "id": "link-in-text-block",
+        "impact": "serious",
+        "count": 1,
+        "examples": [
+          {
+            "target": [
+              ".hover\\:underline"
+            ],
+            "summary": "Fix any of the following:\n  The link has insufficient color contrast of 1.25:1 with the surrounding text. (Minimum contrast is 3:1, link text: #d97706, surrounding text: #9ca3af)\n  The link has no styling (such as underline) to distinguish it from the surrounding text"
+          }
+        ]
+      }
+    ],
+    "mobile": {
+      "viewport": 390,
+      "documentWidth": 390,
+      "overflowing": []
+    }
+  },
+  {
+    "route": "/calculators/bc-speculation-tax",
+    "status": 200,
+    "title": "BC Speculation & Vacancy Tax Calculator",
+    "canonical": "https://www.kraftmortgages.ca/calculators/bc-speculation-tax",
+    "inputCount": 1,
+    "numericOrToggleScenarios": 4,
+    "selectScenarios": 0,
+    "badNumbers": [],
+    "errors": [],
+    "accessibility": [],
+    "mobile": {
+      "viewport": 390,
+      "documentWidth": 390,
+      "overflowing": []
+    }
+  },
+  {
+    "route": "/calculators/closing-costs",
+    "status": 200,
+    "title": "Closing Costs Calculator",
+    "canonical": "https://www.kraftmortgages.ca/calculators/closing-costs",
+    "inputCount": 2,
+    "numericOrToggleScenarios": 6,
+    "selectScenarios": 0,
+    "badNumbers": [],
+    "errors": [],
+    "accessibility": [],
+    "mobile": {
+      "viewport": 390,
+      "documentWidth": 390,
+      "overflowing": []
+    }
+  },
+  {
+    "route": "/calculators/cmhc-insurance",
+    "status": 200,
+    "title": "CMHC Insurance Calculator",
+    "canonical": "https://www.kraftmortgages.ca/calculators/cmhc-insurance",
+    "inputCount": 3,
+    "numericOrToggleScenarios": 10,
+    "selectScenarios": 0,
+    "badNumbers": [],
+    "errors": [],
+    "accessibility": [
+      {
+        "id": "link-in-text-block",
+        "impact": "serious",
+        "count": 2,
+        "examples": [
+          {
+            "target": [
+              ".hover\\:underline"
+            ],
+            "summary": "Fix any of the following:\n  The link has insufficient color contrast of 1.25:1 with the surrounding text. (Minimum contrast is 3:1, link text: #d97706, surrounding text: #9ca3af)\n  The link has no styling (such as underline) to distinguish it from the surrounding text"
+          },
+          {
+            "target": [
+              "a[href=\"tel:604-593-1550\"]"
+            ],
+            "summary": "Fix any of the following:\n  The link has insufficient color contrast of 2.16:1 with the surrounding text. (Minimum contrast is 3:1, link text: #d97706, surrounding text: #d1d5db)\n  The link has no styling (such as underline) to distinguish it from the surrounding text"
+          }
+        ]
+      }
+    ],
+    "mobile": {
+      "viewport": 390,
+      "documentWidth": 390,
+      "overflowing": []
+    }
+  },
+  {
+    "route": "/calculators/construction-pro",
+    "status": 200,
+    "title": "Construction Pro Calculator",
+    "canonical": "https://www.kraftmortgages.ca/calculators/construction-pro",
+    "inputCount": 8,
+    "numericOrToggleScenarios": 32,
+    "selectScenarios": 0,
+    "badNumbers": [],
+    "errors": [],
+    "accessibility": [
+      {
+        "id": "button-name",
+        "impact": "critical",
+        "count": 3,
+        "examples": [
+          {
+            "target": [
+              ".sm\\:gap-4.bg-gray-700\\/30.sm\\:p-3:nth-child(2) > .hover\\:bg-red-500\\/20.disabled\\:opacity-50.disabled\\:cursor-not-allowed"
+            ],
+            "summary": "Fix any of the following:\n  Element does not have inner text that is visible to screen readers\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+          },
+          {
+            "target": [
+              ".sm\\:gap-4.bg-gray-700\\/30.sm\\:p-3:nth-child(3) > .hover\\:bg-red-500\\/20.disabled\\:opacity-50.disabled\\:cursor-not-allowed"
+            ],
+            "summary": "Fix any of the following:\n  Element does not have inner text that is visible to screen readers\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+          },
+          {
+            "target": [
+              ".sm\\:gap-4.bg-gray-700\\/30.sm\\:p-3:nth-child(4) > .hover\\:bg-red-500\\/20.disabled\\:opacity-50.disabled\\:cursor-not-allowed"
+            ],
+            "summary": "Fix any of the following:\n  Element does not have inner text that is visible to screen readers\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+          }
+        ]
+      },
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "count": 3,
+        "examples": [
+          {
+            "target": [
+              ".hover\\:bg-gold-500\\/30.bg-gold-500\\/20.px-3"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.82 (foreground color: #d97706, background color: #37362a, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              ".hover\\:bg-gold-500\\/30.bg-gold-500\\/20[href$=\"payment\"]"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.82 (foreground color: #d97706, background color: #37362a, font size: 12.0pt (16px), font weight: normal). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              ".hover\\:bg-gold-500\\/30.bg-gold-500\\/20.px-4:nth-child(2)"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.82 (foreground color: #d97706, background color: #37362a, font size: 12.0pt (16px), font weight: normal). Expected contrast ratio of 4.5:1"
+          }
+        ]
+      }
+    ],
+    "mobile": {
+      "viewport": 390,
+      "documentWidth": 390,
+      "overflowing": []
+    }
+  },
+  {
+    "route": "/calculators/debt-service-ratio",
+    "status": 200,
+    "title": "Debt Service Ratio Calculator",
+    "canonical": "https://www.kraftmortgages.ca/calculators/debt-service-ratio",
+    "inputCount": 14,
+    "numericOrToggleScenarios": 52,
+    "selectScenarios": 0,
+    "badNumbers": [],
+    "errors": [],
+    "accessibility": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "count": 4,
+        "examples": [
+          {
+            "target": [
+              "div:nth-child(3) > div > .items-baseline.mb-2\\.5.justify-between > .sm\\:text-lg.tabular-nums.text-base"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.46 (foreground color: #d97706, background color: #272a39, font size: 13.5pt (18px), font weight: normal). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              ".hover\\:underline"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.46 (foreground color: #d97706, background color: #272a39, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              "div:nth-child(4) > .items-baseline.mb-2\\.5.justify-between > .sm\\:text-lg.tabular-nums.text-base"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.46 (foreground color: #d97706, background color: #272a39, font size: 13.5pt (18px), font weight: normal). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              "p > .font-semibold.text-gold-400"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.46 (foreground color: #d97706, background color: #272a39, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+          }
+        ]
+      },
+      {
+        "id": "link-in-text-block",
+        "impact": "serious",
+        "count": 1,
+        "examples": [
+          {
+            "target": [
+              ".hover\\:underline"
+            ],
+            "summary": "Fix any of the following:\n  The link has insufficient color contrast of 1.25:1 with the surrounding text. (Minimum contrast is 3:1, link text: #d97706, surrounding text: #9ca3af)\n  The link has no styling (such as underline) to distinguish it from the surrounding text"
+          }
+        ]
+      }
+    ],
+    "mobile": {
+      "viewport": 390,
+      "documentWidth": 390,
+      "overflowing": []
+    }
+  },
+  {
+    "route": "/calculators/down-payment",
+    "status": 200,
+    "title": "Down Payment Calculator",
+    "canonical": "https://www.kraftmortgages.ca/calculators/down-payment",
+    "inputCount": 1,
+    "numericOrToggleScenarios": 4,
+    "selectScenarios": 0,
+    "badNumbers": [],
+    "errors": [],
+    "accessibility": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "count": 1,
+        "examples": [
+          {
+            "target": [
+              ".bg-blue-500.flex-1.justify-center"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.67 (foreground color: #ffffff, background color: #3b82f6, font size: 9.0pt (12px), font weight: bold). Expected contrast ratio of 4.5:1"
+          }
+        ]
+      },
+      {
+        "id": "link-in-text-block",
+        "impact": "serious",
+        "count": 1,
+        "examples": [
+          {
+            "target": [
+              "a[href=\"tel:604-593-1550\"]"
+            ],
+            "summary": "Fix any of the following:\n  The link has insufficient color contrast of 2.16:1 with the surrounding text. (Minimum contrast is 3:1, link text: #d97706, surrounding text: #d1d5db)\n  The link has no styling (such as underline) to distinguish it from the surrounding text"
+          }
+        ]
+      }
+    ],
+    "mobile": {
+      "viewport": 390,
+      "documentWidth": 390,
+      "overflowing": []
+    }
+  },
+  {
+    "route": "/calculators/extra-payments",
+    "status": 200,
+    "title": "Extra Payment Savings Calculator",
+    "canonical": "https://www.kraftmortgages.ca/calculators/extra-payments",
+    "inputCount": 5,
+    "numericOrToggleScenarios": 18,
+    "selectScenarios": 0,
+    "badNumbers": [],
+    "errors": [],
+    "accessibility": [
+      {
+        "id": "scrollable-region-focusable",
+        "impact": "serious",
+        "count": 1,
+        "examples": [
+          {
+            "target": [
+              ".max-h-80"
+            ],
+            "summary": "Fix any of the following:\n  Element should have focusable content\n  Element should be focusable"
+          }
+        ]
+      }
+    ],
+    "mobile": {
+      "viewport": 390,
+      "documentWidth": 390,
+      "overflowing": []
+    }
+  },
+  {
+    "route": "/calculators/first-time-home-buyer",
+    "status": 200,
+    "title": "First-Time Home Buyer Calculator",
+    "canonical": "https://www.kraftmortgages.ca/calculators/first-time-home-buyer",
+    "inputCount": 4,
+    "numericOrToggleScenarios": 14,
+    "selectScenarios": 0,
+    "badNumbers": [],
+    "errors": [],
+    "accessibility": [],
+    "mobile": {
+      "viewport": 390,
+      "documentWidth": 390,
+      "overflowing": []
+    }
+  },
+  {
+    "route": "/calculators/investment",
+    "status": 200,
+    "title": "Investment Calculator",
+    "canonical": "https://www.kraftmortgages.ca/calculators/investment",
+    "inputCount": 7,
+    "numericOrToggleScenarios": 28,
+    "selectScenarios": 4,
+    "badNumbers": [],
+    "errors": [],
+    "accessibility": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "count": 2,
+        "examples": [
+          {
+            "target": [
+              ".hover\\:bg-gold-500\\/30.bg-gold-500\\/20[href$=\"payment\"]"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.82 (foreground color: #d97706, background color: #37362a, font size: 12.0pt (16px), font weight: normal). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              "a[href$=\"dscr\"]"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.82 (foreground color: #d97706, background color: #37362a, font size: 12.0pt (16px), font weight: normal). Expected contrast ratio of 4.5:1"
+          }
+        ]
+      }
+    ],
+    "mobile": {
+      "viewport": 390,
+      "documentWidth": 390,
+      "overflowing": []
+    }
+  },
+  {
+    "route": "/calculators/land-transfer-tax",
+    "status": 200,
+    "title": "Land Transfer Tax Calculator",
+    "canonical": "https://www.kraftmortgages.ca/calculators/land-transfer-tax",
+    "inputCount": 1,
+    "numericOrToggleScenarios": 4,
+    "selectScenarios": 0,
+    "badNumbers": [],
+    "errors": [],
+    "accessibility": [
+      {
+        "id": "button-name",
+        "impact": "critical",
+        "count": 1,
+        "examples": [
+          {
+            "target": [
+              ".bg-gray-600"
+            ],
+            "summary": "Fix any of the following:\n  Element does not have inner text that is visible to screen readers\n  aria-label attribute does not exist or is empty\n  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty\n  Element has no title attribute\n  Element does not have an implicit (wrapped) <label>\n  Element does not have an explicit <label>\n  Element's default semantics were not overridden with role=\"none\" or role=\"presentation\""
+          }
+        ]
+      }
+    ],
+    "mobile": {
+      "viewport": 390,
+      "documentWidth": 390,
+      "overflowing": []
+    }
+  },
+  {
+    "route": "/calculators/mortgage-penalty",
+    "status": 200,
+    "title": "Mortgage Penalty Calculator",
+    "canonical": "https://www.kraftmortgages.ca/calculators/mortgage-penalty",
+    "inputCount": 6,
+    "numericOrToggleScenarios": 14,
+    "selectScenarios": 0,
+    "badNumbers": [],
+    "errors": [],
+    "accessibility": [
+      {
+        "id": "link-in-text-block",
+        "impact": "serious",
+        "count": 1,
+        "examples": [
+          {
+            "target": [
+              ".hover\\:underline"
+            ],
+            "summary": "Fix any of the following:\n  The link has insufficient color contrast of 1.25:1 with the surrounding text. (Minimum contrast is 3:1, link text: #d97706, surrounding text: #9ca3af)\n  The link has no styling (such as underline) to distinguish it from the surrounding text"
+          }
+        ]
+      }
+    ],
+    "mobile": {
+      "viewport": 390,
+      "documentWidth": 390,
+      "overflowing": []
+    }
+  },
+  {
+    "route": "/calculators/mortgage-qualifier",
+    "status": 200,
+    "title": "Can I afford this home?",
+    "canonical": "https://www.kraftmortgages.ca/calculators/mortgage-qualifier",
+    "inputCount": 10,
+    "numericOrToggleScenarios": 36,
+    "selectScenarios": 0,
+    "badNumbers": [],
+    "errors": [],
+    "accessibility": [
+      {
+        "id": "link-in-text-block",
+        "impact": "serious",
+        "count": 2,
+        "examples": [
+          {
+            "target": [
+              ".hover\\:underline.text-gold-400[href$=\"rates\"]"
+            ],
+            "summary": "Fix any of the following:\n  The link has insufficient color contrast of 1.25:1 with the surrounding text. (Minimum contrast is 3:1, link text: #d97706, surrounding text: #9ca3af)\n  The link has no styling (such as underline) to distinguish it from the surrounding text"
+          },
+          {
+            "target": [
+              ".hover\\:underline.text-gold-400[href$=\"contact\"]"
+            ],
+            "summary": "Fix any of the following:\n  The link has insufficient color contrast of 1.25:1 with the surrounding text. (Minimum contrast is 3:1, link text: #d97706, surrounding text: #9ca3af)\n  The link has no styling (such as underline) to distinguish it from the surrounding text"
+          }
+        ]
+      }
+    ],
+    "mobile": {
+      "viewport": 390,
+      "documentWidth": 390,
+      "overflowing": []
+    }
+  },
+  {
+    "route": "/calculators/payment",
+    "status": 200,
+    "title": "Payment Calculator",
+    "canonical": "https://www.kraftmortgages.ca/calculators/payment",
+    "inputCount": 2,
+    "numericOrToggleScenarios": 8,
+    "selectScenarios": 4,
+    "badNumbers": [],
+    "errors": [],
+    "accessibility": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "count": 2,
+        "examples": [
+          {
+            "target": [
+              ".hover\\:bg-gold-500\\/30.bg-gold-500\\/20[href$=\"affordability\"]"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.82 (foreground color: #d97706, background color: #37362a, font size: 12.0pt (16px), font weight: normal). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              ".hover\\:bg-gold-500\\/30.bg-gold-500\\/20[href$=\"renewal\"]"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.82 (foreground color: #d97706, background color: #37362a, font size: 12.0pt (16px), font weight: normal). Expected contrast ratio of 4.5:1"
+          }
+        ]
+      }
+    ],
+    "mobile": {
+      "viewport": 390,
+      "documentWidth": 390,
+      "overflowing": []
+    }
+  },
+  {
+    "route": "/calculators/port-vs-break",
+    "status": 200,
+    "title": "Port vs Break",
+    "canonical": "https://www.kraftmortgages.ca/calculators/port-vs-break",
+    "inputCount": 9,
+    "numericOrToggleScenarios": 24,
+    "selectScenarios": 0,
+    "badNumbers": [],
+    "errors": [],
+    "accessibility": [
+      {
+        "id": "link-in-text-block",
+        "impact": "serious",
+        "count": 1,
+        "examples": [
+          {
+            "target": [
+              ".hover\\:underline"
+            ],
+            "summary": "Fix any of the following:\n  The link has insufficient color contrast of 1.25:1 with the surrounding text. (Minimum contrast is 3:1, link text: #d97706, surrounding text: #9ca3af)\n  The link has no styling (such as underline) to distinguish it from the surrounding text"
+          }
+        ]
+      }
+    ],
+    "mobile": {
+      "viewport": 390,
+      "documentWidth": 390,
+      "overflowing": []
+    }
+  },
+  {
+    "route": "/calculators/pre-approval",
+    "status": 200,
+    "title": "Mortgage Pre-Approval",
+    "canonical": "https://www.kraftmortgages.ca/calculators/pre-approval",
+    "inputCount": 7,
+    "numericOrToggleScenarios": 24,
+    "selectScenarios": 0,
+    "badNumbers": [],
+    "errors": [],
+    "accessibility": [
+      {
+        "id": "link-in-text-block",
+        "impact": "serious",
+        "count": 1,
+        "examples": [
+          {
+            "target": [
+              ".hover\\:underline"
+            ],
+            "summary": "Fix any of the following:\n  The link has insufficient color contrast of 1.25:1 with the surrounding text. (Minimum contrast is 3:1, link text: #d97706, surrounding text: #9ca3af)\n  The link has no styling (such as underline) to distinguish it from the surrounding text"
+          }
+        ]
+      }
+    ],
+    "mobile": {
+      "viewport": 390,
+      "documentWidth": 390,
+      "overflowing": []
+    }
+  },
+  {
+    "route": "/calculators/rate-comparison",
+    "status": 200,
+    "title": "Mortgage Rate Comparison",
+    "canonical": "https://www.kraftmortgages.ca/calculators/rate-comparison",
+    "inputCount": 5,
+    "numericOrToggleScenarios": 12,
+    "selectScenarios": 0,
+    "badNumbers": [],
+    "errors": [],
+    "accessibility": [
+      {
+        "id": "link-in-text-block",
+        "impact": "serious",
+        "count": 1,
+        "examples": [
+          {
+            "target": [
+              ".hover\\:underline"
+            ],
+            "summary": "Fix any of the following:\n  The link has insufficient color contrast of 1.25:1 with the surrounding text. (Minimum contrast is 3:1, link text: #d97706, surrounding text: #9ca3af)\n  The link has no styling (such as underline) to distinguish it from the surrounding text"
+          }
+        ]
+      }
+    ],
+    "mobile": {
+      "viewport": 390,
+      "documentWidth": 390,
+      "overflowing": []
+    }
+  },
+  {
+    "route": "/calculators/refinance-break-even",
+    "status": 200,
+    "title": "Refinance Break-Even Calculator",
+    "canonical": "https://www.kraftmortgages.ca/calculators/refinance-break-even",
+    "inputCount": 8,
+    "numericOrToggleScenarios": 32,
+    "selectScenarios": 0,
+    "badNumbers": [],
+    "errors": [],
+    "accessibility": [],
+    "mobile": {
+      "viewport": 390,
+      "documentWidth": 390,
+      "overflowing": []
+    }
+  },
+  {
+    "route": "/calculators/refinance-cashout",
+    "status": 200,
+    "title": "Refinance Cash-Out Calculator",
+    "canonical": "https://www.kraftmortgages.ca/calculators/refinance-cashout",
+    "inputCount": 5,
+    "numericOrToggleScenarios": 14,
+    "selectScenarios": 0,
+    "badNumbers": [],
+    "errors": [],
+    "accessibility": [],
+    "mobile": {
+      "viewport": 390,
+      "documentWidth": 390,
+      "overflowing": []
+    }
+  },
+  {
+    "route": "/calculators/refinance-vs-heloc-vs-second",
+    "status": 200,
+    "title": "Refinance vs HELOC vs Second Mortgage Calculator",
+    "canonical": "https://www.kraftmortgages.ca/calculators/refinance-vs-heloc-vs-second",
+    "inputCount": 5,
+    "numericOrToggleScenarios": 20,
+    "selectScenarios": 0,
+    "badNumbers": [],
+    "errors": [],
+    "accessibility": [],
+    "mobile": {
+      "viewport": 390,
+      "documentWidth": 390,
+      "overflowing": []
+    }
+  },
+  {
+    "route": "/calculators/renewal",
+    "status": 200,
+    "title": "Renewal Optimizer",
+    "canonical": "https://www.kraftmortgages.ca/calculators/renewal",
+    "inputCount": 6,
+    "numericOrToggleScenarios": 24,
+    "selectScenarios": 0,
+    "badNumbers": [],
+    "errors": [],
+    "accessibility": [],
+    "mobile": {
+      "viewport": 390,
+      "documentWidth": 390,
+      "overflowing": []
+    }
+  },
+  {
+    "route": "/calculators/rent-vs-buy",
+    "status": 200,
+    "title": "Rent vs Buy Calculator",
+    "canonical": "https://www.kraftmortgages.ca/calculators/rent-vs-buy",
+    "inputCount": 13,
+    "numericOrToggleScenarios": 36,
+    "selectScenarios": 0,
+    "badNumbers": [],
+    "errors": [],
+    "accessibility": [],
+    "mobile": {
+      "viewport": 390,
+      "documentWidth": 390,
+      "overflowing": []
+    }
+  },
+  {
+    "route": "/calculators/required-income",
+    "status": 200,
+    "title": "Required Income Calculator",
+    "canonical": "https://www.kraftmortgages.ca/calculators/required-income",
+    "inputCount": 7,
+    "numericOrToggleScenarios": 26,
+    "selectScenarios": 0,
+    "badNumbers": [],
+    "errors": [],
+    "accessibility": [
+      {
+        "id": "link-in-text-block",
+        "impact": "serious",
+        "count": 1,
+        "examples": [
+          {
+            "target": [
+              "a[href=\"tel:604-593-1550\"]"
+            ],
+            "summary": "Fix any of the following:\n  The link has insufficient color contrast of 1.45:1 with the surrounding text. (Minimum contrast is 3:1, link text: #f59e0b, surrounding text: #d1d5db)\n  The link has no styling (such as underline) to distinguish it from the surrounding text"
+          }
+        ]
+      }
+    ],
+    "mobile": {
+      "viewport": 390,
+      "documentWidth": 390,
+      "overflowing": []
+    }
+  },
+  {
+    "route": "/calculators/reverse-mortgage",
+    "status": 200,
+    "title": "Reverse Mortgage Calculator",
+    "canonical": "https://www.kraftmortgages.ca/calculators/reverse-mortgage",
+    "inputCount": 5,
+    "numericOrToggleScenarios": 14,
+    "selectScenarios": 0,
+    "badNumbers": [],
+    "errors": [],
+    "accessibility": [],
+    "mobile": {
+      "viewport": 390,
+      "documentWidth": 390,
+      "overflowing": []
+    }
+  },
+  {
+    "route": "/calculators/self-employed",
+    "status": 200,
+    "title": "Self-Employed Calculator",
+    "canonical": "https://www.kraftmortgages.ca/calculators/self-employed",
+    "inputCount": 4,
+    "numericOrToggleScenarios": 16,
+    "selectScenarios": 0,
+    "badNumbers": [],
+    "errors": [],
+    "accessibility": [],
+    "mobile": {
+      "viewport": 390,
+      "documentWidth": 390,
+      "overflowing": []
+    }
+  },
+  {
+    "route": "/calculators/self-employed-a-vs-b",
+    "status": 200,
+    "title": "A-Lender vs B-Lender",
+    "canonical": "https://www.kraftmortgages.ca/calculators/self-employed-a-vs-b",
+    "inputCount": 9,
+    "numericOrToggleScenarios": 30,
+    "selectScenarios": 0,
+    "badNumbers": [],
+    "errors": [],
+    "accessibility": [],
+    "mobile": {
+      "viewport": 390,
+      "documentWidth": 390,
+      "overflowing": []
+    }
+  },
+  {
+    "route": "/calculators/stress-test",
+    "status": 200,
+    "title": "Stress Test Calculator",
+    "canonical": "https://www.kraftmortgages.ca/calculators/stress-test",
+    "inputCount": 8,
+    "numericOrToggleScenarios": 28,
+    "selectScenarios": 0,
+    "badNumbers": [],
+    "errors": [],
+    "accessibility": [],
+    "mobile": {
+      "viewport": 390,
+      "documentWidth": 390,
+      "overflowing": []
+    }
+  },
+  {
+    "route": "/commercial/calculators/cap-rate",
+    "status": 200,
+    "title": "Capitalization Rate",
+    "canonical": "https://www.kraftmortgages.ca/commercial/calculators/cap-rate",
+    "inputCount": 3,
+    "numericOrToggleScenarios": 12,
+    "selectScenarios": 0,
+    "badNumbers": [],
+    "errors": [],
+    "accessibility": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "count": 1,
+        "examples": [
+          {
+            "target": [
+              ".bg-purple-500"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.95 (foreground color: #ffffff, background color: #a855f7, font size: 12.0pt (16px), font weight: normal). Expected contrast ratio of 4.5:1"
+          }
+        ]
+      }
+    ],
+    "mobile": {
+      "viewport": 390,
+      "documentWidth": 390,
+      "overflowing": []
+    }
+  },
+  {
+    "route": "/commercial/calculators/cash-flow",
+    "status": 200,
+    "title": "Cash Flow Calculator",
+    "canonical": "https://www.kraftmortgages.ca/commercial/calculators/cash-flow",
+    "inputCount": 9,
+    "numericOrToggleScenarios": 36,
+    "selectScenarios": 3,
+    "badNumbers": [],
+    "errors": [],
+    "accessibility": [],
+    "mobile": {
+      "viewport": 390,
+      "documentWidth": 390,
+      "overflowing": []
+    }
+  },
+  {
+    "route": "/commercial/calculators/noi-analysis",
+    "status": 200,
+    "title": "Net Operating Income",
+    "canonical": "https://www.kraftmortgages.ca/commercial/calculators/noi-analysis",
+    "inputCount": 10,
+    "numericOrToggleScenarios": 40,
+    "selectScenarios": 0,
+    "badNumbers": [],
+    "errors": [],
+    "accessibility": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "count": 1,
+        "examples": [
+          {
+            "target": [
+              ".bg-purple-500"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.95 (foreground color: #ffffff, background color: #a855f7, font size: 12.0pt (16px), font weight: normal). Expected contrast ratio of 4.5:1"
+          }
+        ]
+      }
+    ],
+    "mobile": {
+      "viewport": 390,
+      "documentWidth": 390,
+      "overflowing": []
+    }
+  },
+  {
+    "route": "/commercial/calculators/refinance",
+    "status": 200,
+    "title": "Break-Even Analysis",
+    "canonical": "https://www.kraftmortgages.ca/commercial/calculators/refinance",
+    "inputCount": 8,
+    "numericOrToggleScenarios": 32,
+    "selectScenarios": 3,
+    "badNumbers": [],
+    "errors": [],
+    "accessibility": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "count": 2,
+        "examples": [
+          {
+            "target": [
+              ".bg-purple-500.py-2.text-white"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.95 (foreground color: #ffffff, background color: #a855f7, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              ".hover\\:bg-purple-400"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 3.95 (foreground color: #ffffff, background color: #a855f7, font size: 12.0pt (16px), font weight: normal). Expected contrast ratio of 4.5:1"
+          }
+        ]
+      }
+    ],
+    "mobile": {
+      "viewport": 390,
+      "documentWidth": 390,
+      "overflowing": []
+    }
+  },
+  {
+    "route": "/construction/calculators/budget",
+    "status": 200,
+    "title": "Construction Budget Calculator",
+    "canonical": "https://www.kraftmortgages.ca/construction/calculators/budget",
+    "inputCount": 10,
+    "numericOrToggleScenarios": 40,
+    "selectScenarios": 0,
+    "badNumbers": [],
+    "errors": [],
+    "accessibility": [],
+    "mobile": {
+      "viewport": 390,
+      "documentWidth": 390,
+      "overflowing": []
+    }
+  },
+  {
+    "route": "/construction/calculators/builder-program",
+    "status": 200,
+    "title": "Find Your Builder Program",
+    "canonical": "https://www.kraftmortgages.ca/construction/calculators/builder-program",
+    "inputCount": 3,
+    "numericOrToggleScenarios": 12,
+    "selectScenarios": 0,
+    "badNumbers": [],
+    "errors": [],
+    "accessibility": [],
+    "mobile": {
+      "viewport": 390,
+      "documentWidth": 390,
+      "overflowing": []
+    }
+  },
+  {
+    "route": "/construction/calculators/construction-draw",
+    "status": 200,
+    "title": "Construction-to-Permanent Financing",
+    "canonical": "https://www.kraftmortgages.ca/construction/calculators/construction-draw",
+    "inputCount": 5,
+    "numericOrToggleScenarios": 16,
+    "selectScenarios": 0,
+    "badNumbers": [],
+    "errors": [],
+    "accessibility": [],
+    "mobile": {
+      "viewport": 390,
+      "documentWidth": 390,
+      "overflowing": []
+    }
+  },
+  {
+    "route": "/construction/calculators/cost-to-complete",
+    "status": 200,
+    "title": "Project Funding Gap Analysis",
+    "canonical": "https://www.kraftmortgages.ca/construction/calculators/cost-to-complete",
+    "inputCount": 12,
+    "numericOrToggleScenarios": 48,
+    "selectScenarios": 0,
+    "badNumbers": [],
+    "errors": [],
+    "accessibility": [],
+    "mobile": {
+      "viewport": 390,
+      "documentWidth": 390,
+      "overflowing": []
+    }
+  },
+  {
+    "route": "/construction/calculators/progressive-draw",
+    "status": 200,
+    "title": "Interest on Partial Draws",
+    "canonical": "https://www.kraftmortgages.ca/construction/calculators/progressive-draw",
+    "inputCount": 2,
+    "numericOrToggleScenarios": 8,
+    "selectScenarios": 0,
+    "badNumbers": [],
+    "errors": [],
+    "accessibility": [],
+    "mobile": {
+      "viewport": 390,
+      "documentWidth": 390,
+      "overflowing": []
+    }
+  },
+  {
+    "route": "/equity-lending/calculators/debt-consolidation",
+    "status": 200,
+    "title": "Debt Consolidation Calculator",
+    "canonical": "https://www.kraftmortgages.ca/equity-lending/calculators/debt-consolidation",
+    "inputCount": 7,
+    "numericOrToggleScenarios": 28,
+    "selectScenarios": 5,
+    "badNumbers": [],
+    "errors": [],
+    "accessibility": [],
+    "mobile": {
+      "viewport": 390,
+      "documentWidth": 390,
+      "overflowing": []
+    }
+  },
+  {
+    "route": "/equity-lending/calculators/heloc",
+    "status": 200,
+    "title": "Home Equity Line of Credit",
+    "canonical": "https://www.kraftmortgages.ca/equity-lending/calculators/heloc",
+    "inputCount": 6,
+    "numericOrToggleScenarios": 22,
+    "selectScenarios": 0,
+    "badNumbers": [],
+    "errors": [],
+    "accessibility": [],
+    "mobile": {
+      "viewport": 390,
+      "documentWidth": 390,
+      "overflowing": []
+    }
+  },
+  {
+    "route": "/equity-lending/calculators/home-equity",
+    "status": 200,
+    "title": "Home Equity Calculator",
+    "canonical": "https://www.kraftmortgages.ca/equity-lending/calculators/home-equity",
+    "inputCount": 5,
+    "numericOrToggleScenarios": 20,
+    "selectScenarios": 5,
+    "badNumbers": [],
+    "errors": [],
+    "accessibility": [],
+    "mobile": {
+      "viewport": 390,
+      "documentWidth": 390,
+      "overflowing": []
+    }
+  },
+  {
+    "route": "/mli-select/calculators/amortization",
+    "status": 200,
+    "title": "Amortization\nComparison",
+    "canonical": "https://www.kraftmortgages.ca/mli-select/calculators/amortization",
+    "inputCount": 2,
+    "numericOrToggleScenarios": 8,
+    "selectScenarios": 0,
+    "badNumbers": [],
+    "errors": [],
+    "accessibility": [],
+    "mobile": {
+      "viewport": 390,
+      "documentWidth": 390,
+      "overflowing": []
+    }
+  },
+  {
+    "route": "/mli-select/calculators/break-even",
+    "status": 200,
+    "title": "Break-Even\nRent Calculator",
+    "canonical": "https://www.kraftmortgages.ca/mli-select/calculators/break-even",
+    "inputCount": 7,
+    "numericOrToggleScenarios": 28,
+    "selectScenarios": 0,
+    "badNumbers": [],
+    "errors": [],
+    "accessibility": [
+      {
+        "id": "color-contrast",
+        "impact": "serious",
+        "count": 9,
+        "examples": [
+          {
+            "target": [
+              ".bg-gray-800\\/30 > .mb-3.font-medium.text-gray-300"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.45 (foreground color: #777c86, background color: #0c1222, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              ".space-y-3 > .justify-between.flex.items-center:nth-child(1) > .text-gray-400"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 2.99 (foreground color: #5a616e, background color: #0c1222, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              ".font-semibold.text-red-400.text-sm"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 2.73 (foreground color: #8c454d, background color: #0c1222, font size: 10.5pt (14px), font weight: normal). Expected contrast ratio of 4.5:1"
+          },
+          {
+            "target": [
+              ".justify-between.flex.items-center:nth-child(2) > .text-gray-400"
+            ],
+            "summary": "Fix any of the following:\n  Element has insufficient color contrast of 2.99 (foreground color: #5a616e, background color: #0c1222, font size: 9.0pt (12px), font weight: normal). Expected contrast ratio of 4.5:1"
+          }
+        ]
+      }
+    ],
+    "mobile": {
+      "viewport": 390,
+      "documentWidth": 390,
+      "overflowing": []
+    }
+  },
+  {
+    "route": "/mli-select/calculators/dscr",
+    "status": 200,
+    "title": "DSCR Max Loan\nCalculator",
+    "canonical": "https://www.kraftmortgages.ca/mli-select/calculators/dscr",
+    "inputCount": 4,
+    "numericOrToggleScenarios": 16,
+    "selectScenarios": 0,
+    "badNumbers": [],
+    "errors": [],
+    "accessibility": [],
+    "mobile": {
+      "viewport": 390,
+      "documentWidth": 390,
+      "overflowing": []
+    }
+  },
+  {
+    "route": "/mli-select/calculators/eligibility-checklist",
+    "status": 200,
+    "title": "Eligibility Checklist",
+    "canonical": "https://www.kraftmortgages.ca/mli-select/calculators/eligibility-checklist",
+    "inputCount": 0,
+    "numericOrToggleScenarios": 0,
+    "selectScenarios": 0,
+    "badNumbers": [],
+    "errors": [],
+    "accessibility": [],
+    "mobile": {
+      "viewport": 390,
+      "documentWidth": 390,
+      "overflowing": []
+    }
+  },
+  {
+    "route": "/mli-select/calculators/max-loan",
+    "status": 200,
+    "title": "Maximum Loan\n& Equity Calculator",
+    "canonical": "https://www.kraftmortgages.ca/mli-select/calculators/max-loan",
+    "inputCount": 2,
+    "numericOrToggleScenarios": 8,
+    "selectScenarios": 2,
+    "badNumbers": [],
+    "errors": [],
+    "accessibility": [],
+    "mobile": {
+      "viewport": 390,
+      "documentWidth": 390,
+      "overflowing": []
+    }
+  },
+  {
+    "route": "/mli-select/calculators/points",
+    "status": 200,
+    "title": "Points & Tier\nCalculator",
+    "canonical": "https://www.kraftmortgages.ca/mli-select/calculators/points",
+    "inputCount": 7,
+    "numericOrToggleScenarios": 28,
+    "selectScenarios": 2,
+    "badNumbers": [],
+    "errors": [],
+    "accessibility": [],
+    "mobile": {
+      "viewport": 390,
+      "documentWidth": 390,
+      "overflowing": []
+    }
+  },
+  {
+    "route": "/mli-select/calculators/premium",
+    "status": 200,
+    "title": "Premium\nCalculator",
+    "canonical": "https://www.kraftmortgages.ca/mli-select/calculators/premium",
+    "inputCount": 5,
+    "numericOrToggleScenarios": 20,
+    "selectScenarios": 2,
+    "badNumbers": [],
+    "errors": [],
+    "accessibility": [],
+    "mobile": {
+      "viewport": 390,
+      "documentWidth": 390,
+      "overflowing": []
+    }
+  },
+  {
+    "route": "/mli-select/calculators/rent-cap",
+    "status": 200,
+    "title": "Rent Cap Calculator",
+    "canonical": "https://www.kraftmortgages.ca/mli-select/calculators/rent-cap",
+    "inputCount": 2,
+    "numericOrToggleScenarios": 8,
+    "selectScenarios": 0,
+    "badNumbers": [],
+    "errors": [],
+    "accessibility": [],
+    "mobile": {
+      "viewport": 390,
+      "documentWidth": 390,
+      "overflowing": []
+    }
+  },
+  {
+    "route": "/mli-select/calculators/scenario-compare",
+    "status": 200,
+    "title": "Scenario Compare",
+    "canonical": "https://www.kraftmortgages.ca/mli-select/calculators/scenario-compare",
+    "inputCount": 10,
+    "numericOrToggleScenarios": 40,
+    "selectScenarios": 4,
+    "badNumbers": [],
+    "errors": [],
+    "accessibility": [],
+    "mobile": {
+      "viewport": 390,
+      "documentWidth": 390,
+      "overflowing": []
+    }
+  },
+  {
+    "route": "/private-lending/calculators/alternative-income",
+    "status": 200,
+    "title": "Alternative Income Calculator",
+    "canonical": "https://www.kraftmortgages.ca/private-lending/calculators/alternative-income",
+    "inputCount": 11,
+    "numericOrToggleScenarios": 44,
+    "selectScenarios": 9,
+    "badNumbers": [],
+    "errors": [],
+    "accessibility": [],
+    "mobile": {
+      "viewport": 390,
+      "documentWidth": 390,
+      "overflowing": []
+    }
+  }
+]

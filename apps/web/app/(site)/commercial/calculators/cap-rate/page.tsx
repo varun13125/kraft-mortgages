@@ -1,4 +1,5 @@
 "use client";
+import CalculatorNumberInput from "@/components/ui/CalculatorNumberInput";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
@@ -43,7 +44,7 @@ export default function CapRateCalculator() {
     return (
         <>
             <Navigation />
-            <main className="min-h-screen mt-16">
+            <main className="min-h-screen">
                 {/* Breadcrumb */}
                 <section className="py-6 px-4 bg-gray-800/30">
                     <div className="max-w-6xl mx-auto">
@@ -100,7 +101,7 @@ export default function CapRateCalculator() {
                                         <label className="block text-sm text-gray-400 mb-2">Net Operating Income (Annual)</label>
                                         <div className="relative">
                                             <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">$</span>
-                                            <input
+                                            <CalculatorNumberInput aria-label="Net Operating Income (Annual)" min={-1_000_000_000}
                                                 type="number"
                                                 value={netOperatingIncome}
                                                 onChange={(e) => setNetOperatingIncome(Math.max(0, Number(e.target.value)))}
@@ -114,7 +115,7 @@ export default function CapRateCalculator() {
                                         <label className="block text-sm text-gray-400 mb-2">Current Market Value</label>
                                         <div className="relative">
                                             <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">$</span>
-                                            <input
+                                            <CalculatorNumberInput aria-label="Current Market Value" min={1}
                                                 type="number"
                                                 value={marketValue}
                                                 onChange={(e) => setMarketValue(Math.max(1, Number(e.target.value)))}
@@ -126,7 +127,7 @@ export default function CapRateCalculator() {
 
                                     <div>
                                         <label className="block text-sm text-gray-400 mb-2">Target Cap Rate (%)</label>
-                                        <input
+                                        <CalculatorNumberInput aria-label="Target Cap Rate (%)"
                                             type="number"
                                             value={targetCapRate}
                                             onChange={(e) => setTargetCapRate(Math.max(0.1, Math.min(20, Number(e.target.value))))}
@@ -223,13 +224,13 @@ export default function CapRateCalculator() {
                                             </div>
                                         ))}
                                     </div>
-                                    <p className="text-xs text-gray-500 mt-3">*Benchmarks are estimates and vary by property type and location</p>
+                                    <p className="text-xs text-gray-400 mt-3">*Benchmarks are estimates and vary by property type and location</p>
                                 </div>
                             </motion.div>
                         </div>
 
                         {/* CTA */}
-                        <p className="mt-8 text-xs text-gray-500 text-center max-w-3xl mx-auto">
+                        <p className="mt-8 text-xs text-gray-400 text-center max-w-3xl mx-auto">
                             Estimates only. Use stabilized NOI (gross rent less vacancy and operating expenses; excludes debt service,
                             depreciation and capital expenditures). Cap rates vary by asset class, location and lease profile.
                         </p>
@@ -264,7 +265,7 @@ export default function CapRateCalculator() {
                         <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
                             <Link
                                 href="/contact"
-                                className="bg-purple-500 text-white font-semibold py-4 px-8 rounded-xl hover:bg-purple-400 transition-colors"
+                                className="bg-purple-600 text-white font-semibold py-4 px-8 rounded-xl hover:bg-purple-700 transition-colors"
                             >
                                 Get Commercial Financing
                             </Link>

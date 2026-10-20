@@ -120,16 +120,16 @@ export default function AVsEquityPage() {
   return (
     <>
       <Navigation />
-      <main className="min-h-screen mt-16">
+      <main className="min-h-screen">
         {/* Breadcrumb */}
         <section className="py-6 px-4 bg-gray-800/30">
           <div className="max-w-6xl mx-auto">
             <div className="flex items-center gap-2 text-sm">
-              <Link href="/" className="text-gray-400 hover:text-gold-400 transition-colors">Home</Link>
+              <Link href="/" className="text-gray-400 hover:text-gold-300 transition-colors">Home</Link>
               <span className="text-gray-600">›</span>
-              <Link href="/calculators" className="text-gray-400 hover:text-gold-400 transition-colors">Calculators</Link>
+              <Link href="/calculators" className="text-gray-400 hover:text-gold-300 transition-colors">Calculators</Link>
               <span className="text-gray-600">›</span>
-              <span className="text-gold-400">A-Lender vs Equity Lending</span>
+              <span className="text-gold-300">A-Lender vs Equity Lending</span>
             </div>
           </div>
         </section>
@@ -138,7 +138,7 @@ export default function AVsEquityPage() {
         <section className="py-20 px-4">
           <div className="max-w-6xl mx-auto">
             <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="text-center">
-              <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold bg-gold-500/20 text-gold-400 border border-gold-500/30 mb-6">
+              <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold bg-gold-500/20 text-gold-300 border border-gold-500/30 mb-6">
                 <Scale className="w-4 h-4" />
                 Self-Employed Cost Comparison
               </div>
@@ -160,7 +160,7 @@ export default function AVsEquityPage() {
               <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }} className="space-y-8">
                 <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-white/20">
                   <h2 className="text-xl sm:text-2xl font-bold mb-6 flex items-center gap-3">
-                    <Calculator className="w-6 h-6 text-gold-400" />
+                    <Calculator className="w-6 h-6 text-gold-300" />
                     Loan Details
                   </h2>
             {/* PDF Report Download */}
@@ -222,7 +222,7 @@ export default function AVsEquityPage() {
                   <div className="space-y-6">
                     <ValidatedInput label="Mortgage Amount Needed" value={mortgageAmount} onChange={setMortgageAmount} validation={{ min: 50000, max: 5000000 }} type="currency" />
                     <ValidatedInput label="Property Value" value={propertyValue} onChange={setPropertyValue} validation={{ min: 100000, max: 10000000 }} type="currency" />
-                    <p className="text-xs text-gray-500">LTV: {ltv.toFixed(1)}% — {ltv <= 75 ? "✓ Within typical equity lending range" : "⚠ Above the ~65–75% most equity lenders allow on a 1st mortgage"}</p>
+                    <p className="text-xs text-gray-400">LTV: {ltv.toFixed(1)}% — {ltv <= 75 ? "✓ Within typical equity lending range" : "⚠ Above the ~65–75% most equity lenders allow on a 1st mortgage"}</p>
 
                     <div>
                       <label className="block text-sm font-medium text-gray-300 mb-2">Loan Position</label>
@@ -276,7 +276,7 @@ export default function AVsEquityPage() {
 
                     <div className="border-t border-white/10 pt-6">
                       <h3 className="text-sm font-semibold text-gray-300 mb-4 flex items-center gap-2">
-                        <FileText className="w-4 h-4 text-gold-400" /> Tax Impact (Self-Employed)
+                        <FileText className="w-4 h-4 text-gold-300" /> Tax Impact (Self-Employed)
                       </h3>
                       <div className="space-y-4">
                         <div>
@@ -292,13 +292,13 @@ export default function AVsEquityPage() {
                         </div>
                         <ValidatedInput label="Additional Income Needed to Qualify ($/year)" value={additionalIncome} onChange={setAdditionalIncome} validation={{ min: 0, max: 500000 }} type="currency" />
                         <ValidatedInput label="Your Marginal Tax Rate (%)" value={marginalRate} onChange={setMarginalRate} validation={{ min: 0, max: 55 }} type="percentage" />
-                        <p className="text-xs text-gray-500">This is the extra income you&apos;d need to declare on your T1 to qualify with an A-lender. Province defaults are 2026 combined marginal rates for about $117K–$140K of income. Enter your own. For incorporated owners, the true cost is usually lower (personal vs corporate tax).</p>
+                        <p className="text-xs text-gray-400">This is the extra income you&apos;d need to declare on your T1 to qualify with an A-lender. Province defaults are 2026 combined marginal rates for about $117K–$140K of income. Enter your own. For incorporated owners, the true cost is usually lower (personal vs corporate tax).</p>
                       </div>
                     </div>
 
                     <div className="border-t border-white/10 pt-4">
                       <div className="flex items-center gap-3">
-                        <button onClick={() => setIsInvestment(!isInvestment)}
+                        <button aria-label="Investment property" aria-pressed={isInvestment} onClick={() => setIsInvestment(!isInvestment)}
                           className={`w-12 h-6 rounded-full transition-all ${isInvestment ? "bg-gold-500" : "bg-gray-600"} relative`}>
                           <span className={`absolute top-0.5 w-5 h-5 bg-white rounded-full transition-all ${isInvestment ? "left-6" : "left-0.5"}`} />
                         </button>
@@ -341,7 +341,7 @@ export default function AVsEquityPage() {
                       <div className="border-t border-white/10 pt-3">
                         <span className="text-gray-400 block text-xs">Income Tax on Declared Income</span>
                         <span className="font-semibold text-red-400">{formatCurrency(additionalTax, 0)}</span>
-                        <p className="text-[10px] text-gray-500 mt-0.5">{formatCurrency(additionalIncome, 0)}/yr × {marginalRate}% × {term} yrs</p>
+                        <p className="text-[10px] text-gray-400 mt-0.5">{formatCurrency(additionalIncome, 0)}/yr × {marginalRate}% × {term} yrs</p>
                       </div>
                       {isInvestment && aInvestmentTaxSaving > 0 && (
                         <div className="bg-green-500/10 rounded-lg p-2">
@@ -401,7 +401,7 @@ export default function AVsEquityPage() {
                 {/* Detailed Breakdown */}
                 <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
                   <h4 className="font-semibold mb-4 flex items-center gap-2">
-                    <BarChart3 className="w-5 h-5 text-gold-400" />
+                    <BarChart3 className="w-5 h-5 text-gold-300" />
                     Detailed Comparison
                   </h4>
                   <div className="space-y-3 text-sm">
@@ -429,7 +429,7 @@ export default function AVsEquityPage() {
                         {netDifference >= 0 ? "+" : ""}{formatCurrency(netDifference, 0)}
                       </span>
                     </div>
-                    <div className="flex justify-between text-xs text-gray-500">
+                    <div className="flex justify-between text-xs text-gray-400">
                       <span>Time savings</span>
                       <span>~{Math.max(1, Math.round(21 / 5))}x faster with equity (5 days vs 3 weeks)</span>
                     </div>
@@ -457,7 +457,7 @@ export default function AVsEquityPage() {
                     Get Expert Analysis
                   </a>
                   <a href="tel:604-593-1550"
-                    className="flex-1 bg-white/10 border border-white/20 font-semibold py-4 px-6 rounded-xl hover:bg-white/20 transition-colors text-center">
+                    className="flex-1 bg-white/10 border border-white/20 font-semibold py-4 px-6 rounded-xl hover:bg-white/20 transition-colors text-center underline underline-offset-4">
                     Call 604-593-1550
                   </a>
                 </div>
@@ -503,7 +503,7 @@ export default function AVsEquityPage() {
 
               <h3 className="text-2xl font-semibold text-gray-100 mt-8">How Equity Lenders Differ from A-Lenders and B-Lenders</h3>
               <p>
-                The Canadian mortgage market has three tiers. A-lenders (banks, credit unions and monoline lenders) offer the lowest rates{ratesDate && liveConventional5 !== undefined ? ` (as of ${ratesDate}, conventional 5-year fixed rates in our live feed start at ${liveConventional5.toFixed(2)}%)` : ""}, see <Link href="/rates" className="text-gold-400 hover:text-gold-300 underline">today&apos;s rates</Link>, but they require full income verification, strong credit scores (typically 680+), and standard qualification criteria including GDS/TDS ratios. B-lenders sit in the middle, offering slightly higher rates with more flexible qualification, but still generally require some form of income verification.
+                The Canadian mortgage market has three tiers. A-lenders (banks, credit unions and monoline lenders) offer the lowest rates{ratesDate && liveConventional5 !== undefined ? ` (as of ${ratesDate}, conventional 5-year fixed rates in our live feed start at ${liveConventional5.toFixed(2)}%)` : ""}, see <Link href="/rates" className="text-gold-300 hover:text-gold-300 underline">today&apos;s rates</Link>, but they require full income verification, strong credit scores (typically 680+), and standard qualification criteria including GDS/TDS ratios. B-lenders sit in the middle, offering slightly higher rates with more flexible qualification, but still generally require some form of income verification.
               </p>
               <p>
                 Equity lenders operate on an entirely different model. They assess the property value, the loan amount relative to that value, and the exit strategy. Income verification is typically not required at all. Equity-lender rates sit above A- and B-lender rates and vary widely by lender, LTV, property type and province{ratesDate && livePrivateSecond !== undefined ? ` (for reference, the lowest private second-mortgage rate in our live feed is ${livePrivateSecond.toFixed(2)}% as of ${ratesDate})` : ""}. Lender fees are commonly 1% to 3% of the loan amount, and some lenders charge a flat administrative fee instead, which can be cheaper on larger mortgages. Ask us for current quotes from several equity lenders.
@@ -565,21 +565,21 @@ export default function AVsEquityPage() {
                 <li><strong>Term and exit:</strong> equity loans are usually 1–2 year terms, often interest-only. A clear exit plan (refinance to an A- or B-lender, or a sale) gets better pricing.</li>
               </ul>
               <p>
-                We compare several equity lenders for each file. <Link href="/contact" className="text-gold-400 hover:text-gold-300 underline">Contact us</Link> for current quotes, or see <Link href="/rates" className="text-gold-400 hover:text-gold-300 underline">today&apos;s A-lender and private-second benchmarks</Link>.
+                We compare several equity lenders for each file. <Link href="/contact" className="text-gold-300 hover:text-gold-300 underline">Contact us</Link> for current quotes, or see <Link href="/rates" className="text-gold-300 hover:text-gold-300 underline">today&apos;s A-lender and private-second benchmarks</Link>.
               </p>
 
               <div className="mt-8">
-                <Link href="/calculators/closing-costs" className="text-gold-400 hover:text-gold-300 underline">Closing Costs Calculator</Link>
+                <Link href="/calculators/closing-costs" className="text-gold-300 hover:text-gold-300 underline">Closing Costs Calculator</Link>
                 {" · "}
-                <Link href="/calculators/self-employed-a-vs-b" className="text-gold-400 hover:text-gold-300 underline">Self-Employed: A vs B Lender</Link>
+                <Link href="/calculators/self-employed-a-vs-b" className="text-gold-300 hover:text-gold-300 underline">Self-Employed: A vs B Lender</Link>
                 {" · "}
-                <Link href="/calculators/payment" className="text-gold-400 hover:text-gold-300 underline">Mortgage Payment Calculator</Link>
+                <Link href="/calculators/payment" className="text-gold-300 hover:text-gold-300 underline">Mortgage Payment Calculator</Link>
               </div>
             </div>
           </div>
         </section>
 
-        <p className="text-center text-xs text-gray-500 mb-8">
+        <p className="text-center text-xs text-gray-400 mb-8">
           Rates shown are estimated starting rates for comparison purposes. Actual rates vary based on credit, LTV, property type, and location. Contact a broker to confirm rates for your specific situation.
         </p>
 
@@ -592,7 +592,7 @@ export default function AVsEquityPage() {
                 <div key={i} className="bg-white/5 rounded-xl border border-white/10 overflow-hidden">
                   <button onClick={() => setOpenFaq(openFaq === i ? null : i)} className="w-full flex items-center justify-between p-5 text-left">
                     <span className="font-semibold text-gray-200 pr-4">{faq.q}</span>
-                    {openFaq === i ? <ChevronUp className="w-5 h-5 text-gold-400 flex-shrink-0" /> : <ChevronDown className="w-5 h-5 text-gray-400 flex-shrink-0" />}
+                    {openFaq === i ? <ChevronUp className="w-5 h-5 text-gold-300 flex-shrink-0" /> : <ChevronDown className="w-5 h-5 text-gray-400 flex-shrink-0" />}
                   </button>
                   {openFaq === i && (
                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="px-5 pb-5 text-sm text-gray-300 leading-relaxed">{faq.a}</motion.div>

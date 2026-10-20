@@ -1,10 +1,12 @@
 "use client";
+import CalculatorNumberInput from "@/components/ui/CalculatorNumberInput";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
 import { ComplianceBanner } from "@/components/ComplianceBanner";
 import { Building, Calculator, DollarSign, CheckCircle, AlertTriangle, TrendingUp } from "lucide-react";
 import Link from "next/link";
+import { constructionFunding } from "@/lib/calc/construction";
 
 export default function CostToCompleteCalculator() {
     // Hard Costs
@@ -35,8 +37,9 @@ export default function CostToCompleteCalculator() {
 
     const totalFunded = equityInvested + loanFunded;
     // Cost to complete = remaining budget not yet paid for
-    const costToComplete = totalProjectCost - totalFunded;
-    const percentComplete = totalProjectCost > 0 ? (totalFunded / totalProjectCost) * 100 : 0;
+    const funding = constructionFunding({ totalCost: totalProjectCost, equityInvested, loanFunded, loanCommitment });
+    const costToComplete = funding.remainingCost;
+    const percentComplete = funding.fundedPct;
 
     // Lender test: remaining costs vs. the undisbursed balance of the approved loan.
     // A positive gap must be covered by additional equity before further advances.
@@ -47,16 +50,17 @@ export default function CostToCompleteCalculator() {
     return (
         <>
             <Navigation />
-            <main className="min-h-screen mt-16">
+            <main className="min-h-screen">
+                {funding.budgetSurplus > 0 && <p role="status" className="mx-auto max-w-6xl p-4 text-amber-200">Funding exceeds the estimated budget by ${Math.round(funding.budgetSurplus).toLocaleString()}. Remaining budget is $0; verify actual paid costs and available cash before requesting an advance.</p>}
                 {/* Breadcrumb */}
                 <section className="py-6 px-4 bg-gray-800/30">
                     <div className="max-w-6xl mx-auto">
                         <div className="flex items-center gap-2 text-sm">
-                            <Link href="/" className="text-gray-400 hover:text-gold-400 transition-colors">Home</Link>
+                            <Link href="/" className="text-gray-400 hover:text-gold-300 transition-colors">Home</Link>
                             <span className="text-gray-600">›</span>
-                            <Link href="/construction" className="text-gray-400 hover:text-gold-400 transition-colors">Construction</Link>
+                            <Link href="/construction" className="text-gray-400 hover:text-gold-300 transition-colors">Construction</Link>
                             <span className="text-gray-600">›</span>
-                            <span className="text-gold-400">Cost to Complete Calculator</span>
+                            <span className="text-gold-300">Cost to Complete Calculator</span>
                         </div>
                     </div>
                 </section>
@@ -104,7 +108,7 @@ export default function CostToCompleteCalculator() {
                                         <label className="block text-sm text-gray-400 mb-1">Land Cost</label>
                                         <div className="relative">
                                             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">$</span>
-                                            <input
+                                            <CalculatorNumberInput aria-label="Land Cost"
                                                 type="number"
                                                 value={landCost}
                                                 onChange={(e) => setLandCost(Math.max(0, Number(e.target.value)))}
@@ -117,7 +121,7 @@ export default function CostToCompleteCalculator() {
                                         <label className="block text-sm text-gray-400 mb-1">Construction Cost</label>
                                         <div className="relative">
                                             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">$</span>
-                                            <input
+                                            <CalculatorNumberInput aria-label="Construction Cost"
                                                 type="number"
                                                 value={constructionCost}
                                                 onChange={(e) => setConstructionCost(Math.max(0, Number(e.target.value)))}
@@ -130,7 +134,7 @@ export default function CostToCompleteCalculator() {
                                         <label className="block text-sm text-gray-400 mb-1">Landscaping</label>
                                         <div className="relative">
                                             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">$</span>
-                                            <input
+                                            <CalculatorNumberInput aria-label="Landscaping"
                                                 type="number"
                                                 value={landscaping}
                                                 onChange={(e) => setLandscaping(Math.max(0, Number(e.target.value)))}
@@ -164,7 +168,7 @@ export default function CostToCompleteCalculator() {
                                         <label className="block text-sm text-gray-400 mb-1">Permits & Fees</label>
                                         <div className="relative">
                                             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">$</span>
-                                            <input
+                                            <CalculatorNumberInput aria-label="Permits & Fees"
                                                 type="number"
                                                 value={permits}
                                                 onChange={(e) => setPermits(Math.max(0, Number(e.target.value)))}
@@ -177,7 +181,7 @@ export default function CostToCompleteCalculator() {
                                         <label className="block text-sm text-gray-400 mb-1">Architectural Fees</label>
                                         <div className="relative">
                                             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">$</span>
-                                            <input
+                                            <CalculatorNumberInput aria-label="Architectural Fees"
                                                 type="number"
                                                 value={architecturalFees}
                                                 onChange={(e) => setArchitecturalFees(Math.max(0, Number(e.target.value)))}
@@ -190,7 +194,7 @@ export default function CostToCompleteCalculator() {
                                         <label className="block text-sm text-gray-400 mb-1">Engineering Fees</label>
                                         <div className="relative">
                                             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">$</span>
-                                            <input
+                                            <CalculatorNumberInput aria-label="Engineering Fees"
                                                 type="number"
                                                 value={engineeringFees}
                                                 onChange={(e) => setEngineeringFees(Math.max(0, Number(e.target.value)))}
@@ -203,7 +207,7 @@ export default function CostToCompleteCalculator() {
                                         <label className="block text-sm text-gray-400 mb-1">Legal Fees</label>
                                         <div className="relative">
                                             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">$</span>
-                                            <input
+                                            <CalculatorNumberInput aria-label="Legal Fees"
                                                 type="number"
                                                 value={legalFees}
                                                 onChange={(e) => setLegalFees(Math.max(0, Number(e.target.value)))}
@@ -216,7 +220,7 @@ export default function CostToCompleteCalculator() {
                                         <label className="block text-sm text-gray-400 mb-1">Inspection Fees</label>
                                         <div className="relative">
                                             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">$</span>
-                                            <input
+                                            <CalculatorNumberInput aria-label="Inspection Fees"
                                                 type="number"
                                                 value={inspectionFees}
                                                 onChange={(e) => setInspectionFees(Math.max(0, Number(e.target.value)))}
@@ -251,7 +255,7 @@ export default function CostToCompleteCalculator() {
                                             <label className="block text-sm text-gray-400 mb-1">Equity Invested</label>
                                             <div className="relative">
                                                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">$</span>
-                                                <input
+                                                <CalculatorNumberInput aria-label="Equity Invested"
                                                     type="number"
                                                     value={equityInvested}
                                                     onChange={(e) => setEquityInvested(Math.max(0, Number(e.target.value)))}
@@ -264,7 +268,7 @@ export default function CostToCompleteCalculator() {
                                             <label className="block text-sm text-gray-400 mb-1">Loan Already Funded</label>
                                             <div className="relative">
                                                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">$</span>
-                                                <input
+                                                <CalculatorNumberInput aria-label="Loan Already Funded"
                                                     type="number"
                                                     value={loanFunded}
                                                     onChange={(e) => setLoanFunded(Math.max(0, Number(e.target.value)))}
@@ -277,7 +281,7 @@ export default function CostToCompleteCalculator() {
                                             <label className="block text-sm text-gray-400 mb-1">Total Loan Approved (commitment)</label>
                                             <div className="relative">
                                                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">$</span>
-                                                <input
+                                                <CalculatorNumberInput aria-label="Total Loan Approved (commitment)"
                                                     type="number"
                                                     value={loanCommitment}
                                                     onChange={(e) => setLoanCommitment(Math.max(0, Number(e.target.value)))}
@@ -288,7 +292,7 @@ export default function CostToCompleteCalculator() {
                                         </div>
                                         <div>
                                             <label className="block text-sm text-gray-400 mb-1">Contingency (% of construction costs)</label>
-                                            <input
+                                            <CalculatorNumberInput aria-label="Contingency (% of construction costs)"
                                                 type="number"
                                                 value={contingency}
                                                 onChange={(e) => setContingency(Math.max(0, Math.min(25, Number(e.target.value))))}
@@ -371,7 +375,7 @@ export default function CostToCompleteCalculator() {
                                     </div>
                                     <div className="flex justify-between py-2 font-bold text-lg">
                                         <span>Total Project Cost</span>
-                                        <span className="text-gold-400">${Math.round(totalProjectCost).toLocaleString()}</span>
+                                        <span className="text-gold-300">${Math.round(totalProjectCost).toLocaleString()}</span>
                                     </div>
                                 </div>
                                 <div className="space-y-3">
@@ -405,7 +409,7 @@ export default function CostToCompleteCalculator() {
                             </div>
                         </motion.div>
 
-                        <p className="mt-8 text-xs text-gray-500 text-center max-w-3xl mx-auto">
+                        <p className="mt-8 text-xs text-gray-400 text-center max-w-3xl mx-auto">
                             Estimates only. Lenders advance construction funds only while the undisbursed loan covers the remaining
                             cost to complete (confirmed by a cost consultant / quantity surveyor). Statutory 10% lien holdbacks and
                             interest reserves can reduce what is available per draw.

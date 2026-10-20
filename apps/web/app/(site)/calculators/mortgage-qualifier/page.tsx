@@ -8,6 +8,7 @@ import { RelatedCalculators } from "@/components/calculators/RelatedCalculators"
 import { ValidatedInput, ValidatedSlider } from "@/components/ui/ValidatedInput";
 import { ComplianceBanner } from "@/components/ComplianceBanner";
 import { payment } from "@/lib/calc/payment";
+import { purchaseEligibility } from "@/lib/calc/purchaseEligibility";
 import { cmhcPremium, cmhcPremiumRate, stressTestRate, QUALIFYING_RATIOS, minimumDownPayment, isInsurable, premiumPst, INSURED_PRICE_CAP } from "@/lib/calc/cmhc";
 import { maxQualifyingLoan, maxPurchasePrice } from "@/lib/calc/affordability";
 import { landTransferTax as calcLandTransferTax } from "@/lib/calc/landTransferTax";
@@ -38,6 +39,7 @@ export default function MortgageQualifierPage() {
   const [condoFeesMonthly, setCondoFeesMonthly] = useState(0);
   const [province, setProvince] = useState("BC");
   const [isFirstTime, setIsFirstTime] = useState(true);
+  const [isNewBuild, setIsNewBuild] = useState(false);
   // Rate follows today's 5-yr fixed for this purchase (insured < 20% down; insurable; conventional) until edited.
   // Was always the insured rate.
   const rateProduct = purchaseRateProduct(homePrice > 0 ? (downPayment / homePrice) * 100 : 0, homePrice, amortization);
@@ -66,7 +68,8 @@ export default function MortgageQualifierPage() {
   const minDown = minDownPayment(homePrice);
   // Under 20% down the purchase must be insurable: minimum down payment met and price < $1.5M
   const downPaymentOk = needsInsurance ? isInsurable(homePrice, downPayment) : true;
-  const qualifies = gdsPass && tdsPass && downPaymentOk;
+  const eligibility = purchaseEligibility({ price: homePrice, down: downPayment, amortYears: amortization, firstTime: isFirstTime, newBuild: isNewBuild });
+  const qualifies = totalIncome > 0 && baseLoan > 0 && gdsPass && tdsPass && downPaymentOk && eligibility.eligible;
   const ltt = landTransferTax(homePrice, province, isFirstTime, insuredLoan);
   const closingCostsEst = homePrice * 0.015; // legal, inspection, etc
   // Ontario charges 8% PST on the insurance premium; it can't be financed
@@ -92,7 +95,7 @@ export default function MortgageQualifierPage() {
         {/* Hero */}
         <section className="pt-12 pb-8 px-4">
           <div className="max-w-4xl mx-auto text-center">
-            <div className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-semibold bg-gradient-to-r from-gold-500/20 to-transparent text-gold-400 border border-gold-500/30 mb-5">
+            <div className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-semibold bg-gradient-to-r from-gold-500/20 to-transparent text-gold-300 border border-gold-500/30 mb-5">
               <span className="w-1.5 h-1.5 rounded-full bg-gold-400 animate-ping"></span>
               Qualification Tool
             </div>
@@ -114,7 +117,7 @@ export default function MortgageQualifierPage() {
 
               {/* Income */}
               <div className="space-y-4">
-                <div className="text-sm text-gold-400 uppercase tracking-wider font-medium">Income</div>
+                <div className="text-sm text-gold-300 uppercase tracking-wider font-medium">Income</div>
                 <ValidatedInput label="Your Annual Income (Before Tax)" type="currency" value={annualIncome} onChange={setAnnualIncome} validation={{ min: 0, max: 10000000, message: "Enter your gross annual income" }} />
                 <ValidatedInput label="Co-Applicant Income (Optional)" type="currency" value={partnerIncome} onChange={setPartnerIncome} validation={{ min: 0, max: 10000000, message: "Enter co-applicant gross annual income" }} />
                 <ValidatedInput label="Monthly Debt Payments" type="currency" value={monthlyDebts} onChange={setMonthlyDebts} validation={{ min: 0, max: 10000, message: "Car loans, credit cards, student loans (monthly)" }} help="Car loans, credit cards, student loans, child support (monthly total)" />
@@ -122,7 +125,7 @@ export default function MortgageQualifierPage() {
 
               {/* Property */}
               <div className="space-y-4 pt-4 border-t border-gray-700/50">
-                <div className="text-sm text-gold-400 uppercase tracking-wider font-medium">The Home</div>
+                <div className="text-sm text-gold-300 uppercase tracking-wider font-medium">The Home</div>
                 <ValidatedInput label="Purchase Price" type="currency" value={homePrice} onChange={setHomePrice} validation={{ min: 50000, max: 10000000, message: "Enter the home's purchase price" }} />
                 <ValidatedInput label="Down Payment" type="currency" value={downPayment} onChange={setDownPayment} validation={{ min: 0, max: 10000000, message: "Enter your down payment" }} help={`Minimum required: $${Math.round(minDown).toLocaleString()} (${homePrice >= INSURED_PRICE_CAP ? "20% — homes $1.5M+ can't be insured" : homePrice <= 500000 ? "5%" : "5% of first $500K + 10% above"})`} />
 
@@ -147,7 +150,7 @@ export default function MortgageQualifierPage() {
 
               {/* Property Costs */}
               <div className="space-y-4 pt-4 border-t border-gray-700/50">
-                <div className="text-sm text-gold-400 uppercase tracking-wider font-medium">Property Costs</div>
+                <div className="text-sm text-gold-300 uppercase tracking-wider font-medium">Property Costs</div>
                 <ValidatedInput label="Annual Property Tax" type="currency" value={propertyTaxAnnual} onChange={setPropertyTaxAnnual} validation={{ min: 0, max: 50000, message: "Estimated annual property tax" }} />
                 <ValidatedInput label="Monthly Heating" type="currency" value={heatingMonthly} onChange={setHeatingMonthly} validation={{ min: 0, max: 1000, message: "Monthly heating cost" }} />
                 <ValidatedInput label="Monthly Condo Fees (if applicable)" type="currency" value={condoFeesMonthly} onChange={setCondoFeesMonthly} validation={{ min: 0, max: 2000, message: "Monthly condo fees" }} />
@@ -155,12 +158,12 @@ export default function MortgageQualifierPage() {
 
               {/* Province + First-time */}
               <div className="space-y-4 pt-4 border-t border-gray-700/50">
-                <div className="text-sm text-gold-400 uppercase tracking-wider font-medium">Location & Status</div>
+                <div className="text-sm text-gold-300 uppercase tracking-wider font-medium">Location & Status</div>
                 <div>
                   <label className="block text-sm text-gray-400 mb-2">Province</label>
                   <div className="grid grid-cols-3 gap-2">
                     {["BC", "AB", "ON"].map((p) => (
-                      <button key={p} onClick={() => setProvince(p)} className={`py-2.5 rounded-lg border text-sm font-medium transition-all ${province === p ? "border-gold-500 bg-gold-500/10 text-gold-400" : "border-gray-600 text-gray-400 hover:border-gray-500"}`}>
+                      <button key={p} onClick={() => setProvince(p)} className={`py-2.5 rounded-lg border text-sm font-medium transition-all ${province === p ? "border-gold-500 bg-gold-500/10 text-gold-300" : "border-gray-600 text-gray-400 hover:border-gray-500"}`}>
                         {p === "BC" ? "British Columbia" : p === "AB" ? "Alberta" : "Ontario"}
                       </button>
                     ))}
@@ -172,6 +175,7 @@ export default function MortgageQualifierPage() {
                 </label>
               </div>
 
+              <label className="flex items-center gap-3 cursor-pointer"><input type="checkbox" checked={isNewBuild} onChange={e => setIsNewBuild(e.target.checked)} /><span className="text-sm text-gray-300">Eligible newly built home</span></label>
               <ComplianceBanner feature="LEAD_FORM" />
             </div>
 
@@ -180,6 +184,7 @@ export default function MortgageQualifierPage() {
               <div className="absolute -top-20 -right-20 w-48 h-48 bg-gold-500/5 rounded-full blur-3xl pointer-events-none" />
 
               {/* Verdict */}
+              {!eligibility.eligible && <p role="status" className="mb-4 text-amber-200">{eligibility.reason} Results below are illustrative.</p>}
               <div className={`relative rounded-xl p-5 mb-6 ${qualifies ? "bg-emerald-950/30 border border-emerald-600/30" : "bg-red-950/30 border border-red-700/40"}`}>
                 <div className="flex items-center gap-3">
                   {qualifies ? (
@@ -207,13 +212,13 @@ export default function MortgageQualifierPage() {
                 <div className="grid grid-cols-2 gap-3">
                   <div className="bg-gray-800/40 rounded-lg p-4">
                     <div className="text-xs text-gray-400 uppercase tracking-wider mb-1">Your Monthly Payment</div>
-                    <div className="text-2xl font-bold text-gold-400">${Math.round(actualPayment).toLocaleString()}<span className="text-sm text-gray-400">/mo</span></div>
-                    <div className="text-xs text-gray-500 mt-1">at {interestRate.toFixed(2)}% contract rate</div>
+                    <div className="text-2xl font-bold text-gold-300">${Math.round(actualPayment).toLocaleString()}<span className="text-sm text-gray-400">/mo</span></div>
+                    <div className="text-xs text-gray-400 mt-1">at {interestRate.toFixed(2)}% contract rate</div>
                   </div>
                   <div className="bg-gray-800/40 rounded-lg p-4">
                     <div className="text-xs text-gray-400 uppercase tracking-wider mb-1">Qualifying Payment</div>
                     <div className="text-2xl font-bold text-gray-200">${Math.round(monthlyPayment).toLocaleString()}<span className="text-sm text-gray-400">/mo</span></div>
-                    <div className="text-xs text-gray-500 mt-1">at {qualRate.toFixed(2)}% stress test</div>
+                    <div className="text-xs text-gray-400 mt-1">at {qualRate.toFixed(2)}% stress test</div>
                   </div>
                 </div>
 
@@ -221,12 +226,12 @@ export default function MortgageQualifierPage() {
                   <div className="bg-gray-800/40 rounded-lg p-4">
                     <div className="text-xs text-gray-400 uppercase tracking-wider mb-1">CMHC Insurance</div>
                     <div className="text-xl font-bold text-gray-200">{needsInsurance ? `$${Math.round(cmhc).toLocaleString()}` : "$0"}</div>
-                    <div className="text-xs text-gray-500 mt-1">{needsInsurance ? `${(cmhcPremiumRate(downPct, amortization) * 100).toFixed(2)}% premium` : "20%+ down (conventional)"}</div>
+                    <div className="text-xs text-gray-400 mt-1">{needsInsurance ? `${(cmhcPremiumRate(downPct, amortization) * 100).toFixed(2)}% premium` : "20%+ down (conventional)"}</div>
                   </div>
                   <div className="bg-gray-800/40 rounded-lg p-4">
                     <div className="text-xs text-gray-400 uppercase tracking-wider mb-1">Total Mortgage</div>
                     <div className="text-xl font-bold text-gray-200">${Math.round(insuredLoan).toLocaleString()}</div>
-                    <div className="text-xs text-gray-500 mt-1">{needsInsurance ? "includes CMHC" : "no insurance"}</div>
+                    <div className="text-xs text-gray-400 mt-1">{needsInsurance ? "includes CMHC" : "no insurance"}</div>
                   </div>
                 </div>
               </div>
@@ -236,7 +241,7 @@ export default function MortgageQualifierPage() {
                 <div>
                   <div className="flex justify-between text-sm mb-1.5">
                     <span className="text-gray-300">GDS Ratio (Housing Costs)</span>
-                    <span className={gdsPass ? "text-emerald-400" : "text-red-400"}>{gds.toFixed(1)}% <span className="text-gray-500">/ 39%</span></span>
+                    <span className={gdsPass ? "text-emerald-400" : "text-red-400"}>{gds.toFixed(1)}% <span className="text-gray-400">/ 39%</span></span>
                   </div>
                   <div className="h-2.5 rounded-full bg-gray-700 overflow-hidden">
                     <div className={`h-full rounded-full transition-all ${gdsPass ? "bg-emerald-500" : "bg-red-500"}`} style={{ width: `${Math.min(gds / 39 * 100, 100)}%` }} />
@@ -245,7 +250,7 @@ export default function MortgageQualifierPage() {
                 <div>
                   <div className="flex justify-between text-sm mb-1.5">
                     <span className="text-gray-300">TDS Ratio (All Debts)</span>
-                    <span className={tdsPass ? "text-emerald-400" : "text-red-400"}>{tds.toFixed(1)}% <span className="text-gray-500">/ 44%</span></span>
+                    <span className={tdsPass ? "text-emerald-400" : "text-red-400"}>{tds.toFixed(1)}% <span className="text-gray-400">/ 44%</span></span>
                   </div>
                   <div className="h-2.5 rounded-full bg-gray-700 overflow-hidden">
                     <div className={`h-full rounded-full transition-all ${tdsPass ? "bg-emerald-500" : "bg-red-500"}`} style={{ width: `${Math.min(tds / 44 * 100, 100)}%` }} />
@@ -263,7 +268,7 @@ export default function MortgageQualifierPage() {
                     <div className="flex justify-between"><span className="text-gray-300">PST on Insurance Premium (8%)</span><span className="text-gray-100">${Math.round(premiumTax).toLocaleString()}</span></div>
                   )}
                   <div className="flex justify-between"><span className="text-gray-300">Legal, Inspection, etc.</span><span className="text-gray-100">${Math.round(closingCostsEst).toLocaleString()}</span></div>
-                  <div className="flex justify-between pt-2 border-t border-gray-700/50 font-semibold"><span className="text-gray-200">Total Cash Needed</span><span className="text-gold-400">${Math.round(totalCashNeeded).toLocaleString()}</span></div>
+                  <div className="flex justify-between pt-2 border-t border-gray-700/50 font-semibold"><span className="text-gray-200">Total Cash Needed</span><span className="text-gold-300">${Math.round(totalCashNeeded).toLocaleString()}</span></div>
                 </div>
               </div>
 
@@ -271,11 +276,11 @@ export default function MortgageQualifierPage() {
               {maxPurchaseRough > 0 && (
                 <div className="rounded-xl border border-gold-600/20 bg-gold-500/5 p-4 mb-6">
                   <div className="flex items-center gap-2 mb-1">
-                    <TrendingDown className="w-4 h-4 text-gold-400" />
-                    <span className="text-sm text-gold-400 font-medium uppercase tracking-wider">Your Max Purchase Price</span>
+                    <TrendingDown className="w-4 h-4 text-gold-300" />
+                    <span className="text-sm text-gold-300 font-medium uppercase tracking-wider">Your Max Purchase Price</span>
                   </div>
-                  <div className="text-2xl font-bold text-gold-400">${Math.round(maxPurchaseRough).toLocaleString()}</div>
-                  <div className="text-xs text-gray-500 mt-1">
+                  <div className="text-2xl font-bold text-gold-300">${Math.round(maxPurchaseRough).toLocaleString()}</div>
+                  <div className="text-xs text-gray-400 mt-1">
                     Estimated max home price at your income, debts, and down payment
                     {maxPrice.limitedBy === "downPayment" ? " — limited by the minimum down payment rules, not your income" : maxPrice.limitedBy === "income" ? " — limited by the 39% GDS / 44% TDS limits" : ""}
                   </div>
@@ -286,7 +291,7 @@ export default function MortgageQualifierPage() {
               <a href="https://r.mtg-app.com/varun-chaudhry" target="_blank" rel="noopener noreferrer" className="block w-full py-3.5 px-6 bg-gradient-to-r from-gold-500 to-gold-600 text-gray-900 font-semibold rounded-lg hover:from-gold-400 hover:to-gold-500 transition-all text-center shadow-lg shadow-gold-500/20">
                 Get Pre-Approved
               </a>
-              <p className="text-xs text-gray-500 text-center mt-3">Same-day pre-approval with a licensed broker</p>
+              <p className="text-xs text-gray-400 text-center mt-3">Same-day pre-approval with a licensed broker</p>
             </div>
           </div>
         </section>
@@ -299,7 +304,7 @@ export default function MortgageQualifierPage() {
               Canadian mortgage qualification uses three key checks: the <strong className="text-gray-200">stress test</strong> (you must qualify at your contract rate + 2% or 5.25%, whichever is higher), <strong className="text-gray-200">GDS ratio</strong> (housing costs must be ≤39% of gross income), and <strong className="text-gray-200">TDS ratio</strong> (all debts + housing must be ≤44% of gross income). If your down payment is less than 20%, CMHC insurance is added to your mortgage — which increases the loan amount you must qualify for.
             </p>
             <p>
-              This calculator applies all three rules simultaneously. The green/red verdict tells you whether a lender would likely approve this purchase based on the numbers you entered. For a precise pre-approval with actual lender rates, <Link href="/contact" className="text-gold-400 hover:underline">contact our team</Link>.
+              This calculator applies all three rules simultaneously. The green/red verdict tells you whether a lender would likely approve this purchase based on the numbers you entered. For a precise pre-approval with actual lender rates, <Link href="/contact" className="text-gold-300 underline underline-offset-4">contact our team</Link>.
             </p>
           </div>
         </section>

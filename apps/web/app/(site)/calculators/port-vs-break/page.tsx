@@ -100,7 +100,7 @@ export default function PortVsBreakPage() {
         {/* Hero */}
         <section className="pt-12 pb-8 px-4">
           <div className="max-w-4xl mx-auto text-center">
-            <div className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-semibold bg-gradient-to-r from-gold-500/20 to-transparent text-gold-400 border border-gold-500/30 mb-5">
+            <div className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-semibold bg-gradient-to-r from-gold-500/20 to-transparent text-gold-300 border border-gold-500/30 mb-5">
               Renewal & Refinance Tool
             </div>
             <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-gray-100 mb-4">
@@ -181,15 +181,15 @@ export default function PortVsBreakPage() {
                   <div className={`rounded-lg p-4 border ${!breakWins ? "border-emerald-600/30 bg-emerald-950/20" : "border-gray-700/50 bg-gray-800/40"}`}>
                     <div className="text-xs text-gray-400 uppercase tracking-wider mb-2">Option A: Port</div>
                     <div className="text-xl font-bold text-gray-100">${Math.round(totalPortMonthly).toLocaleString()}<span className="text-xs text-gray-400">/mo</span></div>
-                    <div className="text-xs text-gray-500 mt-1">Blended {blendRate.toFixed(2)}% on ${Math.round(totalLoan).toLocaleString()}</div>
-                    <div className="text-xs text-gray-500 mt-1">Split structure: ~${Math.round(twoPartMonthly).toLocaleString()}/mo</div>
-                    <div className="text-xs text-gray-500 mt-2 pt-2 border-t border-gray-700/30">5-yr interest + fees: ${Math.round(portTotalCost5yr).toLocaleString()}</div>
+                    <div className="text-xs text-gray-400 mt-1">Blended {blendRate.toFixed(2)}% on ${Math.round(totalLoan).toLocaleString()}</div>
+                    <div className="text-xs text-gray-400 mt-1">Split structure: ~${Math.round(twoPartMonthly).toLocaleString()}/mo</div>
+                    <div className="text-xs text-gray-400 mt-2 pt-2 border-t border-gray-700/30">5-yr interest + fees: ${Math.round(portTotalCost5yr).toLocaleString()}</div>
                   </div>
                   <div className={`rounded-lg p-4 border ${breakWins ? "border-emerald-600/30 bg-emerald-950/20" : "border-gray-700/50 bg-gray-800/40"}`}>
                     <div className="text-xs text-gray-400 uppercase tracking-wider mb-2">Option B: Break</div>
                     <div className="text-xl font-bold text-gray-100">${Math.round(breakPayment).toLocaleString()}<span className="text-xs text-gray-400">/mo</span></div>
-                    <div className="text-xs text-gray-500 mt-1">New rate entirely</div>
-                    <div className="text-xs text-gray-500 mt-2 pt-2 border-t border-gray-700/30">5-yr interest + penalty: ${Math.round(breakTotalCost5yr).toLocaleString()}</div>
+                    <div className="text-xs text-gray-400 mt-1">New rate entirely</div>
+                    <div className="text-xs text-gray-400 mt-2 pt-2 border-t border-gray-700/30">5-yr interest + penalty: ${Math.round(breakTotalCost5yr).toLocaleString()}</div>
                   </div>
                 </div>
 
@@ -199,9 +199,9 @@ export default function PortVsBreakPage() {
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between"><span className="text-gray-300">3 Months&apos; Interest</span><span className="text-gray-100">${Math.round(threeMonthsInterest).toLocaleString()}</span></div>
                     <div className="flex justify-between"><span className="text-gray-300">Interest Rate Differential (est.)</span><span className="text-gray-100">{mortgageType === "variable" ? "N/A (variable)" : `$${Math.round(ird).toLocaleString()}`}</span></div>
-                    <div className="flex justify-between pt-2 border-t border-gray-700/50 font-semibold"><span className="text-gray-200">Estimated Penalty</span><span className="text-gold-400">${Math.round(penalty).toLocaleString()}</span></div>
+                    <div className="flex justify-between pt-2 border-t border-gray-700/50 font-semibold"><span className="text-gray-200">Estimated Penalty</span><span className="text-gold-300">${Math.round(penalty).toLocaleString()}</span></div>
                   </div>
-                  <div className="mt-3 flex items-start gap-2 text-xs text-gray-500">
+                  <div className="mt-3 flex items-start gap-2 text-xs text-gray-400">
                     <Info className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" />
                     <span>Fixed-rate lenders usually charge the greater of 3 months&apos; interest or the IRD; variable-rate mortgages usually 3 months&apos; interest. This IRD uses the new rate as the comparison rate — banks using posted rates can charge significantly more. Get a written quote from your lender.</span>
                   </div>
@@ -215,7 +215,7 @@ export default function PortVsBreakPage() {
                   </span>
                 </div>
 
-                <p className="text-xs text-gray-500 mb-4">Estimates only. Costs compare interest paid over 5 years plus fees/penalty (semi-annual compounding). Assumes the blended rate applies until your current term ends, then renews at the new rate.</p>
+                <p className="text-xs text-gray-400 mb-4">Estimates only. Costs compare interest paid over 5 years plus fees/penalty (semi-annual compounding). Assumes the blended rate applies until your current term ends, then renews at the new rate.</p>
 
                 <a href="https://r.mtg-app.com/varun-chaudhry" target="_blank" rel="noopener noreferrer" className="block w-full py-3.5 px-6 bg-gradient-to-r from-gold-500 to-gold-600 text-gray-900 font-semibold rounded-lg hover:from-gold-400 hover:to-gold-500 transition-all text-center shadow-lg shadow-gold-500/20">
                   Talk to a Broker

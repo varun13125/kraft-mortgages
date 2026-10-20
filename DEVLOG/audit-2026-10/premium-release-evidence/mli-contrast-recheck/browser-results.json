@@ -1,0 +1,40 @@
+[
+  {
+    "route": "/mli-select/calculators/max-loan",
+    "errors": [],
+    "inputs": [],
+    "scenarios": [],
+    "selects": [],
+    "mobile": {
+      "viewport": 390,
+      "documentWidth": 390,
+      "overflowing": []
+    },
+    "accessibility": [],
+    "status": 200,
+    "loadMs": 4418,
+    "title": "Maximum Loan\n& Equity Calculator",
+    "canonical": "https://www.kraftmortgages.ca/mli-select/calculators/max-loan",
+    "baseline": "Skip to main content\nMLI Select Portal\nHome\nRates\nServices\nCalculators\nMLI Select\nAbout\nContact\nBC\nAB\nON\nApply Now\nMLI Portal\n›\nAll MLI Calculators\nDeal Sizer\nChecklist\nFINANCING CALCULATOR\nMaximum Loan\n& Equity Calculator\n\nDetermine your maximum financing based on project value and tier level\n\n50+ POINTS\n95%\nMax LTC\n70+ POINTS\n95%\nMax LTC\n100+ POINTS\n95%\nMax LTC\nProject Details\nProject Value/Cost ($)\nProject Type\nNew Construction\nExisting Property\nTotal Points\nTier 100\nLoan-to-Cost Ratio\n95%\nFinancing Analysis\nMaximum Loan Amount\n$19.00M\n95% of project cost\nRequired Equity\n$1.00M\n5% of project cost\nFinancing Structure\nLoan 95%\nTotal Project Value:\n$20.00M\nDownload Your Free Report (PDF)\n\nLeverage caps per CMHC MLI Select (residential component): new construction up to 95% LTC at 50/70/100 points; existing properties up to 85% LTV at 50 points and 95% at 70+ points. The insured loan is the lesser of this leverage cap and the loan supported by a 1.10 DCR (standard rental) — see the DSCR calculator. Estimates only.\n\n18+ Years Combined Experience in complex mortgage solutions across British Columbia, Alberta, and Ontario.\n\nQUICK LINKS\nLive Mortgage Rates\nAbout Us\nServices\nCalculators\nMLI Select\nBlog\nCONTACT\nWhatsApp: +1 (604) 359-5993\n604-593-1550\n604-727-1579\nvarun@kraftmortgages.ca\n#301 1688 152nd Street\nSurrey, BC V4A 4N2\nLEGAL & TRUST\nCompliance & FINTRAC Disclosures\nPrivacy Policy\nTerms of Service\nLICENSED IN\n✓ British Columbia\n✓ Alberta\n✓ Ontario\nBCFSA #SR220230\nRECA LIC-00655428\nFSRA #12918\n© 2026 KRAFT MORTGAGES CANADA INC. · BCFSA #SR220230 · RECA LIC-00655428 · FSRA #12918\nSERVING BC · ALBERTA · ONTARIO\nGet guidance",
+    "baselineBadNumbers": []
+  },
+  {
+    "route": "/mli-select/calculators/premium",
+    "errors": [],
+    "inputs": [],
+    "scenarios": [],
+    "selects": [],
+    "mobile": {
+      "viewport": 390,
+      "documentWidth": 390,
+      "overflowing": []
+    },
+    "accessibility": [],
+    "status": 200,
+    "loadMs": 1753,
+    "title": "Premium\nCalculator",
+    "canonical": "https://www.kraftmortgages.ca/mli-select/calculators/premium",
+    "baseline": "Skip to main content\nMLI Select Portal\nHome\nRates\nServices\nCalculators\nMLI Select\nAbout\nContact\nBC\nAB\nON\nApply Now\nMLI Portal\n›\nAll MLI Calculators\nDeal Sizer\nChecklist\nSAVINGS CALCULATOR\nPremium\nCalculator\n\nCalculate your CMHC premium discounts and total savings based on tier level\n\n50+ POINTS\n10%\nDiscount\n70+ POINTS\n20%\nDiscount\n100+ POINTS\n30%\nDiscount\nLoan Details\nLoan Amount ($)\nLTV / LTC (%)\nLoan Purpose\nPurchase / Refinance\nConstruction\nAmortization (yrs)\nBase Premium Rate (%)CMHC grid\nTotal Points\nTier 100\nPremium Breakdown\nBase Rate:\n6.15%\nAmortization Surcharge:\n+1.25%\nDiscount:\n-30%\nFinal Rate:\n5.18%\nSavings Analysis\nTotal Premium Savings\n$333K\nTier 100 discount applied\nBase Premium\n$1110K\n7.40%\nFinal Premium\n$777K\n5.18%\nSavings Visualization\nFinal Cost\nSavings\nYou Pay: $777K\nYou Save: $333K\nDiscount\n30%\nTier\n100\nDownload Your Free Report (PDF)\n\nEstimates only. Base rates follow CMHC's multi-unit premium grid for standard rental housing (effective July 14, 2025); LTV bands above 85% are available under MLI Select only. The amortization surcharge (0.25% per 5 years beyond 25) and the MLI Select discount (10% / 20% / 30% at 50 / 70 / 100 points) are applied as published by CMHC. EGI, non-residential, second-mortgage and other-shelter-model surcharges are not included. CMHC changes these tables periodically — confirm with your lender.\n\n18+ Years Combined Experience in complex mortgage solutions across British Columbia, Alberta, and Ontario.\n\nQUICK LINKS\nLive Mortgage Rates\nAbout Us\nServices\nCalculators\nMLI Select\nBlog\nCONTACT\nWhatsApp: +1 (604) 359-5993\n604-593-1550\n604-727-1579\nvarun@kraftmortgages.ca\n#301 1688 152nd Street\nSurrey, BC V4A 4N2\nLEGAL & TRUST\nCompliance & FINTRAC Disclosures\nPrivacy Policy\nTerms of Service\nLICENSED IN\n✓ British Columbia\n✓ Alberta\n✓ Ontario\nBCFSA #SR220230\nRECA LIC-00655428\nFSRA #12918\n© 2026 KRAFT MORTGAGES CANADA INC. · BCFSA #SR220230 · RECA LIC-00655428 · FSRA #12918\nSERVING BC · ALBERTA · ONTARIO\nGet guidance",
+    "baselineBadNumbers": []
+  }
+]

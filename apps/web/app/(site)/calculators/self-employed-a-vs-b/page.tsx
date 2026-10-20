@@ -150,16 +150,16 @@ export default function SelfEmployedAVsBPage() {
       <Navigation />
       <CalculatorSchema name="Self-Employed: A-Lender vs B-Lender Calculator" description="Compare A-lender vs B-lender costs including the tax implications of declared income." url="/calculators/self-employed-a-vs-b" />
 
-      <main className="min-h-screen mt-16">
+      <main className="min-h-screen">
         {/* Breadcrumb */}
         <section className="py-6 px-4 bg-gray-800/30">
           <div className="max-w-6xl mx-auto">
             <div className="flex items-center gap-2 text-sm">
-              <Link href="/" className="text-gray-400 hover:text-gold-400 transition-colors">Home</Link>
+              <Link href="/" className="text-gray-400 hover:text-gold-300 transition-colors">Home</Link>
               <span className="text-gray-600">›</span>
-              <Link href="/calculators" className="text-gray-400 hover:text-gold-400 transition-colors">Calculators</Link>
+              <Link href="/calculators" className="text-gray-400 hover:text-gold-300 transition-colors">Calculators</Link>
               <span className="text-gray-600">›</span>
-              <span className="text-gold-400">Self-Employed: A-Lender vs B-Lender</span>
+              <span className="text-gold-300">Self-Employed: A-Lender vs B-Lender</span>
             </div>
           </div>
         </section>
@@ -168,7 +168,7 @@ export default function SelfEmployedAVsBPage() {
         <section className="py-20 px-4">
           <div className="max-w-6xl mx-auto">
             <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="text-center">
-              <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold bg-gold-500/20 text-gold-400 border border-gold-500/30 mb-6">
+              <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold bg-gold-500/20 text-gold-300 border border-gold-500/30 mb-6">
                 <Users className="w-4 h-4" />
                 Self-Employed Borrower Tool
               </div>
@@ -190,7 +190,7 @@ export default function SelfEmployedAVsBPage() {
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2 }}
               className="bg-gradient-to-r from-gold-500/10 via-amber-500/10 to-gold-500/10 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-gold-500/30">
               <div className="flex items-start gap-4">
-                <AlertTriangle className="w-6 h-6 text-gold-400 mt-1 flex-shrink-0" />
+                <AlertTriangle className="w-6 h-6 text-gold-300 mt-1 flex-shrink-0" />
                 <div>
                   <h3 className="text-lg font-semibold text-gold-300 mb-2">The Hidden Tax Trap</h3>
                   <p className="text-sm text-gray-300 leading-relaxed">
@@ -211,7 +211,7 @@ export default function SelfEmployedAVsBPage() {
             <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }}
               className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-white/20 mb-10">
               <h2 className="text-xl sm:text-2xl font-bold mb-6 flex items-center gap-3">
-                <Calculator className="w-6 h-6 text-gold-400" />
+                <Calculator className="w-6 h-6 text-gold-300" />
                 Enter Your Details
               </h2>
               <ComplianceBanner feature="LEAD_FORM" />
@@ -219,7 +219,7 @@ export default function SelfEmployedAVsBPage() {
                 <ValidatedInput label="Mortgage Amount Needed" value={mortgageAmount} onChange={setMortgageAmount} validation={{ min: 50000, max: 5000000 }} type="currency" />
                 <div>
                   <ValidatedInput label="Property Value" value={propertyValue} onChange={setPropertyValue} validation={{ min: 100000, max: 10000000 }} type="currency" />
-                  <p className={`text-xs mt-1.5 ${ltv > 80 ? "text-amber-300" : "text-gray-500"}`}>
+                  <p className={`text-xs mt-1.5 ${ltv > 80 ? "text-amber-300" : "text-gray-400"}`}>
                     LTV {ltv.toFixed(1)}%{ltv > 80 ? " — above the 80% maximum for B-lenders (and A-lender financing above 80% must be insured)" : ""}
                   </p>
                 </div>
@@ -246,7 +246,7 @@ export default function SelfEmployedAVsBPage() {
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-2">Marginal Tax Rate ({effectiveTaxRate.toFixed(2)}%)</label>
                   <div className="flex items-center gap-3 mb-2">
-                    <button onClick={() => setAutoTax(!autoTax)}
+                    <button aria-label="Use estimated marginal tax rate" aria-pressed={autoTax} onClick={() => setAutoTax(!autoTax)}
                       className={`w-12 h-6 rounded-full transition-all ${autoTax ? "bg-gold-500" : "bg-gray-600"} relative`}>
                       <span className={`absolute top-0.5 w-5 h-5 bg-white rounded-full transition-all ${autoTax ? "left-6" : "left-0.5"}`} />
                     </button>
@@ -259,12 +259,12 @@ export default function SelfEmployedAVsBPage() {
                 <ValidatedSlider label={`Term (${term} years)`} value={term} onChange={setTerm} min={1} max={10} step={1} formatValue={(v) => `${v} years`} />
                 <div>
                   <ValidatedSlider label="Years of Extra Declared Income" value={effectiveTaxYears} onChange={(v) => setTaxYears(Math.round(v))} min={1} max={10} step={1} formatValue={(v) => `${v} year${v > 1 ? "s" : ""}`} />
-                  <p className="text-xs text-gray-500 mt-1.5">Defaults to your term. A-lenders typically average your 2 most recent NOAs, so you may only need to declare higher income for those years (unless you&apos;ll need to re-qualify later).</p>
+                  <p className="text-xs text-gray-400 mt-1.5">Defaults to your term. A-lenders typically average your 2 most recent NOAs, so you may only need to declare higher income for those years (unless you&apos;ll need to re-qualify later).</p>
                 </div>
                 <ValidatedSlider label={`Amortization (${amortization} years)`} value={amortization} onChange={setAmortization} min={5} max={30} step={5} formatValue={(v) => `${v} years`} />
                 <ValidatedInput label="B-Lender Fee (%)" value={bFee} onChange={setBFee} validation={{ min: 0, max: 3 }} type="percentage" />
                 <div className="flex items-center gap-3 py-2">
-                  <button onClick={() => setIsInvestment(!isInvestment)}
+                  <button aria-label="Investment property" aria-pressed={isInvestment} onClick={() => setIsInvestment(!isInvestment)}
                     className={`w-12 h-6 rounded-full transition-all ${isInvestment ? "bg-gold-500" : "bg-gray-600"} relative`}>
                     <span className={`absolute top-0.5 w-5 h-5 bg-white rounded-full transition-all ${isInvestment ? "left-6" : "left-0.5"}`} />
                   </button>
@@ -292,7 +292,7 @@ export default function SelfEmployedAVsBPage() {
                 {isInvestment && (
                   <span className="block mt-1 text-green-300/80">Includes interest deductibility on both options (investment property)</span>
                 )}
-                <span className="block mt-1 text-xs text-gray-500">For incorporated owners, the real cost of declaring more income is the extra personal tax versus leaving it in the company — usually less than the full marginal rate. Ask your accountant.</span>
+                <span className="block mt-1 text-xs text-gray-400">For incorporated owners, the real cost of declaring more income is the extra personal tax versus leaving it in the company — usually less than the full marginal rate. Ask your accountant.</span>
               </p>
             </motion.div>
 
@@ -310,7 +310,7 @@ export default function SelfEmployedAVsBPage() {
                   <div className="flex justify-between"><span className="text-gray-400 text-sm">Total Interest ({term}yr)</span><span className="font-semibold text-gray-200">{formatCurrency(results.aInterest, 0)}</span></div>
                   <div className="border-t border-white/10 pt-4">
                     <div className="flex justify-between"><span className="text-gray-400 text-sm">Extra Income Tax on Declared Income</span><span className="font-semibold text-red-400">{formatCurrency(results.additionalTax, 0)}</span></div>
-                    <p className="text-xs text-gray-500 mt-1">{formatCurrency(additionalIncome, 0)}/yr × {effectiveTaxRate.toFixed(1)}% × {effectiveTaxYears}yr</p>
+                    <p className="text-xs text-gray-400 mt-1">{formatCurrency(additionalIncome, 0)}/yr × {effectiveTaxRate.toFixed(1)}% × {effectiveTaxYears}yr</p>
                   </div>
                   {isInvestment && results.aInvestmentTaxSavings > 0 && (
                     <div className="bg-green-500/10 rounded-lg p-3 border border-green-500/20">
@@ -322,7 +322,7 @@ export default function SelfEmployedAVsBPage() {
                     <span className="text-xl font-bold text-blue-400">{formatCurrency(results.aNetCost, 0)}</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-500">Monthly tax burden</span>
+                    <span className="text-gray-400">Monthly tax burden</span>
                     <span className="text-gray-400">{formatCurrency(additionalIncome * (effectiveTaxRate / 100) / 12, 0)}/mo</span>
                   </div>
                 </div>
@@ -332,7 +332,7 @@ export default function SelfEmployedAVsBPage() {
               <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6, delay: 0.2 }}
                 className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-gold-500/30">
                 <div className="flex items-center gap-3 mb-6">
-                  <TrendingUp className="w-6 h-6 text-gold-400" />
+                  <TrendingUp className="w-6 h-6 text-gold-300" />
                   <h3 className="text-xl font-bold text-gold-300">B-Lender (Alternative)</h3>
                 </div>
                 <div className="space-y-4">
@@ -349,10 +349,10 @@ export default function SelfEmployedAVsBPage() {
                   )}
                   <div className="border-t border-white/10 pt-4 flex justify-between">
                     <span className="font-semibold text-gray-200">Total Cost Over Term</span>
-                    <span className="text-xl font-bold text-gold-400">{formatCurrency(results.bNetCost, 0)}</span>
+                    <span className="text-xl font-bold text-gold-300">{formatCurrency(results.bNetCost, 0)}</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-500">Monthly difference vs A-lender</span>
+                    <span className="text-gray-400">Monthly difference vs A-lender</span>
                     <span className={results.bMonthly > results.aMonthly ? "text-red-400" : "text-green-400"}>
                       {results.bMonthly > results.aMonthly ? "+" : "-"}{formatCurrency(results.monthlyDiff, 0)}/mo
                     </span>
@@ -421,16 +421,16 @@ export default function SelfEmployedAVsBPage() {
                 <div className="bg-gold-500/5 rounded-xl p-5 border border-gold-500/20">
                   <h4 className="font-semibold text-gold-300 mb-3">B-Lender (Alternative) Requirements</h4>
                   <ul className="space-y-2 text-sm text-gray-300">
-                    <li className="flex items-start gap-2"><span className="text-gold-400 mt-0.5">•</span><strong>12 months business bank statements</strong> (most lenders)</li>
-                    <li className="flex items-start gap-2"><span className="text-gold-400 mt-0.5">•</span>Credit score typically 550–600+ (varies by lender)</li>
-                    <li className="flex items-start gap-2"><span className="text-gold-400 mt-0.5">•</span>More flexible GDS/TDS limits (often up to ~50% TDS)</li>
-                    <li className="flex items-start gap-2"><span className="text-gold-400 mt-0.5">•</span>Property appraisal</li>
-                    <li className="flex items-start gap-2"><span className="text-gold-400 mt-0.5">•</span>Stated income supported by bank statements; NOA often still requested to confirm no CRA arrears</li>
-                    <li className="flex items-start gap-2"><span className="text-gold-400 mt-0.5">•</span>Lender fee (0.5-2% of mortgage)</li>
+                    <li className="flex items-start gap-2"><span className="text-gold-300 mt-0.5">•</span><strong>12 months business bank statements</strong> (most lenders)</li>
+                    <li className="flex items-start gap-2"><span className="text-gold-300 mt-0.5">•</span>Credit score typically 550–600+ (varies by lender)</li>
+                    <li className="flex items-start gap-2"><span className="text-gold-300 mt-0.5">•</span>More flexible GDS/TDS limits (often up to ~50% TDS)</li>
+                    <li className="flex items-start gap-2"><span className="text-gold-300 mt-0.5">•</span>Property appraisal</li>
+                    <li className="flex items-start gap-2"><span className="text-gold-300 mt-0.5">•</span>Stated income supported by bank statements; NOA often still requested to confirm no CRA arrears</li>
+                    <li className="flex items-start gap-2"><span className="text-gold-300 mt-0.5">•</span>Lender fee (0.5-2% of mortgage)</li>
                   </ul>
                 </div>
               </div>
-              <p className="text-center text-xs text-gray-500 mt-4">Requirements vary by lender. A mortgage broker can match you with the right lender based on your specific situation.</p>
+              <p className="text-center text-xs text-gray-400 mt-4">Requirements vary by lender. A mortgage broker can match you with the right lender based on your specific situation.</p>
             </motion.div>
 
             {/* CTA */}
@@ -548,22 +548,22 @@ export default function SelfEmployedAVsBPage() {
               <p>
                 <strong>Result:</strong> B-lender saves Sarah <strong>about $64,500 over the 5-year term</strong>. She pays $529 more per month, but saves over $64K in total by not over-declaring income for five years. At renewal, if her income situation has changed, she can refinance to an A-lender.
               </p>
-              <p className="text-sm text-gray-500 italic">
+              <p className="text-sm text-gray-400 italic">
                 Note: This example uses illustrative rates and is simplified for clarity. Actual costs vary based on your specific situation. Consult a licensed mortgage broker for personalized advice.
               </p>
 
               <div className="mt-8">
-                <Link href="/calculators/self-employed" className="text-gold-400 hover:text-gold-300 underline">Self-Employed Income Calculator</Link>
+                <Link href="/calculators/self-employed" className="text-gold-300 hover:text-gold-300 underline">Self-Employed Income Calculator</Link>
                 {" · "}
-                <Link href="/calculators/payment" className="text-gold-400 hover:text-gold-300 underline">Mortgage Payment Calculator</Link>
+                <Link href="/calculators/payment" className="text-gold-300 hover:text-gold-300 underline">Mortgage Payment Calculator</Link>
                 {" · "}
-                <Link href="/calculators/investment" className="text-gold-400 hover:text-gold-300 underline">Investment Property Calculator</Link>
+                <Link href="/calculators/investment" className="text-gold-300 hover:text-gold-300 underline">Investment Property Calculator</Link>
               </div>
             </div>
           </div>
         </section>
 
-        <p className="text-center text-xs text-gray-500 mb-8">
+        <p className="text-center text-xs text-gray-400 mb-8">
           Rates shown are estimated starting rates for comparison purposes. Actual rates vary based on credit, LTV, property type, and location. Contact a broker to confirm rates for your specific situation.
         </p>
 
@@ -576,7 +576,7 @@ export default function SelfEmployedAVsBPage() {
                 <div key={i} className="bg-white/5 rounded-xl border border-white/10 overflow-hidden">
                   <button onClick={() => setOpenFaq(openFaq === i ? null : i)} className="w-full flex items-center justify-between p-5 text-left">
                     <span className="font-semibold text-gray-200 pr-4">{faq.q}</span>
-                    {openFaq === i ? <ChevronUp className="w-5 h-5 text-gold-400 flex-shrink-0" /> : <ChevronDown className="w-5 h-5 text-gray-400 flex-shrink-0" />}
+                    {openFaq === i ? <ChevronUp className="w-5 h-5 text-gold-300 flex-shrink-0" /> : <ChevronDown className="w-5 h-5 text-gray-400 flex-shrink-0" />}
                   </button>
                   {openFaq === i && (
                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="px-5 pb-5 text-sm text-gray-300 leading-relaxed">{faq.a}</motion.div>

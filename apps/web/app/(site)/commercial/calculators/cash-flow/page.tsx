@@ -1,4 +1,5 @@
 "use client";
+import CalculatorNumberInput from "@/components/ui/CalculatorNumberInput";
 import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
@@ -57,7 +58,7 @@ export default function CommercialCashFlowCalculator() {
   return (
     <>
       <Navigation />
-      <main className="min-h-screen mt-16">
+      <main className="min-h-screen">
         {/* Breadcrumb */}
         <section className="py-6 px-4 bg-gray-800/30">
           <div className="max-w-6xl mx-auto">
@@ -74,7 +75,7 @@ export default function CommercialCashFlowCalculator() {
         {/* Hero Section */}
         <section className="py-20 px-4">
           <div className="max-w-6xl mx-auto">
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
@@ -99,13 +100,13 @@ export default function CommercialCashFlowCalculator() {
           <div className="max-w-4xl mx-auto">
             <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl shadow-2xl border border-gray-700/50 p-8">
               <h2 className="text-2xl font-semibold text-gray-100 mb-6">Commercial Cash Flow Analysis</h2>
-              
+
               <div className="grid gap-6 md:grid-cols-2 mb-8">
                 <div>
                   <label className="block text-sm font-medium text-gray-200 mb-2">
                     Purchase Price
                   </label>
-                  <input
+                  <CalculatorNumberInput aria-label="Purchase Price" min={1}
                     type="number"
                     value={purchasePrice}
                     onChange={(e) => setPurchasePrice(Number(e.target.value))}
@@ -117,7 +118,7 @@ export default function CommercialCashFlowCalculator() {
                   <label className="block text-sm font-medium text-gray-200 mb-2">
                     Down Payment
                   </label>
-                  <input
+                  <CalculatorNumberInput aria-label="Down Payment"
                     type="number"
                     value={downPayment}
                     onChange={(e) => setDownPayment(Number(e.target.value))}
@@ -132,14 +133,14 @@ export default function CommercialCashFlowCalculator() {
                   <label className="block text-sm font-medium text-gray-200 mb-2">
                     Interest Rate (%)
                   </label>
-                  <input
+                  <CalculatorNumberInput aria-label="Interest Rate (%)" max={100}
                     type="number"
                     step="0.01"
                     value={interestRate}
                     onChange={(e) => setInterestRate(Number(e.target.value))}
                     className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-white"
                   />
-                  <div className="text-xs text-gray-500 mt-1">
+                  <div className="text-xs text-gray-400 mt-1">
                     Example rate — commercial pricing is quoted per deal (property type, DSCR, LTV, borrower). Enter your quoted rate.
                   </div>
                 </div>
@@ -148,7 +149,7 @@ export default function CommercialCashFlowCalculator() {
                   <label className="block text-sm font-medium text-gray-200 mb-2">
                     Amortization (Years)
                   </label>
-                  <select
+                  <select aria-label="Amortization (Years)"
                     value={amortization}
                     onChange={(e) => setAmortization(Number(e.target.value))}
                     className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-white"
@@ -163,7 +164,7 @@ export default function CommercialCashFlowCalculator() {
                   <label className="block text-sm font-medium text-gray-200 mb-2">
                     Annual Gross Rent
                   </label>
-                  <input
+                  <CalculatorNumberInput aria-label="Annual Gross Rent"
                     type="number"
                     value={grossRent}
                     onChange={(e) => setGrossRent(Number(e.target.value))}
@@ -175,7 +176,7 @@ export default function CommercialCashFlowCalculator() {
                   <label className="block text-sm font-medium text-gray-200 mb-2">
                     Vacancy Rate (%)
                   </label>
-                  <input
+                  <CalculatorNumberInput aria-label="Vacancy Rate (%)" max={100}
                     type="number"
                     step="0.1"
                     value={vacancy}
@@ -188,7 +189,7 @@ export default function CommercialCashFlowCalculator() {
                   <label className="block text-sm font-medium text-gray-200 mb-2">
                     Operating Expenses
                   </label>
-                  <input
+                  <CalculatorNumberInput aria-label="Operating Expenses"
                     type="number"
                     value={operatingExpenses}
                     onChange={(e) => setOperatingExpenses(Number(e.target.value))}
@@ -200,7 +201,7 @@ export default function CommercialCashFlowCalculator() {
                   <label className="block text-sm font-medium text-gray-200 mb-2">
                     Property Taxes
                   </label>
-                  <input
+                  <CalculatorNumberInput aria-label="Property Taxes"
                     type="number"
                     value={propertyTaxes}
                     onChange={(e) => setPropertyTaxes(Number(e.target.value))}
@@ -212,7 +213,7 @@ export default function CommercialCashFlowCalculator() {
                   <label className="block text-sm font-medium text-gray-200 mb-2">
                     Insurance
                   </label>
-                  <input
+                  <CalculatorNumberInput aria-label="Insurance"
                     type="number"
                     value={insurance}
                     onChange={(e) => setInsurance(Number(e.target.value))}
@@ -224,7 +225,7 @@ export default function CommercialCashFlowCalculator() {
                   <label className="block text-sm font-medium text-gray-200 mb-2">
                     Maintenance & Repairs
                   </label>
-                  <input
+                  <CalculatorNumberInput aria-label="Maintenance & Repairs"
                     type="number"
                     value={maintenance}
                     onChange={(e) => setMaintenance(Number(e.target.value))}
@@ -236,7 +237,7 @@ export default function CommercialCashFlowCalculator() {
               {/* Results */}
               <div className="bg-gray-700/50 rounded-xl p-6 mb-6">
                 <h3 className="text-lg font-semibold text-gray-100 mb-4">Cash Flow Analysis</h3>
-                
+
                 {/* Key Metrics */}
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-6">
                   <div className="bg-gray-800/50 rounded-lg p-4">
@@ -244,7 +245,7 @@ export default function CommercialCashFlowCalculator() {
                     <div className={`text-2xl font-bold ${beforeTaxCashFlow >= 0 ? 'text-green-400' : 'text-red-400'}`}>
                       ${monthlyBeforeTaxCashFlow.toLocaleString(undefined, {maximumFractionDigits: 0})}
                     </div>
-                    <div className="text-xs text-gray-500">Before tax</div>
+                    <div className="text-xs text-gray-400">Before tax</div>
                   </div>
 
                   <div className="bg-gray-800/50 rounded-lg p-4">
@@ -252,7 +253,7 @@ export default function CommercialCashFlowCalculator() {
                     <div className={`text-2xl font-bold ${dscrGood ? 'text-green-400' : 'text-red-400'}`}>
                       {dscr.toFixed(2)}
                     </div>
-                    <div className="text-xs text-gray-500">Min: 1.25</div>
+                    <div className="text-xs text-gray-400">Min: 1.25</div>
                   </div>
 
                   <div className="bg-gray-800/50 rounded-lg p-4">
@@ -260,7 +261,7 @@ export default function CommercialCashFlowCalculator() {
                     <div className={`text-2xl font-bold ${capRateGood ? 'text-green-400' : 'text-yellow-400'}`}>
                       {capRate.toFixed(2)}%
                     </div>
-                    <div className="text-xs text-gray-500">Market rate</div>
+                    <div className="text-xs text-gray-400">Market rate</div>
                   </div>
 
                   <div className="bg-gray-800/50 rounded-lg p-4">
@@ -268,7 +269,7 @@ export default function CommercialCashFlowCalculator() {
                     <div className={`text-2xl font-bold ${cashOnCashReturn >= 8 ? 'text-green-400' : 'text-yellow-400'}`}>
                       {cashOnCashReturn.toFixed(2)}%
                     </div>
-                    <div className="text-xs text-gray-500">Return on investment</div>
+                    <div className="text-xs text-gray-400">Return on investment</div>
                   </div>
                 </div>
 
@@ -288,7 +289,7 @@ export default function CommercialCashFlowCalculator() {
                       <span className="text-gray-400">Effective Gross Income:</span>
                       <span className="text-white font-semibold">${Math.round(effectiveGrossIncome).toLocaleString()}</span>
                     </div>
-                    
+
                     <div className="mt-3 space-y-1">
                       <div className="flex justify-between">
                         <span className="text-gray-400">Operating Expenses:</span>
@@ -307,17 +308,17 @@ export default function CommercialCashFlowCalculator() {
                         <span className="text-red-400">-${maintenance.toLocaleString()}</span>
                       </div>
                     </div>
-                    
+
                     <div className="flex justify-between border-t border-gray-700 pt-2">
                       <span className="text-gray-400">Net Operating Income:</span>
                       <span className="text-purple-400 font-semibold">${Math.round(netOperatingIncome).toLocaleString()}</span>
                     </div>
-                    
+
                     <div className="flex justify-between">
                       <span className="text-gray-400">Debt Service:</span>
                       <span className="text-red-400">-${Math.round(annualDebtService).toLocaleString()}</span>
                     </div>
-                    
+
                     <div className="flex justify-between border-t border-gray-700 pt-2">
                       <span className="text-gray-400">Before-Tax Cash Flow:</span>
                       <span className={`font-semibold ${beforeTaxCashFlow >= 0 ? 'text-green-400' : 'text-red-400'}`}>
@@ -339,7 +340,7 @@ export default function CommercialCashFlowCalculator() {
                         {goodInvestment ? 'Strong Investment Opportunity' : 'Investment Requires Review'}
                       </div>
                       <div className="text-sm text-gray-400">
-                        {goodInvestment 
+                        {goodInvestment
                           ? `DSCR: ${dscr.toFixed(2)}, Cap Rate: ${capRate.toFixed(2)}%, Positive Cash Flow`
                           : `Review: DSCR ${dscr < 1.25 ? 'low' : 'good'}, Cap Rate ${capRate < 6 ? 'below 6%' : 'good'}, Cash Flow ${beforeTaxCashFlow < 0 ? 'negative' : 'positive'}`
                         }
@@ -371,7 +372,7 @@ export default function CommercialCashFlowCalculator() {
                 <div className="text-sm text-gray-400 mt-3">
                   Professional valuation and environmental assessments required for all commercial financing.
                 </div>
-                <div className="text-xs text-gray-500 mt-2">
+                <div className="text-xs text-gray-400 mt-2">
                   Estimates only. Payments assume Canadian semi-annual compounding; NOI excludes debt service, depreciation and capital
                   expenditures. Lender DSCR/LTV thresholds vary (CMHC-insured multi-unit residential uses 1.10x). Not a commitment to lend.
                 </div>
@@ -420,21 +421,21 @@ export default function CommercialCashFlowCalculator() {
 
               {/* Related Calculators */}
               <div className="flex flex-wrap gap-4 justify-center">
-                <Link 
+                <Link
                   href={"/calculators/payment" as any}
                   className="inline-flex items-center gap-2 px-4 py-2 bg-purple-500/20 text-purple-400 rounded-lg hover:bg-purple-500/30 transition-colors"
                 >
                   <Calculator className="w-4 h-4" />
                   Payment Calculator
                 </Link>
-                <Link 
+                <Link
                   href={"/calculators/affordability" as any}
                   className="inline-flex items-center gap-2 px-4 py-2 bg-purple-500/20 text-purple-400 rounded-lg hover:bg-purple-500/30 transition-colors"
                 >
                   <DollarSign className="w-4 h-4" />
                   Affordability Calculator
                 </Link>
-                <Link 
+                <Link
                   href={"/commercial" as any}
                   className="inline-flex items-center gap-2 px-4 py-2 bg-gray-700/50 text-gray-300 rounded-lg hover:bg-gray-700 transition-colors"
                 >

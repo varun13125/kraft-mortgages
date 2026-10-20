@@ -1,4 +1,5 @@
 "use client";
+import CalculatorNumberInput from "@/components/ui/CalculatorNumberInput";
 import { useState } from "react";
 import Card from "@/components/mli/Card";
 import TierBadge from "@/components/mli/TierBadge";
@@ -88,7 +89,8 @@ export default function ScenarioComparePage() {
       pctUniversal: scenario.udPct,
       rhfScore: scenario.rhf
     });
-    const total = totalPointsCalc(aPts, ePts, accPts);
+    const validUnits = scenario.units >= 5 && Number.isInteger(scenario.units) && Number.isInteger(scenario.affUnits) && scenario.affUnits <= scenario.units;
+    const total = validUnits ? totalPointsCalc(aPts, ePts, accPts) : 0;
     const tier = tierFromPoints(total);
     const amort = amortByTier(tier);
     const leverage = leverageFor(scenario.projectType === "new", tier);
@@ -104,16 +106,16 @@ export default function ScenarioComparePage() {
     const premiumSavings = maxLoan * (basePremium - finalPremium) / 100;
 
     return {
-      aPts, ePts, accPts, total, tier, amort, leverage, discount, finalPremium, maxLoan, premiumSavings
+      validUnits, aPts, ePts, accPts, total, tier, amort, leverage, discount, finalPremium, maxLoan, premiumSavings
     };
   };
 
   return (
-    <div className="min-h-screen">
+    <main className="min-h-screen">
       {/* Hero Section */}
       <section className="py-20 px-4">
         <div className="max-w-6xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold bg-gold-500/20 text-gold-400 border border-gold-500/30 mb-6">
+          <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold bg-gold-500/20 text-gold-300 border border-gold-500/30 mb-6">
             CMHC • MLI Select
           </div>
           <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-gray-100 mb-6">
@@ -130,7 +132,7 @@ export default function ScenarioComparePage() {
           <div className="flex justify-between items-center mb-8">
             <h2 className="text-2xl font-bold text-gray-100">Scenarios</h2>
             <div className="flex gap-3">
-              <button 
+              <button
                 onClick={addScenario}
                 className="px-4 py-2 bg-gold-500 text-gray-900 rounded-lg hover:bg-gold-400 transition-colors font-semibold"
               >
@@ -142,17 +144,17 @@ export default function ScenarioComparePage() {
           <div className="grid gap-6 lg:grid-cols-2 xl:grid-cols-3">
             {scenarios.map(scenario => {
               const results = calculateResults(scenario);
-              
+
               return (
                 <Card key={scenario.id} title={
                   <div className="flex items-center justify-between">
-                    <input 
+                    <input aria-label="Scenario name"
                       value={scenario.name}
                       onChange={e => updateScenario(scenario.id, { name: e.target.value })}
                       className="bg-transparent border-none text-lg font-semibold text-gray-100 focus:outline-none focus:ring-2 focus:ring-gold-500/50 rounded px-2"
                     />
                     {scenarios.length > 1 && (
-                      <button 
+                      <button
                         onClick={() => removeScenario(scenario.id)}
                         className="text-red-400 hover:text-red-300 text-sm"
                       >
@@ -162,11 +164,12 @@ export default function ScenarioComparePage() {
                   </div>
                 }>
                   <div className="space-y-4">
+                    {!results.validUnits && <p role="status" className="text-amber-200">Use at least five whole units; affordable units cannot exceed total units. Tier benefits are unavailable until corrected.</p>}
                     {/* Basic Inputs */}
                     <div className="grid grid-cols-2 gap-3">
                       <div>
                         <label className="block text-xs font-medium text-gray-400 mb-1">Project Type</label>
-                        <select 
+                        <select aria-label="Project Type"
                           className="w-full text-xs rounded border border-gray-600 bg-gray-700/50 text-gray-100 px-2 py-1 focus:ring-1 focus:ring-gold-500/50"
                           value={scenario.projectType}
                           onChange={e => updateScenario(scenario.id, { projectType: e.target.value as "new" | "existing" })}
@@ -177,45 +180,45 @@ export default function ScenarioComparePage() {
                       </div>
                       <div>
                         <label className="block text-xs font-medium text-gray-400 mb-1">Total Units</label>
-                        <input 
+                        <CalculatorNumberInput aria-label="Total Units" min={1}
                           className="w-full text-xs rounded border border-gray-600 bg-gray-700/50 text-gray-100 px-2 py-1 focus:ring-1 focus:ring-gold-500/50"
-                          type="number" 
+                          type="number"
                           value={scenario.units}
                           onChange={e => updateScenario(scenario.id, { units: +e.target.value })}
                         />
                       </div>
                       <div>
                         <label className="block text-xs font-medium text-gray-400 mb-1">Affordable Units</label>
-                        <input 
+                        <CalculatorNumberInput aria-label="Affordable Units"
                           className="w-full text-xs rounded border border-gray-600 bg-gray-700/50 text-gray-100 px-2 py-1 focus:ring-1 focus:ring-gold-500/50"
-                          type="number" 
+                          type="number"
                           value={scenario.affUnits}
                           onChange={e => updateScenario(scenario.id, { affUnits: +e.target.value })}
                         />
                       </div>
                       <div>
                         <label className="block text-xs font-medium text-gray-400 mb-1">Aff. Years</label>
-                        <input 
+                        <CalculatorNumberInput aria-label="Aff. Years" max={50}
                           className="w-full text-xs rounded border border-gray-600 bg-gray-700/50 text-gray-100 px-2 py-1 focus:ring-1 focus:ring-gold-500/50"
-                          type="number" 
+                          type="number"
                           value={scenario.affYears}
                           onChange={e => updateScenario(scenario.id, { affYears: +e.target.value })}
                         />
                       </div>
                       <div>
                         <label className="block text-xs font-medium text-gray-400 mb-1">{scenario.projectType === "new" ? "Energy % vs NECB" : "Energy % reduction"}</label>
-                        <input 
+                        <CalculatorNumberInput aria-label={scenario.projectType === "new" ? "Energy % vs NECB" : "Energy % reduction"} max={100}
                           className="w-full text-xs rounded border border-gray-600 bg-gray-700/50 text-gray-100 px-2 py-1 focus:ring-1 focus:ring-gold-500/50"
-                          type="number" 
+                          type="number"
                           value={scenario.energyPct}
                           onChange={e => updateScenario(scenario.id, { energyPct: +e.target.value })}
                         />
                       </div>
                       <div>
                         <label className="block text-xs font-medium text-gray-400 mb-1">Accessible %</label>
-                        <input 
+                        <CalculatorNumberInput aria-label="Accessible %" max={100}
                           className="w-full text-xs rounded border border-gray-600 bg-gray-700/50 text-gray-100 px-2 py-1 focus:ring-1 focus:ring-gold-500/50"
-                          type="number" 
+                          type="number"
                           value={scenario.accPct}
                           onChange={e => updateScenario(scenario.id, { accPct: +e.target.value })}
                         />
@@ -224,18 +227,18 @@ export default function ScenarioComparePage() {
 
                     <div className="flex gap-2">
                       <label className="flex items-center gap-1 text-xs text-gray-300">
-                        <input 
-                          type="checkbox" 
-                          className="rounded border-gray-600 bg-gray-700 text-gold-400"
+                        <input
+                          type="checkbox"
+                          className="rounded border-gray-600 bg-gray-700 text-gold-300"
                           checked={scenario.visitAll}
                           onChange={e => updateScenario(scenario.id, { visitAll: e.target.checked })}
                         />
                         Visitable
                       </label>
                       <label className="flex items-center gap-1 text-xs text-gray-300">
-                        <input 
-                          type="checkbox" 
-                          className="rounded border-gray-600 bg-gray-700 text-gold-400"
+                        <input
+                          type="checkbox"
+                          className="rounded border-gray-600 bg-gray-700 text-gold-300"
                           checked={scenario.commons}
                           onChange={e => updateScenario(scenario.id, { commons: e.target.checked })}
                         />
@@ -248,11 +251,11 @@ export default function ScenarioComparePage() {
                       <div className="flex justify-between items-center">
                         <span className="text-sm text-gray-300">Points</span>
                         <div className="flex items-center gap-2">
-                          <span className="text-lg font-bold text-gold-400">{results.total}</span>
+                          <span className="text-lg font-bold text-gold-300">{results.total}</span>
                           <TierBadge points={results.total} />
                         </div>
                       </div>
-                      
+
                       <div className="text-xs space-y-1">
                         <div className="flex justify-between">
                           <span className="text-gray-400">Affordability:</span>
@@ -364,7 +367,7 @@ export default function ScenarioComparePage() {
                     </tbody>
                   </table>
                 </div>
-                <p className="mt-4 text-xs text-gray-500">
+                <p className="mt-4 text-xs text-gray-400">
                   Premium estimates use CMHC&apos;s standard rental premium grid (effective July 14, 2025): base rate by LTV/LTC
                   and loan purpose (new construction priced as construction financing), plus 0.25% per 5 years of amortization
                   beyond 25, less the MLI Select discount. Excludes EGI, non-residential and second-mortgage surcharges.
@@ -375,6 +378,6 @@ export default function ScenarioComparePage() {
           )}
         </div>
       </section>
-    </div>
+    </main>
   );
 }

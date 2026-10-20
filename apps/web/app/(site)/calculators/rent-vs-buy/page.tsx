@@ -155,16 +155,16 @@ export default function RentVsBuyPage() {
     <>
       <CalculatorSchema name="Rent vs Buy Calculator" description="Compare the financial outcomes of renting vs buying over 25 years with equity and appreciation." url="/calculators/rent-vs-buy" />
       <Navigation />
-      <main className="min-h-screen mt-16">
+      <main className="min-h-screen">
         {/* Breadcrumb */}
         <section className="py-6 px-4 bg-gray-800/30">
           <div className="max-w-6xl mx-auto">
             <div className="flex items-center gap-2 text-sm">
-              <Link href="/" className="text-gray-400 hover:text-gold-400 transition-colors">Home</Link>
+              <Link href="/" className="text-gray-400 hover:text-gold-300 transition-colors">Home</Link>
               <span className="text-gray-600">›</span>
-              <Link href="/calculators" className="text-gray-400 hover:text-gold-400 transition-colors">Calculators</Link>
+              <Link href="/calculators" className="text-gray-400 hover:text-gold-300 transition-colors">Calculators</Link>
               <span className="text-gray-600">›</span>
-              <span className="text-gold-400">Rent vs Buy Calculator</span>
+              <span className="text-gold-300">Rent vs Buy Calculator</span>
             </div>
           </div>
         </section>
@@ -173,7 +173,7 @@ export default function RentVsBuyPage() {
         <section className="py-20 px-4">
           <div className="max-w-6xl mx-auto">
             <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="text-center">
-              <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold bg-gold-500/20 text-gold-400 border border-gold-500/30 mb-6">
+              <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold bg-gold-500/20 text-gold-300 border border-gold-500/30 mb-6">
                 <Scale className="w-4 h-4" />
                 Side-by-Side Comparison
               </div>
@@ -195,7 +195,7 @@ export default function RentVsBuyPage() {
               <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }} className="space-y-8">
                 <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-white/20">
                   <h2 className="text-xl sm:text-2xl font-bold mb-6 flex items-center gap-3">
-                    <Home className="w-6 h-6 text-gold-400" />
+                    <Home className="w-6 h-6 text-gold-300" />
                     Home Purchase Details
                   </h2>
             {/* PDF Report Download */}
@@ -280,7 +280,7 @@ export default function RentVsBuyPage() {
 
                 <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-white/20">
                   <h2 className="text-xl sm:text-2xl font-bold mb-6 flex items-center gap-3">
-                    <DollarSign className="w-6 h-6 text-gold-400" />
+                    <DollarSign className="w-6 h-6 text-gold-300" />
                     Ongoing Costs & Rent
                   </h2>
                   <div className="space-y-6">
@@ -302,13 +302,13 @@ export default function RentVsBuyPage() {
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <p className="text-xs text-gray-400 mb-1">Buying (total monthly)</p>
-                      <p className="text-2xl font-bold text-gold-400">{formatCurrency(results.buyMonthly, 0)}</p>
-                      <p className="text-xs text-gray-500 mt-1">Mortgage {formatCurrency(results.mortgage, 0)} + tax + maint + ins</p>
+                      <p className="text-2xl font-bold text-gold-300">{formatCurrency(results.buyMonthly, 0)}</p>
+                      <p className="text-xs text-gray-400 mt-1">Mortgage {formatCurrency(results.mortgage, 0)} + tax + maint + ins</p>
                     </div>
                     <div>
                       <p className="text-xs text-gray-400 mb-1">Renting</p>
                       <p className="text-2xl font-bold text-gray-100">{formatCurrency(monthlyRent, 0)}</p>
-                      <p className="text-xs text-gray-500 mt-1">Monthly rent payment</p>
+                      <p className="text-xs text-gray-400 mt-1">Monthly rent payment</p>
                     </div>
                   </div>
                   <div className="mt-4 pt-4 border-t border-white/10">
@@ -325,7 +325,7 @@ export default function RentVsBuyPage() {
                 {/* Break-even */}
                 <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-white/20">
                   <div className="flex items-center gap-3 mb-3">
-                    <Clock className="w-5 h-5 text-gold-400" />
+                    <Clock className="w-5 h-5 text-gold-300" />
                     <p className="text-sm text-gray-400">Break-Even Year</p>
                   </div>
                   {results.breakEvenYear ? (
@@ -333,13 +333,13 @@ export default function RentVsBuyPage() {
                   ) : (
                     <p className="text-xl font-semibold text-amber-400">Beyond 25 years (or never)</p>
                   )}
-                  <p className="text-xs text-gray-500 mt-1">First year your projected net worth from buying (after selling costs) exceeds renting and investing the difference</p>
+                  <p className="text-xs text-gray-400 mt-1">First year your projected net worth from buying (after selling costs) exceeds renting and investing the difference</p>
                 </div>
 
                 {/* Multi-year comparison */}
                 <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-white/20">
                   <h4 className="font-semibold mb-4 flex items-center gap-2">
-                    <BarChart3 className="w-5 h-5 text-gold-400" />
+                    <BarChart3 className="w-5 h-5 text-gold-300" />
                     Multi-Year Comparison
                   </h4>
                   <div className="space-y-3">
@@ -380,7 +380,7 @@ export default function RentVsBuyPage() {
                   </div>
                 )}
 
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-gray-400">
                   Projections only, based on your assumptions — not a forecast or advice. Assumes the mortgage rate stays the same for the full amortization, rent and ownership costs rise {rentIncrease}%/yr, investments compound at {investmentReturn}%/yr with no tax (e.g. TFSA), and no capital gains tax on a principal residence. Net worth assumes you sell at year end ({sellingCostPct}% selling costs). Excludes moving costs and PST on CMHC premiums (ON).
                 </p>
 
@@ -443,11 +443,11 @@ export default function RentVsBuyPage() {
               </ul>
 
               <div className="mt-8">
-                <Link href="/calculators/affordability" className="text-gold-400 hover:text-gold-300 underline">Affordability Calculator</Link>
+                <Link href="/calculators/affordability" className="text-gold-300 hover:text-gold-300 underline">Affordability Calculator</Link>
                 {" · "}
-                <Link href="/calculators/payment" className="text-gold-400 hover:text-gold-300 underline">Mortgage Payment Calculator</Link>
+                <Link href="/calculators/payment" className="text-gold-300 hover:text-gold-300 underline">Mortgage Payment Calculator</Link>
                 {" · "}
-                <Link href="/calculators/closing-costs" className="text-gold-400 hover:text-gold-300 underline">Closing Costs Calculator</Link>
+                <Link href="/calculators/closing-costs" className="text-gold-300 hover:text-gold-300 underline">Closing Costs Calculator</Link>
               </div>
             </div>
           </div>
@@ -462,7 +462,7 @@ export default function RentVsBuyPage() {
                 <div key={i} className="bg-white/5 rounded-xl border border-white/10 overflow-hidden">
                   <button onClick={() => setOpenFaq(openFaq === i ? null : i)} className="w-full flex items-center justify-between p-5 text-left">
                     <span className="font-semibold text-gray-200 pr-4">{faq.q}</span>
-                    {openFaq === i ? <ChevronUp className="w-5 h-5 text-gold-400 flex-shrink-0" /> : <ChevronDown className="w-5 h-5 text-gray-400 flex-shrink-0" />}
+                    {openFaq === i ? <ChevronUp className="w-5 h-5 text-gold-300 flex-shrink-0" /> : <ChevronDown className="w-5 h-5 text-gray-400 flex-shrink-0" />}
                   </button>
                   {openFaq === i && (
                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="px-5 pb-5 text-sm text-gray-300 leading-relaxed">

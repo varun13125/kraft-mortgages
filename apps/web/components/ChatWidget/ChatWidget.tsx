@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
+import { useAdvisorHelp } from "@/components/AdvisorHelp";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { MessageCircle, X, Send, Calculator, TrendingUp, DollarSign, Volume2, Languages, Globe, Trash2 } from "lucide-react";
@@ -93,7 +94,9 @@ function loadStoredMessages(): Message[] | null {
 }
 
 export function ChatWidget() {
-  const [isOpen, setIsOpen] = useState(false);
+  const { panel, setPanel } = useAdvisorHelp();
+  const isOpen = panel === "chat";
+  const setIsOpen = (open: boolean) => setPanel(open ? "chat" : null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -430,70 +433,6 @@ export function ChatWidget() {
 
   return (
     <>
-      {/* Floating Action Dock: WhatsApp & AI Chat */}
-      <div className="fixed bottom-6 right-6 flex items-center gap-3 z-50">
-        {/* Dedicated WhatsApp Option */}
-        <motion.a
-          href={WHATSAPP_LINK}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="relative group w-14 h-14 bg-[#25D366] hover:bg-[#20ba59] rounded-full shadow-[0_4px_20px_rgba(37,211,102,0.45)] flex items-center justify-center text-white transition-all duration-200 border-2 border-white/20"
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.95 }}
-          title={`Chat on WhatsApp (${WHATSAPP_PHONE_DISPLAY})`}
-          aria-label={`Chat on WhatsApp ${WHATSAPP_PHONE_DISPLAY}`}
-        >
-          <WhatsAppIcon className="w-7 h-7 fill-current" />
-          
-          {/* Active online pulse dot */}
-          <span className="absolute -top-1 -right-1 flex h-4 w-4">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-4 w-4 bg-emerald-500 border-2 border-gray-900"></span>
-          </span>
-
-          {/* Hover Tooltip */}
-          <div className="absolute bottom-16 right-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-all duration-200 translate-y-1 group-hover:translate-y-0 whitespace-nowrap z-50">
-            <div className="bg-gray-900/95 text-white text-xs font-semibold px-3 py-1.5 rounded-lg shadow-2xl border border-gray-700/80 flex items-center gap-2 backdrop-blur-md">
-              <span className="w-2 h-2 rounded-full bg-[#25D366] animate-pulse" />
-              <span>WhatsApp: <strong>{WHATSAPP_PHONE_DISPLAY}</strong></span>
-            </div>
-          </div>
-        </motion.a>
-
-        {/* Floating AI Chat Button */}
-        <motion.button
-          className="w-14 h-14 bg-gradient-to-r from-gold-500 to-gold-600 rounded-full shadow-lg flex items-center justify-center text-white hover:from-gold-400 hover:to-gold-500 transition-all border-2 border-white/10"
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={() => setIsOpen(!isOpen)}
-          aria-label={isOpen ? "Close AI chat" : "Open AI chat"}
-        >
-          <AnimatePresence mode="wait">
-            {isOpen ? (
-              <motion.div
-                key="close"
-                initial={{ rotate: -90, opacity: 0 }}
-                animate={{ rotate: 0, opacity: 1 }}
-                exit={{ rotate: 90, opacity: 0 }}
-                transition={{ duration: 0.2 }}
-              >
-                <X className="w-6 h-6" />
-              </motion.div>
-            ) : (
-              <motion.div
-                key="chat"
-                initial={{ rotate: 90, opacity: 0 }}
-                animate={{ rotate: 0, opacity: 1 }}
-                exit={{ rotate: -90, opacity: 0 }}
-                transition={{ duration: 0.2 }}
-              >
-                <MessageCircle className="w-6 h-6" />
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </motion.button>
-      </div>
-
       {/* Chat Window */}
       <AnimatePresence>
         {isOpen && (
@@ -507,11 +446,12 @@ export function ChatWidget() {
             className="fixed bottom-24 right-4 sm:right-6 w-[calc(100vw-2rem)] sm:w-96 h-[min(600px,calc(100dvh-7.5rem))] bg-gray-800 rounded-xl shadow-2xl flex flex-col overflow-hidden z-40 border border-gray-700"
           >
             {/* Header */}
-            <div className="bg-gradient-to-r from-gold-500 to-gold-600 p-4 text-white">
-              <div className="flex items-center justify-between mb-2">
+            <div className="relative bg-[#18212b] border-b border-white/15 p-4 text-white">
+              <button type="button" aria-label="Close AI chat" onClick={() => setIsOpen(false)} className="absolute top-2 right-2 min-w-11 min-h-11 flex items-center justify-center rounded-lg hover:bg-white/10"><X size={18} /></button>
+              <div className="flex flex-wrap items-center justify-between gap-3 mb-2 pr-8">
                 <div>
-                  <h3 className="font-semibold text-base leading-tight">Kraft Mortgages Assistant</h3>
-                  <p className="text-xs opacity-90">Underwriting & Rates • 24/7</p>
+                  <h3 className="font-semibold text-base leading-tight">Kraft AI assistant</h3>
+                  <p className="text-xs text-gray-300">Mortgage guidance · 24/7</p>
                 </div>
                 <div className="flex items-center gap-2">
                   {/* Direct WhatsApp Handoff */}
@@ -531,7 +471,7 @@ export function ChatWidget() {
                     type="button"
                     onClick={handleClearChat}
                     disabled={isLoading}
-                    className="p-1.5 rounded-lg bg-white/10 text-white/80 hover:bg-white/20 hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="min-w-11 min-h-11 flex items-center justify-center p-1.5 rounded-lg bg-white/10 text-white/80 hover:bg-white/20 hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     title="Clear chat"
                     aria-label="Clear chat history"
                   >
@@ -541,7 +481,7 @@ export function ChatWidget() {
                   {/* Voice Toggle */}
                   <button
                     onClick={() => setShowVoiceControls(!showVoiceControls)}
-                    className={`p-1.5 rounded-lg transition-colors ${showVoiceControls
+                    className={`min-w-11 min-h-11 flex items-center justify-center p-1.5 rounded-lg transition-colors ${showVoiceControls
                       ? 'bg-white/20 text-white'
                       : 'bg-white/10 text-white/70 hover:bg-white/15'
                       }`}
@@ -773,7 +713,7 @@ export function ChatWidget() {
                   type="submit"
                   aria-label="Send message"
                   disabled={isLoading || !inputValue.trim()}
-                  className="px-4 py-2 bg-gradient-to-r from-gold-500 to-gold-600 text-white rounded-lg hover:from-gold-400 hover:to-gold-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                  className="px-4 py-2 bg-gradient-to-r from-gold-500 to-gold-600 text-gray-950 rounded-lg hover:from-gold-400 hover:to-gold-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                 >
                   <Send className="w-5 h-5" />
                 </button>

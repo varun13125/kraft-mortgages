@@ -1,4 +1,5 @@
 "use client";
+import CalculatorNumberInput from "@/components/ui/CalculatorNumberInput";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import Card from "@/components/mli/Card";
@@ -32,7 +33,7 @@ export default function BreakEvenPage() {
   const money = (x: number) => Math.round(x).toLocaleString();
 
   return (
-    <div className="min-h-screen">
+    <main className="min-h-screen">
       {/* Hero Section with Animated Background */}
       <section className="relative overflow-hidden">
         {/* Animated Background */}
@@ -55,10 +56,10 @@ export default function BreakEvenPage() {
               </defs>
               <rect width="100%" height="100%" fill="url(#building-pattern)" />
             </svg>
-            
+
             {/* Floating Calculation Elements */}
             <div className="absolute top-20 left-10 w-72 h-72">
-              <motion.div 
+              <motion.div
                 className="absolute inset-0 bg-gradient-to-br from-red-500 to-orange-500 rounded-2xl opacity-10 transform rotate-12"
                 animate={{
                   rotate: [12, 25, 12],
@@ -72,7 +73,7 @@ export default function BreakEvenPage() {
               />
             </div>
             <div className="absolute bottom-10 right-10 w-80 h-80">
-              <motion.div 
+              <motion.div
                 className="absolute inset-0 bg-gradient-to-br from-orange-500 to-red-500 rounded-full opacity-10"
                 animate={{
                   scale: [1, 1.2, 1],
@@ -88,10 +89,10 @@ export default function BreakEvenPage() {
           </div>
         </div>
 
-        <div className="relative z-10 py-20 px-4 mt-16">
+        <div className="relative z-10 py-20 px-4">
           <div className="max-w-6xl mx-auto text-center">
             {/* Animated Badge */}
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, scale: 0.8, rotateX: -20 }}
               animate={{ opacity: 1, scale: 1, rotateX: 0 }}
               transition={{ duration: 0.6, type: "spring", bounce: 0.3 }}
@@ -99,9 +100,9 @@ export default function BreakEvenPage() {
             >
               <BarChart3 className="w-4 h-4 text-red-400" />
               <span className="text-sm font-bold text-red-300 tracking-wider uppercase">Break-Even Analysis</span>
-              <motion.div 
+              <motion.div
                 className="w-2 h-2 bg-red-400 rounded-full"
-                animate={{ 
+                animate={{
                   scale: [1, 1.8, 1],
                   opacity: [1, 0.3, 1]
                 }}
@@ -110,7 +111,7 @@ export default function BreakEvenPage() {
             </motion.div>
 
             {/* Title with Gradient */}
-            <motion.h1 
+            <motion.h1
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
@@ -126,7 +127,7 @@ export default function BreakEvenPage() {
             </motion.h1>
 
             {/* Enhanced Description */}
-            <motion.p 
+            <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
@@ -137,7 +138,7 @@ export default function BreakEvenPage() {
             </motion.p>
 
             {/* Key Metrics Display */}
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.3 }}
@@ -148,7 +149,7 @@ export default function BreakEvenPage() {
                 { label: "Operating Costs", icon: Building, color: "text-orange-400", bg: "from-orange-600 to-amber-600" },
                 { label: "Target Margin", icon: Target, color: "text-amber-400", bg: "from-amber-600 to-yellow-600" },
               ].map((item, index) => (
-                <motion.div 
+                <motion.div
                   key={item.label}
                   className="group relative"
                   whileHover={{ scale: 1.05, y: -3 }}
@@ -160,7 +161,7 @@ export default function BreakEvenPage() {
                   <div className={`absolute -inset-1 bg-gradient-to-r ${item.bg} rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-300`}></div>
                   <div className="relative bg-gray-900/90 backdrop-blur-xl px-8 py-6 rounded-2xl border border-gray-700/50">
                     <item.icon className={`w-8 h-8 mx-auto mb-2 ${item.color}`} />
-                    <div className="text-xs text-gray-500 uppercase tracking-wider">{item.label}</div>
+                    <div className="text-xs text-gray-400 uppercase tracking-wider">{item.label}</div>
                     <div className={`text-2xl font-bold ${item.color}`}>✓</div>
                   </div>
                 </motion.div>
@@ -192,35 +193,35 @@ export default function BreakEvenPage() {
                       <label className="block text-sm font-medium text-gray-300 mb-2">Loan Amount ($)</label>
                       <div className="relative">
                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                          <DollarSign className="h-5 w-5 text-gray-500" />
+                          <DollarSign className="h-5 w-5 text-gray-400" />
                         </div>
-                        <input 
+                        <CalculatorNumberInput aria-label="Loan Amount ($)"
                           className="w-full pl-10 rounded-lg border border-gray-600 bg-gray-700/50 text-gray-100 px-3 py-3 text-sm focus:ring-2 focus:ring-red-500/50 focus:border-red-500 placeholder-gray-500 transition-all duration-200"
-                          type="number" 
-                          value={loan} 
-                          onChange={e=>setLoan(+e.target.value)} 
+                          type="number"
+                          value={loan}
+                          onChange={e=>setLoan(+e.target.value)}
                         />
                       </div>
                     </div>
 
                     <div>
                       <label className="block text-sm font-medium text-gray-300 mb-2">Interest Rate (%)</label>
-                      <input 
+                      <CalculatorNumberInput aria-label="Interest Rate (%)" max={100}
                         className="w-full rounded-lg border border-gray-600 bg-gray-700/50 text-gray-100 px-3 py-3 text-sm focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500 placeholder-gray-500 transition-all duration-200"
-                        type="number" 
-                        step={0.05} 
-                        value={rate} 
-                        onChange={e=>setRate(+e.target.value)} 
+                        type="number"
+                        step={0.05}
+                        value={rate}
+                        onChange={e=>setRate(+e.target.value)}
                       />
                     </div>
 
                     <div>
                       <label className="block text-sm font-medium text-gray-300 mb-2">Amortization (years)</label>
-                      <input 
+                      <CalculatorNumberInput aria-label="Amortization (years)" max={50} min={1}
                         className="w-full rounded-lg border border-gray-600 bg-gray-700/50 text-gray-100 px-3 py-3 text-sm focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 placeholder-gray-500 transition-all duration-200"
-                        type="number" 
-                        value={amort} 
-                        onChange={e=>setAmort(+e.target.value)} 
+                        type="number"
+                        value={amort}
+                        onChange={e=>setAmort(+e.target.value)}
                       />
                     </div>
 
@@ -228,13 +229,13 @@ export default function BreakEvenPage() {
                       <label className="block text-sm font-medium text-gray-300 mb-2">Total Units</label>
                       <div className="relative">
                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                          <Building className="h-5 w-5 text-gray-500" />
+                          <Building className="h-5 w-5 text-gray-400" />
                         </div>
-                        <input 
+                        <CalculatorNumberInput aria-label="Total Units" min={1}
                           className="w-full pl-10 rounded-lg border border-gray-600 bg-gray-700/50 text-gray-100 px-3 py-3 text-sm focus:ring-2 focus:ring-yellow-500/50 focus:border-yellow-500 placeholder-gray-500 transition-all duration-200"
-                          type="number" 
-                          value={units} 
-                          onChange={e=>setUnits(+e.target.value)} 
+                          type="number"
+                          value={units}
+                          onChange={e=>setUnits(+e.target.value)}
                         />
                       </div>
                     </div>
@@ -242,11 +243,11 @@ export default function BreakEvenPage() {
 
                   <div>
                     <label className="block text-sm font-medium text-gray-300 mb-2">Monthly Operating Expenses ($)</label>
-                    <input 
+                    <CalculatorNumberInput aria-label="Monthly Operating Expenses ($)"
                       className="w-full rounded-lg border border-gray-600 bg-gray-700/50 text-gray-100 px-3 py-3 text-sm focus:ring-2 focus:ring-red-500/50 focus:border-red-500 placeholder-gray-500 transition-all duration-200"
-                      type="number" 
-                      value={otherOpex} 
-                      onChange={e=>setOtherOpex(+e.target.value)} 
+                      type="number"
+                      value={otherOpex}
+                      onChange={e=>setOtherOpex(+e.target.value)}
                     />
                   </div>
 
@@ -254,21 +255,21 @@ export default function BreakEvenPage() {
                     <label className="block text-sm font-medium text-gray-300 mb-2">Target Margin (%)</label>
                     <div className="relative">
                       <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <Target className="h-5 w-5 text-gray-500" />
+                        <Target className="h-5 w-5 text-gray-400" />
                       </div>
-                      <input 
+                      <CalculatorNumberInput aria-label="Target Margin (%)" max={99}
                         className="w-full pl-10 rounded-lg border border-gray-600 bg-gray-700/50 text-gray-100 px-3 py-3 text-sm focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500 placeholder-gray-500 transition-all duration-200"
-                        type="number" 
-                        step={0.01} 
-                        value={margin * 100} 
-                        onChange={e=>setMargin(+e.target.value / 100)} 
+                        type="number"
+                        step={0.01}
+                        value={margin * 100}
+                        onChange={e=>setMargin(+e.target.value / 100)}
                       />
                     </div>
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-gray-300 mb-2">Vacancy &amp; Credit Loss (%)</label>
-                    <input
+                    <CalculatorNumberInput aria-label="Vacancy &amp; Credit Loss (%)"
                       className="w-full rounded-lg border border-gray-600 bg-gray-700/50 text-gray-100 px-3 py-3 text-sm focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500 placeholder-gray-500 transition-all duration-200"
                       type="number"
                       step={0.5}
@@ -285,7 +286,7 @@ export default function BreakEvenPage() {
                     <div className="text-2xl font-bold text-red-400">
                       ${money(monthlyPayment)}
                     </div>
-                    <div className="text-xs text-gray-500 mt-1">
+                    <div className="text-xs text-gray-400 mt-1">
                       {rate}% over {amort} years (semi-annual compounding)
                     </div>
                   </div>
@@ -308,7 +309,7 @@ export default function BreakEvenPage() {
               }>
                 <div className="space-y-6">
                   {/* Break-Even Rent */}
-                  <motion.div 
+                  <motion.div
                     className="p-5 bg-gradient-to-br from-red-900/20 to-orange-900/20 rounded-xl border border-red-500/20"
                     whileHover={{ scale: 1.02 }}
                     transition={{ type: "spring", stiffness: 300 }}
@@ -319,7 +320,7 @@ export default function BreakEvenPage() {
                         <div className="text-3xl font-bold text-red-400">
                           ${breakEvenRent.toFixed(0)}
                         </div>
-                        <div className="text-xs text-gray-500 mt-1">Monthly rent required</div>
+                        <div className="text-xs text-gray-400 mt-1">Monthly rent required</div>
                       </div>
                       <div className="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center">
                         <Home className="w-8 h-8 text-red-400" />
@@ -328,7 +329,7 @@ export default function BreakEvenPage() {
                   </motion.div>
 
                   {/* Total Income */}
-                  <motion.div 
+                  <motion.div
                     className="p-5 bg-gradient-to-br from-orange-900/20 to-amber-900/20 rounded-xl border border-orange-500/20"
                     whileHover={{ scale: 1.02 }}
                     transition={{ type: "spring", stiffness: 300 }}
@@ -339,7 +340,7 @@ export default function BreakEvenPage() {
                         <div className="text-2xl font-bold text-orange-400">
                           ${money(totalRentalIncome)}
                         </div>
-                        <div className="text-xs text-gray-500 mt-1">{units} units × ${breakEvenRent.toFixed(0)} less {(vacancy * 100).toFixed(1)}% vacancy</div>
+                        <div className="text-xs text-gray-400 mt-1">{units} units × ${breakEvenRent.toFixed(0)} less {(vacancy * 100).toFixed(1)}% vacancy</div>
                       </div>
                       <div className="w-16 h-16 bg-orange-500/10 rounded-full flex items-center justify-center">
                         <DollarSign className="w-8 h-8 text-orange-400" />
@@ -377,19 +378,19 @@ export default function BreakEvenPage() {
                   {/* Visual Breakdown */}
                   <div className="grid grid-cols-3 gap-3">
                     <div className="p-3 bg-gradient-to-br from-red-900/20 to-red-800/10 rounded-lg border border-red-700/30">
-                      <div className="text-xs text-gray-500 mb-1">Debt %</div>
+                      <div className="text-xs text-gray-400 mb-1">Debt %</div>
                       <div className="text-lg font-bold text-red-400">
                         {pctOfIncome(monthlyPayment).toFixed(0)}%
                       </div>
                     </div>
                     <div className="p-3 bg-gradient-to-br from-orange-900/20 to-orange-800/10 rounded-lg border border-orange-700/30">
-                      <div className="text-xs text-gray-500 mb-1">OpEx %</div>
+                      <div className="text-xs text-gray-400 mb-1">OpEx %</div>
                       <div className="text-lg font-bold text-orange-400">
                         {pctOfIncome(otherOpex).toFixed(0)}%
                       </div>
                     </div>
                     <div className="p-3 bg-gradient-to-br from-green-900/20 to-green-800/10 rounded-lg border border-green-700/30">
-                      <div className="text-xs text-gray-500 mb-1">Margin %</div>
+                      <div className="text-xs text-gray-400 mb-1">Margin %</div>
                       <div className="text-lg font-bold text-green-400">
                         {pctOfIncome(netCashFlow).toFixed(0)}%
                       </div>
@@ -401,6 +402,6 @@ export default function BreakEvenPage() {
           </div>
         </div>
       </section>
-    </div>
+    </main>
   );
 }

@@ -228,6 +228,7 @@ const MLI_SELECT_INFO_PAGES = [
 
 // MLI Select calculators (index + 9 tools; each has its own canonical)
 const MLI_SELECT_CALCULATORS = [
+  { url: '/mli-select/calculators/deal-sizer', priority: 0.85, changeFrequency: 'weekly' as const },
   {
     url: '/mli-select/calculators',
     priority: 0.8,

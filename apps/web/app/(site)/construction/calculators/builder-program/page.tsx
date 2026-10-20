@@ -1,4 +1,5 @@
 "use client";
+import CalculatorNumberInput from "@/components/ui/CalculatorNumberInput";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
@@ -98,16 +99,16 @@ export default function BuilderProgramCalculator() {
     return (
         <>
             <Navigation />
-            <main className="min-h-screen mt-16">
+            <main className="min-h-screen">
                 {/* Breadcrumb */}
                 <section className="py-6 px-4 bg-gray-800/30">
                     <div className="max-w-6xl mx-auto">
                         <div className="flex items-center gap-2 text-sm">
-                            <Link href="/" className="text-gray-400 hover:text-gold-400 transition-colors">Home</Link>
+                            <Link href="/" className="text-gray-400 hover:text-gold-300 transition-colors">Home</Link>
                             <span className="text-gray-600">›</span>
-                            <Link href="/construction" className="text-gray-400 hover:text-gold-400 transition-colors">Construction</Link>
+                            <Link href="/construction" className="text-gray-400 hover:text-gold-300 transition-colors">Construction</Link>
                             <span className="text-gray-600">›</span>
-                            <span className="text-gold-400">Builder Program Comparison</span>
+                            <span className="text-gold-300">Builder Program Comparison</span>
                         </div>
                     </div>
                 </section>
@@ -151,7 +152,7 @@ export default function BuilderProgramCalculator() {
                                     <label className="block text-sm text-gray-400 mb-2">Total Project Cost</label>
                                     <div className="relative">
                                         <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">$</span>
-                                        <input
+                                        <CalculatorNumberInput aria-label="Total Project Cost"
                                             type="number"
                                             value={projectCost}
                                             onChange={(e) => setProjectCost(Math.max(0, Number(e.target.value)))}
@@ -164,7 +165,7 @@ export default function BuilderProgramCalculator() {
                                     <label className="block text-sm text-gray-400 mb-2">Down Payment</label>
                                     <div className="relative">
                                         <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">$</span>
-                                        <input
+                                        <CalculatorNumberInput aria-label="Down Payment"
                                             type="number"
                                             value={downPayment}
                                             onChange={(e) => setDownPayment(Math.max(0, Number(e.target.value)))}
@@ -172,11 +173,11 @@ export default function BuilderProgramCalculator() {
                                             inputMode="decimal"
                                         />
                                     </div>
-                                    <div className="text-xs text-gray-500 mt-1">{downPaymentPercent.toFixed(1)}% of project</div>
+                                    <div className="text-xs text-gray-400 mt-1">{downPaymentPercent.toFixed(1)}% of project</div>
                                 </div>
                                 <div>
                                     <label className="block text-sm text-gray-400 mb-2">Construction Period (months)</label>
-                                    <input
+                                    <CalculatorNumberInput aria-label="Construction Period (months)"
                                         type="number"
                                         value={constructionMonths}
                                         onChange={(e) => setConstructionMonths(Math.max(3, Math.min(24, Number(e.target.value))))}
@@ -192,7 +193,7 @@ export default function BuilderProgramCalculator() {
                             <div className="grid md:grid-cols-3 gap-4 mt-6">
                                 <div className="bg-white/5 rounded-xl p-4">
                                     <div className="text-sm text-gray-400">Loan Amount</div>
-                                    <div className="text-2xl font-bold text-gold-400">${loanAmount.toLocaleString()}</div>
+                                    <div className="text-2xl font-bold text-gold-300">${loanAmount.toLocaleString()}</div>
                                 </div>
                                 <div className="bg-white/5 rounded-xl p-4">
                                     <div className="text-sm text-gray-400">Loan-to-Cost</div>
@@ -238,26 +239,26 @@ export default function BuilderProgramCalculator() {
                                             {isEligible ? (
                                                 <CheckCircle className="w-6 h-6 text-green-400" />
                                             ) : (
-                                                <AlertTriangle className="w-6 h-6 text-gray-500" />
+                                                <AlertTriangle className="w-6 h-6 text-gray-400" />
                                             )}
                                         </div>
 
                                         <div className="grid grid-cols-2 gap-4 mb-4">
                                             <div>
-                                                <div className="text-xs text-gray-500">Max Loan-to-Cost</div>
+                                                <div className="text-xs text-gray-400">Max Loan-to-Cost</div>
                                                 <div className="font-semibold">{program.maxLTV}%</div>
                                             </div>
                                             <div>
-                                                <div className="text-xs text-gray-500">Interest Rate (est.)</div>
+                                                <div className="text-xs text-gray-400">Interest Rate (est.)</div>
                                                 <div className="font-semibold">{costs.rate.toFixed(2)}%</div>
-                                                <div className="text-[11px] text-gray-500">Prime + {program.primeSpread.toFixed(2)}%</div>
+                                                <div className="text-[11px] text-gray-400">Prime + {program.primeSpread.toFixed(2)}%</div>
                                             </div>
                                             <div>
-                                                <div className="text-xs text-gray-500">Max Loan</div>
+                                                <div className="text-xs text-gray-400">Max Loan</div>
                                                 <div className="font-semibold">${(program.maxLoanAmount / 1000000).toFixed(1)}M</div>
                                             </div>
                                             <div>
-                                                <div className="text-xs text-gray-500">Est. Interest Cost</div>
+                                                <div className="text-xs text-gray-400">Est. Interest Cost</div>
                                                 <div className="font-semibold text-red-300">${costs.totalInterest.toLocaleString(undefined, { maximumFractionDigits: 0 })}</div>
                                             </div>
                                         </div>
@@ -288,7 +289,7 @@ export default function BuilderProgramCalculator() {
                                         )}
 
                                         {!isEligible && (
-                                            <div className="text-sm text-gray-500">
+                                            <div className="text-sm text-gray-400">
                                                 {ltv > program.maxLTV && `Loan-to-cost too high (max ${program.maxLTV}%)`}
                                                 {loanAmount > program.maxLoanAmount && ` • Loan exceeds maximum`}
                                             </div>
@@ -298,7 +299,7 @@ export default function BuilderProgramCalculator() {
                             })}
                         </div>
 
-                        <p className="mt-8 text-xs text-gray-500 text-center max-w-3xl mx-auto">
+                        <p className="mt-8 text-xs text-gray-400 text-center max-w-3xl mx-auto">
                             Illustrative program profiles only — lender names, spreads and limits are examples, not current offers.
                             Rates are shown as prime + an illustrative spread, using {primeIsLive ? `today's prime of ${prime.toFixed(2)}%${ratesAsOf(liveRates) ? ` (as of ${ratesAsOf(liveRates)})` : ""}` : ratesLoading ? `a ${prime.toFixed(2)}% prime (loading today's rate)` : `an example prime of ${prime.toFixed(2)}% (live rates unavailable)`}.
                             Interest assumes a 50% average advance. New homes built for sale require third-party home warranty

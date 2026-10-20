@@ -1,4 +1,5 @@
 "use client";
+import CalculatorNumberInput from "@/components/ui/CalculatorNumberInput";
 import { useState } from "react";
 import Card from "@/components/mli/Card";
 import TierBadge from "@/components/mli/TierBadge";
@@ -18,6 +19,7 @@ import CalculatorPdfButton from "@/components/calculator-report/CalculatorPdfBut
 import { money, pct } from "@/components/calculator-report/reportFormat";
 
 export default function PointsPage() {
+  const [saveStatus, setSaveStatus] = useState("");
   const [name, setName] = useState("Scenario A");
   const [projectType, setProjectType] = useState<"new"|"existing">("new");
   const [units, setUnits] = useState(100);
@@ -41,7 +43,8 @@ export default function PointsPage() {
     pctUniversal: udPct,
     rhfScore: rhf
   });
-  const total = totalPointsCalc(aPts, ePts, accPts);
+  const validUnits = units >= 5 && Number.isInteger(units) && Number.isInteger(affUnits) && affUnits <= units;
+  const total = validUnits ? totalPointsCalc(aPts, ePts, accPts) : 0;
   const tier = tierFromPoints(total);
   const amort = amortByTier(tier);
   const leverage = leverageFor(projectType === "new", tier);
@@ -53,10 +56,17 @@ export default function PointsPage() {
 
   function saveScenario() {
     const key = "mli:scenarios";
-    const arr = JSON.parse(localStorage.getItem(key) || "[]");
-    arr.unshift({ ...snapshot, savedAt: new Date().toISOString() });
-    localStorage.setItem(key, JSON.stringify(arr.slice(0, 24)));
-    alert("Saved.");
+    if (!validUnits) { setSaveStatus("Correct unit counts before saving."); return; }
+    try {
+      const saved = localStorage.getItem(key);
+      let arr: unknown[] = [];
+      if (saved) {
+        try { const parsed: unknown = JSON.parse(saved); if (!Array.isArray(parsed)) { setSaveStatus("Saved data is unreadable. Export this scenario as JSON; existing data has been preserved."); return; } arr = parsed; }
+        catch { setSaveStatus("Saved data is unreadable. Export this scenario as JSON; existing data has been preserved."); return; }
+      }
+      localStorage.setItem(key, JSON.stringify([{ ...snapshot, savedAt: new Date().toISOString() }, ...arr].slice(0, 24)));
+      setSaveStatus("Saved on this device.");
+    } catch { setSaveStatus("This browser could not save. Export JSON to keep your scenario."); }
   }
 
   function printPDF() { window.print(); }
@@ -74,7 +84,9 @@ export default function PointsPage() {
   }
 
   return (
-    <div className="min-h-screen">
+    <main className="min-h-screen">
+      {!validUnits && <p role="status" className="mx-auto max-w-5xl p-4 text-amber-200">Enter at least five whole units. Affordable units cannot exceed total units. Tier benefits are unavailable until corrected.</p>}
+      <p role="status" className="px-4 text-gray-300">{saveStatus}</p>
       {/* Hero Section with Gradient Background */}
       <section className="relative overflow-hidden">
         {/* Animated Background Gradient */}
@@ -94,17 +106,17 @@ export default function PointsPage() {
             backgroundSize: '50px 50px'
           }}></div>
         </div>
-        
-        <div className="relative z-10 py-20 px-4 mt-16">
+
+        <div className="relative z-10 py-20 px-4">
           <div className="max-w-6xl mx-auto">
             <div className="text-center">
               {/* Enhanced Badge */}
               <div className="inline-flex items-center gap-3 rounded-full px-4 py-2 bg-gradient-to-r from-gold-500/20 to-amber-500/20 border border-gold-500/30 mb-8 backdrop-blur-sm">
                 <div className="w-2 h-2 bg-gold-400 rounded-full animate-pulse"></div>
-                <span className="text-sm font-semibold text-gold-400 tracking-wide">CMHC • MLI SELECT PROGRAM</span>
+                <span className="text-sm font-semibold text-gold-300 tracking-wide">CMHC • MLI SELECT PROGRAM</span>
                 <div className="w-2 h-2 bg-gold-400 rounded-full animate-pulse"></div>
               </div>
-              
+
               {/* Main Title with Gradient */}
               <h1 className="text-5xl sm:text-7xl font-bold tracking-tight mb-6">
                 <span className="bg-gradient-to-r from-gray-100 via-gold-200 to-gray-100 bg-clip-text text-transparent">
@@ -115,23 +127,23 @@ export default function PointsPage() {
                   Calculator
                 </span>
               </h1>
-              
+
               {/* Enhanced Description */}
               <p className="text-xl text-gray-400 max-w-3xl mx-auto mb-8">
-                Calculate your MLI Select qualification score across 
-                <span className="text-gold-400 font-semibold"> Affordability</span>, 
-                <span className="text-green-400 font-semibold"> Energy Efficiency</span>, and 
+                Calculate your MLI Select qualification score across
+                <span className="text-gold-300 font-semibold"> Affordability</span>,
+                <span className="text-green-400 font-semibold"> Energy Efficiency</span>, and
                 <span className="text-blue-400 font-semibold"> Accessibility</span> outcomes.
               </p>
-              
+
               {/* Stats Bar */}
               <div className="flex flex-wrap justify-center gap-8 mt-8">
                 <div className="flex items-center gap-2">
                   <div className="w-12 h-12 bg-gradient-to-br from-gold-500/20 to-gold-600/20 rounded-xl flex items-center justify-center border border-gold-500/30">
-                    <span className="text-gold-400 font-bold">50</span>
+                    <span className="text-gold-300 font-bold">50</span>
                   </div>
                   <div className="text-left">
-                    <div className="text-xs text-gray-500">Tier 1</div>
+                    <div className="text-xs text-gray-400">Tier 1</div>
                     <div className="text-sm text-gray-300">Base Benefits</div>
                   </div>
                 </div>
@@ -140,7 +152,7 @@ export default function PointsPage() {
                     <span className="text-blue-400 font-bold">70</span>
                   </div>
                   <div className="text-left">
-                    <div className="text-xs text-gray-500">Tier 2</div>
+                    <div className="text-xs text-gray-400">Tier 2</div>
                     <div className="text-sm text-gray-300">Enhanced Terms</div>
                   </div>
                 </div>
@@ -149,7 +161,7 @@ export default function PointsPage() {
                     <span className="text-green-400 font-bold">100</span>
                   </div>
                   <div className="text-left">
-                    <div className="text-xs text-gray-500">Tier 3</div>
+                    <div className="text-xs text-gray-400">Tier 3</div>
                     <div className="text-sm text-gray-300">Maximum Benefits</div>
                   </div>
                 </div>
@@ -158,7 +170,7 @@ export default function PointsPage() {
           </div>
         </div>
       </section>
-      
+
       <style jsx>{`
         @keyframes blob {
           0% { transform: translate(0px, 0px) scale(1); }
@@ -183,7 +195,7 @@ export default function PointsPage() {
             <Card title={
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-gradient-to-br from-gold-500/20 to-gold-600/20 rounded-lg flex items-center justify-center border border-gold-500/30">
-                  <svg className="w-5 h-5 text-gold-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg className="w-5 h-5 text-gold-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                   </svg>
                 </div>
@@ -193,19 +205,19 @@ export default function PointsPage() {
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-2">Scenario Name</label>
-                  <input 
-                    className="w-full rounded-lg border border-gray-600 bg-gray-700/50 text-gray-100 px-3 py-2 text-sm focus:ring-2 focus:ring-gold-500/50 focus:border-gold-500 placeholder-gray-500" 
-                    value={name} 
-                    onChange={e=>setName(e.target.value)} 
-                    placeholder="My scenario" 
+                  <input aria-label="Scenario Name"
+                    className="w-full rounded-lg border border-gray-600 bg-gray-700/50 text-gray-100 px-3 py-2 text-sm focus:ring-2 focus:ring-gold-500/50 focus:border-gold-500 placeholder-gray-500"
+                    value={name}
+                    onChange={e=>setName(e.target.value)}
+                    placeholder="My scenario"
                   />
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-2">Project Type</label>
-                  <select 
+                  <select aria-label="Project Type"
                     className="w-full rounded-lg border border-gray-600 bg-gray-700/50 text-gray-100 px-3 py-2 text-sm focus:ring-2 focus:ring-gold-500/50 focus:border-gold-500"
-                    value={projectType} 
+                    value={projectType}
                     onChange={e=>setProjectType(e.target.value as any)}
                   >
                     <option value="new">New Construction</option>
@@ -215,60 +227,60 @@ export default function PointsPage() {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-2">Total Units</label>
-                  <input 
+                  <CalculatorNumberInput aria-label="Total Units" min={1}
                     className="w-full rounded-lg border border-gray-600 bg-gray-700/50 text-gray-100 px-3 py-2 text-sm focus:ring-2 focus:ring-gold-500/50 focus:border-gold-500"
-                    type="number" 
-                    value={units} 
-                    onChange={e=>setUnits(+e.target.value)} 
+                    type="number"
+                    value={units}
+                    onChange={e=>setUnits(+e.target.value)}
                   />
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-2">Affordable Units</label>
-                  <input 
+                  <CalculatorNumberInput aria-label="Affordable Units"
                     className="w-full rounded-lg border border-gray-600 bg-gray-700/50 text-gray-100 px-3 py-2 text-sm focus:ring-2 focus:ring-gold-500/50 focus:border-gold-500"
-                    type="number" 
-                    value={affUnits} 
-                    onChange={e=>setAffUnits(+e.target.value)} 
+                    type="number"
+                    value={affUnits}
+                    onChange={e=>setAffUnits(+e.target.value)}
                   />
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-2">Affordability Commitment (years, min. 10)</label>
-                  <input 
+                  <CalculatorNumberInput aria-label="Affordability Commitment (years, min. 10)" max={50}
                     className="w-full rounded-lg border border-gray-600 bg-gray-700/50 text-gray-100 px-3 py-2 text-sm focus:ring-2 focus:ring-gold-500/50 focus:border-gold-500"
-                    type="number" 
-                    value={affYears} 
-                    onChange={e=>setAffYears(+e.target.value)} 
+                    type="number"
+                    value={affYears}
+                    onChange={e=>setAffYears(+e.target.value)}
                   />
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-2">{projectType === "new" ? "Energy: % better than NECB Tier 1" : "Energy: % reduction vs current baseline"}</label>
-                  <input 
+                  <CalculatorNumberInput aria-label={projectType === "new" ? "Energy: % better than NECB Tier 1" : "Energy: % reduction vs current baseline"} max={100}
                     className="w-full rounded-lg border border-gray-600 bg-gray-700/50 text-gray-100 px-3 py-2 text-sm focus:ring-2 focus:ring-gold-500/50 focus:border-gold-500"
-                    type="number" 
-                    value={energyPct} 
-                    onChange={e=>setEnergyPct(+e.target.value)} 
+                    type="number"
+                    value={energyPct}
+                    onChange={e=>setEnergyPct(+e.target.value)}
                   />
                 </div>
 
                 <div className="grid grid-cols-2 gap-3">
                   <label className="flex items-center gap-2 text-sm text-gray-300">
-                    <input 
-                      type="checkbox" 
-                      className="rounded border-gray-600 bg-gray-700 text-gold-400"
-                      checked={visitAll} 
-                      onChange={e=>setVisitAll(e.target.checked)} 
+                    <input
+                      type="checkbox"
+                      className="rounded border-gray-600 bg-gray-700 text-gold-300"
+                      checked={visitAll}
+                      onChange={e=>setVisitAll(e.target.checked)}
                     />
                     All units visitable
                   </label>
                   <label className="flex items-center gap-2 text-sm text-gray-300">
-                    <input 
-                      type="checkbox" 
-                      className="rounded border-gray-600 bg-gray-700 text-gold-400"
-                      checked={commons} 
-                      onChange={e=>setCommons(e.target.checked)} 
+                    <input
+                      type="checkbox"
+                      className="rounded border-gray-600 bg-gray-700 text-gold-300"
+                      checked={commons}
+                      onChange={e=>setCommons(e.target.checked)}
                     />
                     Barrier-free commons
                   </label>
@@ -276,31 +288,31 @@ export default function PointsPage() {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-2">Fully Accessible Units (% of total)</label>
-                  <input 
+                  <CalculatorNumberInput aria-label="Fully Accessible Units (% of total)" max={100}
                     className="w-full rounded-lg border border-gray-600 bg-gray-700/50 text-gray-100 px-3 py-2 text-sm focus:ring-2 focus:ring-gold-500/50 focus:border-gold-500"
-                    type="number" 
-                    value={accPct} 
-                    onChange={e=>setAccPct(+e.target.value)} 
+                    type="number"
+                    value={accPct}
+                    onChange={e=>setAccPct(+e.target.value)}
                   />
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-2">Universal Design Units (% of total)</label>
-                  <input 
+                  <CalculatorNumberInput aria-label="Universal Design Units (% of total)" max={100}
                     className="w-full rounded-lg border border-gray-600 bg-gray-700/50 text-gray-100 px-3 py-2 text-sm focus:ring-2 focus:ring-gold-500/50 focus:border-gold-500"
-                    type="number" 
-                    value={udPct} 
-                    onChange={e=>setUdPct(+e.target.value)} 
+                    type="number"
+                    value={udPct}
+                    onChange={e=>setUdPct(+e.target.value)}
                   />
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-2">RHF Accessibility Score</label>
-                  <input 
+                  <CalculatorNumberInput aria-label="RHF Accessibility Score" max={100}
                     className="w-full rounded-lg border border-gray-600 bg-gray-700/50 text-gray-100 px-3 py-2 text-sm focus:ring-2 focus:ring-gold-500/50 focus:border-gold-500"
-                    type="number" 
-                    value={rhf} 
-                    onChange={e=>setRhf(+e.target.value)} 
+                    type="number"
+                    value={rhf}
+                    onChange={e=>setRhf(+e.target.value)}
                   />
                 </div>
 
@@ -319,21 +331,21 @@ export default function PointsPage() {
                   <div className="bg-gray-700/30 p-4 rounded-lg border border-gray-600/50">
                     <div className="font-semibold text-gray-100">Affordability</div>
                     <div className="mt-1 text-gray-400">{((affUnits/units)*100||0).toFixed(1)}% units • {affYears} years</div>
-                    <div className="mt-1 text-gray-300">Points: <b className="text-gold-400">{aPts}</b></div>
+                    <div className="mt-1 text-gray-300">Points: <b className="text-gold-300">{aPts}</b></div>
                   </div>
                   <div className="bg-gray-700/30 p-4 rounded-lg border border-gray-600/50">
                     <div className="font-semibold text-gray-100">Energy</div>
                     <div className="mt-1 text-gray-400">{energyPct}% improvement</div>
-                    <div className="mt-1 text-gray-300">Points: <b className="text-gold-400">{ePts}</b></div>
+                    <div className="mt-1 text-gray-300">Points: <b className="text-gold-300">{ePts}</b></div>
                   </div>
                   <div className="bg-gray-700/30 p-4 rounded-lg border border-gray-600/50">
                     <div className="font-semibold text-gray-100">Accessibility</div>
                     <div className="mt-1 text-gray-400">Points</div>
-                    <div className="mt-1 text-gray-300">Points: <b className="text-gold-400">{accPts}</b></div>
+                    <div className="mt-1 text-gray-300">Points: <b className="text-gold-300">{accPts}</b></div>
                   </div>
                   <div className="bg-gray-700/30 p-4 rounded-lg border border-gray-600/50">
                     <div className="font-semibold text-gray-100">Total</div>
-                    <div className="mt-1 text-2xl font-bold text-gold-400">{total}</div>
+                    <div className="mt-1 text-2xl font-bold text-gold-300">{total}</div>
                     <div className="mt-2"><TierBadge points={total} /></div>
                     <div className="mt-3 text-sm text-gray-400">
                       Max amortization (by tier): <b>{amort} years</b> • Leverage: <b>{(leverage*100).toFixed(0)}%</b>
@@ -393,6 +405,6 @@ export default function PointsPage() {
           </div>
         </div>
       </section>
-    </div>
+    </main>
   );
 }

@@ -18,7 +18,7 @@ Round-2 reports (2026-10-13/14) use `r2-ai`, `r2-be`, `r2-fe`, `r2-calc`, `r2-sp
 
 ---
 
-## 0. Current status of every item (updated 2026-10-14, round 2 — supersedes the Status column in §1–§2)
+## 0. Current status of every item (updated 2026-10-20, calculator re-audit — supersedes the Status column in §1–§2)
 
 | ID | Status | Note |
 | --- | --- | --- |
@@ -59,7 +59,7 @@ Round-2 reports (2026-10-13/14) use `r2-ai`, `r2-be`, `r2-fe`, `r2-calc`, `r2-sp
 | BUG-035 | fixed | Unused deps + old AI SDKs removed; phantom deps moved into `apps/web`. Remaining majors (firebase-admin 14, Next 15, zod 4) are planned upgrades, not defects. |
 | BUG-036 | open (owner) | Business facts (hours, head office, licence numbers, emails). |
 | BUG-037 | open (owner) | APR disclosure on advertised rates. |
-| BUG-038 | partially fixed | Contrast fixed in frontend-owned files (31 replacements); calculator/specialty pages still use gray-500 small text. |
+| BUG-038 | partly fixed (2026-10-20) | Calculator contrast/links/controls audited and repaired; full-site/manual assistive-technology review remains. See final scan evidence. |
 | BUG-039 | fixed | Province selector in header + city pages set their province. |
 | BUG-040 | fixed | Blog images WebP (10.6 MB → 1.0 MB); blog ISR every 5 min. |
 | BUG-041 | open | Tool calling not wired into live chat (FEAT-009). |
@@ -78,10 +78,21 @@ Round-2 reports (2026-10-13/14) use `r2-ai`, `r2-be`, `r2-fe`, `r2-calc`, `r2-sp
 | BUG-054 | fixed (new, high) | 13 hub calculators inherited their hub's title/canonical from `{hub}/layout.tsx` → each now has its own leaf `layout.tsx`. |
 | BUG-055 | fixed in code (new, high) | Live feed defects: "Private 2nd" contained A-lender products at Prime + 0.50% (4.95%) and dates were spreadsheet serials ("46301"); median/fee fields were dropped. `lib/rates.ts` now filters private seconds below prime + 2%, converts serial dates, keeps median/fees (tests with a feed snapshot). **Owner: fix the Spotlight/Hermes feed generator too.** |
 | BUG-056 | fixed (new) | Calling window was Pacific-only (Ontario numbers callable until 22:30 ET). Now also requires the CRTC window (weekdays 9:00–21:30, weekends 10:00–18:00) in every time zone of the recipient's area code (`isRecipientCallable`). |
-| BUG-057 | open (new, low) | Possible blank band under the header on some pages (Navigation spacer + page `mt-16`) — homepage and calculators looked fine in a browser check; check city/contact/rates/learn. |
+| BUG-057 | partly fixed (2026-10-20) | Removed redundant calculator mt-16 after Navigation spacer. Remaining homepage/city/contact/rates/learn spacing should be handled in the design pass. |
 | BUG-058 | open (new, low) | JSON-LD `<script>` blocks use bare `JSON.stringify`; escape `<` in a shared serializer (hardening). |
 | BUG-059 | open (new, low) | `/api/chat` Gemini fallback is `gemini-2.5-flash`; Google limits 2.5 access to existing projects — move to a 3.x flash model if the key's project never used 2.5. |
 | BUG-060 | open (new, low) | Pipeline stages parse LLM JSON: fence-tolerant parser added (`lib/pipeline/json.ts`), but a supervised end-to-end pipeline run has never happened. |
+| BUG-061 | fixed (2026-10-20) | Finite validation, retained invalid drafts with last-valid disclosure, named/associated inputs and switches. See calculator premium audit and browser evidence. |
+| BUG-062 | fixed (2026-10-20) | Shared equal-debt/horizon interest-cost comparison in residential/commercial refinance, renewal and AI tool math. Payment relief separate; default recovery 37 → 48 months. |
+| BUG-063 | fixed (2026-10-20) | URL rate applied once; user edits persist; conventional renewal pricing; rate provenance corrected. Targeted browser assertions pass. |
+| BUG-064 | fixed (2026-10-20) | Separate types/lender-attachments.d.ts augmentation; owner data untouched. Type check verified separately. |
+| BUG-065 | fixed (2026-10-20) | MLI true margin, unit/tier safeguards; shared purchase eligibility and first-time/new-build check; Toronto closing tax choice. Full deal underwriting remains a feature. |
+| BUG-066 | fixed (2026-10-20) | Zero-income verdict guards; home-equity and HELOC sizing use both GDS and TDS. HELOC housing costs separated from other debt. |
+| BUG-067 | fixed (2026-10-20) | Stable annuity/inverse; scheduled final-payment interest; 2,160 ledger stress combinations and irregular payoff regressions. |
+| BUG-068 | fixed (2026-10-20) | MLI Save preserves malformed data and reports storage failures; export offered; browser regression passes. |
+| BUG-069 | fixed (2026-10-20) | Construction remaining budget ≥0; surplus separate from undisbursed commitment; regression test. |
+| BUG-070 | fixed (2026-10-20) | Accelerated-payment simulation rejects non-finite inputs and unsupported >100-year horizons; regression guards NaN/runaway work for non-UI callers. |
+| BUG-071 | fixed (2026-10-20) | Medium: B-vs-equity no longer calls equity lending the best option merely because B-lender criteria fail; verdict invites review without implying private eligibility. |
 
 ---
 

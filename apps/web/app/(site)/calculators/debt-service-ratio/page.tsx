@@ -1,4 +1,5 @@
 "use client";
+import { isInsurable } from "@/lib/calc/cmhc";
 import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
@@ -119,13 +120,14 @@ export default function DebtServiceRatioPage() {
 
     // CMHC insured maxima are 39% GDS / 44% TDS (the previous 32/40 check contradicted
     // the 39/44 max-mortgage math and the PDF). Some lenders apply stricter 35/42 limits.
-    const gdsPass = monthlyIncome > 0 && gds <= QUALIFYING_RATIOS.GDS_MAX;
-    const tdsPass = monthlyIncome > 0 && tds <= QUALIFYING_RATIOS.TDS_MAX;
-    const conventionalGdsPass = monthlyIncome > 0 && gds <= 35;
-    const conventionalTdsPass = monthlyIncome > 0 && tds <= 42;
+    const purchaseEligible = calcMethod !== "auto" || downPaymentPct >= 20 || isInsurable(homePrice, homePrice * downPaymentPct / 100);
+    const gdsPass = purchaseEligible && monthlyIncome > 0 && gds <= QUALIFYING_RATIOS.GDS_MAX;
+    const tdsPass = purchaseEligible && monthlyIncome > 0 && tds <= QUALIFYING_RATIOS.TDS_MAX;
+    const conventionalGdsPass = purchaseEligible && monthlyIncome > 0 && gds <= 35;
+    const conventionalTdsPass = purchaseEligible && monthlyIncome > 0 && tds <= 42;
 
     return {
-      totalIncome, monthlyIncome, mortgagePayment, housingCosts, totalDebts,
+      purchaseEligible, totalIncome, monthlyIncome, mortgagePayment, housingCosts, totalDebts,
       gds, tds, halfCondo, gdsPass, tdsPass,
       conventionalGdsPass, conventionalTdsPass,
       cmhcMaxMortgage, maxMonthlyMortgage, stressTestRate
@@ -136,16 +138,17 @@ export default function DebtServiceRatioPage() {
     <>
       <CalculatorSchema name="Debt Service Ratio Calculator" description="Calculate your GDS and TDS ratios to check CMHC qualification thresholds." url="/calculators/debt-service-ratio" />
       <Navigation />
-      <main className="min-h-screen mt-16">
+      <main className="min-h-screen">
+        {!results.purchaseEligible && <p role="status" className="mx-auto max-w-6xl p-4 text-amber-200">This purchase does not meet minimum down payment or insured price rules. Debt ratios are illustrative and cannot establish eligibility.</p>}
         {/* Breadcrumb */}
         <section className="py-6 px-4 bg-gray-800/30">
           <div className="max-w-6xl mx-auto">
             <div className="flex items-center gap-2 text-sm">
-              <Link href="/" className="text-gray-400 hover:text-gold-400 transition-colors">Home</Link>
+              <Link href="/" className="text-gray-400 hover:text-gold-300 transition-colors">Home</Link>
               <span className="text-gray-600">›</span>
-              <Link href="/calculators" className="text-gray-400 hover:text-gold-400 transition-colors">Calculators</Link>
+              <Link href="/calculators" className="text-gray-400 hover:text-gold-300 transition-colors">Calculators</Link>
               <span className="text-gray-600">›</span>
-              <span className="text-gold-400">Debt Service Ratio Calculator</span>
+              <span className="text-gold-300">Debt Service Ratio Calculator</span>
             </div>
           </div>
         </section>
@@ -154,7 +157,7 @@ export default function DebtServiceRatioPage() {
         <section className="py-20 px-4">
           <div className="max-w-6xl mx-auto">
             <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="text-center">
-              <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold bg-gold-500/20 text-gold-400 border border-gold-500/30 mb-6">
+              <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold bg-gold-500/20 text-gold-300 border border-gold-500/30 mb-6">
                 <Shield className="w-4 h-4" />
                 CMHC Qualification Check
               </div>
@@ -176,7 +179,7 @@ export default function DebtServiceRatioPage() {
               <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }} className="space-y-8">
                 <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-white/20">
                   <h2 className="text-xl sm:text-2xl font-bold mb-6 flex items-center gap-3">
-                    <Users className="w-6 h-6 text-gold-400" />
+                    <Users className="w-6 h-6 text-gold-300" />
                     Income
                   </h2>
             {/* PDF Report Download */}
@@ -235,14 +238,14 @@ export default function DebtServiceRatioPage() {
                     <ValidatedInput label="Your Annual Gross Income" value={annualIncome} onChange={setAnnualIncome} validation={{ min: 20000, max: 1000000 }} type="currency" />
                     <ValidatedInput label="Co-Applicant Annual Gross Income" value={coApplicantIncome} onChange={setCoApplicantIncome} validation={{ min: 0, max: 1000000 }} type="currency" />
                     <div className="bg-white/5 rounded-lg p-3 text-sm text-gray-400">
-                      Combined monthly income: <span className="text-gold-400 font-semibold">{formatCurrency(results.monthlyIncome, 0)}</span>
+                      Combined monthly income: <span className="text-gold-300 font-semibold">{formatCurrency(results.monthlyIncome, 0)}</span>
                     </div>
                   </div>
                 </div>
 
                 <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-white/20">
                   <h2 className="text-xl sm:text-2xl font-bold mb-6 flex items-center gap-3">
-                    <TrendingUp className="w-6 h-6 text-gold-400" />
+                    <TrendingUp className="w-6 h-6 text-gold-300" />
                     Housing Costs
                   </h2>
                   <div className="space-y-6">
@@ -266,7 +269,7 @@ export default function DebtServiceRatioPage() {
                           <ValidatedSlider label={`Amortization (${amortization} years)`} value={amortization} onChange={setAmortization} min={5} max={30} step={5} formatValue={(v) => `${v} years`} />
                           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                             <p className="text-sm text-gray-300">
-                              Payment at the {helperQualRate.toFixed(2)}% qualifying rate: <span className="font-semibold text-gold-400">{formatCurrency(helperPayment, 0)}/mo</span>
+                              Payment at the {helperQualRate.toFixed(2)}% qualifying rate: <span className="font-semibold text-gold-300">{formatCurrency(helperPayment, 0)}/mo</span>
                             </p>
                             <button type="button" onClick={() => setManualMortgage(Math.round(helperPayment))} className="py-2 px-4 rounded-lg text-sm font-semibold bg-gold-500 text-black hover:bg-gold-400 transition-colors">
                               Use this payment
@@ -293,7 +296,7 @@ export default function DebtServiceRatioPage() {
 
                 <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-white/20">
                   <h2 className="text-xl sm:text-2xl font-bold mb-6 flex items-center gap-3">
-                    <AlertTriangle className="w-6 h-6 text-gold-400" />
+                    <AlertTriangle className="w-6 h-6 text-gold-300" />
                     Other Monthly Debts
                   </h2>
                   <div className="space-y-5">
@@ -332,7 +335,7 @@ export default function DebtServiceRatioPage() {
                     <div className="h-3 bg-gray-700 rounded-full overflow-hidden">
                       <motion.div initial={{ width: 0 }} animate={{ width: `${Math.min(results.gds / 50 * 100, 100)}%` }} transition={{ duration: 0.8 }} className={`h-full rounded-full ${results.gdsPass ? "bg-green-500" : "bg-red-500"}`} />
                     </div>
-                    <div className="flex justify-between mt-1 text-xs text-gray-500">
+                    <div className="flex justify-between mt-1 text-xs text-gray-400">
                       <span>0%</span>
                       <span className="text-green-400">39% CMHC limit</span>
                       <span>50%</span>
@@ -363,7 +366,7 @@ export default function DebtServiceRatioPage() {
                     <div className="h-3 bg-gray-700 rounded-full overflow-hidden">
                       <motion.div initial={{ width: 0 }} animate={{ width: `${Math.min(results.tds / 55 * 100, 100)}%` }} transition={{ duration: 0.8 }} className={`h-full rounded-full ${results.tdsPass ? "bg-green-500" : "bg-red-500"}`} />
                     </div>
-                    <div className="flex justify-between mt-1 text-xs text-gray-500">
+                    <div className="flex justify-between mt-1 text-xs text-gray-400">
                       <span>0%</span>
                       <span className="text-green-400">44% CMHC limit</span>
                       <span>55%</span>
@@ -374,7 +377,7 @@ export default function DebtServiceRatioPage() {
                 {/* Conventional limits */}
                 <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
                   <h4 className="font-semibold mb-3 flex items-center gap-2">
-                    <Info className="w-5 h-5 text-gold-400" />
+                    <Info className="w-5 h-5 text-gold-300" />
                     Stricter Lender Guidelines (some conventional lenders)
                   </h4>
                   <div className="grid grid-cols-2 gap-4 text-sm">
@@ -392,8 +395,8 @@ export default function DebtServiceRatioPage() {
                 {/* Max qualifying mortgage */}
                 <div className="bg-gradient-to-br from-gold-500/20 to-amber-500/10 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-gold-500/30">
                   <p className="text-sm text-gold-300 font-medium mb-1">CMHC Maximum Qualifying Mortgage</p>
-                  <p className="text-3xl sm:text-4xl font-bold text-gold-400">{formatCurrency(results.cmhcMaxMortgage, 0)}</p>
-                  <p className="text-xs text-gray-500 mt-1">Based on {amortization}-year amortization at a {results.stressTestRate.toFixed(2)}% stress test rate ({mortgageRate.toFixed(2)}% contract rate + 2%, min 5.25%){calcMethod === "manual" ? " — adjust the rate under “Calculate from Purchase”" : ""}</p>
+                  <p className="text-3xl sm:text-4xl font-bold text-gold-300">{formatCurrency(results.cmhcMaxMortgage, 0)}</p>
+                  <p className="text-xs text-gray-400 mt-1">Based on {amortization}-year amortization at a {results.stressTestRate.toFixed(2)}% stress test rate ({mortgageRate.toFixed(2)}% contract rate + 2%, min 5.25%){calcMethod === "manual" ? " — adjust the rate under “Calculate from Purchase”" : ""}</p>
                 </div>
 
                 {/* CTA */}
@@ -456,11 +459,11 @@ export default function DebtServiceRatioPage() {
               </p>
 
               <div className="mt-8">
-                <Link href="/calculators/affordability" className="text-gold-400 hover:text-gold-300 underline">Affordability Calculator</Link>
+                <Link href="/calculators/affordability" className="text-gold-300 hover:text-gold-300 underline">Affordability Calculator</Link>
                 {" · "}
-                <Link href="/calculators/payment" className="text-gold-400 hover:text-gold-300 underline">Mortgage Payment Calculator</Link>
+                <Link href="/calculators/payment" className="text-gold-300 hover:text-gold-300 underline">Mortgage Payment Calculator</Link>
                 {" · "}
-                <Link href="/calculators/stress-test" className="text-gold-400 hover:text-gold-300 underline">Stress Test Calculator</Link>
+                <Link href="/calculators/stress-test" className="text-gold-300 hover:text-gold-300 underline">Stress Test Calculator</Link>
               </div>
             </div>
           </div>
@@ -475,7 +478,7 @@ export default function DebtServiceRatioPage() {
                 <div key={i} className="bg-white/5 rounded-xl border border-white/10 overflow-hidden">
                   <button onClick={() => setOpenFaq(openFaq === i ? null : i)} className="w-full flex items-center justify-between p-5 text-left">
                     <span className="font-semibold text-gray-200 pr-4">{faq.q}</span>
-                    {openFaq === i ? <ChevronUp className="w-5 h-5 text-gold-400 flex-shrink-0" /> : <ChevronDown className="w-5 h-5 text-gray-400 flex-shrink-0" />}
+                    {openFaq === i ? <ChevronUp className="w-5 h-5 text-gold-300 flex-shrink-0" /> : <ChevronDown className="w-5 h-5 text-gray-400 flex-shrink-0" />}
                   </button>
                   {openFaq === i && (
                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="px-5 pb-5 text-sm text-gray-300 leading-relaxed">

@@ -1,4 +1,5 @@
 "use client";
+import CalculatorNumberInput from "@/components/ui/CalculatorNumberInput";
 import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
@@ -6,7 +7,7 @@ import { TrendingUp, Home, Calculator, DollarSign, AlertTriangle, CheckCircle } 
 import Link from "next/link";
 import { useLiveRates } from "@/lib/useLiveRates";
 import { payment } from "@/lib/calc/payment";
-import { stressTestRate } from "@/lib/calc/affordability";
+import { stressTestRate, maxQualifyingLoan } from "@/lib/calc/affordability";
 import { liveConventional5yr, ratesAsOf } from "@/components/calculators/liveRateDefaults";
 
 // Static conventional 5-yr fixed used when the live feed is unavailable (Oct 2026 snapshot)
@@ -41,13 +42,16 @@ export default function HomeEquityCalculator() {
   const monthlyIncome = income / 12;
   const qualRate = stressTestRate(estimatedRate);
   const qualPerDollar = payment({ principal: 1, annualRatePct: qualRate, amortYears: 25, paymentsPerYear: 12 });
-  const maxMortgageByIncome = Math.max(0, (monthlyIncome * 0.44 - monthlyDebts - taxAndHeat) / qualPerDollar);
+  const maxMortgageByIncome = maxQualifyingLoan({
+    incomeAnnual: income, otherDebtsMonthly: monthlyDebts, nonMortgageHousingMonthly: taxAndHeat,
+    contractRatePct: estimatedRate, amortYears: 25,
+  });
   const availableByIncome = Math.max(0, maxMortgageByIncome - currentMortgage);
   const availableToBorrow = Math.min(availableEquity, availableByIncome);
   const debtToIncome = monthlyIncome > 0
-    ? (((currentMortgage + availableEquity) * qualPerDollar + monthlyDebts + taxAndHeat) / monthlyIncome) * 100
+    ? (((currentMortgage + availableToBorrow) * qualPerDollar + monthlyDebts + taxAndHeat) / monthlyIncome) * 100
     : 0;
-  const qualifiesBasic = debtToIncome <= 44 && creditScore >= 600;
+  const qualifiesBasic = income > 0 && availableToBorrow > 0 && debtToIncome <= 44 + 1e-9 && creditScore >= 600;
 
   // Estimated payment on the new money at the contract rate, 25-year amortization (semi-annual compounding)
   const monthlyPaymentNewMoney = availableToBorrow > 0
@@ -57,7 +61,7 @@ export default function HomeEquityCalculator() {
   return (
     <>
       <Navigation />
-      <main className="min-h-screen mt-16">
+      <main className="min-h-screen">
         {/* Breadcrumb */}
         <section className="py-6 px-4 bg-gray-800/30">
           <div className="max-w-6xl mx-auto">
@@ -74,7 +78,7 @@ export default function HomeEquityCalculator() {
         {/* Hero Section */}
         <section className="py-20 px-4">
           <div className="max-w-6xl mx-auto">
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
@@ -99,13 +103,13 @@ export default function HomeEquityCalculator() {
           <div className="max-w-4xl mx-auto">
             <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl shadow-2xl border border-gray-700/50 p-8">
               <h2 className="text-2xl font-semibold text-gray-100 mb-6">Home Equity Analysis</h2>
-              
+
               <div className="grid gap-6 md:grid-cols-2 mb-8">
                 <div>
                   <label className="block text-sm font-medium text-gray-200 mb-2">
                     Current Home Value
                   </label>
-                  <input
+                  <CalculatorNumberInput aria-label="Current Home Value" min={1}
                     type="number"
                     value={homeValue}
                     onChange={(e) => setHomeValue(Number(e.target.value))}
@@ -117,7 +121,7 @@ export default function HomeEquityCalculator() {
                   <label className="block text-sm font-medium text-gray-200 mb-2">
                     Current Mortgage Balance
                   </label>
-                  <input
+                  <CalculatorNumberInput aria-label="Current Mortgage Balance"
                     type="number"
                     value={currentMortgage}
                     onChange={(e) => setCurrentMortgage(Number(e.target.value))}
@@ -129,7 +133,7 @@ export default function HomeEquityCalculator() {
                   <label className="block text-sm font-medium text-gray-200 mb-2">
                     Credit Score
                   </label>
-                  <select
+                  <select aria-label="Credit Score"
                     value={creditScore}
                     onChange={(e) => setCreditScore(Number(e.target.value))}
                     className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent text-white"
@@ -146,7 +150,7 @@ export default function HomeEquityCalculator() {
                   <label className="block text-sm font-medium text-gray-200 mb-2">
                     Annual Income
                   </label>
-                  <input
+                  <CalculatorNumberInput aria-label="Annual Income"
                     type="number"
                     value={income}
                     onChange={(e) => setIncome(Number(e.target.value))}
@@ -158,7 +162,7 @@ export default function HomeEquityCalculator() {
                   <label className="block text-sm font-medium text-gray-200 mb-2">
                     Monthly Debt Payments (excluding mortgage)
                   </label>
-                  <input
+                  <CalculatorNumberInput aria-label="Monthly Debt Payments (excluding mortgage)" max={1000000}
                     type="number"
                     value={monthlyDebts}
                     onChange={(e) => setMonthlyDebts(Number(e.target.value))}
@@ -170,7 +174,7 @@ export default function HomeEquityCalculator() {
                   <label className="block text-sm font-medium text-gray-200 mb-2">
                     Property Tax &amp; Heating (monthly)
                   </label>
-                  <input
+                  <CalculatorNumberInput aria-label="Property Tax &amp; Heating (monthly)"
                     type="number"
                     value={taxAndHeat}
                     onChange={(e) => setTaxAndHeat(Math.max(0, Number(e.target.value)))}
@@ -182,14 +186,14 @@ export default function HomeEquityCalculator() {
               {/* Results */}
               <div className="bg-gray-700/50 rounded-xl p-6 mb-6">
                 <h3 className="text-lg font-semibold text-gray-100 mb-4">Available Equity</h3>
-                
+
                 <div className="grid gap-4 md:grid-cols-2 mb-6">
                   <div className="bg-gray-800/50 rounded-lg p-4">
                     <div className="text-sm text-gray-400 mb-1">Current Equity</div>
                     <div className="text-2xl font-bold text-emerald-400">
                       ${(homeValue - currentMortgage).toLocaleString()}
                     </div>
-                    <div className="text-xs text-gray-500">Home value - mortgage</div>
+                    <div className="text-xs text-gray-400">Home value - mortgage</div>
                   </div>
 
                   <div className="bg-gray-800/50 rounded-lg p-4">
@@ -197,7 +201,7 @@ export default function HomeEquityCalculator() {
                     <div className="text-2xl font-bold text-emerald-400">
                       ${availableToBorrow.toLocaleString(undefined, {maximumFractionDigits: 0})}
                     </div>
-                    <div className="text-xs text-gray-500">
+                    <div className="text-xs text-gray-400">
                       Lesser of LTV room (${Math.round(availableEquity).toLocaleString()}) and income limit (${Math.round(availableByIncome).toLocaleString()})
                     </div>
                   </div>
@@ -205,7 +209,7 @@ export default function HomeEquityCalculator() {
                   <div className="bg-gray-800/50 rounded-lg p-4">
                     <div className="text-sm text-gray-400 mb-1">Estimated Rate</div>
                     <div className="text-2xl font-bold text-emerald-400">{estimatedRate.toFixed(2)}%</div>
-                    <div className="text-xs text-gray-500">
+                    <div className="text-xs text-gray-400">
                       {liveConv !== undefined
                         ? `Lowest conventional 5-yr fixed ${baseRate.toFixed(2)}%${ratesAsOf(liveRates) ? ` (as of ${ratesAsOf(liveRates)})` : ""}`
                         : ratesLoading
@@ -220,7 +224,7 @@ export default function HomeEquityCalculator() {
                     <div className="text-2xl font-bold text-emerald-400">
                       ${monthlyPaymentNewMoney.toLocaleString(undefined, {maximumFractionDigits: 0})}
                     </div>
-                    <div className="text-xs text-gray-500">Monthly, 25-yr amortization (est.)</div>
+                    <div className="text-xs text-gray-400">Monthly, 25-yr amortization (est.)</div>
                   </div>
                 </div>
 
@@ -236,7 +240,7 @@ export default function HomeEquityCalculator() {
                         {qualifiesBasic ? 'Likely Qualifies' : 'May Need Review'}
                       </div>
                       <div className="text-sm text-gray-400">
-                        TDS at full LTV room: {debtToIncome.toFixed(1)}% (stress-tested at {qualRate.toFixed(2)}%, max 44%)
+                        TDS at the income-supported amount: {debtToIncome.toFixed(1)}% (stress-tested at {qualRate.toFixed(2)}%, max 44%)
                         {qualifiesBasic
                           ? ' - Within guideline'
                           : ' - Income limits the amount; an alternative lender or smaller amount may be needed'
@@ -263,7 +267,7 @@ export default function HomeEquityCalculator() {
                 <div className="text-sm text-gray-400 mt-3">
                   Save thousands with our institutional rates and professional service.
                 </div>
-                <div className="text-xs text-gray-500 mt-2">
+                <div className="text-xs text-gray-400 mt-2">
                   Estimates only. Assumes a refinance of the whole mortgage, qualified at the federal stress-test rate with a 44% TDS limit.
                   Rates are estimated from today&apos;s lowest conventional (uninsured) 5-year fixed rate plus a credit-based spread; refinance penalties, legal and
                   appraisal costs are not included.
@@ -272,21 +276,21 @@ export default function HomeEquityCalculator() {
 
               {/* Related Calculators */}
               <div className="flex flex-wrap gap-4 justify-center">
-                <Link 
+                <Link
                   href="/equity-lending/calculators/debt-consolidation"
                   className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-500/20 text-emerald-400 rounded-lg hover:bg-emerald-500/30 transition-colors"
                 >
                   <Calculator className="w-4 h-4" />
                   Debt Consolidation
                 </Link>
-                <Link 
+                <Link
                   href="/calculators/affordability"
                   className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-500/20 text-emerald-400 rounded-lg hover:bg-emerald-500/30 transition-colors"
                 >
                   <DollarSign className="w-4 h-4" />
                   Affordability Calculator
                 </Link>
-                <Link 
+                <Link
                   href="/equity-lending"
                   className="inline-flex items-center gap-2 px-4 py-2 bg-gray-700/50 text-gray-300 rounded-lg hover:bg-gray-700 transition-colors"
                 >

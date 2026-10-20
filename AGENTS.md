@@ -7,6 +7,8 @@ Before doing anything in this repository:
 2. Run `git status`. The owner often has uncommitted data updates in `apps/web/data/` (rates, lenders,
    underwriting matrix). Don't modify or revert them without permission.
 3. Claim the `BUG-###` / `FEAT-###` items you'll work on (set them to `in-progress (<you>, <date>)`).
+4. **Read `DEVLOG/DEVELOPER_GUIDE.md` before implementation.** It defines the premium aesthetic,
+   shared calculator shell, financial result contract, help/consent behavior and release checks.
 
 Before you stop:
 

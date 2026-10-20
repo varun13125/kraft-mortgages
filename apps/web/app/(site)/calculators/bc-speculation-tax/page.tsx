@@ -75,15 +75,15 @@ export default function BCSpeculationTaxPage() {
       <Navigation />
       <CalculatorSchema name="BC Speculation & Vacancy Tax Calculator" description="Calculate BC speculation and vacancy tax liability based on ownership status." url="/calculators/bc-speculation-tax" />
 
-      <main className="min-h-screen mt-16">
+      <main className="min-h-screen">
         <section className="py-6 px-4 bg-gray-800/30">
           <div className="max-w-6xl mx-auto">
             <div className="flex items-center gap-2 text-sm">
-              <Link href="/" className="text-gray-400 hover:text-gold-400 transition-colors">Home</Link>
+              <Link href="/" className="text-gray-400 hover:text-gold-300 transition-colors">Home</Link>
               <span className="text-gray-600">›</span>
-              <Link href="/calculators" className="text-gray-400 hover:text-gold-400 transition-colors">Calculators</Link>
+              <Link href="/calculators" className="text-gray-400 hover:text-gold-300 transition-colors">Calculators</Link>
               <span className="text-gray-600">›</span>
-              <span className="text-gold-400">BC Speculation & Vacancy Tax</span>
+              <span className="text-gold-300">BC Speculation & Vacancy Tax</span>
             </div>
           </div>
         </section>
@@ -91,7 +91,7 @@ export default function BCSpeculationTaxPage() {
         <section className="py-20 px-4">
           <div className="max-w-6xl mx-auto">
             <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="text-center">
-              <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold bg-gold-500/20 text-gold-400 border border-gold-500/30 mb-6">
+              <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold bg-gold-500/20 text-gold-300 border border-gold-500/30 mb-6">
                 <Building className="w-4 h-4" />
                 BC Property Tax
               </div>
@@ -108,7 +108,7 @@ export default function BCSpeculationTaxPage() {
             <div className="grid lg:grid-cols-2 gap-12">
               <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }} className="space-y-8">
                 <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-white/20">
-                  <h2 className="text-xl sm:text-2xl font-bold mb-6 flex items-center gap-3"><Calculator className="w-6 h-6 text-gold-400" /> Property Details</h2>
+                  <h2 className="text-xl sm:text-2xl font-bold mb-6 flex items-center gap-3"><Calculator className="w-6 h-6 text-gold-300" /> Property Details</h2>
             {/* PDF Report Download */}
             <div className="mt-4">
               <motion.button
@@ -184,7 +184,7 @@ export default function BCSpeculationTaxPage() {
                       </div>
                       <label className="flex items-start gap-3 mt-3 cursor-pointer">
                         <input type="checkbox" checked={untaxedWorldwideEarner} onChange={(e) => setUntaxedWorldwideEarner(e.target.checked)} className="mt-1 w-4 h-4 rounded border-gray-600 bg-gray-700 text-gold-500" />
-                        <span className="text-sm text-gray-300">Untaxed worldwide earner (formerly &quot;satellite family&quot;) <span className="block text-xs text-gray-500">Less than 50% of household income reported on Canadian tax returns</span></span>
+                        <span className="text-sm text-gray-300">Untaxed worldwide earner (formerly &quot;satellite family&quot;) <span className="block text-xs text-gray-400">Less than 50% of household income reported on Canadian tax returns</span></span>
                       </label>
                     </div>
 
@@ -230,7 +230,7 @@ export default function BCSpeculationTaxPage() {
                           </button>
                         ))}
                       </div>
-                      <p className="text-xs text-gray-500 mt-2">Other designated areas include Abbotsford, Chilliwack, Mission, Kamloops, Nanaimo, Squamish, Vernon, Penticton, Courtenay, Comox and more — check the BC government&apos;s taxable-areas map.</p>
+                      <p className="text-xs text-gray-400 mt-2">Other designated areas include Abbotsford, Chilliwack, Mission, Kamloops, Nanaimo, Squamish, Vernon, Penticton, Courtenay, Comox and more — check the BC government&apos;s taxable-areas map.</p>
                     </div>
                   </div>
                 </div>
@@ -252,7 +252,7 @@ export default function BCSpeculationTaxPage() {
                   <>
                     <div className="bg-gradient-to-br from-gold-500/20 to-amber-500/10 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-gold-500/30">
                       <p className="text-sm text-gold-300 font-medium mb-1">Estimated SVT</p>
-                      <p className="text-4xl sm:text-5xl font-bold text-gold-400 mb-2">{formatCurrency(taxAmount, 0)}/year</p>
+                      <p className="text-4xl sm:text-5xl font-bold text-gold-300 mb-2">{formatCurrency(taxAmount, 0)}/year</p>
                       <p className="text-sm text-gray-300">Effective rate: {taxRate}% of assessed value</p>
                     </div>
 
@@ -264,7 +264,7 @@ export default function BCSpeculationTaxPage() {
                         </div>
                         <div className="bg-white/5 rounded-lg p-4">
                           <span className="text-gray-400 block text-xs">SVT Rate</span>
-                          <span className="font-semibold text-gold-400">{taxRate}%</span>
+                          <span className="font-semibold text-gold-300">{taxRate}%</span>
                         </div>
                         <div className="bg-white/5 rounded-lg p-4">
                           <span className="text-gray-400 block text-xs">Monthly Equivalent</span>
@@ -296,7 +296,7 @@ export default function BCSpeculationTaxPage() {
 
                 <div className="flex flex-col sm:flex-row gap-4">
                   <a href="https://r.mtg-app.com/varun-chaudhry" target="_blank" rel="noopener noreferrer" className="flex-1 bg-gold-500 text-black font-semibold py-4 px-6 rounded-xl hover:bg-gold-400 transition-colors text-center">Talk to a Broker</a>
-                  <a href="tel:604-593-1550" className="flex-1 bg-white/10 border border-white/20 font-semibold py-4 px-6 rounded-xl hover:bg-white/20 transition-colors text-center">Call 604-593-1550</a>
+                  <a href="tel:604-593-1550" className="flex-1 bg-white/10 border border-white/20 font-semibold py-4 px-6 rounded-xl hover:bg-white/20 transition-colors text-center underline underline-offset-4">Call 604-593-1550</a>
                 </div>
               </motion.div>
             </div>
@@ -320,11 +320,11 @@ export default function BCSpeculationTaxPage() {
               <p>Every residential property owner in an SVT-designated area must complete an annual declaration. The BC government mails declaration packages in January and February each year, and you can also complete the declaration online. The typical deadline is March 31. Even if you are exempt, you must still file. If you don&apos;t declare, your property is assessed at the highest rate until you complete the declaration.</p>
 
               <div className="mt-8">
-                <Link href="/calculators/closing-costs" className="text-gold-400 hover:text-gold-300 underline">Closing Costs Calculator</Link>
+                <Link href="/calculators/closing-costs" className="text-gold-300 hover:text-gold-300 underline">Closing Costs Calculator</Link>
                 {" · "}
-                <Link href="/calculators/payment" className="text-gold-400 hover:text-gold-300 underline">Payment Calculator</Link>
+                <Link href="/calculators/payment" className="text-gold-300 hover:text-gold-300 underline">Payment Calculator</Link>
                 {" · "}
-                <Link href="/calculators/land-transfer-tax" className="text-gold-400 hover:text-gold-300 underline">Land Transfer Tax Calculator</Link>
+                <Link href="/calculators/land-transfer-tax" className="text-gold-300 hover:text-gold-300 underline">Land Transfer Tax Calculator</Link>
               </div>
             </div>
           </div>
@@ -339,7 +339,7 @@ export default function BCSpeculationTaxPage() {
                 <div key={i} className="bg-white/5 rounded-xl border border-white/10 overflow-hidden">
                   <button onClick={() => setOpenFaq(openFaq === i ? null : i)} className="w-full flex items-center justify-between p-5 text-left">
                     <span className="font-semibold text-gray-200 pr-4">{faq.q}</span>
-                    {openFaq === i ? <ChevronUp className="w-5 h-5 text-gold-400 flex-shrink-0" /> : <ChevronDown className="w-5 h-5 text-gray-400 flex-shrink-0" />}
+                    {openFaq === i ? <ChevronUp className="w-5 h-5 text-gold-300 flex-shrink-0" /> : <ChevronDown className="w-5 h-5 text-gray-400 flex-shrink-0" />}
                   </button>
                   {openFaq === i && (
                     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="px-5 pb-5 text-sm text-gray-300 leading-relaxed">{faq.a}</motion.div>

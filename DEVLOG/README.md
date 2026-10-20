@@ -10,7 +10,8 @@ If you finish work, **update the log before you stop** (see "When you finish").
 2. [`FINDINGS.md`](FINDINGS.md): register of bugs, flaws and risks (`BUG-###`). Shows what's open and what's fixed.
 3. [`FEATURES.md`](FEATURES.md): feature backlog (`FEAT-###`) with priority, effort and status.
 4. [`SESSIONS.md`](SESSIONS.md): chronological work log, newest first. Read at least the latest entry.
-5. `audit-2026-10/`: raw area reports from the October 2026 full audit. Go here for detail
+5. [`DEVELOPER_GUIDE.md`](DEVELOPER_GUIDE.md): required design, calculator, integration, verification and release rules. Follow this before implementing UI or financial logic.
+6. `audit-2026-10/`: raw area reports from the October 2026 full audit. Go here for detail
    (file:line references, verification notes, reasoning) behind any `BUG`/`FEAT` item.
 
 ## Other docs and how much to trust them

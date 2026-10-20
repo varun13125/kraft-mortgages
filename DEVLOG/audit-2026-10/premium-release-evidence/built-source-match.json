@@ -1,0 +1,346 @@
+[
+  {
+    "path": "apps/web/app/(site)/calculators/CalculatorsHub.tsx",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/app/(site)/calculators/_lib/LiveRateNote.tsx",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/app/(site)/calculators/a-vs-equity/page.tsx",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/app/(site)/calculators/affordability/page.tsx",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/app/(site)/calculators/amortization/page.tsx",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/app/(site)/calculators/b-vs-equity/page.tsx",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/app/(site)/calculators/bc-speculation-tax/page.tsx",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/app/(site)/calculators/closing-costs/page.tsx",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/app/(site)/calculators/cmhc-insurance/page.tsx",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/app/(site)/calculators/construction-pro/page.tsx",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/app/(site)/calculators/debt-service-ratio/page.tsx",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/app/(site)/calculators/down-payment/page.tsx",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/app/(site)/calculators/extra-payments/page.tsx",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/app/(site)/calculators/first-time-home-buyer/page.tsx",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/app/(site)/calculators/investment/page.tsx",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/app/(site)/calculators/land-transfer-tax/page.tsx",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/app/(site)/calculators/mortgage-penalty/page.tsx",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/app/(site)/calculators/mortgage-qualifier/page.tsx",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/app/(site)/calculators/payment/page.tsx",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/app/(site)/calculators/port-vs-break/page.tsx",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/app/(site)/calculators/pre-approval/page.tsx",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/app/(site)/calculators/rate-comparison/page.tsx",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/app/(site)/calculators/refinance-break-even/page.tsx",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/app/(site)/calculators/refinance-cashout/page.tsx",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/app/(site)/calculators/refinance-vs-heloc-vs-second/page.tsx",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/app/(site)/calculators/renewal/layout.tsx",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/app/(site)/calculators/renewal/page.tsx",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/app/(site)/calculators/rent-vs-buy/page.tsx",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/app/(site)/calculators/required-income/page.tsx",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/app/(site)/calculators/reverse-mortgage/page.tsx",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/app/(site)/calculators/self-employed-a-vs-b/page.tsx",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/app/(site)/calculators/self-employed/page.tsx",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/app/(site)/calculators/stress-test/page.tsx",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/app/(site)/commercial/calculators/cap-rate/page.tsx",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/app/(site)/commercial/calculators/cash-flow/page.tsx",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/app/(site)/commercial/calculators/noi-analysis/page.tsx",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/app/(site)/commercial/calculators/refinance/page.tsx",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/app/(site)/commercial/calculators/refinance/refinanceMath.ts",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/app/(site)/construction/calculators/budget/page.tsx",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/app/(site)/construction/calculators/builder-program/page.tsx",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/app/(site)/construction/calculators/construction-draw/page.tsx",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/app/(site)/construction/calculators/cost-to-complete/page.tsx",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/app/(site)/construction/calculators/progressive-draw/page.tsx",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/app/(site)/equity-lending/calculators/debt-consolidation/page.tsx",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/app/(site)/equity-lending/calculators/heloc/page.tsx",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/app/(site)/equity-lending/calculators/home-equity/page.tsx",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/app/(site)/mli-select/calculators/amortization/page.tsx",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/app/(site)/mli-select/calculators/break-even/page.tsx",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/app/(site)/mli-select/calculators/deal-sizer/layout.tsx",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/app/(site)/mli-select/calculators/deal-sizer/page.tsx",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/app/(site)/mli-select/calculators/dscr/page.tsx",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/app/(site)/mli-select/calculators/eligibility-checklist/page.tsx",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/app/(site)/mli-select/calculators/max-loan/page.tsx",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/app/(site)/mli-select/calculators/page.tsx",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/app/(site)/mli-select/calculators/points/page.tsx",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/app/(site)/mli-select/calculators/premium/page.tsx",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/app/(site)/mli-select/calculators/rent-cap/page.tsx",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/app/(site)/mli-select/calculators/scenario-compare/page.tsx",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/app/(site)/private-lending/calculators/alternative-income/page.tsx",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/app/calculator-experience.css",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/app/layout.tsx",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/components/AdvisorHelp.tsx",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/components/ChatWidget/ChatWidget.tsx",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/components/Navigation.tsx",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/components/ThinkrrVoiceWidget.tsx",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/components/calculators/CalculatorDirectory.tsx",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/components/calculators/CalculatorExperience.tsx",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/components/calculators/CalculatorShell.tsx",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/components/calculators/LiveRateNote.tsx",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/components/calculators/PaymentExperience.tsx",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/components/calculators/RenewalComparison.tsx",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/components/mli/TierBadge.tsx",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/components/ui/CalculatorNumberInput.tsx",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/components/ui/ValidatedInput.tsx",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/lib/ai/tools/calculator-tools.ts",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/lib/calc/construction.ts",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/lib/calc/mliDeal.ts",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/lib/calc/payment.ts",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/lib/calc/purchaseEligibility.ts",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/lib/calc/refinance.ts",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/lib/calc/renewal.ts",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/lib/calculators/catalog.ts",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/lib/mli/calcs.ts",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/lib/seo/sitemap.ts",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/lib/utils/validation.ts",
+    "sourceMatches": true
+  },
+  {
+    "path": "apps/web/types/lender-attachments.d.ts",
+    "sourceMatches": true
+  }
+]

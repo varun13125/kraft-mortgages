@@ -21,7 +21,7 @@ export function LiveRateNote({ data, product, source, suffix = "", className = "
         ? <>Default: {LIVE_RATE_LABELS[product]}{suffix} from our live rate feed (as of {asOf}).{" "}</>
         : source === "fallback" ? <>Illustrative default rate.{" "}</> : null}
       Use the rate you were actually offered, or{" "}
-      <Link href="/rates" className="text-gold-400 hover:underline">see today&apos;s rates</Link>.
+      <Link href="/rates" className="text-gold-300 underline underline-offset-4">see today&apos;s rates</Link>.
     </p>
   );
 }

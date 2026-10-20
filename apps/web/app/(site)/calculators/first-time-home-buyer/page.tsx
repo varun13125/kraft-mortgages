@@ -131,16 +131,16 @@ export default function FirstTimeHomeBuyer() {
       <Navigation />
       <CalculatorSchema name="First-Time Home Buyer Calculator" description="Calculate down payment requirements, FHSA tax savings, and first-time buyer incentives." url="/calculators/first-time-home-buyer" />
 
-      <main className="min-h-screen mt-16">
+      <main className="min-h-screen">
         {/* Breadcrumb */}
         <section className="py-6 px-4 bg-gray-800/30">
           <div className="max-w-6xl mx-auto">
             <div className="flex items-center gap-2 text-sm">
-              <Link href="/" className="text-gray-400 hover:text-gold-400 transition-colors">Home</Link>
+              <Link href="/" className="text-gray-400 hover:text-gold-300 transition-colors">Home</Link>
               <span className="text-gray-600">›</span>
-              <Link href="/calculators" className="text-gray-400 hover:text-gold-400 transition-colors">Calculators</Link>
+              <Link href="/calculators" className="text-gray-400 hover:text-gold-300 transition-colors">Calculators</Link>
               <span className="text-gray-600">›</span>
-              <span className="text-gold-400">First-Time Home Buyer Calculator</span>
+              <span className="text-gold-300">First-Time Home Buyer Calculator</span>
             </div>
           </div>
         </section>
@@ -149,7 +149,7 @@ export default function FirstTimeHomeBuyer() {
         <section className="py-20 px-4">
           <div className="max-w-6xl mx-auto text-center">
             <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
-              <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold bg-gold-500/20 text-gold-400 border border-gold-500/30 mb-6">
+              <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold bg-gold-500/20 text-gold-300 border border-gold-500/30 mb-6">
                 <Gift className="w-4 h-4" />
                 First-Time Buyer Programs
               </div>
@@ -170,7 +170,7 @@ export default function FirstTimeHomeBuyer() {
             <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }} className="space-y-8">
               <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-white/20">
                 <h2 className="text-xl sm:text-2xl font-bold mb-6 flex items-center gap-3">
-                  <Calculator className="w-6 h-6 text-gold-400" />
+                  <Calculator className="w-6 h-6 text-gold-300" />
                   Your Details
                 </h2>
                 <div className="space-y-6">
@@ -191,7 +191,7 @@ export default function FirstTimeHomeBuyer() {
 
               <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-white/20">
                 <h3 className="text-lg font-semibold mb-6 flex items-center gap-3">
-                  <Home className="w-5 h-5 text-gold-400" />
+                  <Home className="w-5 h-5 text-gold-300" />
                   Property Details
                 </h3>
                 <div className="space-y-6">
@@ -209,12 +209,12 @@ export default function FirstTimeHomeBuyer() {
                   <div className="grid grid-cols-2 gap-6">
                     <button onClick={() => setIsNewBuild(!isNewBuild)}
                       className={`rounded-xl p-4 border text-left transition-all ${isNewBuild ? "border-gold-500 bg-gold-500/10" : "border-white/20 bg-white/5"}`}>
-                      <Building className="w-5 h-5 mb-2 text-gold-400" />
+                      <Building className="w-5 h-5 mb-2 text-gold-300" />
                       <div className="text-sm font-semibold text-gray-200">{isNewBuild ? "✓ New Build" : "New Build"}</div>
                     </button>
                     <button onClick={() => setIsCouple(!isCouple)}
                       className={`rounded-xl p-4 border text-left transition-all ${isCouple ? "border-gold-500 bg-gold-500/10" : "border-white/20 bg-white/5"}`}>
-                      <CheckCircle className="w-5 h-5 mb-2 text-gold-400" />
+                      <CheckCircle className="w-5 h-5 mb-2 text-gold-300" />
                       <div className="text-sm font-semibold text-gray-200">{isCouple ? "✓ Couple" : "Single"}</div>
                     </button>
                   </div>
@@ -228,10 +228,10 @@ export default function FirstTimeHomeBuyer() {
               {/* Total */}
               <div className="bg-gradient-to-br from-gold-500/20 to-amber-500/10 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-gold-500/30">
                 <div className="flex items-center gap-3 mb-2">
-                  <Gift className="w-6 h-6 text-gold-400" />
+                  <Gift className="w-6 h-6 text-gold-300" />
                   <span className="text-sm text-gold-300 font-medium">Total Program Savings</span>
                 </div>
-                <div className="text-4xl sm:text-5xl font-bold text-gold-400 mb-2">
+                <div className="text-4xl sm:text-5xl font-bold text-gold-300 mb-2">
                   {formatCurrency(results.totalIncentiveValue, 0)}
                 </div>
                 <p className="text-sm text-gray-400">Combined value of all eligible programs and rebates</p>
@@ -239,7 +239,7 @@ export default function FirstTimeHomeBuyer() {
 
               {/* Breakdown */}
               <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-white/20 space-y-5">
-                <h4 className="font-semibold flex items-center gap-2"><PiggyBank className="w-5 h-5 text-gold-400" /> Program Breakdown</h4>
+                <h4 className="font-semibold flex items-center gap-2"><PiggyBank className="w-5 h-5 text-gold-300" /> Program Breakdown</h4>
 
                 <div className="flex justify-between items-center py-3 border-b border-white/10">
                   <div><div className="font-medium">FHSA Tax Savings</div><div className="text-xs text-gray-400">{formatCurrency(results.fhsaContributed, 0)} contributed over {results.fhsaYearsNeeded} yr{results.fhsaYearsNeeded > 1 ? "s" : ""}</div></div>
@@ -278,7 +278,7 @@ export default function FirstTimeHomeBuyer() {
 
                 <div className="flex justify-between items-center py-3 border-b border-white/10">
                   <div><div className="font-medium">Savings + Program Benefits</div><div className="text-xs text-gray-400">Not all of this is cash at closing — LTT relief lowers closing costs, FHSA refunds arrive at tax time, and GST rebates are usually credited by the builder</div></div>
-                  <span className="font-semibold text-gold-400">{formatCurrency(results.effectiveDown, 0)}</span>
+                  <span className="font-semibold text-gold-300">{formatCurrency(results.effectiveDown, 0)}</span>
                 </div>
               </div>
 
@@ -300,7 +300,7 @@ export default function FirstTimeHomeBuyer() {
               Buying your first home is one of the most significant financial decisions you&apos;ll ever make. The Canadian government and provinces offer several programs designed to make homeownership more accessible. Understanding these programs can save you thousands of dollars and help you enter the housing market sooner than you thought possible.
             </p>
 
-            <h3 className="text-2xl font-semibold text-gold-400 mt-8 mb-4">First Home Savings Account (FHSA)</h3>
+            <h3 className="text-2xl font-semibold text-gold-300 mt-8 mb-4">First Home Savings Account (FHSA)</h3>
             <p className="text-gray-300 leading-relaxed mb-4">
               The FHSA is arguably the most powerful savings tool for first-time home buyers in Canada. It combines the best features of an RRSP and TFSA: your contributions are tax-deductible (like an RRSP), and withdrawals for a qualifying home purchase are completely tax-free (like a TFSA). You can contribute up to $8,000 per year with a lifetime limit of $40,000. The account has a 15-year carrying period, meaning you must use it for a home purchase or transfer it to an RRSP or RRIF within that timeframe.
             </p>
@@ -308,12 +308,12 @@ export default function FirstTimeHomeBuyer() {
               <strong>Key benefit:</strong> If you&apos;re in a 30% marginal tax bracket and contribute the full $8,000 annually, you&apos;ll receive approximately $2,400 in tax refunds each year — money you can reinvest or add to your down payment savings.
             </p>
 
-            <h3 className="text-2xl font-semibold text-gold-400 mt-8 mb-4">Home Buyers&apos; Plan (HBP)</h3>
+            <h3 className="text-2xl font-semibold text-gold-300 mt-8 mb-4">Home Buyers&apos; Plan (HBP)</h3>
             <p className="text-gray-300 leading-relaxed mb-4">
               The Home Buyers&apos; Plan lets you withdraw up to $60,000 ($120,000 for couples) from your RRSP to put toward your first home purchase. You have 15 years to repay the withdrawal, with annual minimum payments starting the second year after withdrawal. This program is especially powerful when combined with the FHSA, as you can use FHSA contributions to build your RRSP, then withdraw through the HBP.
             </p>
 
-            <h3 className="text-2xl font-semibold text-gold-400 mt-8 mb-4">Land Transfer Tax Rebates by Province</h3>
+            <h3 className="text-2xl font-semibold text-gold-300 mt-8 mb-4">Land Transfer Tax Rebates by Province</h3>
             <p className="text-gray-300 leading-relaxed mb-4">
               <strong>British Columbia:</strong> Under the First Time Home Buyers&apos; Program (since April 1, 2024), qualifying buyers pay no Property Transfer Tax on the first $500,000 of homes valued up to $835,000 — a saving of up to $8,000. The exemption phases out between $835,000 and $860,000. Newly built homes up to $1.1 million may qualify for a separate new-home exemption.
             </p>
@@ -324,17 +324,17 @@ export default function FirstTimeHomeBuyer() {
               <strong>Ontario:</strong> First-time buyers receive a refund of up to $4,000 on the Ontario Land Transfer Tax, which eliminates the provincial tax on the first $368,333 of the purchase price. Buyers in Toronto can also claim a municipal rebate of up to $4,475.
             </p>
 
-            <h3 className="text-2xl font-semibold text-gold-400 mt-8 mb-4">GST/HST Rebate on New Homes</h3>
+            <h3 className="text-2xl font-semibold text-gold-300 mt-8 mb-4">GST/HST Rebate on New Homes</h3>
             <p className="text-gray-300 leading-relaxed mb-4">
               First-time buyers of a newly built home can now recover the full 5% GST (up to $50,000) on homes priced up to $1 million, with the rebate phasing out between $1 million and $1.5 million (First-Time Home Buyers&apos; GST Rebate, law since March 2026, for agreements of purchase and sale signed on or after March 20, 2025 and before 2031). It tops up the older new housing rebate (36% of the GST, max $6,300, for homes under $450,000). Ontario also offers a rebate of up to $80,000 of the provincial portion of HST for first-time buyers of new homes. Confirm eligibility with your builder or the CRA.
             </p>
 
-            <h3 className="text-2xl font-semibold text-gold-400 mt-8 mb-4">CMHC Mortgage Loan Insurance</h3>
+            <h3 className="text-2xl font-semibold text-gold-300 mt-8 mb-4">CMHC Mortgage Loan Insurance</h3>
             <p className="text-gray-300 leading-relaxed mb-4">
               If your down payment is less than 20% of the purchase price, you&apos;ll need CMHC mortgage loan insurance (or equivalent from a private insurer). This protects the lender if you default on your mortgage. The minimum down payment is 5% on the first $500,000 and 10% on the portion between $500,000 and $1,500,000. Premiums range from 2.8% to 4.0% of the mortgage amount depending on your down payment percentage.
             </p>
 
-            <h3 className="text-2xl font-semibold text-gold-400 mt-8 mb-4">Step-by-Step Guide for First-Time Buyers</h3>
+            <h3 className="text-2xl font-semibold text-gold-300 mt-8 mb-4">Step-by-Step Guide for First-Time Buyers</h3>
             <ol className="list-decimal list-inside space-y-2 text-gray-300 mb-6">
               <li>Determine your budget using an affordability calculator</li>
               <li>Open an FHSA and maximize contributions for tax savings</li>
@@ -346,7 +346,7 @@ export default function FirstTimeHomeBuyer() {
               <li>Close on your new home and claim all eligible rebates</li>
             </ol>
 
-            <h3 className="text-2xl font-semibold text-gold-400 mt-8 mb-4">Frequently Asked Questions</h3>
+            <h3 className="text-2xl font-semibold text-gold-300 mt-8 mb-4">Frequently Asked Questions</h3>
             <div className="space-y-6 mb-8">
               <div>
                 <h4 className="font-semibold text-gray-200">Can I use both the FHSA and the HBP together?</h4>
@@ -371,10 +371,10 @@ export default function FirstTimeHomeBuyer() {
             </div>
 
             <div className="flex flex-wrap gap-4 text-sm">
-              <Link href="/calculators/affordability" className="text-gold-400 hover:text-gold-300 underline">Affordability Calculator</Link>
-              <Link href="/calculators/stress-test" className="text-gold-400 hover:text-gold-300 underline">Stress Test Calculator</Link>
-              <Link href="/calculators/closing-costs" className="text-gold-400 hover:text-gold-300 underline">Closing Costs Calculator</Link>
-              <Link href="/calculators/payment" className="text-gold-400 hover:text-gold-300 underline">Mortgage Payment Calculator</Link>
+              <Link href="/calculators/affordability" className="text-gold-300 hover:text-gold-300 underline">Affordability Calculator</Link>
+              <Link href="/calculators/stress-test" className="text-gold-300 hover:text-gold-300 underline">Stress Test Calculator</Link>
+              <Link href="/calculators/closing-costs" className="text-gold-300 hover:text-gold-300 underline">Closing Costs Calculator</Link>
+              <Link href="/calculators/payment" className="text-gold-300 hover:text-gold-300 underline">Mortgage Payment Calculator</Link>
             </div>
           </div>
         </section>

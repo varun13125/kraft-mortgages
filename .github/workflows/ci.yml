@@ -11,8 +11,7 @@ concurrency:
 
 # Uses only tooling already in the repo (pnpm 9 / tsc / next lint). Node 22 matches
 # the Vercel project setting (nodeVersion 22.x).
-# Production installs on Vercel currently use `npm install` + package-lock.json
-# (root vercel.json) — see DEVLOG/audit-2026-10/platform-build-deps.md.
+# Production uses pnpm install --frozen-lockfile (root vercel.json).
 jobs:
   typecheck:
     runs-on: ubuntu-latest

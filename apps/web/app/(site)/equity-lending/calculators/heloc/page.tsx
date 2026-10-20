@@ -1,4 +1,5 @@
 "use client";
+import CalculatorNumberInput from "@/components/ui/CalculatorNumberInput";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
@@ -7,7 +8,7 @@ import { CreditCard, Calculator, DollarSign, ArrowRight, TrendingUp, Percent, Ho
 import Link from "next/link";
 import { useLiveRates } from "@/lib/useLiveRates";
 import { payment } from "@/lib/calc/payment";
-import { stressTestRate } from "@/lib/calc/affordability";
+import { maxQualifyingPayment, stressTestRate } from "@/lib/calc/affordability";
 import { livePrime, ratesAsOf } from "@/components/calculators/liveRateDefaults";
 
 // HELOC calculation logic
@@ -21,6 +22,7 @@ function calculateHELOC({
   monthlyIncome,
   mortgagePayment,
   otherMonthlyCosts,
+  housingCosts,
   primeRate
 }: {
   homeValue: number;
@@ -29,6 +31,7 @@ function calculateHELOC({
   monthlyIncome: number;
   mortgagePayment: number;
   otherMonthlyCosts: number;
+  housingCosts: number;
   primeRate: number;
 }) {
   const value = Math.max(0, homeValue);
@@ -47,15 +50,16 @@ function calculateHELOC({
   else spread = 3.5; // typically private / alternative lender
   const rate = primeRate + spread;
 
-  // Income test (TDS ≤ 44%): existing obligations + stress-tested payment on the HELOC limit
+  // Income test (GDS ≤ 39%, TDS ≤ 44%): existing obligations + stress-tested payment on the HELOC limit
   const qualRate = stressTestRate(rate);
   const qualPaymentPerDollar = payment({ principal: 1, annualRatePct: qualRate, amortYears: 25, paymentsPerYear: 12 });
-  const roomForHeloc = monthlyIncome * 0.44 - Math.max(0, mortgagePayment) - Math.max(0, otherMonthlyCosts);
+  const roomForHeloc = maxQualifyingPayment({ incomeAnnual: monthlyIncome * 12,
+    otherDebtsMonthly: otherMonthlyCosts, nonMortgageHousingMonthly: Math.max(0, mortgagePayment) + housingCosts });
   const incomeSupported = Math.max(0, roomForHeloc / qualPaymentPerDollar);
   const maxHELOC = Math.max(0, Math.min(ltvLimit, incomeSupported));
-  const qualifies = incomeSupported >= ltvLimit;
+  const qualifies = monthlyIncome > 0 && ltvLimit > 0 && incomeSupported >= ltvLimit;
   const tdsAtLimit = monthlyIncome > 0
-    ? ((Math.max(0, mortgagePayment) + Math.max(0, otherMonthlyCosts) + ltvLimit * qualPaymentPerDollar) / monthlyIncome) * 100
+    ? ((Math.max(0, mortgagePayment) + Math.max(0, otherMonthlyCosts) + housingCosts + ltvLimit * qualPaymentPerDollar) / monthlyIncome) * 100
     : 0;
 
   // Interest-only payment if the available limit is fully drawn
@@ -69,6 +73,7 @@ function calculateHELOC({
     interestOnlyPayment,
     qualifies,
     tdsAtLimit,
+    gdsAtLimit: monthlyIncome > 0 ? (Math.max(0, mortgagePayment) + housingCosts + ltvLimit * qualPaymentPerDollar) / monthlyIncome * 100 : 0,
     currentLTV: value > 0 ? (balance / value) * 100 : 0,
     newLTV: value > 0 ? ((balance + maxHELOC) / value) * 100 : 0
   };
@@ -80,7 +85,8 @@ export default function HELOCCalculator() {
   const [creditScore, setCreditScore] = useState(750);
   const [income, setIncome] = useState(120000);
   const [mortgagePayment, setMortgagePayment] = useState(2300);
-  const [otherMonthlyCosts, setOtherMonthlyCosts] = useState(600);
+  const [otherMonthlyCosts, setOtherMonthlyCosts] = useState(200);
+  const [housingCosts, setHousingCosts] = useState(400);
   const { primeRate, data: liveRates, loading: ratesLoading } = useLiveRates();
   const primeIsLive = livePrime(liveRates) !== undefined;
   const asOf = ratesAsOf(liveRates);
@@ -92,22 +98,23 @@ export default function HELOCCalculator() {
     monthlyIncome: income / 12,
     mortgagePayment,
     otherMonthlyCosts,
+  housingCosts,
     primeRate
   });
 
   return (
     <>
       <Navigation />
-      <main className="min-h-screen mt-16">
+      <main className="min-h-screen">
         {/* Breadcrumb */}
         <section className="py-6 px-4 bg-gray-800/30">
           <div className="max-w-6xl mx-auto">
             <div className="flex items-center gap-2 text-sm">
-              <Link href="/" className="text-gray-400 hover:text-gold-400 transition-colors">Home</Link>
+              <Link href="/" className="text-gray-400 hover:text-gold-300 transition-colors">Home</Link>
               <span className="text-gray-600">›</span>
-              <Link href="/equity-lending" className="text-gray-400 hover:text-gold-400 transition-colors">Equity Lending</Link>
+              <Link href="/equity-lending" className="text-gray-400 hover:text-gold-300 transition-colors">Equity Lending</Link>
               <span className="text-gray-600">›</span>
-              <span className="text-gold-400">HELOC Calculator</span>
+              <span className="text-gold-300">HELOC Calculator</span>
             </div>
           </div>
         </section>
@@ -115,15 +122,15 @@ export default function HELOCCalculator() {
         {/* Hero Section */}
         <section className="py-20 px-4">
           <div className="max-w-6xl mx-auto">
-            <motion.div 
+            <motion.div
               className="text-center mb-12"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
             >
               <div className="inline-flex items-center gap-3 px-6 py-3 bg-gold-500/20 rounded-full mb-6">
-                <CreditCard className="w-5 h-5 text-gold-400" />
-                <span className="text-gold-400 font-semibold">HELOC Calculator</span>
+                <CreditCard className="w-5 h-5 text-gold-300" />
+                <span className="text-gold-300 font-semibold">HELOC Calculator</span>
               </div>
               <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-white via-gold-200 to-gold-400 bg-clip-text text-transparent">
                 Home Equity Line of Credit
@@ -148,7 +155,7 @@ export default function HELOCCalculator() {
               >
                 <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
                   <h2 className="text-2xl font-bold mb-8 flex items-center gap-3">
-                    <Calculator className="w-6 h-6 text-gold-400" />
+                    <Calculator className="w-6 h-6 text-gold-300" />
                     Property & Financial Details
                   </h2>
 
@@ -156,12 +163,12 @@ export default function HELOCCalculator() {
                     {/* Home Value */}
                     <div>
                       <label className="block text-sm font-medium mb-2 flex items-center gap-2">
-                        <Home className="w-4 h-4 text-gold-400" />
+                        <Home className="w-4 h-4 text-gold-300" />
                         Current Home Value
                       </label>
                       <div className="relative">
                         <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">$</span>
-                        <input
+                        <CalculatorNumberInput aria-label="Current Home Value"
                           type="number"
                           value={homeValue}
                           onChange={(e) => setHomeValue(Number(e.target.value))}
@@ -176,12 +183,12 @@ export default function HELOCCalculator() {
                     {/* Mortgage Balance */}
                     <div>
                       <label className="block text-sm font-medium mb-2 flex items-center gap-2">
-                        <DollarSign className="w-4 h-4 text-gold-400" />
+                        <DollarSign className="w-4 h-4 text-gold-300" />
                         Current Mortgage Balance
                       </label>
                       <div className="relative">
                         <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">$</span>
-                        <input
+                        <CalculatorNumberInput aria-label="Current Mortgage Balance"
                           type="number"
                           value={mortgageBalance}
                           onChange={(e) => setMortgageBalance(Number(e.target.value))}
@@ -196,10 +203,10 @@ export default function HELOCCalculator() {
                     {/* Credit Score */}
                     <div>
                       <label className="block text-sm font-medium mb-2 flex items-center gap-2">
-                        <TrendingUp className="w-4 h-4 text-gold-400" />
+                        <TrendingUp className="w-4 h-4 text-gold-300" />
                         Credit Score
                       </label>
-                      <input
+                      <input aria-label="Credit Score"
                         type="range"
                         min="500"
                         max="850"
@@ -209,7 +216,7 @@ export default function HELOCCalculator() {
                       />
                       <div className="flex justify-between text-sm text-gray-400 mt-2">
                         <span>500</span>
-                        <span className="font-semibold text-gold-400">{creditScore}</span>
+                        <span className="font-semibold text-gold-300">{creditScore}</span>
                         <span>850</span>
                       </div>
                     </div>
@@ -217,12 +224,12 @@ export default function HELOCCalculator() {
                     {/* Annual Income */}
                     <div>
                       <label className="block text-sm font-medium mb-2 flex items-center gap-2">
-                        <TrendingUp className="w-4 h-4 text-gold-400" />
+                        <TrendingUp className="w-4 h-4 text-gold-300" />
                         Annual Income
                       </label>
                       <div className="relative">
                         <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">$</span>
-                        <input
+                        <CalculatorNumberInput aria-label="Annual Income"
                           type="number"
                           value={income}
                           onChange={(e) => setIncome(Number(e.target.value))}
@@ -237,12 +244,12 @@ export default function HELOCCalculator() {
                     {/* Current Mortgage Payment */}
                     <div>
                       <label className="block text-sm font-medium mb-2 flex items-center gap-2">
-                        <DollarSign className="w-4 h-4 text-gold-400" />
+                        <DollarSign className="w-4 h-4 text-gold-300" />
                         Current Mortgage Payment (monthly)
                       </label>
                       <div className="relative">
                         <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">$</span>
-                        <input
+                        <CalculatorNumberInput aria-label="Current Mortgage Payment (monthly)"
                           type="number"
                           value={mortgagePayment}
                           onChange={(e) => setMortgagePayment(Math.max(0, Number(e.target.value)))}
@@ -253,15 +260,18 @@ export default function HELOCCalculator() {
                       </div>
                     </div>
 
-                    {/* Other monthly costs */}
+                    {/* Existing housing costs are separate from non-housing debt for GDS/TDS. */}
+                    <label className="block text-sm font-medium">Property tax, heat and 50% condo fees (monthly)
+                      <CalculatorNumberInput aria-label="Property tax, heat and 50% condo fees (monthly)" value={housingCosts} onChange={e => setHousingCosts(Number(e.target.value))} max={1000000} className="mt-2 w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white" />
+                    </label>
                     <div>
                       <label className="block text-sm font-medium mb-2 flex items-center gap-2">
-                        <DollarSign className="w-4 h-4 text-gold-400" />
-                        Property Tax, Heat &amp; Other Debt Payments (monthly)
+                        <DollarSign className="w-4 h-4 text-gold-300" />
+                        Other Debt Payments (monthly)
                       </label>
                       <div className="relative">
                         <span className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">$</span>
-                        <input
+                        <CalculatorNumberInput aria-label="Other Debt Payments (monthly)" max={1000000}
                           type="number"
                           value={otherMonthlyCosts}
                           onChange={(e) => setOtherMonthlyCosts(Math.max(0, Number(e.target.value)))}
@@ -285,10 +295,10 @@ export default function HELOCCalculator() {
                 {/* HELOC Amount */}
                 <div className="bg-gradient-to-br from-gold-500/20 to-gold-600/10 backdrop-blur-sm rounded-2xl p-8 border border-gold-500/30">
                   <div className="flex items-center gap-3 mb-4">
-                    <CreditCard className="w-6 h-6 text-gold-400" />
+                    <CreditCard className="w-6 h-6 text-gold-300" />
                     <h3 className="text-xl font-bold">HELOC Available</h3>
                   </div>
-                  <div className="text-4xl font-bold text-gold-400 mb-2">
+                  <div className="text-4xl font-bold text-gold-300 mb-2">
                     ${Math.round(results.maxHELOC).toLocaleString()}
                   </div>
                   <p className="text-gray-300 text-sm">
@@ -301,14 +311,14 @@ export default function HELOCCalculator() {
                   <div className="grid grid-cols-2 gap-6">
                     <div>
                       <div className="flex items-center gap-2 mb-2">
-                        <Percent className="w-5 h-5 text-gold-400" />
+                        <Percent className="w-5 h-5 text-gold-300" />
                         <h4 className="font-semibold">Interest Rate</h4>
                       </div>
-                      <div className="text-2xl font-bold text-gold-400">
+                      <div className="text-2xl font-bold text-gold-300">
                         {results.rate.toFixed(2)}%
                       </div>
                       <p className="text-sm text-gray-400">Variable (prime + spread, est.)</p>
-                      <p className="text-xs text-gray-500 mt-1">
+                      <p className="text-xs text-gray-400 mt-1">
                         Prime {primeRate.toFixed(2)}%
                         {primeIsLive ? (asOf ? ` as of ${asOf}` : "") : ratesLoading ? " (loading today's rate)" : " (example — live rates unavailable)"}
                         {" "}+ {(results.rate - primeRate).toFixed(2)}% est. credit spread
@@ -316,7 +326,7 @@ export default function HELOCCalculator() {
                     </div>
                     <div>
                       <div className="flex items-center gap-2 mb-2">
-                        <DollarSign className="w-5 h-5 text-gold-400" />
+                        <DollarSign className="w-5 h-5 text-gold-300" />
                         <h4 className="font-semibold">Monthly Payment</h4>
                       </div>
                       <div className="text-2xl font-bold">
@@ -337,7 +347,7 @@ export default function HELOCCalculator() {
                         </div>
                         <div>
                           <h4 className="font-semibold text-green-300">Income Supports Full Limit</h4>
-                          <p className="text-sm text-green-200">TDS {results.tdsAtLimit.toFixed(1)}% at a {results.qualRate.toFixed(2)}% stress-test rate (max 44%)</p>
+                          <p className="text-sm text-green-200">GDS {results.gdsAtLimit.toFixed(1)}% (max 39%) / TDS {results.tdsAtLimit.toFixed(1)}% at a {results.qualRate.toFixed(2)}% stress-test rate (max 44%)</p>
                         </div>
                       </>
                     ) : (
@@ -347,7 +357,7 @@ export default function HELOCCalculator() {
                         </div>
                         <div>
                           <h4 className="font-semibold text-red-300">Limited by Income</h4>
-                          <p className="text-sm text-red-200">TDS would be {results.tdsAtLimit.toFixed(1)}% at the full equity limit (max 44% at a {results.qualRate.toFixed(2)}% stress-test rate) — limit reduced to what your income supports</p>
+                          <p className="text-sm text-red-200">GDS would be {results.gdsAtLimit.toFixed(1)}% (max 39%) / TDS {results.tdsAtLimit.toFixed(1)}% at the full equity limit (max 44% at a {results.qualRate.toFixed(2)}% stress-test rate) — limit reduced to what your income supports</p>
                         </div>
                       </>
                     )}
@@ -368,20 +378,20 @@ export default function HELOCCalculator() {
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-300">Available Equity</span>
-                      <span className="font-semibold text-gold-400">${Math.round(results.availableEquity).toLocaleString()}</span>
+                      <span className="font-semibold text-gold-300">${Math.round(results.availableEquity).toLocaleString()}</span>
                     </div>
                   </div>
                 </div>
 
                 {/* Next Steps */}
                 <div className="flex gap-4">
-                  <Link 
+                  <Link
                     href="/contact"
                     className="flex-1 bg-gold-500 text-black font-semibold py-4 px-6 rounded-xl hover:bg-gold-400 transition-colors text-center"
                   >
                     Get Pre-Approved
                   </Link>
-                  <Link 
+                  <Link
                     href="/equity-lending/calculators/home-equity"
                     className="flex-1 bg-white/10 border border-white/20 font-semibold py-4 px-6 rounded-xl hover:bg-white/20 transition-colors text-center"
                   >

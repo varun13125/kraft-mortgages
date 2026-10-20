@@ -14,7 +14,7 @@ export function LiveRateNote({
   loading = false,
   onReset,
   extra,
-  className = "text-xs text-gray-500 mt-1",
+  className = "text-xs text-gray-400 mt-1",
 }: {
   /** e.g. "conventional 5-yr fixed" */
   label: string;

@@ -1,4 +1,5 @@
 "use client";
+import CalculatorNumberInput from "@/components/ui/CalculatorNumberInput";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import Navigation from "@/components/Navigation";
@@ -56,7 +57,7 @@ export default function RefinanceCalculator() {
     return (
         <>
             <Navigation />
-            <main className="min-h-screen mt-16">
+            <main className="min-h-screen">
                 {/* Breadcrumb */}
                 <section className="py-6 px-4 bg-gray-800/30">
                     <div className="max-w-6xl mx-auto">
@@ -87,7 +88,7 @@ export default function RefinanceCalculator() {
                                 Break-Even Analysis
                             </h1>
                             <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-                                Calculate your penalty, monthly savings, and time to break even on a commercial refinance.
+                                Calculate your penalty, payment reduction, and time to break even on a commercial refinance.
                             </p>
                         </motion.div>
                     </div>
@@ -113,7 +114,7 @@ export default function RefinanceCalculator() {
                                         <label className="block text-sm text-gray-400 mb-1">Outstanding Balance</label>
                                         <div className="relative">
                                             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">$</span>
-                                            <input
+                                            <CalculatorNumberInput aria-label="Outstanding Balance"
                                                 type="number"
                                                 value={currentBalance}
                                                 onChange={(e) => setCurrentBalance(Math.max(0, Number(e.target.value)))}
@@ -124,7 +125,7 @@ export default function RefinanceCalculator() {
                                     </div>
                                     <div>
                                         <label className="block text-sm text-gray-400 mb-1">Current Interest Rate (%)</label>
-                                        <input
+                                        <CalculatorNumberInput aria-label="Current Interest Rate (%)" max={100}
                                             type="number"
                                             value={currentRate}
                                             onChange={(e) => setCurrentRate(Math.max(0, Number(e.target.value)))}
@@ -135,7 +136,7 @@ export default function RefinanceCalculator() {
                                     </div>
                                     <div>
                                         <label className="block text-sm text-gray-400 mb-1">Remaining Term (months)</label>
-                                        <input
+                                        <CalculatorNumberInput aria-label="Remaining Term (months)" max={120}
                                             type="number"
                                             value={remainingTerm}
                                             onChange={(e) => setRemainingTerm(Math.max(1, Number(e.target.value)))}
@@ -145,7 +146,7 @@ export default function RefinanceCalculator() {
                                     </div>
                                     <div>
                                         <label className="block text-sm text-gray-400 mb-1">Remaining Amortization (years)</label>
-                                        <input
+                                        <CalculatorNumberInput aria-label="Remaining Amortization (years)" max={50} min={1}
                                             type="number"
                                             value={remainingAmortization}
                                             onChange={(e) => setRemainingAmortization(Math.max(1, Math.min(40, Number(e.target.value))))}
@@ -162,7 +163,7 @@ export default function RefinanceCalculator() {
                                 <div className="space-y-4">
                                     <div>
                                         <label className="block text-sm text-gray-400 mb-1">New Interest Rate (%)</label>
-                                        <input
+                                        <CalculatorNumberInput aria-label="New Interest Rate (%)" max={100}
                                             type="number"
                                             value={newRate}
                                             onChange={(e) => setNewRate(Math.max(0, Number(e.target.value)))}
@@ -170,13 +171,13 @@ export default function RefinanceCalculator() {
                                             step="0.01"
                                             inputMode="decimal"
                                         />
-                                        <p className="text-xs text-gray-500 mt-1">
+                                        <p className="text-xs text-gray-400 mt-1">
                                             Example rate — commercial pricing is quoted per deal. Enter the rate you&apos;ve been offered.
                                         </p>
                                     </div>
                                     <div>
                                         <label className="block text-sm text-gray-400 mb-1">Amortization (years)</label>
-                                        <select
+                                        <select aria-label="Amortization (years)"
                                             value={newAmortization}
                                             onChange={(e) => setNewAmortization(Number(e.target.value))}
                                             className="w-full px-4 py-3 min-h-[48px] bg-white/5 border border-white/20 rounded-lg focus:border-green-400 transition-colors"
@@ -197,7 +198,7 @@ export default function RefinanceCalculator() {
                                                 key={type}
                                                 onClick={() => setPenaltyType(type)}
                                                 className={`px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${penaltyType === type
-                                                        ? 'bg-purple-500 text-white'
+                                                        ? 'bg-purple-600 text-white'
                                                         : 'bg-white/10 text-gray-300 hover:bg-white/20'
                                                     }`}
                                             >
@@ -218,7 +219,7 @@ export default function RefinanceCalculator() {
                                             <label className="block text-sm text-gray-400 mb-1">{label}</label>
                                             <div className="relative">
                                                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">$</span>
-                                                <input
+                                                <CalculatorNumberInput aria-label={label}
                                                     type="number"
                                                     value={value}
                                                     onChange={(e) => setter(Math.max(0, Number(e.target.value)))}
@@ -304,7 +305,7 @@ export default function RefinanceCalculator() {
 
                                     <div className="grid grid-cols-2 gap-4 mb-4">
                                         <div>
-                                            <div className="text-sm text-gray-400">Monthly Savings</div>
+                                            <div className="text-sm text-gray-400">Monthly Payment Reduction</div>
                                             <div className={`text-2xl font-bold ${monthlySavings > 0 ? 'text-green-400' : 'text-red-400'}`}>
                                                 ${monthlySavings.toLocaleString(undefined, { maximumFractionDigits: 0 })}
                                             </div>
@@ -329,7 +330,7 @@ export default function RefinanceCalculator() {
                             </motion.div>
                         </div>
 
-                        <p className="mt-8 text-xs text-gray-500 text-center max-w-3xl mx-auto">
+                        <p className="mt-8 text-xs text-gray-400 text-center max-w-3xl mx-auto">
                             Estimates only. Payments use Canadian semi-annual compounding. Monthly savings compare your current payment
                             (remaining amortization) with the new payment; choosing a longer new amortization lowers the payment partly by
                             extending the payoff period. The IRD shown uses the new rate as the comparison rate — get a written penalty quote
@@ -366,20 +367,20 @@ export default function RefinanceCalculator() {
                                         { label: "Total Refinance Costs", value: money(totalCosts), highlight: true },
                                         { label: "Current Monthly Payment", value: money(currentMonthlyPayment) },
                                         { label: "New Monthly Payment", value: money(newMonthlyPayment) },
-                                        { label: "Monthly Savings", value: money(monthlySavings), highlight: true },
-                                        { label: "Break-Even", value: breakEvenMonths === Infinity ? "N/A (no monthly savings)" : `${breakEvenMonths} months`, highlight: true },
+                                        { label: "Monthly Payment Reduction", value: money(monthlySavings), highlight: true },
+                                        { label: "Break-Even", value: breakEvenMonths === Infinity ? "Not recovered within five years" : `${breakEvenMonths} months`, highlight: true },
                                         { label: "5-Year Net Savings", value: money(fiveYearSavings) },
                                     ],
                                 },
                             ]}
-                            educationalContent="A refinance pays off when the monthly savings recover the penalty and fees before your current term would have ended. Payments use Canadian semi-annual compounding. The IRD shown uses the new rate as the comparison rate; lenders use their own comparison rate, so get a written penalty quote. A longer new amortization lowers the payment partly by extending the payoff period. Estimates only; not a commitment to lend."
+                            educationalContent="A refinance pays off when interest savings recover the penalty and fees before your current term would have ended. Net savings compare interest and cash-paid fees over the same horizon. Rates are held constant for the estimate; extending amortization is not counted as a saving. Payments use Canadian semi-annual compounding. The IRD shown uses the new rate as the comparison rate; lenders use their own comparison rate, so get a written penalty quote. A longer new amortization lowers the payment partly by extending the payoff period. Estimates only; not a commitment to lend."
                         />
 
                         {/* CTA */}
                         <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
                             <Link
                                 href="/contact"
-                                className="bg-purple-500 text-white font-semibold py-4 px-8 rounded-xl hover:bg-purple-400 transition-colors"
+                                className="bg-purple-600 text-white font-semibold py-4 px-8 rounded-xl hover:bg-purple-700 transition-colors"
                             >
                                 Get Refinance Quote
                             </Link>

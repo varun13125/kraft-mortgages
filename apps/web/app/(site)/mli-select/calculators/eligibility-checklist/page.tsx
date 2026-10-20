@@ -38,7 +38,7 @@ export default function EligibilityChecklistPage() {
   ]);
 
   const toggleItem = (id: string) => {
-    setChecklist(prev => prev.map(item => 
+    setChecklist(prev => prev.map(item =>
       item.id === id ? { ...item, checked: !item.checked } : item
     ));
   };
@@ -51,11 +51,11 @@ export default function EligibilityChecklistPage() {
   const readinessScore = Math.min(completedOptional * 10, 100); // Readiness score (not official MLI points)
 
   return (
-    <div className="min-h-screen">
+    <main className="min-h-screen">
       {/* Hero Section */}
       <section className="py-20 px-4">
         <div className="max-w-6xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold bg-gold-500/20 text-gold-400 border border-gold-500/30 mb-6">
+          <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold bg-gold-500/20 text-gold-300 border border-gold-500/30 mb-6">
             CMHC • MLI Select
           </div>
           <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-gray-100 mb-6">
@@ -86,7 +86,7 @@ export default function EligibilityChecklistPage() {
                               type="checkbox"
                               checked={item.checked}
                               onChange={() => toggleItem(item.id)}
-                              className="mt-1 rounded border-gray-600 bg-gray-700 text-gold-400 focus:ring-gold-500/50 focus:ring-2"
+                              className="mt-1 rounded border-gray-600 bg-gray-700 text-gold-300 focus:ring-gold-500/50 focus:ring-2"
                             />
                             <div className="flex-1">
                               <div className="flex items-center gap-2">
@@ -118,7 +118,7 @@ export default function EligibilityChecklistPage() {
                       <span className="text-gray-100">{completedRequired}/{requiredItems.length}</span>
                     </div>
                     <div className="w-full bg-gray-700 rounded-full h-2">
-                      <div 
+                      <div
                         className="bg-red-500 h-2 rounded-full transition-all duration-300"
                         style={{ width: `${(completedRequired / requiredItems.length) * 100}%` }}
                       />
@@ -131,7 +131,7 @@ export default function EligibilityChecklistPage() {
                       <span className="text-gray-100">{completedOptional}/{optionalItems.length}</span>
                     </div>
                     <div className="w-full bg-gray-700 rounded-full h-2">
-                      <div 
+                      <div
                         className="bg-gold-500 h-2 rounded-full transition-all duration-300"
                         style={{ width: `${(completedOptional / optionalItems.length) * 100}%` }}
                       />
@@ -140,7 +140,7 @@ export default function EligibilityChecklistPage() {
 
                   <div className="border-t border-gray-600 pt-4">
                     <div className="text-center">
-                      <div className="text-2xl font-bold text-gold-400">{readinessScore}</div>
+                      <div className="text-2xl font-bold text-gold-300">{readinessScore}</div>
                       <div className="text-sm text-gray-400">Readiness Score</div>
                     </div>
                   </div>
@@ -181,6 +181,6 @@ export default function EligibilityChecklistPage() {
           </div>
         </div>
       </section>
-    </div>
+    </main>
   );
 }

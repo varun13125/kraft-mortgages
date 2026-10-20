@@ -40,7 +40,7 @@ export default function RefinanceCashOutPage() {
       <main className="min-h-screen bg-slate-950 pb-16">
         <section className="pt-12 pb-8 px-4">
           <div className="max-w-4xl mx-auto text-center">
-            <div className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-semibold bg-gradient-to-r from-gold-500/20 to-transparent text-gold-400 border border-gold-500/30 mb-5">
+            <div className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-semibold bg-gradient-to-r from-gold-500/20 to-transparent text-gold-300 border border-gold-500/30 mb-5">
               Refinance Tool
             </div>
             <h1 className="text-4xl sm:text-5xl font-bold tracking-tight text-gray-100 mb-4">
@@ -68,7 +68,7 @@ export default function RefinanceCashOutPage() {
                 </div>
                 <ValidatedSlider label="New Amortization" value={newAmortYears} onChange={(v) => setNewAmortYears(Math.round(v))} min={5} max={30} step={1} formatValue={(v) => Math.round(v) + " years"} />
                 <ValidatedSlider label="Max Loan-to-Value (LTV)" value={maxLtvPct} onChange={(v) => setMaxLtvPct(Math.round(v))} min={65} max={80} step={1} formatValue={(v) => Math.round(v) + "%"} />
-                <p className="text-xs text-gray-500">A refinance is capped at 80% LTV — insured (CMHC) refinancing isn&apos;t available, except the federal secondary-suite program (up to 90% of the as-improved value, for adding a rental suite).</p>
+                <p className="text-xs text-gray-400">A refinance is capped at 80% LTV — insured (CMHC) refinancing isn&apos;t available, except the federal secondary-suite program (up to 90% of the as-improved value, for adding a rental suite).</p>
               </div>
 
               <ComplianceBanner feature="LEAD_FORM" />
@@ -81,8 +81,8 @@ export default function RefinanceCashOutPage() {
                 {/* Hero result */}
                 <div className="mb-6 pb-6 border-b border-gray-700/50">
                   <div className="text-xs text-gray-400 uppercase tracking-wider mb-2">Available Cash-Out</div>
-                  <div className="text-5xl font-bold text-gold-400 leading-none">${Math.round(cashOut).toLocaleString()}</div>
-                  <div className="text-sm text-gray-500 mt-2">at {maxLtvPct}% LTV · {cashOut > 0 ? "you can access this much" : "no equity available at this LTV"}</div>
+                  <div className="text-5xl font-bold text-gold-300 leading-none">${Math.round(cashOut).toLocaleString()}</div>
+                  <div className="text-sm text-gray-400 mt-2">at {maxLtvPct}% LTV · {cashOut > 0 ? "you can access this much" : "no equity available at this LTV"}</div>
                 </div>
 
                 {/* Breakdown */}
@@ -90,20 +90,20 @@ export default function RefinanceCashOutPage() {
                   <div className="flex justify-between py-2 border-b border-gray-700/50"><span className="text-sm text-gray-300">Home Value</span><span className="text-gray-100 font-medium">${Math.round(safeValue).toLocaleString()}</span></div>
                   <div className="flex justify-between py-2 border-b border-gray-700/50"><span className="text-sm text-gray-300">Max Loan ({maxLtvPct}% LTV)</span><span className="text-gray-100 font-medium">${Math.round(maxLoan).toLocaleString()}</span></div>
                   <div className="flex justify-between py-2 border-b border-gray-700/50"><span className="text-sm text-gray-300">Current Balance</span><span className="text-gray-100 font-medium">${Math.round(safeBalance).toLocaleString()}</span></div>
-                  <div className="flex justify-between py-2 border-b border-gray-700/50"><span className="text-sm text-gray-300 font-semibold">Cash Available</span><span className="text-gold-400 font-bold text-lg">${Math.round(cashOut).toLocaleString()}</span></div>
+                  <div className="flex justify-between py-2 border-b border-gray-700/50"><span className="text-sm text-gray-300 font-semibold">Cash Available</span><span className="text-gold-300 font-bold text-lg">${Math.round(cashOut).toLocaleString()}</span></div>
                 </div>
 
                 {/* New payment */}
                 <div className="grid grid-cols-2 gap-3 mb-6">
                   <div className="bg-gray-800/40 rounded-lg p-4">
                     <div className="text-xs text-gray-400 uppercase tracking-wider mb-1">New Monthly Payment</div>
-                    <div className="text-2xl font-bold text-gold-400">${Math.round(newPayment).toLocaleString()}</div>
-                    <div className="text-xs text-gray-500 mt-1">vs ${Math.round(currentPayment).toLocaleString()} on current balance (same rate &amp; amortization)</div>
+                    <div className="text-2xl font-bold text-gold-300">${Math.round(newPayment).toLocaleString()}</div>
+                    <div className="text-xs text-gray-400 mt-1">vs ${Math.round(currentPayment).toLocaleString()} on current balance (same rate &amp; amortization)</div>
                   </div>
                   <div className="bg-gray-800/40 rounded-lg p-4">
                     <div className="text-xs text-gray-400 uppercase tracking-wider mb-1">LTV After Refinance</div>
                     <div className="text-2xl font-bold text-gray-200">{ltvAfter.toFixed(1)}%</div>
-                    <div className="text-xs text-gray-500 mt-1">${Math.round(equityRemaining).toLocaleString()} equity left</div>
+                    <div className="text-xs text-gray-400 mt-1">${Math.round(equityRemaining).toLocaleString()} equity left</div>
                   </div>
                 </div>
 
@@ -114,7 +114,7 @@ export default function RefinanceCashOutPage() {
                   </div>
                 )}
 
-                <p className="text-xs text-gray-500 mb-4">Estimate only. Excludes any prepayment penalty on your current mortgage, legal and appraisal fees, and lender approval (income and credit still apply; you must qualify at the stress-test rate).</p>
+                <p className="text-xs text-gray-400 mb-4">Estimate only. Excludes any prepayment penalty on your current mortgage, legal and appraisal fees, and lender approval (income and credit still apply; you must qualify at the stress-test rate).</p>
 
                 <a href="https://r.mtg-app.com/varun-chaudhry" target="_blank" rel="noopener noreferrer" className="block w-full py-3.5 px-6 bg-gradient-to-r from-gold-500 to-gold-600 text-gray-900 font-semibold rounded-lg hover:from-gold-400 hover:to-gold-500 transition-all text-center shadow-lg shadow-gold-500/20">
                   Start Refinance Application

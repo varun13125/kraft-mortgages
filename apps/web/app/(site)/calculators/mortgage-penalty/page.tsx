@@ -120,16 +120,16 @@ export default function MortgagePenaltyPage() {
     <>
       <CalculatorSchema name="Mortgage Penalty Calculator" description="Estimate your mortgage prepayment penalty including IRD and 3-months interest." url="/calculators/mortgage-penalty" />
       <Navigation />
-      <main className="min-h-screen mt-16">
+      <main className="min-h-screen">
         {/* Breadcrumb */}
         <section className="py-6 px-4 bg-gray-800/30">
           <div className="max-w-6xl mx-auto">
             <div className="flex items-center gap-2 text-sm">
-              <Link href="/" className="text-gray-400 hover:text-gold-400 transition-colors">Home</Link>
+              <Link href="/" className="text-gray-400 hover:text-gold-300 transition-colors">Home</Link>
               <span className="text-gray-600">›</span>
-              <Link href="/calculators" className="text-gray-400 hover:text-gold-400 transition-colors">Calculators</Link>
+              <Link href="/calculators" className="text-gray-400 hover:text-gold-300 transition-colors">Calculators</Link>
               <span className="text-gray-600">›</span>
-              <span className="text-gold-400">Mortgage Penalty Calculator</span>
+              <span className="text-gold-300">Mortgage Penalty Calculator</span>
             </div>
           </div>
         </section>
@@ -138,7 +138,7 @@ export default function MortgagePenaltyPage() {
         <section className="py-20 px-4">
           <div className="max-w-6xl mx-auto">
             <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }} className="text-center">
-              <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold bg-gold-500/20 text-gold-400 border border-gold-500/30 mb-6">
+              <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold bg-gold-500/20 text-gold-300 border border-gold-500/30 mb-6">
                 <Scale className="w-4 h-4" />
                 Break Cost Analysis
               </div>
@@ -160,7 +160,7 @@ export default function MortgagePenaltyPage() {
               <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }} className="space-y-8">
                 <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-white/20">
                   <h2 className="text-xl sm:text-2xl font-bold mb-6 flex items-center gap-3">
-                    <Calculator className="w-6 h-6 text-gold-400" />
+                    <Calculator className="w-6 h-6 text-gold-300" />
                     Mortgage Details
                   </h2>
             {/* PDF Report Download */}
@@ -271,7 +271,7 @@ export default function MortgagePenaltyPage() {
                               step={0.05}
                               formatValue={(v) => `${v.toFixed(2)}%`}
                             />
-                            <p className="text-xs text-gray-500 mt-2">
+                            <p className="text-xs text-gray-400 mt-2">
                               Big banks often subtract the discount you got at signing (their posted rate then minus your contract rate) from today&apos;s posted rate. Leave at 0% if your lender compares against its current discounted rates. Comparison rate used: <strong className="text-gray-300">{comparisonRate.toFixed(2)}%</strong>
                             </p>
                           </div>
@@ -299,7 +299,7 @@ export default function MortgagePenaltyPage() {
                 {/* Penalty Amount */}
                 <div className="bg-gradient-to-br from-gold-500/20 to-amber-500/10 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-gold-500/30">
                   <p className="text-sm text-gold-300 font-medium mb-1">Estimated Penalty</p>
-                  <p className="text-4xl sm:text-5xl font-bold text-gold-400 mb-2">
+                  <p className="text-4xl sm:text-5xl font-bold text-gold-300 mb-2">
                     {formatCurrency(results.penalty, 0)}
                   </p>
                   <p className="text-sm text-gray-300">
@@ -312,7 +312,7 @@ export default function MortgagePenaltyPage() {
                 {mortgageType === "fixed" && (
                   <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-white/20">
                     <h4 className="font-semibold mb-4 flex items-center gap-2">
-                      <Scale className="w-5 h-5 text-gold-400" />
+                      <Scale className="w-5 h-5 text-gold-300" />
                       Penalty Comparison
                     </h4>
                     <div className="grid grid-cols-2 gap-4 mb-4">
@@ -339,14 +339,14 @@ export default function MortgagePenaltyPage() {
                 {results.breakEvenMonths && (
                   <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-white/20">
                     <h4 className="font-semibold mb-4 flex items-center gap-2">
-                      <Clock className="w-5 h-5 text-gold-400" />
+                      <Clock className="w-5 h-5 text-gold-300" />
                       Break-Even Analysis
                     </h4>
                     <p className="text-gray-300 text-sm mb-3">
                       Moving from {contractRate.toFixed(2)}% to {newRate.toFixed(2)}% saves about{" "}
                       <strong>{formatCurrency(monthlyInterestSaved, 0)}/month</strong> in interest, so your penalty of{" "}
                       <strong>{formatCurrency(results.penalty, 0)}</strong> is recovered in about{" "}
-                      <strong className="text-gold-400">{results.breakEvenMonths} months</strong>
+                      <strong className="text-gold-300">{results.breakEvenMonths} months</strong>
                       {results.breakEvenMonths > remainingMonths ? " — longer than your remaining term, so waiting for renewal is likely cheaper" : ""}.
                     </p>
                     <div className="w-full bg-gray-700 rounded-full h-3">
@@ -367,7 +367,7 @@ export default function MortgagePenaltyPage() {
                   <h4 className="font-semibold mb-3">Equivalent Interest</h4>
                   <p className="text-gray-300 text-sm">
                     Your penalty equals{" "}
-                    <strong className="text-gold-400">
+                    <strong className="text-gold-300">
                       {(results.penalty / ((balance * contractRate / 100) / 12)).toFixed(1)} months
                     </strong>{" "}
                     of regular mortgage interest payments.
@@ -463,11 +463,11 @@ export default function MortgagePenaltyPage() {
               </p>
 
               <div className="mt-8">
-                <Link href="/calculators/affordability" className="text-gold-400 hover:text-gold-300 underline">Affordability Calculator</Link>
+                <Link href="/calculators/affordability" className="text-gold-300 hover:text-gold-300 underline">Affordability Calculator</Link>
                 {" · "}
-                <Link href="/calculators/payment" className="text-gold-400 hover:text-gold-300 underline">Payment Calculator</Link>
+                <Link href="/calculators/payment" className="text-gold-300 hover:text-gold-300 underline">Payment Calculator</Link>
                 {" · "}
-                <Link href="/calculators/renewal" className="text-gold-400 hover:text-gold-300 underline">Renewal Calculator</Link>
+                <Link href="/calculators/renewal" className="text-gold-300 hover:text-gold-300 underline">Renewal Calculator</Link>
               </div>
             </div>
           </div>
@@ -486,7 +486,7 @@ export default function MortgagePenaltyPage() {
                   >
                     <span className="font-semibold text-gray-200 pr-4">{faq.q}</span>
                     {openFaq === i ? (
-                      <ChevronUp className="w-5 h-5 text-gold-400 flex-shrink-0" />
+                      <ChevronUp className="w-5 h-5 text-gold-300 flex-shrink-0" />
                     ) : (
                       <ChevronDown className="w-5 h-5 text-gray-400 flex-shrink-0" />
                     )}
