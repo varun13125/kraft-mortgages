@@ -1,7 +1,7 @@
 # Project Status
 
 **Last updated:** 2026-10-20 — communications repairs released; phone/browser voice, Twenty and owner WhatsApp verified
-**Branch:** `main`; communications implementation and public-embed correction pushed/deployed; final keyboard/quiet-style polish follows the same release pipeline. Exact deployment SHAs/receipts are in the communications verification log. Four owner data-file changes remain excluded and untouched.
+**Branch:** `main`; communications implementation, public-embed correction and keyboard/quiet-style polish pushed/deployed and production verified. Exact deployment SHAs/receipts are in the communications verification log. Four owner data-file changes remain excluded and untouched.
 
 ## What this project is
 
@@ -50,14 +50,14 @@ Owner must rotate Twilio token exposed by provider UI and rejected VPS OpenRoute
    - `ADMIN_BASIC_AUTH_USER`, `ADMIN_BASIC_AUTH_PASSWORD` — choose them; **`/admin` is locked (503) until set**.
    - `CRON_SECRET` — any long random string.
    - `VAPI_*` legacy credentials must be rotated if retained; public-form outbound calling is disabled and does not need reactivation.
-   - Confirm these already exist: `TWILIO_AUTH_TOKEN` (needed to verify Twilio callbacks), `FACEBOOK_APP_SECRET` (without it FB leads get no AI call), `THINKR_WEBHOOK_SECRET` (set the same value in Thinkrr), a Firebase Admin credential, `DISCORD_LEAD_WEBHOOK_URL`, `CREWAPI_SECRET` (not `CREWAI_SECRET`).
+   - Confirm these already exist: `TWILIO_AUTH_TOKEN` (needed to verify Twilio callbacks), `FACEBOOK_APP_SECRET` (verifies Lead Ad signatures; callbacks disabled), `THINKR_WEBHOOK_SECRET` (old Next receiver only; actual VPS receiver authentication is BUG-083), a Firebase Admin credential, `DISCORD_LEAD_WEBHOOK_URL`, `CREWAPI_SECRET` (not `CREWAI_SECRET`).
    - Optional: `CRM_WEBHOOK_SECRET` (then make the VPS receiver require header `X-Webhook-Secret`), `LENDERS_API_KEY` (if an external tool needs BDM contacts), `AI_AUTO_PUBLISH=true` (only if AI posts should skip review).
 4. **Vercel → Domains:** set `kraftmortgages.ca` → `www` redirect to **Permanent (308)** (currently 307).
 5. **Firestore rules:** `firebase deploy --only firestore:rules` (file at repo root).
 6. **Facebook Lead Ads:** review contact/marketing consent and run a controlled signed lead test. Automated callbacks are disabled under the message-only policy.
 7. **Legal review:** consent wording (`lib/compliance/consent.ts`) and the updated privacy policy.
 8. **Physical microphone and mailbox checks:** controlled phone + synthetic browser audio passed; verify target devices/permissions and arrival of the info@ test email.
-9. **Decisions still open:** marketing claims (BUG-014), business facts (BUG-036), APR disclosure (BUG-037), A-vs-B tax-years default (BUG-043), Vapi vs Thinkrr (BUG-031), add `build_approved_directories.py` to the scheduled sync (BUG-028), fix CTBC + private-second rows upstream in the Hermes generator (BUG-027/055).
+9. **Decisions still open:** marketing claims (BUG-014), business facts (BUG-036), APR disclosure (BUG-037), A-vs-B tax-years default (BUG-043), add `build_approved_directories.py` to the scheduled sync (BUG-028), fix CTBC + private-second rows upstream in the Hermes generator (BUG-027/055).
 
 ## Next up for agents (in order)
 

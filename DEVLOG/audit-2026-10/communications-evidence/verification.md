@@ -27,3 +27,12 @@ Fresh WhatsApp test after website release: signed inbound SMa7687555a75c4c9ba7a7
 Final minor polish verified locally: keyboard semantics for vendor clickable div and scoped muted-gold/no-glow presentation (BUG-084). New mocked browser regression verifies keyboard activation/close without any real call.
 
 Final polish: isolated126-page production build and clean lint/type validation. Browser suite13/13 pass, including vendor-stub keyboard activation and closing stopping a session; no actual paid calls in regression harness. Source/data baseline preserved. Final production polish deployment receipt follows.
+
+
+## Final production polish receipt
+
+Commit db6624bf2fd0c9a941a3dc7285ed567c0509d32a, deployment dpl_4RrAQrRdiMEeg1mXsXxjwdF8xcpR READY, www.kraftmortgages.ca alias/no alias error. Live control rendered with button role, tabIndex0 and keyboard focus. Computed shadow:none and state background rgb(195,164,119). Screenshot voice-controls-premium-live.png. Provider uses an important white-icon filter; final CSS specificity follow-up forces a dark microphone for gold-surface contrast. No additional real call needed; voice flow unchanged.
+
+VPS deployed thinkrr-hook.py, whatsapp_inbox.py, whatsapp_rates.py and website-leads.mjs hashes exactly match local deployment working tree. CRM commits4863cf1/8b4dede pushed. Owner mirror remains uncommitted but present/deployed. Four unrelated website data files remain modified and excluded.
+
+Icon-contrast specificity follow-up: final isolated production build again passed126/126 pages with type validation; no calculator/model behavior changed. All functional flow receipts above remain applicable.

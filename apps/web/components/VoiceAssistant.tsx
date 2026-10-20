@@ -111,7 +111,7 @@ export function ThinkrrVoiceWidget() {
       #kraft-voice-controls .wcw-user-talking { background-color: #c3a477 !important; }
       #kraft-voice-controls .ripple-container { display: none !important; }
       #kraft-voice-controls .wave-bar { background-color: #111820 !important; }
-      #kraft-voice-controls .wcw-quiet { filter: brightness(0); }
+      #kraft-voice-controls .wcw-quiet { filter: brightness(0) !important; }
     `}</style>
     <div ref={dialog} role="dialog" aria-modal="true" aria-label="Kraft Mortgages voice AI assistant" aria-labelledby="voice-heading" tabIndex={-1} className="w-full max-w-lg max-h-[calc(100dvh-2rem)] overflow-y-auto rounded-2xl border border-[#c3a477]/30 bg-[#111820] text-[#eff1f3] shadow-2xl outline-none">
       <div className="flex items-center justify-between border-b border-white/10 p-5">
