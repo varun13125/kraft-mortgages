@@ -80,7 +80,7 @@ For every new calculator, show CAD/period/units, scenario purpose, rate source/d
 Official sources checked 2026-10-20:
 
 - [CMHC MLI Select](https://www.cmhc-schl.gc.ca/MLISelect)
-- [CMHC multi-unit premiums and fees](https://www.cmhc-schl.gc.ca/professionals/project-funding-and-mortgage-financing/mortgage-loan-insurance/multi-unit-insurance/premiums-and-fees)
+- [CMHC multi-unit premiums and fees](https://assets.cmhc-schl.gc.ca/sites/cmhc/professional/project-funding-and-mortgage-financing/mortgage-loan-insurance/multi-unit-insurance/mliselect/mli-select-multi-unit-fees-and-premiums-at-a-glance-en.pdf?rev=477fd129-abf9-4027-a71a-52bf53e2ee32)
 - [OSFI uninsured straight switches](https://www.osfi-bsif.gc.ca/en/news/backgrounder-minimum-qualifying-rate-mqr)
 
 Re-check official sources before changing regulatory tables. The audit report has links for residential insurance, provincial/municipal taxes and qualifying rules. A date in a comment is not proof that a rule is still current.

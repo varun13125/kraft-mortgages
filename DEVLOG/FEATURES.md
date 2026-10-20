@@ -14,10 +14,10 @@ Pick from the top. P0 items also close open `BUG`s, noted in the **Closes** colu
 | FEAT-005 | done | pnpm-only Vercel install/build, single `vercel.json`. |
 | FEAT-006 | partly done (2026-10-20) | 119 tests pass; 2,160 ledger stress combinations plus 75 integrated MLI sizing cases; reusable browser harnesses cover 53 calculators. Browser CI integration remains. |
 | FEAT-021 | partly done (2026-10-20) | Toronto toggle and municipal rebates added to Closing Costs; remaining new-build/non-resident/mixed-owner extensions are open. |
-| FEAT-060 | done (2026-10-20; release verification pending) | Scoped restrained theme across calculator routes, complete searchable directory, single help dock, mobile summaries and full shared shell for Payment/Renewal/MLI sizing. Mandatory design/developer guide. Remaining component migrations are FEAT-069. |
+| FEAT-060 | done (2026-10-20; production verified) | Scoped restrained theme across calculator routes, complete searchable directory, single help dock, mobile summaries and full shared shell for Payment/Renewal/MLI sizing. Mandatory design/developer guide. Remaining component migrations are FEAT-069. |
 | FEAT-061 | partly done (2026-10-20) | Contract implemented in the three shared-shell tools and documented for future work; apply to remaining legacy tools through FEAT-069. |
-| FEAT-019 | done (2026-10-20; release verification pending) | Standard rental MLI sizer connects points, leverage, DCR including financed premiums, cash and sensitivities; ungated scenario PDF. |
-| FEAT-062 | done for renewal / early break (2026-10-20; release verification pending) | Three offers; common locked horizon; interest, cash fees, retained cashback/clawbacks, actual payout penalty, ending balances and PDF. Cash-out/capitalized fees extension is FEAT-070. |
+| FEAT-019 | done (2026-10-20; production verified) | Standard rental MLI sizer connects points, leverage, DCR including financed premiums, cash and sensitivities; ungated scenario PDF. |
+| FEAT-062 | done for renewal / early break (2026-10-20; production verified) | Three offers; common locked horizon; interest, cash fees, retained cashback/clawbacks, actual payout penalty, ending balances and PDF. Cash-out/capitalized fees extension is FEAT-070. |
 | FEAT-007 | done | Live-rate defaults across calculators and landing pages. |
 | FEAT-016 | partly done | Drafts by default + admin publish; run list/polling remain. |
 | FEAT-018 | partly done | PDF report + lead capture added to 4 commercial, 5 MLI calculators and alt-income. Construction, equity and remaining MLI pages still to do. |

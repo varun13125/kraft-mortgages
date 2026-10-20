@@ -93,6 +93,7 @@ Round-2 reports (2026-10-13/14) use `r2-ai`, `r2-be`, `r2-fe`, `r2-calc`, `r2-sp
 | BUG-069 | fixed (2026-10-20) | Construction remaining budget ≥0; surplus separate from undisbursed commitment; regression test. |
 | BUG-070 | fixed (2026-10-20) | Accelerated-payment simulation rejects non-finite inputs and unsupported >100-year horizons; regression guards NaN/runaway work for non-UI callers. |
 | BUG-071 | fixed (2026-10-20) | Medium: B-vs-equity no longer calls equity lending the best option merely because B-lender criteria fail; verdict invites review without implying private eligibility. |
+| BUG-072 | fixed (2026-10-20 release follow-up) | Low: draft CMHC premium source URL returned 404; UI/guide now use the official fees/premiums PDF linked by the live CMHC MLI Select page. Target HTTP200 verified. |
 
 ---
 

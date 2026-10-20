@@ -33,7 +33,7 @@ The collection sweep ran while visual fixes were being made. `final-all-routes.j
 
 Browser harnesses blocked non-GET/HEAD requests and external widget calls. No real leads, emails, WhatsApp messages or calls were sent. Opening voice was tested only through its pre-call disclosure screen. This is numerical/input stress testing, not production traffic load testing. Automated axe/layout checks do not establish full screen-reader, manual zoom or real-device certification.
 
-The isolated build had no Firebase credentials and used the existing mock blog fallback. Local build success does not certify production Firebase/CRM/AI/voice integrations. Stale Browserslist data is a nonblocking tool warning. Production release status is recorded in the later live receipt and DEVLOG session.
+The isolated build had no Firebase credentials and used the existing mock blog fallback. Local build success does not certify production Firebase/CRM/AI/voice integrations. Stale Browserslist data is a nonblocking tool warning. Production release status is recorded in the [live receipt](live-release.md) and DEVLOG session.
 
 ## Intentional scope limits
 

@@ -1,7 +1,7 @@
 # Project Status
 
-**Last updated:** 2026-10-20 — calculator audit + premium implementation verified locally; authorized release pending
-**Branch:** `main`, base `006c93a`; calculator release prepared for commit/push. Four owner data-file changes remain excluded and untouched.
+**Last updated:** 2026-10-20 — calculator audit + approved premium implementation released and production verified
+**Branch:** `main`; implementation `d42ea97` pushed and deployed. Release-receipt follow-up records verification and corrects the CMHC source link. Four owner data-file changes remain excluded and untouched.
 
 ## What this project is
 
@@ -20,7 +20,7 @@ Stack: Next.js 14.2.35 App Router, TypeScript strict, Tailwind, Firebase/Firesto
 - [Complete calculator/premium report](audit-2026-10/calculator-premium-audit-2026-10-20.md), [interactive design concept](audit-2026-10/premium-calculator-concept.html), [run evidence](audit-2026-10/calculator-audit-evidence/summary.json).
 - BUG-061…071 repaired; Toronto Closing Costs portion of FEAT-021 delivered. FEAT-019/060/062 implemented; FEAT-061 contract applied to three shared-shell tools. Other roadmap items remain open. Required [developer/design guide](DEVELOPER_GUIDE.md).
 - 53/53 routes returned 200 with unique matching canonicals; final merged axe scan zero violations, no page errors/390px overflow. 119/119 tests, 2,160 ledger combinations + 75 MLI sizing combinations; 136 additional numeric UI stress cases. Original 24/24 and new built-app 12/12 browser checks pass. [Premium release evidence](audit-2026-10/premium-release-evidence/verification.md).
-- Restrained calculator theme and searchable 53-tool directory; single guidance launcher; Payment, Renewal and MLI Deal Sizer use the full ivory/ink shell, mobile result summaries and ungated scenario PDF. Remaining legacy body migrations: FEAT-069; cash-out/capitalized-fee renewal extension: FEAT-070. Deployment verification is pending; real integrations and production field performance remain unverified.
+- Restrained calculator theme and searchable 53-tool directory; single guidance launcher; Payment, Renewal and MLI Deal Sizer use the full ivory/ink shell, mobile result summaries and ungated scenario PDF. Remaining legacy body migrations: FEAT-069; cash-out/capitalized-fee renewal extension: FEAT-070. Vercel production deployment dpl_6yqURBnT5Km64v8GtqW3Nd1aPUj5 is READY for d42ea97337f54f193c3768251d1e846b3263c824 and owns www.kraftmortgages.ca. See the live receipt in the evidence folder. Real AI/CRM/voice integrations and field performance remain unverified.
 
 ## Health (local 2026-10-20)
 
@@ -31,7 +31,7 @@ Stack: Next.js 14.2.35 App Router, TypeScript strict, Tailwind, Firebase/Firesto
 | Tests: `pnpm test` (→ `node --test "tests/**/*.test.mjs"`, Node ≥ 22.18) | ✅ 119/119 (includes integrated renewal/MLI, registry, stress, eligibility and input regressions) |
 | Production build: `cd apps/web && ./node_modules/.bin/next build` | ✅ Final isolated build passed, 126/126 pages, committed data baseline; runtime source matched to release files |
 | Local smoke test (`next start`) | ✅ Built app: 53/53 calculator routes 200, matching unique canonicals/H1s; 12/12 premium regressions. External integrations not exercised |
-| Browser check | ✅ All 52 calculator routes; 1,146 initial numeric/range + 43 select cases; 38 follow-up toggle cases; 24 targeted assertions/captures; final automated axe scan 0 violations. Real Thinkrr/CRM/email and full manual accessibility not certified |
+| Browser check | ✅ All 53 calculators; final merged axe 0 violations/page errors/390px overflow; 24 original + 12 built-app premium checks; 136 new numeric input cases. New tools also checked at 320px. No real calls/leads or full manual accessibility certification |
 | CI (`.github/workflows/ci.yml`) | typecheck, lint, test, build — all blocking |
 
 ## Owner checklist (nothing below can be done by an agent)
@@ -53,7 +53,7 @@ Stack: Next.js 14.2.35 App Router, TypeScript strict, Tailwind, Firebase/Firesto
 
 ## Next up for agents (in order)
 
-1. Read DEVELOPER_GUIDE.md and the latest session. Verify the pending authorized production release against its exact Git SHA; then continue FEAT-069 (remaining body/result-contract migrations) and FEAT-070 only if prioritised by the owner. Do not mistake remaining roadmap ideas for delivered features.
+1. Read DEVELOPER_GUIDE.md and the latest session. The audit and approved premium phase are released. FEAT-069 (remaining body/result-contract migrations) and FEAT-070 (different balances/financed costs) are future extensions; keep them separate from delivered capability. Confirm the latest production SHA using the release guide before a new release.
 2. **FEAT-003** durable rate limiting (Vercel WAF/Upstash) + merge the two guard helpers (BUG-007).
 3. **FEAT-002** unified lead ingestion (`lib/leads/ingest.ts`).
 4. **FEAT-009** tool calling in the live chat + chat consent form (BUG-026/041).

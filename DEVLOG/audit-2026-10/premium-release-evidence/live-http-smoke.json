@@ -1,0 +1,37 @@
+[
+  {
+    "route": "/",
+    "status": 200,
+    "h1": "Expert Mortgage Solutions Across BC, Alberta &amp; Ontario"
+  },
+  {
+    "route": "/calculators",
+    "status": 200,
+    "h1": "Clarity for your next move."
+  },
+  {
+    "route": "/calculators/payment",
+    "status": 200,
+    "h1": "A payment you can plan around."
+  },
+  {
+    "route": "/calculators/renewal",
+    "status": 200,
+    "h1": "Put your renewal offers side by side."
+  },
+  {
+    "route": "/mli-select/calculators/deal-sizer",
+    "status": 200,
+    "h1": "See how your rental project sizes up."
+  },
+  {
+    "route": "/rates",
+    "status": 200,
+    "h1": "Today&#x27;s Verified Mortgage Rates"
+  },
+  {
+    "route": "/sitemap.xml",
+    "status": 200,
+    "h1": ""
+  }
+]

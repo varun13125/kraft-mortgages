@@ -18,6 +18,15 @@ Older history (2025-08 → 2026-10-04) lives in `/AI_CONTEXT_LOG.md`.
 
 ---
 
+## 2026-10-20: Production release verified and handoff completed
+
+- **Who:** Codex.
+- **Commits:** d42ea97337f54f193c3768251d1e846b3263c824 (audit + premium calculator implementation), followed by the release-receipt/CMHC reference correction commit. Both authorized by the owner; main → origin/main → Vercel production.
+- **Released:** BUG-061…071; FEAT-019/060 and renewal/early-break scope of FEAT-062. FEAT-061 partly delivered in three shared-shell tools; FEAT-069/070 explicitly remain open. All new engineering/aesthetic rules are in mandatory DEVELOPER_GUIDE.md.
+- **Production verified:** Vercel dpl_6yqURBnT5Km64v8GtqW3Nd1aPUj5 READY for exact implementation SHA, www.kraftmortgages.ca alias, no alias error. All 53 live calculator routes HTTP200 with correct canonical/H1; home/directory/rates/sitemap checked. Safe live browser suite 12/12 pass, including actual PDF downloads and 1440/390/320px layout/axe checks. Full local 119/119 tests, clean tsc/lint and isolated 126-page production build recorded in the prior entry. Live evidence: audit-2026-10/premium-release-evidence/live-release.md.
+- **Release follow-up:** BUG-072 corrected a draft external CMHC premium link returning 404. UI/guide now point to the official premium PDF linked by the CMHC MLI Select page, HTTP200 verified. No calculator model/input/output changed. This receipt commit is itself deployed by the normal main-branch pipeline; confirm its final SHA via git/Vercel when continuing.
+- **Preserved:** Four pre-existing apps/web/data changes remain unstaged, untouched and excluded from deployment. No real leads, calls, WhatsApp messages or paid integration requests were sent by the checks.
+- **Next:** Maintain the design contract; future FEAT-069 body migrations and FEAT-070 financed-cost/cash-out expansion must preserve the verified models. Existing owner security/legal/env/real-voice checks remain open in STATUS; this release does not certify them.
 ## 2026-10-20: Premium calculator system, integrated decision tools and release preparation
 
 - **Who:** Codex.
