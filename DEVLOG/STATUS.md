@@ -1,7 +1,7 @@
 # Project Status
 
-**Last updated:** 2026-10-20 — communications repairs verified locally/VPS; authorized website release being finalized
-**Branch:** `main`; communications implementation `869edd7` pushed/deployed; environment correction/final receipt follow-up in progress. Four owner data-file changes remain excluded and untouched.
+**Last updated:** 2026-10-20 — communications repairs released; phone/browser voice, Twenty and owner WhatsApp verified
+**Branch:** `main`; communications implementation and public-embed correction pushed/deployed; final keyboard/quiet-style polish follows the same release pipeline. Exact deployment SHAs/receipts are in the communications verification log. Four owner data-file changes remain excluded and untouched.
 
 ## What this project is
 
@@ -15,16 +15,20 @@ Kraft Mortgages (kraftmortgages.ca) is the website of a licensed mortgage broker
 
 Stack: Next.js 14.2.35 App Router, TypeScript strict, Tailwind, Firebase/Firestore, pnpm monorepo (`apps/web` is the site), Vercel (pnpm install, root `vercel.json`).
 
-## Communications repair in progress (2026-10-20)
+## Communications release (2026-10-20)
 
-BUG-073…079 are claimed by Codex. Owner confirmed Twenty on VPS is the CRM (no GoHighLevel), and Julia must **only take messages for Varun, never transfer live calls to the office**. See DEVELOPER_GUIDE for the verified service map. Website implementation passed isolated staged-tree typecheck, lint, 125 tests, 126-page build and 12 browser regressions; release is being finalized. VPS contact receiver now accepts repeat emails, writes modern linked notes/consent, and has a verified successful website test. WhatsApp signed acknowledgements are fast/deduplicated; a real test reply was delivered after adding the website AI fallback for the VPS's rejected OpenRouter key. Thinkrr new inbound agent 21437 has a verified controlled phone transcript in Twenty and delivered owner WhatsApp notification. Published-domain web controls and release validation are being completed. See the communications audit.
+[Complete communications report](audit-2026-10/communications-audit-2026-10-20.md) and [verification/limits](audit-2026-10/communications-evidence/verification.md). BUG-073/074/075/077/078/079/082/084 repaired; BUG-076 partly repaired (full outbox/recovery still future). Twenty on VPS is the CRM; Julia takes messages for Varun only, no office transfer/booking or public-form automatic calls. Notifications use owner WhatsApp and Discord, not Telegram. Manpreet Dhaliwal is Principal Broker; info@ is public contact.
+
+Controlled phone AND synthetic browser-audio calls saved transcripts in Twenty and delivered owner WhatsApp notifications. Fresh WhatsApp response delivered, 50 words, dated and no raw Markdown/console help. Three live website inquiry types read back from Twenty with no-call consent; repeat person reused. SMTP accepted general-inbox test; actual mailbox arrival, real Facebook ads/external carrier SMS/physical microphone remain unverified. Isolated committed-data baseline: type/lint clean,125 tests,126-page build,13 browser regressions (including mocked vendor keyboard/close test). Four owner data edits untouched.
+
+Owner must rotate Twilio token exposed by provider UI and rejected VPS OpenRouter key. BUG-083 actual VPS Thinkrr webhook authentication/dedupe and per-destination retries remain open; BUG-081 SMS history/carrier checks remain open. Do not infer complete delivery from these configuration notes or reactivate retired GHL/outbound campaigns.
 
 ## Current calculator release (2026-10-20)
 
 - [Complete calculator/premium report](audit-2026-10/calculator-premium-audit-2026-10-20.md), [interactive design concept](audit-2026-10/premium-calculator-concept.html), [run evidence](audit-2026-10/calculator-audit-evidence/summary.json).
 - BUG-061…071 repaired; Toronto Closing Costs portion of FEAT-021 delivered. FEAT-019/060/062 implemented; FEAT-061 contract applied to three shared-shell tools. Other roadmap items remain open. Required [developer/design guide](DEVELOPER_GUIDE.md).
 - 53/53 routes returned 200 with unique matching canonicals; final merged axe scan zero violations, no page errors/390px overflow. 119/119 tests, 2,160 ledger combinations + 75 MLI sizing combinations; 136 additional numeric UI stress cases. Original 24/24 and new built-app 12/12 browser checks pass. [Premium release evidence](audit-2026-10/premium-release-evidence/verification.md).
-- Restrained calculator theme and searchable 53-tool directory; single guidance launcher; Payment, Renewal and MLI Deal Sizer use the full ivory/ink shell, mobile result summaries and ungated scenario PDF. Remaining legacy body migrations: FEAT-069; cash-out/capitalized-fee renewal extension: FEAT-070. Vercel production deployment dpl_6yqURBnT5Km64v8GtqW3Nd1aPUj5 is READY for d42ea97337f54f193c3768251d1e846b3263c824 and owns www.kraftmortgages.ca. See the live receipt in the evidence folder. Real AI/CRM/voice integrations and field performance remain unverified.
+- Restrained calculator theme and searchable 53-tool directory; single guidance launcher; Payment, Renewal and MLI Deal Sizer use the full ivory/ink shell, mobile result summaries and ungated scenario PDF. Remaining legacy body migrations: FEAT-069; cash-out/capitalized-fee renewal extension: FEAT-070. Vercel production deployment dpl_6yqURBnT5Km64v8GtqW3Nd1aPUj5 is READY for d42ea97337f54f193c3768251d1e846b3263c824 and owns www.kraftmortgages.ca. See the live receipt in the evidence folder. That calculator release did not test real communications. The subsequent communications release above records actual controlled integration receipts; field performance remains separate.
 
 ## Health (local 2026-10-20)
 
@@ -32,7 +36,7 @@ BUG-073…079 are claimed by Codex. Owner confirmed Twenty on VPS is the CRM (no
 | --- | --- |
 | Type check: `cd apps/web && ./node_modules/.bin/tsc --noEmit --incremental false -p .` | ✅ 0 errors (delete `apps/web/.next` first if it has stale route types) |
 | Lint: `cd apps/web && ./node_modules/.bin/next lint` | ✅ 0 errors, 0 warnings |
-| Tests: `pnpm test` (→ `node --test "tests/**/*.test.mjs"`, Node ≥ 22.18) | ✅ 119/119 (includes integrated renewal/MLI, registry, stress, eligibility and input regressions) |
+| Tests: `pnpm test` (→ `node --test "tests/**/*.test.mjs"`, Node ≥ 22.18) | ✅ 125/125 (renewal/MLI, registry, stress, eligibility/input and communications regressions) |
 | Production build: `cd apps/web && ./node_modules/.bin/next build` | ✅ Final isolated build passed, 126/126 pages, committed data baseline; runtime source matched to release files |
 | Local smoke test (`next start`) | ✅ Built app: 53/53 calculator routes 200, matching unique canonicals/H1s; 12/12 premium regressions. External integrations not exercised |
 | Browser check | ✅ All 53 calculators; final merged axe 0 violations/page errors/390px overflow; 24 original + 12 built-app premium checks; 136 new numeric input cases. New tools also checked at 320px. No real calls/leads or full manual accessibility certification |
@@ -52,7 +56,7 @@ BUG-073…079 are claimed by Codex. Owner confirmed Twenty on VPS is the CRM (no
 5. **Firestore rules:** `firebase deploy --only firestore:rules` (file at repo root).
 6. **Facebook Lead Ads:** review contact/marketing consent and run a controlled signed lead test. Automated callbacks are disabled under the message-only policy.
 7. **Legal review:** consent wording (`lib/compliance/consent.ts`) and the updated privacy policy.
-8. **Test a real Thinkrr voice call** on the live site and confirm "End" hangs up.
+8. **Physical microphone and mailbox checks:** controlled phone + synthetic browser audio passed; verify target devices/permissions and arrival of the info@ test email.
 9. **Decisions still open:** marketing claims (BUG-014), business facts (BUG-036), APR disclosure (BUG-037), A-vs-B tax-years default (BUG-043), Vapi vs Thinkrr (BUG-031), add `build_approved_directories.py` to the scheduled sync (BUG-028), fix CTBC + private-second rows upstream in the Hermes generator (BUG-027/055).
 
 ## Next up for agents (in order)

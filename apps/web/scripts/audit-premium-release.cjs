@@ -98,6 +98,22 @@ fs.mkdirSync(out, { recursive: true });
     await page.keyboard.press('Escape'); await page.getByRole('button',{name:'Get guidance',exact:true}).waitFor();
     return 'No call view mounted and all non-GET requests blocked.';
   });
+  await run('voice vendor control is keyboard accessible and closing ends a mocked session', async () => {
+    await go('/calculators/payment');
+    await page.route('https://live-api.thinkrr.ai/voice-agents/v1/widget/config', r => r.fulfill({status:200,contentType:'application/json',body:'{}'}));
+    await page.route('https://d2cqc7yqzf8c8f.cloudfront.net/web-widget.js', r => r.fulfill({status:200,contentType:'application/javascript',body:`window.widgetLib={scanWidgets(){document.querySelectorAll('[data-widget-key]').forEach(m=>{if(m.firstChild)return;const t=document.createElement('div');t.className='wcw-widget-container';t.style.boxShadow='0px 4px 60px rgba(137,92,246,.6)';const q=document.createElement('span');q.className='wcw-quiet';q.textContent='Microphone';t.append(q);t.onclick=()=>{q.style.display=q.style.display==='none'?'':'none';};m.append(t);});}};`}));
+    await page.getByRole('button',{name:'Get guidance',exact:true}).click();
+    await page.getByRole('button',{name:'Leave a message with Julia'}).click();
+    await page.getByRole('button',{name:'Open English voice controls',exact:true}).click();
+    const control=page.getByRole('button',{name:'Start or end Julia voice call',exact:true});
+    await control.waitFor();await control.press('Enter');
+    assert.equal(await page.locator('.wcw-quiet').evaluate(e=>e.style.display),'none');
+    assert.equal(await control.evaluate(e=>getComputedStyle(e).boxShadow),'none');
+    await page.keyboard.press('Escape');
+    assert.equal(await page.getByRole('dialog').count(),0);
+    assert.notEqual(await page.locator('.wcw-quiet').evaluate(e=>e.style.display),'none');
+    return 'Mock SDK only; no microphone, external call or lead.';
+  });
   for (const [route,slug] of [['/calculators/payment','payment'],['/calculators/renewal','renewal'],['/mli-select/calculators/deal-sizer','mli-deal']]) {
     await run(`${slug}: PDF reflects current results and downloads without lead capture`, async () => {
       await go(route); const downloaded = page.waitForEvent('download'); await page.getByRole('button',{name:'Download scenario PDF',exact:true}).click();

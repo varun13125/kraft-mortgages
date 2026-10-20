@@ -95,13 +95,14 @@ Round-2 reports (2026-10-13/14) use `r2-ai`, `r2-be`, `r2-fe`, `r2-calc`, `r2-sp
 | BUG-071 | fixed (2026-10-20) | Medium: B-vs-equity no longer calls equity lending the best option merely because B-lender criteria fail; verdict invites review without implying private eligibility. |
 | BUG-073 | fixed (2026-10-20) | Customer/operator routing repaired; durable signed intake/dedupe; actual Twilio reply delivered. See communications audit. |
 | BUG-074 | fixed (2026-10-20) | Safe Markdown, concise dated regional benchmark answers, shared feed, correct prime attribution; tests/browser verified. |
-| BUG-075 | in-progress (Codex, 2026-10-20) | Voice embed can remain empty while UI claims a connecting session. Reproduce vendor lifecycle/config failures; expose actual readiness/error states. |
+| BUG-075 | fixed (2026-10-20) | New inbound agent/embed and corrected Vercel override; bounded readiness/error states. Controlled live phone and browser voice transcripts saved in Twenty; owner WhatsApp notifications delivered. |
 | BUG-076 | partially fixed (2026-10-20) | partially fixed: shared genuine Twenty receipts, repeat inquiry/note/phone support, calculator/business-funding routing. Full durable fan-out, voice caller linking/summary and mailbox/FB verification remain. |
 | BUG-077 | fixed (2026-10-20) | Manpreet Principal Broker and info@ public contact/Thinkrr notification email corrected. |
 | BUG-078 | fixed (2026-10-20) | Active GHL forwarding/iframe/defaults removed; native consented form and Twenty receiver deployed. |
 | BUG-079 | fixed (2026-10-20) | Message-only Julia phone conversation verified; no transfer/booking, public automatic callbacks disabled and voicemail-only fallback. |
 | BUG-080 | open (owner, 2026-10-20) | Thinkrr import form displayed the existing Twilio Auth Token as plaintext in a browser diagnostic. Rotate it and update Thinkrr, VPS token file and every active signature validator together. Do not copy the value into this log. |
 | BUG-082 | fixed (2026-10-20) | Live audit: chat copied province once at mount and ignored later navigation/city selection; use the shared store directly and verify both directions in browser regression. |
+| BUG-084 | fixed (2026-10-20) | Live vendor widget uses a clickable div without keyboard role/tab stop. Add scoped keyboard/button semantics and restrained styling; mock regression verifies Enter start and Escape stop. |
 | BUG-083 | open | Actual VPS /thinkrr-hook accepts unauthenticated JSON and lacks event-ID dedupe; coordinate provider/receiver authentication and durable notification retries. Separate from old website BUG-009 route. |
 | BUG-081 | open | SMS receiver restored and signed ACK tested; external carrier/two-way SMS and linked Twenty SMS history still need verification/implementation. |
 | BUG-072 | fixed (2026-10-20 release follow-up) | Low: draft CMHC premium source URL returned 404; UI/guide now use the official fees/premiums PDF linked by the live CMHC MLI Select page. Target HTTP200 verified. |

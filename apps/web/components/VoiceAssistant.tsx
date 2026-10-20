@@ -58,6 +58,7 @@ export function ThinkrrVoiceWidget() {
     let observer: MutationObserver | null = null;
     let renderTimeout: ReturnType<typeof setTimeout> | null = null;
     let mounted: HTMLDivElement | null = null;
+    let accessibleToggle: HTMLElement | null = null;
     setStatus("loading"); setError("");
     const prepare = async () => {
       try {
@@ -72,7 +73,17 @@ export function ThinkrrVoiceWidget() {
         mounted = getWidgetMount(selectedKey);
         container.current.appendChild(mounted);
         const check = () => {
-          if (mounted?.querySelector(".wcw-widget-container")) {
+          const toggle = mounted?.querySelector<HTMLElement>(".wcw-widget-container");
+          if (toggle) {
+            if (accessibleToggle !== toggle) {
+              accessibleToggle = toggle;
+              toggle.setAttribute("role", "button");
+              toggle.setAttribute("aria-label", "Start or end Julia voice call");
+              toggle.tabIndex = 0;
+              toggle.addEventListener("keydown", event => {
+                if (event.key === "Enter" || event.key === " ") { event.preventDefault(); toggle.click(); }
+              }, { signal: controller.signal });
+            }
             setStatus("ready"); if (renderTimeout) clearTimeout(renderTimeout); observer?.disconnect();
           }
         };
@@ -92,6 +103,16 @@ export function ThinkrrVoiceWidget() {
 
   if (!isOpen) return null;
   return <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm">
+    <style jsx global>{`
+      #kraft-voice-controls .wcw-widget-container { box-shadow: none !important; transition: none !important; }
+      #kraft-voice-controls .wcw-widget-container:focus-visible { outline: 2px solid #c3a477; outline-offset: 5px; }
+      #kraft-voice-controls .wcw-state-container,
+      #kraft-voice-controls .wcw-agent-talking,
+      #kraft-voice-controls .wcw-user-talking { background-color: #c3a477 !important; }
+      #kraft-voice-controls .ripple-container { display: none !important; }
+      #kraft-voice-controls .wave-bar { background-color: #111820 !important; }
+      #kraft-voice-controls .wcw-quiet { filter: brightness(0); }
+    `}</style>
     <div ref={dialog} role="dialog" aria-modal="true" aria-label="Kraft Mortgages voice AI assistant" aria-labelledby="voice-heading" tabIndex={-1} className="w-full max-w-lg max-h-[calc(100dvh-2rem)] overflow-y-auto rounded-2xl border border-[#c3a477]/30 bg-[#111820] text-[#eff1f3] shadow-2xl outline-none">
       <div className="flex items-center justify-between border-b border-white/10 p-5">
         <div><p className="text-xs uppercase tracking-widest text-[#c3a477]">Kraft Mortgages</p><h2 id="voice-heading" className="mt-1 font-serif text-2xl">Leave a message with Julia</h2></div>
@@ -109,7 +130,7 @@ export function ThinkrrVoiceWidget() {
             {status === "ready" && "Voice controls ready. Select the microphone below to start; allow microphone access when asked."}
           </div>
           {status === "error" && <div role="alert" className="rounded-lg border border-amber-300/30 bg-amber-300/5 p-4 text-sm"><AlertCircle className="mb-2 text-[#c3a477]" size={20}/>{error}<button onClick={() => error.startsWith("Voice controls did not") ? window.location.reload() : setAttempt(n => n + 1)} className="mt-3 block min-h-11 rounded-lg border border-white/20 px-4">{error.startsWith("Voice controls did not") ? "Reload page" : "Try again"}</button></div>}
-          <div ref={container} className={status === "error" ? "hidden" : "flex min-h-16 justify-center"}/>
+          <div id="kraft-voice-controls" ref={container} className={status === "error" ? "hidden" : "flex min-h-16 justify-center"}/>
           <button onClick={() => { endAllThinkrrSessions(); setSelectedKey(null); }} className="min-h-11 w-full rounded-lg border border-white/20 p-3">End voice session / back</button>
         </>}
         <div className="border-t border-white/10 pt-4"><p className="mb-3 text-xs text-[#bac3ce]">You can also reach Kraft directly.</p><div className="flex flex-col gap-2 sm:flex-row">

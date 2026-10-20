@@ -22,6 +22,11 @@
       "detail": "No call view mounted and all non-GET requests blocked."
     },
     {
+      "name": "voice vendor control is keyboard accessible and closing ends a mocked session",
+      "pass": true,
+      "detail": "Mock SDK only; no microphone, external call or lead."
+    },
+    {
       "name": "payment: PDF reflects current results and downloads without lead capture",
       "pass": true,
       "detail": {

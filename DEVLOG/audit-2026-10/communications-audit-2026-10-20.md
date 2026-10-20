@@ -59,3 +59,12 @@ Four owner data updates excluded from website release. VPS backups: /opt/kraft-f
 Provider reference: [Thinkrr phone management](https://docs.thinkrr.ai/guides/usage/phone-numbers/Management-and-Assignment). Runtime receipts establish live delivery; dashboard Active labels alone do not.
 
 Release follow-up: Vercel retained the retired public embed in NEXT_PUBLIC settings; corrected English and cleared unverified Hindi. Browser-origin config now200, environment rebuild required. BUG-082: chat initially copied province only once; now directly shares navigation/city store, with browser regression in both directions. All three live inquiry types read back from Twenty with TEST ONLY/no-call consent; see verification receipt.
+
+
+## Final browser voice and fresh WhatsApp proof
+
+Production override corrected and rebuilt in 5e3eebe / dpl_5dhf6rFadkLwjchBb4H8db2zeLET (READY, www alias). Browser controls rendered. Generated 42-second test audio substituted temporarily for getUserMedia, so no ambient microphone audio was captured. Web-call API200, call_81d2c3ab0012456f9c2dd5b2086; Twenty conversation 38edf8f4-8ec6-429c-a599-d3b6f9b5bbd5 saved 601-character synthetic transcript. Julia took the message for Varun and asked the caller's name, offered no transfer/booking. Owner notification SMa759dec79234faf4ec0485ac66c03ae4 delivered14:59:20 UTC. Test ended and reload removed the audio substitution. This verifies WebRTC/agent/completion/CRM/provider notification; it does not certify every visitor's microphone permissions/device.
+
+Fresh WhatsApp response SM93f7242263bb8ca57bae84b1461c2928 delivered14:56:08 UTC:50 words, feed date present, no raw double-star Markdown or console help. All three live website test inquiries were read back from Twenty with consentToCall:false; person reused across inquiries. Browser dictation/read-aloud, new real Facebook ads, mailbox receipt and external carrier SMS remain outside the proven receipts.
+
+BUG-084 found in live SDK: microphone was a clickable div without keyboard semantics, with bright pink/purple glow. Final wrapper adds role/button label/tab stop/Enter/Space and muted-gold/no-glow styling. Mock SDK regression verifies keyboard start and Escape stops/parks the session, with all external mutations blocked.

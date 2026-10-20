@@ -16,3 +16,14 @@ Live voice initially still returned403: Vercel NEXT_PUBLIC_THINKRR_ENGLISH_WIDGE
 Signed voicemail fallback HTTP200 contains Record and no Dial. Signed SMS audit processed; SMTP accepted test email to info@ (mailbox arrival unverified). Restricted temporary credential file confirmed absent.
 
 Final follow-up source: shared province store and business-funding sink receipt fields. Isolated build again passed 126/126 pages, lint clean, tests125/125; browser help regression now checks navigation-to-chat and chat-to-navigation province synchronization. No unrelated data changes included.
+
+
+## Browser voice verified after environment rebuild
+
+Deployment dpl_5dhf6rFadkLwjchBb4H8db2zeLET READY for 5e3eebed2b4e5fa5829dcb863ca94b99fa82b9c5, owns www alias, no alias error. Live controls rendered. Controlled browser test used generated 42-second audio through a temporary getUserMedia substitution, never physical microphone. Thinkrr web-call API200, call_81d2c3ab0012456f9c2dd5b2086. Message-only transcript saved in Twenty 38edf8f4-8ec6-429c-a599-d3b6f9b5bbd5 (601 chars) at14:59:19 UTC. Owner WhatsApp SMa759dec79234faf4ec0485ac66c03ae4 delivered14:59:20. Session ended, page reloaded to remove substitution. No real microphone permission granted. Screenshot voice-controls-live.png records that session.
+
+Fresh WhatsApp test after website release: signed inbound SMa7687555a75c4c9ba7a7c093ca54a2f6, actual reply SM93f7242263bb8ca57bae84b1461c2928 delivered14:56:08; 50 words, dated, no raw double-star formatting or operator-console text.
+
+Final minor polish verified locally: keyboard semantics for vendor clickable div and scoped muted-gold/no-glow presentation (BUG-084). New mocked browser regression verifies keyboard activation/close without any real call.
+
+Final polish: isolated126-page production build and clean lint/type validation. Browser suite13/13 pass, including vendor-stub keyboard activation and closing stopping a session; no actual paid calls in regression harness. Source/data baseline preserved. Final production polish deployment receipt follows.
