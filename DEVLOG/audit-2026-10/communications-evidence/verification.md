@@ -36,3 +36,10 @@ Commit db6624bf2fd0c9a941a3dc7285ed567c0509d32a, deployment dpl_4RrAQrRdiMEeg1mX
 VPS deployed thinkrr-hook.py, whatsapp_inbox.py, whatsapp_rates.py and website-leads.mjs hashes exactly match local deployment working tree. CRM commits4863cf1/8b4dede pushed. Owner mirror remains uncommitted but present/deployed. Four unrelated website data files remain modified and excluded.
 
 Icon-contrast specificity follow-up: final isolated production build again passed126/126 pages with type validation; no calculator/model behavior changed. All functional flow receipts above remain applicable.
+
+
+## Release complete
+
+Final functional implementation **f6ac58276322d94d8f3279905b8f5f0847f743e3**, Vercel **dpl_1x8Z3ngXjVk8NndYQqghoyTQVYVT READY**, www.kraftmortgages.ca assigned/no alias error. Live source rendered the corrected keyboard control and dark microphone (computed brightness(0)); gold background/no glow retained. Final proof voice-controls-premium-live.png; machine receipt production-release.json. No call running and no test audio substitution retained. Public compliance/privacy/profile/rates routes200, Manpreet/info@ correct and native form present. Receipt-only documentation follow-up contains identical application code; latest Git SHA can be inspected normally.
+
+All requested functional repairs and controlled verification are complete within the documented scope. Open credential/security/notification retry and untested carrier/inbox/physical-device items remain explicitly listed; this receipt does not certify those.

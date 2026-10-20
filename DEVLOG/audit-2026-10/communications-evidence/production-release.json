@@ -1,0 +1,33 @@
+{
+  "verifiedAtUtc": "2026-10-20T15:15:42.277721+00:00",
+  "implementationCommit": "f6ac58276322d94d8f3279905b8f5f0847f743e3",
+  "deploymentId": "dpl_1x8Z3ngXjVk8NndYQqghoyTQVYVT",
+  "state": "READY",
+  "productionAlias": "www.kraftmortgages.ca",
+  "aliasError": null,
+  "finalControl": {
+    "config": "ready",
+    "role": "button",
+    "keyboardTabStop": true,
+    "goldBackground": "rgb(195, 164, 119)",
+    "boxShadow": "none",
+    "microphoneFilter": "brightness(0)"
+  },
+  "checks": {
+    "websiteTests": 125,
+    "browserRegressions": 13,
+    "vpsTests": 6,
+    "typecheck": "pass",
+    "lint": "zero errors/warnings",
+    "productionPages": 126
+  },
+  "preservedOwnerDataFiles": 4,
+  "crmCommit": "8b4dede",
+  "limits": [
+    "Synthetic browser audio, not a hardware microphone test",
+    "SMTP acceptance, not mailbox arrival",
+    "Signed synthetic SMS intake, not external carrier certification",
+    "No real Facebook Lead Ad generated",
+    "Credentials/authentication/outbox follow-ups remain open"
+  ]
+}
