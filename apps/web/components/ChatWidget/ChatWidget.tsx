@@ -105,8 +105,7 @@ export function ChatWidget() {
   const [voiceEnabled, setVoiceEnabled] = useState(false);
   const [isPlayingVoice, setIsPlayingVoice] = useState<string | null>(null);
   const [showVoiceControls, setShowVoiceControls] = useState(false);
-  const { province, language } = useAppStore();
-  const [selectedProvince, setSelectedProvince] = useState(province || "BC");
+  const { province: selectedProvince, setProvince: setSelectedProvince, language } = useAppStore();
   const pathname = usePathname();
   const pageContext = getPageContext(pathname);
   const messagesEndRef = useRef<HTMLDivElement>(null);

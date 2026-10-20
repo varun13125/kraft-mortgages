@@ -52,7 +52,7 @@ Round-2 reports (2026-10-13/14) use `r2-ai`, `r2-be`, `r2-fe`, `r2-calc`, `r2-sp
 | BUG-028 | root cause found | `Hermes Agent/enrich_appraisal_legal_all_lenders.py` rewrites the TS interface from a template: template now includes `isDormant` (backup `.bak-2026-10-13` beside it). It also overwrites appraisal/legal policies and the scheduled sync never runs `build_approved_directories.py`, so directory attachments drop out of `canadianLendersData.ts` (the site reads them from `approvedDirectoriesData.ts`, so no visible impact). Owner decision: add that script to `run_scheduled_sync.bat`? |
 | BUG-029 | fixed — needs live test | Hindi agent hidden without its key; hard-coded rate removed; close now clicks Thinkrr's own toggle (internal class names — **test a real call**). |
 | BUG-030 | fixed | Voicemail province from area code; leads unscored. |
-| BUG-031 | open (owner) | Vapi (contact form) vs Thinkrr (Facebook) — pick one. |
+| BUG-031 | resolved (owner, 2026-10-20) | Thinkrr incoming message intake. Public-form/Facebook automated calls disabled; legacy campaigns must not be reactivated without owner instruction. |
 | BUG-032 | fixed | MLI microsite retired (workspace, build, `public/mli-select` except `guide.pdf`, `apps/public`, `mli-proxy`). |
 | BUG-033 | open | 10 MB lender data module (FEAT-048). |
 | BUG-034 | fixed | `isPrismaEnabled()` everywhere; no crash when `DATABASE_URL` is set without a generated client. |
@@ -101,6 +101,8 @@ Round-2 reports (2026-10-13/14) use `r2-ai`, `r2-be`, `r2-fe`, `r2-calc`, `r2-sp
 | BUG-078 | fixed (2026-10-20) | Active GHL forwarding/iframe/defaults removed; native consented form and Twenty receiver deployed. |
 | BUG-079 | fixed (2026-10-20) | Message-only Julia phone conversation verified; no transfer/booking, public automatic callbacks disabled and voicemail-only fallback. |
 | BUG-080 | open (owner, 2026-10-20) | Thinkrr import form displayed the existing Twilio Auth Token as plaintext in a browser diagnostic. Rotate it and update Thinkrr, VPS token file and every active signature validator together. Do not copy the value into this log. |
+| BUG-082 | fixed (2026-10-20) | Live audit: chat copied province once at mount and ignored later navigation/city selection; use the shared store directly and verify both directions in browser regression. |
+| BUG-083 | open | Actual VPS /thinkrr-hook accepts unauthenticated JSON and lacks event-ID dedupe; coordinate provider/receiver authentication and durable notification retries. Separate from old website BUG-009 route. |
 | BUG-081 | open | SMS receiver restored and signed ACK tested; external carrier/two-way SMS and linked Twenty SMS history still need verification/implementation. |
 | BUG-072 | fixed (2026-10-20 release follow-up) | Low: draft CMHC premium source URL returned 404; UI/guide now use the official fees/premiums PDF linked by the live CMHC MLI Select page. Target HTTP200 verified. |
 

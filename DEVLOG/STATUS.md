@@ -1,7 +1,7 @@
 # Project Status
 
 **Last updated:** 2026-10-20 — communications repairs verified locally/VPS; authorized website release being finalized
-**Branch:** `main`; implementation `d42ea97` pushed and deployed. Release-receipt follow-up records verification and corrects the CMHC source link. Four owner data-file changes remain excluded and untouched.
+**Branch:** `main`; communications implementation `869edd7` pushed/deployed; environment correction/final receipt follow-up in progress. Four owner data-file changes remain excluded and untouched.
 
 ## What this project is
 
@@ -45,12 +45,12 @@ BUG-073…079 are claimed by Codex. Owner confirmed Twenty on VPS is the CRM (no
 3. **Vercel → Settings → Environment Variables** (Production + Preview):
    - `ADMIN_BASIC_AUTH_USER`, `ADMIN_BASIC_AUTH_PASSWORD` — choose them; **`/admin` is locked (503) until set**.
    - `CRON_SECRET` — any long random string.
-   - `VAPI_API_KEY`, `VAPI_ASSISTANT_ID`, `VAPI_PHONE_NUMBER_ID` — from the Vapi dashboard (after rotating).
+   - `VAPI_*` legacy credentials must be rotated if retained; public-form outbound calling is disabled and does not need reactivation.
    - Confirm these already exist: `TWILIO_AUTH_TOKEN` (needed to verify Twilio callbacks), `FACEBOOK_APP_SECRET` (without it FB leads get no AI call), `THINKR_WEBHOOK_SECRET` (set the same value in Thinkrr), a Firebase Admin credential, `DISCORD_LEAD_WEBHOOK_URL`, `CREWAPI_SECRET` (not `CREWAI_SECRET`).
    - Optional: `CRM_WEBHOOK_SECRET` (then make the VPS receiver require header `X-Webhook-Secret`), `LENDERS_API_KEY` (if an external tool needs BDM contacts), `AI_AUTO_PUBLISH=true` (only if AI posts should skip review).
 4. **Vercel → Domains:** set `kraftmortgages.ca` → `www` redirect to **Permanent (308)** (currently 307).
 5. **Firestore rules:** `firebase deploy --only firestore:rules` (file at repo root).
-6. **Facebook Lead Ads:** add a consent question ("Yes, call me now with Kraft Mortgages' AI assistant") — FB leads are no longer auto-called without it.
+6. **Facebook Lead Ads:** review contact/marketing consent and run a controlled signed lead test. Automated callbacks are disabled under the message-only policy.
 7. **Legal review:** consent wording (`lib/compliance/consent.ts`) and the updated privacy policy.
 8. **Test a real Thinkrr voice call** on the live site and confirm "End" hangs up.
 9. **Decisions still open:** marketing claims (BUG-014), business facts (BUG-036), APR disclosure (BUG-037), A-vs-B tax-years default (BUG-043), Vapi vs Thinkrr (BUG-031), add `build_approved_directories.py` to the scheduled sync (BUG-028), fix CTBC + private-second rows upstream in the Hermes generator (BUG-027/055).
@@ -67,7 +67,7 @@ BUG-073…079 are claimed by Codex. Owner confirmed Twenty on VPS is the CRM (no
 ## Behaviour changes now live (rounds 1 + 2)
 
 - **Calculators give different (correct) numbers** and start from live rates (until the visitor edits a field). Many verdicts changed — see the calculator reports for before/after.
-- **AI phone calls only with consent:** contact/qualify/PDF forms show an unticked "call me now" box; unticked → no automated call (the lead is still saved and followed up). Calls also respect office hours AND the CRTC window in the recipient's local time, max 1 auto-dial per number per 24h. Facebook leads are called only with an affirmative consent answer.
+- **Message-only workflow (owner decision 2026-10-20):** public forms/Facebook save inquiries without automated calls. Julia takes incoming messages for Varun; no transfer/booking. Older consent/calling-hours code remains for historical campaigns and is not authorization to reactivate them.
 - `/admin` requires HTTP Basic Auth. Cron/pipeline routes require `CRON_SECRET`/`CREWAPI_SECRET`. AI blog posts are saved as drafts; publish from the dashboard.
 - Lead APIs are validated + rate-limited and can return 429/500/502 instead of a fake success; consent evidence is stored with every lead.
 - Chat: "AI Mortgage Assistant" disclosure, Clear-chat button, 30-day history expiry, timeouts. Voice: AI/recording notices.

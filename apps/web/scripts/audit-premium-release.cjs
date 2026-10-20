@@ -71,12 +71,16 @@ fs.mkdirSync(out, { recursive: true });
   });
   await run('one help launcher, keyboard close, chat focus and voice consent without a call', async () => {
     await go('/calculators/payment');
+    await page.getByRole('combobox',{name:'Select your province'}).selectOption('ON');
     assert.equal(await page.getByRole('button',{name:'Get guidance',exact:true}).count(),1);
     await page.getByRole('button',{name:'Get guidance',exact:true}).click();
     let scan = await new AxeBuilder({page}).include('.advisor-help').withTags(['wcag2a','wcag2aa','wcag21aa','wcag22aa']).analyze();
     assert.deepEqual(scan.violations.map(v=>({id:v.id,nodes:v.nodes.map(n=>n.target)})),[]);
     await page.getByRole('button',{name:'Ask the AI assistant'}).click();
     await page.getByRole('dialog',{name:'Kraft Mortgages AI chat assistant'}).waitFor(); await page.waitForTimeout(300);
+    assert.equal(await page.getByRole('button',{name:'Province ON',exact:true}).getAttribute('aria-pressed'),'true');
+    await page.getByRole('button',{name:'Province AB',exact:true}).click();
+    assert.equal(await page.getByRole('combobox',{name:'Select your province'}).inputValue(),'AB');
     assert.equal(await page.getByRole('button',{name:'Get guidance',exact:true}).count(),0);
     scan = await new AxeBuilder({page}).include('[role="dialog"]').withTags(['wcag2a','wcag2aa','wcag21aa','wcag22aa']).analyze();
     assert.deepEqual(scan.violations.map(v=>({id:v.id,nodes:v.nodes.map(n=>n.target)})),[]);

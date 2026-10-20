@@ -1,0 +1,39 @@
+[
+  {
+    "path": "/api/contact",
+    "status": 200,
+    "seconds": 3.14,
+    "receipt": {
+      "success": true,
+      "crmRecorded": true,
+      "backupSaved": false,
+      "teamNotified": true,
+      "isAfterHours": true,
+      "scheduledTime": "Today at 9:15 AM PT",
+      "callDispatched": false,
+      "callConsent": false,
+      "message": "Your message is saved for Varun to review. No automated call or appointment has been started."
+    }
+  },
+  {
+    "path": "/api/lead",
+    "status": 200,
+    "seconds": 1.63,
+    "receipt": {
+      "id": "SljsO6y7zlqxj4ZiNMWQ",
+      "score": 60,
+      "status": "NEW",
+      "success": true,
+      "crmRecorded": true
+    }
+  },
+  {
+    "path": "/api/business-funding",
+    "status": 200,
+    "seconds": 0.88,
+    "receipt": {
+      "success": true,
+      "message": "Thank you! Your business funding application has been submitted successfully."
+    }
+  }
+]

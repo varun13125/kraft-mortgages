@@ -169,6 +169,9 @@ export async function POST(req: NextRequest) {
     // outage returned success:false and the page told the user to resubmit (duplicates).
     return NextResponse.json({
       success: crmRecorded || dbSaved || discordSent,
+      crmRecorded,
+      backupSaved: dbSaved,
+      teamNotified: discordSent,
       message: crmRecorded
         ? "Thank you! Your business funding application has been submitted successfully."
         : "Application received. Our team will contact you shortly.",
