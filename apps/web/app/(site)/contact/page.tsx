@@ -141,8 +141,7 @@ export default function ContactPage() {
                           </p>
                         ) : callConsent && outcome.isAfterHours ? (
                           <p className="text-gray-300 max-w-sm">
-                            We&apos;ll be in touch shortly. It&apos;s outside our calling hours, so we&apos;ll call you
-                            {outcome.scheduledTime ? <> {outcome.scheduledTime}</> : " during business hours"}.
+                            Your request is saved for team follow-up during business hours. A callback time has not been confirmed.
                           </p>
                         ) : (
                           <p className="text-gray-300">We&apos;ll be in touch shortly.</p>
@@ -295,8 +294,8 @@ export default function ContactPage() {
                     <div>
                       <h3 className="text-lg font-medium text-gray-100 mb-2">Email</h3>
                       <p className="text-gray-400 mb-2">Send us your questions anytime</p>
-                      <a href="mailto:varun@kraftmortgages.ca" className="text-gold-400 hover:text-gold-300 transition-colors font-semibold">
-                        varun@kraftmortgages.ca
+                      <a href="mailto:info@kraftmortgages.ca" className="text-gold-400 hover:text-gold-300 transition-colors font-semibold">
+                        info@kraftmortgages.ca
                       </a>
                     </div>
                   </div>

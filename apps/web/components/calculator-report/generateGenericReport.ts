@@ -214,7 +214,7 @@ function addContactPage(doc: jsPDF, pageNum: number, totalPages: number) {
     "Varun Chaudhry — Senior Mortgage Broker",
     "#301 - 1688 152nd Street, Surrey, BC V4A 4N2",
     "Phone: 604-593-1550  |  Mobile: 604-727-1579",
-    "Email: varun@kraftmortgages.ca",
+    "Email: info@kraftmortgages.ca",
     "Website: kraftmortgages.ca",
   ].forEach((line, i) => {
     doc.text(line, margin + 10, y + 36 + i * 6);

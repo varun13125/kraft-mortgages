@@ -91,7 +91,7 @@ export default function NewBlogPostPage() {
     content: '',
     excerpt: '',
     author: 'Varun Chaudhry',
-    authorEmail: 'varun@kraftmortgages.ca',
+    authorEmail: 'info@kraftmortgages.ca',
     status: 'draft',
     featured: false,
     categories: [],

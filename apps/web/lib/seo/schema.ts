@@ -240,7 +240,7 @@ export function buildLocalBusinessJsonLd(): any {
     description: 'Expert mortgage solutions across BC, AB & ON. Specializing in MLI Select, Construction Financing, and Self-Employed mortgages.',
     url: 'https://www.kraftmortgages.ca',
     telephone: '+1-604-593-1550',
-    email: 'varun@kraftmortgages.ca',
+    email: 'info@kraftmortgages.ca',
     address: {
       '@type': 'PostalAddress',
       streetAddress: '301-1688 152nd Street',

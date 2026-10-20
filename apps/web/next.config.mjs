@@ -8,18 +8,18 @@ const withMDX = createMDX({ extension: /\.mdx?$/ });
 // are added via middleware.
 const cspReportOnly = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://cdn.segment.com https://vercel.live https://d2cqc7yqzf8c8f.cloudfront.net https://*.cloudfront.net https://link.msgsndr.com https://connect.facebook.net",
+  "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://cdn.segment.com https://vercel.live https://d2cqc7yqzf8c8f.cloudfront.net https://*.cloudfront.net https://connect.facebook.net",
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "font-src 'self' data: https://fonts.gstatic.com",
   "img-src 'self' data: blob: https:",
   "media-src 'self' data: blob: https:",
-  "connect-src 'self' https://*.googleapis.com https://*.firebaseio.com wss://*.firebaseio.com https://*.google-analytics.com https://api.segment.io https://cdn.segment.com https://vercel.live wss://*.pusher.com https://*.cloudfront.net https://*.livekit.cloud wss://*.livekit.cloud wss:",
-  "frame-src 'self' https://api.leadconnectorhq.com https://link.msgsndr.com https://vercel.live https://www.google.com",
+  "connect-src 'self' https://*.googleapis.com https://*.firebaseio.com wss://*.firebaseio.com https://*.google-analytics.com https://api.segment.io https://cdn.segment.com https://vercel.live wss://*.pusher.com https://*.cloudfront.net https://live-api.thinkrr.ai https://*.livekit.cloud wss://*.livekit.cloud wss:",
+  "frame-src 'self' https://vercel.live https://www.google.com",
   "worker-src 'self' blob:",
   "frame-ancestors 'self'",
   "base-uri 'self'",
   "object-src 'none'",
-  "form-action 'self' https://api.leadconnectorhq.com",
+  "form-action 'self'",
   "upgrade-insecure-requests",
   'report-uri /api/csp-report',
 ].join('; ');

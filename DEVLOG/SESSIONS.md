@@ -18,6 +18,15 @@ Older history (2025-08 → 2026-10-04) lives in `/AI_CONTEXT_LOG.md`.
 
 ---
 
+## 2026-10-20: Communications repair, message-only Julia and verified owner notification
+
+- **Who:** Codex. Owner explicitly authorized controlled tests, commits, push and live release.
+- **Scope:** BUG-073..079, BUG-026 scraping removal, partial BUG-002 fallback removal and FEAT-002 shared receipt delivery. New BUG-080 Twilio token rotation required after plaintext diagnostic exposure; SMS/history/outbox limitations recorded in the communications audit.
+- **Done:** Customer/operator WhatsApp routing; durable fast signed intake; website AI fallback for VPS 401; concise safely formatted dated/regional chat; shared rates loader; new Thinkrr inbound Julia agent 21437 and existing Twilio-number assignment; no transfer/booking, signed voicemail-only fallback, automated public-form callbacks disabled. Native /varun form and Twenty business funding replace retired GHL. Manpreet Principal Broker/info@ public contact corrected.
+- **Verified:** Controlled phone call completed after asynchronous provisioning, correct message-only conversation in Thinkrr, 632-character transcript in Twenty and delivered owner WhatsApp notification. Signed WhatsApp acknowledgement/dedupe and delivered response. Signed SMS intake, SMTP accepted info@ test; mailbox arrival not claimed. 125 website tests, 3 receiver tests and 3 queue tests pass; release validation continuing in isolated staged tree. See communications-evidence/verification.md for final release state.
+- **Preserved:** Four owner website data edits and CRM owner's pre-existing 34-line notification mirror remain separate. No client called. No credentials placed in new source/report.
+- **Handoff:** [Communications audit](audit-2026-10/communications-audit-2026-10-20.md), mandatory DEVELOPER_GUIDE. Twilio/OpenRouter rotation, Thinkrr webhook authentication/event dedupe, full durable outbox, caller linking/summary/SMS history, mailbox and real Facebook delivery remain explicit follow-ups.
+
 ## 2026-10-20: Production release verified and handoff completed
 
 - **Who:** Codex.

@@ -144,7 +144,7 @@ export default function AboutUs() {
                       </div>
                       <div>
                         <h3 className="text-2xl font-bold text-gray-100">Varun Chaudhry</h3>
-                        <p className="text-gold-400">Founder & Principal Broker</p>
+                        <p className="text-gold-400">Founder & President</p>
                       </div>
                     </div>
 
@@ -439,7 +439,7 @@ export default function AboutUs() {
                   <Mail className="w-5 h-5 text-gold-400 mt-0.5" />
                   <div>
                     <p className="font-semibold text-gray-100">Email</p>
-                    <p className="text-sm text-gray-400">info@kraftmortgages.ca<br />varun@kraftmortgages.ca<br />gursharan@kraftmortgages.ca</p>
+                    <p className="text-sm text-gray-400">info@kraftmortgages.ca</p>
                   </div>
                 </div>
               </div>

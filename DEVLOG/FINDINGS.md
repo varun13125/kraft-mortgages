@@ -47,7 +47,7 @@ Round-2 reports (2026-10-13/14) use `r2-ai`, `r2-be`, `r2-fe`, `r2-calc`, `r2-sp
 | BUG-023 | partially fixed | Dead dashboard buttons removed; republish updates instead of duplicating; posts list + publish. Run list/polling still to do (FEAT-016). |
 | BUG-024 | fixed | Facebook leads deduped on `leadgen_id` (Firestore `fbLeads`). |
 | BUG-025 | fixed | PdfLeadModal shows failure + retry; /qualify "calling" state from the server's `callDispatched`. |
-| BUG-026 | partially fixed | Clear-chat button + 30-day history TTL. Chat still scrapes contact details without a consent record (FEAT-001 for chat). |
+| BUG-026 | partially fixed | Clear-chat button + 30-day history TTL. 2026-10-20: automatic contact scraping removed; explicit contact form replaces it. Full optional in-chat lead form remains FEAT-001. |
 | BUG-027 | fixed in code | CTBC corrected via `CHANNEL_CORRECTIONS` in `lenderIntelligence.ts`. Owner: fix upstream in the lender generator. |
 | BUG-028 | root cause found | `Hermes Agent/enrich_appraisal_legal_all_lenders.py` rewrites the TS interface from a template: template now includes `isDormant` (backup `.bak-2026-10-13` beside it). It also overwrites appraisal/legal policies and the scheduled sync never runs `build_approved_directories.py`, so directory attachments drop out of `canadianLendersData.ts` (the site reads them from `approvedDirectoriesData.ts`, so no visible impact). Owner decision: add that script to `run_scheduled_sync.bat`? |
 | BUG-029 | fixed — needs live test | Hindi agent hidden without its key; hard-coded rate removed; close now clicks Thinkrr's own toggle (internal class names — **test a real call**). |
@@ -93,6 +93,15 @@ Round-2 reports (2026-10-13/14) use `r2-ai`, `r2-be`, `r2-fe`, `r2-calc`, `r2-sp
 | BUG-069 | fixed (2026-10-20) | Construction remaining budget ≥0; surplus separate from undisbursed commitment; regression test. |
 | BUG-070 | fixed (2026-10-20) | Accelerated-payment simulation rejects non-finite inputs and unsupported >100-year horizons; regression guards NaN/runaway work for non-UI callers. |
 | BUG-071 | fixed (2026-10-20) | Medium: B-vs-equity no longer calls equity lending the best option merely because B-lender criteria fail; verdict invites review without implying private eligibility. |
+| BUG-073 | fixed (2026-10-20) | Customer/operator routing repaired; durable signed intake/dedupe; actual Twilio reply delivered. See communications audit. |
+| BUG-074 | fixed (2026-10-20) | Safe Markdown, concise dated regional benchmark answers, shared feed, correct prime attribution; tests/browser verified. |
+| BUG-075 | in-progress (Codex, 2026-10-20) | Voice embed can remain empty while UI claims a connecting session. Reproduce vendor lifecycle/config failures; expose actual readiness/error states. |
+| BUG-076 | partially fixed (2026-10-20) | partially fixed: shared genuine Twenty receipts, repeat inquiry/note/phone support, calculator/business-funding routing. Full durable fan-out, voice caller linking/summary and mailbox/FB verification remain. |
+| BUG-077 | fixed (2026-10-20) | Manpreet Principal Broker and info@ public contact/Thinkrr notification email corrected. |
+| BUG-078 | fixed (2026-10-20) | Active GHL forwarding/iframe/defaults removed; native consented form and Twenty receiver deployed. |
+| BUG-079 | fixed (2026-10-20) | Message-only Julia phone conversation verified; no transfer/booking, public automatic callbacks disabled and voicemail-only fallback. |
+| BUG-080 | open (owner, 2026-10-20) | Thinkrr import form displayed the existing Twilio Auth Token as plaintext in a browser diagnostic. Rotate it and update Thinkrr, VPS token file and every active signature validator together. Do not copy the value into this log. |
+| BUG-081 | open | SMS receiver restored and signed ACK tested; external carrier/two-way SMS and linked Twenty SMS history still need verification/implementation. |
 | BUG-072 | fixed (2026-10-20 release follow-up) | Low: draft CMHC premium source URL returned 404; UI/guide now use the official fees/premiums PDF linked by the live CMHC MLI Select page. Target HTTP200 verified. |
 
 ---

@@ -106,7 +106,7 @@ Return the enhanced article in Markdown format.
 
 Every mortgage situation is unique. Contact Varun directly to discuss your specific needs and explore the best mortgage solutions for your circumstances.
 
-**📞 [604-593-1550](tel:604-593-1550) | 📧 [varun@kraftmortgages.ca](mailto:varun@kraftmortgages.ca)**
+**📞 [604-593-1550](tel:604-593-1550) | 📧 [info@kraftmortgages.ca](mailto:info@kraftmortgages.ca)**
 `;
       enhancedContent += authorBio;
     }

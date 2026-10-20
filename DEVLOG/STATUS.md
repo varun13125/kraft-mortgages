@@ -1,6 +1,6 @@
 # Project Status
 
-**Last updated:** 2026-10-20 — calculator audit + approved premium implementation released and production verified
+**Last updated:** 2026-10-20 — communications repairs verified locally/VPS; authorized website release being finalized
 **Branch:** `main`; implementation `d42ea97` pushed and deployed. Release-receipt follow-up records verification and corrects the CMHC source link. Four owner data-file changes remain excluded and untouched.
 
 ## What this project is
@@ -8,12 +8,16 @@
 Kraft Mortgages (kraftmortgages.ca) is the website of a licensed mortgage brokerage serving BC, Alberta and Ontario. It includes:
 - 53 Canadian mortgage calculators (residential, commercial, construction, equity, private, CMHC MLI Select), with live product benchmarks where appropriate and explicit commercial quote assumptions
 - an AI chat assistant with lender intelligence over a ~147-lender database
-- voice AI (Thinkrr WebRTC widget; consent-gated Vapi/Thinkrr outbound calls on new leads; Twilio voicemail)
-- lead capture with CASL consent evidence → Twenty CRM (via n8n), GoHighLevel and Discord
+- voice AI (Thinkrr Julia message intake; automated public-form callbacks disabled; signed Twilio voicemail fallback)
+- lead capture with CASL consent evidence → Twenty CRM via the VPS Node receiver and Discord
 - a Firestore-backed blog with an AI content pipeline (drafts + admin publish)
 - city landing pages and SEO infrastructure
 
 Stack: Next.js 14.2.35 App Router, TypeScript strict, Tailwind, Firebase/Firestore, pnpm monorepo (`apps/web` is the site), Vercel (pnpm install, root `vercel.json`).
+
+## Communications repair in progress (2026-10-20)
+
+BUG-073…079 are claimed by Codex. Owner confirmed Twenty on VPS is the CRM (no GoHighLevel), and Julia must **only take messages for Varun, never transfer live calls to the office**. See DEVELOPER_GUIDE for the verified service map. Website implementation passed isolated staged-tree typecheck, lint, 125 tests, 126-page build and 12 browser regressions; release is being finalized. VPS contact receiver now accepts repeat emails, writes modern linked notes/consent, and has a verified successful website test. WhatsApp signed acknowledgements are fast/deduplicated; a real test reply was delivered after adding the website AI fallback for the VPS's rejected OpenRouter key. Thinkrr new inbound agent 21437 has a verified controlled phone transcript in Twenty and delivered owner WhatsApp notification. Published-domain web controls and release validation are being completed. See the communications audit.
 
 ## Current calculator release (2026-10-20)
 
@@ -37,13 +41,13 @@ Stack: Next.js 14.2.35 App Router, TypeScript strict, Tailwind, Firebase/Firesto
 ## Owner checklist (nothing below can be done by an agent)
 
 1. **Revoke the Vercel token pasted into chat on 2026-10-14** (it was not used).
-2. **Rotate leaked keys** (BUG-001, BUG-002): Google Cloud, ElevenLabs, MiniMax, n8n, Postiz, Vapi. Then purge history (`git filter-repo`, see platform report §5.4) and enable GitHub secret scanning.
+2. **Rotate Twilio token exposed by Thinkrr import UI (BUG-080), updating Thinkrr/VPS/all validators together. Rotate rejected VPS OpenRouter key.** Then **rotate leaked keys** (BUG-001, BUG-002): Google Cloud, ElevenLabs, MiniMax, n8n, Postiz, Vapi. Then purge history (`git filter-repo`, see platform report §5.4) and enable GitHub secret scanning.
 3. **Vercel → Settings → Environment Variables** (Production + Preview):
    - `ADMIN_BASIC_AUTH_USER`, `ADMIN_BASIC_AUTH_PASSWORD` — choose them; **`/admin` is locked (503) until set**.
    - `CRON_SECRET` — any long random string.
    - `VAPI_API_KEY`, `VAPI_ASSISTANT_ID`, `VAPI_PHONE_NUMBER_ID` — from the Vapi dashboard (after rotating).
    - Confirm these already exist: `TWILIO_AUTH_TOKEN` (needed to verify Twilio callbacks), `FACEBOOK_APP_SECRET` (without it FB leads get no AI call), `THINKR_WEBHOOK_SECRET` (set the same value in Thinkrr), a Firebase Admin credential, `DISCORD_LEAD_WEBHOOK_URL`, `CREWAPI_SECRET` (not `CREWAI_SECRET`).
-   - Optional: `CRM_WEBHOOK_SECRET` (then make n8n/GHL require header `X-Webhook-Secret`), `LENDERS_API_KEY` (if an external tool needs BDM contacts), `AI_AUTO_PUBLISH=true` (only if AI posts should skip review).
+   - Optional: `CRM_WEBHOOK_SECRET` (then make the VPS receiver require header `X-Webhook-Secret`), `LENDERS_API_KEY` (if an external tool needs BDM contacts), `AI_AUTO_PUBLISH=true` (only if AI posts should skip review).
 4. **Vercel → Domains:** set `kraftmortgages.ca` → `www` redirect to **Permanent (308)** (currently 307).
 5. **Firestore rules:** `firebase deploy --only firestore:rules` (file at repo root).
 6. **Facebook Lead Ads:** add a consent question ("Yes, call me now with Kraft Mortgages' AI assistant") — FB leads are no longer auto-called without it.

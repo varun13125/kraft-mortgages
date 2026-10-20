@@ -50,10 +50,10 @@ export function AdvisorHelpDock() {
   return <div ref={dock} className="advisor-help">
     {panel === "menu" && <div id="advisor-help-options" className="advisor-help-menu" aria-label="Ways to get help">
       <p>How can we help?</p>
-      <a href={`tel:${BUSINESS.telephone}`}><Phone size={18} /><span>Call our brokerage<small>{BUSINESS.telephoneDisplay}</small></span></a>
+      <a href={`tel:${BUSINESS.secondaryPhone}`}><Phone size={18} /><span>Leave a phone message<small>{BUSINESS.secondaryPhoneDisplay}</small></span></a>
       <a href={WHATSAPP_LINK} target="_blank" rel="noopener noreferrer"><MessageCircle size={18} /><span>WhatsApp<small>Message the Kraft team</small></span></a>
       <button onClick={() => setPanel("chat")}><MessageCircle size={18} /><span>Ask the AI assistant<small>General guidance, available anytime</small></span></button>
-      <button onClick={() => setPanel("voice")}><Mic size={18} /><span>Talk to voice AI<small>Review call details before starting</small></span></button>
+      <button onClick={() => setPanel("voice")}><Mic size={18} /><span>Leave a message with Julia<small>AI message intake; no live transfer</small></span></button>
     </div>}
     <button ref={trigger} className="advisor-help-trigger" aria-expanded={panel === "menu"} aria-controls="advisor-help-options" onClick={() => setPanel(panel ? null : "menu")}>
       {panel ? <X size={18} /> : <MessageCircle size={18} />}<span>{panel ? "Close help" : "Get guidance"}</span>

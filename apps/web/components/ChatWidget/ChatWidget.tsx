@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import { useAdvisorHelp } from "@/components/AdvisorHelp";
+import ChatMessageContent from "./ChatMessageContent";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { MessageCircle, X, Send, Calculator, TrendingUp, DollarSign, Volume2, Languages, Globe, Trash2 } from "lucide-react";
@@ -50,7 +51,7 @@ const STORAGE_VERSION = 2;
 const MAX_INPUT_CHARS = 2000; // keep in sync with /api/chat
 // No hard-coded rates here: this text is persisted in localStorage and would go stale.
 const WELCOME_CONTENT =
-  "Hi! I'm the Kraft Mortgages AI assistant. I can walk you through today's benchmark rates, 30-year amortization rules, and qualification basics across BC, Alberta, and Ontario. Which city or province are you exploring?";
+  "Hi, I’m Kraft’s AI assistant. I can help with rate benchmarks and mortgage questions. Are you buying, renewing or refinancing?";
 
 // Blob URLs only live as long as the page, so never persist them.
 function toStorable(messages: Message[]) {
@@ -583,7 +584,7 @@ export function ChatWidget() {
                       }`}
                   >
                     <div className="flex items-start justify-between gap-2">
-                      <div className="text-sm whitespace-pre-wrap flex-1">{message.content}</div>
+                      <div className="min-w-0 flex-1">{message.sender === "assistant" ? <ChatMessageContent content={message.content} /> : <p className="text-sm whitespace-pre-wrap break-words">{message.content}</p>}</div>
 
                       {/* Voice Controls for Assistant Messages */}
                       {message.sender === "assistant" && message.metadata?.voice?.audioUrl && (
@@ -685,8 +686,7 @@ export function ChatWidget() {
             {/* AI / privacy disclosure (provincial disclaimer text comes from lib/compliance/rules) */}
             <div className="px-4 pt-2 text-[10px] leading-snug text-gray-400 border-t border-gray-700">
               AI assistant: general information only, not financial advice or a mortgage approval. Rates are indicative, O.A.C.
-              {complianceNotes[0] ? ` ${complianceNotes[0]}` : ""} Please don&apos;t share your SIN or banking details here. If you share contact
-              details, our team may follow up about your inquiry.{" "}
+              {complianceNotes[0] ? ` ${complianceNotes[0]}` : ""} Please don&apos;t share your SIN or banking details here. For team follow-up, <a href="/contact" className="underline hover:text-gray-200">send a contact request</a>.{" "}
               <a href="/privacy" target="_blank" rel="noopener noreferrer" className="underline hover:text-gray-200">
                 Privacy
               </a>

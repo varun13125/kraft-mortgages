@@ -3,7 +3,7 @@ import { z } from "zod";
 import { prisma, isPrismaEnabled } from "@/lib/db";
 import { firestore } from "@/lib/firebaseAdmin";
 import { limitByIp } from "@/lib/compliance/requestGuards";
-import { crmWebhookHeaders, ghlWebhookUrl } from "@/lib/crm/webhooks";
+import { submitCrmLead } from "@/lib/crm/submitLead";
 import { buildConsentRecord, consentInputShape, consentRecordToStrings } from "@/lib/compliance/consentRecord";
 
 export const dynamic = "force-dynamic";
@@ -53,31 +53,6 @@ interface BusinessFundingData {
   consentVersion?: string;
 }
 
-// Forward to GoHighLevel (LeadConnector) Webhook.
-// URL: GHL_WEBHOOK_URL (default = the previously hard-coded MPower webhook);
-// optional X-Webhook-Secret from CRM_WEBHOOK_SECRET (BUG-022).
-async function sendToGoHighLevel(data: BusinessFundingData & Record<string, unknown>) {
-  try {
-    const response = await fetch(ghlWebhookUrl(), {
-      method: "POST",
-      headers: crmWebhookHeaders(),
-      body: JSON.stringify(data),
-      signal: AbortSignal.timeout(15_000),
-    });
-
-    if (!response.ok) {
-      const text = await response.text().catch(() => "");
-      console.error("GHL Webhook error:", response.status, text.slice(0, 200));
-      return false;
-    }
-
-    return true;
-  } catch (error) {
-    console.error("GHL Webhook fetch failed:", error instanceof Error ? error.message : error);
-    return false;
-  }
-}
-
 // Discord notification for real-time alerts
 async function sendDiscordNotification(data: BusinessFundingData): Promise<boolean> {
   const webhookUrl = process.env.DISCORD_LEAD_WEBHOOK_URL;
@@ -90,9 +65,10 @@ async function sendDiscordNotification(data: BusinessFundingData): Promise<boole
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
+        allowed_mentions: { parse: [] },
         embeds: [
           {
-            title: "💼 New Lead — Business Funding (Forwarded to MPower)",
+            title: "New Lead — Business Funding",
             color: 0xc8a962,
             fields: [
               { name: "Name", value: fullName, inline: true },
@@ -107,7 +83,7 @@ async function sendDiscordNotification(data: BusinessFundingData): Promise<boole
               { name: "Requested Amount", value: data.funding_amount ? `$${data.funding_amount}` : "—", inline: true },
               { name: "Purpose", value: data.purpose_of_funding === "Other" ? `Other: ${data.other_purpose || ""}` : data.purpose_of_funding || "—", inline: true },
               { name: "Timeline", value: data.when_are_funds_needed || "—", inline: true },
-              { name: "Integration Status", value: "Forwarded to MPower GHL", inline: true },
+              { name: "Integration Status", value: "Application received; CRM receipt is tracked separately", inline: true },
               { name: "Notes", value: data.notes?.slice(0, 500) || "—" },
             ],
             timestamp: new Date().toISOString(),
@@ -146,7 +122,7 @@ export async function POST(req: NextRequest) {
       province: "BC" as const, // Default to BC for Prisma enum compatibility
       intent: "BUSINESS_LOAN",
       details: { ...body, consent } as any,
-      score: 100, // Pre-qualified complete application
+      score: 100, // Completeness score only; this is not a qualification decision
       status: "NEW" as const,
       createdAt: new Date(),
     };
@@ -173,17 +149,27 @@ export async function POST(req: NextRequest) {
       console.error("Redundant DB logging failed, continuing with integrations:", dbError instanceof Error ? dbError.message : dbError);
     }
 
-    // Submit to GoHighLevel (LeadConnector Webhook)
-    const ghlSuccess = await sendToGoHighLevel({ ...body, ...consentRecordToStrings(consent) });
+    // Twenty on the VPS is the brokerage's CRM (owner confirmed 2026-10-20).
+    const crmRecorded = await submitCrmLead({
+      firstName: body.first_name, lastName: body.last_name, email: body.email,
+      phone: body.phone, mortgageType: "Business Funding", amount: body.funding_amount,
+      source: "website-business-funding", dispatchMode: "none",
+      message: Object.entries(body).filter(([key]) => !["first_name", "last_name", "email", "phone"].includes(key)).map(([key, value]) => `${key}: ${value ?? ""}`).join("\n"),
+      ...consentRecordToStrings(consent),
+    });
 
     // Send Discord Real-Time Alert
     const discordSent = await sendDiscordNotification(body);
 
+    if (!crmRecorded && !dbSaved && !discordSent) {
+      return NextResponse.json({ success: false, error: "We could not save your application. Please retry or call us." }, { status: 502 });
+    }
+
     // The application counts as received if ANY sink recorded it; previously a GHL
     // outage returned success:false and the page told the user to resubmit (duplicates).
     return NextResponse.json({
-      success: ghlSuccess || dbSaved || discordSent,
-      message: ghlSuccess
+      success: crmRecorded || dbSaved || discordSent,
+      message: crmRecorded
         ? "Thank you! Your business funding application has been submitted successfully."
         : "Application received. Our team will contact you shortly.",
     });

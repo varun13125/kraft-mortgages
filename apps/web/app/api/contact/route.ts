@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { getCallingHoursStatus, isRecipientCallable } from "@/lib/businessHours";
-import { triggerVapiOutboundCall } from "@/lib/voice/vapi";
-import { limitByIp, rateLimit, maskEmail, maskPhone, phoneKey } from "@/lib/compliance/requestGuards";
+import { limitByIp, maskEmail, maskPhone } from "@/lib/compliance/requestGuards";
 import { firestore } from "@/lib/firebaseAdmin";
-import { crmWebhookHeaders, twentyWebhookUrl } from "@/lib/crm/webhooks";
+import { submitCrmLead } from "@/lib/crm/submitLead";
 import { buildConsentRecord, consentInputShape, consentRecordToStrings, type ConsentRecord } from "@/lib/compliance/consentRecord";
 
 export const dynamic = "force-dynamic";
@@ -53,32 +52,6 @@ interface ContactFormData {
   consentVersion?: string;
 }
 
-// Forward to Twenty CRM webhook — single source of truth for leads.
-// URL: TWENTY_WEBHOOK_URL (default = the n8n contact-form webhook); optional
-// X-Webhook-Secret from CRM_WEBHOOK_SECRET (BUG-022).
-async function sendToTwenty(data: Record<string, string>) {
-  try {
-    const response = await fetch(twentyWebhookUrl(), {
-      method: "POST",
-      headers: crmWebhookHeaders(),
-      body: JSON.stringify(data),
-      signal: AbortSignal.timeout(15_000),
-    });
-
-    if (!response.ok) {
-      const text = await response.text().catch(() => "");
-      console.error("Twenty CRM error:", response.status, text.slice(0, 200));
-      return false;
-    }
-
-    const result = await response.json();
-    return result.success === true;
-  } catch (error) {
-    console.error("Twenty CRM fetch failed:", error instanceof Error ? error.message : error);
-    return false;
-  }
-}
-
 // Discord notification for real-time alerts
 // Backup store so a lead is never lost when the CRM webhook is down.
 async function persistLeadBackup(data: Record<string, string>, consent: ConsentRecord): Promise<boolean> {
@@ -101,7 +74,7 @@ async function persistLeadBackup(data: Record<string, string>, consent: ConsentR
   }
 }
 
-async function sendDiscordNotification(data: ContactFormData, isAfterHours: boolean, scheduledTime: string, callConsent: boolean): Promise<boolean> {
+async function sendDiscordNotification(data: ContactFormData, isAfterHours: boolean, scheduledTime: string): Promise<boolean> {
   const webhookUrl = process.env.DISCORD_LEAD_WEBHOOK_URL;
   if (!webhookUrl) return false;
 
@@ -109,11 +82,7 @@ async function sendDiscordNotification(data: ContactFormData, isAfterHours: bool
     ? `${data.firstName} ${data.lastName || ""}`.trim()
     : data.name || "Unknown";
 
-  const dispatchStatus = !callConsent
-    ? "🙋 No AI-call consent — manual follow-up"
-    : isAfterHours
-      ? `🌙 After-Hours Queue (${scheduledTime})`
-      : "⚡ Live Dial (Julia +1 604-359-5993)";
+  const dispatchStatus = "Message received — Varun controls follow-up; no automated callback or transfer";
 
   try {
     const res = await fetch(webhookUrl, {
@@ -122,7 +91,7 @@ async function sendDiscordNotification(data: ContactFormData, isAfterHours: bool
       body: JSON.stringify({
         embeds: [
           {
-            title: isAfterHours ? "🌙 New Lead (After-Hours Queued)" : "🆕 New Lead — Website Contact Form",
+            title: isAfterHours ? "New Lead — Follow-up Requested" : "🆕 New Lead — Website Contact Form",
             color: isAfterHours ? 0x38bdf8 : 0xc8a962,
             fields: [
               { name: "Name", value: fullName, inline: true },
@@ -205,20 +174,21 @@ export async function POST(req: NextRequest) {
       scheduledCallback: scheduledTime,
       // "none" = the person did NOT consent to an automated call: n8n must not
       // queue or place an AI call for this lead (BUG-005).
-      dispatchMode: !callConsent ? "none" : isAfterHours ? "queue" : "live_dial",
+      dispatchMode: "none", // Website owns immediate calling; CRM receiver records only.
+      callRequested: callConsent ? "true" : "false",
       _hp: "",
       // CASL evidence: consent flags, wording version, server time, client IP.
       ...consentRecordToStrings(consent),
     };
 
     // Send to Twenty CRM (lead creation — primary)
-    const crmSuccess = await sendToTwenty(twentyData);
+    const crmSuccess = await submitCrmLead(twentyData);
 
     // If the CRM is down, keep a copy in Firestore so the lead is not lost
     const backupSaved = crmSuccess ? false : await persistLeadBackup(twentyData, consent);
 
     // Discord notification (real-time alert)
-    const discordSent = await sendDiscordNotification(body, isAfterHours, scheduledTime, callConsent);
+    const discordSent = await sendDiscordNotification(body, isAfterHours, scheduledTime);
 
     if (!crmSuccess && !backupSaved && !discordSent) {
       // Nothing recorded the lead anywhere — tell the client so the user can retry/call.
@@ -232,23 +202,9 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Speed-to-lead outbound qualification call via Julia (Vapi Voice AI)
-    // Never auto-dial the same number more than once per 24h (per instance) —
-    // prevents the form being used to repeatedly call a victim's phone.
-    let callDispatched = false;
-    const canDialNumber =
-      callConsent &&
-      !!body.phone && phoneKey(body.phone).length >= 10 &&
-      rateLimit(`contact-dial:${phoneKey(body.phone)}`, 1, 24 * 60 * 60 * 1000).ok;
-    if (callConsent && !isAfterHours && body.phone && canDialNumber) {
-      callDispatched = await triggerVapiOutboundCall({
-        name: `${twentyData.firstName} ${twentyData.lastName}`.trim() || "Valued Client",
-        phone: body.phone,
-        email: body.email,
-        mortgageType: body.mortgageType,
-        amount: body.amount,
-      });
-    }
+    // Owner's message-only workflow: save the inquiry and let Varun control follow-up.
+    // Never invoke the legacy outbound qualification assistant from a public form.
+    const callDispatched = false;
 
     console.log("Lead submitted:", {
       email: maskEmail(body.email),
@@ -256,23 +212,20 @@ export async function POST(req: NextRequest) {
       afterHours: isAfterHours,
       scheduledTime,
       crm: crmSuccess ? "✅" : "❌",
-      voiceCall: !callConsent ? "call_skipped: no_consent" : callDispatched ? "📞 Dispatched" : isAfterHours ? "🌙 Queued" : "⚠️ Skipped",
+      voiceCall: !callConsent ? "call_skipped: no_consent" : callDispatched ? "📞 Dispatched" : isAfterHours ? "follow-up requested" : "⚠️ Skipped",
     });
 
     return NextResponse.json({
-      success: crmSuccess,
+      success: true,
+      crmRecorded: crmSuccess,
+      backupSaved,
+      teamNotified: discordSent,
       isAfterHours,
       scheduledTime,
       callDispatched,
       // false = no automated call will be placed (no consent), so the UI must not promise one
       callConsent,
-      message: !callConsent
-        ? "Thank you! A mortgage specialist will contact you shortly."
-        : isAfterHours
-          ? `Priority rate locked! Julia is scheduled to place your priority call ${scheduledTime}.`
-          : callDispatched
-            ? "Thank you! Julia is dialing your number right now."
-            : "Thank you! A mortgage specialist will contact you shortly.",
+      message: "Your message is saved for Varun to review. No automated call or appointment has been started.",
     });
   } catch (error) {
     console.error("Contact form error:", error instanceof Error ? error.message : error);

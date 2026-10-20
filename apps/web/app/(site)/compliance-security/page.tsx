@@ -1,5 +1,7 @@
 "use client";
 
+import { BUSINESS } from "@/lib/seo/business-config";
+
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
@@ -507,15 +509,15 @@ export default function ComplianceSecurityPage() {
                 Questions About Compliance or Your Rights?
               </h2>
               <p className="text-gray-300 max-w-2xl mx-auto mb-10 leading-relaxed">
-                Our Principal Broker &amp; Designated Compliance Officer is available to address any questions
+                Our Principal Broker is available to address any questions
                 regarding our regulatory obligations, your consumer protection rights, or our data security practices.
               </p>
 
               <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-4xl mx-auto mb-10">
                 <div className="flex flex-col items-center gap-2 text-gray-300">
                   <Building2 className="w-5 h-5 text-gold-400" />
-                  <span className="text-sm font-medium text-white">Varun Chaudhry</span>
-                  <span className="text-xs text-gray-400">Principal Broker &amp; Compliance Officer</span>
+                  <span className="text-sm font-medium text-white">{BUSINESS.principalBroker}</span>
+                  <span className="text-xs text-gray-400">Principal Broker</span>
                 </div>
                 <div className="flex flex-col items-center gap-2 text-gray-300">
                   <MapPin className="w-5 h-5 text-gold-400" />
@@ -531,10 +533,10 @@ export default function ComplianceSecurityPage() {
                 <div className="flex flex-col items-center gap-2 text-gray-300">
                   <Mail className="w-5 h-5 text-gold-400" />
                   <a
-                    href="mailto:varun@kraftmortgages.ca"
+                    href="mailto:info@kraftmortgages.ca"
                     className="text-sm hover:text-gold-400 transition-colors"
                   >
-                    varun@kraftmortgages.ca
+                    info@kraftmortgages.ca
                   </a>
                 </div>
               </div>

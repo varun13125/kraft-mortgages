@@ -1,5 +1,6 @@
 'use client';
 import type { ReactNode } from 'react';
+import { AUTOMATED_CALLBACKS_ENABLED } from '@/lib/voice/workflow';
 import { CONSENT_TEXT } from '@/lib/compliance/consent';
 
 interface Box {
@@ -41,7 +42,7 @@ export function ConsentCheckboxes({
   return (
     <fieldset className={`space-y-3 text-left ${className}`}>
       <legend className="sr-only">Contact preferences (optional)</legend>
-      {call && (
+      {call && AUTOMATED_CALLBACKS_ENABLED && (
         <div className="flex items-start gap-3">
           <input
             id={`${idPrefix}-consent-call`}

@@ -14,9 +14,9 @@ export interface VapiCallPayload {
 }
 
 export async function triggerVapiOutboundCall(contact: VapiCallPayload): Promise<boolean> {
-  const apiKey = process.env.VAPI_API_KEY || "c9af458e-6935-41ac-a521-7fd4a68cd068";
-  const assistantId = process.env.VAPI_ASSISTANT_ID || "8a5ab646-355b-4d2a-aab2-5fc5d08dacc6";
-  const phoneNumberId = process.env.VAPI_PHONE_NUMBER_ID || "afd9510d-7e0c-4a56-9dea-c5405c0f0a14";
+  const apiKey = process.env.VAPI_API_KEY || "";
+  const assistantId = process.env.VAPI_ASSISTANT_ID || "";
+  const phoneNumberId = process.env.VAPI_PHONE_NUMBER_ID || "";
 
   if (!apiKey || !contact.phone) {
     console.warn("⚠️ Vapi: Missing API key or phone number.");
@@ -55,6 +55,7 @@ export async function triggerVapiOutboundCall(contact: VapiCallPayload): Promise
         "User-Agent": "Mozilla/5.0"
       },
       body: JSON.stringify(payload),
+      signal: AbortSignal.timeout(10_000),
     });
 
     if (!response.ok) {
@@ -64,8 +65,7 @@ export async function triggerVapiOutboundCall(contact: VapiCallPayload): Promise
     }
 
     const result = await response.json();
-    console.log(`✅ Vapi API: Outbound call dispatched successfully. Call ID: ${result.id}`);
-    return true;
+    return typeof result.id === "string" && result.id.length > 0;
   } catch (error) {
     console.error("❌ Vapi API: Error triggering outbound qualification call:", error);
     return false;

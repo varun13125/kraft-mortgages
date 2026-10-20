@@ -22,6 +22,8 @@ export const BUSINESS = {
   secondaryPhone: '+1-604-359-5993',      // Julia 24/7 AI Receptionist (Twilio virtual line)
   secondaryPhoneDisplay: '(604) 359-5993',
   email: 'info@kraftmortgages.ca',
+  principalBroker: 'Manpreet Dhaliwal', // Owner-confirmed 2026-10-20
+  president: 'Varun Chaudhry',
   address: {
     streetAddress: '#301 - 1688 152nd Street',
     addressLocality: 'Surrey',

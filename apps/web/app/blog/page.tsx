@@ -96,7 +96,7 @@ function transformPost(post: any) {
     title: decodedTitle,
     excerpt: decodedExcerpt,
     author: post.author?.name || post.author || 'Varun Chaudhry',
-    authorEmail: post.authoremail || 'varun@kraftmortgages.ca',
+    authorEmail: post.authoremail || 'info@kraftmortgages.ca',
     publishedAt: (new Date(post.publishedAt || post.publishedat || new Date())),
     updatedAt: (new Date(post.updatedAt || post.updatedat || post.publishedAt || post.publishedat || new Date())),
     status: post.status || 'published',
@@ -145,7 +145,7 @@ export default async function BlogPage() {
             author: {
               '@type': 'Person',
               name: 'Varun Chaudhry',
-              email: 'varun@kraftmortgages.ca',
+              email: 'info@kraftmortgages.ca',
               jobTitle: 'Licensed Mortgage Broker',
               worksFor: { '@id': ORG_ID },
             },
@@ -285,11 +285,11 @@ export default async function BlogPage() {
                       604-593-1550
                     </a>
                     <a
-                      href="mailto:varun@kraftmortgages.ca"
+                      href="mailto:info@kraftmortgages.ca"
                       className="inline-flex items-center justify-center px-6 py-3 border border-gold-500/50 text-gold-400 rounded-lg hover:bg-gold-500/10 transition-colors"
                     >
                       <Mail className="w-4 h-4 mr-2" />
-                      varun@kraftmortgages.ca
+                      info@kraftmortgages.ca
                     </a>
                   </div>
                 </div>
@@ -397,10 +397,10 @@ export default async function BlogPage() {
                   <h3 className="font-bold text-gray-100 mb-2">📧 Email</h3>
                   <p className="text-gray-400 mb-3">Get detailed responses</p>
                   <a
-                    href="mailto:varun@kraftmortgages.ca"
+                    href="mailto:info@kraftmortgages.ca"
                     className="text-gold-400 hover:text-gold-300 font-medium transition-colors"
                   >
-                    varun@kraftmortgages.ca
+                    info@kraftmortgages.ca
                   </a>
                 </div>
                 <div className="bg-gray-800/50 backdrop-blur-sm border border-gray-700/50 rounded-lg p-6">

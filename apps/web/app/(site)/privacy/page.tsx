@@ -1,3 +1,5 @@
+
+import { BUSINESS } from "@/lib/seo/business-config";
 import type { Metadata } from "next";
 import Link from "next/link";
 import Navigation from "@/components/Navigation";
@@ -56,19 +58,14 @@ const SERVICE_PROVIDERS: { name: string; purpose: string; data: string }[] = [
     data: "The contact and enquiry details you submit through our forms.",
   },
   {
-    name: "Twenty CRM and n8n (on a server we rent from Hostinger)",
+    name: "Twenty CRM and our integration receiver (hosted on our Hostinger VPS)",
     purpose: "Our client relationship management system and the automation that routes new enquiries into it.",
-    data: "Contact details, enquiry details, contact details you type into the chat assistant, and call outcomes.",
+    data: "Contact details and enquiry details you submit for team follow-up, and call outcomes.",
   },
   {
     name: "Discord Inc.",
     purpose: "Internal alerts that tell our team a new enquiry has arrived.",
     data: "Name, email, phone number, enquiry details and, for chat or call leads, a summary of the conversation.",
-  },
-  {
-    name: "HighLevel Inc. (GoHighLevel / LeadConnector)",
-    purpose: "Receives business-funding applications and hosts the enquiry form on our broker profile page.",
-    data: "The contact and business information you enter in those forms.",
   },
   {
     name: "Finmo",
@@ -559,7 +556,7 @@ export default function PrivacyPolicyPage() {
                       <UserCheck className="w-4 h-4 text-emerald-400" />
                       Designated Privacy Officer
                     </h3>
-                    <p className="text-slate-300 font-semibold mb-1">Varun Chaudhry — Principal Broker</p>
+                    <p className="text-slate-300 font-semibold mb-1">{BUSINESS.principalBroker} — Principal Broker</p>
                     <p className="text-slate-400 mb-1">Kraft Mortgages Canada Inc.</p>
                     <p className="text-slate-400">Head Office: Suite 202 - 12725 80 Avenue, Surrey, BC V3W 3A6</p>
                     <p className="text-slate-400">Dealing Office: #301 - 1688 152nd Street, Surrey, BC V4A 4N2</p>
@@ -570,7 +567,7 @@ export default function PrivacyPolicyPage() {
                       Direct Privacy Channels
                     </h3>
                     <p className="text-slate-400 mb-1">Privacy Email: <a href="mailto:privacy@kraftmortgages.ca" className="text-slate-200 hover:text-gold-400 font-medium">privacy@kraftmortgages.ca</a></p>
-                    <p className="text-slate-400 mb-1">Executive Email: <a href="mailto:varun@kraftmortgages.ca" className="text-slate-200 hover:text-gold-400 font-medium">varun@kraftmortgages.ca</a></p>
+                    <p className="text-slate-400 mb-1">Contact Email: <a href="mailto:info@kraftmortgages.ca" className="text-slate-200 hover:text-gold-400 font-medium">info@kraftmortgages.ca</a></p>
                     <p className="text-slate-400 mb-1">Head Office Phone: <a href="tel:604-593-1550" className="text-slate-200 hover:text-gold-400">604-593-1550</a></p>
                     <p className="text-slate-400">Mobile Desk: <a href="tel:604-727-1579" className="text-slate-200 hover:text-gold-400">604-727-1579</a></p>
                   </div>

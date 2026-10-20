@@ -157,7 +157,7 @@ export default function QualifyPage() {
 • Desired Loan Amount: $${form.loanAmount}
 • Self-Reported Credit: ${form.creditScore}
 • Employment Profile: ${form.employmentType}
-• Calling Timing: ${isAfterHours ? `🌙 After-Hours Queue (Scheduled: ${scheduledTime})` : `⚡ Live Dial Allowed (${callingStatus?.currentPtTime || "PT"})`}
+• Calling Timing: ${isAfterHours ? `🌙 Follow-up requested (preferred: ${scheduledTime})` : `⚡ Live Dial Allowed (${callingStatus?.currentPtTime || "PT"})`}
 • Automated AI Call Consent: ${callConsent ? "YES (box ticked)" : "NO — human follow-up only"}
 • Source Attribution: ${utmParams.utm_source} / Campaign: ${utmParams.utm_campaign}
     `.trim();
@@ -214,7 +214,7 @@ export default function QualifyPage() {
       if (callDispatched === true) {
         setStatus("calling");
       } else if (callConsent && (serverAfterHours ?? isAfterHours)) {
-        setStatus("completed"); // automated callback queued for the next calling window
+        setStatus("completed"); // request saved for team follow-up; no confirmed callback queue
       } else {
         setStatus("received"); // no automated call: a broker follows up
       }
@@ -268,16 +268,16 @@ export default function QualifyPage() {
           <div className="text-center mb-12">
             <div className="inline-flex items-center gap-2.5 mb-4 font-mono text-xs font-semibold text-[#f3d275] tracking-[0.2em] border border-[#d4af37]/30 px-4 py-1.5 rounded-full bg-[#0c1626]/90 shadow-sm">
               <span className="w-2 h-2 rounded-full bg-[#d4af37] animate-pulse" />
-              SECURE PORTAL · INSTANT PRE-QUALIFICATION
+              MORTGAGE INQUIRY · PERSONAL FOLLOW-UP
             </div>
 
             <div className="inline-flex items-center gap-2 mb-5 px-3.5 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-mono">
               <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-              <span>AI Voice Qualification Specialist (Beta Version)</span>
+              <span>Leave an inquiry for review</span>
             </div>
 
           <h1 className="font-serif font-normal text-4xl sm:text-6xl leading-[1.0] tracking-[-0.03em] mb-4 text-white">
-            Qualify for Your <em className="text-[#f3d275] italic font-normal">Priority Rate.</em>
+            Explore Your <em className="text-[#f3d275] italic font-normal">Mortgage Options.</em>
           </h1>
           {requestedTerm && (
             <div className="inline-flex items-center gap-2 mb-4 px-4 py-2 rounded-full bg-[#0c1626] border border-[#d4af37]/40 text-[#f3d275] text-xs font-mono shadow-md">
@@ -288,7 +288,7 @@ export default function QualifyPage() {
             </div>
           )}
           <p className="text-base text-slate-200 max-w-[620px] mx-auto leading-relaxed">
-            Map your credit profile, compare competitive rate options, and, if you choose, get a call from Julia (our automated voice assistant) to start your file.
+            Share your credit profile and mortgage goals for Varun to review. Your submission does not start an automated call.
           </p>
           <p className="text-xs text-slate-400 max-w-[580px] mx-auto mt-2 leading-relaxed">
             ⚡ <em>Beta Notice: Voice calling is currently experimental AI beta. Speech recognition may occasionally mishear phrases; every file is independently validated by our licensed human mortgage team.</em>
@@ -396,11 +396,11 @@ export default function QualifyPage() {
               </div>
 
               <h2 className="font-serif text-3xl sm:text-4xl mb-3 text-white">
-                Your Callback Is <em className="text-[#f3d275] italic font-normal">Queued.</em>
+                Your Request Is <em className="text-[#f3d275] italic font-normal">Saved.</em>
               </h2>
 
               <p className="text-base text-slate-200 mb-8 leading-relaxed">
-                Thank you, <strong className="text-white font-semibold">{form.firstName}</strong>. Because your request was submitted outside our live dialing window ({callingStatus?.currentPtTime || "Pacific Time"}), your priority qualification call is queued for our next available business window.
+                Thank you, <strong className="text-white font-semibold">{form.firstName}</strong>. Because your request was submitted outside our live dialing window ({callingStatus?.currentPtTime || "Pacific Time"}), your request is saved for team follow-up during business hours. A callback time is not confirmed.
               </p>
 
               {/* Scheduled Appointment Card */}
@@ -409,7 +409,7 @@ export default function QualifyPage() {
                   <div>
                     <div className="text-xs font-mono text-slate-400 uppercase tracking-wider mb-1 flex items-center gap-1.5">
                       <Clock className="w-3.5 h-3.5 text-emerald-400" />
-                      <span>Scheduled Priority Call</span>
+                      <span>Preferred follow-up window</span>
                     </div>
                     <div className="text-xl font-mono font-bold text-emerald-300">
                       {preferredCallback || callingStatus?.nextAvailableTime || "Tomorrow at 9:15 AM PT"}
@@ -634,47 +634,12 @@ export default function QualifyPage() {
                     Verify Your Contact <em className="text-[#f3d275] italic font-normal">Details.</em>
                   </h2>
                   <p className="text-sm text-slate-300 mb-6">
-                    {callingStatus && !callingStatus.isOpen
-                      ? `Want an automated call from Julia? Tick “Yes, call me now” below and she will call on ${callingStatus.nextAvailableTime}. Otherwise a licensed broker will follow up.`
-                      : "Want a call right away? Tick “Yes, call me now” below and Julia, our AI assistant, will call you. Otherwise a licensed broker will follow up."}
+                    Leave the contact details you want Varun to use when reviewing your inquiry.
                   </p>
 
-                  {/* Calling Hours Guardrail Status Banner */}
-                  {callingStatus && !callingStatus.isOpen ? (
-                    <div className="mb-6 p-4 rounded-lg bg-amber-500/10 border border-amber-500/30 text-left max-w-[540px] mx-auto">
-                      <div className="flex items-center gap-2 font-mono text-xs font-bold text-amber-300 uppercase tracking-wider mb-1">
-                        <Moon className="w-3.5 h-3.5 text-amber-300" />
-                        <span>AFTER-HOURS GUARDRAIL ACTIVE • {callingStatus.currentPtTime}</span>
-                      </div>
-                      <p className="text-xs text-slate-300 leading-relaxed">
-                        To respect Canadian telecommunications quiet hours, automated phone calls are paused overnight. Your request is recorded as soon as you submit{callConsent ? <>, and Julia will place your call on <strong>{callingStatus.nextAvailableTime}</strong></> : null}.
-                      </p>
-                    </div>
-                  ) : callingStatus?.isOpen ? (
-                    <div className="mb-6 p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-left max-w-[540px] mx-auto flex items-center gap-2.5">
-                      <span className="relative flex h-2 w-2">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                        <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                      </span>
-                      <span className="text-xs text-emerald-300 font-mono font-medium">
-                        <strong>LIVE DIAL AVAILABLE ({callingStatus.currentPtTime}):</strong>{" "}
-                        {callConsent
-                          ? "Julia will call your phone right after you submit."
-                          : "Tick “Yes, call me now” below if you’d like Julia to call you right after you submit."}
-                      </span>
-                    </div>
-                  ) : null}
-
-                  {/* Beta Voice Assistant Disclaimer */}
-                  <div className="mb-6 p-4 rounded-lg bg-[#0c1626] border border-amber-500/30 text-left max-w-[540px] mx-auto flex items-start gap-3 shadow-inner">
-                    <span className="text-amber-400 text-lg leading-none mt-0.5">⚡</span>
-                    <div className="text-xs text-slate-300 leading-relaxed">
-                      <strong className="text-amber-300 block mb-0.5 font-mono uppercase tracking-wider text-[11px]">
-                        AI Voice Qualification (Beta Version)
-                      </strong>
-                      If you tick &ldquo;Yes, call me now&rdquo;, you will receive a brief 90-second automated verification call from Julia (<span className="text-[#f3d275] font-mono">+1 604-359-5993</span>). Voice calling is currently in beta and AI speech recognition may occasionally make mistakes. Rest assured, your file is always reviewed by our human senior mortgage brokers before underwriting.
-                    </div>
-                  </div>
+                  <p className="mb-6 max-w-[540px] mx-auto text-sm leading-relaxed text-slate-300">
+                    Submit your message for Varun to review. Julia can also take a voice message through the guidance menu. There is no live office transfer or automatic appointment booking.
+                  </p>
 
                   <form onSubmit={handleSubmit} className="space-y-5 max-w-[540px] mx-auto text-left">
                     <input
@@ -765,8 +730,8 @@ export default function QualifyPage() {
                         </select>
                         <span className="text-xs text-slate-400 font-mono block mt-1.5 font-medium">
                           {callConsent
-                            ? "Julia will dial you during this window from +1 (604) 359-5993."
-                            : "A member of our team will call you during this window."}
+                            ? "We will record this preferred window for the team to confirm."
+                            : "This is a preferred window for Varun to confirm; no appointment is booked."}
                         </span>
                       </div>
                     )}

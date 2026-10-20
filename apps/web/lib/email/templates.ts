@@ -125,7 +125,7 @@ const getBaseTemplate = (content: string, data: EmailTemplateData): string => {
             <div>BCFSA #SR220230 | RECA LIC-00655428 | FSRA #12918</div>
             <div style="margin: 15px 0;">
                 📞 <a href="tel:+16045931550">604-593-1550</a> | 
-                📧 <a href="mailto:varun@kraftmortgages.ca">varun@kraftmortgages.ca</a>
+                📧 <a href="mailto:info@kraftmortgages.ca">info@kraftmortgages.ca</a>
             </div>
             <div>301-1688 152nd Street, Surrey, BC V4A 4N2</div>
             
@@ -173,7 +173,7 @@ export const welcomeEmailTemplate = (data: EmailTemplateData): string => {
     <div class="contact-info">
         <h4 style="color: #2c3e50; margin-bottom: 10px;">Get in Touch</h4>
         <p><strong>Call/Text:</strong> <a href="tel:+16045931550" style="color: #D4AF37;">604-593-1550</a></p>
-        <p><strong>Email:</strong> <a href="mailto:varun@kraftmortgages.ca" style="color: #D4AF37;">varun@kraftmortgages.ca</a></p>
+        <p><strong>Email:</strong> <a href="mailto:info@kraftmortgages.ca" style="color: #D4AF37;">info@kraftmortgages.ca</a></p>
         <p><strong>Licensed in:</strong> BC, AB, ON</p>
     </div>
     
@@ -264,7 +264,7 @@ export const appointmentConfirmationTemplate = (data: EmailTemplateData): string
     
     <p><strong>Need to reach me before our call?</strong></p>
     <p>📞 <a href="tel:+16045931550" style="color: #D4AF37;">604-593-1550</a><br>
-    📧 <a href="mailto:varun@kraftmortgages.ca" style="color: #D4AF37;">varun@kraftmortgages.ca</a></p>
+    📧 <a href="mailto:info@kraftmortgages.ca" style="color: #D4AF37;">info@kraftmortgages.ca</a></p>
   `;
 
     return getBaseTemplate(content, data);

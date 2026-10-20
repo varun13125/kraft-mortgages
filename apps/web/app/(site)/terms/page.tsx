@@ -361,7 +361,7 @@ export default function TermsOfServicePage() {
                     </h3>
                     <p className="text-slate-400 mb-1">Office Telephone: <a href="tel:604-593-1550" className="text-slate-200 hover:text-gold-400">604-593-1550</a></p>
                     <p className="text-slate-400 mb-1">Direct Mobile: <a href="tel:604-727-1579" className="text-slate-200 hover:text-gold-400">604-727-1579</a></p>
-                    <p className="text-slate-400">Compliance Email: <a href="mailto:varun@kraftmortgages.ca" className="text-slate-200 hover:text-gold-400">varun@kraftmortgages.ca</a></p>
+                    <p className="text-slate-400">Compliance Email: <a href="mailto:info@kraftmortgages.ca" className="text-slate-200 hover:text-gold-400">info@kraftmortgages.ca</a></p>
                   </div>
                 </div>
               </section>

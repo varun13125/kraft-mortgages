@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createHmac, timingSafeEqual } from "crypto";
+import { AUTOMATED_CALLBACKS_ENABLED } from "@/lib/voice/workflow";
 import { triggerThinkrOutboundCall } from "@/lib/voice/thinkr";
 import { getCallingHoursStatus, isRecipientCallable } from "@/lib/businessHours";
 import { maskEmail } from "@/lib/compliance/requestGuards";
-import { crmWebhookHeaders, twentyWebhookUrl } from "@/lib/crm/webhooks";
+import { submitCrmLead } from "@/lib/crm/submitLead";
 import { firestore } from "@/lib/firebaseAdmin";
 
 export const dynamic = "force-dynamic";
@@ -145,25 +146,9 @@ async function fetchLeadData(leadgenId: string): Promise<FacebookLead | null> {
   }
 }
 
-// URL: TWENTY_WEBHOOK_URL (default = n8n contact-form webhook); optional
-// X-Webhook-Secret from CRM_WEBHOOK_SECRET (BUG-022).
+// Twenty on the VPS is the brokerage CRM; require its complete receipt.
 async function sendToTwenty(data: Record<string, string>): Promise<boolean> {
-  try {
-    const res = await fetch(twentyWebhookUrl(), {
-      method: "POST",
-      headers: crmWebhookHeaders(),
-      body: JSON.stringify({
-        ...data,
-        source: "facebook-lead-ad",
-      }),
-      signal: AbortSignal.timeout(15_000),
-    });
-    if (!res.ok) console.error("Twenty CRM forward failed:", res.status);
-    return res.ok;
-  } catch (error) {
-    console.error("Twenty CRM forward failed:", error instanceof Error ? error.message : error);
-    return false;
-  }
+  return submitCrmLead({ ...data, source: "facebook-lead-ad", dispatchMode: "none" });
 }
 
 async function sendDiscordNotification(data: Record<string, string>): Promise<boolean> {
@@ -303,7 +288,7 @@ export async function POST(req: NextRequest) {
           if (callSkip) {
             console.log(`Facebook lead: call_skipped: ${callSkip}`);
           } else {
-            callTriggered = await triggerThinkrOutboundCall({
+            callTriggered = AUTOMATED_CALLBACKS_ENABLED && await triggerThinkrOutboundCall({
               name: `${crmData.firstName} ${crmData.lastName}`.trim() || "Facebook Lead",
               phone: crmData.phone,
               email: crmData.email,

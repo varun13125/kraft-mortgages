@@ -87,11 +87,20 @@ Re-check official sources before changing regulatory tables. The audit report ha
 
 ## Help, leads and privacy
 
+### Owner-confirmed communications architecture (2026-10-20)
+
+- **Twenty CRM on the Hostinger VPS is the only brokerage CRM.** The default `TWENTY_WEBHOOK_URL` ends in `/webhook/contact-form`, but nginx proxies it to the Node `kraft-finmo-webhook` service on port 8081; it is not an n8n workflow. Do not restore retired GoHighLevel business-funding forwarding or the `/varun` GHL iframe. A disconnected GHL notice in Thinkrr is stale configuration, not a reason to reconnect it.
+- **Julia takes messages for Varun. No live call transfer to the Kraft office, no round-robin handoff, no autonomous booking.** Collect a short message and optional contact/callback preference with permission, acknowledge it, save it in Twenty and notify the existing owner-controlled destination. Varun decides the follow-up. Website chat may explain general mortgage concepts; voice is message intake.
+- Existing Thinkrr account-level completion webhook: `https://crm.srv848694.hstgr.cloud/thinkrr-hook`. Existing receiver mirrors to the configured owner WhatsApp number and the Discord bridge (`#whatsapp-alerts`), not Telegram. Verify delivery receipts and channel permissions before claiming the notification reached Varun.
+- Thinkrr web agent **21437, Julia — Kraft Website**, was created during this repair; public embed identifier lives in `lib/voice/thinkrr-widget.ts`. The previous website fallback identifier was rejected with HTTP 403. A widget is only ready when its controls render; opening the modal is not a connected call.
+- Controlled phone test verified Julia message intake, Twenty transcript and delivered owner WhatsApp notification. Browser voice and release receipts are tracked separately in the communications audit.
+
+
 - `AdvisorHelpProvider` owns the active help panel. `AdvisorHelpDock` is the single launcher for brokerage phone, WhatsApp, text AI and voice AI. Do not reintroduce competing floating buttons.
 - Selecting voice opens disclosures/language selection. Never start a call from opening help or loading a page. Preserve `ThinkrrVoiceWidget`’s stop-and-park lifecycle: removing its DOM does **not** hang up a call. Closing/Escape must call the existing end-session logic.
-- Keep AI disclosures and contact consent. “Call me now” stays unticked by default. Do not change lead ingestion or claim delivery success without checking API responses.
+- Keep AI disclosures and contact consent. Automated callback controls are hidden while `AUTOMATED_CALLBACKS_ENABLED` is false; do not restore campaigns without an owner decision. Do not change lead ingestion or claim delivery success without checking API responses.
 - New integrated scenario PDFs are local and ungated. Existing calculators with lead-gated reports retain their established consent flow until deliberately migrated.
-- Never submit real test leads, initiate calls, email clients or exercise paid external services during automated checks. Use mocks/stubs or blocked requests. State when production integration is not tested.
+- Default automated checks use mocks/stubs or blocked requests. Real messages/calls require explicit owner authorization and controlled contacts. The owner authorized the 2026-10-20 communications tests using the existing business line and info@kraftmortgages.ca. Label tests, never contact clients and record receipts.
 - Business names, licensing, phone, addresses and operating hours come from `lib/seo/business-config.ts`. Do not duplicate them in components.
 
 ## SEO and routing

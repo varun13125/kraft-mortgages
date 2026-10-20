@@ -1,3 +1,5 @@
+import { submitCrmLead } from "@/lib/crm/submitLead";
+import { consentRecordToStrings } from "@/lib/compliance/consentRecord";
 import { NextRequest } from "next/server";
 import { z } from "zod";
 import { prisma, isPrismaEnabled } from "@/lib/db";
@@ -46,6 +48,7 @@ async function notifyDiscord(details: Record<string, any>, score: number): Promi
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
+        allowed_mentions: { parse: [] },
         embeds: [
           {
             title: "🆕 New Lead — Website Lead Form",
@@ -63,6 +66,7 @@ async function notifyDiscord(details: Record<string, any>, score: number): Promi
           },
         ],
       }),
+      signal: AbortSignal.timeout(8_000),
     });
     return res.ok;
   } catch (error) {
@@ -87,6 +91,7 @@ export async function POST(req: NextRequest) {
     return Response.json({ error: "Invalid lead data" }, { status: 400 });
   }
   const body = parsed.data;
+  if (!body.email && !body.phone) return Response.json({ error: "Email or phone is required" }, { status: 400 });
 
   // Handle both old format (with income/downPayment) and new format (with name/email/phone)
   let score;
@@ -126,7 +131,13 @@ export async function POST(req: NextRequest) {
 
   // Real-time alert so website leads don't sit unseen in the database
   // (previously this route only wrote to the DB and nobody was notified).
-  const notified = await notifyDiscord(body, score);
+  const [notified, crmRecorded] = await Promise.all([notifyDiscord(body, score), submitCrmLead({
+    firstName: body.firstName || body.name?.split(" ")[0] || "Website visitor",
+    lastName: body.lastName || body.name?.split(" ").slice(1).join(" ") || "",
+    email: body.email || "", phone: body.phone || "", mortgageType: intent,
+    amount: String(body.loanAmount || ""), message: body.message || "",
+    source: body.source || "website-lead", dispatchMode: "none", ...consentRecordToStrings(consent),
+  })]);
 
   try {
     if (isPrismaEnabled()) {
@@ -139,13 +150,13 @@ export async function POST(req: NextRequest) {
           status: leadData.status
         }
       });
-      return Response.json({ id: lead.id, score: leadData.score, status: leadData.status });
+      return Response.json({ id: lead.id, score: leadData.score, status: leadData.status, success: true, crmRecorded });
     }
 
     // Fallback to Firestore
     const db = firestore();
     const doc = await db.collection("leads").add(leadData);
-    return Response.json({ id: doc.id, score: leadData.score, status: leadData.status });
+    return Response.json({ id: doc.id, score: leadData.score, status: leadData.status, success: true, crmRecorded });
 
   } catch (error) {
     console.error("Error saving lead:", error instanceof Error ? error.message : error, {
@@ -154,13 +165,13 @@ export async function POST(req: NextRequest) {
       notified,
     });
 
-    if (notified) {
+    if (notified || crmRecorded) {
       // The team was alerted, so the lead is not lost even though the DB write failed.
       return Response.json({
         id: null,
         score: leadData.score,
         status: leadData.status,
-        note: "Lead received",
+        note: "Lead received", success: true, crmRecorded,
       });
     }
 

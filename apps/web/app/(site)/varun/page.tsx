@@ -1,7 +1,7 @@
 'use client'
 
 import { motion, useReducedMotion } from 'framer-motion'
-import Script from 'next/script'
+import BrokerContactForm from '@/components/BrokerContactForm'
 import { Shield, Clock, Users, FileText, CheckCircle, Phone, Mail, MapPin, ArrowRight, Calculator, BookOpen, ClipboardCheck } from 'lucide-react'
 
 export default function VarunLandingPage() {
@@ -226,7 +226,7 @@ export default function VarunLandingPage() {
                 </div>
             </section>
 
-            {/* ========== GHL FORM SECTION ========== */}
+            {/* ========== BROKER CONTACT SECTION ========== */}
             <section id="form-section" className="py-20 bg-gradient-to-b from-black via-zinc-900 to-black">
                 <div className="container mx-auto px-4">
                     <div className="max-w-3xl mx-auto">
@@ -247,7 +247,7 @@ export default function VarunLandingPage() {
                             </p>
                         </motion.div>
 
-                        {/* GHL Form Container */}
+                        {/* Contact form container */}
                         <motion.div
                             initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 30 }}
                             whileInView={{ opacity: 1, y: 0 }}
@@ -267,28 +267,10 @@ export default function VarunLandingPage() {
 
                             {/* Expectation Setting */}
                             <p className="text-zinc-400 text-sm sm:text-base text-center mb-6">
-                                After you submit, we&apos;ll call you during business hours to discuss your situation and next steps.
+                                Send your inquiry and our team will follow up about your situation and next steps.
                             </p>
 
-                            {/* GHL Form Embed */}
-                            <iframe
-                                src="https://api.leadconnectorhq.com/widget/form/EWgpdDb4vZV81EZXxWHf"
-                                style={{ width: '100%', height: '100%', border: 'none', borderRadius: '0px', minHeight: '700px' }}
-                                id="inline-EWgpdDb4vZV81EZXxWHf"
-                                data-layout="{'id':'INLINE'}"
-                                data-trigger-type="alwaysShow"
-                                data-trigger-value=""
-                                data-activation-type="alwaysActivated"
-                                data-activation-value=""
-                                data-deactivation-type="neverDeactivate"
-                                data-deactivation-value=""
-                                data-form-name="Mortgage Lead Capture"
-                                data-height="undefined"
-                                data-layout-iframe-id="inline-EWgpdDb4vZV81EZXxWHf"
-                                data-form-id="EWgpdDb4vZV81EZXxWHf"
-                                title="Mortgage Lead Capture"
-                            />
-                            <Script src="https://link.msgsndr.com/js/form_embed.js" strategy="lazyOnload" />
+                            <BrokerContactForm />
                         </motion.div>
 
                         {/* Trust Note Below Form */}
@@ -299,7 +281,7 @@ export default function VarunLandingPage() {
                             transition={{ delay: 0.4 }}
                             className="text-center text-zinc-500 text-sm mt-8"
                         >
-                            🔒 Your information is secure and will never be shared. No obligation.
+                            🔒 Your information is used to respond to your inquiry. No obligation.
                         </motion.p>
 
                         {/* ========== TRUSTED RESOURCES SECTION ========== */}
@@ -548,9 +530,9 @@ export default function VarunLandingPage() {
                                 </a>
                             </p>
                             <p className="text-zinc-400">
-                                <a href="mailto:varun@kraftmortgages.ca" className="hover:text-gold-400 transition-colors inline-flex items-center gap-2 min-h-[44px] px-2">
+                                <a href="mailto:info@kraftmortgages.ca" className="hover:text-gold-400 transition-colors inline-flex items-center gap-2 min-h-[44px] px-2">
                                     <Mail className="w-4 h-4" />
-                                    varun@kraftmortgages.ca
+                                    info@kraftmortgages.ca
                                 </a>
                             </p>
                         </div>

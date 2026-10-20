@@ -106,7 +106,7 @@ function transformGoogleSheetsPost(post: any) {
     content: content,
     excerpt: decodedExcerpt,
     author: post.author?.name || post.author || 'Varun Chaudhry',
-    authorEmail: post.authoremail || 'varun@kraftmortgages.ca',
+    authorEmail: post.authoremail || 'info@kraftmortgages.ca',
     // Bug fix: Firestore posts carry `publishedAt` (camelCase Date); reading only the
     // legacy lowercase `publishedat` made every post show today's date (UI, OG, schema).
     publishedAt: toIso(post.publishedAt) || toIso(post.publishedat) || new Date().toISOString(),
@@ -392,7 +392,7 @@ export default async function BlogPostPage({
                 </div>
                 <div className="bg-gray-800/50 backdrop-blur-sm border border-gray-700/50 rounded-lg p-6">
                   <h3 className="font-bold text-gray-100 mb-4">✉️ Email & Online</h3>
-                  <p className="text-gray-400 mb-2">Email: <a href="mailto:varun@kraftmortgages.ca" className="text-gold-400 hover:text-gold-300 font-medium transition-colors">varun@kraftmortgages.ca</a></p>
+                  <p className="text-gray-400 mb-2">Email: <a href="mailto:info@kraftmortgages.ca" className="text-gold-400 hover:text-gold-300 font-medium transition-colors">info@kraftmortgages.ca</a></p>
                   <p className="text-gray-400">Apply: <a href="https://r.mtg-app.com/varun-chaudhry" className="text-gold-400 hover:text-gold-300 font-medium transition-colors" target="_blank" rel="noopener noreferrer">Online Application</a></p>
                 </div>
               </div>
