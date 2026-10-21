@@ -1,6 +1,6 @@
 # Project Status
 
-**Last updated:** 2026-10-20 — communications repairs released; phone/browser voice, Twenty and owner WhatsApp verified
+**Last updated:** 2026-10-21 — generic Kraft team intake verified; WhatsApp voice-alert window failure identified
 **Branch:** `main`; communications implementation, public-embed correction and keyboard/quiet-style polish pushed/deployed and production verified. Exact deployment SHAs/receipts are in the communications verification log. Four owner data-file changes remain excluded and untouched.
 
 ## What this project is
@@ -15,9 +15,21 @@ Kraft Mortgages (kraftmortgages.ca) is the website of a licensed mortgage broker
 
 Stack: Next.js 14.2.35 App Router, TypeScript strict, Tailwind, Firebase/Firestore, pnpm monorepo (`apps/web` is the site), Vercel (pnpm install, root `vercel.json`).
 
+## Latest routing verification (2026-10-21)
+
+Owner explicitly approved connecting the existing Twilio number. Live Twilio API confirms +1(604)359-5993 already points to the previously tested Thinkrr Julia agent and retains the signed message-only voicemail fallback. No new import, routing/SMS/WhatsApp change, call or deployment was necessary. Existing pending security/verification items remain below.
+
+## Current team intake (2026-10-21; supersedes Varun-only wording)
+
+BUG-086: Julia takes messages for the **Kraft Mortgages team**. A team member can follow up on the brokerage's behalf; no named person or deadline is promised. Internal staffing/location/time-zone details stay private. Owner can delegate manually; existing Twenty/owner WhatsApp/Discord destinations remain unchanged. No live office transfer, booking, round-robin assignment or public-form automated callback.
+
+Saved/reloaded Thinkrr agent21437 training; booking/transfer switches OFF. New43s business-line test recorded the exact team greeting in Twenty8f51fef2-fdac-45dc-8a72-a8eab4a0a875. Owner screenshot confirms Thinkrr summary reached info@. Deployed VPS WhatsApp policy and generic voicemail; signed fallback200/Record/noDial. Website copy/policies validated with0 type/lint errors,125 tests and126-page build on isolated committed data; release receipts in communications evidence.
+
+**New BUG-087:** this test's owner WhatsApp alert was **undelivered63016** (closed24h session window). Prior delivered alerts do not establish out-of-window reliability. A voice-appropriate approved template plus delivery tracking/retries is needed. The existing approved mirror template labels content as a WhatsApp message, so it was not repurposed for voice. No new Discord readback is claimed. Phone→Twenty and actual provider-email inbox arrival verified separately.
+
 ## Communications release (2026-10-20)
 
-[Complete communications report](audit-2026-10/communications-audit-2026-10-20.md) and [verification/limits](audit-2026-10/communications-evidence/verification.md). BUG-073/074/075/077/078/079/082/084 repaired; BUG-076 partly repaired (full outbox/recovery still future). Twenty on VPS is the CRM; Julia takes messages for Varun only, no office transfer/booking or public-form automatic calls. Notifications use owner WhatsApp and Discord, not Telegram. Manpreet Dhaliwal is Principal Broker; info@ is public contact.
+[Complete communications report](audit-2026-10/communications-audit-2026-10-20.md) and [verification/limits](audit-2026-10/communications-evidence/verification.md). BUG-073/074/075/077/078/079/082/084 repaired; BUG-076 partly repaired (full outbox/recovery still future). Twenty on VPS is the CRM; Julia now takes messages for the Kraft Mortgages team (October21 update above), no office transfer/booking or public-form automatic calls. Notifications use owner WhatsApp and Discord, not Telegram. Manpreet Dhaliwal is Principal Broker; info@ is public contact.
 
 Controlled phone AND synthetic browser-audio calls saved transcripts in Twenty and delivered owner WhatsApp notifications. Fresh WhatsApp response delivered, 50 words, dated and no raw Markdown/console help. Three live website inquiry types read back from Twenty with no-call consent; repeat person reused. SMTP accepted general-inbox test; actual mailbox arrival, real Facebook ads/external carrier SMS/physical microphone remain unverified. Isolated committed-data baseline: type/lint clean,125 tests,126-page build,13 browser regressions (including mocked vendor keyboard/close test). Four owner data edits untouched.
 
@@ -60,6 +72,8 @@ Owner must rotate Twilio token exposed by provider UI and rejected VPS OpenRoute
 9. **Decisions still open:** marketing claims (BUG-014), business facts (BUG-036), APR disclosure (BUG-037), A-vs-B tax-years default (BUG-043), add `build_approved_directories.py` to the scheduled sync (BUG-028), fix CTBC + private-second rows upstream in the Hermes generator (BUG-027/055).
 
 ## Next up for agents (in order)
+
+0. **BUG-087:** make voice-owner WhatsApp alerts work outside the24h window using an approved voice-specific template and verified delivery state; preserve existing recipients and the owner-authored mirror hunk. Coordinate with BUG-083 retries/authentication. Generic team wording does not authorize automatic callbacks or assignments.
 
 1. Read DEVELOPER_GUIDE.md and the latest session. The audit and approved premium phase are released. FEAT-069 (remaining body/result-contract migrations) and FEAT-070 (different balances/financed costs) are future extensions; keep them separate from delivered capability. Confirm the latest production SHA using the release guide before a new release.
 2. **FEAT-003** durable rate limiting (Vercel WAF/Upstash) + merge the two guard helpers (BUG-007).

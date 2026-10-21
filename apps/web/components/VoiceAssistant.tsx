@@ -119,7 +119,7 @@ export function ThinkrrVoiceWidget() {
         <button aria-label="Close voice assistant" onClick={() => setPanel(null)} className="rounded-lg p-3 hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-[#c3a477]"><X size={20}/></button>
       </div>
       <div className="space-y-5 p-5">
-        <p className="text-sm leading-relaxed text-[#bac3ce]">Julia is an AI assistant who takes messages for Varun. Leave your question and preferred contact details; Varun will review and decide the next step.</p>
+        <p className="text-sm leading-relaxed text-[#bac3ce]">Julia is an AI assistant for Kraft Mortgages. Leave your message and preferred contact details, and a member of our team will follow up.</p>
         {!selectedKey ? <>
           <p className="text-xs leading-relaxed text-[#bac3ce]">Calls may be recorded and transcribed for follow-up. No live office transfer, appointment booking, mortgage approval or guaranteed rate. See our <a href="/privacy" className="underline">Privacy Policy</a>. Your microphone is used only when you start the voice controls.</p>
           <button onClick={() => setSelectedKey(englishKey)} className="flex min-h-11 w-full items-center justify-center gap-2 rounded-lg bg-[#c3a477] px-4 py-3 font-medium text-[#111820]"><Mic size={18}/>Open English voice controls</button>

@@ -18,6 +18,24 @@ Older history (2025-08 → 2026-10-04) lives in `/AI_CONTEXT_LOG.md`.
 
 ---
 
+## 2026-10-21: Generic Kraft team intake and live phone/email proof
+
+- **Who:** Codex; owner authorized wording change and continuing release.
+- **Goal:** Julia represents Kraft Mortgages team; follow-up can be delegated without promising Varun personally.
+- **Done:** BUG-086. Saved/reloaded Thinkrr agent21437 identity, greeting, introduction, key facts, goal and guidelines. Transfer and booking remain OFF. Website voice/qualification/contact acknowledgement/chat handoff policy made generic. VPS WhatsApp policy and voicemail greeting/closing aligned; service active and deployed hashes match working sources. Developer guide and production setup current contract updated; old setup dossier explicitly historical. No new recipients, automatic assignment, calls from forms or bookings. Preserve four owner data edits and sibling CRM owner34-line notification mirror.
+- **Verified:** Controlled phone CAfda4cb5f626b87a35fa044695b514f8a,09:00:44–09:01:27UTC,43s. Twenty8f51fef2-fdac-45dc-8a72-a8eab4a0a875 contains exact new team greeting and no-callback/no-booking test request. Owner screenshot confirms provider summary arrived at info@. Signed voicemail fallback200 with Record/noDial and generic team wording. CRM Python syntax +3queue/3receiver tests pass. Website isolated staged source on committed data: type0,lint0,125tests,126-page production build; React review found only text changes, no hook/layout behavior changes. Saved Thinkrr screenshot in communications evidence. Website production receipt follows there.
+- **New finding:** BUG-087: voice-owner WhatsApp alert SM73d2b0dc3b7b090e230eb84b6c86b5ae failed63016 outside24h window. Existing approved template says “New WhatsApp message”; do not mislabel calls with it. No fresh Discord readback was obtained. Phone/CRM/email success must not be described as WhatsApp delivery.
+- **Next:** Release website text changes; add exact receipt. Approved voice notification template and delivery tracking/retries remain open alongside prior credential/security tasks. Human callback introduction documented: “Hello, this is [first name] calling from Kraft Mortgages about the message you left with us.”
+
+## 2026-10-21: Existing Twilio-to-Thinkrr connection reverified
+
+- **Who:** Codex.
+- **Goal:** Latest owner instruction explicitly approved connecting the existing Twilio number to Thinkrr, superseding the delayed "keep routing unchanged" response.
+- **Done:** Reverified BUG-075/079 without reopening fixed items. Number +1(604)359-5993 already routed to Thinkrr's inbound service and exactly the backend agent used by the successful Julia phone test on October20. Message-only voicemail fallback remains configured. No duplicate import, routing change, credential transfer, SMS/WhatsApp change or new call was needed.
+- **Verification:** Live authenticated Twilio API read; matching agent identifier, POST voice route, in-use number and existing signed voicemail-only fallback. Prior successful phone/CRM/owner-notification receipts remain in communications-evidence/verification.md; no new end-to-end call claimed today. Chrome browser connection unavailable; verification used the live Twilio API rather than relying on a stale portal view.
+- **Files/commit:** Documentation-only local handoff update; no application code or deployment change. Owner's four existing data modifications preserved.
+- **Next:** Connection request satisfied. Existing credential rotation/webhook hardening/other verification follow-ups remain as documented.
+
 ## 2026-10-20: Communications repair, message-only Julia and verified owner notification
 
 - **Who:** Codex. Owner explicitly authorized controlled tests, commits, push and live release.

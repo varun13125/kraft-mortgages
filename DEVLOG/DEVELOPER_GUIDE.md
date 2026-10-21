@@ -1,6 +1,6 @@
 # Kraft Mortgages — development & design contract
 
-Last reviewed: 2026-10-20. This is the durable implementation guide. `STATUS.md` describes the current release; `SESSIONS.md` records what changed. Read this after those documents, before changing UI, calculator logic or integrations. The DEVLOG takes precedence over stale root history.
+Last reviewed: 2026-10-21. This is the durable implementation guide. `STATUS.md` describes the current release; `SESSIONS.md` records what changed. Read this after those documents, before changing UI, calculator logic or integrations. The DEVLOG takes precedence over stale root history.
 
 ## Start here when continuing
 
@@ -87,10 +87,10 @@ Re-check official sources before changing regulatory tables. The audit report ha
 
 ## Help, leads and privacy
 
-### Owner-confirmed communications architecture (2026-10-20)
+### Owner-confirmed communications architecture (updated 2026-10-21)
 
 - **Twenty CRM on the Hostinger VPS is the only brokerage CRM.** The default `TWENTY_WEBHOOK_URL` ends in `/webhook/contact-form`, but nginx proxies it to the Node `kraft-finmo-webhook` service on port 8081; it is not an n8n workflow. Do not restore retired GoHighLevel business-funding forwarding or the `/varun` GHL iframe. A disconnected GHL notice in Thinkrr is stale configuration, not a reason to reconnect it.
-- **Julia takes messages for Varun. No live call transfer to the Kraft office, no round-robin handoff, no autonomous booking.** Collect a short message and optional contact/callback preference with permission, acknowledge it, save it in Twenty and notify the existing owner-controlled destination. Varun decides the follow-up. Website chat may explain general mortgage concepts; voice is message intake.
+- **Julia takes messages for the Kraft Mortgages team. No live call transfer to the office, no round-robin handoff, no autonomous booking.** This October21 instruction supersedes earlier Varun-only wording. Say: “I can take a message, and a member of our team will get back to you.” Collect the message first, then optional name/contact/callback preference with permission; acknowledge it and save it in Twenty through existing owner-controlled notifications. The owner can delegate follow-up to an authorized team member. Do not promise a named person, assignment or response deadline, or expose internal staffing/location/time-zone details. Do not change notification recipients or start automatic callbacks. Staff can introduce themselves: “Hello, this is [first name] calling from Kraft Mortgages about the message you left with us.” Website chat may explain general mortgage concepts; voice is message intake.
 - Authentication follow-ups: BUG-083 covers the actual VPS Thinkrr hook; BUG-085 covers direct website receiver access. Optional sender headers/old Next secrets alone do not enforce authentication at either VPS endpoint. Coordinate all legitimate senders before enforcement.
 - Existing Thinkrr account-level completion webhook: `https://crm.srv848694.hstgr.cloud/thinkrr-hook`. Existing receiver mirrors to the configured owner WhatsApp number and the Discord bridge (`#whatsapp-alerts`), not Telegram. Verify delivery receipts and channel permissions before claiming the notification reached Varun.
 - Thinkrr web agent **21437, Julia — Kraft Website**, was created during this repair; public embed identifier lives in `lib/voice/thinkrr-widget.ts`. The previous website fallback and production NEXT_PUBLIC override were rejected with HTTP 403. Public embed environment overrides require a rebuild; inspect the actual published request, not source defaults alone. Unsupported Hindi embed was cleared until a verified message-intake agent exists. A widget is only ready when its controls render; opening the modal is not a connected call.

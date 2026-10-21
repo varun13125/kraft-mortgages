@@ -1,4 +1,33 @@
-# Kraft Mortgages — Thinkrr Voice AI (Julia) Production Configuration & Intelligence Dossier
+# Julia: current production message-intake configuration
+
+Updated 2026-10-21. The current contract is in `DEVLOG/DEVELOPER_GUIDE.md`. Everything below the historical heading is obsolete reference material: **do not upload its old prompt, numeric rates, principal-broker details or callback promises.**
+
+## Current customer experience
+
+Julia represents **the Kraft Mortgages team**, not a named individual. The saved greeting is:
+
+> Hi, I'm Julia, the AI message assistant for Kraft Mortgages. This call may be recorded and transcribed. I can take a message, and a member of our team will get back to you. How can we help?
+
+Take the message first, then ask for name and preferred contact details if a response is wanted. Ask one question at a time. A callback window is optional and unconfirmed. Read back the message, accept corrections, thank the caller and end. No SIN, banking credentials, identity documents or full qualification interview. Do not promise a named person, automatic assignment, response deadline, approval, rate hold or booking. Keep internal staffing, location and time-zone details private.
+
+Authorized team members can follow up: “Hello, this is [first name] calling from Kraft Mortgages about the message you left with us.” Assignment remains an internal human decision; no new automatic dispatch or contact list has been introduced.
+
+## Current live configuration
+
+- Portal: https://ava.thinkrr.ai. Inbound agent **21437, Julia — Kraft Website**, active on Phone & Web.
+- Representing: **Kraft Mortgages team**; title **Mortgage advisory team**.
+- Existing Twilio number: **+1 (604) 359-5993**. Preserve the Thinkrr inbound route, independent WhatsApp/SMS webhooks and signed voicemail fallback.
+- **Real-time booking OFF. Call Transfer OFF.** Existing representative notification remains configured; public email **info@kraftmortgages.ca**.
+- Principal Broker: **Manpreet Dhaliwal**. Public business facts live in `apps/web/lib/seo/business-config.ts`.
+- No verified live rate feed/calendar is attached to this voice agent. Record rate questions as messages; do not quote stored benchmarks. Website text AI uses the maintained dated rate feed.
+- Twenty CRM on the VPS is the CRM. The completion webhook is `https://crm.srv848694.hstgr.cloud/thinkrr-hook`, handled by `thinkrr-hook` on localhost8799. Alerts go to owner WhatsApp and Discord `#whatsapp-alerts`, not Telegram. Keep recipients unchanged; team wording does not grant access to new staff.
+- Sources are in sibling **Kraft Deal Tracker** repository. Its working `deploy/thinkrr-hook.py` includes an owner-authored notification mirror that is deployed but uncommitted; preserve it. `deploy/whatsapp_rates.py` maintains the WhatsApp response policy. Voicemail records a message only; never `<Dial>` an office line.
+
+Verify saved training after reload and check the action switches. Avoid the credential-bearing phone import form. See BUG-080 (rotation), BUG-083 (VPS Thinkrr authentication/dedupe/retries), BUG-085 (website receiver authentication), and current communications evidence for delivery receipts and limits.
+
+---
+
+# Historical configuration dossier — superseded, do not deploy
 
 ---
 

@@ -54,7 +54,7 @@ const MAX_HISTORY_MESSAGE_CHARS = 4000;
 const ALLOWED_PROVINCES = new Set(["BC", "AB", "ON"]);
 
 const BROKERAGE_FALLBACK_REPLY =
-  "Thank you for contacting Kraft Mortgages! We are licensed across BC, Alberta, and Ontario. For follow-up, leave a message for Varun on WhatsApp at +1 (604) 359-5993 or through our contact page.";
+  "Thank you for contacting Kraft Mortgages! We are licensed across BC, Alberta, and Ontario. For follow-up, leave a message for the Kraft Mortgages team on WhatsApp at +1 (604) 359-5993 or through our contact page.";
 
 // In-memory rotating training and underwriting interaction log buffer (per server instance).
 interface UnderwritingChatLog {

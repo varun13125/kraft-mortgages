@@ -288,7 +288,7 @@ export default function QualifyPage() {
             </div>
           )}
           <p className="text-base text-slate-200 max-w-[620px] mx-auto leading-relaxed">
-            Share your credit profile and mortgage goals for Varun to review. Your submission does not start an automated call.
+            Share your credit profile and mortgage goals for our team to review. Your submission does not start an automated call.
           </p>
           <p className="text-xs text-slate-400 max-w-[580px] mx-auto mt-2 leading-relaxed">
             ⚡ <em>Beta Notice: Voice calling is currently experimental AI beta. Speech recognition may occasionally mishear phrases; every file is independently validated by our licensed human mortgage team.</em>
@@ -634,11 +634,11 @@ export default function QualifyPage() {
                     Verify Your Contact <em className="text-[#f3d275] italic font-normal">Details.</em>
                   </h2>
                   <p className="text-sm text-slate-300 mb-6">
-                    Leave the contact details you want Varun to use when reviewing your inquiry.
+                    Leave the contact details you would like our team to use when following up.
                   </p>
 
                   <p className="mb-6 max-w-[540px] mx-auto text-sm leading-relaxed text-slate-300">
-                    Submit your message for Varun to review. Julia can also take a voice message through the guidance menu. There is no live office transfer or automatic appointment booking.
+                    Submit your message for the Kraft Mortgages team. Julia can also take a voice message through the guidance menu. There is no live office transfer or automatic appointment booking.
                   </p>
 
                   <form onSubmit={handleSubmit} className="space-y-5 max-w-[540px] mx-auto text-left">
@@ -731,7 +731,7 @@ export default function QualifyPage() {
                         <span className="text-xs text-slate-400 font-mono block mt-1.5 font-medium">
                           {callConsent
                             ? "We will record this preferred window for the team to confirm."
-                            : "This is a preferred window for Varun to confirm; no appointment is booked."}
+                            : "This is a preferred window for our team to confirm; no appointment is booked."}
                         </span>
                       </div>
                     )}

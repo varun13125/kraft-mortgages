@@ -82,7 +82,7 @@ async function sendDiscordNotification(data: ContactFormData, isAfterHours: bool
     ? `${data.firstName} ${data.lastName || ""}`.trim()
     : data.name || "Unknown";
 
-  const dispatchStatus = "Message received — Varun controls follow-up; no automated callback or transfer";
+  const dispatchStatus = "Message received — Kraft Mortgages team follow-up; no automated callback or transfer";
 
   try {
     const res = await fetch(webhookUrl, {
@@ -202,7 +202,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Owner's message-only workflow: save the inquiry and let Varun control follow-up.
+    // Owner's message-only workflow: save the inquiry for team follow-up.
     // Never invoke the legacy outbound qualification assistant from a public form.
     const callDispatched = false;
 
@@ -225,7 +225,7 @@ export async function POST(req: NextRequest) {
       callDispatched,
       // false = no automated call will be placed (no consent), so the UI must not promise one
       callConsent,
-      message: "Your message is saved for Varun to review. No automated call or appointment has been started.",
+      message: "Your message is saved for the Kraft Mortgages team. A team member will follow up; no automated call or appointment has been started.",
     });
   } catch (error) {
     console.error("Contact form error:", error instanceof Error ? error.message : error);
