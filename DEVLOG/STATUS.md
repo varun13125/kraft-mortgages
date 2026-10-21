@@ -3,6 +3,8 @@
 **Last updated:** 2026-10-21 — generic Kraft team intake verified; WhatsApp voice-alert window failure identified
 **Branch:** `main`; communications implementation, public-embed correction and keyboard/quiet-style polish pushed/deployed and production verified. Exact deployment SHAs/receipts are in the communications verification log. Four owner data-file changes remain excluded and untouched.
 
+Latest functional team-intake source84b79a4, deployment dpl_tTJ5CS8u5fHnGhRV3ZLvLsYFw7vx READY/www alias; short natural team reply verified on published API. CRM1424f25 pushed/deployed policy; BUG-087 remains partly fixed pending Meta approval and live template delivery. [October21 receipts](audit-2026-10/communications-evidence/team-intake-2026-10-21.md).
+
 ## What this project is
 
 Kraft Mortgages (kraftmortgages.ca) is the website of a licensed mortgage brokerage serving BC, Alberta and Ontario. It includes:

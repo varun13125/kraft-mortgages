@@ -41,3 +41,7 @@ Website isolated staged application tree2fb473c0d4e2cdb8f3a0977c822a9cd2aabb5741
 CRM Python syntax,3existing queue/3receiver tests,4new template tests: approval gating, no Body/caller data, delivered versus queued/failed state, and no duplicate after ambiguous submission. Unrelated Balikbayan Box folder untouched. Prior credential, SMS/carrier, Facebook and physical microphone limits remain in the main report.
 
 Follow-up wording check caught chat reciting internal assignment/timing limits. Policies now apply these silently and answer ordinary handoff questions in one or two short team-based sentences. WhatsApp updated policy deployed with current hash above. CRM template-sender75eead70d02e1a02020263d027ef16b1d1b2c870 and concise-policy1424f25 pushed; Meta approval still pending. Final isolated follow-up validation: lint0,125tests,126-page production build including type validity. Website follow-up release receipt follows.
+
+## Final functional release
+
+84b79a4e6646e6f092bb60226f2ac46e4271b3db → dpl_tTJ5CS8u5fHnGhRV3ZLvLsYFw7vx **READY**, www.kraftmortgages.ca alias/no alias error. Published API question “If I leave a message with Julia, who will call me back?” returned only: “Julia passes your message to the team, and a member of the Kraft Mortgages team will get back to you using your preferred contact details.” No contact data, lead, call or booking was submitted by that text check. Final template approval recheck remains pending; no template-delivery claim. Documentation-only receipt follow-up leaves application code identical.
