@@ -25,7 +25,7 @@ BUG-086: Julia takes messages for the **Kraft Mortgages team**. A team member ca
 
 Saved/reloaded Thinkrr agent21437 training; booking/transfer switches OFF. New43s business-line test recorded the exact team greeting in Twenty8f51fef2-fdac-45dc-8a72-a8eab4a0a875. Owner screenshot confirms Thinkrr summary reached info@. Deployed VPS WhatsApp policy and generic voicemail; signed fallback200/Record/noDial. Website copy/policies validated with0 type/lint errors,125 tests and126-page build on isolated committed data; release receipts in communications evidence.
 
-**New BUG-087:** this test's owner WhatsApp alert was **undelivered63016** (closed24h session window). Prior delivered alerts do not establish out-of-window reliability. A voice-appropriate approved template plus delivery tracking/retries is needed. The existing approved mirror template labels content as a WhatsApp message, so it was not repurposed for voice. No new Discord readback is claimed. Phone→Twenty and actual provider-email inbox arrival verified separately.
+**New BUG-087, partly fixed:** this test's owner WhatsApp alert was **undelivered63016** (closed24h session window). Submitted voice-specific UTILITY template kraft_voice_message_alert_v1, HX4b427c4b28693efa556ace4ad1501d8d; Meta approval pending. Deployed voice_alerts.py uses it automatically after approval, links to Twenty without caller details, and checks delivery status.4new tests pass. Until approval, existing free-form alerts remain window-limited; template delivery is not yet verified. Existing WhatsApp-message template was not repurposed for phone calls. No new Discord readback claimed. Phone→Twenty and actual provider-email arrival verified separately; durable retries remain BUG-083.
 
 ## Communications release (2026-10-20)
 
@@ -73,7 +73,7 @@ Owner must rotate Twilio token exposed by provider UI and rejected VPS OpenRoute
 
 ## Next up for agents (in order)
 
-0. **BUG-087:** make voice-owner WhatsApp alerts work outside the24h window using an approved voice-specific template and verified delivery state; preserve existing recipients and the owner-authored mirror hunk. Coordinate with BUG-083 retries/authentication. Generic team wording does not authorize automatic callbacks or assignments.
+0. **BUG-087:** check Meta approval for voice template HX4b427c4b28693efa556ace4ad1501d8d, then verify a controlled existing-owner alert and final delivery. Deployed helper already selects it when approved. Companion voice_alerts.py must deploy with thinkrr-hook.py; preserve owner34-line mirror. Coordinate durable retries with BUG-083. Generic team wording does not authorize automatic callbacks or assignments.
 
 1. Read DEVELOPER_GUIDE.md and the latest session. The audit and approved premium phase are released. FEAT-069 (remaining body/result-contract migrations) and FEAT-070 (different balances/financed costs) are future extensions; keep them separate from delivered capability. Confirm the latest production SHA using the release guide before a new release.
 2. **FEAT-003** durable rate limiting (Vercel WAF/Upstash) + merge the two guard helpers (BUG-007).
