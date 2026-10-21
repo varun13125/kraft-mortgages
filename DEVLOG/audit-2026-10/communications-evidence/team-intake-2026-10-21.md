@@ -30,7 +30,7 @@ Working/deployed SHA256:
 
 - hook18ea0baed02db08bdcc25417e2c8849d1fd747778e742558240e395cad662d1c
 - voice_alerts07917bc49abc21c85a3f5c7542cbb163bc0f1b4f936c399192577250d937502e
-- whatsapp_rates079dedeeb75803a33c725ab390153e9b69c05918dcd7438e37b413695135c9a0
+- whatsapp_ratesd0ea77cf3d47152dbc71548c0ddda6fe87ca97127ea1566e8a5b1320a3abd611
 
 Deploy helper with hook and preserve owner mirror. Backups *.before-team-intake-20261021 and hook.before-voice-template-20261021.
 
@@ -39,3 +39,5 @@ Deploy helper with hook and preserve owner mirror. Backups *.before-team-intake-
 Website isolated staged application tree2fb473c0d4e2cdb8f3a0977c822a9cd2aabb5741 on committed data: type0/lint0,125tests,126-page build. React review: text only, no hook/layout/control changes. Four owner data edits untouched/excluded.
 
 CRM Python syntax,3existing queue/3receiver tests,4new template tests: approval gating, no Body/caller data, delivered versus queued/failed state, and no duplicate after ambiguous submission. Unrelated Balikbayan Box folder untouched. Prior credential, SMS/carrier, Facebook and physical microphone limits remain in the main report.
+
+Follow-up wording check caught chat reciting internal assignment/timing limits. Policies now apply these silently and answer ordinary handoff questions in one or two short team-based sentences. WhatsApp updated policy deployed with current hash above. CRM template-sender75eead70d02e1a02020263d027ef16b1d1b2c870 and concise-policy1424f25 pushed; Meta approval still pending. Final isolated follow-up validation: lint0,125tests,126-page production build including type validity. Website follow-up release receipt follows.
