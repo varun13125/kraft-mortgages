@@ -412,11 +412,11 @@ export default function AboutUs() {
                   Start Your Application
                 </a>
                 <a
-                  href="tel:604-593-1550"
+                  href="tel:+16043595993"
                   className="inline-flex items-center justify-center px-8 py-4 border-2 border-gold-500/50 text-gold-400 rounded-lg hover:bg-gold-500/10 transition-colors"
                 >
                   <Phone className="w-4 h-4 mr-2" />
-                  Call 604-593-1550
+                  Call or Text (604) 359-5993
                 </a>
               </div>
 
@@ -425,14 +425,14 @@ export default function AboutUs() {
                   <MapPin className="w-5 h-5 text-gold-400 mt-0.5" />
                   <div>
                     <p className="font-semibold text-gray-100">Head Office</p>
-                    <p className="text-sm text-gray-400">#301 1688 152nd Street<br />Surrey, BC V4A 4N2</p>
+                    <p className="text-sm text-gray-400">Unit 201 - 12830 80th Ave<br />Surrey, BC V3W 3A8</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
                   <Phone className="w-5 h-5 text-gold-400 mt-0.5" />
                   <div>
                     <p className="font-semibold text-gray-100">Phone</p>
-                    <p className="text-sm text-gray-400">604-593-1550 (Office)<br />604-727-1579 (Mobile)</p>
+                    <p className="text-sm text-gray-400">(604) 359-5993 (24/7 Call/Text)<br />604-593-1550 (Surrey Office)</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">

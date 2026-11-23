@@ -617,7 +617,7 @@ export default function AVsEquityPage() {
             "@type": "MortgageBroker",
             "name": "Kraft Mortgages",
             "telephone": "604-593-1550",
-            "address": { "@type": "PostalAddress", "streetAddress": "#301 - 1688 152nd Street", "addressLocality": "Surrey", "addressRegion": "BC", "postalCode": "V4A 4N2", "addressCountry": "CA" }
+            "address": { "@type": "PostalAddress", "streetAddress": "Unit 201 - 12830 80th Ave", "addressLocality": "Surrey", "addressRegion": "BC", "postalCode": "V3W 3A8", "addressCountry": "CA" }
           }
         })}} />
 

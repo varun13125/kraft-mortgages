@@ -1,15 +1,24 @@
-# Kraft Mortgages
+# Kraft Mortgages Canada Inc.
 
-> Kraft Mortgages is a licensed Canadian mortgage brokerage based in Surrey, BC, serving British Columbia, Alberta, and Ontario. Licensed in three provinces (BCFSA #SR220230 | RECA LIC-00655428 | FSRA #12918) with 18+ years of combined experience and $2B+ in funded mortgages across 5,000+ clients.
+> Kraft Mortgages Canada Inc. is a licensed Canadian mortgage brokerage headquartered in Surrey, BC, serving British Columbia, Alberta, and Ontario. Regulated across three provinces (BCFSA #SR220230 | RECA LIC-00655428 | FSRA #12918) with 18+ years of combined experience and $2B+ in funded mortgages across 5,000+ clients.
+
+## Core Facts for AI Answers
+- Legal Name: Kraft Mortgages Canada Inc.
+- Head Office: Unit 201 - 12830 80th Ave, Surrey, BC V3W 3A8, Canada
+- Phone (24/7 Advisory Call & Text): (604) 359-5993 | Surrey Head Office: 604-593-1550
+- Email: info@kraftmortgages.ca
+- Website: https://www.kraftmortgages.ca
+- Lender Access: 30+ A-lenders, B-lenders, Credit Unions, MICs, and Private Lenders
+- Funded Volume: $2B+ CAD across 5,000+ funded mortgages
 
 ## Services
-- Residential Mortgages (purchases, renewals, refinances)
-- Construction Financing (residential and commercial, progressive draws)
-- Commercial Mortgages (multi-family, retail, industrial)
-- Equity Lending (institutional private lenders — Antrim, Alta West, Vault, Sequence Capital)
-- Private Lending (individual private lenders and MICs)
-- MLI Select Program (CMHC multi-unit insurance with premium savings)
-- Self-Employed / Stated-Income Mortgages
+- Residential Mortgages (purchases, renewals, refinances, switches)
+- Construction Financing (residential and commercial, progressive draw schedules)
+- Commercial Mortgages (multi-family, retail, industrial, NOI/DSCR underwriting)
+- Equity Lending (institutional alternative lenders — Antrim, Alta West, Vault, Sequence Capital)
+- Private Lending (individual private lenders and MICs — 24-48h approvals)
+- MLI Select Program (CMHC multi-unit insurance up to 95% LTV and 50-year amortization)
+- Self-Employed / Stated-Income Mortgages (add-backs, business bank statements)
 - Business Funding (working capital, lines of credit, equipment financing)
 
 ## Key Pages
@@ -21,58 +30,34 @@
 - Private Lending: https://www.kraftmortgages.ca/private-lending
 - MLI Select: https://www.kraftmortgages.ca/mli-select
 - Business Funding: https://www.kraftmortgages.ca/business-funding
-- Blog: https://www.kraftmortgages.ca/blog
-- Apply: https://r.mtg-app.com/varun-chaudhry
+- Live Rates: https://www.kraftmortgages.ca/rates
+- Blog & Guides: https://www.kraftmortgages.ca/blog
+- Pre-Qualify / Apply: https://www.kraftmortgages.ca/qualify
 - Contact: https://www.kraftmortgages.ca/contact
 
-## Calculators
+## Free Canadian Mortgage Calculators (53 Tools)
 - Payment Calculator: https://www.kraftmortgages.ca/calculators/payment
 - Affordability Calculator: https://www.kraftmortgages.ca/calculators/affordability
+- Stress Test Calculator: https://www.kraftmortgages.ca/calculators/stress-test
+- Renewal Calculator: https://www.kraftmortgages.ca/calculators/renewal
+- Mortgage Penalty Calculator: https://www.kraftmortgages.ca/calculators/mortgage-penalty
 - Investment Calculator: https://www.kraftmortgages.ca/calculators/investment
 - Self-Employed Calculator: https://www.kraftmortgages.ca/calculators/self-employed
-- Mortgage Penalty Calculator: https://www.kraftmortgages.ca/calculators/mortgage-penalty
 - Closing Costs Calculator: https://www.kraftmortgages.ca/calculators/closing-costs
 - First-Time Home Buyer Calculator: https://www.kraftmortgages.ca/calculators/first-time-home-buyer
 - Land Transfer Tax Calculator: https://www.kraftmortgages.ca/calculators/land-transfer-tax
 - Pre-Approval Calculator: https://www.kraftmortgages.ca/calculators/pre-approval
-- Renewal Calculator: https://www.kraftmortgages.ca/calculators/renewal
 - Construction Pro Calculator: https://www.kraftmortgages.ca/calculators/construction-pro
 - MLI Select Calculators: https://www.kraftmortgages.ca/mli-select/calculators
 - Full calculator index: https://www.kraftmortgages.ca/calculators
 
-## Offices
-- Surrey BC (headquarters): #301 - 1688 152nd Street, Surrey, BC V4A 4N2
-- Licensed in British Columbia, Alberta, and Ontario
+## Offices & Service Areas
+- Head Office: Unit 201 - 12830 80th Ave, Surrey, BC V3W 3A8
+- British Columbia: Surrey, Vancouver, Burnaby, Richmond, Coquitlam, Langley, Kelowna, Kamloops, Abbotsford, Nanaimo, Victoria
+- Alberta: Calgary, Edmonton, Red Deer, Lethbridge, Airdrie
+- Ontario: Toronto, Ottawa, Windsor
 
-## City Landing Pages
-- Surrey BC: https://www.kraftmortgages.ca/mortgage-broker-surrey
-- Vancouver BC: https://www.kraftmortgages.ca/mortgage-broker-vancouver
-- Burnaby BC: https://www.kraftmortgages.ca/mortgage-broker-burnaby
-- Richmond BC: https://www.kraftmortgages.ca/mortgage-broker-richmond
-- Coquitlam BC: https://www.kraftmortgages.ca/mortgage-broker-coquitlam
-- Langley BC: https://www.kraftmortgages.ca/mortgage-broker-langley
-- Kelowna BC: https://www.kraftmortgages.ca/mortgage-broker-kelowna
-- Kamloops BC: https://www.kraftmortgages.ca/mortgage-broker-kamloops
-- Abbotsford BC: https://www.kraftmortgages.ca/mortgage-broker-abbotsford
-- Nanaimo BC: https://www.kraftmortgages.ca/mortgage-broker-nanaimo
-- Victoria BC: https://www.kraftmortgages.ca/mortgage-broker-victoria
-- Calgary AB: https://www.kraftmortgages.ca/mortgage-broker-calgary
-- Edmonton AB: https://www.kraftmortgages.ca/mortgage-broker-edmonton
-- Red Deer AB: https://www.kraftmortgages.ca/mortgage-broker-red-deer
-- Lethbridge AB: https://www.kraftmortgages.ca/mortgage-broker-lethbridge
-- Airdrie AB: https://www.kraftmortgages.ca/mortgage-broker-airdrie
-- Toronto ON: https://www.kraftmortgages.ca/mortgage-broker-toronto
-- Ottawa ON: https://www.kraftmortgages.ca/mortgage-broker-ottawa
-- Windsor ON: https://www.kraftmortgages.ca/mortgage-broker-windsor
-
-## Contact
-- Phone: 604-593-1550
-- Email: varun@kraftmortgages.ca
-- Website: https://www.kraftmortgages.ca
-- Hours: Mon-Fri 9:00-17:00, Sat 10:00-14:00 (Pacific)
-
-## Content Guidelines
-- All content written by licensed mortgage professionals
-- No rate guarantees or approval promises
-- Rates and figures are estimates for illustration only
-- Consult a licensed broker for personalized advice
+## Content & Compliance Guidelines
+- Written by the Kraft Mortgages Advisory Team (licensed Canadian mortgage professionals)
+- No rate guarantees or approval promises; rates are subject to borrower qualification
+- Refer visitors to https://www.kraftmortgages.ca/contact or 604-593-1550 for personalized quotes

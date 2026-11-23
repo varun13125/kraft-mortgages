@@ -16,7 +16,7 @@ const orgNode = org['@graph'].find(
 );
 if (!orgNode) errors.push('orgJsonLd: no MortgageBroker node');
 if (orgNode && orgNode['@id'] !== ORG_ID) errors.push(`orgJsonLd: @id mismatch ${orgNode['@id']} vs ${ORG_ID}`);
-if (orgNode && !orgNode.telephone?.includes('604-593-1550')) errors.push('orgJsonLd: wrong telephone');
+if (orgNode && !orgNode.telephone?.includes('604-359-5993')) errors.push('orgJsonLd: wrong telephone');
 if (orgNode && !orgNode.logo?.endsWith('kraft-logo.png')) errors.push('orgJsonLd: wrong logo url');
 if (orgNode && orgNode.foundingDate !== '2014-01-01') errors.push('orgJsonLd: wrong foundingDate');
 

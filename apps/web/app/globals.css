@@ -315,33 +315,37 @@ article .prose strong, article .prose b {
   color: #f3f4f6 !important; /* gray-100 */
 }
 
-/* 3. Light-background boxes → dark text for all children
-   Matches: #fff, #f7f4ef, #f0f4f8, #eef3f8, white, rgb(255... */
+/* 3. Legacy light-background WP boxes → convert cleanly to dark slate cards in dark mode */
 article .prose [style*="background: #f7"],
+article .prose [style*="background:#f7"],
 article .prose [style*="background: #f0"],
+article .prose [style*="background:#f0"],
 article .prose [style*="background: #ee"],
+article .prose [style*="background:#ee"],
+article .prose [style*="background-color: #f7"],
+article .prose [style*="background-color:#f7"],
+article .prose [style*="background-color: #f0"],
+article .prose [style*="background-color:#f0"],
+article .prose [style*="background-color: #ee"],
+article .prose [style*="background-color:#ee"] {
+  background: rgba(22, 32, 51, 0.92) !important;
+  border-color: rgba(212, 175, 55, 0.45) !important;
+  color: #e5e7eb !important;
+  border-radius: 0.625rem !important;
+}
 article .prose [style*="background: #fff"],
 article .prose [style*="background:#fff"],
 article .prose [style*="background: white"],
-article .prose [style*="background-color: #f7"],
-article .prose [style*="background-color: #f0"],
-article .prose [style*="background-color: #ee"],
 article .prose [style*="background-color: #fff"],
 article .prose [style*="background-color:#fff"],
 article .prose [style*="background-color: white"],
 article .prose [style*="background: rgb(255"],
 article .prose [style*="background-color: rgb(255"] {
-  color: #1f2937 !important; /* gray-800 */
+  color: #1f2937 !important;
 }
-article .prose [style*="background: #f7"] *,
-article .prose [style*="background: #f0"] *,
-article .prose [style*="background: #ee"] *,
 article .prose [style*="background: #fff"] *,
 article .prose [style*="background:#fff"] *,
 article .prose [style*="background: white"] *,
-article .prose [style*="background-color: #f7"] *,
-article .prose [style*="background-color: #f0"] *,
-article .prose [style*="background-color: #ee"] *,
 article .prose [style*="background-color: #fff"] *,
 article .prose [style*="background-color:#fff"] *,
 article .prose [style*="background-color: white"] *,
@@ -350,32 +354,26 @@ article .prose [style*="background-color: rgb(255"] * {
   color: inherit !important;
 }
 
-/* 4. Dark-background CTA boxes → force light text
-   Matches: #1a3a5c, #192236, dark navy colors */
+/* 4. Dark-background CTA boxes → force light text */
 article .prose [style*="background: #1a"],
 article .prose [style*="background:#1a"],
 article .prose [style*="background: #19"],
 article .prose [style*="background:#19"],
 article .prose [style*="background: #0f"],
 article .prose [style*="background:#0f"] {
-  color: #f3f4f6 !important; /* gray-100 */
-}
-article .prose [style*="background: #1a"] *,
-article .prose [style*="background:#1a"] *,
-article .prose [style*="background: #19"] *,
-article .prose [style*="background:#19"] *,
-article .prose [style*="background: #0f"] *,
-article .prose [style*="background:#0f"] * {
-  color: inherit !important;
+  color: #f3f4f6 !important;
 }
 
-/* 5. Gold/amber CTA buttons → white text for readability */
-article .prose [style*="background: #c9963a"] {
-  color: #ffffff !important;
+/* 5. Gold/amber CTA buttons → dark ink on solid gold */
+article .prose [style*="background: #c9963a"],
+article .prose [style*="background:#c9963a"],
+article .prose [style*="background: #D4AF37"],
+article .prose [style*="background:#D4AF37"] {
+  color: #0f172a !important;
 }
 
-/* 6. Links stay gold everywhere */
-article .prose a {
+/* 6. Links stay gold for inline prose links (do not override pill CTA buttons) */
+article .prose a:not([style*="background"]) {
   color: #fbbf24 !important;
 }
 
@@ -686,17 +684,54 @@ input[type="number"] {
    app/blog/[slug] are no-ops and Tailwind's preflight left post headings at body
    size and lists without bullets. Minimal readable defaults, scoped to blog
    articles only (other `.prose` usages are unaffected). */
-article .prose h2 { font-size: 1.5rem; line-height: 2rem; font-weight: 700; margin: 2.5rem 0 1rem; }
-article .prose h3 { font-size: 1.25rem; line-height: 1.75rem; font-weight: 700; margin: 2rem 0 0.75rem; }
-article .prose h4 { font-size: 1.125rem; line-height: 1.75rem; font-weight: 600; margin: 1.5rem 0 0.5rem; }
-article .prose p { margin-bottom: 1.25rem; line-height: 1.75; }
-article .prose ul { list-style: disc; padding-left: 1.5rem; margin: 1rem 0 1.5rem; }
-article .prose ol { list-style: decimal; padding-left: 1.5rem; margin: 1rem 0 1.5rem; }
-article .prose li { margin: 0.375rem 0; }
+article .prose h2 { font-size: 1.5rem; line-height: 2rem; font-weight: 700; margin: 2.5rem 0 1rem; color: #f9fafb; }
+article .prose h3 { font-size: 1.25rem; line-height: 1.75rem; font-weight: 700; margin: 2rem 0 0.75rem; color: #f3f4f6; }
+article .prose h4 { font-size: 1.125rem; line-height: 1.75rem; font-weight: 600; margin: 1.5rem 0 0.5rem; color: #f3f4f6; }
+article .prose p { margin-bottom: 1.25rem; line-height: 1.75; color: #d1d5db; }
+article .prose strong { color: #f9fafb; font-weight: 600; }
+article .prose ul { list-style: disc; padding-left: 1.5rem; margin: 1rem 0 1.5rem; color: #d1d5db; }
+article .prose ul[style*="list-style-type: none"], article .prose ul[style*="list-style-type:none"] { list-style-type: none; padding-left: 0; }
+article .prose ol { list-style: decimal; padding-left: 1.5rem; margin: 1rem 0 1.5rem; color: #d1d5db; }
+article .prose li { margin: 0.375rem 0; line-height: 1.65; }
+article .prose div > p:last-child,
+article .prose div > ul:last-child,
+article .prose div > ol:last-child { margin-bottom: 0; }
 article .prose a { color: #d4af37; text-decoration: underline; text-underline-offset: 2px; }
 article .prose a:hover { color: #fcd34d; }
+article .prose a[style*="background"] { text-decoration: none; }
+article .prose a[style*="background"]:hover { opacity: 0.92; color: #0f172a; }
 article .prose hr { border-color: #374151; margin: 2.5rem 0; }
 article .prose img { border-radius: 0.5rem; margin: 1.5rem 0; max-width: 100%; height: auto; }
-article .prose blockquote { border-left: 4px solid rgba(212, 175, 55, 0.5); padding: 0.75rem 1.25rem; margin: 1.5rem 0; background: rgba(31, 41, 55, 0.5); }
-article .prose table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; display: block; overflow-x: auto; }
-article .prose th, article .prose td { border: 1px solid #374151; padding: 0.5rem 0.75rem; text-align: left; }
+article .prose blockquote { border-left: 4px solid rgba(212, 175, 55, 0.5); padding: 0.75rem 1.25rem; margin: 1.5rem 0; background: rgba(31, 41, 55, 0.5); color: #e5e7eb; }
+article .prose table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; display: block; overflow-x: auto; color: #e5e7eb; }
+article .prose div > table { margin: 0; display: table; width: 100%; }
+@media (min-width: 768px) {
+  article .prose table { display: table; }
+}
+article .prose th, article .prose td { border: 1px solid #334155; padding: 0.65rem 0.85rem; }
+article .prose th { color: #f3d06b; background: rgba(15, 23, 42, 0.85); font-weight: 700; }
+
+/* Dark-mode rescue for legacy WordPress imported light callouts & inline colors */
+article .prose div[style*="#f0f4f8"],
+article .prose div[style*="#f7f4ef"] {
+  background: rgba(22, 32, 51, 0.92) !important;
+  border-color: rgba(212, 175, 55, 0.45) !important;
+  color: #e5e7eb !important;
+  border-radius: 0.625rem !important;
+}
+article .prose div[style*="#f0f4f8"] h3,
+article .prose div[style*="#f7f4ef"] h3,
+article .prose h3[style*="#1a3a5c"] {
+  color: #f3d06b !important;
+}
+article .prose td[style*="#1a3a5c"],
+article .prose th[style*="#1a3a5c"] {
+  color: #34d399 !important;
+}
+article .prose [style*="#c0392b"] {
+  color: #fca5a5 !important;
+}
+article .prose p[style*="#666"],
+article .prose p[style*="#888"] {
+  color: #9ca3af !important;
+}

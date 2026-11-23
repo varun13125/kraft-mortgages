@@ -487,10 +487,10 @@ export default function CMHCInsurancePage() {
                 "telephone": "604-593-1550",
                 "address": {
                   "@type": "PostalAddress",
-                  "streetAddress": "#301 - 1688 152nd Street",
+                  "streetAddress": "Unit 201 - 12830 80th Ave",
                   "addressLocality": "Surrey",
                   "addressRegion": "BC",
-                  "postalCode": "V4A 4N2",
+                  "postalCode": "V3W 3A8",
                   "addressCountry": "CA"
                 }
               }

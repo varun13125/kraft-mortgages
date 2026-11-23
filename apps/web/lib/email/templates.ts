@@ -127,7 +127,7 @@ const getBaseTemplate = (content: string, data: EmailTemplateData): string => {
                 📞 <a href="tel:+16045931550">604-593-1550</a> | 
                 📧 <a href="mailto:info@kraftmortgages.ca">info@kraftmortgages.ca</a>
             </div>
-            <div>301-1688 152nd Street, Surrey, BC V4A 4N2</div>
+            <div>Unit 201 - 12830 80th Ave, Surrey, BC V3W 3A8</div>
             
             <div class="social-links">
                 <a href="https://linkedin.com/company/kraft-mortgages">LinkedIn</a> |

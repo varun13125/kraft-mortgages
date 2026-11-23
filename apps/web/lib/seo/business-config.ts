@@ -17,21 +17,21 @@ export const BUSINESS = {
   imageUrls: ['https://www.kraftmortgages.ca/og-default.jpg'],
 
   // NAP — one canonical format. Used everywhere.
-  telephone: '+1-604-593-1550',           // primary, tel: links
-  telephoneDisplay: '604-593-1550',
-  secondaryPhone: '+1-604-359-5993',      // Julia 24/7 AI Receptionist (Twilio virtual line)
-  secondaryPhoneDisplay: '(604) 359-5993',
+  telephone: '+1-604-359-5993',           // primary 24/7 advisory call & SMS lead line
+  telephoneDisplay: '(604) 359-5993',
+  secondaryPhone: '+1-604-593-1550',      // Surrey Head Office Desk
+  secondaryPhoneDisplay: '604-593-1550',
   email: 'info@kraftmortgages.ca',
   principalBroker: 'Manpreet Dhaliwal', // Owner-confirmed 2026-10-20
   president: 'Varun Chaudhry',
   address: {
-    streetAddress: '#301 - 1688 152nd Street',
+    streetAddress: 'Unit 201 - 12830 80th Ave',
     addressLocality: 'Surrey',
     addressRegion: 'BC',
-    postalCode: 'V4A 4N2',
+    postalCode: 'V3W 3A8',
     addressCountry: 'CA',
   },
-  geo: { lat: 49.0326, lng: -122.8012 },  // Surrey office
+  geo: { lat: 49.1475, lng: -122.8673 },  // Surrey head office (12830 80th Ave)
 
   areaServed: [
     { type: 'Province', name: 'British Columbia' },

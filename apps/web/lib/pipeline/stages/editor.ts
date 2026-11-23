@@ -41,12 +41,12 @@ Enhancement requirements:
 9. Add contact/consultation call-to-action
 
 Author Details:
-- Name: Varun Chaudhry
-- Title: Licensed Mortgage Broker  
+- Name: Kraft Mortgages Advisory Team
+- Title: Licensed Mortgage Brokerage Team  
 - License: BCFSA #SR220230 | RECA LIC-00655428 | FSRA #12918
-- Experience: 18+ years in Canadian mortgage industry
+- Experience: 18+ years combined experience in Canadian mortgage industry
 - Specialties: MLI Select, Construction Financing, Self-Employed mortgages
-- Office: 301-1688 152nd Street, Surrey, BC V4A 4N2
+- Office: Unit 201 - 12830 80th Ave, Surrey, BC V3W 3A8
 - Phone: 604-593-1550
 
 IMPORTANT RULES:
@@ -84,17 +84,17 @@ Return the enhanced article in Markdown format.
     });
 
     // Add author bio if not present
-    if (!enhancedContent.includes('Varun Chaudhry')) {
+    if (!enhancedContent.includes('Kraft Mortgages Advisory Team') && !enhancedContent.includes('About the Author')) {
       const authorBio = `
 
 ---
 
-## About the Author
+## About the Authors
 
-**Varun Chaudhry** is a licensed mortgage broker with over 18 years of experience in the Canadian mortgage industry. Specializing in MLI Select, construction financing, and self-employed mortgages across BC, AB, and ON.
+The **Kraft Mortgages Advisory Team** brings over 18 years of combined experience in the Canadian mortgage industry, specializing in MLI Select, construction financing, commercial lending, and self-employed mortgages across BC, AB, and ON.
 
-- **License**: BCFSA #SR220230 | RECA LIC-00655428 | FSRA #12918
-- **Office**: 301-1688 152nd Street, Surrey, BC V4A 4N2  
+- **Brokerage Licenses**: BCFSA #SR220230 | RECA LIC-00655428 | FSRA #12918
+- **Office**: Unit 201 - 12830 80th Ave, Surrey, BC V3W 3A8  
 - **Phone**: [604-593-1550](tel:604-593-1550)
 - **Specialties**: MLI Select Program, Construction Financing, Self-Employed Mortgages
 
@@ -104,7 +104,7 @@ Return the enhanced article in Markdown format.
 
 ## Ready to Get Started?
 
-Every mortgage situation is unique. Contact Varun directly to discuss your specific needs and explore the best mortgage solutions for your circumstances.
+Every mortgage situation is unique. Contact the Kraft Mortgages Advisory Team to discuss your specific needs and explore the best mortgage solutions for your circumstances.
 
 **📞 [604-593-1550](tel:604-593-1550) | 📧 [info@kraftmortgages.ca](mailto:info@kraftmortgages.ca)**
 `;

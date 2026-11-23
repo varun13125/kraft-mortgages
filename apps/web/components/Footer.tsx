@@ -18,12 +18,12 @@ const FOOTER_LINKS = {
     { label: "Blog", href: "/blog" },
   ],
   "CONTACT": [
+    { label: "24/7 Advisory (Call/Text): (604) 359-5993", href: `tel:${BUSINESS.telephone}` },
     { label: "WhatsApp: +1 (604) 359-5993", href: "https://wa.me/16043595993?text=Hi%20Kraft%20Mortgages%2C%20I%27d%20like%20to%20inquire%20about%20mortgage%20rates." },
-    { label: BUSINESS.telephoneDisplay, href: `tel:${BUSINESS.telephone}` },
-    { label: "604-727-1579", href: "tel:604-727-1579" },
+    { label: `Surrey Office: ${BUSINESS.secondaryPhoneDisplay}`, href: `tel:${BUSINESS.secondaryPhone}` },
     { label: "info@kraftmortgages.ca", href: "mailto:info@kraftmortgages.ca" },
-    { label: "#301 1688 152nd Street", href: undefined },
-    { label: "Surrey, BC V4A 4N2", href: undefined },
+    { label: "Unit 201 - 12830 80th Ave", href: undefined },
+    { label: "Surrey, BC V3W 3A8", href: undefined },
   ],
   "LEGAL & TRUST": [
     { label: "Compliance & FINTRAC Disclosures", href: "/compliance-security" },

@@ -524,9 +524,9 @@ export default function VarunLandingPage() {
                         {/* Contact */}
                         <div className="space-y-2">
                             <p className="text-zinc-400">
-                                <a href="tel:+16047271579" className="hover:text-gold-400 transition-colors inline-flex items-center gap-2 min-h-[44px] px-2">
+                                <a href="tel:+16043595993" className="hover:text-gold-400 transition-colors inline-flex items-center gap-2 min-h-[44px] px-2">
                                     <Phone className="w-4 h-4" />
-                                    (604) 727-1579
+                                    (604) 359-5993
                                 </a>
                             </p>
                             <p className="text-zinc-400">

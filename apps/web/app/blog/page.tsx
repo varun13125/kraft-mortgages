@@ -15,7 +15,7 @@ import { generateExcerpt, decodeHtmlEntities } from '@/lib/utils/blog-content';
 
 export const metadata: Metadata = {
   title: 'Mortgage Blog | Expert Advice & Rates | Kraft Mortgages',
-  description: 'Mortgage advice, BC rate updates & homebuying guides from licensed broker Varun Chaudhry. $2B+ funded. Updated weekly.',
+  description: 'Mortgage advice, BC/AB/ON rate updates & homebuying guides from the Kraft Mortgages Advisory Team. $2B+ funded. Updated weekly.',
   keywords: 'Surrey mortgage broker blog, mortgage advice BC, mortgage rates Surrey, home buying tips Surrey, BC mortgage news, first-time buyer guide Surrey',
   alternates: {
     canonical: 'https://www.kraftmortgages.ca/blog',
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     // OG_DEFAULTS supplies the site share image — /images/blog-default.jpg never existed.
     ...OG_DEFAULTS,
     title: 'Surrey Mortgage Broker Blog | Expert Advice & Rates | Kraft Mortgages',
-    description: 'Expert mortgage advice and market insights from licensed broker Varun Chaudhry.',
+    description: 'Expert mortgage advice and market insights from the Kraft Mortgages Advisory Team.',
     url: 'https://www.kraftmortgages.ca/blog',
   },
 };
@@ -95,7 +95,7 @@ function transformPost(post: any) {
     slug: post.slug || '',
     title: decodedTitle,
     excerpt: decodedExcerpt,
-    author: post.author?.name || post.author || 'Varun Chaudhry',
+    author: post.author?.name || post.author || 'Kraft Mortgages Advisory Team',
     authorEmail: post.authoremail || 'info@kraftmortgages.ca',
     publishedAt: (new Date(post.publishedAt || post.publishedat || new Date())),
     updatedAt: (new Date(post.updatedAt || post.updatedat || post.publishedAt || post.publishedat || new Date())),
@@ -140,14 +140,13 @@ export default async function BlogPage() {
             '@context': 'https://schema.org',
             '@type': 'Blog',
             name: 'Kraft Mortgages Blog',
-            description: 'Expert mortgage advice and market insights from licensed broker Varun Chaudhry',
+            description: 'Expert mortgage advice and market insights from the Kraft Mortgages Advisory Team',
             url: 'https://www.kraftmortgages.ca/blog',
             author: {
-              '@type': 'Person',
-              name: 'Varun Chaudhry',
+              '@type': 'Organization',
+              '@id': ORG_ID,
+              name: 'Kraft Mortgages Advisory Team',
               email: 'info@kraftmortgages.ca',
-              jobTitle: 'Licensed Mortgage Broker',
-              worksFor: { '@id': ORG_ID },
             },
             publisher: { '@id': ORG_ID },
           }),
@@ -168,7 +167,7 @@ export default async function BlogPage() {
               </p>
               <div className="flex items-center justify-center gap-4 text-gray-400 mb-8">
                 <User className="w-5 h-5" />
-                <span>Varun Chaudhry, Licensed Mortgage Broker</span>
+                <span>Kraft Mortgages Advisory Team</span>
                 <span className="text-gray-600">•</span>
                 <span>BCFSA #SR220230 | RECA LIC-00655428 | FSRA #12918</span>
               </div>
@@ -384,13 +383,13 @@ export default async function BlogPage() {
               </p>
               <div className="grid md:grid-cols-3 gap-6 mb-8">
                 <div className="bg-gray-800/50 backdrop-blur-sm border border-gray-700/50 rounded-lg p-6">
-                  <h3 className="font-bold text-gray-100 mb-2">📞 Call Direct</h3>
-                  <p className="text-gray-400 mb-3">Speak with Varun directly</p>
+                  <h3 className="font-bold text-gray-100 mb-2">📞 24/7 Advisory (Call or Text)</h3>
+                  <p className="text-gray-400 mb-3">Speak or message with our advisory team anytime</p>
                   <a
-                    href="tel:604-593-1550"
+                    href="tel:+16043595993"
                     className="text-gold-400 hover:text-gold-300 font-medium transition-colors"
                   >
-                    604-593-1550
+                    (604) 359-5993
                   </a>
                 </div>
                 <div className="bg-gray-800/50 backdrop-blur-sm border border-gray-700/50 rounded-lg p-6">

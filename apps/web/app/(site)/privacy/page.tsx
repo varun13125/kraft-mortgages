@@ -558,8 +558,7 @@ export default function PrivacyPolicyPage() {
                     </h3>
                     <p className="text-slate-300 font-semibold mb-1">{BUSINESS.principalBroker} — Principal Broker</p>
                     <p className="text-slate-400 mb-1">Kraft Mortgages Canada Inc.</p>
-                    <p className="text-slate-400">Head Office: Suite 202 - 12725 80 Avenue, Surrey, BC V3W 3A6</p>
-                    <p className="text-slate-400">Dealing Office: #301 - 1688 152nd Street, Surrey, BC V4A 4N2</p>
+                    <p className="text-slate-400">Head Office: Unit 201 - 12830 80th Ave, Surrey, BC V3W 3A8</p>
                   </div>
                   <div>
                     <h3 className="font-bold text-white mb-2 flex items-center gap-2">
@@ -568,8 +567,8 @@ export default function PrivacyPolicyPage() {
                     </h3>
                     <p className="text-slate-400 mb-1">Privacy Email: <a href="mailto:privacy@kraftmortgages.ca" className="text-slate-200 hover:text-gold-400 font-medium">privacy@kraftmortgages.ca</a></p>
                     <p className="text-slate-400 mb-1">Contact Email: <a href="mailto:info@kraftmortgages.ca" className="text-slate-200 hover:text-gold-400 font-medium">info@kraftmortgages.ca</a></p>
-                    <p className="text-slate-400 mb-1">Head Office Phone: <a href="tel:604-593-1550" className="text-slate-200 hover:text-gold-400">604-593-1550</a></p>
-                    <p className="text-slate-400">Mobile Desk: <a href="tel:604-727-1579" className="text-slate-200 hover:text-gold-400">604-727-1579</a></p>
+                    <p className="text-slate-400 mb-1">24/7 Advisory (Call/Text): <a href="tel:+16043595993" className="text-slate-200 hover:text-gold-400">(604) 359-5993</a></p>
+                    <p className="text-slate-400">Head Office Phone: <a href="tel:604-593-1550" className="text-slate-200 hover:text-gold-400">604-593-1550</a></p>
                   </div>
                 </div>
                 <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800 text-xs text-slate-400">

@@ -279,11 +279,12 @@ export default function ContactPage() {
                       <Phone className="w-6 h-6 text-gold-400" />
                     </div>
                     <div>
-                      <h3 className="text-lg font-medium text-gray-100 mb-2">Phone</h3>
-                      <p className="text-gray-400 mb-2">Call us for immediate assistance</p>
-                      <a href="tel:604-593-1550" className="text-gold-400 hover:text-gold-300 transition-colors font-semibold">
-                        604-593-1550
+                      <h3 className="text-lg font-medium text-gray-100 mb-2">24/7 Advisory Line (Call or Text)</h3>
+                      <p className="text-gray-400 mb-2">Call or message anytime for immediate assistance</p>
+                      <a href="tel:+16043595993" className="text-gold-400 hover:text-gold-300 transition-colors font-semibold block mb-1">
+                        (604) 359-5993
                       </a>
+                      <span className="text-sm text-gray-400">Surrey Office: <a href="tel:604-593-1550" className="text-gold-400 hover:underline">604-593-1550</a></span>
                     </div>
                   </div>
 
@@ -320,8 +321,8 @@ export default function ContactPage() {
                     </div>
                     <div>
                       <h3 className="text-lg font-medium text-gray-100 mb-2">Office Address</h3>
-                      <a href="https://maps.google.com/?q=%23301+1688+152nd+Street+Surrey+BC+V4A+4N2" target="_blank" rel="noopener noreferrer" className="text-gold-400 hover:text-gold-300 transition-colors">
-                        #301 - 1688 152nd Street<br />Surrey, BC V4A 4N2
+                      <a href="https://maps.google.com/?q=Unit+201+12830+80th+Ave+Surrey+BC+V3W+3A8" target="_blank" rel="noopener noreferrer" className="text-gold-400 hover:text-gold-300 transition-colors">
+                        Unit 201 - 12830 80th Ave<br />Surrey, BC V3W 3A8
                       </a>
                       <p className="text-gray-400 text-sm mt-2">Serving BC, AB &amp; ON</p>
                     </div>

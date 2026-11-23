@@ -43,16 +43,22 @@ export function buildArticleJsonLd(data: ArticleData): any {
         datePublished: publishDate,
         dateModified: modifyDate,
         wordCount: content.split(/\s+/).length,
-        author: {
-          '@type': 'Person',
-          '@id': `https://www.kraftmortgages.ca/about#varun-chaudhry`,
-          name: author,
-          jobTitle: 'Licensed Mortgage Broker',
-          // Reference the single canonical org node (app/layout.tsx) by @id instead of
-          // redefining it. The old '...ca#organization' id (no slash) didn't match
-          // ORG_ID ('...ca/#organization'), creating a second, conflicting entity.
-          worksFor: { '@id': ORG_ID }
-        },
+        author: author.includes('Team') || author.includes('Kraft')
+          ? {
+              '@type': 'Organization',
+              '@id': ORG_ID,
+              name: author,
+            }
+          : {
+              '@type': 'Person',
+              '@id': `https://www.kraftmortgages.ca/about#varun-chaudhry`,
+              name: author,
+              jobTitle: 'Licensed Mortgage Broker',
+              // Reference the single canonical org node (app/layout.tsx) by @id instead of
+              // redefining it. The old '...ca#organization' id (no slash) didn't match
+              // ORG_ID ('...ca/#organization'), creating a second, conflicting entity.
+              worksFor: { '@id': ORG_ID }
+            },
         publisher: {
           '@type': 'Organization',
           '@id': ORG_ID,
@@ -243,16 +249,16 @@ export function buildLocalBusinessJsonLd(): any {
     email: 'info@kraftmortgages.ca',
     address: {
       '@type': 'PostalAddress',
-      streetAddress: '301-1688 152nd Street',
+      streetAddress: 'Unit 201 - 12830 80th Ave',
       addressLocality: 'Surrey',
       addressRegion: 'BC',
-      postalCode: 'V4A 4N2',
+      postalCode: 'V3W 3A8',
       addressCountry: 'CA'
     },
     geo: {
       '@type': 'GeoCoordinates',
-      latitude: 49.0323,
-      longitude: -122.8028
+      latitude: 49.1475,
+      longitude: -122.8673
     },
     openingHours: ['Mo-Fr 09:00-17:00'],
     priceRange: '$$',

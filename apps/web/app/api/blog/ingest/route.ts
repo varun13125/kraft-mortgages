@@ -229,8 +229,8 @@ export async function POST(req: NextRequest) {
       status,
       publishedAt,
       author: {
-        name: typeof body.author === 'string' && body.author.trim() ? body.author.slice(0, 120) : 'Varun Chaudhry',
-        title: 'Licensed Mortgage Broker',
+        name: typeof body.author === 'string' && body.author.trim() ? body.author.slice(0, 120) : 'Kraft Mortgages Advisory Team',
+        title: 'Licensed Mortgage Brokerage Team',
         license: 'BCFSA #SR220230 | RECA LIC-00655428 | FSRA #12918',
       },
       metaDescription,

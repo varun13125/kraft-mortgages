@@ -351,16 +351,15 @@ export default function TermsOfServicePage() {
                       <Building2 className="w-4 h-4 text-gold-400" />
                       Kraft Mortgages Canada Inc.
                     </h3>
-                    <p className="text-slate-400 mb-1">Head Office: Suite 202 - 12725 80 Avenue, Surrey, BC V3W 3A6</p>
-                    <p className="text-slate-400">Dealing Office: #301 - 1688 152nd Street, Surrey, BC V4A 4N2</p>
+                    <p className="text-slate-400 mb-1">Head Office: Unit 201 - 12830 80th Ave, Surrey, BC V3W 3A8</p>
                   </div>
                   <div>
                     <h3 className="font-bold text-white mb-2 flex items-center gap-2">
                       <Phone className="w-4 h-4 text-gold-400" />
                       Contact Channels
                     </h3>
+                    <p className="text-slate-400 mb-1">24/7 Advisory (Call/Text): <a href="tel:+16043595993" className="text-slate-200 hover:text-gold-400">(604) 359-5993</a></p>
                     <p className="text-slate-400 mb-1">Office Telephone: <a href="tel:604-593-1550" className="text-slate-200 hover:text-gold-400">604-593-1550</a></p>
-                    <p className="text-slate-400 mb-1">Direct Mobile: <a href="tel:604-727-1579" className="text-slate-200 hover:text-gold-400">604-727-1579</a></p>
                     <p className="text-slate-400">Compliance Email: <a href="mailto:info@kraftmortgages.ca" className="text-slate-200 hover:text-gold-400">info@kraftmortgages.ca</a></p>
                   </div>
                 </div>

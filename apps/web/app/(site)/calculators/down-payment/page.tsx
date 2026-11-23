@@ -396,7 +396,7 @@ export default function DownPaymentPage() {
               </ul>
 
               <p>
-                With 18+ years of combined experience and over $2 billion in funded mortgages, Kraft Mortgages helps buyers across BC, Alberta, and Ontario navigate down payment strategies and find the best mortgage solutions. Call us at <a href="tel:604-593-1550" className="text-gold-300 hover:text-gold-300 underline underline-offset-4">604-593-1550</a> or visit our office at #301 - 1688 152nd Street, Surrey, BC.
+                With 18+ years of combined experience and over $2 billion in funded mortgages, Kraft Mortgages helps buyers across BC, Alberta, and Ontario navigate down payment strategies and find the best mortgage solutions. Call us at <a href="tel:604-593-1550" className="text-gold-300 hover:text-gold-300 underline underline-offset-4">604-593-1550</a> or visit our office at Unit 201 - 12830 80th Ave, Surrey, BC.
               </p>
 
               <div className="mt-8">
@@ -464,10 +464,10 @@ export default function DownPaymentPage() {
                 "telephone": "604-593-1550",
                 "address": {
                   "@type": "PostalAddress",
-                  "streetAddress": "#301 - 1688 152nd Street",
+                  "streetAddress": "Unit 201 - 12830 80th Ave",
                   "addressLocality": "Surrey",
                   "addressRegion": "BC",
-                  "postalCode": "V4A 4N2",
+                  "postalCode": "V3W 3A8",
                   "addressCountry": "CA"
                 }
               }

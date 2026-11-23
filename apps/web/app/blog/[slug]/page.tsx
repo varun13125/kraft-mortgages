@@ -7,6 +7,7 @@ export const revalidate = 300;
 import { cache } from 'react';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import Footer from '@/components/Footer';
 import { BUSINESS } from '@/lib/seo/business-config';
 import { ORG_ID } from '@/lib/seo/jsonld';
@@ -22,6 +23,34 @@ import { sanitizeBlogHtml } from '@/lib/security/sanitizeHtml';
 const getFsPost = cache(getPost);
 
 const SITE_URL = 'https://www.kraftmortgages.ca';
+
+function stripTags(html: string): string {
+  return decodeHtmlEntities(html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim());
+}
+
+/** Extract FAQ question/answer pairs from post.faq or rendered HTML for AIO/GEO FAQPage schema. */
+function extractFaqs(rawPost: any, html: string): Array<{ question: string; answer: string }> {
+  if (Array.isArray(rawPost?.faq) && rawPost.faq.length > 0) {
+    return rawPost.faq
+      .filter((f: any) => f && f.question && f.answer)
+      .map((f: any) => ({ question: String(f.question).trim(), answer: String(f.answer).trim() }))
+      .slice(0, 12);
+  }
+  const faqs: Array<{ question: string; answer: string }> = [];
+  const faqHeadingIdx = html.search(/<h2[^>]*>[^<]*(?:FAQ|Frequently Asked Questions)[^<]*<\/h2>/i);
+  const scope = faqHeadingIdx >= 0 ? html.slice(faqHeadingIdx) : html;
+  const qaPattern = /<h3[^>]*>(.*?)<\/h3>\s*(?:<p[^>]*>(.*?)<\/p>)/gi;
+  let m: RegExpExecArray | null;
+  while ((m = qaPattern.exec(scope)) !== null) {
+    const rawQ = stripTags(m[1]).replace(/^Q:\s*/i, '').trim();
+    const rawA = stripTags(m[2]).replace(/^A:\s*/i, '').trim();
+    if (rawQ.length >= 10 && rawA.length >= 15 && (faqHeadingIdx >= 0 || rawQ.endsWith('?') || /^Q:/i.test(stripTags(m[1])))) {
+      faqs.push({ question: rawQ, answer: rawA });
+    }
+    if (faqs.length >= 12) break;
+  }
+  return faqs;
+}
 
 /** Make root-relative image paths absolute (OG/schema images must be absolute URLs). */
 function absoluteUrl(url: string): string {
@@ -105,7 +134,7 @@ function transformGoogleSheetsPost(post: any) {
     title: decodedTitle,
     content: content,
     excerpt: decodedExcerpt,
-    author: post.author?.name || post.author || 'Varun Chaudhry',
+    author: post.author?.name || post.author || 'Kraft Mortgages Advisory Team',
     authorEmail: post.authoremail || 'info@kraftmortgages.ca',
     // Bug fix: Firestore posts carry `publishedAt` (camelCase Date); reading only the
     // legacy lowercase `publishedat` made every post show today's date (UI, OG, schema).
@@ -192,6 +221,9 @@ export default async function BlogPostPage({
 
   // Process content to handle image placeholders
   const processedContent = sanitizeBlogHtml(processPostContent(post.content));
+  const extractedFaqs = extractFaqs(rawPost, processedContent);
+  const authorName = typeof post.author === 'string' ? post.author : 'Kraft Mortgages Advisory Team';
+  const isTeamAuthor = authorName.includes('Team') || authorName.includes('Kraft');
 
   const publishedDate = new Date(post.publishedAt);
   const updatedDate = new Date(post.updatedAt);
@@ -201,7 +233,7 @@ export default async function BlogPostPage({
       {/* Navigation Component */}
       <Navigation />
 
-      {/* Structured Data for SEO */}
+      {/* Structured Data for SEO & AIO */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -211,14 +243,20 @@ export default async function BlogPostPage({
             headline: post.title,
             description: post.excerpt,
             image: post.seo.ogImage,
-            author: {
-              '@type': 'Person',
-              name: typeof post.author === 'string' ? post.author : 'Varun Chaudhry',
-              url: 'https://www.kraftmortgages.ca/about',
-              jobTitle: 'Licensed Mortgage Broker',
-              // (licence numbers were stuffed into honorificPrefix — wrong property)
-              worksFor: { '@id': ORG_ID },
-            },
+            author: isTeamAuthor
+              ? {
+                  '@type': 'Organization',
+                  '@id': ORG_ID,
+                  name: authorName,
+                  url: 'https://www.kraftmortgages.ca/about',
+                }
+              : {
+                  '@type': 'Person',
+                  name: authorName,
+                  url: 'https://www.kraftmortgages.ca/about',
+                  jobTitle: 'Licensed Mortgage Broker',
+                  worksFor: { '@id': ORG_ID },
+                },
             // Reference the single org node from app/layout.tsx; logo URL was non-www (redirect).
             publisher: {
               '@type': 'Organization',
@@ -238,6 +276,26 @@ export default async function BlogPostPage({
           }),
         }}
       />
+      {extractedFaqs.length > 0 && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'FAQPage',
+              '@id': `${post.seo.canonicalUrl}#faq`,
+              mainEntity: extractedFaqs.map((item) => ({
+                '@type': 'Question',
+                name: item.question,
+                acceptedAnswer: {
+                  '@type': 'Answer',
+                  text: item.answer,
+                },
+              })),
+            }),
+          }}
+        />
+      )}
 
       <main id="main-content" className="min-h-screen bg-gray-900">
         {/* Header */}
@@ -350,16 +408,22 @@ export default async function BlogPostPage({
               <div className="mt-12 pt-8 border-t border-gray-700">
                 <div className="bg-gray-800/50 backdrop-blur-sm border border-gray-700/50 rounded-lg p-6">
                   <div className="flex items-start gap-4">
-                    <div className="w-16 h-16 bg-gold-500 rounded-full flex items-center justify-center text-gray-900 font-bold text-xl">
-                      {typeof post.author === 'string' ? post.author.split(' ').map((n: string) => n[0]).join('') : post.author.name.split(' ').map((n: string) => n[0]).join('')}
+                    <div className="w-16 h-16 shrink-0 bg-gray-900 border border-gold-500/40 rounded-full flex items-center justify-center p-2.5 overflow-hidden">
+                      <Image
+                        src="/apple-touch-icon.png"
+                        alt="Kraft Mortgages Canada Inc."
+                        width={44}
+                        height={44}
+                        className="w-10 h-10 object-contain"
+                      />
                     </div>
                     <div>
                       <h3 className="text-xl font-bold text-gray-100 mb-2">
                         About {typeof post.author === 'string' ? post.author : post.author.name}
                       </h3>
                       <p className="text-gray-400 mb-4">
-                        Licensed mortgage broker with over 18+ years of combined experience in the Canadian mortgage industry.
-                        Specializing in MLI Select, construction financing, and self-employed mortgages across BC, AB, and ON.
+                        Licensed Canadian mortgage brokerage team with over 18+ years of combined experience.
+                        Specializing in MLI Select, construction financing, residential renewals, and self-employed mortgages across BC, AB, and ON.
                       </p>
                       <div className="flex flex-wrap gap-4 text-sm text-gray-400">
                         <span>📧 {post.authorEmail}</span>
@@ -386,14 +450,14 @@ export default async function BlogPostPage({
               </p>
               <div className="grid md:grid-cols-2 gap-6 max-w-2xl mx-auto">
                 <div className="bg-gray-800/50 backdrop-blur-sm border border-gray-700/50 rounded-lg p-6">
-                  <h3 className="font-bold text-gray-100 mb-4">📞 Call Us</h3>
-                  <p className="text-gray-400 mb-2">Office: <a href="tel:604-593-1550" className="text-gold-400 hover:text-gold-300 font-medium transition-colors">604-593-1550</a></p>
-                  <p className="text-gray-400">Mobile: <a href="tel:604-727-1579" className="text-gold-400 hover:text-gold-300 font-medium transition-colors">604-727-1579</a></p>
+                  <h3 className="font-bold text-gray-100 mb-4">📞 Call or Text 24/7</h3>
+                  <p className="text-gray-400 mb-2">24/7 Advisory (Call/Text): <a href="tel:+16043595993" className="text-gold-400 hover:text-gold-300 font-medium transition-colors">(604) 359-5993</a></p>
+                  <p className="text-gray-400">Surrey Office: <a href="tel:604-593-1550" className="text-gold-400 hover:text-gold-300 font-medium transition-colors">604-593-1550</a></p>
                 </div>
                 <div className="bg-gray-800/50 backdrop-blur-sm border border-gray-700/50 rounded-lg p-6">
-                  <h3 className="font-bold text-gray-100 mb-4">✉️ Email & Online</h3>
+                  <h3 className="font-bold text-gray-100 mb-4">✉️ Email &amp; Online</h3>
                   <p className="text-gray-400 mb-2">Email: <a href="mailto:info@kraftmortgages.ca" className="text-gold-400 hover:text-gold-300 font-medium transition-colors">info@kraftmortgages.ca</a></p>
-                  <p className="text-gray-400">Apply: <a href="https://r.mtg-app.com/varun-chaudhry" className="text-gold-400 hover:text-gold-300 font-medium transition-colors" target="_blank" rel="noopener noreferrer">Online Application</a></p>
+                  <p className="text-gray-400">Apply: <Link href="/contact" className="text-gold-400 hover:text-gold-300 font-medium transition-colors">Request Free Quote →</Link></p>
                 </div>
               </div>
             </div>

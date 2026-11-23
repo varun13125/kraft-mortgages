@@ -332,7 +332,7 @@ export default function BC() {
                 <MapPin className="w-5 h-5 text-gold-500 mt-0.5" />
                 <div>
                   <p className="font-semibold text-white">Surrey Office</p>
-                  <p className="text-sm text-gray-300">301-1688 152nd Street<br />Surrey, BC V4A 4N2</p>
+                  <p className="text-sm text-gray-300">Unit 201 - 12830 80th Ave<br />Surrey, BC V3W 3A8</p>
                 </div>
               </div>
               <div className="flex items-start gap-3">
